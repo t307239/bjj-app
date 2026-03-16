@@ -69,7 +69,6 @@ export default function ProfileForm({ userId }: Props) {
     setFormError(null);
     setSaved(false);
 
-    // バリデーション
     if (profile.start_date && profile.start_date > today) {
       setFormError("BJJ開始日に未来の日付は設定できません");
       return;
@@ -79,14 +78,34 @@ export default function ProfileForm({ userId }: Props) {
 
     const { error } = await supabase
       .from("profiles")
-      .upsert({ id: userId, ...profile, updated_at: new Date().toISOString() });
+      .upsert(
+        { id: userId, ...profile },
+        { onConflict: "id" }
+      );
 
     if (!error) {
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
       setToast({ message: "プロフィールを保存しました！", type: "success" });
     } else {
-      setToast({ message: "保存に失敗しました", type: "error" });
+      console.error("Profile save error:", error);
+      if (error.code === "PGRST204" || error.message?.includes("column") || error.message?.includes("schema")) {
+        const { error: fallbackError } = await supabase
+          .from("profiles")
+          .upsert(
+            { id: userId, belt: profile.belt, stripe: profile.stripe, gym: profile.gym },
+            { onConflict: "id" }
+          );
+        if (!fallbackError) {
+          setSaved(true);
+          setTimeout(() => setSaved(false), 3000);
+          setToast({ message: "一部保存しました。SQLマイグレーションを実行すると全項目保存できます。", type: "success" });
+        } else {
+          setToast({ message: `保存に失敗しました (${fallbackError.code || fallbackError.message})`, type: "error" });
+        }
+      } else {
+        setToast({ message: `保存に失敗しました: ${error.message || error.code || "不明なエラー"}`, type: "error" });
+      }
     }
     setLoading(false);
   };
@@ -234,14 +253,12 @@ export default function ProfileForm({ userId }: Props) {
         />
       </div>
 
-      {/* バリデーションエラー */}
       {formError && (
         <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">
           {formError}
         </div>
       )}
 
-      {/* 保存ボタン */}
       <button
         type="submit"
         disabled={loading}
