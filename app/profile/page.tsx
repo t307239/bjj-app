@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import ProfileForm from "@/components/ProfileForm";
+
+export const metadata: Metadata = {
+  title: "プロフィール",
+};
 
 export default async function ProfilePage() {
   const supabase = await createClient();

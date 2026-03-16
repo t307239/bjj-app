@@ -2,7 +2,8 @@
   "name": "BJJ App - Jiu-Jitsu Tracker",
   "short_name": "BJJ App",
   "description": "Brazilian Jiu-Jitsu training tracker",
-  "start_url": "/",
+  "start_url": "/dashboard",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#1a1a2e",
   "theme_color": "#1a1a2e",
@@ -21,5 +22,19 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["sports", "health", "fitness"]
+  "categories": ["sports", "health", "fitness"],
+  "shortcuts": [
+    {
+      "name": "練習を記録",
+      "short_name": "記録",
+      "description": "練習ログを追加する",
+      "url": "/dashboard"
+    },
+    {
+      "name": "テクニック帳",
+      "short_name": "テクニック",
+      "description": "テクニックを確認する",
+      "url": "/techniques"
+    }
+  ]
 }

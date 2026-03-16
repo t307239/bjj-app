@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import TrainingLog from "@/components/TrainingLog";
 import TrainingChart from "@/components/TrainingChart";
+
+export const metadata: Metadata = {
+  title: "ダッシュボード",
+};
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -29,25 +34,40 @@ export default async function DashboardPage() {
   const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
     .toISOString()
     .split("T")[0];
+  // 今週の月曜日を計算
+  const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon...
+  const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  const firstDayOfWeek = new Date(now.getTime() - daysToMonday * 86400000)
+    .toISOString()
+    .split("T")[0];
 
-  const [{ count: monthCount }, { count: totalCount }, { data: recentLogs }] =
-    await Promise.all([
-      supabase
-        .from("training_logs")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", user.id)
-        .gte("date", firstDayOfMonth),
-      supabase
-        .from("training_logs")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", user.id),
-      supabase
-        .from("training_logs")
-        .select("date")
-        .eq("user_id", user.id)
-        .order("date", { ascending: false })
-        .limit(60),
-    ]);
+  const [
+    { count: monthCount },
+    { count: weekCount },
+    { count: techniqueCount },
+    { data: recentLogs },
+  ] = await Promise.all([
+    supabase
+      .from("training_logs")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .gte("date", firstDayOfMonth),
+    supabase
+      .from("training_logs")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .gte("date", firstDayOfWeek),
+    supabase
+      .from("techniques")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id),
+    supabase
+      .from("training_logs")
+      .select("date")
+      .eq("user_id", user.id)
+      .order("date", { ascending: false })
+      .limit(60),
+  ]);
 
   // 連続練習日数を計算
   let streak = 0;
@@ -101,18 +121,26 @@ export default async function DashboardPage() {
         </div>
 
         {/* クイックスタッツ */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="grid grid-cols-2 gap-3 mb-3">
           <div className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-[#e94560]/40 transition-colors">
             <div className="text-2xl font-bold text-[#e94560]">
               {monthCount ?? 0}
             </div>
             <div className="text-gray-400 text-xs mt-1">今月の練習</div>
           </div>
+          <div className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-yellow-400/40 transition-colors">
+            <div className="text-2xl font-bold text-yellow-400">
+              {weekCount ?? 0}
+            </div>
+            <div className="text-gray-400 text-xs mt-1">今週の練習</div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3 mb-6">
           <Link href="/techniques" className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-blue-400/40 transition-colors block">
             <div className="text-2xl font-bold text-blue-400">
-              {totalCount ?? 0}
+              {techniqueCount ?? 0}
             </div>
-            <div className="text-gray-400 text-xs mt-1">総練習数</div>
+            <div className="text-gray-400 text-xs mt-1">習得テクニック</div>
           </Link>
           <Link href="/profile" className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-green-400/40 transition-colors block">
             <div className="text-2xl font-bold text-green-400">{streak}</div>

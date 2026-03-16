@@ -35,7 +35,9 @@ export default function ProfileForm({ userId }: Props) {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [saved, setSaved] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const today = new Date().toISOString().split("T")[0];
   const supabase = createClient();
 
   useEffect(() => {
@@ -64,8 +66,16 @@ export default function ProfileForm({ userId }: Props) {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setFormError(null);
     setSaved(false);
+
+    // バリデーション
+    if (profile.start_date && profile.start_date > today) {
+      setFormError("BJJ開始日に未来の日付は設定できません");
+      return;
+    }
+
+    setLoading(true);
 
     const { error } = await supabase
       .from("profiles")
@@ -194,6 +204,7 @@ export default function ProfileForm({ userId }: Props) {
         <input
           type="date"
           value={profile.start_date}
+          max={today}
           onChange={(e) => setProfile({ ...profile, start_date: e.target.value })}
           className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400"
         />
@@ -222,6 +233,13 @@ export default function ProfileForm({ userId }: Props) {
           className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400 resize-none"
         />
       </div>
+
+      {/* バリデーションエラー */}
+      {formError && (
+        <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">
+          {formError}
+        </div>
+      )}
 
       {/* 保存ボタン */}
       <button

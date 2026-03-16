@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import TechniqueLog from "@/components/TechniqueLog";
+
+export const metadata: Metadata = {
+  title: "テクニック帳",
+};
 
 export default async function TechniquesPage() {
   const supabase = await createClient();

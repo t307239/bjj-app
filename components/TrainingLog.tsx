@@ -33,9 +33,12 @@ export default function TrainingLog({ userId }: Props) {
   const [hasMore, setHasMore] = useState(false);
   const PAGE_SIZE = 20;
   const [showForm, setShowForm] = useState(false);
+  const [filterType, setFilterType] = useState("all");
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const today = new Date().toISOString().split("T")[0];
   const [form, setForm] = useState({
     date: new Date().toISOString().split("T")[0],
     duration_min: 60,
@@ -74,6 +77,18 @@ export default function TrainingLog({ userId }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
+
+    // バリデーション
+    if (form.date > today) {
+      setFormError("未来の日付は記録できません");
+      return;
+    }
+    if (form.duration_min < 1 || form.duration_min > 480) {
+      setFormError("練習時間は1〜480分の範囲で入力してください");
+      return;
+    }
+
     setLoading(true);
 
     const { data, error } = await supabase
@@ -163,6 +178,11 @@ export default function TrainingLog({ userId }: Props) {
     setLoadingMore(false);
   };
 
+  // タイプフィルタ
+  const filtered = filterType === "all"
+    ? entries
+    : entries.filter((e) => e.type === filterType);
+
   // 今月の合計時間
   const thisMonth = new Date().toISOString().slice(0, 7);
   const monthEntries = entries.filter((e) => e.date.startsWith(thisMonth));
@@ -170,7 +190,6 @@ export default function TrainingLog({ userId }: Props) {
   const monthHoursDisplay = monthTotalMins >= 60
     ? `${Math.floor(monthTotalMins / 60)}h${monthTotalMins % 60 > 0 ? `${monthTotalMins % 60}m` : ""}`
     : `${monthTotalMins}m`;
-  const monthHours = Math.round(monthTotalMins / 60);
 
   return (
     <div>
@@ -196,14 +215,17 @@ export default function TrainingLog({ userId }: Props) {
             </div>
             <div className="w-px h-8 bg-gray-700" />
             <div className="flex-1 text-center">
-              <div className="text-lg font-bold text-green-400">{entries.length}</div>
-              <div className="text-gray-400 text-xs">総記録数</div>
+              <div className="text-lg font-bold text-green-400">{entries.length}{hasMore ? "+" : ""}</div>
+              <div className="text-gray-400 text-xs">読込済み</div>
             </div>
           </div>
+          {hasMore && (
+            <p className="text-gray-600 text-xs text-center mt-2">※ 追加データあり。「もっと見る」で更新</p>
+          )}
         </div>
       )}
 
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <h3 className="text-lg font-semibold">練習記録</h3>
         <button
           onClick={() => setShowForm(!showForm)}
@@ -213,18 +235,55 @@ export default function TrainingLog({ userId }: Props) {
         </button>
       </div>
 
+      {/* タイプフィルター */}
+      {!initialLoading && entries.length > 0 && (
+        <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide">
+          <button
+            onClick={() => setFilterType("all")}
+            className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+              filterType === "all"
+                ? "bg-[#e94560] text-white"
+                : "bg-[#16213e] text-gray-400 border border-gray-700"
+            }`}
+          >
+            すべて
+          </button>
+          {TRAINING_TYPES.filter((t) =>
+            entries.some((e) => e.type === t.value)
+          ).map((t) => (
+            <button
+              key={t.value}
+              onClick={() => setFilterType(t.value)}
+              className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                filterType === t.value
+                  ? "bg-[#e94560] text-white"
+                  : "bg-[#16213e] text-gray-400 border border-gray-700"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* 記録フォーム */}
       {showForm && (
         <form
           onSubmit={handleSubmit}
           className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4"
         >
+          {formError && (
+            <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2 mb-3 text-red-400 text-xs">
+              {formError}
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
               <label className="block text-gray-400 text-xs mb-1">日付</label>
               <input
                 type="date"
                 value={form.date}
+                max={today}
                 onChange={(e) => setForm({ ...form, date: e.target.value })}
                 className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400"
                 required
@@ -282,7 +341,7 @@ export default function TrainingLog({ userId }: Props) {
             </button>
             <button
               type="button"
-              onClick={() => setShowForm(false)}
+              onClick={() => { setShowForm(false); setFormError(null); }}
               className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
             >
               キャンセル
@@ -314,9 +373,15 @@ export default function TrainingLog({ userId }: Props) {
         </div>
       )}
 
-      {!initialLoading && entries.length > 0 && (
+      {!initialLoading && entries.length > 0 && filtered.length === 0 && (
+        <div className="text-center py-8 text-gray-500 text-sm">
+          このタイプの記録はありません
+        </div>
+      )}
+
+      {!initialLoading && filtered.length > 0 && (
         <div className="space-y-3">
-          {entries.map((entry) => (
+          {filtered.map((entry) => (
             <div
               key={entry.id}
               className="bg-[#16213e] rounded-xl p-4 border border-gray-700"

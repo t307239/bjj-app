@@ -1,8 +1,27 @@
 "use client";
 
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-export default function LoginPage() {
+const errorMessages: Record<string, string> = {
+  auth: "認証に失敗しました。もう一度お試しください。",
+  callback: "コールバックエラーが発生しました。再度ログインしてください。",
+  access_denied: "アクセスが拒否されました。",
+};
+
+function ErrorBanner() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+  if (!error) return null;
+  return (
+    <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 mb-4 text-red-400 text-sm text-center">
+      {errorMessages[error] ?? "エラーが発生しました。もう一度お試しください。"}
+    </div>
+  );
+}
+
+function LoginForm() {
   const supabase = createClient();
 
   const signInWithGoogle = async () => {
@@ -33,6 +52,10 @@ export default function LoginPage() {
             ソーシャルアカウントで続ける
           </p>
         </div>
+
+        <Suspense fallback={null}>
+          <ErrorBanner />
+        </Suspense>
 
         <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700 space-y-3">
           {/* Google */}
@@ -79,4 +102,8 @@ export default function LoginPage() {
       </div>
     </main>
   );
+}
+
+export default function LoginPage() {
+  return <LoginForm />;
 }

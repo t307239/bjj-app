@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "BJJ App - Brazilian Jiu-Jitsu練習トラッカー",
+  description: "柔術の練習記録・テクニック管理・成長の可視化。無料で始めるBJJトレーニングアプリ。",
+};
 
 export default async function Home() {
   const supabase = await createClient();

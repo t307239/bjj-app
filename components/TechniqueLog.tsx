@@ -36,9 +36,11 @@ export default function TechniqueLog({ userId }: Props) {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [form, setForm] = useState({
     name: "",
@@ -74,11 +76,23 @@ export default function TechniqueLog({ userId }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
+
+    // バリデーション
+    if (!form.name.trim()) {
+      setFormError("テクニック名を入力してください");
+      return;
+    }
+    if (form.name.trim().length > 100) {
+      setFormError("テクニック名は100文字以内で入力してください");
+      return;
+    }
+
     setLoading(true);
 
     const { data, error } = await supabase
       .from("techniques")
-      .insert([{ ...form, user_id: userId }])
+      .insert([{ ...form, name: form.name.trim(), user_id: userId }])
       .select()
       .single();
 
@@ -146,10 +160,13 @@ export default function TechniqueLog({ userId }: Props) {
     }
   };
 
-  const filtered =
-    filterCategory === "all"
-      ? techniques
-      : techniques.filter((t) => t.category === filterCategory);
+  const filtered = techniques
+    .filter((t) => filterCategory === "all" || t.category === filterCategory)
+    .filter((t) =>
+      searchQuery === "" ||
+      t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (t.notes && t.notes.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
 
   return (
     <div>
@@ -196,6 +213,27 @@ export default function TechniqueLog({ userId }: Props) {
         </button>
       </div>
 
+      {/* 検索バー */}
+      {!initialLoading && techniques.length > 0 && (
+        <div className="relative mb-3">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="テクニック名・メモを検索..."
+            className="w-full bg-[#16213e] text-white rounded-xl px-4 py-2.5 text-sm border border-gray-700 focus:outline-none focus:border-blue-400 pl-9"
+          />
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          {searchQuery && (
+            <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white text-xs">
+              ✕
+            </button>
+          )}
+        </div>
+      )}
+
       {/* カテゴリフィルター */}
       {!initialLoading && techniques.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide">
@@ -233,6 +271,11 @@ export default function TechniqueLog({ userId }: Props) {
           onSubmit={handleSubmit}
           className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4"
         >
+          {formError && (
+            <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2 mb-3 text-red-400 text-xs">
+              {formError}
+            </div>
+          )}
           <div className="mb-3">
             <label className="block text-gray-400 text-xs mb-1">テクニック名</label>
             <input
@@ -299,7 +342,7 @@ export default function TechniqueLog({ userId }: Props) {
             </button>
             <button
               type="button"
-              onClick={() => setShowForm(false)}
+              onClick={() => { setShowForm(false); setFormError(null); }}
               className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
             >
               キャンセル
