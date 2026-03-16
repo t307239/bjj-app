@@ -12,7 +12,10 @@ export async function GET(request: Request) {
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`);
     }
+    console.error("[auth/callback] error:", JSON.stringify({ message: error.message, status: error.status, name: error.name }));
+    const msg = encodeURIComponent(error.message ?? "unknown");
+    return NextResponse.redirect(`${origin}/login?error=auth&msg=${msg}`);
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth`);
+  return NextResponse.redirect(`${origin}/login?error=nocode`);
 }
