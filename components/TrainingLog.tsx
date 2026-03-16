@@ -17,6 +17,60 @@ type Props = {
   userId: string;
 };
 
+const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
+
+function formatDuration(min: number): string {
+  if (min < 60) return `${min}m`;
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return m > 0 ? `${h}h${m}m` : `${h}h`;
+}
+
+function DurationPicker({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (v: number) => void;
+}) {
+  const isPreset = DURATION_PRESETS.includes(value);
+  return (
+    <div>
+      <label className="block text-gray-400 text-xs mb-1">時間</label>
+      <div className="flex flex-wrap gap-1.5 mb-2">
+        {DURATION_PRESETS.map((d) => (
+          <button
+            key={d}
+            type="button"
+            onClick={() => onChange(d)}
+            className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+              value === d
+                ? "bg-[#e94560] text-white"
+                : "bg-[#0f3460] text-gray-400 hover:text-white"
+            }`}
+          >
+            {formatDuration(d)}
+          </button>
+        ))}
+      </div>
+      <div className="flex items-center gap-2">
+        <input
+          type="number"
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+          min={1}
+          max={480}
+          step={15}
+          className={`w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border focus:outline-none focus:border-blue-400 ${
+            isPreset ? "border-gray-600" : "border-[#e94560]"
+          }`}
+        />
+        <span className="text-gray-500 text-xs flex-shrink-0">分</span>
+      </div>
+    </div>
+  );
+}
+
 const TRAINING_TYPES = [
   { value: "gi", label: "道衣 (Gi)", color: "bg-blue-500/20 text-blue-300" },
   { value: "nogi", label: "ノーギ (No-Gi)", color: "bg-orange-500/20 text-orange-300" },
@@ -53,7 +107,6 @@ export default function TrainingLog({ userId }: Props) {
   });
   const supabase = createClient();
 
-  // 初回データ読み込み
   useEffect(() => {
     const loadEntries = async () => {
       setInitialLoading(true);
@@ -79,7 +132,6 @@ export default function TrainingLog({ userId }: Props) {
     e.preventDefault();
     setFormError(null);
 
-    // バリデーション
     if (form.date > today) {
       setFormError("未来の日付は記録できません");
       return;
@@ -168,22 +220,19 @@ export default function TrainingLog({ userId }: Props) {
       .select("*")
       .eq("user_id", userId)
       .order("date", { ascending: false })
-      .range(entries.length, entries.length + PAGE_SIZE); // inclusive, fetches PAGE_SIZE+1 rows
+      .range(entries.length, entries.length + PAGE_SIZE);
 
     if (!error && data) {
-      // range(n, n+PAGE_SIZE) fetches PAGE_SIZE+1 rows
       setHasMore(data.length > PAGE_SIZE);
       setEntries([...entries, ...data.slice(0, PAGE_SIZE)]);
     }
     setLoadingMore(false);
   };
 
-  // タイプフィルタ
   const filtered = filterType === "all"
     ? entries
     : entries.filter((e) => e.type === filterType);
 
-  // 今月の合計時間
   const thisMonth = new Date().toISOString().slice(0, 7);
   const monthEntries = entries.filter((e) => e.date.startsWith(thisMonth));
   const monthTotalMins = monthEntries.reduce((sum, e) => sum + e.duration_min, 0);
@@ -200,7 +249,6 @@ export default function TrainingLog({ userId }: Props) {
           onClose={() => setToast(null)}
         />
       )}
-      {/* 月次サマリー */}
       {!initialLoading && entries.length > 0 && (
         <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
           <div className="flex items-center gap-4 text-sm">
@@ -235,7 +283,6 @@ export default function TrainingLog({ userId }: Props) {
         </button>
       </div>
 
-      {/* タイプフィルター */}
       {!initialLoading && entries.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide">
           <button
@@ -266,7 +313,6 @@ export default function TrainingLog({ userId }: Props) {
         </div>
       )}
 
-      {/* 記録フォーム */}
       {showForm && (
         <form
           onSubmit={handleSubmit}
@@ -277,32 +323,22 @@ export default function TrainingLog({ userId }: Props) {
               {formError}
             </div>
           )}
-          <div className="grid grid-cols-2 gap-3 mb-3">
-            <div>
-              <label className="block text-gray-400 text-xs mb-1">日付</label>
-              <input
-                type="date"
-                value={form.date}
-                max={today}
-                onChange={(e) => setForm({ ...form, date: e.target.value })}
-                className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-gray-400 text-xs mb-1">時間（分）</label>
-              <input
-                type="number"
-                value={form.duration_min}
-                onChange={(e) =>
-                  setForm({ ...form, duration_min: Number(e.target.value) })
-                }
-                min={1}
-                max={480}
-                className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400"
-                required
-              />
-            </div>
+          <div className="mb-3">
+            <label className="block text-gray-400 text-xs mb-1">日付</label>
+            <input
+              type="date"
+              value={form.date}
+              max={today}
+              onChange={(e) => setForm({ ...form, date: e.target.value })}
+              className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400"
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <DurationPicker
+              value={form.duration_min}
+              onChange={(v) => setForm({ ...form, duration_min: v })}
+            />
           </div>
 
           <div className="mb-3">
@@ -350,7 +386,6 @@ export default function TrainingLog({ userId }: Props) {
         </form>
       )}
 
-      {/* ローディング */}
       {initialLoading && (
         <div className="text-center py-8 text-gray-500">
           <div className="inline-block w-6 h-6 border-2 border-gray-600 border-t-[#e94560] rounded-full animate-spin mb-2" />
@@ -358,7 +393,6 @@ export default function TrainingLog({ userId }: Props) {
         </div>
       )}
 
-      {/* 記録一覧 */}
       {!initialLoading && entries.length === 0 && (
         <div className="text-center py-12">
           <div className="text-5xl mb-4">🥋</div>
@@ -387,21 +421,17 @@ export default function TrainingLog({ userId }: Props) {
               className="bg-[#16213e] rounded-xl p-4 border border-gray-700"
             >
               {editingId === entry.id ? (
-                /* インライン編集フォーム */
                 <form onSubmit={(e) => handleUpdate(e, entry.id)}>
-                  <div className="grid grid-cols-2 gap-2 mb-2">
+                  <div className="mb-2">
                     <input
                       type="date"
                       value={editForm.date}
                       onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
-                      className="bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-blue-400"
+                      className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-blue-400 mb-2"
                     />
-                    <input
-                      type="number"
+                    <DurationPicker
                       value={editForm.duration_min}
-                      onChange={(e) => setEditForm({ ...editForm, duration_min: Number(e.target.value) })}
-                      min={1} max={480}
-                      className="bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-blue-400"
+                      onChange={(v) => setEditForm({ ...editForm, duration_min: v })}
                     />
                   </div>
                   <select
@@ -429,7 +459,6 @@ export default function TrainingLog({ userId }: Props) {
                   </div>
                 </form>
               ) : (
-                /* 通常表示 */
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
@@ -479,7 +508,6 @@ export default function TrainingLog({ userId }: Props) {
         </div>
       )}
 
-      {/* もっと見るボタン */}
       {!initialLoading && hasMore && (
         <div className="text-center mt-4">
           <button
@@ -493,4 +521,4 @@ export default function TrainingLog({ userId }: Props) {
       )}
     </div>
   );
-}
+          }
