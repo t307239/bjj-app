@@ -1,0 +1,236 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
+
+type Log = {
+  id: string;
+  date: string;
+  type: string;
+  duration_min: number;
+  notes?: string;
+};
+
+type Props = {
+  userId: string;
+};
+
+const TYPE_COLORS: Record<string, string> = {
+  gi:          "bg-blue-500",
+  nogi:        "bg-orange-500",
+  drilling:    "bg-purple-500",
+  competition: "bg-red-500",
+  open_mat:    "bg-green-500",
+};
+
+const TYPE_LABEL: Record<string, string> = {
+  gi:          "Gi",
+  nogi:        "NoGi",
+  drilling:    "ドリル",
+  competition: "試合",
+  open_mat:    "オープン",
+};
+
+const WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"];
+
+function formatDuration(min: number): string {
+  if (min < 60) return `${min}分`;
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return m > 0 ? `${h}時間${m}分` : `${h}時間`;
+}
+
+export default function TrainingCalendar({ userId }: Props) {
+  const today = new Date();
+  const [year, setYear]   = useState(today.getFullYear());
+  const [month, setMonth] = useState(today.getMonth()); // 0-indexed
+  const [logs, setLogs]   = useState<Log[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
+  const supabase = createClient();
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      const firstDay = `${year}-${String(month + 1).padStart(2, "0")}-01`;
+      const lastDay  = new Date(year, month + 1, 0);
+      const lastStr  = `${year}-${String(month + 1).padStart(2, "0")}-${String(lastDay.getDate()).padStart(2, "0")}`;
+
+      const { data } = await supabase
+        .from("training_logs")
+        .select("id, date, type, duration_min, notes")
+        .eq("user_id", userId)
+        .gte("date", firstDay)
+        .lte("date", lastStr)
+        .order("date", { ascending: true });
+
+      setLogs(data ?? []);
+      setLoading(false);
+    };
+    load();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, year, month]);
+
+  const prevMonth = () => {
+    if (month === 0) { setMonth(11); setYear(y => y - 1); }
+    else setMonth(m => m - 1);
+    setSelectedDate(null);
+  };
+  const nextMonth = () => {
+    if (month === 11) { setMonth(0); setYear(y => y + 1); }
+    else setMonth(m => m + 1);
+    setSelectedDate(null);
+  };
+
+  // 日付ごとのログをまとめる
+  const logsByDate: Record<string, Log[]> = {};
+  logs.forEach(log => {
+    if (!logsByDate[log.date]) logsByDate[log.date] = [];
+    logsByDate[log.date].push(log);
+  });
+
+  // カレンダーグリッドを構築
+  const firstOfMonth = new Date(year, month, 1);
+  const startWeekday = firstOfMonth.getDay(); // 0=Sun
+  const daysInMonth  = new Date(year, month + 1, 0).getDate();
+
+  const cells: (number | null)[] = [
+    ...Array(startWeekday).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
+  // 6行になるようにpaddingを後ろに追加
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  const todayStr = today.toISOString().split("T")[0];
+  const totalSessions = logs.length;
+  const totalMinutes  = logs.reduce((s, l) => s + (l.duration_min || 0), 0);
+
+  const selectedLogs = selectedDate ? (logsByDate[selectedDate] ?? []) : [];
+
+  return (
+    <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-4 overflow-hidden">
+      {/* ヘッダー */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
+        <button
+          onClick={prevMonth}
+          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
+        >
+          ‹
+        </button>
+        <div className="text-center">
+          <div className="font-bold text-white">{year}年{month + 1}月</div>
+          {!loading && (
+            <div className="text-xs text-gray-500 mt-0.5">
+              {totalSessions}回 · {formatDuration(totalMinutes)}
+            </div>
+          )}
+        </div>
+        <button
+          onClick={nextMonth}
+          disabled={year === today.getFullYear() && month === today.getMonth()}
+          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-gray-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+        >
+          ›
+        </button>
+      </div>
+
+      {/* 曜日ヘッダー */}
+      <div className="grid grid-cols-7 border-b border-gray-700/50">
+        {WEEKDAYS.map((d, i) => (
+          <div
+            key={d}
+            className={`text-center text-[11px] py-2 font-medium ${
+              i === 0 ? "text-red-400" : i === 6 ? "text-blue-400" : "text-gray-500"
+            }`}
+          >
+            {d}
+          </div>
+        ))}
+      </div>
+
+      {/* カレンダーグリッド */}
+      {loading ? (
+        <div className="py-10 text-center text-gray-600 text-sm">読み込み中...</div>
+      ) : (
+        <div className="grid grid-cols-7">
+          {cells.map((day, idx) => {
+            if (day === null) {
+              return <div key={`empty-${idx}`} className="aspect-square p-1" />;
+            }
+            const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+            const dayLogs = logsByDate[dateStr] ?? [];
+            const hasLogs = dayLogs.length > 0;
+            const isToday = dateStr === todayStr;
+            const isSelected = dateStr === selectedDate;
+            const weekday = (startWeekday + day - 1) % 7;
+
+            return (
+              <button
+                key={dateStr}
+                onClick={() => setSelectedDate(isSelected ? null : dateStr)}
+                className={`aspect-square p-1 flex flex-col items-center justify-start transition-colors rounded-lg m-0.5
+                  ${isSelected ? "bg-gray-700 ring-1 ring-[#e94560]" : hasLogs ? "hover:bg-gray-700/50" : "hover:bg-gray-800/30"}
+                  ${!hasLogs ? "cursor-default" : "cursor-pointer"}`}
+              >
+                {/* 日付番号 */}
+                <div className={`text-[11px] font-medium w-5 h-5 flex items-center justify-center rounded-full
+                  ${isToday ? "bg-[#e94560] text-white" : weekday === 0 ? "text-red-400" : weekday === 6 ? "text-blue-400" : "text-gray-300"}`}
+                >
+                  {day}
+                </div>
+                {/* タイプドット */}
+                {hasLogs && (
+                  <div className="flex flex-wrap gap-0.5 mt-0.5 justify-center">
+                    {dayLogs.slice(0, 3).map((log, i) => (
+                      <div
+                        key={i}
+                        className={`w-1.5 h-1.5 rounded-full ${TYPE_COLORS[log.type] ?? "bg-gray-400"}`}
+                      />
+                    ))}
+                    {dayLogs.length > 3 && (
+                      <div className="text-[8px] text-gray-500">+</div>
+                    )}
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* 選択日の詳細パネル */}
+      {selectedDate && selectedLogs.length > 0 && (
+        <div className="border-t border-gray-700 px-4 py-3 space-y-2">
+          <div className="text-xs text-gray-500 font-medium">
+            {parseInt(selectedDate.split("-")[2])}日の記録
+          </div>
+          {selectedLogs.map(log => (
+            <div key={log.id} className="flex items-start gap-3 bg-gray-800/50 rounded-lg px-3 py-2">
+              <div className={`w-2 h-2 rounded-full mt-1 flex-shrink-0 ${TYPE_COLORS[log.type] ?? "bg-gray-400"}`} />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-medium text-white">{TYPE_LABEL[log.type] ?? log.type}</span>
+                  <span className="text-xs text-gray-500">{formatDuration(log.duration_min)}</span>
+                </div>
+                {log.notes && (
+                  <p className="text-xs text-gray-400 mt-0.5 truncate">{log.notes}</p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 凡例 */}
+      <div className="border-t border-gray-700/50 px-4 py-2 flex flex-wrap gap-3">
+        {Object.entries(TYPE_LABEL).map(([key, label]) => (
+          <div key={key} className="flex items-center gap-1">
+            <div className={`w-2 h-2 rounded-full ${TYPE_COLORS[key]}`} />
+            <span className="text-[10px] text-gray-500">{label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
