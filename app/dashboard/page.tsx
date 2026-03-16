@@ -5,6 +5,7 @@ import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import TrainingLog from "@/components/TrainingLog";
 import TrainingChart from "@/components/TrainingChart";
+import TrainingCalendar from "@/components/TrainingCalendar";
 
 export const metadata: Metadata = {
   title: "ダッシュボード",
@@ -148,7 +149,10 @@ export default async function DashboardPage() {
           </Link>
         </div>
 
-        {/* アクティビティチャート */}
+        {/* 月カレンダー */}
+        <TrainingCalendar userId={user.id} />
+
+        {/* アクティビティヒートマップ */}
         <TrainingChart userId={user.id} />
 
         {/* 練習記録コンポーネント */}
