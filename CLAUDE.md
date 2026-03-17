@@ -1,4 +1,30 @@
 ## 📝 開発ログ
+- Day 4eo (2026/03/17): **Batch H — PersonalBests拡張・月別グラフ6/12切替・タイプ分布期間フィルター・テクニックソート・WeeklyStrip新規** 🎉
+  **実装内容（6コミット）**:
+    - H1: `components/PersonalBests.tsx` 修正（commit: `62222e4d`）✅ — 4→6統計カードに拡張
+      - `Bests` 型に `avgSessionMin` / `avgMonthly` 追加
+      - avgSessionMin = round(totalMinutes/totalSessions) 計算
+      - avgMonthly = round(totalSessions/monthKeys.length) 計算
+      - アイテム配列を6件に: ⌛平均時間/回 + 📈月平均 追加
+    - H2: `components/TrainingBarChart.tsx` 完全再構築（commit: `32cf5e92`）✅ — 6/12ヶ月範囲切替
+      - data6 / data12 状態 + range: 6 | 12 state
+      - buildBuckets(months) 関数で単一クエリから両方構築
+      - 6月/12月トグルボタン追加（ヘッダー右上）
+    - H3: `components/TrainingTypeChart.tsx` 修正（commit: `20911f5f`）✅ — 期間フィルター追加
+      - allLogs に date+type 保存、period: "all"|"month"|"week" state
+      - getPeriodStart(period) / toLocalDateStr(d) ヘルパー追加
+      - クライアントサイドフィルター（全期間/今月/今週 3ボタン）
+    - H4: `components/TechniqueLog.tsx` 修正（commit: `8073f83b`）✅ — ソートドロップダウン追加
+      - sortBy: "newest"|"mastery_desc"|"mastery_asc"|"name" state
+      - .slice().sort() で4モードソート
+      - select ドロップダウンをヘッダータイトル横に配置
+    - H5: `components/WeeklyStrip.tsx` 新規作成（commit: `9c141068`）✅ — 今週練習ドットストリップ
+      - 月〜日の7つの円ドット表示（練習済=赤チェック、今日=赤枠、過去=灰、未来=薄灰）
+      - 今週月曜〜日曜のSupabase日付範囲クエリ
+      - ヘッダーに trainedThisWeek/totalPastDays 日カウント表示
+    - H6: `app/dashboard/page.tsx` 修正（commit: `623e4b31`）✅ — WeeklyStrip統合
+  **バグチェック**: 6ファイル全確認、✅ TOTAL ISSUES: 0
+
 - Day 4ej+G (2026/03/17): **Batch G — UX改善バッチ完了** 🎉
   **実装内容**:
     - G1: `components/TrainingBarChart.tsx` 修正 ✅ (commit: `c312bb6e`)
