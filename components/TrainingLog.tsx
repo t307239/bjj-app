@@ -143,6 +143,8 @@ export default function TrainingLog({ userId }: Props) {
   const [showForm, setShowForm] = useState(false);
   const [filterType, setFilterType] = useState("all");
   const [periodFilter, setPeriodFilter] = useState<"all" | "month" | "week">("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
@@ -318,6 +320,8 @@ export default function TrainingLog({ userId }: Props) {
   const filtered = entries
     .filter((e) => filterType === "all" || e.type === filterType)
     .filter((e) => !periodStart || e.date >= periodStart)
+    .filter((e) => !dateFrom || e.date >= dateFrom)
+    .filter((e) => !dateTo || e.date <= dateTo)
     .filter((e) => {
       if (!searchQuery.trim()) return true;
       const q = searchQuery.toLowerCase();
@@ -433,6 +437,68 @@ export default function TrainingLog({ userId }: Props) {
         </div>
       )}
 
+      {/* 日付範囲フィルター */}
+      {!initialLoading && entries.length > 0 && (dateFrom || dateTo) ? (
+        <div className="flex items-center gap-2 mb-2">
+          <input
+            type="date"
+            value={dateFrom}
+            max={dateTo || today}
+            onChange={(e) => setDateFrom(e.target.value)}
+            className="flex-1 bg-[#16213e] text-white text-xs rounded-lg px-2 py-1.5 border border-gray-700 focus:outline-none focus:border-[#e94560]/60"
+          />
+          <span className="text-gray-600 text-xs">〜</span>
+          <input
+            type="date"
+            value={dateTo}
+            min={dateFrom}
+            max={today}
+            onChange={(e) => setDateTo(e.target.value)}
+            className="flex-1 bg-[#16213e] text-white text-xs rounded-lg px-2 py-1.5 border border-gray-700 focus:outline-none focus:border-[#e94560]/60"
+          />
+          {(dateFrom || dateTo) && (
+            <button onClick={() => { setDateFrom(""); setDateTo(""); }} className="text-gray-500 hover:text-white text-xs px-2">
+              ✕
+            </button>
+          )}
+        </div>
+      ) : null}
+
+      {/* 日付範囲ボタン（未設定時） */}
+      {!initialLoading && entries.length > 0 && !dateFrom && !dateTo && (
+        <div className="flex gap-1.5 mb-2">
+          <button
+            onClick={() => { setDateFrom(""); setDateTo(""); }}
+            className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors text-gray-600 border border-gray-800 hover:border-gray-700 hover:text-gray-400"
+          >
+            📅 日付絞込
+          </button>
+          {[
+            { label: "先週", fn: () => {
+              const now = new Date();
+              const dow = now.getDay();
+              const daysToMon = dow === 0 ? 6 : dow - 1;
+              const lastMon = new Date(now); lastMon.setDate(now.getDate() - daysToMon - 7);
+              const lastSun = new Date(lastMon); lastSun.setDate(lastMon.getDate() + 6);
+              const fmt = (d: Date) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+              setDateFrom(fmt(lastMon)); setDateTo(fmt(lastSun));
+            }},
+            { label: "先月", fn: () => {
+              const now = new Date();
+              const y = now.getMonth() === 0 ? now.getFullYear()-1 : now.getFullYear();
+              const m = now.getMonth() === 0 ? 12 : now.getMonth();
+              const lastDay = new Date(y, m, 0).getDate();
+              setDateFrom(`${y}-${String(m).padStart(2,'0')}-01`);
+              setDateTo(`${y}-${String(m).padStart(2,'0')}-${lastDay}`);
+            }},
+          ].map(({ label, fn }) => (
+            <button key={label} onClick={fn}
+              className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors text-gray-600 border border-gray-800 hover:border-gray-700 hover:text-gray-400"
+            >{label}</button>
+          ))}
+        </div>
+      )}
+
       {/* タイプフィルター */}
       {!initialLoading && entries.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide">
@@ -476,7 +542,18 @@ export default function TrainingLog({ userId }: Props) {
             </div>
           )}
           <div className="mb-3">
-            <label className="block text-gray-400 text-xs mb-1">日付</label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-gray-400 text-xs">日付</label>
+              {form.date !== today && (
+                <button
+                  type="button"
+                  onClick={() => setForm({ ...form, date: today })}
+                  className="text-[10px] text-[#e94560] hover:text-[#c73652] font-medium"
+                >
+                  今日に戻す
+                </button>
+              )}
+            </div>
             <input
               type="date"
               value={form.date}
