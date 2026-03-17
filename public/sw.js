@@ -1,5 +1,5 @@
 // BJJ App Service Worker — PWA offline cache
-const CACHE_NAME = "bjj-app-v1";
+const CACHE_NAME = "bjj-app-20260317";
 const PRECACHE = ["/", "/login", "/manifest.json", "/icon-192.png", "/favicon.ico"];
 
 self.addEventListener("install", (event) => {
