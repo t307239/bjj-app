@@ -75,6 +75,7 @@ function DonutSegment({
 export default function CompetitionStats({ userId }: Props) {
   const [record, setRecord] = useState<CompRecord | null>(null);
   const [loading, setLoading] = useState(true);
+  const [monthlyBreakdown, setMonthlyBreakdown] = useState<Record<string, { w: number; l: number; d: number }>>({});
   const supabase = createClient();
 
   useEffect(() => {
@@ -128,6 +129,19 @@ export default function CompetitionStats({ userId }: Props) {
         rec.currentWinStreak = streak;
         rec.bestWinStreak = best;
         setRecord(rec);
+        // Monthly breakdown
+        const monthly: Record<string, { w: number; l: number; d: number }> = {};
+        data.forEach((log) => {
+          const ym = (log.date ?? "").slice(0, 7);
+          if (!ym) return;
+          if (!monthly[ym]) monthly[ym] = { w: 0, l: 0, d: 0 };
+          const e2 = decodeEntry(log.notes ?? "");
+          if (!e2) return;
+          if (e2.result === "win") monthly[ym].w++;
+          else if (e2.result === "loss") monthly[ym].l++;
+          else if (e2.result === "draw") monthly[ym].d++;
+        });
+        setMonthlyBreakdown(monthly);
       }
       setLoading(false);
     };
@@ -272,6 +286,24 @@ export default function CompetitionStats({ userId }: Props) {
           </div>
         </div>
       )}
-    </div>
+          {Object.keys(monthlyBreakdown).length > 1 && (
+        <div className="mt-4 pt-3 border-t border-gray-700/50">
+          <p className="text-xs text-gray-500 mb-2">月別成績</p>
+          <div className="flex flex-col gap-1">
+            {Object.entries(monthlyBreakdown)
+              .sort((a, b) => b[0].localeCompare(a[0]))
+              .slice(0, 6)
+              .map(([ym, v]) => (
+                <div key={ym} className="flex items-center gap-2 text-xs">
+                  <span className="text-gray-500 w-16">{ym.slice(0, 4)}年{parseInt(ym.slice(5))}月</span>
+                  <span className="text-green-400">▲{v.w}</span>
+                  <span className="text-red-400">▼{v.l}</span>
+                  {v.d > 0 && <span className="text-gray-400">—{v.d}</span>}
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+</div>
   );
 }
