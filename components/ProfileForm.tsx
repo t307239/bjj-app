@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 import Toast from "./Toast";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 type Profile = {
   belt: string;
@@ -15,6 +17,78 @@ type Profile = {
 type Props = {
   userId: string;
 };
+
+// JST対応: toISOString()はUTCなので、ローカル日付を返すヘルパー
+function getLocalDateString(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function calcBjjMonths(startDate: string): number {
+  return Math.floor(
+    (new Date().getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24 * 30)
+  );
+}
+
+function DeleteAccountSection({ userId, supabase }: { userId: string; supabase: SupabaseClient }) {
+  const router = useRouter();
+  const [confirm, setConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    // ユーザーデータを全削除（RLSで本人のみ削除可能）
+    await supabase.from("training_logs").delete().eq("user_id", userId);
+    await supabase.from("techniques").delete().eq("user_id", userId);
+    await supabase.from("profiles").delete().eq("id", userId);
+    await supabase.auth.signOut();
+    router.push("/?deleted=1");
+  };
+
+  if (!confirm) {
+    return (
+      <div className="mt-10 border-t border-gray-800 pt-6">
+        <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-3">アカウント</h3>
+        <button
+          type="button"
+          onClick={() => setConfirm(true)}
+          className="text-red-500 hover:text-red-400 text-sm underline"
+        >
+          退会する（データをすべて削除）
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-10 border-t border-gray-800 pt-6">
+      <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-3">アカウント</h3>
+      <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+        <p className="text-red-400 text-sm font-semibold mb-1">本当に退会しますか？</p>
+        <p className="text-gray-400 text-xs mb-4">
+          練習記録・テクニックノート・プロフィールがすべて削除されます。この操作は取り消せません。
+        </p>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={deleting}
+            className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold py-2 rounded-lg text-sm"
+          >
+            {deleting ? "削除中..." : "はい、退会します"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setConfirm(false)}
+            className="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-300 font-bold py-2 rounded-lg text-sm"
+          >
+            キャンセル
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const BELTS = [
   { value: "white", label: "白帯", color: "bg-white text-gray-900" },
@@ -37,7 +111,8 @@ export default function ProfileForm({ userId }: Props) {
   const [saved, setSaved] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
-  const today = new Date().toISOString().split("T")[0];
+  const [savedProfile, setSavedProfile] = useState<Profile | null>(null);
+  const today = getLocalDateString();
   const supabase = createClient();
 
   useEffect(() => {
@@ -50,13 +125,15 @@ export default function ProfileForm({ userId }: Props) {
         .single();
 
       if (data) {
-        setProfile({
+        const loaded: Profile = {
           belt: data.belt || "white",
           stripe: data.stripe || 0,
           gym: data.gym || "",
           bio: data.bio || "",
           start_date: data.start_date || "",
-        });
+        };
+        setProfile(loaded);
+        setSavedProfile(loaded);
       }
       setInitialLoading(false);
     };
@@ -69,6 +146,7 @@ export default function ProfileForm({ userId }: Props) {
     setFormError(null);
     setSaved(false);
 
+    // バリデーション
     if (profile.start_date && profile.start_date > today) {
       setFormError("BJJ開始日に未来の日付は設定できません");
       return;
@@ -85,27 +163,12 @@ export default function ProfileForm({ userId }: Props) {
 
     if (!error) {
       setSaved(true);
+      setSavedProfile({ ...profile });
       setTimeout(() => setSaved(false), 3000);
       setToast({ message: "プロフィールを保存しました！", type: "success" });
     } else {
       console.error("Profile save error:", error);
-      if (error.code === "PGRST204" || error.message?.includes("column") || error.message?.includes("schema")) {
-        const { error: fallbackError } = await supabase
-          .from("profiles")
-          .upsert(
-            { id: userId, belt: profile.belt, stripe: profile.stripe, gym: profile.gym },
-            { onConflict: "id" }
-          );
-        if (!fallbackError) {
-          setSaved(true);
-          setTimeout(() => setSaved(false), 3000);
-          setToast({ message: "一部保存しました。SQLマイグレーションを実行すると全項目保存できます。", type: "success" });
-        } else {
-          setToast({ message: `保存に失敗しました (${fallbackError.code || fallbackError.message})`, type: "error" });
-        }
-      } else {
-        setToast({ message: `保存に失敗しました: ${error.message || error.code || "不明なエラー"}`, type: "error" });
-      }
+      setToast({ message: `保存に失敗しました: ${error.message || error.code || "不明なエラー"}`, type: "error" });
     }
     setLoading(false);
   };
@@ -130,13 +193,42 @@ export default function ProfileForm({ userId }: Props) {
           onClose={() => setToast(null)}
         />
       )}
+
+      {/* 保存済みプロフィールサマリーカード */}
+      {savedProfile && (
+        <div className="bg-gradient-to-br from-[#16213e] to-[#0f3460] rounded-xl p-5 border border-gray-700 mb-6">
+          <h3 className="text-xs text-gray-500 uppercase tracking-wider mb-3">現在のプロフィール</h3>
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-2">
+              <span className={`px-4 py-1 rounded-full text-sm font-bold ${BELTS.find(b => b.value === savedProfile.belt)?.color}`}>
+                {BELTS.find(b => b.value === savedProfile.belt)?.label}
+              </span>
+              <div className="flex gap-1">
+                {[1,2,3,4].map(s => (
+                  <div key={s} className={`w-2.5 h-2.5 rounded-full border ${s <= savedProfile.stripe ? "bg-white border-white" : "bg-transparent border-gray-600"}`} />
+                ))}
+              </div>
+            </div>
+            {savedProfile.gym && (
+              <span className="text-gray-300 text-sm">🏛 {savedProfile.gym}</span>
+            )}
+            {savedProfile.start_date && (
+              <span className="text-gray-300 text-sm">
+                🥋 BJJ歴 {calcBjjMonths(savedProfile.start_date)}ヶ月
+              </span>
+            )}
+          </div>
+          {savedProfile.bio && (
+            <p className="text-gray-400 text-sm mt-3 border-t border-gray-700 pt-3 line-clamp-2">{savedProfile.bio}</p>
+          )}
+        </div>
+      )}
+
       <form onSubmit={handleSave} className="space-y-6">
       {/* 帯表示 */}
       <div className="bg-[#16213e] rounded-xl p-6 border border-gray-700 text-center">
         <div className="inline-flex items-center gap-3 mb-2">
-          <span
-            className={`px-6 py-2 rounded-full text-sm font-bold ${currentBelt?.color}`}
-          >
+          <span className={`px-6 py-2 rounded-full text-sm font-bold ${currentBelt?.color}`}>
             {currentBelt?.label}
           </span>
           <div className="flex gap-1">
@@ -229,12 +321,7 @@ export default function ProfileForm({ userId }: Props) {
         />
         {profile.start_date && (
           <p className="text-gray-500 text-xs mt-1">
-            BJJ歴:{" "}
-            {Math.floor(
-              (new Date().getTime() - new Date(profile.start_date).getTime()) /
-                (1000 * 60 * 60 * 24 * 30)
-            )}
-            ヶ月
+            BJJ歴: {Math.floor((new Date().getTime() - new Date(profile.start_date).getTime()) / (1000 * 60 * 60 * 24 * 30))}ヶ月
           </p>
         )}
       </div>
@@ -253,12 +340,14 @@ export default function ProfileForm({ userId }: Props) {
         />
       </div>
 
+      {/* バリデーションエラー */}
       {formError && (
         <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">
           {formError}
         </div>
       )}
 
+      {/* 保存ボタン */}
       <button
         type="submit"
         disabled={loading}
@@ -267,6 +356,9 @@ export default function ProfileForm({ userId }: Props) {
         {loading ? "保存中..." : saved ? "✓ 保存しました" : "プロフィールを保存"}
       </button>
     </form>
+
+    {/* 退会セクション */}
+    <DeleteAccountSection userId={userId} supabase={supabase} />
     </>
   );
 }
