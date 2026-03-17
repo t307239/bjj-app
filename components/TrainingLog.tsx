@@ -20,7 +20,7 @@ type Props = {
 
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
 
-// JSTå¯¾å¿: toISOString()ã¯UTCãªã®ã§ãã­ã¼ã«ã«æ¥ä»ãè¿ããã«ãã¼
+// JSTÃ¥Â¯Â¾Ã¥Â¿Â: toISOString()Ã£ÂÂ¯UTCÃ£ÂÂªÃ£ÂÂ®Ã£ÂÂ§Ã£ÂÂÃ£ÂÂ­Ã£ÂÂ¼Ã£ÂÂ«Ã£ÂÂ«Ã¦ÂÂ¥Ã¤Â»ÂÃ£ÂÂÃ¨Â¿ÂÃ£ÂÂÃ£ÂÂÃ£ÂÂ«Ã£ÂÂÃ£ÂÂ¼
 function getLocalDateString(): string {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -33,7 +33,7 @@ function formatDuration(min: number): string {
   return m > 0 ? `${h}h${m}m` : `${h}h`;
 }
 
-// è©¦åè©³ç´°ãã¼ã¿ã®ã¨ã³ã³ã¼ã/ãã³ã¼ãï¼DBã¹ã­ã¼ãå¤æ´ä¸è¦ï¼
+// Ã¨Â©Â¦Ã¥ÂÂÃ¨Â©Â³Ã§Â´Â°Ã£ÂÂÃ£ÂÂ¼Ã£ÂÂ¿Ã£ÂÂ®Ã£ÂÂ¨Ã£ÂÂ³Ã£ÂÂ³Ã£ÂÂ¼Ã£ÂÂ/Ã£ÂÂÃ£ÂÂ³Ã£ÂÂ¼Ã£ÂÂÃ¯Â¼ÂDBÃ£ÂÂ¹Ã£ÂÂ­Ã£ÂÂ¼Ã£ÂÂÃ¥Â¤ÂÃ¦ÂÂ´Ã¤Â¸ÂÃ¨Â¦ÂÃ¯Â¼Â
 type CompData = { result: string; opponent: string; finish: string; event: string };
 const COMP_PREFIX = "__comp__";
 
@@ -57,25 +57,25 @@ function decodeCompNotes(notes: string): { comp: CompData | null; userNotes: str
 }
 
 const RESULT_LABELS: Record<string, { label: string; color: string }> = {
-  win:  { label: "åå© ð", color: "text-green-400" },
-  loss: { label: "æå", color: "text-red-400" },
-  draw: { label: "å¼ãåã", color: "text-yellow-400" },
+  win:  { label: "Ã¥ÂÂÃ¥ÂÂ© Ã°ÂÂÂ", color: "text-green-400" },
+  loss: { label: "Ã¦ÂÂÃ¥ÂÂ", color: "text-red-400" },
+  draw: { label: "Ã¥Â¼ÂÃ£ÂÂÃ¥ÂÂÃ£ÂÂ", color: "text-yellow-400" },
 };
 
 function buildXShareUrl(entry: { date: string; duration_min: number; type: string; notes: string }): string {
   const typeLabels: Record<string, string> = {
-    gi: "éè¡£(Gi)", nogi: "ãã¼ã®", drilling: "ããªã«", competition: "è©¦å", open_mat: "ãªã¼ãã³ããã",
+    gi: "Ã©ÂÂÃ¨Â¡Â£(Gi)", nogi: "Ã£ÂÂÃ£ÂÂ¼Ã£ÂÂ®", drilling: "Ã£ÂÂÃ£ÂÂªÃ£ÂÂ«", competition: "Ã¨Â©Â¦Ã¥ÂÂ", open_mat: "Ã£ÂÂªÃ£ÂÂ¼Ã£ÂÂÃ£ÂÂ³Ã£ÂÂÃ£ÂÂÃ£ÂÂ",
   };
   const dur = entry.duration_min >= 60
-    ? `${Math.floor(entry.duration_min / 60)}æé${entry.duration_min % 60 > 0 ? `${entry.duration_min % 60}å` : ""}`
-    : `${entry.duration_min}å`;
+    ? `${Math.floor(entry.duration_min / 60)}Ã¦ÂÂÃ©ÂÂ${entry.duration_min % 60 > 0 ? `${entry.duration_min % 60}Ã¥ÂÂ` : ""}`
+    : `${entry.duration_min}Ã¥ÂÂ`;
   const lines = [
-    `ð¥ BJJç·´ç¿ãã¾ããï¼ (${entry.date})`,
-    `â± ${dur} | ${typeLabels[entry.type] ?? entry.type}`,
-    entry.notes ? `ð ${entry.notes}` : "",
+    `Ã°ÂÂ¥Â BJJÃ§Â·Â´Ã§Â¿ÂÃ£ÂÂÃ£ÂÂ¾Ã£ÂÂÃ£ÂÂÃ¯Â¼Â (${entry.date})`,
+    `Ã¢ÂÂ± ${dur} | ${typeLabels[entry.type] ?? entry.type}`,
+    entry.notes ? `Ã°ÂÂÂ ${entry.notes}` : "",
     "",
-    "ç·´ç¿è¨é² â https://bjj-app-one.vercel.app",
-    "#BJJ #æè¡ #ãã©ã¸ãªã¢ã³æè¡",
+    "Ã§Â·Â´Ã§Â¿ÂÃ¨Â¨ÂÃ©ÂÂ² Ã¢ÂÂ https://bjj-app-one.vercel.app",
+    "#BJJ #Ã¦ÂÂÃ¨Â¡Â #Ã£ÂÂÃ£ÂÂ©Ã£ÂÂ¸Ã£ÂÂªÃ£ÂÂ¢Ã£ÂÂ³Ã¦ÂÂÃ¨Â¡Â",
   ].filter(Boolean).join("\n");
   return `https://x.com/intent/tweet?text=${encodeURIComponent(lines)}`;
 }
@@ -90,7 +90,7 @@ function DurationPicker({
   const isPreset = DURATION_PRESETS.includes(value);
   return (
     <div>
-      <label className="block text-gray-400 text-xs mb-1">æé</label>
+      <label className="block text-gray-400 text-xs mb-1">Ã¦ÂÂÃ©ÂÂ</label>
       <div className="flex flex-wrap gap-1.5 mb-2">
         {DURATION_PRESETS.map((d) => (
           <button
@@ -119,18 +119,18 @@ function DurationPicker({
             isPreset ? "border-gray-600" : "border-[#e94560]"
           }`}
         />
-        <span className="text-gray-500 text-xs flex-shrink-0">å</span>
+        <span className="text-gray-500 text-xs flex-shrink-0">Ã¥ÂÂ</span>
       </div>
     </div>
   );
 }
 
 const TRAINING_TYPES = [
-  { value: "gi", label: "éè¡£ (Gi)", color: "bg-blue-500/20 text-blue-300" },
-  { value: "nogi", label: "ãã¼ã® (No-Gi)", color: "bg-orange-500/20 text-orange-300" },
-  { value: "drilling", label: "ããªã«", color: "bg-purple-500/20 text-purple-300" },
-  { value: "competition", label: "è©¦å", color: "bg-red-500/20 text-red-300" },
-  { value: "open_mat", label: "ãªã¼ãã³ããã", color: "bg-green-500/20 text-green-300" },
+  { value: "gi", label: "Ã©ÂÂÃ¨Â¡Â£ (Gi)", color: "bg-blue-500/20 text-blue-300" },
+  { value: "nogi", label: "Ã£ÂÂÃ£ÂÂ¼Ã£ÂÂ® (No-Gi)", color: "bg-orange-500/20 text-orange-300" },
+  { value: "drilling", label: "Ã£ÂÂÃ£ÂÂªÃ£ÂÂ«", color: "bg-purple-500/20 text-purple-300" },
+  { value: "competition", label: "Ã¨Â©Â¦Ã¥ÂÂ", color: "bg-red-500/20 text-red-300" },
+  { value: "open_mat", label: "Ã£ÂÂªÃ£ÂÂ¼Ã£ÂÂÃ£ÂÂ³Ã£ÂÂÃ£ÂÂÃ£ÂÂ", color: "bg-green-500/20 text-green-300" },
 ];
 
 export default function TrainingLog({ userId }: Props) {
@@ -170,7 +170,7 @@ export default function TrainingLog({ userId }: Props) {
   });
   const supabase = createClient();
 
-  // ååãã¼ã¿èª­ã¿è¾¼ã¿
+  // Ã¥ÂÂÃ¥ÂÂÃ£ÂÂÃ£ÂÂ¼Ã£ÂÂ¿Ã¨ÂªÂ­Ã£ÂÂ¿Ã¨Â¾Â¼Ã£ÂÂ¿
   useEffect(() => {
     const loadEntries = async () => {
       setInitialLoading(true);
@@ -200,19 +200,19 @@ export default function TrainingLog({ userId }: Props) {
     e.preventDefault();
     setFormError(null);
 
-    // ããªãã¼ã·ã§ã³
+    // Ã£ÂÂÃ£ÂÂªÃ£ÂÂÃ£ÂÂ¼Ã£ÂÂ·Ã£ÂÂ§Ã£ÂÂ³
     if (form.date > today) {
-      setFormError("æªæ¥ã®æ¥ä»ã¯è¨é²ã§ãã¾ãã");
+      setFormError("Ã¦ÂÂªÃ¦ÂÂ¥Ã£ÂÂ®Ã¦ÂÂ¥Ã¤Â»ÂÃ£ÂÂ¯Ã¨Â¨ÂÃ©ÂÂ²Ã£ÂÂ§Ã£ÂÂÃ£ÂÂ¾Ã£ÂÂÃ£ÂÂ");
       return;
     }
     if (form.duration_min < 1 || form.duration_min > 480) {
-      setFormError("ç·´ç¿æéã¯1ã480åã®ç¯å²ã§å¥åãã¦ãã ãã");
+      setFormError("Ã§Â·Â´Ã§Â¿ÂÃ¦ÂÂÃ©ÂÂÃ£ÂÂ¯1Ã£ÂÂ480Ã¥ÂÂÃ£ÂÂ®Ã§Â¯ÂÃ¥ÂÂ²Ã£ÂÂ§Ã¥ÂÂ¥Ã¥ÂÂÃ£ÂÂÃ£ÂÂ¦Ã£ÂÂÃ£ÂÂ Ã£ÂÂÃ£ÂÂ");
       return;
     }
 
     setLoading(true);
 
-    // è©¦åã¿ã¤ãã®å ´åã¯è©³ç´°ãã¼ã¿ãnotesã«ã¨ã³ã³ã¼ã
+    // Ã¨Â©Â¦Ã¥ÂÂÃ£ÂÂ¿Ã£ÂÂ¤Ã£ÂÂÃ£ÂÂ®Ã¥Â Â´Ã¥ÂÂÃ£ÂÂ¯Ã¨Â©Â³Ã§Â´Â°Ã£ÂÂÃ£ÂÂ¼Ã£ÂÂ¿Ã£ÂÂnotesÃ£ÂÂ«Ã£ÂÂ¨Ã£ÂÂ³Ã£ÂÂ³Ã£ÂÂ¼Ã£ÂÂ
     const finalNotes = form.type === "competition"
       ? encodeCompNotes(compForm, form.notes)
       : form.notes;
@@ -233,15 +233,15 @@ export default function TrainingLog({ userId }: Props) {
       });
       setCompForm({ result: "win", opponent: "", finish: "", event: "" });
       setShowForm(false);
-      setToast({ message: "ç·´ç¿ãè¨é²ãã¾ããï¼", type: "success" });
+      setToast({ message: "Ã§Â·Â´Ã§Â¿ÂÃ£ÂÂÃ¨Â¨ÂÃ©ÂÂ²Ã£ÂÂÃ£ÂÂ¾Ã£ÂÂÃ£ÂÂÃ¯Â¼Â", type: "success" });
     } else {
-      setToast({ message: "ä¿å­ã«å¤±æãã¾ãã", type: "error" });
+      setToast({ message: "Ã¤Â¿ÂÃ¥Â­ÂÃ£ÂÂ«Ã¥Â¤Â±Ã¦ÂÂÃ£ÂÂÃ£ÂÂ¾Ã£ÂÂÃ£ÂÂ", type: "error" });
     }
     setLoading(false);
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("ãã®è¨é²ãåé¤ãã¾ããï¼")) return;
+    if (!confirm("Ã£ÂÂÃ£ÂÂ®Ã¨Â¨ÂÃ©ÂÂ²Ã£ÂÂÃ¥ÂÂÃ©ÂÂ¤Ã£ÂÂÃ£ÂÂ¾Ã£ÂÂÃ£ÂÂÃ¯Â¼Â")) return;
     setDeletingId(id);
 
     const { error } = await supabase
@@ -252,9 +252,9 @@ export default function TrainingLog({ userId }: Props) {
 
     if (!error) {
       setEntries(entries.filter((e) => e.id !== id));
-      setToast({ message: "è¨é²ãåé¤ãã¾ãã", type: "success" });
+      setToast({ message: "Ã¨Â¨ÂÃ©ÂÂ²Ã£ÂÂÃ¥ÂÂÃ©ÂÂ¤Ã£ÂÂÃ£ÂÂ¾Ã£ÂÂÃ£ÂÂ", type: "success" });
     } else {
-      setToast({ message: "åé¤ã«å¤±æãã¾ãã", type: "error" });
+      setToast({ message: "Ã¥ÂÂÃ©ÂÂ¤Ã£ÂÂ«Ã¥Â¤Â±Ã¦ÂÂÃ£ÂÂÃ£ÂÂ¾Ã£ÂÂÃ£ÂÂ", type: "error" });
     }
     setDeletingId(null);
   };
@@ -282,9 +282,9 @@ export default function TrainingLog({ userId }: Props) {
     if (!error && data) {
       setEntries(entries.map((e) => (e.id === id ? data : e)));
       setEditingId(null);
-      setToast({ message: "è¨é²ãæ´æ°ãã¾ãã", type: "success" });
+      setToast({ message: "Ã¨Â¨ÂÃ©ÂÂ²Ã£ÂÂÃ¦ÂÂ´Ã¦ÂÂ°Ã£ÂÂÃ£ÂÂ¾Ã£ÂÂÃ£ÂÂ", type: "success" });
     } else {
-      setToast({ message: "æ´æ°ã«å¤±æãã¾ãã", type: "error" });
+      setToast({ message: "Ã¦ÂÂ´Ã¦ÂÂ°Ã£ÂÂ«Ã¥Â¤Â±Ã¦ÂÂÃ£ÂÂÃ£ÂÂ¾Ã£ÂÂÃ£ÂÂ", type: "error" });
     }
   };
 
@@ -305,14 +305,14 @@ export default function TrainingLog({ userId }: Props) {
     setLoadingMore(false);
   };
 
-  // æéãã£ã«ã¿ã¼è¨ç®
+  // Ã¦ÂÂÃ©ÂÂÃ£ÂÂÃ£ÂÂ£Ã£ÂÂ«Ã£ÂÂ¿Ã£ÂÂ¼Ã¨Â¨ÂÃ§Â®Â
   const getPeriodStart = (): string | null => {
     if (periodFilter === "all") return null;
     const now = new Date();
     if (periodFilter === "month") {
       return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
     }
-    // week: ä»é±æææ¥
+    // week: Ã¤Â»ÂÃ©ÂÂ±Ã¦ÂÂÃ¦ÂÂÃ¦ÂÂ¥
     const dayOfWeek = now.getDay();
     const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
     const monday = new Date(now);
@@ -321,7 +321,7 @@ export default function TrainingLog({ userId }: Props) {
   };
   const periodStart = getPeriodStart();
 
-  // ã¿ã¤ããã£ã«ã¿ã¼ + æéãã£ã«ã¿ã¼ + ã­ã¼ã¯ã¼ãæ¤ç´¢
+  // Ã£ÂÂ¿Ã£ÂÂ¤Ã£ÂÂÃ£ÂÂÃ£ÂÂ£Ã£ÂÂ«Ã£ÂÂ¿Ã£ÂÂ¼ + Ã¦ÂÂÃ©ÂÂÃ£ÂÂÃ£ÂÂ£Ã£ÂÂ«Ã£ÂÂ¿Ã£ÂÂ¼ + Ã£ÂÂ­Ã£ÂÂ¼Ã£ÂÂ¯Ã£ÂÂ¼Ã£ÂÂÃ¦Â¤ÂÃ§Â´Â¢
   const filtered = entries
     .filter((e) => filterType === "all" || e.type === filterType)
     .filter((e) => !periodStart || e.date >= periodStart)
@@ -339,7 +339,7 @@ export default function TrainingLog({ userId }: Props) {
       );
     });
 
-  // ä»æã®åè¨æé
+  // Ã¤Â»ÂÃ¦ÂÂÃ£ÂÂ®Ã¥ÂÂÃ¨Â¨ÂÃ¦ÂÂÃ©ÂÂ
   const thisMonth = getLocalDateString().slice(0, 7);
   const monthEntries = entries.filter((e) => e.date.startsWith(thisMonth));
   const monthTotalMins = monthEntries.reduce((sum, e) => sum + e.duration_min, 0);
@@ -356,45 +356,65 @@ export default function TrainingLog({ userId }: Props) {
           onClose={() => setToast(null)}
         />
       )}
-      {/* ææ¬¡ãµããªã¼ */}
+      {/* Today training prompt */}
+      {!initialLoading && trainedToday === false && (
+        <div
+          className="bg-[#e94560]/10 border border-[#e94560]/30 rounded-xl px-4 py-3 mb-4 flex items-center gap-3 cursor-pointer hover:bg-[#e94560]/15 transition-colors"
+          onClick={() => setShowForm(true)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === "Enter" && setShowForm(true)}
+        >
+          <span className="text-xl flex-shrink-0">🥋</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-[#e94560] text-sm font-medium">今日の練習を記録しよう！</p>
+            <p className="text-gray-400 text-xs mt-0.5">タップして練習ログを追加</p>
+          </div>
+          <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      )}
+
+      {/* Ã¦ÂÂÃ¦Â¬Â¡Ã£ÂÂµÃ£ÂÂÃ£ÂÂªÃ£ÂÂ¼ */}
       {!initialLoading && entries.length > 0 && (
         <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
           <div className="flex items-center gap-4 text-sm">
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-[#e94560]">{monthEntries.length}</div>
-              <div className="text-gray-400 text-xs">ä»æã®ç·´ç¿</div>
+              <div className="text-gray-400 text-xs">Ã¤Â»ÂÃ¦ÂÂÃ£ÂÂ®Ã§Â·Â´Ã§Â¿Â</div>
             </div>
             <div className="w-px h-8 bg-gray-700" />
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-blue-400">{monthHoursDisplay}</div>
-              <div className="text-gray-400 text-xs">ä»æã®æé</div>
+              <div className="text-gray-400 text-xs">Ã¤Â»ÂÃ¦ÂÂÃ£ÂÂ®Ã¦ÂÂÃ©ÂÂ</div>
             </div>
             <div className="w-px h-8 bg-gray-700" />
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-green-400">{entries.length}{hasMore ? "+" : ""}</div>
-              <div className="text-gray-400 text-xs">èª­è¾¼æ¸ã¿</div>
+              <div className="text-gray-400 text-xs">Ã¨ÂªÂ­Ã¨Â¾Â¼Ã¦Â¸ÂÃ£ÂÂ¿</div>
             </div>
           </div>
           {hasMore && (
-            <p className="text-gray-600 text-xs text-center mt-2">â» è¿½å ãã¼ã¿ãããããã£ã¨è¦ããã§æ´æ°</p>
+            <p className="text-gray-600 text-xs text-center mt-2">Ã¢ÂÂ» Ã¨Â¿Â½Ã¥ÂÂ Ã£ÂÂÃ£ÂÂ¼Ã£ÂÂ¿Ã£ÂÂÃ£ÂÂÃ£ÂÂÃ£ÂÂÃ£ÂÂÃ£ÂÂ£Ã£ÂÂ¨Ã¨Â¦ÂÃ£ÂÂÃ£ÂÂÃ£ÂÂ§Ã¦ÂÂ´Ã¦ÂÂ°</p>
           )}
         </div>
       )}
 
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold">ç·´ç¿è¨é²</h3>
+          <h3 className="text-lg font-semibold">Ã§Â·Â´Ã§Â¿ÂÃ¨Â¨ÂÃ©ÂÂ²</h3>
           <CsvExport userId={userId} />
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
           className="bg-[#e94560] hover:bg-[#c73652] text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors"
         >
-          + è¨é²ãè¿½å 
+          + Ã¨Â¨ÂÃ©ÂÂ²Ã£ÂÂÃ¨Â¿Â½Ã¥ÂÂ 
         </button>
       </div>
 
-      {/* ã­ã¼ã¯ã¼ãæ¤ç´¢ */}
+      {/* Ã£ÂÂ­Ã£ÂÂ¼Ã£ÂÂ¯Ã£ÂÂ¼Ã£ÂÂÃ¦Â¤ÂÃ§Â´Â¢ */}
       {!initialLoading && entries.length > 0 && (
         <div className="relative mb-2">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -404,7 +424,7 @@ export default function TrainingLog({ userId }: Props) {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="æ¥ä»ã»ã¿ã¤ãã»ã¡ã¢ã§æ¤ç´¢..."
+            placeholder="Ã¦ÂÂ¥Ã¤Â»ÂÃ£ÂÂ»Ã£ÂÂ¿Ã£ÂÂ¤Ã£ÂÂÃ£ÂÂ»Ã£ÂÂ¡Ã£ÂÂ¢Ã£ÂÂ§Ã¦Â¤ÂÃ§Â´Â¢..."
             className="w-full bg-[#16213e] text-white rounded-xl pl-9 pr-9 py-2 text-sm border border-gray-700 focus:outline-none focus:border-[#e94560]/60 placeholder-gray-600"
           />
           {searchQuery && (
@@ -420,11 +440,11 @@ export default function TrainingLog({ userId }: Props) {
         </div>
       )}
 
-      {/* æéãã£ã«ã¿ã¼ */}
+      {/* Ã¦ÂÂÃ©ÂÂÃ£ÂÂÃ£ÂÂ£Ã£ÂÂ«Ã£ÂÂ¿Ã£ÂÂ¼ */}
       {!initialLoading && entries.length > 0 && (
         <div className="flex gap-1.5 mb-2">
           {(["all", "month", "week"] as const).map((p) => {
-            const label = p === "all" ? "å¨æé" : p === "month" ? "ä»æ" : "ä»é±";
+            const label = p === "all" ? "Ã¥ÂÂ¨Ã¦ÂÂÃ©ÂÂ" : p === "month" ? "Ã¤Â»ÂÃ¦ÂÂ" : "Ã¤Â»ÂÃ©ÂÂ±";
             return (
               <button
                 key={p}
@@ -442,7 +462,7 @@ export default function TrainingLog({ userId }: Props) {
         </div>
       )}
 
-      {/* æ¥ä»ç¯å²ãã£ã«ã¿ã¼ */}
+      {/* Ã¦ÂÂ¥Ã¤Â»ÂÃ§Â¯ÂÃ¥ÂÂ²Ã£ÂÂÃ£ÂÂ£Ã£ÂÂ«Ã£ÂÂ¿Ã£ÂÂ¼ */}
       {!initialLoading && entries.length > 0 && (dateFrom || dateTo) ? (
         <div className="flex items-center gap-2 mb-2">
           <input
@@ -452,7 +472,7 @@ export default function TrainingLog({ userId }: Props) {
             onChange={(e) => setDateFrom(e.target.value)}
             className="flex-1 bg-[#16213e] text-white text-xs rounded-lg px-2 py-1.5 border border-gray-700 focus:outline-none focus:border-[#e94560]/60"
           />
-          <span className="text-gray-600 text-xs">ã</span>
+          <span className="text-gray-600 text-xs">Ã£ÂÂ</span>
           <input
             type="date"
             value={dateTo}
@@ -463,23 +483,23 @@ export default function TrainingLog({ userId }: Props) {
           />
           {(dateFrom || dateTo) && (
             <button onClick={() => { setDateFrom(""); setDateTo(""); }} className="text-gray-500 hover:text-white text-xs px-2">
-              â
+              Ã¢ÂÂ
             </button>
           )}
         </div>
       ) : null}
 
-      {/* æ¥ä»ç¯å²ãã¿ã³ï¼æªè¨­å®æï¼ */}
+      {/* Ã¦ÂÂ¥Ã¤Â»ÂÃ§Â¯ÂÃ¥ÂÂ²Ã£ÂÂÃ£ÂÂ¿Ã£ÂÂ³Ã¯Â¼ÂÃ¦ÂÂªÃ¨Â¨Â­Ã¥Â®ÂÃ¦ÂÂÃ¯Â¼Â */}
       {!initialLoading && entries.length > 0 && !dateFrom && !dateTo && (
         <div className="flex gap-1.5 mb-2">
           <button
             onClick={() => { setDateFrom(""); setDateTo(""); }}
             className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors text-gray-600 border border-gray-800 hover:border-gray-700 hover:text-gray-400"
           >
-            ð æ¥ä»çµè¾¼
+            Ã°ÂÂÂ Ã¦ÂÂ¥Ã¤Â»ÂÃ§ÂµÂÃ¨Â¾Â¼
           </button>
           {[
-            { label: "åé±", fn: () => {
+            { label: "Ã¥ÂÂÃ©ÂÂ±", fn: () => {
               const now = new Date();
               const dow = now.getDay();
               const daysToMon = dow === 0 ? 6 : dow - 1;
@@ -488,7 +508,7 @@ export default function TrainingLog({ userId }: Props) {
               const fmt = (d: Date) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
               setDateFrom(fmt(lastMon)); setDateTo(fmt(lastSun));
             }},
-            { label: "åæ", fn: () => {
+            { label: "Ã¥ÂÂÃ¦ÂÂ", fn: () => {
               const now = new Date();
               const y = now.getMonth() === 0 ? now.getFullYear()-1 : now.getFullYear();
               const m = now.getMonth() === 0 ? 12 : now.getMonth();
@@ -504,7 +524,7 @@ export default function TrainingLog({ userId }: Props) {
         </div>
       )}
 
-      {/* ã¿ã¤ããã£ã«ã¿ã¼ */}
+      {/* Ã£ÂÂ¿Ã£ÂÂ¤Ã£ÂÂÃ£ÂÂÃ£ÂÂ£Ã£ÂÂ«Ã£ÂÂ¿Ã£ÂÂ¼ */}
       {!initialLoading && entries.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide">
           <button
@@ -515,7 +535,7 @@ export default function TrainingLog({ userId }: Props) {
                 : "bg-[#16213e] text-gray-400 border border-gray-700"
             }`}
           >
-            ãã¹ã¦
+            Ã£ÂÂÃ£ÂÂ¹Ã£ÂÂ¦
           </button>
           {TRAINING_TYPES.filter((t) =>
             entries.some((e) => e.type === t.value)
@@ -535,7 +555,7 @@ export default function TrainingLog({ userId }: Props) {
         </div>
       )}
 
-      {/* è¨é²ãã©ã¼ã  */}
+      {/* Ã¨Â¨ÂÃ©ÂÂ²Ã£ÂÂÃ£ÂÂ©Ã£ÂÂ¼Ã£ÂÂ  */}
       {showForm && (
         <form
           onSubmit={handleSubmit}
@@ -548,14 +568,14 @@ export default function TrainingLog({ userId }: Props) {
           )}
           <div className="mb-3">
             <div className="flex items-center justify-between mb-1">
-              <label className="text-gray-400 text-xs">æ¥ä»</label>
+              <label className="text-gray-400 text-xs">Ã¦ÂÂ¥Ã¤Â»Â</label>
               {form.date !== today && (
                 <button
                   type="button"
                   onClick={() => setForm({ ...form, date: today })}
                   className="text-[10px] text-[#e94560] hover:text-[#c73652] font-medium"
                 >
-                  ä»æ¥ã«æ»ã
+                  Ã¤Â»ÂÃ¦ÂÂ¥Ã£ÂÂ«Ã¦ÂÂ»Ã£ÂÂ
                 </button>
               )}
             </div>
@@ -576,7 +596,7 @@ export default function TrainingLog({ userId }: Props) {
           </div>
 
           <div className="mb-3">
-            <label className="block text-gray-400 text-xs mb-1">ç·´ç¿ã¿ã¤ã</label>
+            <label className="block text-gray-400 text-xs mb-1">Ã§Â·Â´Ã§Â¿ÂÃ£ÂÂ¿Ã£ÂÂ¤Ã£ÂÂ</label>
             <select
               value={form.type}
               onChange={(e) => setForm({ ...form, type: e.target.value })}
@@ -590,52 +610,52 @@ export default function TrainingLog({ userId }: Props) {
             </select>
           </div>
 
-          {/* è©¦åè©³ç´°ãã©ã¼ã ï¼competition ã¿ã¤ãé¸ææã®ã¿è¡¨ç¤ºï¼ */}
+          {/* Ã¨Â©Â¦Ã¥ÂÂÃ¨Â©Â³Ã§Â´Â°Ã£ÂÂÃ£ÂÂ©Ã£ÂÂ¼Ã£ÂÂ Ã¯Â¼Âcompetition Ã£ÂÂ¿Ã£ÂÂ¤Ã£ÂÂÃ©ÂÂ¸Ã¦ÂÂÃ¦ÂÂÃ£ÂÂ®Ã£ÂÂ¿Ã¨Â¡Â¨Ã§Â¤ÂºÃ¯Â¼Â */}
           {form.type === "competition" && (
             <div className="mb-3 bg-red-500/5 border border-red-500/20 rounded-xl p-3 space-y-2">
-              <p className="text-[11px] text-red-400 font-semibold mb-2">ð è©¦åè¨é²</p>
+              <p className="text-[11px] text-red-400 font-semibold mb-2">Ã°ÂÂÂ Ã¨Â©Â¦Ã¥ÂÂÃ¨Â¨ÂÃ©ÂÂ²</p>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-gray-400 text-xs mb-1">çµæ</label>
+                  <label className="block text-gray-400 text-xs mb-1">Ã§ÂµÂÃ¦ÂÂ</label>
                   <select
                     value={compForm.result}
                     onChange={(e) => setCompForm({ ...compForm, result: e.target.value })}
                     className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-red-400"
                   >
-                    <option value="win">åå© ð</option>
-                    <option value="loss">æå</option>
-                    <option value="draw">å¼ãåã</option>
+                    <option value="win">Ã¥ÂÂÃ¥ÂÂ© Ã°ÂÂÂ</option>
+                    <option value="loss">Ã¦ÂÂÃ¥ÂÂ</option>
+                    <option value="draw">Ã¥Â¼ÂÃ£ÂÂÃ¥ÂÂÃ£ÂÂ</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-gray-400 text-xs mb-1">ç¸æï¼ä»»æï¼</label>
+                  <label className="block text-gray-400 text-xs mb-1">Ã§ÂÂ¸Ã¦ÂÂÃ¯Â¼ÂÃ¤Â»Â»Ã¦ÂÂÃ¯Â¼Â</label>
                   <input
                     type="text"
                     value={compForm.opponent}
                     onChange={(e) => setCompForm({ ...compForm, opponent: e.target.value })}
-                    placeholder="ç¸æã®åå"
+                    placeholder="Ã§ÂÂ¸Ã¦ÂÂÃ£ÂÂ®Ã¥ÂÂÃ¥ÂÂ"
                     className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-gray-400 text-xs mb-1">ãã£ããã·ã¥ï¼ä»»æï¼</label>
+                  <label className="block text-gray-400 text-xs mb-1">Ã£ÂÂÃ£ÂÂ£Ã£ÂÂÃ£ÂÂÃ£ÂÂ·Ã£ÂÂ¥Ã¯Â¼ÂÃ¤Â»Â»Ã¦ÂÂÃ¯Â¼Â</label>
                   <input
                     type="text"
                     value={compForm.finish}
                     onChange={(e) => setCompForm({ ...compForm, finish: e.target.value })}
-                    placeholder="ä¾: ãã¼ã«ããã¯"
+                    placeholder="Ã¤Â¾Â: Ã£ÂÂÃ£ÂÂ¼Ã£ÂÂ«Ã£ÂÂÃ£ÂÂÃ£ÂÂ¯"
                     className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-400 text-xs mb-1">å¤§ä¼åï¼ä»»æï¼</label>
+                  <label className="block text-gray-400 text-xs mb-1">Ã¥Â¤Â§Ã¤Â¼ÂÃ¥ÂÂÃ¯Â¼ÂÃ¤Â»Â»Ã¦ÂÂÃ¯Â¼Â</label>
                   <input
                     type="text"
                     value={compForm.event}
                     onChange={(e) => setCompForm({ ...compForm, event: e.target.value })}
-                    placeholder="ä¾: æ±äº¬ãªã¼ãã³"
+                    placeholder="Ã¤Â¾Â: Ã¦ÂÂ±Ã¤ÂºÂ¬Ã£ÂÂªÃ£ÂÂ¼Ã£ÂÂÃ£ÂÂ³"
                     className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
                   />
                 </div>
@@ -644,11 +664,11 @@ export default function TrainingLog({ userId }: Props) {
           )}
 
           <div className="mb-4">
-            <label className="block text-gray-400 text-xs mb-1">ã¡ã¢</label>
+            <label className="block text-gray-400 text-xs mb-1">Ã£ÂÂ¡Ã£ÂÂ¢</label>
             <textarea
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
-              placeholder="ä»æ¥ã®ç·´ç¿ã®ãã¤ã³ããæ°ã¥ããªã©..."
+              placeholder="Ã¤Â»ÂÃ¦ÂÂ¥Ã£ÂÂ®Ã§Â·Â´Ã§Â¿ÂÃ£ÂÂ®Ã£ÂÂÃ£ÂÂ¤Ã£ÂÂ³Ã£ÂÂÃ£ÂÂÃ¦Â°ÂÃ£ÂÂ¥Ã£ÂÂÃ£ÂÂªÃ£ÂÂ©..."
               rows={2}
               className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400 resize-none"
             />
@@ -660,45 +680,45 @@ export default function TrainingLog({ userId }: Props) {
               disabled={loading}
               className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-colors"
             >
-              {loading ? "ä¿å­ä¸­..." : "ä¿å­"}
+              {loading ? "Ã¤Â¿ÂÃ¥Â­ÂÃ¤Â¸Â­..." : "Ã¤Â¿ÂÃ¥Â­Â"}
             </button>
             <button
               type="button"
               onClick={() => { setShowForm(false); setFormError(null); }}
               className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
             >
-              ã­ã£ã³ã»ã«
+              Ã£ÂÂ­Ã£ÂÂ£Ã£ÂÂ³Ã£ÂÂ»Ã£ÂÂ«
             </button>
           </div>
         </form>
       )}
 
-      {/* ã­ã¼ãã£ã³ã° */}
+      {/* Ã£ÂÂ­Ã£ÂÂ¼Ã£ÂÂÃ£ÂÂ£Ã£ÂÂ³Ã£ÂÂ° */}
       {initialLoading && (
         <div className="text-center py-8 text-gray-500">
           <div className="inline-block w-6 h-6 border-2 border-gray-600 border-t-[#e94560] rounded-full animate-spin mb-2" />
-          <p className="text-sm">èª­ã¿è¾¼ã¿ä¸­...</p>
+          <p className="text-sm">Ã¨ÂªÂ­Ã£ÂÂ¿Ã¨Â¾Â¼Ã£ÂÂ¿Ã¤Â¸Â­...</p>
         </div>
       )}
 
-      {/* è¨é²ä¸è¦§ */}
+      {/* Ã¨Â¨ÂÃ©ÂÂ²Ã¤Â¸ÂÃ¨Â¦Â§ */}
       {!initialLoading && entries.length === 0 && (
         <div className="text-center py-12">
-          <div className="text-5xl mb-4">ð¥</div>
-          <p className="text-gray-300 font-semibold mb-1">ç·´ç¿è¨é²ãã¾ã ããã¾ãã</p>
-          <p className="text-gray-500 text-sm mb-5">æåã®ç·´ç¿ãè¨é²ãã¦ãæé·ã®æãå§ãããï¼</p>
+          <div className="text-5xl mb-4">Ã°ÂÂ¥Â</div>
+          <p className="text-gray-300 font-semibold mb-1">Ã§Â·Â´Ã§Â¿ÂÃ¨Â¨ÂÃ©ÂÂ²Ã£ÂÂÃ£ÂÂ¾Ã£ÂÂ Ã£ÂÂÃ£ÂÂÃ£ÂÂ¾Ã£ÂÂÃ£ÂÂ</p>
+          <p className="text-gray-500 text-sm mb-5">Ã¦ÂÂÃ¥ÂÂÃ£ÂÂ®Ã§Â·Â´Ã§Â¿ÂÃ£ÂÂÃ¨Â¨ÂÃ©ÂÂ²Ã£ÂÂÃ£ÂÂ¦Ã£ÂÂÃ¦ÂÂÃ©ÂÂ·Ã£ÂÂ®Ã¦ÂÂÃ£ÂÂÃ¥Â§ÂÃ£ÂÂÃ£ÂÂÃ£ÂÂÃ¯Â¼Â</p>
           <button
             onClick={() => setShowForm(true)}
             className="bg-[#e94560] hover:bg-[#c73652] text-white text-sm font-semibold py-2.5 px-6 rounded-full transition-colors"
           >
-            + æåã®ç·´ç¿ãè¨é²
+            + Ã¦ÂÂÃ¥ÂÂÃ£ÂÂ®Ã§Â·Â´Ã§Â¿ÂÃ£ÂÂÃ¨Â¨ÂÃ©ÂÂ²
           </button>
         </div>
       )}
 
       {!initialLoading && entries.length > 0 && filtered.length === 0 && (
         <div className="text-center py-8 text-gray-500 text-sm">
-          {searchQuery ? `ã${searchQuery}ãã«ä¸è´ããè¨é²ã¯ããã¾ãã` : "ãã®ãã£ã«ã¿ã¼ã«ä¸è´ããè¨é²ã¯ããã¾ãã"}
+          {searchQuery ? `Ã£ÂÂ${searchQuery}Ã£ÂÂÃ£ÂÂ«Ã¤Â¸ÂÃ¨ÂÂ´Ã£ÂÂÃ£ÂÂÃ¨Â¨ÂÃ©ÂÂ²Ã£ÂÂ¯Ã£ÂÂÃ£ÂÂÃ£ÂÂ¾Ã£ÂÂÃ£ÂÂ` : "Ã£ÂÂÃ£ÂÂ®Ã£ÂÂÃ£ÂÂ£Ã£ÂÂ«Ã£ÂÂ¿Ã£ÂÂ¼Ã£ÂÂ«Ã¤Â¸ÂÃ¨ÂÂ´Ã£ÂÂÃ£ÂÂÃ¨Â¨ÂÃ©ÂÂ²Ã£ÂÂ¯Ã£ÂÂÃ£ÂÂÃ£ÂÂ¾Ã£ÂÂÃ£ÂÂ"}
         </div>
       )}
 
@@ -710,7 +730,7 @@ export default function TrainingLog({ userId }: Props) {
               className={`bg-[#16213e] rounded-xl p-4 border border-gray-700${entry.type === "competition" ? " border-l-2 border-l-red-500" : ""}`}
             >
               {editingId === entry.id ? (
-                /* ã¤ã³ã©ã¤ã³ç·¨éãã©ã¼ã  */
+                /* Ã£ÂÂ¤Ã£ÂÂ³Ã£ÂÂ©Ã£ÂÂ¤Ã£ÂÂ³Ã§Â·Â¨Ã©ÂÂÃ£ÂÂÃ£ÂÂ©Ã£ÂÂ¼Ã£ÂÂ  */
                 <form onSubmit={(e) => handleUpdate(e, entry.id)}>
                   <div className="mb-2">
                     <input
@@ -742,15 +762,15 @@ export default function TrainingLog({ userId }: Props) {
                   />
                   <div className="flex gap-2">
                     <button type="submit" className="flex-1 bg-[#e94560] text-white text-xs font-semibold py-1.5 rounded-lg">
-                      æ´æ°
+                      Ã¦ÂÂ´Ã¦ÂÂ°
                     </button>
                     <button type="button" onClick={() => setEditingId(null)} className="px-3 text-gray-400 text-xs">
-                      ã­ã£ã³ã»ã«
+                      Ã£ÂÂ­Ã£ÂÂ£Ã£ÂÂ³Ã£ÂÂ»Ã£ÂÂ«
                     </button>
                   </div>
                 </form>
               ) : (
-                /* éå¸¸è¡¨ç¤º */
+                /* Ã©ÂÂÃ¥Â¸Â¸Ã¨Â¡Â¨Ã§Â¤Âº */
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
@@ -760,9 +780,9 @@ export default function TrainingLog({ userId }: Props) {
                       <span className="text-gray-400 text-xs">{entry.date}</span>
                     </div>
                     <div className="text-[#e94560] text-xs font-medium mb-1">
-                      â± {entry.duration_min >= 60
-                        ? `${Math.floor(entry.duration_min / 60)}æé${entry.duration_min % 60 > 0 ? `${entry.duration_min % 60}å` : ""}`
-                        : `${entry.duration_min}å`}
+                      Ã¢ÂÂ± {entry.duration_min >= 60
+                        ? `${Math.floor(entry.duration_min / 60)}Ã¦ÂÂÃ©ÂÂ${entry.duration_min % 60 > 0 ? `${entry.duration_min % 60}Ã¥ÂÂ` : ""}`
+                        : `${entry.duration_min}Ã¥ÂÂ`}
                     </div>
                     {entry.notes && (() => {
                       const { comp, userNotes } = decodeCompNotes(entry.notes);
@@ -775,7 +795,7 @@ export default function TrainingLog({ userId }: Props) {
                               </span>
                               {comp.opponent && <span className="text-xs text-gray-400">vs {comp.opponent}</span>}
                               {comp.finish && <span className="text-xs text-gray-500">by {comp.finish}</span>}
-                              {comp.event && <span className="text-xs text-gray-500">ð {comp.event}</span>}
+                              {comp.event && <span className="text-xs text-gray-500">Ã°ÂÂÂ {comp.event}</span>}
                             </div>
                           )}
                           {userNotes && (
@@ -787,18 +807,18 @@ export default function TrainingLog({ userId }: Props) {
                                     onClick={() => setExpandedNotes((prev) => { const s = new Set(prev); s.delete(entry.id); return s; })}
                                     className="text-[11px] text-gray-600 hover:text-gray-400 mt-0.5"
                                   >
-                                    æãããã â²
+                                    Ã¦ÂÂÃ£ÂÂÃ£ÂÂÃ£ÂÂÃ£ÂÂ Ã¢ÂÂ²
                                   </button>
                                 )}
                               </div>
                             ) : (
                               <div>
-                                <p className="text-gray-300 text-sm mt-1">{userNotes.slice(0, 80)}â¦</p>
+                                <p className="text-gray-300 text-sm mt-1">{userNotes.slice(0, 80)}Ã¢ÂÂ¦</p>
                                 <button
                                   onClick={() => setExpandedNotes((prev) => new Set([...prev, entry.id]))}
                                   className="text-[11px] text-gray-600 hover:text-gray-400 mt-0.5"
                                 >
-                                  ãã£ã¨è¦ã â¼
+                                  Ã£ÂÂÃ£ÂÂ£Ã£ÂÂ¨Ã¨Â¦ÂÃ£ÂÂ Ã¢ÂÂ¼
                                 </button>
                               </div>
                             )
@@ -813,7 +833,7 @@ export default function TrainingLog({ userId }: Props) {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-sky-400 transition-colors p-1"
-                      title="Xã§ã·ã§ã¢"
+                      title="XÃ£ÂÂ§Ã£ÂÂ·Ã£ÂÂ§Ã£ÂÂ¢"
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -822,7 +842,7 @@ export default function TrainingLog({ userId }: Props) {
                     <button
                       onClick={() => startEdit(entry)}
                       className="text-gray-600 hover:text-blue-400 transition-colors p-1"
-                      title="ç·¨é"
+                      title="Ã§Â·Â¨Ã©ÂÂ"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -832,7 +852,7 @@ export default function TrainingLog({ userId }: Props) {
                       onClick={() => handleDelete(entry.id)}
                       disabled={deletingId === entry.id}
                       className="text-gray-600 hover:text-red-400 transition-colors p-1 disabled:opacity-50"
-                      title="åé¤"
+                      title="Ã¥ÂÂÃ©ÂÂ¤"
                     >
                       {deletingId === entry.id ? (
                         <span className="text-xs">...</span>
@@ -850,7 +870,7 @@ export default function TrainingLog({ userId }: Props) {
         </div>
       )}
 
-      {/* ãã£ã¨è¦ããã¿ã³ */}
+      {/* Ã£ÂÂÃ£ÂÂ£Ã£ÂÂ¨Ã¨Â¦ÂÃ£ÂÂÃ£ÂÂÃ£ÂÂ¿Ã£ÂÂ³ */}
       {!initialLoading && hasMore && (
         <div className="text-center mt-4">
           <button
@@ -858,7 +878,7 @@ export default function TrainingLog({ userId }: Props) {
             disabled={loadingMore}
             className="text-gray-400 hover:text-white text-sm border border-gray-700 hover:border-gray-500 px-6 py-2 rounded-full transition-colors disabled:opacity-50"
           >
-            {loadingMore ? "èª­ã¿è¾¼ã¿ä¸­..." : "ãã£ã¨è¦ã"}
+            {loadingMore ? "Ã¨ÂªÂ­Ã£ÂÂ¿Ã¨Â¾Â¼Ã£ÂÂ¿Ã¤Â¸Â­..." : "Ã£ÂÂÃ£ÂÂ£Ã£ÂÂ¨Ã¨Â¦ÂÃ£ÂÂ"}
           </button>
         </div>
       )}
