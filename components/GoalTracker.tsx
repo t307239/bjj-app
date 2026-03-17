@@ -220,6 +220,14 @@ export default function GoalTracker({ userId }: Props) {
 
   const hasGoals = data.weeklyGoal > 0 || data.monthlyGoal > 0 || data.techniqueGoal > 0;
 
+  // 全目標達成バナー
+  const activeGoalStates = [
+    { target: data.weeklyGoal, current: data.weekCount },
+    { target: data.monthlyGoal, current: data.monthCount },
+    { target: data.techniqueGoal, current: data.techniqueCount },
+  ].filter((g) => g.target > 0);
+  const allGoalsAchieved = hasGoals && activeGoalStates.length > 0 && activeGoalStates.every((g) => g.current >= g.target);
+
   return (
     <>
       {toast && (
@@ -232,6 +240,15 @@ export default function GoalTracker({ userId }: Props) {
             <span className="text-[10px] text-gray-600">目標を設定して継続を管理しよう</span>
           )}
         </div>
+
+        {/* 全目標達成バナー */}
+        {allGoalsAchieved && !editing && (
+          <div className="mx-4 mt-3 rounded-xl bg-green-500/10 border border-green-500/30 px-4 py-3 text-center">
+            <div className="text-lg mb-0.5">🎉</div>
+            <div className="text-sm font-semibold text-green-400">全目標達成！</div>
+            <div className="text-[11px] text-gray-400 mt-0.5">素晴らしい！この調子で続けよう</div>
+          </div>
+        )}
 
         <div className="p-4 space-y-3">
           {/* 週間目標 */}
