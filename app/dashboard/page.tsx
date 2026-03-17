@@ -18,6 +18,7 @@ import DailyRecommend from "@/components/DailyRecommend";
 import DailyQuote from "@/components/DailyQuote";
 import StreakFreeze from "@/components/StreakFreeze";
 import AchievementBadge from "@/components/AchievementBadge";
+import InstallBanner from "@/components/InstallBanner";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app-one.vercel.app";
@@ -209,6 +210,8 @@ export default async function DashboardPage() {
   }
 
   return (
+    <>
+    <InstallBanner />
     <div className="min-h-screen bg-[#1a1a2e] pb-20 sm:pb-0">
       <NavBar displayName={displayName} avatarUrl={avatarUrl} />
       {/* ゲストデータの自動マージ（ログイン直後） */}
@@ -311,6 +314,6 @@ export default async function DashboardPage() {
         {/* 練習記録コンポーネント（CsvExport内蔵） */}
         <TrainingLog userId={user.id} />
       </main>
-    </div>
-  );
+    </>
+    );
 }
