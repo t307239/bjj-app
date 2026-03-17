@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
 
@@ -259,6 +259,18 @@ export default function GoalTracker({ userId }: Props) {
     { target: data.techniqueGoal, current: data.techniqueCount },
   ].filter((g) => g.target > 0);
   const allGoalsAchieved = hasGoals && activeGoalStates.length > 0 && activeGoalStates.every((g) => g.current >= g.target);
+  // Sparkle animation on first achievement
+  const [sparkle, setSparkle] = useState(false);
+  const prevAchieved = useRef(false);
+  useEffect(() => {
+    if (allGoalsAchieved && !prevAchieved.current) {
+      setSparkle(true);
+      const timer = setTimeout(() => setSparkle(false), 3000);
+      prevAchieved.current = true;
+      return () => clearTimeout(timer);
+    }
+    if (!allGoalsAchieved) prevAchieved.current = false;
+  }, [allGoalsAchieved]);
 
   return (
     <>
@@ -274,10 +286,13 @@ export default function GoalTracker({ userId }: Props) {
         </div>
 
         {allGoalsAchieved && !editing && (
-          <div className="mx-4 mt-3 rounded-xl bg-green-500/10 border border-green-500/30 px-4 py-3 text-center">
-            <div className="text-lg mb-0.5">🎉</div>
+          <div className={`mx-4 mt-3 rounded-xl bg-green-500/10 border px-4 py-3 text-center transition-all duration-500 ${sparkle ? "border-green-400 shadow-lg shadow-green-500/20" : "border-green-500/30"}`}>
+            <div className={`text-2xl mb-0.5 ${sparkle ? "animate-bounce" : ""}`}>🎉</div>
             <div className="text-sm font-semibold text-green-400">全目標達成！</div>
             <div className="text-[11px] text-gray-400 mt-0.5">素晴らしい！この調子で続けよう</div>
+            {sparkle && (
+              <div className="text-xs text-green-300 mt-1 animate-pulse">✨ おめでとう！✨</div>
+            )}
           </div>
         )}
 
