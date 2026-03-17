@@ -7,14 +7,25 @@ type Props = {
   userId: string;
 };
 
+type LogEntry = { date: string; type: string };
+
+// ローカル日付文字列ヘルパー
 function toLocalDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 const DAY_LABELS = ["月", "火", "水", "木", "金", "土", "日"];
 
+const TYPE_CONFIG: Record<string, { label: string; color: string }> = {
+  gi:          { label: "道衣", color: "bg-blue-500/20 text-blue-300" },
+  nogi:        { label: "ノーギ", color: "bg-orange-500/20 text-orange-300" },
+  drilling:    { label: "ドリル", color: "bg-purple-500/20 text-purple-300" },
+  competition: { label: "試合", color: "bg-red-500/20 text-red-300" },
+  open_mat:    { label: "オープン", color: "bg-green-500/20 text-green-300" },
+};
+
 export default function WeeklyStrip({ userId }: Props) {
-  const [trainedDates, setTrainedDates] = useState<Set<string>>(new Set());
+  const [logs, setLogs] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
@@ -25,23 +36,17 @@ export default function WeeklyStrip({ userId }: Props) {
       const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
       const monday = new Date(now);
       monday.setDate(now.getDate() - daysToMonday);
-
       const sunday = new Date(monday);
       sunday.setDate(monday.getDate() + 6);
 
-      const mondayStr = toLocalDateStr(monday);
-      const sundayStr = toLocalDateStr(sunday);
-
-      const { data: logs } = await supabase
+      const { data } = await supabase
         .from("training_logs")
-        .select("date")
+        .select("date, type")
         .eq("user_id", userId)
-        .gte("date", mondayStr)
-        .lte("date", sundayStr);
+        .gte("date", toLocalDateStr(monday))
+        .lte("date", toLocalDateStr(sunday));
 
-      if (logs) {
-        setTrainedDates(new Set(logs.map((l: { date: string }) => l.date)));
-      }
+      if (data) setLogs(data);
       setLoading(false);
     };
     load();
@@ -55,6 +60,8 @@ export default function WeeklyStrip({ userId }: Props) {
   const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
   const monday = new Date(now);
   monday.setDate(now.getDate() - daysToMonday);
+
+  const trainedDates = new Set(logs.map((l) => l.date));
 
   const weekDays = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(monday);
@@ -70,6 +77,13 @@ export default function WeeklyStrip({ userId }: Props) {
   const trainedThisWeek = weekDays.filter((d) => trainedDates.has(d.dateStr)).length;
   const totalPastDays = weekDays.filter((d) => d.isPast).length;
 
+  // 今週のタイプ内訳集計
+  const typeCounts: Record<string, number> = {};
+  logs.forEach((l) => {
+    typeCounts[l.type] = (typeCounts[l.type] ?? 0) + 1;
+  });
+  const typeEntries = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]);
+
   return (
     <div className="bg-[#16213e] rounded-xl px-4 py-3 border border-gray-700 mb-4">
       <div className="flex items-center justify-between mb-2">
@@ -78,7 +92,7 @@ export default function WeeklyStrip({ userId }: Props) {
           {trainedThisWeek}/{totalPastDays}日
         </span>
       </div>
-      <div className="flex gap-1.5">
+      <div className="flex gap-1.5 mb-3">
         {weekDays.map((day) => {
           const trained = trainedDates.has(day.dateStr);
           const isFuture = !day.isPast && !day.isToday;
@@ -103,11 +117,7 @@ export default function WeeklyStrip({ userId }: Props) {
               </div>
               <span
                 className={`text-[10px] leading-none ${
-                  day.isToday
-                    ? "text-[#e94560] font-semibold"
-                    : trained
-                    ? "text-gray-300"
-                    : "text-gray-600"
+                  day.isToday ? "text-[#e94560] font-semibold" : trained ? "text-gray-300" : "text-gray-600"
                 }`}
               >
                 {day.label}
@@ -116,6 +126,20 @@ export default function WeeklyStrip({ userId }: Props) {
           );
         })}
       </div>
+
+      {/* タイプ内訳ピル */}
+      {typeEntries.length > 0 && (
+        <div className="flex flex-wrap gap-1 pt-2 border-t border-gray-700/50">
+          {typeEntries.map(([type, count]) => {
+            const cfg = TYPE_CONFIG[type] ?? { label: type, color: "bg-gray-500/20 text-gray-300" };
+            return (
+              <span key={type} className={`text-[10px] px-2 py-0.5 rounded-full ${cfg.color}`}>
+                {cfg.label} {count}
+              </span>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
