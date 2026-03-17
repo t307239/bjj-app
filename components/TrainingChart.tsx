@@ -18,11 +18,15 @@ export default function TrainingChart({ userId }: Props) {
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
+  // ローカル日付文字列ヘルパー（UTC変換しない）
+  const toLocalStr = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
   useEffect(() => {
     const load = async () => {
       const since = new Date();
       since.setDate(since.getDate() - 83);
-      const sinceStr = since.toISOString().split("T")[0];
+      const sinceStr = toLocalStr(since);
 
       const { data: logs } = await supabase
         .from("training_logs")
@@ -31,18 +35,16 @@ export default function TrainingChart({ userId }: Props) {
         .gte("date", sinceStr);
 
       if (logs) {
-        // 日付ごとのカウント集計
         const counts: Record<string, number> = {};
         logs.forEach((l: { date: string }) => {
           counts[l.date] = (counts[l.date] || 0) + 1;
         });
 
-        // 過去84日分の配列を作成
         const days: DayData[] = [];
         for (let i = 83; i >= 0; i--) {
           const d = new Date();
           d.setDate(d.getDate() - i);
-          const dateStr = d.toISOString().split("T")[0];
+          const dateStr = toLocalStr(d);
           days.push({ date: dateStr, count: counts[dateStr] || 0 });
         }
         setData(days);
@@ -63,7 +65,6 @@ export default function TrainingChart({ userId }: Props) {
     return "bg-[#e94560]";
   };
 
-  // 12週分（7日×12列）
   const weeks: DayData[][] = [];
   for (let i = 0; i < 12; i++) {
     weeks.push(data.slice(i * 7, i * 7 + 7));
@@ -79,7 +80,6 @@ export default function TrainingChart({ userId }: Props) {
         <span className="text-xs text-gray-500">過去84日: {totalDays}日練習</span>
       </div>
       <div className="flex gap-1">
-        {/* 曜日ラベル */}
         <div className="flex flex-col gap-0.5 mr-1">
           {dayLabels.map((d) => (
             <div key={d} className="text-[9px] text-gray-600 h-3 flex items-center">
@@ -87,7 +87,6 @@ export default function TrainingChart({ userId }: Props) {
             </div>
           ))}
         </div>
-        {/* ヒートマップグリッド */}
         {weeks.map((week, wi) => (
           <div key={wi} className="flex flex-col gap-0.5">
             {week.map((day, di) => (
