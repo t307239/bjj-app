@@ -37,6 +37,22 @@ export default function DashboardLoading() {
           ))}
         </div>
 
+        {/* StreakProtect/StreakFreezeスケルトン */}
+        <div className="h-12 bg-[#16213e] rounded-xl border border-gray-700 animate-pulse mb-3" />
+
+        {/* DailyRecommendスケルトン */}
+        <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-4 overflow-hidden">
+          <div className="px-4 py-3 border-b border-gray-700 flex items-center justify-between">
+            <div className="h-4 w-28 bg-gray-700 rounded animate-pulse" />
+            <div className="h-3 w-12 bg-gray-800 rounded animate-pulse" />
+          </div>
+          <div className="p-4">
+            <div className="h-5 w-48 bg-gray-700 rounded animate-pulse mb-2" />
+            <div className="h-4 w-full bg-gray-800 rounded animate-pulse mb-1" />
+            <div className="h-4 w-3/4 bg-gray-800 rounded animate-pulse" />
+          </div>
+        </div>
+
         {/* WeeklyStripスケルトン */}
         <div className="bg-[#16213e] rounded-xl px-4 py-3 border border-gray-700 mb-4">
           <div className="flex items-center justify-between mb-2">
@@ -53,7 +69,7 @@ export default function DashboardLoading() {
           </div>
         </div>
 
-                {/* GoalTrackerスケルトン */}
+        {/* GoalTrackerスケルトン */}
         <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-4 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-700">
             <div className="h-4 w-24 bg-gray-700 rounded animate-pulse" />
@@ -68,7 +84,7 @@ export default function DashboardLoading() {
           </div>
         </div>
 
-        {/* PersonalBestsスケルトン */}
+        {/* PersonalBestsスケルトン (6 cards) */}
         <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
           <div className="h-4 w-24 bg-gray-700 rounded animate-pulse mb-3" />
           <div className="grid grid-cols-2 gap-2">
@@ -101,7 +117,11 @@ export default function DashboardLoading() {
           <div className="h-4 w-32 bg-gray-700 rounded animate-pulse mb-3" />
           <div className="flex items-end gap-1 h-24">
             {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="flex-1 bg-gray-700 rounded animate-pulse" style={{ height: `${30 + (i % 4) * 15}%` }} />
+              <div
+                key={i}
+                className="flex-1 bg-gray-700 rounded animate-pulse"
+                style={{ height: `${30 + (i * 7) % 60}%` }}
+              />
             ))}
           </div>
         </div>
