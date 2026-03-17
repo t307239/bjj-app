@@ -70,6 +70,7 @@ export default function TechniqueLog({ userId }: Props) {
   const [showForm, setShowForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
+  const [sortBy, setSortBy] = useState<"newest" | "mastery_desc" | "mastery_asc" | "name">("newest");
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
@@ -199,7 +200,14 @@ export default function TechniqueLog({ userId }: Props) {
       searchQuery === "" ||
       t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (t.notes && t.notes.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
+    )
+    .slice()
+    .sort((a, b) => {
+      if (sortBy === "mastery_desc") return (b.mastery_level ?? 0) - (a.mastery_level ?? 0);
+      if (sortBy === "mastery_asc") return (a.mastery_level ?? 0) - (b.mastery_level ?? 0);
+      if (sortBy === "name") return a.name.localeCompare(b.name, "ja");
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
 
   return (
     <div>
@@ -271,7 +279,21 @@ export default function TechniqueLog({ userId }: Props) {
       )}
 
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold">テクニック帳</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-lg font-semibold">テクニック帳</h3>
+          {!initialLoading && techniques.length > 0 && (
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+              className="text-xs bg-[#16213e] text-gray-400 border border-gray-700 rounded-lg px-2 py-1 focus:outline-none focus:border-[#e94560]/60 cursor-pointer"
+            >
+              <option value="newest">最新順</option>
+              <option value="mastery_desc">習熟度↓</option>
+              <option value="mastery_asc">習熟度↑</option>
+              <option value="name">名前順</option>
+            </select>
+          )}
+        </div>
         <button
           onClick={() => setShowForm(!showForm)}
           className="bg-[#e94560] hover:bg-[#c73652] text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors"
