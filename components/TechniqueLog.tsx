@@ -21,7 +21,7 @@ const CATEGORIES = [
   { value: "guard", label: "ガード" },
   { value: "passing", label: "パス" },
   { value: "submissions", label: "サブミッション" },
-  { value: "takedowns", label: "テイクトダウン" },
+  { value: "takedowns", label: "テイクダウン" },
   { value: "escapes", label: "エスケープ" },
   { value: "back", label: "バック" },
   { value: "mount", label: "マウント" },
@@ -33,7 +33,7 @@ const MASTERY_COLORS = ["", "text-gray-400", "text-blue-400", "text-yellow-400",
 
 const NOTE_TRUNCATE = 80;
 
-// YouTube URLからビデオワIDを抽出
+// YouTube URLからビデオIDを抽出
 function extractYoutubeId(url: string): string | null {
   try {
     const u = new URL(url);
@@ -49,8 +49,9 @@ function extractYoutubeId(url: string): string | null {
   return null;
 }
 
-// URLを検出してリンク化（YouTube は🎜アイコン付きサムネイル表示）
-function renderNotes(notes: string, expanded: boolean): React.ReactNode {  const display = !expanded && notes.length > NOTE_TRUNCATE
+// URLを検出してリンク化（YouTube は🎬アイコン付きサムネイル表示）
+function renderNotes(notes: string, expanded: boolean): React.ReactNode {
+  const display = !expanded && notes.length > NOTE_TRUNCATE
     ? notes.slice(0, NOTE_TRUNCATE) + "…"
     : notes;
 
@@ -91,7 +92,7 @@ function renderNotes(notes: string, expanded: boolean): React.ReactNode {  const
                 </div>
               ) : (
                 <span className="flex items-center gap-1.5 px-3 py-2 text-blue-400 hover:text-blue-300 text-sm">
-                  🎜 YouTube動画
+                  🎬 YouTube動画
                 </span>
               )}
             </a>
@@ -141,6 +142,7 @@ export default function TechniqueLog({ userId }: Props) {
     notes: "",
   });
   const supabase = createClient();
+
   useEffect(() => {
     const loadTechniques = async () => {
       setInitialLoading(true);
@@ -170,6 +172,14 @@ export default function TechniqueLog({ userId }: Props) {
     }
     if (form.name.trim().length > 100) {
       setFormError("テクニック名は100文字以内で入力してください");
+      return;
+    }
+
+    // 重複チェック（大文字小文字・全角半角を区別しない）
+    const nameNorm = form.name.trim().toLowerCase();
+    const duplicate = techniques.find((t) => t.name.trim().toLowerCase() === nameNorm);
+    if (duplicate) {
+      setFormError(`「${duplicate.name}」はすでに登録されています`);
       return;
     }
 
@@ -244,6 +254,7 @@ export default function TechniqueLog({ userId }: Props) {
       setTechniques(techniques.map((t) => (t.id === id ? data : t)));
     }
   };
+
   const filtered = techniques
     .filter((t) => filterCategory === "all" || t.category === filterCategory)
     .filter((t) =>
@@ -292,10 +303,10 @@ export default function TechniqueLog({ userId }: Props) {
               <div className="text-gray-400 text-xs">カテゴリ数</div>
             </div>
           </div>
-          {/* 習熙度分布バー */}
+          {/* 習熟度分布バー */}
           {(() => {
             const masteryColors = ["", "bg-gray-500", "bg-blue-500", "bg-yellow-500", "bg-orange-500", "bg-green-500"];
-            const masteryLabels = ["", "入門", "基础", "中級", "上級", "マスター"];
+            const masteryLabels = ["", "入門", "基礎", "中級", "上級", "マスター"];
             const counts = [1, 2, 3, 4, 5].map((lvl) =>
               techniques.filter((t) => t.mastery_level === lvl).length
             );
@@ -340,8 +351,8 @@ export default function TechniqueLog({ userId }: Props) {
               className="text-xs bg-[#16213e] text-gray-400 border border-gray-700 rounded-lg px-2 py-1 focus:outline-none focus:border-[#e94560]/60 cursor-pointer"
             >
               <option value="newest">最新順</option>
-              <option value="mastery_desc">習熙度↓</option>
-              <option value="mastery_asc">習熙度↑</option>
+              <option value="mastery_desc">習熟度↓</option>
+              <option value="mastery_asc">習熟度↑</option>
               <option value="name">名前順</option>
             </select>
           )}
@@ -353,6 +364,7 @@ export default function TechniqueLog({ userId }: Props) {
           + テクニックを追加
         </button>
       </div>
+
       {/* 検索バー */}
       {!initialLoading && techniques.length > 0 && (
         <div className="relative mb-3">
@@ -368,7 +380,7 @@ export default function TechniqueLog({ userId }: Props) {
           </svg>
           {searchQuery && (
             <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white text-xs">
-              ✗
+              ✕
             </button>
           )}
         </div>
@@ -444,7 +456,7 @@ export default function TechniqueLog({ userId }: Props) {
               </select>
             </div>
             <div>
-              <label className="block text-gray-400 text-xs mb-1">習熙度</label>
+              <label className="block text-gray-400 text-xs mb-1">習熟度</label>
               <select
                 value={form.mastery_level}
                 onChange={(e) =>
@@ -490,6 +502,7 @@ export default function TechniqueLog({ userId }: Props) {
           </div>
         </form>
       )}
+
       {/* ローディング */}
       {initialLoading && (
         <div className="text-center py-8 text-gray-500">
@@ -498,10 +511,10 @@ export default function TechniqueLog({ userId }: Props) {
         </div>
       )}
 
-      {/* 空状況 */}
+      {/* 空状態 */}
       {!initialLoading && techniques.length === 0 && (
         <div className="text-center py-12 text-gray-500">
-          <div className="text-4xl mb-3">�"udcc8</div>
+          <div className="text-4xl mb-3">📚</div>
           <p>テクニックがまだありません</p>
           <p className="text-sm mt-1">最初のテクニックを追加しましょう！</p>
         </div>
@@ -572,7 +585,7 @@ export default function TechniqueLog({ userId }: Props) {
                               ? MASTERY_COLORS[technique.mastery_level]
                               : "text-gray-700 hover:text-gray-500"
                           }`}
-                          title={`習熙度${star}: ${MASTERY_LABELS[star]}`}
+                          title={`࿒熟度${star}: ${MASTERY_LABELS[star]}`}
                         >
                           ★
                         </button>
@@ -595,7 +608,7 @@ export default function TechniqueLog({ userId }: Props) {
                             })}
                             className="text-[10px] text-blue-500 hover:text-blue-400 mt-0.5"
                           >
-                            {expandedIds.has(technique.id) ? "▲ 折りたたむ" : "▼ 続きを詳る"}
+                            {expandedIds.has(technique.id) ? "▲ 折りたたむ" : "▼ 続きを見る"}
                           </button>
                         )}
                       </div>
