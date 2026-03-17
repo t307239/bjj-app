@@ -166,6 +166,9 @@ export default function TrainingLog({ userId }: Props) {
   const [compForm, setCompForm] = useState<CompData>({
     result: "win", opponent: "", finish: "", event: "",
   });
+  const [editCompForm, setEditCompForm] = useState<CompData>({
+    result: "win", opponent: "", finish: "", event: "",
+  });
   const supabase = createClient();
 
   useEffect(() => {
@@ -256,19 +259,28 @@ export default function TrainingLog({ userId }: Props) {
 
   const startEdit = (entry: TrainingEntry) => {
     setEditingId(entry.id);
+    const { comp, userNotes } = decodeCompNotes(entry.notes);
     setEditForm({
       date: entry.date,
       duration_min: entry.duration_min,
       type: entry.type,
-      notes: entry.notes,
+      notes: userNotes ?? "",
     });
+    if (comp) {
+      setEditCompForm({ result: comp.result ?? "win", opponent: comp.opponent ?? "", finish: comp.finish ?? "", event: comp.event ?? "" });
+    } else {
+      setEditCompForm({ result: "win", opponent: "", finish: "", event: "" });
+    }
   };
 
   const handleUpdate = async (e: React.FormEvent, id: string) => {
     e.preventDefault();
+    const finalEditNotes = editForm.type === "competition"
+      ? encodeCompNotes(editCompForm, editForm.notes)
+      : editForm.notes;
     const { data, error } = await supabase
       .from("training_logs")
-      .update(editForm)
+      .update({ ...editForm, notes: finalEditNotes })
       .eq("id", id)
       .eq("user_id", userId)
       .select()
@@ -747,10 +759,47 @@ export default function TrainingLog({ userId }: Props) {
                       <option key={t.value} value={t.value}>{t.label}</option>
                     ))}
                   </select>
+                  {editForm.type === "competition" && (
+                    <div className="bg-red-500/5 border border-red-500/20 rounded-lg p-2 mb-2 space-y-1.5">
+                      <p className="text-[10px] text-red-400 font-semibold">🏆 試合詳細</p>
+                      <select
+                        value={editCompForm.result}
+                        onChange={(e) => setEditCompForm({ ...editCompForm, result: e.target.value as CompData["result"] })}
+                        className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400"
+                      >
+                        <option value="win">勝利</option>
+                        <option value="loss">敗北</option>
+                        <option value="draw">引き分け</option>
+                        <option value="unknown">不明</option>
+                      </select>
+                      <input
+                        type="text"
+                        placeholder="対戦相手（任意）"
+                        value={editCompForm.opponent}
+                        onChange={(e) => setEditCompForm({ ...editCompForm, opponent: e.target.value })}
+                        className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                      />
+                      <input
+                        type="text"
+                        placeholder="決まり手（任意）"
+                        value={editCompForm.finish}
+                        onChange={(e) => setEditCompForm({ ...editCompForm, finish: e.target.value })}
+                        className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                      />
+                      <input
+                        type="text"
+                        placeholder="大会名（任意）"
+                        value={editCompForm.event}
+                        onChange={(e) => setEditCompForm({ ...editCompForm, event: e.target.value })}
+                        className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                      />
+                    </div>
+                  )}
                   <textarea
                     value={editForm.notes}
                     onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
                     rows={2}
+                    placeholder="メモ（任意）"
                     className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-blue-400 resize-none mb-2"
                   />
                   <div className="flex gap-2">
