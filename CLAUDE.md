@@ -1,4 +1,30 @@
 ## 📝 開発ログ
+- Day 4et (2026/03/17): **Batch Q — StreakFreeze履歴・GoalTrackerペースチップ・CsvExport試合デコード・TechniqueLog重複チェック・Login JSON-LD** 🎉
+  **実装内容（6コミット）**:
+    - Q1: `components/StreakFreeze.tsx` 修正（commit: `d1678668`）✅ — ストリークフリーズ最終使用日表示追加
+      - `lastUsed` が null 以外の場合に「最終使用: N月N日」表示
+      - `lastUsed === null` の平常時は「絊急時に連続記録を守れます」メッセージ
+    - Q2: `components/GoalTracker.tsx` 修正（commit: `390cdf0f`）✅ — 月間目標に残日数+ペースチップ追加
+      - `daysLeftInMonth` / `daysInMonth` / `daysSoFar` / `monthlyPace` 変数計算追加
+      - 月間目標未達成時に「あとN日」グレーチップ表示
+      - ペース計算: 現在の練習頺度から月末までの見込み回数を表示（達成見込緑・不足見込黄）
+    - Q3: `components/CsvExport.tsx` 修正（commit: `2f3a48d2`）✅ — CSV履歴に試合記録詳細をデコード出力
+      - `decodeCompForCsv()` 関数追加: `__comp__`JSON形式の試合ノートを「勝利 | vs opponent | by finish | event」形式に変換
+      - 練習ログCSVのノート列が、試合エントリの場合は円読CSVとして出力
+    - Q4: `components/TechniqueLog.tsx` 修正（commit: `a0c4022d`）✅ — テクニック名重複チェック追加
+      - `handleSubmit` 内に`isDuplicate` チェック追加（`techniques.some()` で大文字小文字無視比較）
+      - 重複時は「同名のテクニックが既に存在します」エラー表示、insertリクエストキャンセル
+      - 100文字バリデーションの直後、setLoadingの直前に配置
+    - Q5: `app/login/page.tsx` 修正（commit: `1af2a377`） + `app/login/LoginClient.tsx` 新規作成（commit: `0108cf5d`）✅
+      - サーバーコンポーネント分離（クライアントロジックをLoginClient.tsxに移動）
+      - page.tsxに `export const metadata` （title/description/OGP/Twitter Card）追加
+      - JSON-LD `WebPage` + `LoginAction` スキーマ追加
+  **バグチェック**: 6ファイル全確認 ✅ TOTAL ISSUES: 0
+  **次の優先タスク**（優先度順）:
+    1. **Supabase Migration** — `profiles` テーブルに `streak_freeze_count` / `streak_freeze_last_used` カラム追加が必要
+    2. **Batch R** — 次の5タスク実装
+    3. **BJJ Wiki UI更新** — ユーザーが後回しにする意向
+
 - Day 4ex (2026/03/17): **Batch P — DailyRecommendYouTube・WEEKタイプ内訳・BJJ名言・試合編集ワTECHLOG YouTube** 🎉
   **実装内容（6コミット）**:
     - P1: DailyRecommend YouTubeアイコンボタン追加（commit: ecd810a2） ✅
