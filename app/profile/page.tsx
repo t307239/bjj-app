@@ -7,6 +7,15 @@ import PersonalBests from "@/components/PersonalBests";
 
 export const metadata: Metadata = {
   title: "プロフィール",
+  description: "BJJ練習の累計記録・帯・ジム・目標を管理するプロフィールページ。",
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "name": "BJJ App プロフィール",
+  "description": "Brazilian Jiu-Jitsuの練習記録・帯・目標を管理",
+  "url": "https://bjj-app-one.vercel.app/profile",
 };
 
 export default async function ProfilePage() {
@@ -30,6 +39,10 @@ export default async function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#1a1a2e] pb-20 sm:pb-0">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <NavBar displayName={displayName} avatarUrl={avatarUrl} />
 
       <main className="max-w-4xl mx-auto px-4 py-6">
