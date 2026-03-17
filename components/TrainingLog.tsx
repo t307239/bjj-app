@@ -379,8 +379,10 @@ export default function TrainingLog({ userId }: Props) {
             </div>
             <div className="w-px h-8 bg-gray-700" />
             <div className="flex-1 text-center">
-              <div className="text-lg font-bold text-green-400">{entries.length}{hasMore ? "+" : ""}</div>
-              <div className="text-gray-400 text-xs">読込済み</div>
+              <div className="text-lg font-bold text-purple-400">
+                {monthEntries.length > 0 ? formatDuration(Math.round(monthTotalMins / monthEntries.length)) : "-"}
+              </div>
+              <div className="text-gray-400 text-xs">平均/回</div>
             </div>
           </div>
           {hasMore && (
