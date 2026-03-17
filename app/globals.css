@@ -12,3 +12,38 @@ body {
   background: var(--background);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
+
+/* 印刷 / PDF保存スタイル */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .print\:hidden {
+    display: none !important;
+  }
+  nav, header, footer {
+    display: none !important;
+  }
+  /* 練習記録の印刷スタイル */
+  .bg-\[\#0f0e17\],
+  .bg-\[\#1a1a2e\],
+  .bg-\[\#16213e\] {
+    background: white !important;
+    color: black !important;
+    border: 1px solid #ddd !important;
+  }
+  .text-white, .text-gray-200, .text-gray-300, .text-gray-400 {
+    color: #333 !important;
+  }
+  .text-\[\#e94560\] {
+    color: #c00 !important;
+  }
+  .border-gray-700 {
+    border-color: #ddd !important;
+  }
+  /* ページブレーク制御 */
+  .training-entry {
+    break-inside: avoid;
+  }
+}
