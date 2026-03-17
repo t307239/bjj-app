@@ -337,6 +337,21 @@ export default function TrainingLog({ userId }: Props) {
     ? `${Math.floor(monthTotalMins / 60)}h${monthTotalMins % 60 > 0 ? `${monthTotalMins % 60}m` : ""}`
     : `${monthTotalMins}m`;
 
+  // 今月の試合成績
+  const monthCompEntries = monthEntries.filter((e) => e.type === "competition");
+  const monthCompWin = monthCompEntries.filter((e) => {
+    if (!e.notes?.startsWith(COMP_PREFIX)) return false;
+    try { const d = JSON.parse(e.notes.slice(COMP_PREFIX.length)); return d.result === "win"; } catch { return false; }
+  }).length;
+  const monthCompLoss = monthCompEntries.filter((e) => {
+    if (!e.notes?.startsWith(COMP_PREFIX)) return false;
+    try { const d = JSON.parse(e.notes.slice(COMP_PREFIX.length)); return d.result === "loss"; } catch { return false; }
+  }).length;
+  const monthCompDraw = monthCompEntries.filter((e) => {
+    if (!e.notes?.startsWith(COMP_PREFIX)) return false;
+    try { const d = JSON.parse(e.notes.slice(COMP_PREFIX.length)); return d.result === "draw"; } catch { return false; }
+  }).length;
+
   return (
     <div>
       {toast && (
@@ -385,6 +400,17 @@ export default function TrainingLog({ userId }: Props) {
               <div className="text-gray-400 text-xs">平均/回</div>
             </div>
           </div>
+          {monthCompEntries.length > 0 && (
+            <div className="flex items-center justify-center gap-2 mt-3 pt-3 border-t border-gray-700/50">
+              <span className="text-[10px] text-gray-500">今月の試合:</span>
+              {monthCompWin > 0 && <span className="text-[11px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full">勝{monthCompWin}</span>}
+              {monthCompLoss > 0 && <span className="text-[11px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full">負{monthCompLoss}</span>}
+              {monthCompDraw > 0 && <span className="text-[11px] bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded-full">分{monthCompDraw}</span>}
+              {monthCompEntries.length - monthCompWin - monthCompLoss - monthCompDraw > 0 && (
+                <span className="text-[11px] bg-gray-500/20 text-gray-400 px-2 py-0.5 rounded-full">他{monthCompEntries.length - monthCompWin - monthCompLoss - monthCompDraw}</span>
+              )}
+            </div>
+          )}
           {hasMore && (
             <p className="text-gray-600 text-xs text-center mt-2">※ 追加データあり。「もっと見る」で更新</p>
           )}
