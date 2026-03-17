@@ -6,6 +6,26 @@ import { redirect } from "next/navigation";
 export const metadata: Metadata = {
   title: "BJJ App - Brazilian Jiu-Jitsu練習トラッカー",
   description: "柔術の練習記録・テクニック管理・成長の可視化。無料で始めるBJJトレーニングアプリ。",
+  keywords: ["BJJ", "ブラジリアン柔術", "練習記録", "テクニック管理", "格闘技アプリ", "Brazilian Jiu-Jitsu"],
+  openGraph: {
+    type: "website",
+    title: "BJJ App - Brazilian Jiu-Jitsu練習トラッカー",
+    description: "柔術の練習記録・テクニック管理・成長の可視化。無料で始めるBJJトレーニングアプリ。",
+    url: "https://bjj-app-one.vercel.app",
+    siteName: "BJJ App",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "BJJ App",
+  "description": "Brazilian Jiu-Jitsuの練習記録・テクニック管理・成長可視化アプリ。練習回数・テクニック・連続記録を追跡。",
+  "url": "https://bjj-app-one.vercel.app",
+  "applicationCategory": "SportsApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "inLanguage": ["ja", "en"],
 };
 
 export default async function Home() {
@@ -19,6 +39,11 @@ export default async function Home() {
   }
 
   return (
+    <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
     <main className="min-h-screen flex flex-col">
       {/* ナビゲーション */}
       <nav className="px-6 py-4 flex items-center justify-between max-w-5xl mx-auto w-full">
@@ -73,6 +98,11 @@ export default async function Home() {
 
           <p className="text-gray-600 text-sm">
             GitHub / Google アカウントで即スタート。クレジットカード不要。
+          </p>
+          <p className="text-gray-700 text-xs mt-3">
+            <Link href="/dashboard" className="hover:text-gray-500 underline transition-colors">
+              登録なしで体験する →
+            </Link>
           </p>
         </div>
       </section>
@@ -311,5 +341,6 @@ export default async function Home() {
         <p>© 2026 BJJ App. Made for grapplers, by grapplers.</p>
       </footer>
     </main>
+    </>
   );
 }
