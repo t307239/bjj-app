@@ -174,6 +174,13 @@ export default function TechniqueLog({ userId }: Props) {
       return;
     }
 
+    // 重複チェック
+    const isDuplicate = techniques.some((t) => t.name.toLowerCase() === form.name.trim().toLowerCase());
+    if (isDuplicate) {
+      setFormError("同名のテクニックが既に存在します");
+      return;
+    }
+
     setLoading(true);
 
     const { data, error } = await supabase
