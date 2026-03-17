@@ -11,6 +11,8 @@ type Bests = {
   maxSessionMin: number;
   longestStreak: number;
   bestMonthCount: number;
+  avgSessionMin: number;
+  avgMonthly: number;
 };
 
 function fmtTime(min: number): string {
@@ -38,13 +40,12 @@ export default function PersonalBests({ userId }: Props) {
       const totalMinutes = logs.reduce((s, l) => s + (l.duration_min ?? 0), 0);
       const maxSessionMin = Math.max(...logs.map((l) => l.duration_min ?? 0));
 
-      // 最長連続日数
-      const uniqueDates = [...new Set(logs.map((l: { date: string }) => l.date))].sort();
+      const uniqueDates = [...new Set(logs.map((l) => l.date))].sort();
       let maxStreak = uniqueDates.length > 0 ? 1 : 0;
       let curStreak = 1;
       for (let i = 1; i < uniqueDates.length; i++) {
-        const prev = new Date(uniqueDates[i - 1] as string);
-        const curr = new Date(uniqueDates[i] as string);
+        const prev = new Date(uniqueDates[i - 1]);
+        const curr = new Date(uniqueDates[i]);
         const diff = Math.round((curr.getTime() - prev.getTime()) / 86400000);
         if (diff === 1) {
           curStreak++;
@@ -54,9 +55,8 @@ export default function PersonalBests({ userId }: Props) {
         }
       }
 
-      // 月間最多
       const monthCounts: Record<string, number> = {};
-      logs.forEach((l: { date: string }) => {
+      logs.forEach((l) => {
         const ym = l.date.slice(0, 7);
         monthCounts[ym] = (monthCounts[ym] ?? 0) + 1;
       });
@@ -64,7 +64,13 @@ export default function PersonalBests({ userId }: Props) {
         ? Math.max(...Object.values(monthCounts))
         : totalSessions;
 
-      setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount });
+      const avgSessionMin = totalSessions > 0 ? Math.round(totalMinutes / totalSessions) : 0;
+      const monthKeys = Object.keys(monthCounts);
+      const avgMonthly = monthKeys.length > 0
+        ? Math.round(totalSessions / monthKeys.length)
+        : totalSessions;
+
+      setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, avgSessionMin, avgMonthly });
     };
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -77,6 +83,8 @@ export default function PersonalBests({ userId }: Props) {
     { icon: "⏱️", label: "総練習時間", value: fmtTime(bests.totalMinutes) },
     { icon: "🔥", label: "最長連続日", value: `${bests.longestStreak}日` },
     { icon: "📅", label: "月間最多", value: `${bests.bestMonthCount}回` },
+    { icon: "⌛", label: "平均時間/回", value: fmtTime(bests.avgSessionMin) },
+    { icon: "📈", label: "月平均", value: `${bests.avgMonthly}回` },
   ];
 
   return (
@@ -93,7 +101,7 @@ export default function PersonalBests({ userId }: Props) {
       </div>
       {bests.maxSessionMin > 0 && (
         <div className="mt-2 text-center text-[10px] text-gray-600">
-          最長セッション: {fmtTime(bests.maxSessionMin)}
+          最長セッション: {fmtTime(bests.maxSessionMin)} · 最多月: {bests.bestMonthCount}回
         </div>
       )}
     </div>
