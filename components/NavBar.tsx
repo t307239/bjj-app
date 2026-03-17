@@ -17,22 +17,45 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
   const pathname = usePathname();
   const { t } = useLocale();
   const [trainedToday, setTrainedToday] = useState<boolean | null>(null);
+  const [currentStreak, setCurrentStreak] = useState<number>(0);
 
   useEffect(() => {
     const checkToday = async () => {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-      const today = (() => {
-        const d = new Date();
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-      })();
-      const { count } = await supabase
-        .from("training_logs")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id)
-        .eq("date", today);
+      const d = new Date();
+      const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      const [{ count }, { data: recentLogs }] = await Promise.all([
+        supabase
+          .from("training_logs")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", user.id)
+          .eq("date", today),
+        supabase
+          .from("training_logs")
+          .select("date")
+          .eq("user_id", user.id)
+          .order("date", { ascending: false })
+          .limit(60),
+      ]);
       setTrainedToday((count ?? 0) > 0);
+      // ストリーク計算
+      if (recentLogs && recentLogs.length > 0) {
+        const uniqueDates = [...new Set(recentLogs.map((l: { date: string }) => l.date))].sort().reverse() as string[];
+        let streak = 0;
+        let checkDate = new Date(today);
+        for (const dateStr of uniqueDates) {
+          const check = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, "0")}-${String(checkDate.getDate()).padStart(2, "0")}`;
+          if (dateStr === check) {
+            streak++;
+            checkDate.setDate(checkDate.getDate() - 1);
+          } else if (dateStr < check) {
+            break;
+          }
+        }
+        setCurrentStreak(streak);
+      }
     };
     checkToday();
   }, [pathname]); // re-check after navigation (e.g. after logging a session)
@@ -74,6 +97,11 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
             </nav>
           </div>
           <div className="flex items-center gap-2">
+            {currentStreak >= 2 && (
+              <span className="hidden sm:flex items-center gap-1 text-[11px] text-orange-400 bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-full">
+                🔥 {currentStreak}日
+              </span>
+            )}
             <LangToggle />
             {avatarUrl && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -93,6 +121,11 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
 
       {/* モバイル ボトムナビ */}
       <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-[#16213e] border-t border-gray-700 z-50">
+        {currentStreak >= 2 && (
+          <div className="flex justify-center py-1 border-b border-gray-700/50 bg-orange-500/5">
+            <span className="text-[10px] text-orange-400">🔥 {currentStreak}日連続練習中</span>
+          </div>
+        )}
         <div className="grid grid-cols-3">
           {NAV_ITEMS.map((item) => (
             <Link
