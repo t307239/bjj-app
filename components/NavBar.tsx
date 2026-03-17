@@ -3,20 +3,23 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoutButton from "./LogoutButton";
+import LangToggle from "./LangToggle";
+import { useLocale } from "@/lib/i18n";
 
 type Props = {
   displayName: string;
   avatarUrl?: string | null;
 };
 
-const NAV_ITEMS = [
-  { href: "/dashboard", label: "ホーム", icon: "🏠" },
-  { href: "/techniques", label: "テクニック", icon: "📚" },
-  { href: "/profile", label: "プロフィール", icon: "🏅" },
-];
-
 export default function NavBar({ displayName, avatarUrl }: Props) {
   const pathname = usePathname();
+  const { t } = useLocale();
+
+  const NAV_ITEMS = [
+    { href: "/dashboard", label: t("nav.home"), icon: "🏠" },
+    { href: "/techniques", label: t("nav.techniques"), icon: "📚" },
+    { href: "/profile", label: t("nav.profile"), icon: "🏅" },
+  ];
 
   return (
     <>
@@ -45,7 +48,8 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
               ))}
             </nav>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <LangToggle />
             {avatarUrl && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
