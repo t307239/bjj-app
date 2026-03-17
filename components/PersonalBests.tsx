@@ -40,7 +40,7 @@ export default function PersonalBests({ userId }: Props) {
 
       // 最長連続日数
       const uniqueDates = [...new Set(logs.map((l: { date: string }) => l.date))].sort();
-      let maxStreak = 1;
+      let maxStreak = uniqueDates.length > 0 ? 1 : 0;
       let curStreak = 1;
       for (let i = 1; i < uniqueDates.length; i++) {
         const prev = new Date(uniqueDates[i - 1] as string);
@@ -60,7 +60,9 @@ export default function PersonalBests({ userId }: Props) {
         const ym = l.date.slice(0, 7);
         monthCounts[ym] = (monthCounts[ym] ?? 0) + 1;
       });
-      const bestMonthCount = Math.max(...Object.values(monthCounts));
+      const bestMonthCount = Object.values(monthCounts).length > 0
+        ? Math.max(...Object.values(monthCounts))
+        : totalSessions;
 
       setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount });
     };
@@ -68,7 +70,7 @@ export default function PersonalBests({ userId }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  if (!bests || bests.totalSessions < 3) return null;
+  if (!bests) return null;
 
   const items = [
     { icon: "🏋️", label: "総練習回数", value: `${bests.totalSessions}回` },
