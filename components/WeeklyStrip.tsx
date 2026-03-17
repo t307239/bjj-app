@@ -24,6 +24,7 @@ const DAY_LABELS = ["月", "火", "水", "木", "金", "土", "日"];
 export default function WeeklyStrip({ userId }: Props) {
   const [trainedDates, setTrainedDates] = useState<Set<string>>(new Set());
   const [weekTotalMins, setWeekTotalMins] = useState(0);
+  const [lastWeekCount, setLastWeekCount] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
@@ -39,20 +40,37 @@ export default function WeeklyStrip({ userId }: Props) {
       const sunday = new Date(monday);
       sunday.setDate(monday.getDate() + 6);
 
+      // 先週月曜〜日曜
+      const lastMonday = new Date(monday);
+      lastMonday.setDate(monday.getDate() - 7);
+      const lastSunday = new Date(monday);
+      lastSunday.setDate(monday.getDate() - 1);
+
       const mondayStr = toLocalDateStr(monday);
       const sundayStr = toLocalDateStr(sunday);
+      const lastMondayStr = toLocalDateStr(lastMonday);
+      const lastSundayStr = toLocalDateStr(lastSunday);
 
-      const { data: logs } = await supabase
-        .from("training_logs")
-        .select("date, duration_min")
-        .eq("user_id", userId)
-        .gte("date", mondayStr)
-        .lte("date", sundayStr);
+      const [{ data: logs }, { count: prevCount }] = await Promise.all([
+        supabase
+          .from("training_logs")
+          .select("date, duration_min")
+          .eq("user_id", userId)
+          .gte("date", mondayStr)
+          .lte("date", sundayStr),
+        supabase
+          .from("training_logs")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", userId)
+          .gte("date", lastMondayStr)
+          .lte("date", lastSundayStr),
+      ]);
 
       if (logs) {
         setTrainedDates(new Set(logs.map((l: { date: string; duration_min: number }) => l.date)));
         setWeekTotalMins(logs.reduce((sum: number, l: { date: string; duration_min: number }) => sum + (l.duration_min ?? 0), 0));
       }
+      setLastWeekCount(prevCount ?? 0);
       setLoading(false);
     };
     load();
@@ -92,6 +110,11 @@ export default function WeeklyStrip({ userId }: Props) {
           </span>
           {weekTotalMins > 0 && (
             <span className="text-[10px] text-gray-500">· {fmtMins(weekTotalMins)}</span>
+          )}
+          {lastWeekCount !== null && lastWeekCount > 0 && (
+            <span className={`text-[10px] font-medium ${trainedThisWeek > lastWeekCount ? "text-green-400" : trainedThisWeek < lastWeekCount ? "text-gray-500" : "text-gray-500"}`}>
+              {trainedThisWeek > lastWeekCount ? `▲${trainedThisWeek - lastWeekCount} 先週比` : trainedThisWeek < lastWeekCount ? `先週${lastWeekCount}回` : `= 先週`}
+            </span>
           )}
         </div>
       </div>
