@@ -130,7 +130,13 @@ export default function StreakFreeze({ userId, streak }: Props) {
             <span className="text-base">❄️</span>
             <div>
               <p className="text-xs font-medium text-gray-300">ストリークフリーズ</p>
-              <p className="text-[11px] text-gray-500">緊急時に連続記録を守れます</p>
+              {lastUsed ? (
+                <p className="text-[11px] text-gray-500">
+                  最終使用: {lastUsed.slice(5, 7)}月{lastUsed.slice(8, 10)}日
+                </p>
+              ) : (
+                <p className="text-[11px] text-gray-500">緊急時に連続記録を守れます</p>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-1">
