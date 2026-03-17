@@ -9,9 +9,69 @@ import GoalTracker from "@/components/GoalTracker";
 import GuestDashboard from "@/components/GuestDashboard";
 import GuestMigration from "@/components/GuestMigration";
 
-export const metadata: Metadata = {
-  title: "ダッシュボード",
-};
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app-one.vercel.app";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { title: "ダッシュボード | BJJ App" };
+  }
+
+  // プロフィールと総練習数を並列取得
+  const [{ data: profile }, { count: totalCount }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("belt, start_date")
+      .eq("id", user.id)
+      .single(),
+    supabase
+      .from("training_logs")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id),
+  ]);
+
+  const belt = profile?.belt ?? "white";
+  const count = totalCount ?? 0;
+
+  // BJJ歴（月）を計算
+  let months = 0;
+  if (profile?.start_date) {
+    const start = new Date(profile.start_date);
+    months = Math.max(
+      0,
+      Math.floor((Date.now() - start.getTime()) / (1000 * 60 * 60 * 24 * 30))
+    );
+  }
+
+  const BELT_LABELS: Record<string, string> = {
+    white: "白帯", blue: "青帯", purple: "紫帯", brown: "茶帯", black: "黒帯",
+  };
+  const beltLabel = BELT_LABELS[belt] ?? "白帯";
+
+  const ogImageUrl = `${BASE_URL}/api/og?belt=${belt}&count=${count}&months=${months}`;
+  const title = `BJJの記録 — ${count}回練習達成！ | BJJ App`;
+  const description = `${beltLabel} · 総${count}回練習 · BJJ歴${months}ヶ月 — BJJ Appで毎日の練習を記録中`;
+
+  return {
+    title: "ダッシュボード",
+    openGraph: {
+      title,
+      description,
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: "BJJ App 練習記録" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
+    },
+  };
+}
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -35,12 +95,13 @@ export default async function DashboardPage() {
 
   // サーバーサイドで統計データを取得（JST = UTC+9 補正）
   const JST_OFFSET = 9 * 60 * 60 * 1000;
-  const now = new Date(Date.now() + JST_OFFSET);
+  const now = new Date(Date.now() + JST_OFFSET); // JST時刻
   const toJSTStr = (d: Date) =>
     `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
 
   const firstDayOfMonth = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-01`;
-  const dayOfWeek = now.getUTCDay();
+  // 今週の月曜日を計算
+  const dayOfWeek = now.getUTCDay(); // 0=Sun, 1=Mon...
   const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
   const firstDayOfWeek = toJSTStr(new Date(now.getTime() - daysToMonday * 86400000));
 
