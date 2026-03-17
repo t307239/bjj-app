@@ -17,6 +17,13 @@ type GoalData = {
   techniqueCount: number;
 };
 
+type MonthHistory = {
+  ym: string;
+  label: string;
+  count: number;
+  achieved: boolean;
+};
+
 function ProgressBar({ current, target }: { current: number; target: number }) {
   const pct = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
   const done = current >= target && target > 0;
@@ -116,6 +123,7 @@ export default function GoalTracker({ userId }: Props) {
   const [editing, setEditing] = useState<"weekly" | "monthly" | "technique" | null>(null);
   const [editValue, setEditValue] = useState(0);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [monthHistory, setMonthHistory] = useState<MonthHistory[]>([]);
 
   const supabase = createClient();
 
@@ -151,21 +159,46 @@ export default function GoalTracker({ userId }: Props) {
           .single(),
       ]);
 
-      // スキーマ未対応チェック（カラム非存在）
       if (profileRes.error && profileRes.error.code === "42703") {
         setSchemaReady(false);
         setLoading(false);
         return;
       }
 
+      const mGoal = profileRes.data?.monthly_goal ?? 0;
+
       setData({
         weeklyGoal: profileRes.data?.weekly_goal ?? 0,
-        monthlyGoal: profileRes.data?.monthly_goal ?? 0,
+        monthlyGoal: mGoal,
         techniqueGoal: (profileRes.data as { technique_goal?: number } | null)?.technique_goal ?? 0,
         weekCount: wc ?? 0,
         monthCount: mc ?? 0,
         techniqueCount: tc ?? 0,
       });
+
+      if (mGoal > 0) {
+        const history: MonthHistory[] = [];
+        for (let i = 5; i >= 0; i--) {
+          const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+          const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+          const nextD = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+          const nextYm = `${nextD.getFullYear()}-${String(nextD.getMonth() + 1).padStart(2, "0")}-01`;
+          const { count: hc } = await supabase
+            .from("training_logs")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", userId)
+            .gte("date", `${ym}-01`)
+            .lt("date", nextYm);
+          history.push({
+            ym,
+            label: `${d.getMonth() + 1}月`,
+            count: hc ?? 0,
+            achieved: (hc ?? 0) >= mGoal,
+          });
+        }
+        setMonthHistory(history);
+      }
+
       setLoading(false);
     };
     load();
@@ -220,7 +253,6 @@ export default function GoalTracker({ userId }: Props) {
 
   const hasGoals = data.weeklyGoal > 0 || data.monthlyGoal > 0 || data.techniqueGoal > 0;
 
-  // 全目標達成バナー
   const activeGoalStates = [
     { target: data.weeklyGoal, current: data.weekCount },
     { target: data.monthlyGoal, current: data.monthCount },
@@ -241,7 +273,6 @@ export default function GoalTracker({ userId }: Props) {
           )}
         </div>
 
-        {/* 全目標達成バナー */}
         {allGoalsAchieved && !editing && (
           <div className="mx-4 mt-3 rounded-xl bg-green-500/10 border border-green-500/30 px-4 py-3 text-center">
             <div className="text-lg mb-0.5">🎉</div>
@@ -251,7 +282,6 @@ export default function GoalTracker({ userId }: Props) {
         )}
 
         <div className="p-4 space-y-3">
-          {/* 週間目標 */}
           {editing === "weekly" ? (
             <GoalEditor
               label="今週"
@@ -285,7 +315,6 @@ export default function GoalTracker({ userId }: Props) {
             </div>
           )}
 
-          {/* 月間目標 */}
           {editing === "monthly" ? (
             <GoalEditor
               label="今月"
@@ -319,7 +348,6 @@ export default function GoalTracker({ userId }: Props) {
             </div>
           )}
 
-          {/* テクニック目標 */}
           {editing === "technique" ? (
             <GoalEditor
               label="テクニック習得数"
@@ -353,6 +381,33 @@ export default function GoalTracker({ userId }: Props) {
             </div>
           )}
         </div>
+
+        {monthHistory.length > 0 && (
+          <div className="border-t border-gray-700 px-4 py-3">
+            <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wider">過去6ヶ月の達成履歴</p>
+            <div className="flex items-end justify-between gap-1">
+              {monthHistory.map((m) => (
+                <div key={m.ym} className="flex flex-col items-center gap-1 flex-1">
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors ${
+                      m.achieved
+                        ? "bg-green-500 text-white shadow-sm shadow-green-500/40"
+                        : "bg-gray-700 text-gray-500"
+                    }`}
+                  >
+                    {m.achieved ? "✓" : m.count}
+                  </div>
+                  <span className={`text-[9px] ${m.achieved ? "text-green-400" : "text-gray-600"}`}>
+                    {m.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <p className="text-[10px] text-gray-600 mt-2 text-center">
+              {monthHistory.filter((m) => m.achieved).length} / 6ヶ月 達成
+            </p>
+          </div>
+        )}
       </div>
     </>
   );
