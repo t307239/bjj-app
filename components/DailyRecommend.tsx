@@ -45,10 +45,12 @@ export default function DailyRecommend({ userId }: Props) {
         .limit(10);
 
       if (data && data.length > 0) {
+        // 日付ベースで候補をローテーション（毎日変わる）
         const dayIndex = new Date().getDate() % data.length;
         setTech(data[dayIndex]);
       }
 
+      // 今日のヒント（年の通算日でローテーション）
       const now = new Date();
       const dayOfYear = Math.floor(
         (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000
@@ -69,8 +71,14 @@ export default function DailyRecommend({ userId }: Props) {
     );
   }
 
+  const openYouTube = (techName: string) => {
+    const query = encodeURIComponent(techName + " BJJ tutorial");
+    window.open(`https://www.youtube.com/results?search_query=${query}`, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <div className="mb-4 space-y-3">
+      {/* 今日のおすすめテクニック */}
       {tech && (
         <div className="bg-gradient-to-r from-[#1a1a2e] to-[#16213e] rounded-xl p-4 border border-[#e94560]/30">
           <div className="flex items-center gap-2 mb-2">
@@ -79,21 +87,35 @@ export default function DailyRecommend({ userId }: Props) {
               今日の練習テーマ
             </span>
           </div>
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex-1 min-w-0">
               <p className="text-white font-semibold text-sm">{tech.name}</p>
               <p className="text-gray-400 text-xs mt-0.5">{tech.category}</p>
             </div>
-            <div className="text-right">
-              <span className="bg-[#e94560]/20 text-[#e94560] text-xs px-2 py-1 rounded-full">
-                {MASTERY_LABELS[tech.mastery_level] ?? "入門"}
-              </span>
-              <p className="text-gray-500 text-[10px] mt-1">習熟度を上げよう</p>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {/* YouTube クイック検索ボタン */}
+              <button
+                onClick={() => openYouTube(tech.name)}
+                title="YouTubeで動画を検索"
+                className="flex items-center gap-1 bg-red-600/20 hover:bg-red-600/40 text-red-400 hover:text-red-300 border border-red-600/30 hover:border-red-500/50 rounded-lg px-2 py-1.5 text-[10px] font-medium transition-colors"
+              >
+                <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                <span>動画</span>
+              </button>
+              <div className="text-right">
+                <span className="bg-[#e94560]/20 text-[#e94560] text-xs px-2 py-1 rounded-full">
+                  {MASTERY_LABELS[tech.mastery_level] ?? "入門"}
+                </span>
+                <p className="text-gray-500 text-[10px] mt-1">習熟度を上げよう</p>
+              </div>
             </div>
           </div>
         </div>
       )}
 
+      {/* 今日のトレーニングヒント */}
       <div className="bg-[#16213e] rounded-xl p-4 border border-yellow-400/20">
         <div className="flex items-start gap-2">
           <span className="text-base mt-0.5">💡</span>
