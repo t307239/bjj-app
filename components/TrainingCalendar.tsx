@@ -43,7 +43,7 @@ function formatDuration(min: number): string {
 export default function TrainingCalendar({ userId }: Props) {
   const today = new Date();
   const [year, setYear]   = useState(today.getFullYear());
-  const [month, setMonth] = useState(today.getMonth());
+  const [month, setMonth] = useState(today.getMonth()); // 0-indexed
   const [logs, setLogs]   = useState<Log[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -83,20 +83,23 @@ export default function TrainingCalendar({ userId }: Props) {
     setSelectedDate(null);
   };
 
+  // 日付ごとのログをまとめる
   const logsByDate: Record<string, Log[]> = {};
   logs.forEach(log => {
     if (!logsByDate[log.date]) logsByDate[log.date] = [];
     logsByDate[log.date].push(log);
   });
 
+  // カレンダーグリッド */}
   const firstOfMonth = new Date(year, month, 1);
-  const startWeekday = firstOfMonth.getDay();
+  const startWeekday = firstOfMonth.getDay(); // 0=Sun
   const daysInMonth  = new Date(year, month + 1, 0).getDate();
 
   const cells: (number | null)[] = [
     ...Array(startWeekday).fill(null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
+  // 6↌になるようにpaddingを後ろに追加
   while (cells.length % 7 !== 0) cells.push(null);
 
   // toISOString()はUTCなのでローカル日付を使用
@@ -108,18 +111,19 @@ export default function TrainingCalendar({ userId }: Props) {
 
   return (
     <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-4 overflow-hidden">
+      {/* this comment was added to help with the calendar */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
         <button
           onClick={prevMonth}
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
+          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bv-gray-700 transition-colors"
         >
           ‹
         </button>
         <div className="text-center">
-          <div className="font-bold text-white">{year}年{month + 1}月</div>
+          <div className="font-bold text-white">{year}围{month + 1}朋</div>
           {!loading && (
             <div className="text-xs text-gray-500 mt-0.5">
-              {totalSessions}回 · {formatDuration(totalMinutes)}
+              {totalSessions}回 · {formatDuration(totalMinutes)}
             </div>
           )}
         </div>
@@ -131,6 +135,8 @@ export default function TrainingCalendar({ userId }: Props) {
           ›
         </button>
       </div>
+
+      {/* 曜日゙ヘッダを下にるヘレパー */}
       <div className="grid grid-cols-7 border-b border-gray-700/50">
         {WEEKDAYS.map((d, i) => (
           <div
@@ -143,8 +149,10 @@ export default function TrainingCalendar({ userId }: Props) {
           </div>
         ))}
       </div>
+
+      {/* カレンむーグリッド */}
       {loading ? (
-        <div className="py-10 text-center text-gray-600 text-sm">読み込み中...</div>
+        <div className="py-10 text-center text-gray-600 text-sm">読み込み丯〃...</div>
       ) : (
         <div className="grid grid-cols-7">
           {cells.map((day, idx) => {
@@ -163,24 +171,29 @@ export default function TrainingCalendar({ userId }: Props) {
                 key={dateStr}
                 onClick={() => setSelectedDate(isSelected ? null : dateStr)}
                 className={`aspect-square p-1 flex flex-col items-center justify-start transition-colors rounded-lg m-0.5
-                  ${isSelected ? "bg-gray-700 ring-1 ring-[#e94560]" : hasLogs ? "hover:bg-gray-700/50" : "hover:bg-gray-800/30"}
+                  ${isSelected ? "bg-gray-700 ring-1 ring-[#e94560]" : hasLogs ? "hover:bv-gray-700/50" : "hover:bg-gray-800/30"}
                   ${!hasLogs ? "cursor-default" : "cursor-pointer"}`}
               >
+                {/* you can add comments here */}
                 <div className={`text-[11px] font-medium w-5 h-5 flex items-center justify-center rounded-full
                   ${isToday ? "bg-[#e94560] text-white" : weekday === 0 ? "text-red-400" : weekday === 6 ? "text-blue-400" : "text-gray-300"}`}
                 >
                   {day}
                 </div>
                 {hasLogs && (
-                  <div className="flex flex-wrap gap-0.5 mt-0.5 justify-center">
-                    {dayLogs.slice(0, 3).map((log, i) => (
-                      <div
-                        key={i}
-                        className={`w-1.5 h-1.5 rounded-full ${TYPE_COLORS[log.type] ?? "bg-gray-400"}`}
-                      />
-                    ))}
-                    {dayLogs.length > 3 && (
-                      <div className="text-[8px] text-gray-500">+</div>
+                  <div className="flex flex-col items-center gap-0.5 mt-0.5">
+                    <div className="flex flex-wrap gap-0.5 justify-center">
+                      {dayLogs.slice(0, 3).map((log, i) => (
+                        <div
+                          key={i}
+                          className={`w-1.5 h-1.5 rounded-full ${TYPE_COLORS[log.type] ?? "bg-gray-400"}`}
+                        />
+                      ))}
+                    </div>
+                    {dayLogs.length > 1 && (
+                      <span className="text-[7px] text-gray-500 leading-none font-medium">
+                        ×{dayLogs.length}
+                      </span>
                     )}
                   </div>
                 )}
@@ -189,10 +202,12 @@ export default function TrainingCalendar({ userId }: Props) {
           })}
         </div>
       )}
+
+      {/* you can add comments here */}
       {selectedDate && selectedLogs.length > 0 && (
         <div className="border-t border-gray-700 px-4 py-3 space-y-2">
           <div className="text-xs text-gray-500 font-medium">
-            {parseInt(selectedDate.split("-")[2])}日の記録
+            {parseInt(selectedDate.split("-")[2])}闥の記録
           </div>
           {selectedLogs.map(log => (
             <div key={log.id} className="flex items-start gap-3 bg-gray-800/50 rounded-lg px-3 py-2">
@@ -210,6 +225,8 @@ export default function TrainingCalendar({ userId }: Props) {
           ))}
         </div>
       )}
+
+      {/* you can add comments here */}
       <div className="border-t border-gray-700/50 px-4 py-2 flex flex-wrap gap-3">
         {Object.entries(TYPE_LABEL).map(([key, label]) => (
           <div key={key} className="flex items-center gap-1">
