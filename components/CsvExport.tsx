@@ -11,6 +11,28 @@ const TYPE_LABELS: Record<string, string> = {
   open_mat: "オープンマット",
 };
 
+// 試合ノートのデコード（TrainingLogと同じロジック）
+const COMP_PREFIX = "__comp__";
+const RESULT_MAP: Record<string, string> = { win: "勝利", loss: "敗北", draw: "引き分け" };
+
+function decodeCompForCsv(notes: string): string {
+  if (!notes || !notes.startsWith(COMP_PREFIX)) return notes;
+  const nl = notes.indexOf("\n");
+  const jsonStr = nl === -1 ? notes.slice(COMP_PREFIX.length) : notes.slice(COMP_PREFIX.length, nl);
+  const userNotes = nl === -1 ? "" : notes.slice(nl + 1);
+  try {
+    const comp = JSON.parse(jsonStr) as { result: string; opponent: string; finish: string; event: string };
+    const parts = [RESULT_MAP[comp.result] ?? comp.result];
+    if (comp.opponent) parts.push("vs " + comp.opponent);
+    if (comp.finish) parts.push("by " + comp.finish);
+    if (comp.event) parts.push(comp.event);
+    const compStr = parts.join(" | ");
+    return userNotes ? compStr + " / " + userNotes : compStr;
+  } catch {
+    return notes;
+  }
+}
+
 type Props = {
   userId: string;
 };
@@ -34,27 +56,28 @@ export default function CsvExport({ userId }: Props) {
       return;
     }
 
+    // CSV生成
     const header = ["日付", "種類", "時間（分）", "メモ"];
     const rows = logs.map((l) => [
       l.date,
       TYPE_LABELS[l.type] ?? l.type,
       String(l.duration_min ?? ""),
-      `"${(l.notes ?? "").replace(/"/g, '""')}"`,
+      '"' + decodeCompForCsv(l.notes ?? "").replace(/"/g, '""') + '"',
     ]);
 
     const csvContent = [header.join(","), ...rows.map((r) => r.join(","))].join("\n");
 
-    // BOM付きUTF-8でExcelでも文字化けなし
+    // BOM付きUTF-8 でExcelでも文字化けなし
     const bom = "\uFEFF";
     const blob = new Blob([bom + csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
 
     const now = new Date();
-    const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+    const dateStr = now.getFullYear() + String(now.getMonth() + 1).padStart(2, "0") + String(now.getDate()).padStart(2, "0");
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = `bjj_training_${dateStr}.csv`;
+    a.download = "bjj_training_" + dateStr + ".csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
