@@ -11,6 +11,7 @@ export default function InsightsBanner({ userId }: Props) {
   const [bestDay, setBestDay] = useState<string | null>(null);
   const [paceMsg, setPaceMsg] = useState<string | null>(null);
   const [totalStreak, setTotalStreak] = useState<number | null>(null);
+  const [streakInsight, setStreakInsight] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -28,8 +29,8 @@ export default function InsightsBanner({ userId }: Props) {
         new Date(Date.UTC(jstNow.getUTCFullYear(), jstNow.getUTCMonth() - 1, 1))
       );
 
-      // 過去28日のログを取得（曜日分析用）
-      const [{ data: recentLogs }, { count: thisMonthCount }, { count: prevMonthCount }] =
+      // 過去28日のログを取得（曜日分析用）+ 全ログ（ストリーク計算用）
+      const [{ data: recentLogs }, { count: thisMonthCount }, { count: prevMonthCount }, { data: allLogs }] =
         await Promise.all([
           supabase
             .from("training_logs")
@@ -49,6 +50,11 @@ export default function InsightsBanner({ userId }: Props) {
             .eq("user_id", userId)
             .gte("date", firstOfPrevMonth)
             .lt("date", firstOfMonth),
+          supabase
+            .from("training_logs")
+            .select("date")
+            .eq("user_id", userId)
+            .order("date", { ascending: true }),
         ]);
 
       // 最多練習曜日
@@ -65,7 +71,7 @@ export default function InsightsBanner({ userId }: Props) {
         }
       }
 
-      // 今月 vs 先月ペース㯔較
+      // 今月 vs 先月ペース比較
       const curDay = jstNow.getUTCDate();
       const daysInCurMonth = new Date(
         Date.UTC(jstNow.getUTCFullYear(), jstNow.getUTCMonth() + 1, 0)
@@ -90,13 +96,34 @@ export default function InsightsBanner({ userId }: Props) {
         }
         setTotalStreak(thisMonthCount ?? 0);
       }
+
+      // 最長連続日数
+      if (allLogs && allLogs.length >= 3) {
+        const uniqueDates = [...new Set(allLogs.map((l: { date: string }) => l.date))].sort();
+        let maxStreak = uniqueDates.length > 0 ? 1 : 0;
+        let curStreak = 1;
+        for (let i = 1; i < uniqueDates.length; i++) {
+          const prev = new Date(uniqueDates[i - 1] as string);
+          const curr = new Date(uniqueDates[i] as string);
+          const diff = Math.round((curr.getTime() - prev.getTime()) / 86400000);
+          if (diff === 1) {
+            curStreak++;
+            if (curStreak > maxStreak) maxStreak = curStreak;
+          } else {
+            curStreak = 1;
+          }
+        }
+        if (maxStreak >= 3) {
+          setStreakInsight(`最長連続: ${maxStreak}日`);
+        }
+      }
     };
 
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  if (!bestDay && !paceMsg) return null;
+  if (!bestDay && !paceMsg && !streakInsight) return null;
 
   return (
     <div className="bg-[#0f3460]/40 border border-[#e94560]/20 rounded-xl px-4 py-3 mb-4">
@@ -120,6 +147,12 @@ export default function InsightsBanner({ userId }: Props) {
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] text-gray-500">今月</span>
             <span className="text-xs text-green-400 font-medium">{totalStreak}回達成 🎯</span>
+          </div>
+        )}
+        {streakInsight && (
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] text-gray-500">記録</span>
+            <span className="text-xs text-yellow-400 font-medium">🔥 {streakInsight}</span>
           </div>
         )}
       </div>
