@@ -6,14 +6,33 @@ import Toast from "./Toast";
 
 type Props = { userId: string; streak: number };
 
+// streak_freeze_last_used カラムを JSON 配列文字列として再利用
+// 例: '["2026-03-17","2026-03-15","2026-03-10"]'
+// 旧形式（"2026-03-17" 単独文字列）は後方互換で処理
+
+function parseHistory(raw: string | null): string[] {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed.slice(0, 3);
+    return [raw]; // 旧形式
+  } catch {
+    return raw ? [raw] : []; // 旧形式
+  }
+}
+
+function fmtDate(dateStr: string): string {
+  const [y, m, d] = dateStr.split("-");
+  return `${y}/${m}/${d}`;
+}
+
 export default function StreakFreeze({ userId, streak }: Props) {
   const [freezeCount, setFreezeCount] = useState(0);
-  const [lastUsed, setLastUsed] = useState<string | null>(null);
+  const [historyDates, setHistoryDates] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [using, setUsing] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [dismissed, setDismissed] = useState(false);
-  const [confirmingFreeze, setConfirmingFreeze] = useState(false);
 
   const supabase = createClient();
 
@@ -25,16 +44,16 @@ export default function StreakFreeze({ userId, streak }: Props) {
         .eq("id", userId)
         .single();
       setFreezeCount(data?.streak_freeze_count ?? 0);
-      setLastUsed(data?.streak_freeze_last_used ?? null);
+      setHistoryDates(parseHistory(data?.streak_freeze_last_used ?? null));
       setLoading(false);
     };
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  const today = new Date().toLocaleDateString("sv-SE");
-  const usedToday = lastUsed === today;
+  const today = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD
   const yesterday = new Date(Date.now() - 86400000).toLocaleDateString("sv-SE");
+  const usedToday = historyDates[0] === today;
 
   const [hadYesterdayLog, setHadYesterdayLog] = useState<boolean | null>(null);
 
@@ -55,19 +74,21 @@ export default function StreakFreeze({ userId, streak }: Props) {
     if (freezeCount <= 0 || usedToday || using) return;
     setUsing(true);
     try {
+      // 新しい使用日を先頭に追加し、最大3件保持
+      const newHistory = [today, ...historyDates].slice(0, 3);
       const { error } = await supabase
         .from("profiles")
         .upsert(
           {
             id: userId,
             streak_freeze_count: Math.max(0, freezeCount - 1),
-            streak_freeze_last_used: today,
+            streak_freeze_last_used: JSON.stringify(newHistory),
           },
           { onConflict: "id" }
         );
       if (!error) {
         setFreezeCount((prev) => Math.max(0, prev - 1));
-        setLastUsed(today);
+        setHistoryDates(newHistory);
         setToast({ message: "❄️ ストリークフリーズを使用しました！連続記録が守られます。", type: "success" });
       } else {
         setToast({ message: "使用に失敗しました。後でお試しください。", type: "error" });
@@ -91,6 +112,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
         <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
       )}
 
+      {/* 危機警告 + フリーズ使用 */}
       {showWarning && (
         <div className="bg-[#1a1a2e] border border-blue-500/40 rounded-xl p-4 mb-4">
           <div className="flex items-start justify-between gap-2">
@@ -104,6 +126,11 @@ export default function StreakFreeze({ userId, streak }: Props) {
                   昨日の記録がありません。フリーズを使って連続記録を守りましょう。
                 </p>
                 <p className="text-[11px] text-blue-400 mt-1">残り {freezeCount} 回使用可能</p>
+                {historyDates.length > 0 && (
+                  <p className="text-[10px] text-gray-500 mt-0.5">
+                    直近の使用: {historyDates.map(fmtDate).join(" / ")}
+                  </p>
+                )}
               </div>
             </div>
             <button
@@ -114,60 +141,55 @@ export default function StreakFreeze({ userId, streak }: Props) {
             </button>
           </div>
           <div className="flex gap-2 mt-3">
-            {!confirmingFreeze ? (
-              <button
-                onClick={() => setConfirmingFreeze(true)}
-                disabled={freezeCount <= 0 || using}
-                className="flex-1 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 disabled:opacity-40 text-white text-sm font-semibold transition-colors"
-              >
-                {using ? "使用中…" : `❄️ フリーズを使う (残${freezeCount})`}
-              </button>
-            ) : (
-              <div className="flex-1 flex flex-col gap-2">
-                <p className="text-xs text-center text-gray-300">本当にフリーズを使用しますか？</p>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => { setConfirmingFreeze(false); useFreeze(); }}
-                    className="flex-1 py-1.5 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold"
-                  >
-                    はい
-                  </button>
-                  <button
-                    onClick={() => setConfirmingFreeze(false)}
-                    className="flex-1 py-1.5 rounded-lg bg-gray-600 hover:bg-gray-500 text-white text-xs"
-                  >
-                    キャンセル
-                  </button>
-                </div>
-              </div>
-            )}
+            <button
+              onClick={useFreeze}
+              disabled={freezeCount <= 0 || using}
+              className="flex-1 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 disabled:opacity-40 text-white text-sm font-semibold transition-colors"
+            >
+              {using ? "使用中…" : `❄️ フリーズを使う (残${freezeCount})`}
+            </button>
           </div>
         </div>
       )}
 
+      {/* ステータス表示（危機でない時） */}
       {showStatus && freezeCount > 0 && (
-        <div className="bg-[#16213e] rounded-xl px-4 py-3 mb-4 border border-gray-700 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-base">❄️</span>
-            <div>
-              <p className="text-xs font-medium text-gray-300">ストリークフリーズ</p>
-              {lastUsed ? (
-                <p className="text-[11px] text-gray-500">
-                  最終使用: {lastUsed.slice(5, 7)}月{lastUsed.slice(8, 10)}日
-                </p>
-              ) : (
+        <div className="bg-[#16213e] rounded-xl px-4 py-3 mb-4 border border-gray-700">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-base">❄️</span>
+              <div>
+                <p className="text-xs font-medium text-gray-300">ストリークフリーズ</p>
                 <p className="text-[11px] text-gray-500">緊急時に連続記録を守れます</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(3, freezeCount) }).map((_, i) => (
+                <span key={i} className="text-blue-400 text-base">❄️</span>
+              ))}
+              {freezeCount > 3 && (
+                <span className="text-[11px] text-blue-400">+{freezeCount - 3}</span>
               )}
             </div>
           </div>
-          <div className="flex items-center gap-1">
-            {Array.from({ length: Math.min(3, freezeCount) }).map((_, i) => (
-              <span key={i} className="text-blue-400 text-base">❄️</span>
-            ))}
-            {freezeCount > 3 && (
-              <span className="text-[11px] text-blue-400">+{freezeCount - 3}</span>
-            )}
-          </div>
+          {/* 直近の使用履歴 */}
+          {historyDates.length > 0 && (
+            <div className="mt-2 pt-2 border-t border-gray-700/50">
+              <p className="text-[10px] text-gray-500">
+                直近の使用:{" "}
+                {historyDates.map((d, i) => (
+                  <span key={i}>
+                    <span className={i === 0 ? "text-blue-400" : "text-gray-600"}>
+                      {fmtDate(d)}
+                    </span>
+                    {i < historyDates.length - 1 && (
+                      <span className="text-gray-700"> · </span>
+                    )}
+                  </span>
+                ))}
+              </p>
+            </div>
+          )}
         </div>
       )}
     </>
