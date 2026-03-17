@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useLocale } from "@/lib/i18n";
+import LangToggle from "./LangToggle";
 
 type GuestLog = {
   id: string;
@@ -42,6 +45,8 @@ function saveGuestLogs(logs: GuestLog[]) {
 }
 
 export default function GuestDashboard() {
+  const router = useRouter();
+  const { t } = useLocale();
   const [logs, setLogs] = useState<GuestLog[]>([]);
   const [date, setDate] = useState(getLocalDateString());
   const [duration, setDuration] = useState(60);
@@ -81,20 +86,24 @@ export default function GuestDashboard() {
     <div className="min-h-screen bg-[#1a1a2e] pb-20 sm:pb-0">
       {/* ゲストバナー */}
       <div className="bg-gradient-to-r from-[#e94560]/90 to-[#0f3460]/90 px-4 py-3 text-center">
-        <p className="text-white text-sm font-medium">
-          🥋 ゲストモードで体験中 —
-          <Link href="/login" className="underline ml-1 font-bold">
-            無料登録
-          </Link>
-          してデータをクラウドに保存
-        </p>
+        <div className="flex items-center justify-between max-w-4xl mx-auto">
+          <p className="text-white text-sm font-medium flex-1 text-center">
+            🥋 {t("guest.banner")} —
+            <Link href="/login" className="underline ml-1 font-bold">
+              {t("guest.signupLink")}
+            </Link>
+            {t("guest.saveToCloud")}
+          </p>
+          <LangToggle />
+        </div>
       </div>
 
       <main className="max-w-4xl mx-auto px-4 py-6">
+        {/* ヘッダー */}
         <div className="mb-6">
-          <h2 className="text-2xl font-bold">ようこそ！👋</h2>
+          <h2 className="text-2xl font-bold">{t("guest.welcome")}</h2>
           <p className="text-gray-400 text-sm mt-1">
-            登録不要で今すぐ練習を記録できます
+            {t("guest.noLogin")}
           </p>
         </div>
 
@@ -102,46 +111,50 @@ export default function GuestDashboard() {
         <div className="grid grid-cols-2 gap-3 mb-6">
           <div className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700">
             <div className="text-2xl font-bold text-[#e94560]">{logs.length}</div>
-            <div className="text-gray-400 text-xs mt-1">記録した練習</div>
+            <div className="text-gray-400 text-xs mt-1">{t("guest.sessions")}</div>
           </div>
           <div className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700">
             <div className="text-2xl font-bold text-yellow-400">
               {logs.reduce((s, l) => s + l.duration_min, 0)}
             </div>
-            <div className="text-gray-400 text-xs mt-1">総練習分</div>
+            <div className="text-gray-400 text-xs mt-1">{t("guest.totalMins")}</div>
           </div>
         </div>
 
         {/* 練習記録セクション */}
         <div className="bg-[#16213e] rounded-xl border border-gray-700 p-4 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-white">練習記録</h3>
+            <h3 className="font-semibold text-white">{t("training.title")}</h3>
             <button
               onClick={() => setShowForm(!showForm)}
               className="bg-[#e94560] hover:bg-[#c73652] text-white text-sm font-bold px-4 py-1.5 rounded-lg"
             >
-              {showForm ? "キャンセル" : "+ 追加"}
+              {showForm ? t("training.cancel") : t("training.add")}
             </button>
           </div>
 
+          {/* 入力フォーム */}
           {showForm && (
             <div className="space-y-3 mb-4 border border-gray-600 rounded-xl p-4 bg-[#0f3460]/30">
-              <input
-                type="date"
-                value={date}
-                max={getLocalDateString()}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full bg-[#0f3460] text-white text-sm rounded-lg px-3 py-2 border border-gray-600 focus:outline-none focus:border-blue-400"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="date"
+                  value={date}
+                  max={getLocalDateString()}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="flex-1 bg-[#0f3460] text-white text-sm rounded-lg px-3 py-2 border border-gray-600 focus:outline-none focus:border-blue-400"
+                />
+              </div>
+              {/* 時間プリセット */}
               <div>
                 <p className="text-gray-400 text-xs mb-1.5">練習時間</p>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   {DURATION_PRESETS.map((d) => (
                     <button
                       key={d}
                       type="button"
                       onClick={() => setDuration(d)}
-                      className={`flex-1 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
                         duration === d
                           ? "bg-[#e94560] border-[#e94560] text-white"
                           : "bg-[#0f3460] border-gray-600 text-gray-400 hover:text-white"
@@ -152,6 +165,7 @@ export default function GuestDashboard() {
                   ))}
                 </div>
               </div>
+              {/* タイプ */}
               <div className="flex gap-2 flex-wrap">
                 {TRAINING_TYPES.map((t) => (
                   <button
@@ -182,11 +196,12 @@ export default function GuestDashboard() {
             </div>
           )}
 
+          {/* ログ一覧 */}
           {logs.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <p className="text-4xl mb-2">🥋</p>
-              <p className="text-sm">まだ記録がありません</p>
-              <p className="text-xs mt-1">「+ 追加」から最初の練習を記録しよう</p>
+              <p className="text-sm">{t("training.empty")}</p>
+              <p className="text-xs mt-1">{t("training.emptyDesc")}</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -212,7 +227,7 @@ export default function GuestDashboard() {
           )}
         </div>
 
-        {/* 登録CTAカード */}
+        {/* 登録CTAカード（3回以上練習したら強調表示） */}
         <div className={`rounded-xl border p-5 text-center transition-all ${
           logs.length >= 3
             ? "bg-gradient-to-br from-[#e94560]/20 to-[#0f3460] border-[#e94560]/50"
@@ -220,21 +235,23 @@ export default function GuestDashboard() {
         }`}>
           {logs.length >= 3 && (
             <p className="text-[#e94560] text-sm font-semibold mb-1">
-              🎉 {logs.length}回記録しました！
+              {t("guest.ctaRecorded", { n: logs.length })}
             </p>
           )}
-          <p className="text-white font-semibold mb-1">データをクラウドに保存しませんか？</p>
+          <p className="text-white font-semibold mb-1">
+            {t("guest.ctaTitle")}
+          </p>
           <p className="text-gray-400 text-xs mb-4">
-            無料登録するとカレンダー表示・目標管理・複数デバイス同期が使えます
+            {t("guest.ctaDesc")}
           </p>
           <Link
             href="/login"
             className="inline-block bg-[#e94560] hover:bg-[#c73652] text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-colors"
           >
-            無料でアカウント登録 →
+            {t("guest.ctaButton")}
           </Link>
           <p className="text-gray-600 text-xs mt-2">
-            ※ 登録後、このブラウザのデータは自動で引き継がれます
+            {t("guest.ctaNote")}
           </p>
         </div>
       </main>
