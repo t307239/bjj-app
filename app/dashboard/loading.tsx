@@ -52,7 +52,21 @@ export default function DashboardLoading() {
           </div>
         </div>
 
-        {/* カルンダースケルトン */}
+        {/* PersonalBestsスケルトン */}
+        <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
+          <div className="h-4 w-24 bg-gray-700 rounded animate-pulse mb-3" />
+          <div className="grid grid-cols-2 gap-2">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="bg-gray-800/40 rounded-xl p-3 text-center">
+                <div className="h-5 w-6 bg-gray-700 rounded animate-pulse mx-auto mb-1" />
+                <div className="h-4 w-14 bg-gray-700 rounded animate-pulse mx-auto mb-1" />
+                <div className="h-3 w-16 bg-gray-800 rounded animate-pulse mx-auto" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* カレンダースケルトン */}
         <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
           <div className="flex justify-between mb-3">
             <div className="h-4 w-8 bg-gray-700 rounded animate-pulse" />
