@@ -11,6 +11,7 @@ type Bests = {
   maxSessionMin: number;
   longestStreak: number;
   bestMonthCount: number;
+  bestMonthLabel: string;
   avgSessionMin: number;
   avgMonthly: number;
 };
@@ -63,6 +64,10 @@ export default function PersonalBests({ userId }: Props) {
       const bestMonthCount = Object.values(monthCounts).length > 0
         ? Math.max(...Object.values(monthCounts))
         : totalSessions;
+      const bestMonthKey = Object.entries(monthCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "";
+      const bestMonthLabel = bestMonthKey
+        ? bestMonthKey.slice(0, 4) + "年" + String(parseInt(bestMonthKey.slice(5, 7))) + "月"
+        : "";
 
       const avgSessionMin = totalSessions > 0 ? Math.round(totalMinutes / totalSessions) : 0;
       const monthKeys = Object.keys(monthCounts);
@@ -70,7 +75,7 @@ export default function PersonalBests({ userId }: Props) {
         ? Math.round(totalSessions / monthKeys.length)
         : totalSessions;
 
-      setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, avgSessionMin, avgMonthly });
+      setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, bestMonthLabel, avgSessionMin, avgMonthly });
     };
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,7 +87,7 @@ export default function PersonalBests({ userId }: Props) {
     { icon: "🏋️", label: "総練習回数", value: `${bests.totalSessions}回` },
     { icon: "⏱️", label: "総練習時間", value: fmtTime(bests.totalMinutes) },
     { icon: "🔥", label: "最長連続日", value: `${bests.longestStreak}日` },
-    { icon: "📅", label: "月間最多", value: `${bests.bestMonthCount}回` },
+    { icon: "📅", label: "月間最多", value: `${bests.bestMonthCount}回`, sub: bests.bestMonthLabel },
     { icon: "⌛", label: "平均時間/回", value: fmtTime(bests.avgSessionMin) },
     { icon: "📈", label: "月平均", value: `${bests.avgMonthly}回` },
   ];
@@ -126,6 +131,9 @@ export default function PersonalBests({ userId }: Props) {
             <div className="text-lg mb-0.5">{item.icon}</div>
             <div className="text-base font-bold text-white">{item.value}</div>
             <div className="text-[10px] text-gray-500 mt-0.5">{item.label}</div>
+            {"sub" in item && (item as {sub?: string}).sub && (
+              <div className="text-[9px] text-green-500/70 mt-0.5">⭐ {(item as {sub?: string}).sub}</div>
+            )}
           </div>
         ))}
       </div>
