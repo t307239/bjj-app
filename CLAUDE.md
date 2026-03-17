@@ -1,4 +1,21 @@
 ## 📝 開発ログ
+- Day 4ep (2026/03/17): **Batch I — CsvExport新規・ローディングスケルトン更新・日付範囲フィルター・BeltVisual SVG・今日クイック入力** 🎉
+  **実装内容（5コミット）**:
+    - I1: CsvExport.tsx 新規作成（commit: 8e759181）✅ — CSV一括エクスポート（フリーミアム核心機能）
+      - 全training_logs → CSV変換 → BOM付きUTF-8 Blobダウンロード（Excel対応）
+      - 日付・タイプ・時間(分)・メモの4列、日本語タイプラベル変換
+    - I2: dashboard/loading.tsx 修正（commit: dc94497b）✅ — スケルトン更新
+      - WeeklyStrip 7ドットスケルトン追加（GoalTrackerの前）
+      - PersonalBests スケルトンを4→6セルに更新
+    - I3+I5: components/TrainingLog.tsx 修正（commit: f6391e24）✅ — 日付範囲フィルター + 今日クイック入力
+      - dateFrom/dateTo state + フィルターチェーン追加
+      - 日付範囲UI: from/to日付input + ✕クリア + 先週/先月ショートカット
+      - 記録フォームに「今日に戻す」ボタン（今日以外選択時のみ表示）
+    - I4: components/ProfileForm.tsx 修正（commit: bfdf2ce1）✅ — BeltVisual SVG グラフィック追加
+      - BeltVisual({ belt, stripe }) コンポーネント: SVG帯（本体+先端+白ストライプ）
+      - ProfileViewCard の pill+dots を BeltVisual に置換
+  **バグチェック**: 4ファイル全確認、✅ TOTAL ISSUES: 0
+
 - Day 4eo (2026/03/17): **Batch H — PersonalBests拡張・月別グラフ6/12切替・タイプ分布期間フィルター・テクニックソート・WeeklyStrip新規** 🎉
   **実装内容（6コミット）**:
     - H1: `components/PersonalBests.tsx` 修正（commit: `62222e4d`）✅ — 4→6統計カードに拡張
