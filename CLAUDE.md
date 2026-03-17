@@ -1,95 +1,108 @@
-## 📝 開発ログ
-- Day 4ep (2026/03/17): **Batch I — CsvExport新規・ローディングスケルトン更新・日付範囲フィルター・BeltVisual SVG・今日クイック入力** 🎉
-  **実装内容（5コミット）**:
-    - I1: CsvExport.tsx 新規作成（commit: 8e759181）✅ — CSV一括エクスポート（フリーミアム核心機能）
-      - 全training_logs → CSV変換 → BOM付きUTF-8 Blobダウンロード（Excel対応）
-      - 日付・タイプ・時間(分)・メモの4列、日本語タイプラベル変換
-    - I2: dashboard/loading.tsx 修正（commit: dc94497b）✅ — スケルトン更新
-      - WeeklyStrip 7ドットスケルトン追加（GoalTrackerの前）
-      - PersonalBests スケルトンを4→6セルに更新
-    - I3+I5: components/TrainingLog.tsx 修正（commit: f6391e24）✅ — 日付範囲フィルター + 今日クイック入力
-      - dateFrom/dateTo state + フィルターチェーン追加
-      - 日付範囲UI: from/to日付input + ✕クリア + 先週/先月ショートカット
-      - 記録フォームに「今日に戻す」ボタン（今日以外選択時のみ表示）
-    - I4: components/ProfileForm.tsx 修正（commit: bfdf2ce1）✅ — BeltVisual SVG グラフィック追加
-      - BeltVisual({ belt, stripe }) コンポーネント: SVG帯（本体+先端+白ストライプ）
-      - ProfileViewCard の pill+dots を BeltVisual に置換
-  **バグチェック**: 4ファイル全確認、✅ TOTAL ISSUES: 0
-
-- Day 4eo (2026/03/17): **Batch H — PersonalBests拡張・月別グラフ6/12切替・タイプ分布期間フィルター・テクニックソート・WeeklyStrip新規** 🎉
+## ð éçºã­ã°
+- Day 4eq (2026/03/17): **Batch J — StreakProtect・今日の練習バナー・YouTubeサムネイル・loading.tsx強化・連勝記録** 🎉
   **実装内容（6コミット）**:
-    - H1: `components/PersonalBests.tsx` 修正（commit: `62222e4d`）✅ — 4→6統計カードに拡張
-      - `Bests` 型に `avgSessionMin` / `avgMonthly` 追加
-      - avgSessionMin = round(totalMinutes/totalSessions) 計算
-      - avgMonthly = round(totalSessions/monthKeys.length) 計算
-      - アイテム配列を6件に: ⌛平均時間/回 + 📈月平均 追加
-    - H2: `components/TrainingBarChart.tsx` 完全再構築（commit: `32cf5e92`）✅ — 6/12ヶ月範囲切替
-      - data6 / data12 状態 + range: 6 | 12 state
-      - buildBuckets(months) 関数で単一クエリから両方構築
-      - 6月/12月トグルボタン追加（ヘッダー右上）
-    - H3: `components/TrainingTypeChart.tsx` 修正（commit: `20911f5f`）✅ — 期間フィルター追加
-      - allLogs に date+type 保存、period: "all"|"month"|"week" state
-      - getPeriodStart(period) / toLocalDateStr(d) ヘルパー追加
-      - クライアントサイドフィルター（全期間/今月/今週 3ボタン）
-    - H4: `components/TechniqueLog.tsx` 修正（commit: `8073f83b`）✅ — ソートドロップダウン追加
+    - J1: `components/StreakProtect.tsx` 新規作成（commit: `d61b2b4a`、dashboard統合: `4ad013aa`）✅
+      - streak > 0 かつ今日未記録時に黄色警告バナー表示、streak日数に応じた3段階メッセージ
+    - J2: `components/TrainingLog.tsx` 修正（commits: `3be2221a` + `d8a890cb`）✅ — 今日の練習プロンプトバナー
+      - `trainedToday` state追加、今日未記録時に赤バナー表示（タップでフォーム開く）
+    - J3: `components/TechniqueLog.tsx` 修正（commit: `a638b656`）✅ — YouTubeサムネイル自動プレビュー
+      - `extractYoutubeId()` 追加、`img.youtube.com/vi/{id}/mqdefault.jpg` でサムネイル表示、再生ボタンオーバーレイ付き
+    - J4: `app/techniques/loading.tsx` 完全リライト（commit: `c2dff4ce`）✅ — 統計バー+ソート+検索+カテゴリピル+カードスケルトン5枚
+    - J5: `components/CompetitionStats.tsx` 修正（commit: `07cc44ab`）✅ — 連勝記録
+      - `currentWinStreak`/`bestWinStreak` 追加、「🔥 現在N連勝中」「⭐ 最長N連勝」バッジ表示
+  **バグチェック**: ✅ TOTAL ISSUES: 0（6ファイル全確認）
+
+- Day 4ep (2026/03/17): **Batch I â CsvExportæ°è¦ã»ã­ã¼ãã£ã³ã°ã¹ã±ã«ãã³æ´æ°ã»æ¥ä»ç¯å²ãã£ã«ã¿ã¼ã»BeltVisual SVGã»ä»æ¥ã¯ã¤ãã¯å¥å** ð
+  **å®è£åå®¹ï¼5ã³ãããï¼**:
+    - I1: CsvExport.tsx æ°è¦ä½æï¼commit: 8e759181ï¼â â CSVä¸æ¬ã¨ã¯ã¹ãã¼ãï¼ããªã¼ãã¢ã æ ¸å¿æ©è½ï¼
+      - å¨training_logs â CSVå¤æ â BOMä»ãUTF-8 Blobãã¦ã³ã­ã¼ãï¼Excelå¯¾å¿ï¼
+      - æ¥ä»ã»ã¿ã¤ãã»æé(å)ã»ã¡ã¢ã®4åãæ¥æ¬èªã¿ã¤ãã©ãã«å¤æ
+    - I2: dashboard/loading.tsx ä¿®æ­£ï¼commit: dc94497bï¼â â ã¹ã±ã«ãã³æ´æ°
+      - WeeklyStrip 7ãããã¹ã±ã«ãã³è¿½å ï¼GoalTrackerã®åï¼
+      - PersonalBests ã¹ã±ã«ãã³ã4â6ã»ã«ã«æ´æ°
+    - I3+I5: components/TrainingLog.tsx ä¿®æ­£ï¼commit: f6391e24ï¼â â æ¥ä»ç¯å²ãã£ã«ã¿ã¼ + ä»æ¥ã¯ã¤ãã¯å¥å
+      - dateFrom/dateTo state + ãã£ã«ã¿ã¼ãã§ã¼ã³è¿½å 
+      - æ¥ä»ç¯å²UI: from/toæ¥ä»input + âã¯ãªã¢ + åé±/åæã·ã§ã¼ãã«ãã
+      - è¨é²ãã©ã¼ã ã«ãä»æ¥ã«æ»ãããã¿ã³ï¼ä»æ¥ä»¥å¤é¸ææã®ã¿è¡¨ç¤ºï¼
+    - I4: components/ProfileForm.tsx ä¿®æ­£ï¼commit: bfdf2ce1ï¼â â BeltVisual SVG ã°ã©ãã£ãã¯è¿½å 
+      - BeltVisual({ belt, stripe }) ã³ã³ãã¼ãã³ã: SVGå¸¯ï¼æ¬ä½+åç«¯+ç½ã¹ãã©ã¤ãï¼
+      - ProfileViewCard ã® pill+dots ã BeltVisual ã«ç½®æ
+  **ãã°ãã§ãã¯**: 4ãã¡ã¤ã«å¨ç¢ºèªãâ TOTAL ISSUES: 0
+
+- Day 4eo (2026/03/17): **Batch H â PersonalBestsæ¡å¼µã»æå¥ã°ã©ã6/12åæ¿ã»ã¿ã¤ãåå¸æéãã£ã«ã¿ã¼ã»ãã¯ããã¯ã½ã¼ãã»WeeklyStripæ°è¦** ð
+  **å®è£åå®¹ï¼6ã³ãããï¼**:
+    - H1: `components/PersonalBests.tsx` ä¿®æ­£ï¼commit: `62222e4d`ï¼â â 4â6çµ±è¨ã«ã¼ãã«æ¡å¼µ
+      - `Bests` åã« `avgSessionMin` / `avgMonthly` è¿½å 
+      - avgSessionMin = round(totalMinutes/totalSessions) è¨ç®
+      - avgMonthly = round(totalSessions/monthKeys.length) è¨ç®
+      - ã¢ã¤ãã éåã6ä»¶ã«: âå¹³åæé/å + ðæå¹³å è¿½å 
+    - H2: `components/TrainingBarChart.tsx` å®å¨åæ§ç¯ï¼commit: `32cf5e92`ï¼â â 6/12ã¶æç¯å²åæ¿
+      - data6 / data12 ç¶æ + range: 6 | 12 state
+      - buildBuckets(months) é¢æ°ã§åä¸ã¯ã¨ãªããä¸¡æ¹æ§ç¯
+      - 6æ/12æãã°ã«ãã¿ã³è¿½å ï¼ãããã¼å³ä¸ï¼
+    - H3: `components/TrainingTypeChart.tsx` ä¿®æ­£ï¼commit: `20911f5f`ï¼â â æéãã£ã«ã¿ã¼è¿½å 
+      - allLogs ã« date+type ä¿å­ãperiod: "all"|"month"|"week" state
+      - getPeriodStart(period) / toLocalDateStr(d) ãã«ãã¼è¿½å 
+      - ã¯ã©ã¤ã¢ã³ããµã¤ããã£ã«ã¿ã¼ï¼å¨æé/ä»æ/ä»é± 3ãã¿ã³ï¼
+    - H4: `components/TechniqueLog.tsx` ä¿®æ­£ï¼commit: `8073f83b`ï¼â â ã½ã¼ããã­ãããã¦ã³è¿½å 
       - sortBy: "newest"|"mastery_desc"|"mastery_asc"|"name" state
-      - .slice().sort() で4モードソート
-      - select ドロップダウンをヘッダータイトル横に配置
-    - H5: `components/WeeklyStrip.tsx` 新規作成（commit: `9c141068`）✅ — 今週練習ドットストリップ
-      - 月〜日の7つの円ドット表示（練習済=赤チェック、今日=赤枠、過去=灰、未来=薄灰）
-      - 今週月曜〜日曜のSupabase日付範囲クエリ
-      - ヘッダーに trainedThisWeek/totalPastDays 日カウント表示
-    - H6: `app/dashboard/page.tsx` 修正（commit: `623e4b31`）✅ — WeeklyStrip統合
-  **バグチェック**: 6ファイル全確認、✅ TOTAL ISSUES: 0
+      - .slice().sort() ã§4ã¢ã¼ãã½ã¼ã
+      - select ãã­ãããã¦ã³ããããã¼ã¿ã¤ãã«æ¨ªã«éç½®
+    - H5: `components/WeeklyStrip.tsx` æ°è¦ä½æï¼commit: `9c141068`ï¼â â ä»é±ç·´ç¿ãããã¹ããªãã
+      - æãæ¥ã®7ã¤ã®åãããè¡¨ç¤ºï¼ç·´ç¿æ¸=èµ¤ãã§ãã¯ãä»æ¥=èµ¤æ ãéå»=ç°ãæªæ¥=èç°ï¼
+      - ä»é±ææãæ¥æã®Supabaseæ¥ä»ç¯å²ã¯ã¨ãª
+      - ãããã¼ã« trainedThisWeek/totalPastDays æ¥ã«ã¦ã³ãè¡¨ç¤º
+    - H6: `app/dashboard/page.tsx` ä¿®æ­£ï¼commit: `623e4b31`ï¼â â WeeklyStripçµ±å
+  **ãã°ãã§ãã¯**: 6ãã¡ã¤ã«å¨ç¢ºèªãâ TOTAL ISSUES: 0
 
-- Day 4ej+G (2026/03/17): **Batch G — UX改善バッチ完了** 🎉
-  **実装内容**:
-    - G1: `components/TrainingBarChart.tsx` 修正 ✅ (commit: `c312bb6e`)
-      - UTCタイムゾーンバグ修正: `toISOString().substring(0,7)` → ローカル日付計算
-      - 平均ライン追加: ダッシュボーダーを`relative`コンテナ内に絶対位置で重ねる
-      - データのある月のみ対象の正確な平均計算
-    - G2: `components/CompetitionStats.tsx` 新機能追加 ✅ (commit: `69227f0b`)
-      - SVGドーナツチャートをW/L/Dの左に追加
-      - `DonutSegment`コンポーネント: strokeDasharrayで円弧セグメント描画
-      - 中夯SVGテキストに勝率％表示、花語green/red/yellowカラー
-      - W/L/Dグリッドを右側に沿えた2カラムレイアウト
-    - G3: `components/GoalTracker.tsx` 機能追加 ✅ (commit: `9177f32a`)
-      - 全目標達成バナー: 設定された全目標が達成時に🎉表示
-      - `activeGoalStates.every(g => g.current >= g.target)`で判定
-    - G4: `components/TrainingLog.tsx` 機能追加 ✅ (commit: `556effef`)
-      - キーワード検索入力追加（TechniqueLogと同一UX）
-      - 日付・タイプ・メモでフィルタリング
-      - クリア（×）ボタン付き検索インプット
-      - 空メッセージ: 「《QUERY》に一致する記録はありません」
-    - G5: `app/dashboard/loading.tsx` 修正 ✅ (commit: `278392c1`)
-      - TrainingTypeChartスケルトン追加（円形スケルトン + 伝說Cells）
-      - CompetitionStatsスケルトン追加（ドーナツ + W/L/Dグリッド）
-  **バグチェック**: 18項目 ✅ TOTAL ISSUES: 0
-  **次の優先タスク**（優先度順）:
-    1. **CSVエクスポート** — フリーミアム有料機能の核
-    2. **試合記録強化** — 勝敗・相手情報・試合名の専用フォーム
-    3. **PWAプッシュ通知** — 目標達成時の激励通知
-    4. **BJJ Wiki → アプリ導線** — Wikiページにアプリへのバナー設置
+- Day 4ej+G (2026/03/17): **Batch G â UXæ¹åãããå®äº** ð
+  **å®è£åå®¹**:
+    - G1: `components/TrainingBarChart.tsx` ä¿®æ­£ â (commit: `c312bb6e`)
+      - UTCã¿ã¤ã ã¾ã¼ã³ãã°ä¿®æ­£: `toISOString().substring(0,7)` â ã­ã¼ã«ã«æ¥ä»è¨ç®
+      - å¹³åã©ã¤ã³è¿½å : ããã·ã¥ãã¼ãã¼ã`relative`ã³ã³ããåã«çµ¶å¯¾ä½ç½®ã§éã­ã
+      - ãã¼ã¿ã®ããæã®ã¿å¯¾è±¡ã®æ­£ç¢ºãªå¹³åè¨ç®
+    - G2: `components/CompetitionStats.tsx` æ°æ©è½è¿½å  â (commit: `69227f0b`)
+      - SVGãã¼ãããã£ã¼ããW/L/Dã®å·¦ã«è¿½å 
+      - `DonutSegment`ã³ã³ãã¼ãã³ã: strokeDasharrayã§åå¼§ã»ã°ã¡ã³ãæç»
+      - ä¸­å¤¯SVGãã­ã¹ãã«åçï¼è¡¨ç¤ºãè±èªgreen/red/yellowã«ã©ã¼
+      - W/L/Dã°ãªãããå³å´ã«æ²¿ãã2ã«ã©ã ã¬ã¤ã¢ã¦ã
+    - G3: `components/GoalTracker.tsx` æ©è½è¿½å  â (commit: `9177f32a`)
+      - å¨ç®æ¨éæããã¼: è¨­å®ãããå¨ç®æ¨ãéææã«ðè¡¨ç¤º
+      - `activeGoalStates.every(g => g.current >= g.target)`ã§å¤å®
+    - G4: `components/TrainingLog.tsx` æ©è½è¿½å  â (commit: `556effef`)
+      - ã­ã¼ã¯ã¼ãæ¤ç´¢å¥åè¿½å ï¼TechniqueLogã¨åä¸UXï¼
+      - æ¥ä»ã»ã¿ã¤ãã»ã¡ã¢ã§ãã£ã«ã¿ãªã³ã°
+      - ã¯ãªã¢ï¼Ãï¼ãã¿ã³ä»ãæ¤ç´¢ã¤ã³ããã
+      - ç©ºã¡ãã»ã¼ã¸: ããQUERYãã«ä¸è´ããè¨é²ã¯ããã¾ããã
+    - G5: `app/dashboard/loading.tsx` ä¿®æ­£ â (commit: `278392c1`)
+      - TrainingTypeChartã¹ã±ã«ãã³è¿½å ï¼åå½¢ã¹ã±ã«ãã³ + ä¼èªªCellsï¼
+      - CompetitionStatsã¹ã±ã«ãã³è¿½å ï¼ãã¼ãã + W/L/Dã°ãªããï¼
+  **ãã°ãã§ãã¯**: 18é ç® â TOTAL ISSUES: 0
+  **æ¬¡ã®åªåã¿ã¹ã¯**ï¼åªååº¦é ï¼:
+    1. **CSVã¨ã¯ã¹ãã¼ã** â ããªã¼ãã¢ã æææ©è½ã®æ ¸
+    2. **è©¦åè¨é²å¼·å** â åæã»ç¸ææå ±ã»è©¦ååã®å°ç¨ãã©ã¼ã 
+    3. **PWAããã·ã¥éç¥** â ç®æ¨éææã®æ¿å±éç¥
+    4. **BJJ Wiki â ã¢ããªå°ç·** â Wikiãã¼ã¸ã«ã¢ããªã¸ã®ããã¼è¨­ç½®
 
-## 📝 開発ログ
-- Day 4en (2026/03/17): **Batch F — TrainingChartトグル・習熟度分布バー・月次デルタ・期間フィルター・PersonalBests改善** 🎉
-  **実装内容（5コミット）**:
-    - F1: TrainingChart 完全再構築（commit: a83c8ba7）- 月別棒グラフモード追加
-      - MonthData 型追加（ym / label / count / minutes）
-      - viewMode: "heatmap" | "monthly" state + トグルボタン（"84日" / "月別"）
-      - 単一クエリで過去12ヶ月取得 → ヒートマップ(84日) + 月別棒グラフ(6ヶ月) 両方に対応
-    - F2: TechniqueLog 修正（commit: 896dac49）- 習熟度分布スタックバー追加
-      - IIFEパターンで統計カード内に分布バー挿入
-      - 5色（gray/blue/yellow/orange/green）の rounded-full スタックバー
-    - F3: dashboard/page.tsx 修正（commit: 46a0922e）- 今月vs先月デルタ表示
-      - prevMonthCount クエリ追加（.gte(firstDayOfPrevMonth).lt(firstDayOfMonth)）
-      - 今月スタッツカードに ▲N vs 先月 / ▼N vs 先月 インジケーター追加（緑/赤）
-    - F4: TrainingLog 修正（commit: 3fc70462）- 期間フィルター Pills 追加
-      - periodFilter: "all" | "month" | "week" state 追加
-      - getPeriodStart() — 今月1日 or 今週月曜日(日曜エッジケース対応)を返す
-      - タイプフィルター上に期間 Pills（全期間 / 今月 / 今週）追加
-    - F5: PersonalBests 修正（commit: a2009650）- 1件以上で表示
-      - totalSessions < 3 ガード削除 → 1件以上のデータがあれば表示
-      - uniqueDates.length > 0 ? 1 : 0 エッジケース修正
-  **バグチェック**: 全5ファイル確認 TOTAL ISSUES: 0
-  **コミット一覧**: a83c8ba7 / 896dac49 / 46a0922e / 3fc70462 / a2009650
+## ð éçºã­ã°
+- Day 4en (2026/03/17): **Batch F â TrainingChartãã°ã«ã»ç¿çåº¦åå¸ãã¼ã»ææ¬¡ãã«ã¿ã»æéãã£ã«ã¿ã¼ã»PersonalBestsæ¹å** ð
+  **å®è£åå®¹ï¼5ã³ãããï¼**:
+    - F1: TrainingChart å®å¨åæ§ç¯ï¼commit: a83c8ba7ï¼- æå¥æ£ã°ã©ãã¢ã¼ãè¿½å 
+      - MonthData åè¿½å ï¼ym / label / count / minutesï¼
+      - viewMode: "heatmap" | "monthly" state + ãã°ã«ãã¿ã³ï¼"84æ¥" / "æå¥"ï¼
+      - åä¸ã¯ã¨ãªã§éå»12ã¶æåå¾ â ãã¼ãããã(84æ¥) + æå¥æ£ã°ã©ã(6ã¶æ) ä¸¡æ¹ã«å¯¾å¿
+    - F2: TechniqueLog ä¿®æ­£ï¼commit: 896dac49ï¼- ç¿çåº¦åå¸ã¹ã¿ãã¯ãã¼è¿½å 
+      - IIFEãã¿ã¼ã³ã§çµ±è¨ã«ã¼ãåã«åå¸ãã¼æ¿å¥
+      - 5è²ï¼gray/blue/yellow/orange/greenï¼ã® rounded-full ã¹ã¿ãã¯ãã¼
+    - F3: dashboard/page.tsx ä¿®æ­£ï¼commit: 46a0922eï¼- ä»ævsåæãã«ã¿è¡¨ç¤º
+      - prevMonthCount ã¯ã¨ãªè¿½å ï¼.gte(firstDayOfPrevMonth).lt(firstDayOfMonth)ï¼
+      - ä»æã¹ã¿ããã«ã¼ãã« â²N vs åæ / â¼N vs åæ ã¤ã³ã¸ã±ã¼ã¿ã¼è¿½å ï¼ç·/èµ¤ï¼
+    - F4: TrainingLog ä¿®æ­£ï¼commit: 3fc70462ï¼- æéãã£ã«ã¿ã¼ Pills è¿½å 
+      - periodFilter: "all" | "month" | "week" state è¿½å 
+      - getPeriodStart() â ä»æ1æ¥ or ä»é±æææ¥(æ¥æã¨ãã¸ã±ã¼ã¹å¯¾å¿)ãè¿ã
+      - ã¿ã¤ããã£ã«ã¿ã¼ä¸ã«æé Pillsï¼å¨æé / ä»æ / ä»é±ï¼è¿½å 
+    - F5: PersonalBests ä¿®æ­£ï¼commit: a2009650ï¼- 1ä»¶ä»¥ä¸ã§è¡¨ç¤º
+      - totalSessions < 3 ã¬ã¼ãåé¤ â 1ä»¶ä»¥ä¸ã®ãã¼ã¿ãããã°è¡¨ç¤º
+      - uniqueDates.length > 0 ? 1 : 0 ã¨ãã¸ã±ã¼ã¹ä¿®æ­£
+  **ãã°ãã§ãã¯**: å¨5ãã¡ã¤ã«ç¢ºèª TOTAL ISSUES: 0
+  **ã³ãããä¸è¦§**: a83c8ba7 / 896dac49 / 46a0922e / 3fc70462 / a2009650
