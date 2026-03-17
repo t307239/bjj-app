@@ -18,22 +18,38 @@ type Props = {
 };
 
 const CATEGORIES = [
-  { value: "guard", label: "ガード" },
-  { value: "passing", label: "パス" },
-  { value: "submissions", label: "サブミッション" },
-  { value: "takedowns", label: "テイクダウン" },
-  { value: "escapes", label: "エスケープ" },
-  { value: "back", label: "バック" },
-  { value: "mount", label: "マウント" },
-  { value: "other", label: "その他" },
+  { value: "guard", label: "ã¬ã¼ã" },
+  { value: "passing", label: "ãã¹" },
+  { value: "submissions", label: "ãµãããã·ã§ã³" },
+  { value: "takedowns", label: "ãã¤ã¯ãã¦ã³" },
+  { value: "escapes", label: "ã¨ã¹ã±ã¼ã" },
+  { value: "back", label: "ããã¯" },
+  { value: "mount", label: "ãã¦ã³ã" },
+  { value: "other", label: "ãã®ä»" },
 ];
 
-const MASTERY_LABELS = ["", "知っている", "練習中", "使える", "得意", "マスター"];
+const MASTERY_LABELS = ["", "ç¥ã£ã¦ãã", "ç·´ç¿ä¸­", "ä½¿ãã", "å¾æ", "ãã¹ã¿ã¼"];
 const MASTERY_COLORS = ["", "text-gray-400", "text-blue-400", "text-yellow-400", "text-orange-400", "text-green-400"];
 
 const NOTE_TRUNCATE = 80;
 
-// URLを検出してリンク化（YouTube は🎬アイコン付き）
+// YouTube URLからビデオIDを抽出
+function extractYoutubeId(url: string): string | null {
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes("youtube.com")) {
+      return u.searchParams.get("v");
+    }
+    if (u.hostname === "youtu.be") {
+      return u.pathname.slice(1).split("?")[0] || null;
+    }
+  } catch {
+    // invalid URL
+  }
+  return null;
+}
+
+// URLを検出してリンク化（YouTube は🎬アイコン付きサムネイル表示）
 function renderNotes(notes: string, expanded: boolean): React.ReactNode {
   const display = !expanded && notes.length > NOTE_TRUNCATE
     ? notes.slice(0, NOTE_TRUNCATE) + "…"
@@ -46,6 +62,43 @@ function renderNotes(notes: string, expanded: boolean): React.ReactNode {
     if (urlRegex.test(part)) {
       urlRegex.lastIndex = 0;
       const isYoutube = part.includes("youtube.com") || part.includes("youtu.be");
+      if (isYoutube) {
+        const videoId = extractYoutubeId(part);
+        return (
+          <span key={i} className="inline-block mt-1 w-full">
+            <a
+              href={part}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-lg overflow-hidden border border-gray-700 hover:border-gray-500 transition-colors"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {videoId ? (
+                <div className="relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`https://img.youtube.com/vi/${videoId}/mqdefault.jpg`}
+                    alt="YouTube thumbnail"
+                    className="w-full h-auto rounded-lg"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="bg-black/60 rounded-full w-10 h-10 flex items-center justify-center">
+                      <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <span className="flex items-center gap-1.5 px-3 py-2 text-blue-400 hover:text-blue-300 text-sm">
+                  🎬 YouTube動画
+                </span>
+              )}
+            </a>
+          </span>
+        );
+      }
       return (
         <a
           key={i}
@@ -55,14 +108,13 @@ function renderNotes(notes: string, expanded: boolean): React.ReactNode {
           className="text-blue-400 hover:text-blue-300 underline break-all"
           onClick={(e) => e.stopPropagation()}
         >
-          {isYoutube ? "🎬 YouTube動画" : part}
+          {part}
         </a>
       );
     }
     return <span key={i}>{part}</span>;
   });
 }
-
 export default function TechniqueLog({ userId }: Props) {
   const [techniques, setTechniques] = useState<Technique[]>([]);
   const [loading, setLoading] = useState(false);
@@ -112,13 +164,13 @@ export default function TechniqueLog({ userId }: Props) {
     e.preventDefault();
     setFormError(null);
 
-    // バリデーション
+    // ããªãã¼ã·ã§ã³
     if (!form.name.trim()) {
-      setFormError("テクニック名を入力してください");
+      setFormError("ãã¯ããã¯åãå¥åãã¦ãã ãã");
       return;
     }
     if (form.name.trim().length > 100) {
-      setFormError("テクニック名は100文字以内で入力してください");
+      setFormError("ãã¯ããã¯åã¯100æå­ä»¥åã§å¥åãã¦ãã ãã");
       return;
     }
 
@@ -134,15 +186,15 @@ export default function TechniqueLog({ userId }: Props) {
       setTechniques([data, ...techniques]);
       setForm({ name: "", category: "guard", mastery_level: 1, notes: "" });
       setShowForm(false);
-      setToast({ message: "テクニックを追加しました！", type: "success" });
+      setToast({ message: "ãã¯ããã¯ãè¿½å ãã¾ããï¼", type: "success" });
     } else {
-      setToast({ message: "保存に失敗しました", type: "error" });
+      setToast({ message: "ä¿å­ã«å¤±æãã¾ãã", type: "error" });
     }
     setLoading(false);
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("このテクニックを削除しますか？")) return;
+    if (!confirm("ãã®ãã¯ããã¯ãåé¤ãã¾ããï¼")) return;
     setDeletingId(id);
     const { error } = await supabase
       .from("techniques")
@@ -151,9 +203,9 @@ export default function TechniqueLog({ userId }: Props) {
       .eq("user_id", userId);
     if (!error) {
       setTechniques(techniques.filter((t) => t.id !== id));
-      setToast({ message: "テクニックを削除しました", type: "success" });
+      setToast({ message: "ãã¯ããã¯ãåé¤ãã¾ãã", type: "success" });
     } else {
-      setToast({ message: "削除に失敗しました", type: "error" });
+      setToast({ message: "åé¤ã«å¤±æãã¾ãã", type: "error" });
     }
     setDeletingId(null);
   };
@@ -175,9 +227,9 @@ export default function TechniqueLog({ userId }: Props) {
     if (!error && data) {
       setTechniques(techniques.map((t) => (t.id === id ? data : t)));
       setEditingId(null);
-      setToast({ message: "テクニックを更新しました", type: "success" });
+      setToast({ message: "ãã¯ããã¯ãæ´æ°ãã¾ãã", type: "success" });
     } else {
-      setToast({ message: "更新に失敗しました", type: "error" });
+      setToast({ message: "æ´æ°ã«å¤±æãã¾ãã", type: "error" });
     }
   };
 
@@ -218,32 +270,32 @@ export default function TechniqueLog({ userId }: Props) {
           onClose={() => setToast(null)}
         />
       )}
-      {/* 統計バー */}
+      {/* çµ±è¨ãã¼ */}
       {!initialLoading && techniques.length > 0 && (
         <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
           <div className="flex items-center gap-4 text-sm mb-3">
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-[#e94560]">{techniques.length}</div>
-              <div className="text-gray-400 text-xs">総テクニック</div>
+              <div className="text-gray-400 text-xs">ç·ãã¯ããã¯</div>
             </div>
             <div className="w-px h-8 bg-gray-700" />
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-green-400">
                 {techniques.filter((t) => t.mastery_level >= 4).length}
               </div>
-              <div className="text-gray-400 text-xs">得意技</div>
+              <div className="text-gray-400 text-xs">å¾ææ</div>
             </div>
             <div className="w-px h-8 bg-gray-700" />
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-blue-400">
                 {new Set(techniques.map((t) => t.category)).size}
               </div>
-              <div className="text-gray-400 text-xs">カテゴリ数</div>
+              <div className="text-gray-400 text-xs">ã«ãã´ãªæ°</div>
             </div>
-          </div>          {/* 習熟度分布バー */}
+          </div>          {/* ç¿çåº¦åå¸ãã¼ */}
           {(() => {
             const masteryColors = ["", "bg-gray-500", "bg-blue-500", "bg-yellow-500", "bg-orange-500", "bg-green-500"];
-            const masteryLabels = ["", "入門", "基礎", "中級", "上級", "マスター"];
+            const masteryLabels = ["", "å¥é", "åºç¤", "ä¸­ç´", "ä¸ç´", "ãã¹ã¿ã¼"];
             const counts = [1, 2, 3, 4, 5].map((lvl) =>
               techniques.filter((t) => t.mastery_level === lvl).length
             );
@@ -258,7 +310,7 @@ export default function TechniqueLog({ userId }: Props) {
                         key={i}
                         className={`${masteryColors[i + 1]} transition-all`}
                         style={{ width: `${pct}%` }}
-                        title={`${masteryLabels[i + 1]}: ${cnt}個`}
+                        title={`${masteryLabels[i + 1]}: ${cnt}å`}
                       />
                     ) : null;
                   })}
@@ -267,7 +319,7 @@ export default function TechniqueLog({ userId }: Props) {
                   {counts.map((cnt, i) =>
                     cnt > 0 ? (
                       <span key={i} className="text-[10px] text-gray-500">
-                        <span className={`${masteryColors[i + 1].replace("bg-", "text-")}`}>●</span> {masteryLabels[i + 1]} {cnt}
+                        <span className={`${masteryColors[i + 1].replace("bg-", "text-")}`}>â</span> {masteryLabels[i + 1]} {cnt}
                       </span>
                     ) : null
                   )}
@@ -280,17 +332,17 @@ export default function TechniqueLog({ userId }: Props) {
 
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold">テクニック帳</h3>
+          <h3 className="text-lg font-semibold">ãã¯ããã¯å¸³</h3>
           {!initialLoading && techniques.length > 0 && (
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
               className="text-xs bg-[#16213e] text-gray-400 border border-gray-700 rounded-lg px-2 py-1 focus:outline-none focus:border-[#e94560]/60 cursor-pointer"
             >
-              <option value="newest">最新順</option>
-              <option value="mastery_desc">習熟度↓</option>
-              <option value="mastery_asc">習熟度↑</option>
-              <option value="name">名前順</option>
+              <option value="newest">ææ°é </option>
+              <option value="mastery_desc">ç¿çåº¦â</option>
+              <option value="mastery_asc">ç¿çåº¦â</option>
+              <option value="name">ååé </option>
             </select>
           )}
         </div>
@@ -298,18 +350,18 @@ export default function TechniqueLog({ userId }: Props) {
           onClick={() => setShowForm(!showForm)}
           className="bg-[#e94560] hover:bg-[#c73652] text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors"
         >
-          + テクニックを追加
+          + ãã¯ããã¯ãè¿½å 
         </button>
       </div>
 
-      {/* 検索バー */}
+      {/* æ¤ç´¢ãã¼ */}
       {!initialLoading && techniques.length > 0 && (
         <div className="relative mb-3">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="テクニック名・メモを検索..."
+            placeholder="ãã¯ããã¯åã»ã¡ã¢ãæ¤ç´¢..."
             className="w-full bg-[#16213e] text-white rounded-xl px-4 py-2.5 text-sm border border-gray-700 focus:outline-none focus:border-blue-400 pl-9"
           />
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -317,13 +369,13 @@ export default function TechniqueLog({ userId }: Props) {
           </svg>
           {searchQuery && (
             <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white text-xs">
-              ✕
+              â
             </button>
           )}
         </div>
       )}
 
-      {/* カテゴリフィルター */}
+      {/* ã«ãã´ãªãã£ã«ã¿ã¼ */}
       {!initialLoading && techniques.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide">
           <button
@@ -334,7 +386,7 @@ export default function TechniqueLog({ userId }: Props) {
                 : "bg-[#16213e] text-gray-400 border border-gray-700"
             }`}
           >
-            すべて
+            ãã¹ã¦
           </button>
           {CATEGORIES.filter((c) =>
             techniques.some((t) => t.category === c.value)
@@ -354,7 +406,7 @@ export default function TechniqueLog({ userId }: Props) {
         </div>
       )}
 
-      {/* 追加フォーム */}
+      {/* è¿½å ãã©ã¼ã  */}
       {showForm && (
         <form
           onSubmit={handleSubmit}
@@ -366,12 +418,12 @@ export default function TechniqueLog({ userId }: Props) {
             </div>
           )}
           <div className="mb-3">
-            <label className="block text-gray-400 text-xs mb-1">テクニック名</label>
+            <label className="block text-gray-400 text-xs mb-1">ãã¯ããã¯å</label>
             <input
               type="text"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="例: アームバー (クローズドガードから)"
+              placeholder="ä¾: ã¢ã¼ã ãã¼ (ã¯ã­ã¼ãºãã¬ã¼ããã)"
               className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400"
               required
             />
@@ -379,7 +431,7 @@ export default function TechniqueLog({ userId }: Props) {
 
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
-              <label className="block text-gray-400 text-xs mb-1">カテゴリ</label>
+              <label className="block text-gray-400 text-xs mb-1">ã«ãã´ãª</label>
               <select
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
@@ -393,7 +445,7 @@ export default function TechniqueLog({ userId }: Props) {
               </select>
             </div>
             <div>
-              <label className="block text-gray-400 text-xs mb-1">習熟度</label>
+              <label className="block text-gray-400 text-xs mb-1">ç¿çåº¦</label>
               <select
                 value={form.mastery_level}
                 onChange={(e) =>
@@ -411,11 +463,11 @@ export default function TechniqueLog({ userId }: Props) {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-400 text-xs mb-1">メモ</label>
+            <label className="block text-gray-400 text-xs mb-1">ã¡ã¢</label>
             <textarea
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
-              placeholder="ポイント・注意点・参考動画URLなど..."
+              placeholder="ãã¤ã³ãã»æ³¨æç¹ã»åèåç»URLãªã©..."
               rows={2}
               className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400 resize-none"
             />
@@ -427,36 +479,36 @@ export default function TechniqueLog({ userId }: Props) {
               disabled={loading}
               className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-colors"
             >
-              {loading ? "保存中..." : "保存"}
+              {loading ? "ä¿å­ä¸­..." : "ä¿å­"}
             </button>
             <button
               type="button"
               onClick={() => { setShowForm(false); setFormError(null); }}
               className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
             >
-              キャンセル
+              ã­ã£ã³ã»ã«
             </button>
           </div>
         </form>
       )}
-      {/* ローディング */}
+      {/* ã­ã¼ãã£ã³ã° */}
       {initialLoading && (
         <div className="text-center py-8 text-gray-500">
           <div className="inline-block w-6 h-6 border-2 border-gray-600 border-t-[#e94560] rounded-full animate-spin mb-2" />
-          <p className="text-sm">読み込み中...</p>
+          <p className="text-sm">èª­ã¿è¾¼ã¿ä¸­...</p>
         </div>
       )}
 
-      {/* 空状態 */}
+      {/* ç©ºç¶æ */}
       {!initialLoading && techniques.length === 0 && (
         <div className="text-center py-12 text-gray-500">
-          <div className="text-4xl mb-3">📚</div>
-          <p>テクニックがまだありません</p>
-          <p className="text-sm mt-1">最初のテクニックを追加しましょう！</p>
+          <div className="text-4xl mb-3">ð</div>
+          <p>ãã¯ããã¯ãã¾ã ããã¾ãã</p>
+          <p className="text-sm mt-1">æåã®ãã¯ããã¯ãè¿½å ãã¾ãããï¼</p>
         </div>
       )}
 
-      {/* テクニック一覧 */}
+      {/* ãã¯ããã¯ä¸è¦§ */}
       {!initialLoading && filtered.length > 0 && (
         <div className="space-y-3">
           {filtered.map((technique) => (
@@ -496,8 +548,8 @@ export default function TechniqueLog({ userId }: Props) {
                     className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none mb-2 resize-none"
                   />
                   <div className="flex gap-2">
-                    <button type="submit" className="flex-1 bg-[#e94560] text-white text-xs font-semibold py-1.5 rounded-lg">更新</button>
-                    <button type="button" onClick={() => setEditingId(null)} className="px-3 text-gray-400 text-xs">キャンセル</button>
+                    <button type="submit" className="flex-1 bg-[#e94560] text-white text-xs font-semibold py-1.5 rounded-lg">æ´æ°</button>
+                    <button type="button" onClick={() => setEditingId(null)} className="px-3 text-gray-400 text-xs">ã­ã£ã³ã»ã«</button>
                   </div>
                 </form>
               ) : (
@@ -521,9 +573,9 @@ export default function TechniqueLog({ userId }: Props) {
                               ? MASTERY_COLORS[technique.mastery_level]
                               : "text-gray-700 hover:text-gray-500"
                           }`}
-                          title={`習熟度${star}: ${MASTERY_LABELS[star]}`}
+                          title={`ç¿çåº¦${star}: ${MASTERY_LABELS[star]}`}
                         >
-                          ★
+                          â
                         </button>
                       ))}
                       <span className={`text-xs ml-1 ${MASTERY_COLORS[technique.mastery_level]}`}>
@@ -544,7 +596,7 @@ export default function TechniqueLog({ userId }: Props) {
                             })}
                             className="text-[10px] text-blue-500 hover:text-blue-400 mt-0.5"
                           >
-                            {expandedIds.has(technique.id) ? "▲ 折りたたむ" : "▼ 続きを見る"}
+                            {expandedIds.has(technique.id) ? "â² æãããã" : "â¼ ç¶ããè¦ã"}
                           </button>
                         )}
                       </div>
@@ -554,7 +606,7 @@ export default function TechniqueLog({ userId }: Props) {
                     <button
                       onClick={() => startEdit(technique)}
                       className="text-gray-600 hover:text-blue-400 transition-colors p-1"
-                      title="編集"
+                      title="ç·¨é"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -564,7 +616,7 @@ export default function TechniqueLog({ userId }: Props) {
                       onClick={() => handleDelete(technique.id)}
                       disabled={deletingId === technique.id}
                       className="text-gray-600 hover:text-red-400 transition-colors p-1 disabled:opacity-50"
-                      title="削除"
+                      title="åé¤"
                     >
                       {deletingId === technique.id ? (
                         <span className="text-xs">...</span>
@@ -582,10 +634,10 @@ export default function TechniqueLog({ userId }: Props) {
         </div>
       )}
 
-      {/* フィルター結果ゼロ */}
+      {/* ãã£ã«ã¿ã¼çµæã¼ã­ */}
       {!initialLoading && techniques.length > 0 && filtered.length === 0 && (
         <div className="text-center py-8 text-gray-500 text-sm">
-          このカテゴリにテクニックはありません
+          ãã®ã«ãã´ãªã«ãã¯ããã¯ã¯ããã¾ãã
         </div>
       )}
     </div>
