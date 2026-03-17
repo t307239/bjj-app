@@ -1,4 +1,34 @@
 ## 📝 開発ログ
+- Day 4ej+G (2026/03/17): **Batch G — UX改善バッチ完了** 🎉
+  **実装内容**:
+    - G1: `components/TrainingBarChart.tsx` 修正 ✅ (commit: `c312bb6e`)
+      - UTCタイムゾーンバグ修正: `toISOString().substring(0,7)` → ローカル日付計算
+      - 平均ライン追加: ダッシュボーダーを`relative`コンテナ内に絶対位置で重ねる
+      - データのある月のみ対象の正確な平均計算
+    - G2: `components/CompetitionStats.tsx` 新機能追加 ✅ (commit: `69227f0b`)
+      - SVGドーナツチャートをW/L/Dの左に追加
+      - `DonutSegment`コンポーネント: strokeDasharrayで円弧セグメント描画
+      - 中夯SVGテキストに勝率％表示、花語green/red/yellowカラー
+      - W/L/Dグリッドを右側に沿えた2カラムレイアウト
+    - G3: `components/GoalTracker.tsx` 機能追加 ✅ (commit: `9177f32a`)
+      - 全目標達成バナー: 設定された全目標が達成時に🎉表示
+      - `activeGoalStates.every(g => g.current >= g.target)`で判定
+    - G4: `components/TrainingLog.tsx` 機能追加 ✅ (commit: `556effef`)
+      - キーワード検索入力追加（TechniqueLogと同一UX）
+      - 日付・タイプ・メモでフィルタリング
+      - クリア（×）ボタン付き検索インプット
+      - 空メッセージ: 「《QUERY》に一致する記録はありません」
+    - G5: `app/dashboard/loading.tsx` 修正 ✅ (commit: `278392c1`)
+      - TrainingTypeChartスケルトン追加（円形スケルトン + 伝說Cells）
+      - CompetitionStatsスケルトン追加（ドーナツ + W/L/Dグリッド）
+  **バグチェック**: 18項目 ✅ TOTAL ISSUES: 0
+  **次の優先タスク**（優先度順）:
+    1. **CSVエクスポート** — フリーミアム有料機能の核
+    2. **試合記録強化** — 勝敗・相手情報・試合名の専用フォーム
+    3. **PWAプッシュ通知** — 目標達成時の激励通知
+    4. **BJJ Wiki → アプリ導線** — Wikiページにアプリへのバナー設置
+
+## 📝 開発ログ
 - Day 4en (2026/03/17): **Batch F — TrainingChartトグル・習熟度分布バー・月次デルタ・期間フィルター・PersonalBests改善** 🎉
   **実装内容（5コミット）**:
     - F1: TrainingChart 完全再構築（commit: a83c8ba7）- 月別棒グラフモード追加
