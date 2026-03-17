@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
-import ProfileForm from "@/components/ProfileForm";
-import PersonalBests from "@/components/PersonalBests";
+import ProfileTabs from "@/components/ProfileTabs";
 
 export const metadata: Metadata = {
   title: "プロフィール",
@@ -33,7 +32,6 @@ export default async function ProfilePage() {
     user.user_metadata?.name ||
     user.email?.split("@")[0] ||
     "選手";
-
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
@@ -44,10 +42,9 @@ export default async function ProfilePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <NavBar displayName={displayName} avatarUrl={avatarUrl} />
-
       <main className="max-w-4xl mx-auto px-4 py-6">
         {/* ユーザー情報 */}
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex items-center gap-4 mb-6">
           {avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -65,11 +62,8 @@ export default async function ProfilePage() {
             <p className="text-gray-400 text-sm">{user.email}</p>
           </div>
         </div>
-
-        {/* 累計記録 */}
-        <PersonalBests userId={user.id} />
-
-        <ProfileForm userId={user.id} />
+        {/* タブナビ */}
+        <ProfileTabs userId={user.id} />
       </main>
     </div>
   );
