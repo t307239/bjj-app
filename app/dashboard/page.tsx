@@ -32,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   // プロフィールと総練習数を並列取得
-  const [{ data: profile }, { count: totalCount }] = await Promise.all([
+  const [{ data: profile }, { count: totalCount }, { data: recentLogsForStreak }] = await Promise.all([
     supabase
       .from("profiles")
       .select("belt, start_date")
@@ -42,6 +42,12 @@ export async function generateMetadata(): Promise<Metadata> {
       .from("training_logs")
       .select("*", { count: "exact", head: true })
       .eq("user_id", user.id),
+    supabase
+      .from("training_logs")
+      .select("date")
+      .eq("user_id", user.id)
+      .order("date", { ascending: false })
+      .limit(60),
   ]);
 
   const belt = profile?.belt ?? "white";
@@ -62,7 +68,24 @@ export async function generateMetadata(): Promise<Metadata> {
   };
   const beltLabel = BELT_LABELS[belt] ?? "白帯";
 
-  const ogImageUrl = `${BASE_URL}/api/og?belt=${belt}&count=${count}&months=${months}`;
+  // メタデータ用ストリーク計算（簡易版）
+  let metaStreak = 0;
+  if (recentLogsForStreak && recentLogsForStreak.length > 0) {
+    const jstNow = new Date(Date.now() + 9 * 3600000);
+    const toStr = (d: Date) => `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,"0")}-${String(d.getUTCDate()).padStart(2,"0")}`;
+    const dates = [...new Set(recentLogsForStreak.map((l: { date: string }) => l.date))].sort((a,b)=>new Date(b).getTime()-new Date(a).getTime());
+    const today = toStr(jstNow);
+    const yesterday = toStr(new Date(jstNow.getTime() - 86400000));
+    if (dates[0] === today || dates[0] === yesterday) {
+      metaStreak = 1;
+      for (let i = 1; i < dates.length; i++) {
+        const diff = Math.round((new Date(dates[i-1] as string).getTime() - new Date(dates[i] as string).getTime()) / 86400000);
+        if (diff === 1) metaStreak++; else break;
+      }
+    }
+  }
+
+  const ogImageUrl = `${BASE_URL}/api/og?belt=${belt}&count=${count}&months=${months}&streak=${metaStreak}`;
   const title = `BJJの記録 — ${count}回練習達成！ | BJJ App`;
   const description = `${beltLabel} · 総${count}回練習 · BJJ歴${months}ヶ月 — BJJ Appで毎日の練習を記録中`;
 
