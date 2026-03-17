@@ -18,6 +18,7 @@ import DailyRecommend from "@/components/DailyRecommend";
 import StreakFreeze from "@/components/StreakFreeze";
 import AchievementBadge from "@/components/AchievementBadge";
 import InstallBanner from "@/components/InstallBanner";
+import InsightsBanner from "@/components/InsightsBanner";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app-one.vercel.app";
@@ -112,7 +113,7 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 未認証はゲストモードで表示
+  // 未認証はゲスタモードで表示
   if (!user) {
     return <GuestDashboard />;
   }
@@ -286,6 +287,9 @@ export default async function DashboardPage() {
             <div className="text-gray-400 text-xs mt-1">連続練習日</div>
           </Link>
         </div>
+
+        {/* 練習インサイト */}
+        <InsightsBanner userId={user.id} />
 
         {/* 連続練習ストリーク保護バナー */}
         <StreakProtect userId={user.id} streak={streak} />
