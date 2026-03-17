@@ -4,9 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
 
-type Props = {
-  userId: string;
-};
+type Props = { userId: string; };
 
 type GoalData = {
   weeklyGoal: number;
@@ -17,12 +15,7 @@ type GoalData = {
   techniqueCount: number;
 };
 
-type MonthHistory = {
-  ym: string;
-  label: string;
-  count: number;
-  achieved: boolean;
-};
+type MonthHistory = { ym: string; label: string; count: number; achieved: boolean; };
 
 function ProgressBar({ current, target }: { current: number; target: number }) {
   const pct = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
@@ -124,7 +117,8 @@ export default function GoalTracker({ userId }: Props) {
   const [editValue, setEditValue] = useState(0);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [monthHistory, setMonthHistory] = useState<MonthHistory[]>([]);
-
+  const [sparkle, setSparkle] = useState(false);
+  const prevAchieved = useRef(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -166,7 +160,6 @@ export default function GoalTracker({ userId }: Props) {
       }
 
       const mGoal = profileRes.data?.monthly_goal ?? 0;
-
       setData({
         weeklyGoal: profileRes.data?.weekly_goal ?? 0,
         monthlyGoal: mGoal,
@@ -198,70 +191,25 @@ export default function GoalTracker({ userId }: Props) {
         }
         setMonthHistory(history);
       }
-
       setLoading(false);
     };
     load();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  const startEdit = (type: "weekly" | "monthly" | "technique") => {
-    setEditValue(
-      type === "weekly" ? data.weeklyGoal
-      : type === "monthly" ? data.monthlyGoal
-      : data.techniqueGoal
-    );
-    setEditing(type);
-  };
-
-  const saveGoal = async () => {
-    if (!editing) return;
-    const col = editing === "weekly" ? "weekly_goal"
-      : editing === "monthly" ? "monthly_goal"
-      : "technique_goal";
-    const { error } = await supabase
-      .from("profiles")
-      .upsert({ id: userId, [col]: editValue }, { onConflict: "id" });
-
-    if (!error) {
-      setData((prev) => ({
-        ...prev,
-        weeklyGoal: editing === "weekly" ? editValue : prev.weeklyGoal,
-        monthlyGoal: editing === "monthly" ? editValue : prev.monthlyGoal,
-        techniqueGoal: editing === "technique" ? editValue : prev.techniqueGoal,
-      }));
-      setToast({ message: "目標を設定しました！", type: "success" });
-    } else {
-      setToast({ message: "保存に失敗しました", type: "error" });
-    }
-    setEditing(null);
-  };
-
-  if (loading) return null;
-
-  if (!schemaReady) {
-    return (
-      <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
-        <p className="text-xs text-gray-500 text-center">
-          目標トラッキングを有効にするには、Supabaseで
-          <code className="text-yellow-400 mx-1">supabase-goals-schema.sql</code>
-          を実行してください。
-        </p>
-      </div>
-    );
-  }
-
+  // Derived values — safe before early returns since data has default 0 values
   const hasGoals = data.weeklyGoal > 0 || data.monthlyGoal > 0 || data.techniqueGoal > 0;
-
   const activeGoalStates = [
     { target: data.weeklyGoal, current: data.weekCount },
     { target: data.monthlyGoal, current: data.monthCount },
     { target: data.techniqueGoal, current: data.techniqueCount },
   ].filter((g) => g.target > 0);
-  const allGoalsAchieved = hasGoals && activeGoalStates.length > 0 && activeGoalStates.every((g) => g.current >= g.target);
-  // Sparkle animation on first achievement
-  const [sparkle, setSparkle] = useState(false);
-  const prevAchieved = useRef(false);
+  const allGoalsAchieved =
+    hasGoals &&
+    activeGoalStates.length > 0 &&
+    activeGoalStates.every((g) => g.current >= g.target);
+
+  // Sparkle animation on first achievement — must be before early returns
   useEffect(() => {
     if (allGoalsAchieved && !prevAchieved.current) {
       setSparkle(true);
@@ -283,9 +231,59 @@ export default function GoalTracker({ userId }: Props) {
     return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
   })();
   const daysSoFar = daysInMonth - daysLeftInMonth;
-  const monthlyPace = data.monthlyGoal > 0 && daysSoFar > 0
-    ? Math.round((data.monthCount / daysSoFar) * daysInMonth)
-    : null;
+  const monthlyPace =
+    data.monthlyGoal > 0 && daysSoFar > 0
+      ? Math.round((data.monthCount / daysSoFar) * daysInMonth)
+      : null;
+
+  const startEdit = (type: "weekly" | "monthly" | "technique") => {
+    setEditValue(
+      type === "weekly"
+        ? data.weeklyGoal
+        : type === "monthly"
+        ? data.monthlyGoal
+        : data.techniqueGoal
+    );
+    setEditing(type);
+  };
+
+  const saveGoal = async () => {
+    if (!editing) return;
+    const col =
+      editing === "weekly"
+        ? "weekly_goal"
+        : editing === "monthly"
+        ? "monthly_goal"
+        : "technique_goal";
+    const { error } = await supabase
+      .from("profiles")
+      .upsert({ id: userId, [col]: editValue }, { onConflict: "id" });
+    if (!error) {
+      setData((prev) => ({
+        ...prev,
+        weeklyGoal: editing === "weekly" ? editValue : prev.weeklyGoal,
+        monthlyGoal: editing === "monthly" ? editValue : prev.monthlyGoal,
+        techniqueGoal: editing === "technique" ? editValue : prev.techniqueGoal,
+      }));
+      setToast({ message: "目標を設定しました！", type: "success" });
+    } else {
+      setToast({ message: "保存に失敗しました", type: "error" });
+    }
+    setEditing(null);
+  };
+
+  if (loading) return null;
+  if (!schemaReady) {
+    return (
+      <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
+        <p className="text-xs text-gray-500 text-center">
+          目標トラッキングを有効にするには、Supabaseで{" "}
+          <code className="text-yellow-400 mx-1">supabase-goals-schema.sql</code>{" "}
+          を実行してください。
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -299,9 +297,12 @@ export default function GoalTracker({ userId }: Props) {
             <span className="text-[10px] text-gray-600">目標を設定して継続を管理しよう</span>
           )}
         </div>
-
         {allGoalsAchieved && !editing && (
-          <div className={`mx-4 mt-3 rounded-xl bg-green-500/10 border px-4 py-3 text-center transition-all duration-500 ${sparkle ? "border-green-400 shadow-lg shadow-green-500/20" : "border-green-500/30"}`}>
+          <div
+            className={`mx-4 mt-3 rounded-xl bg-green-500/10 border px-4 py-3 text-center transition-all duration-500 ${
+              sparkle ? "border-green-400 shadow-lg shadow-green-500/20" : "border-green-500/30"
+            }`}
+          >
             <div className={`text-2xl mb-0.5 ${sparkle ? "animate-bounce" : ""}`}>🎉</div>
             <div className="text-sm font-semibold text-green-400">全目標達成！</div>
             <div className="text-[11px] text-gray-400 mt-0.5">素晴らしい！この調子で続けよう</div>
@@ -310,7 +311,6 @@ export default function GoalTracker({ userId }: Props) {
             )}
           </div>
         )}
-
         <div className="p-4 space-y-3">
           {editing === "weekly" ? (
             <GoalEditor
@@ -330,7 +330,9 @@ export default function GoalTracker({ userId }: Props) {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-gray-200">今週の目標</span>
                   {data.weekCount >= data.weeklyGoal && data.weeklyGoal > 0 && (
-                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">達成！</span>
+                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">
+                      達成！
+                    </span>
                   )}
                 </div>
                 <button className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors">
@@ -344,7 +346,6 @@ export default function GoalTracker({ userId }: Props) {
               )}
             </div>
           )}
-
           {editing === "monthly" ? (
             <GoalEditor
               label="今月"
@@ -363,14 +364,30 @@ export default function GoalTracker({ userId }: Props) {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-gray-200">今月の目標</span>
                   {data.monthCount >= data.monthlyGoal && data.monthlyGoal > 0 && (
-                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">達成！</span>
+                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">
+                      達成！
+                    </span>
                   )}
-                  {daysLeftInMonth > 0 && data.monthlyGoal > 0 && data.monthCount < data.monthlyGoal && (
-                    <span className="text-[10px] bg-gray-700/50 text-gray-400 px-1.5 py-0.5 rounded">あと{daysLeftInMonth}日</span>
-                  )}
-                  {monthlyPace !== null && data.monthlyGoal > 0 && data.monthCount < data.monthlyGoal && (
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${monthlyPace >= data.monthlyGoal ? "bg-green-500/10 text-green-500" : "bg-yellow-500/10 text-yellow-400"}`}>ペース:{monthlyPace}回見込</span>
-                  )}
+                  {daysLeftInMonth > 0 &&
+                    data.monthlyGoal > 0 &&
+                    data.monthCount < data.monthlyGoal && (
+                      <span className="text-[10px] bg-gray-700/50 text-gray-400 px-1.5 py-0.5 rounded">
+                        あと{daysLeftInMonth}日
+                      </span>
+                    )}
+                  {monthlyPace !== null &&
+                    data.monthlyGoal > 0 &&
+                    data.monthCount < data.monthlyGoal && (
+                      <span
+                        className={`text-[10px] px-1.5 py-0.5 rounded ${
+                          monthlyPace >= data.monthlyGoal
+                            ? "bg-green-500/10 text-green-500"
+                            : "bg-yellow-500/10 text-yellow-400"
+                        }`}
+                      >
+                        ペース:{monthlyPace}回見込
+                      </span>
+                    )}
                 </div>
                 <button className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors">
                   {data.monthlyGoal > 0 ? "変更" : "＋ 設定"}
@@ -383,7 +400,6 @@ export default function GoalTracker({ userId }: Props) {
               )}
             </div>
           )}
-
           {editing === "technique" ? (
             <GoalEditor
               label="テクニック習得数"
@@ -402,7 +418,9 @@ export default function GoalTracker({ userId }: Props) {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-gray-200">🥋 テクニック目標</span>
                   {data.techniqueCount >= data.techniqueGoal && data.techniqueGoal > 0 && (
-                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">達成！</span>
+                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">
+                      達成！
+                    </span>
                   )}
                 </div>
                 <button className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors">
@@ -417,10 +435,11 @@ export default function GoalTracker({ userId }: Props) {
             </div>
           )}
         </div>
-
         {monthHistory.length > 0 && (
           <div className="border-t border-gray-700 px-4 py-3">
-            <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wider">過去6ヶ月の達成履歴</p>
+            <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wider">
+              過去6ヶ月の達成履歴
+            </p>
             <div className="flex items-end justify-between gap-1">
               {monthHistory.map((m) => (
                 <div key={m.ym} className="flex flex-col items-center gap-1 flex-1">
@@ -433,7 +452,9 @@ export default function GoalTracker({ userId }: Props) {
                   >
                     {m.achieved ? "✓" : m.count}
                   </div>
-                  <span className={`text-[9px] ${m.achieved ? "text-green-400" : "text-gray-600"}`}>
+                  <span
+                    className={`text-[9px] ${m.achieved ? "text-green-400" : "text-gray-600"}`}
+                  >
                     {m.label}
                   </span>
                 </div>
