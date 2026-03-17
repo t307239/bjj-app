@@ -13,6 +13,7 @@ import GoalTracker from "@/components/GoalTracker";
 import WeeklyStrip from "@/components/WeeklyStrip";
 import GuestDashboard from "@/components/GuestDashboard";
 import GuestMigration from "@/components/GuestMigration";
+import StreakProtect from "@/components/StreakProtect";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app-one.vercel.app";
@@ -24,10 +25,10 @@ export async function generateMetadata(): Promise<Metadata> {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { title: "ダッシュボード | BJJ App" };
+    return { title: "ããã·ã¥ãã¼ã | BJJ App" };
   }
 
-  // プロフィールと総練習数を並列取得
+  // ãã­ãã£ã¼ã«ã¨ç·ç·´ç¿æ°ãä¸¦ååå¾
   const [{ data: profile }, { count: totalCount }] = await Promise.all([
     supabase
       .from("profiles")
@@ -43,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const belt = profile?.belt ?? "white";
   const count = totalCount ?? 0;
 
-  // BJJ歴（月）を計算
+  // BJJæ­´ï¼æï¼ãè¨ç®
   let months = 0;
   if (profile?.start_date) {
     const start = new Date(profile.start_date);
@@ -54,20 +55,20 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   const BELT_LABELS: Record<string, string> = {
-    white: "白帯", blue: "青帯", purple: "紫帯", brown: "茶帯", black: "黒帯",
+    white: "ç½å¸¯", blue: "éå¸¯", purple: "ç´«å¸¯", brown: "è¶å¸¯", black: "é»å¸¯",
   };
-  const beltLabel = BELT_LABELS[belt] ?? "白帯";
+  const beltLabel = BELT_LABELS[belt] ?? "ç½å¸¯";
 
   const ogImageUrl = `${BASE_URL}/api/og?belt=${belt}&count=${count}&months=${months}`;
-  const title = `BJJの記録 — ${count}回練習達成！ | BJJ App`;
-  const description = `${beltLabel} · 総${count}回練習 · BJJ歴${months}ヶ月 — BJJ Appで毎日の練習を記録中`;
+  const title = `BJJã®è¨é² â ${count}åç·´ç¿éæï¼ | BJJ App`;
+  const description = `${beltLabel} Â· ç·${count}åç·´ç¿ Â· BJJæ­´${months}ã¶æ â BJJ Appã§æ¯æ¥ã®ç·´ç¿ãè¨é²ä¸­`;
 
   return {
-    title: "ダッシュボード",
+    title: "ããã·ã¥ãã¼ã",
     openGraph: {
       title,
       description,
-      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: "BJJ App 練習記録" }],
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: "BJJ App ç·´ç¿è¨é²" }],
     },
     twitter: {
       card: "summary_large_image",
@@ -84,7 +85,7 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 未認証はゲストモードで表示
+  // æªèªè¨¼ã¯ã²ã¹ãã¢ã¼ãã§è¡¨ç¤º
   if (!user) {
     return <GuestDashboard />;
   }
@@ -93,23 +94,23 @@ export default async function DashboardPage() {
     user.user_metadata?.full_name ||
     user.user_metadata?.name ||
     user.email?.split("@")[0] ||
-    "選手";
+    "é¸æ";
 
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
-  // サーバーサイドで統計データを取得（JST = UTC+9 補正）
+  // ãµã¼ãã¼ãµã¤ãã§çµ±è¨ãã¼ã¿ãåå¾ï¼JST = UTC+9 è£æ­£ï¼
   const JST_OFFSET = 9 * 60 * 60 * 1000;
-  const now = new Date(Date.now() + JST_OFFSET); // JST時刻
+  const now = new Date(Date.now() + JST_OFFSET); // JSTæå»
   const toJSTStr = (d: Date) =>
     `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
 
   const firstDayOfMonth = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-01`;
-  // 先月の開始日・終了日
+  // åæã®éå§æ¥ã»çµäºæ¥
   const prevMonthDate = new Date(now);
   prevMonthDate.setUTCMonth(prevMonthDate.getUTCMonth() - 1);
   const firstDayOfPrevMonth = `${prevMonthDate.getUTCFullYear()}-${String(prevMonthDate.getUTCMonth() + 1).padStart(2, "0")}-01`;
-  // 今週の月曜日を計算
+  // ä»é±ã®æææ¥ãè¨ç®
   const dayOfWeek = now.getUTCDay(); // 0=Sun, 1=Mon...
   const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
   const firstDayOfWeek = toJSTStr(new Date(now.getTime() - daysToMonday * 86400000));
@@ -149,7 +150,7 @@ export default async function DashboardPage() {
       .limit(60),
   ]);
 
-  // 連続練習日数を計算
+  // é£ç¶ç·´ç¿æ¥æ°ãè¨ç®
   let streak = 0;
   if (recentLogs && recentLogs.length > 0) {
     const dates = [
@@ -178,41 +179,41 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#1a1a2e] pb-20 sm:pb-0">
       <NavBar displayName={displayName} avatarUrl={avatarUrl} />
-      {/* ゲストデータの自動マージ（ログイン直後） */}
+      {/* ã²ã¹ããã¼ã¿ã®èªåãã¼ã¸ï¼ã­ã°ã¤ã³ç´å¾ï¼ */}
       <GuestMigration userId={user.id} />
 
-      {/* メインコンテンツ */}
+      {/* ã¡ã¤ã³ã³ã³ãã³ã */}
       <main className="max-w-4xl mx-auto px-4 py-6">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold">おかえり、{displayName} 👋</h2>
+          <h2 className="text-2xl font-bold">ããããã{displayName} ð</h2>
           <p className="text-gray-400 text-sm mt-1">
             {streak >= 30
-              ? `🔥 ${streak}日連続！圧倒的な継続力です。`
+              ? `ð¥ ${streak}æ¥é£ç¶ï¼å§åçãªç¶ç¶åã§ãã`
               : streak >= 14
-              ? `💪 ${streak}日連続！素晴らしいペースです。`
+              ? `ðª ${streak}æ¥é£ç¶ï¼ç´ æ´ããããã¼ã¹ã§ãã`
               : streak >= 7
-              ? `⚡ ${streak}日連続！勢いが出てきました！`
+              ? `â¡ ${streak}æ¥é£ç¶ï¼å¢ããåºã¦ãã¾ããï¼`
               : streak >= 3
-              ? `🎯 ${streak}日連続！良い習慣が育っています。`
+              ? `ð¯ ${streak}æ¥é£ç¶ï¼è¯ãç¿æ£ãè²ã£ã¦ãã¾ãã`
               : streak >= 1
-              ? "今日も練習頑張ろう！"
-              : "今日から新しい練習を記録しよう！"}
+              ? "ä»æ¥ãç·´ç¿é å¼µããï¼"
+              : "ä»æ¥ããæ°ããç·´ç¿ãè¨é²ãããï¼"}
           </p>
         </div>
 
-        {/* クイックスタッツ */}
+        {/* ã¯ã¤ãã¯ã¹ã¿ãã */}
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-[#e94560]/40 transition-colors">
             <div className="text-2xl font-bold text-[#e94560]">
               {monthCount ?? 0}
             </div>
-            <div className="text-gray-400 text-xs mt-1">今月の練習</div>
+            <div className="text-gray-400 text-xs mt-1">ä»æã®ç·´ç¿</div>
             {prevMonthCount !== null && prevMonthCount !== undefined && (
               <div className={`text-[10px] mt-0.5 ${
                 (monthCount ?? 0) >= prevMonthCount ? "text-green-400" : "text-red-400"
               }`}>
-                {(monthCount ?? 0) >= prevMonthCount ? "▲" : "▼"}
-                {Math.abs((monthCount ?? 0) - prevMonthCount)} vs 先月
+                {(monthCount ?? 0) >= prevMonthCount ? "â²" : "â¼"}
+                {Math.abs((monthCount ?? 0) - prevMonthCount)} vs åæ
               </div>
             )}
           </div>
@@ -220,7 +221,7 @@ export default async function DashboardPage() {
             <div className="text-2xl font-bold text-yellow-400">
               {weekCount ?? 0}
             </div>
-            <div className="text-gray-400 text-xs mt-1">今週の練習</div>
+            <div className="text-gray-400 text-xs mt-1">ä»é±ã®ç·´ç¿</div>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3 mb-6">
@@ -228,39 +229,42 @@ export default async function DashboardPage() {
             <div className="text-2xl font-bold text-blue-400">
               {techniqueCount ?? 0}
             </div>
-            <div className="text-gray-400 text-xs mt-1">習得テクニック</div>
+            <div className="text-gray-400 text-xs mt-1">ç¿å¾ãã¯ããã¯</div>
           </Link>
           <Link href="/profile" className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-green-400/40 transition-colors block">
             <div className="text-2xl font-bold text-green-400">{streak}</div>
-            <div className="text-gray-400 text-xs mt-1">連続練習日</div>
+            <div className="text-gray-400 text-xs mt-1">é£ç¶ç·´ç¿æ¥</div>
           </Link>
         </div>
 
-        {/* 今週の練習状況 */}
+        {/* ä»é±ã®ç·´ç¿ç¶æ³ */}
+        {/* 連続練習ストリーク保護バナー */}
+        <StreakProtect userId={user.id} streak={streak} />
+
         <WeeklyStrip userId={user.id} />
 
-        {/* 目標トラッカー */}
+        {/* ç®æ¨ãã©ãã«ã¼ */}
         <GoalTracker userId={user.id} />
 
-        {/* 累計記録 */}
+        {/* ç´¯è¨è¨é² */}
         <PersonalBests userId={user.id} />
 
-        {/* 月カレンダー */}
+        {/* æã«ã¬ã³ãã¼ */}
         <TrainingCalendar userId={user.id} />
 
-        {/* 月別練習グラフ */}
+        {/* æå¥ç·´ç¿ã°ã©ã */}
         <TrainingBarChart userId={user.id} />
 
-        {/* 練習タイプ分布 */}
+        {/* ç·´ç¿ã¿ã¤ãåå¸ */}
         <TrainingTypeChart userId={user.id} />
 
-        {/* 試合戦績 */}
+        {/* è©¦åæ¦ç¸¾ */}
         <CompetitionStats userId={user.id} />
 
-        {/* アクティビティヒートマップ */}
+        {/* ã¢ã¯ãã£ããã£ãã¼ãããã */}
         <TrainingChart userId={user.id} />
 
-        {/* 練習記録コンポーネント（CsvExport内蔵） */}
+        {/* ç·´ç¿è¨é²ã³ã³ãã¼ãã³ãï¼CsvExportåèµï¼ */}
         <TrainingLog userId={user.id} />
       </main>
     </div>
