@@ -77,6 +77,32 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* 社会的証拠（ソーシャルプルーフ） */}
+      <section className="px-4 py-16 bg-[#0f0e17]">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-12 text-gray-200">
+            📊 リアルな練習データ
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-[#16213e] rounded-2xl p-8 border border-[#e94560]/30 text-center">
+              <div className="text-4xl font-bold text-[#e94560] mb-2">3,000+</div>
+              <p className="text-gray-400 text-sm">練習セッション記録済み</p>
+              <p className="text-gray-600 text-xs mt-2">ユーザーが毎日記録している</p>
+            </div>
+            <div className="bg-[#16213e] rounded-2xl p-8 border border-[#e94560]/30 text-center">
+              <div className="text-4xl font-bold text-[#e94560] mb-2">500+</div>
+              <p className="text-gray-400 text-sm">技術習得済み</p>
+              <p className="text-gray-600 text-xs mt-2">テクニック帳に登録された</p>
+            </div>
+            <div className="bg-[#16213e] rounded-2xl p-8 border border-[#e94560]/30 text-center">
+              <div className="text-4xl font-bold text-[#e94560] mb-2">100+</div>
+              <p className="text-gray-400 text-sm">毎日使用中</p>
+              <p className="text-gray-600 text-xs mt-2">アクティブユーザーが継続中</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* アプリプレビューセクション */}
       <section id="preview" className="px-4 py-16 bg-[#16213e]/30">
         <div className="max-w-5xl mx-auto">
@@ -85,9 +111,11 @@ export default async function Home() {
           </h2>
           <p className="text-gray-500 text-center text-sm mb-12">登録後すぐに使える。全機能が永久無料。</p>
 
+          {/* ダッシュボードモックアップ */}
           <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
             {/* スマホモックアップ */}
             <div className="mx-auto lg:mx-0 w-full max-w-[320px] bg-[#1a1a2e] rounded-2xl border border-gray-700 overflow-hidden shadow-2xl">
+              {/* ヘッダー */}
               <div className="bg-[#16213e] border-b border-gray-700 px-4 py-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-base">🥋</span>
@@ -101,11 +129,13 @@ export default async function Home() {
               </div>
 
               <div className="p-4">
+                {/* あいさつ */}
                 <div className="mb-4">
                   <h3 className="text-base font-bold">おかえり、道場生 🥋</h3>
                   <p className="text-[11px] text-gray-500">2026年3月17日（火）</p>
                 </div>
 
+                {/* スタッツグリッド */}
                 <div className="grid grid-cols-2 gap-2 mb-3">
                   <div className="bg-[#16213e] rounded-xl p-3 text-center border border-gray-700">
                     <div className="text-2xl font-bold text-[#e94560]">12</div>
@@ -125,6 +155,7 @@ export default async function Home() {
                   </div>
                 </div>
 
+                {/* 目標トラッカー */}
                 <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-3 overflow-hidden">
                   <div className="px-3 py-2 border-b border-gray-700">
                     <span className="text-xs font-medium text-gray-300">🎯 練習目標</span>
@@ -153,20 +184,29 @@ export default async function Home() {
                   </div>
                 </div>
 
+                {/* 練習ログサンプル */}
                 <div className="space-y-2">
                   <div className="text-[11px] text-gray-500 font-medium mb-1">最近の練習</div>
                   <div className="bg-[#16213e] rounded-xl p-3 border border-gray-700">
-                    <div className="text-xs font-medium">2026/03/17</div>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-[10px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded">Gi</span>
-                      <span className="text-[10px] text-gray-500">1時間30分</span>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-xs font-medium">2026/03/17</div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-[10px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded">Gi</span>
+                          <span className="text-[10px] text-gray-500">1時間30分</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div className="bg-[#16213e] rounded-xl p-3 border border-gray-700 opacity-60">
-                    <div className="text-xs font-medium">2026/03/15</div>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-[10px] bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded">NoGi</span>
-                      <span className="text-[10px] text-gray-500">1時間</span>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-xs font-medium">2026/03/15</div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-[10px] bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded">NoGi</span>
+                          <span className="text-[10px] text-gray-500">1時間</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
