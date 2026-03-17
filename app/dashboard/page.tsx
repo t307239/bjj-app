@@ -133,6 +133,10 @@ export default async function DashboardPage() {
     `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
 
   const firstDayOfMonth = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-01`;
+  // 今月の残り日数と予測
+  const daysInMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 0)).getUTCDate();
+  const currentDayOfMonth = now.getUTCDate();
+  const remainingDays = daysInMonth - currentDayOfMonth;
   // 先月の開始日・終了日
   const prevMonthDate = new Date(now);
   prevMonthDate.setUTCMonth(prevMonthDate.getUTCMonth() - 1);
@@ -250,6 +254,16 @@ export default async function DashboardPage() {
               }`}>
                 {(monthCount ?? 0) >= prevMonthCount ? "▲" : "▼"}
                 {Math.abs((monthCount ?? 0) - prevMonthCount)} vs 先月
+              </div>
+            )}
+            {remainingDays > 0 && (
+              <div className="text-[10px] mt-0.5 text-gray-500">
+                あと{remainingDays}日
+                {(monthCount ?? 0) > 0 && currentDayOfMonth > 0 && (
+                  <span className="text-blue-400/80">
+                    {" · "}予測{Math.round((monthCount ?? 0) / currentDayOfMonth * daysInMonth)}回
+                  </span>
+                )}
               </div>
             )}
           </div>
