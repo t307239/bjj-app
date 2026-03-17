@@ -364,6 +364,12 @@ export default function TrainingLog({ userId }: Props) {
     try { const d = JSON.parse(e.notes.slice(COMP_PREFIX.length)); return d.result === "draw"; } catch { return false; }
   }).length;
 
+  const filtersActive = filterType !== "all" || periodFilter !== "all" || !!dateFrom || !!dateTo || !!searchQuery.trim();
+  const filteredTotalMins = filtered.reduce((sum, e) => sum + (e.duration_min ?? 0), 0);
+  const filteredTotalFmt = filteredTotalMins >= 60
+    ? `${Math.floor(filteredTotalMins / 60)}h${filteredTotalMins % 60 > 0 ? `${filteredTotalMins % 60}m` : ""}`
+    : `${filteredTotalMins}m`;
+
   return (
     <div>
       {toast && (
@@ -719,6 +725,13 @@ export default function TrainingLog({ userId }: Props) {
           >
             + 最初の練習を記録
           </button>
+        </div>
+      )}
+
+      {filtersActive && filtered.length > 0 && (
+        <div className="flex items-center gap-2 px-1 mb-2 text-xs text-gray-400">
+          <span className="bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded">フィルター適用中</span>
+          <span>{filtered.length}件 &bull; {filteredTotalFmt}</span>
         </div>
       )}
 
