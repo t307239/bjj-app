@@ -1,13 +1,4 @@
-{/* ベルトビジュアル */}
-      <div className="mb-3">
-        <BeltVisual belt={profile.belt} stripe={profile.stripe} />
-        <div className="flex items-center gap-2 mt-1.5">
-          <span className={`px-3 py-0.5 rounded-full text-xs font-bold ${beltInfo?.color}`}>
-            {beltInfo?.label}
-          </span>
-          <span className="text-gray-500 text-xs">{profile.stripe}本線</span>
-        </div>
-      </div>"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
