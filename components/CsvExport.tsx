@@ -15,6 +15,26 @@ const TRAINING_TYPE_LABELS: Record<string, string> = {
   open_mat: "オープンマット",
 };
 
+function decodeCompForCsv(notes: string): string {
+  const PREFIX = "__comp__";
+  if (!notes.startsWith(PREFIX)) return notes;
+  try {
+    const body = notes.slice(PREFIX.length);
+    const nlIdx = body.indexOf("\n");
+    const jsonStr = nlIdx >= 0 ? body.slice(0, nlIdx) : body;
+    const userNotes = nlIdx >= 0 ? body.slice(nlIdx + 1) : "";
+    const comp = JSON.parse(jsonStr);
+    const LABELS: Record<string, string> = { win: "勝利", loss: "敗北", draw: "引き分け" };
+    const label = LABELS[comp.result as string] ?? comp.result ?? "";
+    const parts: string[] = [label];
+    if (comp.opponent) parts.push("vs " + comp.opponent);
+    if (comp.finish) parts.push("by " + comp.finish);
+    if (comp.event) parts.push(String(comp.event));
+    if (userNotes) parts.push(userNotes);
+    return parts.join(" | ");
+  } catch { return notes; }
+}
+
 export default function CsvExport({ userId }: Props) {
   const [loading, setLoading] = useState(false);
   const supabase = createClient();
@@ -38,7 +58,7 @@ export default function CsvExport({ userId }: Props) {
         l.date,
         TRAINING_TYPE_LABELS[l.type] ?? l.type,
         l.duration_min ?? "",
-        (l.notes ?? "").replace(/"/g, '""'),
+        decodeCompForCsv(l.notes ?? "").replace(/"/g, '""'),
       ]);
 
       const csvContent =
