@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     title: "BJJ App",
   },
   robots: {
-    index: false,
-    follow: false,
+    index: true,  // LPはGoogle検索対象（ダッシュボードは認証保護）
+    follow: true,
   },
 };
 
