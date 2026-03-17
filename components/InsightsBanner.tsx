@@ -12,6 +12,7 @@ export default function InsightsBanner({ userId }: Props) {
   const [paceMsg, setPaceMsg] = useState<string | null>(null);
   const [totalStreak, setTotalStreak] = useState<number | null>(null);
   const [streakInsight, setStreakInsight] = useState<string | null>(null);
+  const [consistencyMsg, setConsistencyMsg] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -117,13 +118,23 @@ export default function InsightsBanner({ userId }: Props) {
           setStreakInsight(`最長連続: ${maxStreak}日`);
         }
       }
+
+      // 過去28日の練習率（練習した日 / 28日）
+      if (recentLogs && recentLogs.length >= 4) {
+        const uniqueTrainedDays = new Set(recentLogs.map((l: { date: string }) => l.date)).size;
+        const rate = Math.round((uniqueTrainedDays / 28) * 100);
+        if (rate >= 30) {
+          const emoji = rate >= 70 ? "🏆" : rate >= 50 ? "💪" : "📅";
+          setConsistencyMsg(`${emoji} 練習率${rate}%`);
+        }
+      }
     };
 
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  if (!bestDay && !paceMsg && !streakInsight) return null;
+  if (!bestDay && !paceMsg && !streakInsight && !consistencyMsg) return null;
 
   return (
     <div className="bg-[#0f3460]/40 border border-[#e94560]/20 rounded-xl px-4 py-3 mb-4">
@@ -153,6 +164,12 @@ export default function InsightsBanner({ userId }: Props) {
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] text-gray-500">記録</span>
             <span className="text-xs text-yellow-400 font-medium">🔥 {streakInsight}</span>
+          </div>
+        )}
+        {consistencyMsg && (
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] text-gray-500">継続率</span>
+            <span className="text-xs text-blue-300 font-medium">{consistencyMsg}</span>
           </div>
         )}
       </div>
