@@ -143,7 +143,6 @@ export default function GoalTracker({ userId }: Props) {
           .single(),
       ]);
 
-      // スキーマ未対応チェック（カラム非存在）
       if (profileRes.error && profileRes.error.code === "42703") {
         setSchemaReady(false);
         setLoading(false);
@@ -172,7 +171,7 @@ export default function GoalTracker({ userId }: Props) {
     const col = editing === "weekly" ? "weekly_goal" : "monthly_goal";
     const { error } = await supabase
       .from("profiles")
-      .upsert({ id: userId, [col]: editValue, updated_at: new Date().toISOString() });
+      .upsert({ id: userId, [col]: editValue }, { onConflict: "id" });
 
     if (!error) {
       setData((prev) => ({
@@ -217,7 +216,6 @@ export default function GoalTracker({ userId }: Props) {
         </div>
 
         <div className="p-4 space-y-3">
-          {/* 週間目標 */}
           {editing === "weekly" ? (
             <GoalEditor
               label="今週"
@@ -251,7 +249,6 @@ export default function GoalTracker({ userId }: Props) {
             </div>
           )}
 
-          {/* 月間目標 */}
           {editing === "monthly" ? (
             <GoalEditor
               label="今月"
