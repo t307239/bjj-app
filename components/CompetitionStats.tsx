@@ -20,6 +20,15 @@ type CompRecord = {
 
 type CompEntry = { result: string; finish: string };
 
+type MonthStats = {
+  ym: string;    // "2026-03"
+  label: string; // "3月"
+  win: number;
+  loss: number;
+  draw: number;
+  total: number;
+};
+
 // 試合ノートのデコード（TrainingLogと同じロジック）
 const COMP_PREFIX = "__comp__";
 
@@ -35,7 +44,7 @@ function decodeEntry(notes: string): CompEntry | null {
   }
 }
 
-// SVGドーリダチィートのセグメント
+// SVGドーナツチャートのセグメント
 function DonutSegment({
   value,
   total,
@@ -74,8 +83,8 @@ function DonutSegment({
 
 export default function CompetitionStats({ userId }: Props) {
   const [record, setRecord] = useState<CompRecord | null>(null);
+  const [monthlyStats, setMonthlyStats] = useState<MonthStats[]>([]);
   const [loading, setLoading] = useState(true);
-  const [monthlyBreakdown, setMonthlyBreakdown] = useState<Record<string, { w: number; l: number; d: number }>>({});
   const supabase = createClient();
 
   useEffect(() => {
@@ -129,19 +138,24 @@ export default function CompetitionStats({ userId }: Props) {
         rec.currentWinStreak = streak;
         rec.bestWinStreak = best;
         setRecord(rec);
-        // Monthly breakdown
-        const monthly: Record<string, { w: number; l: number; d: number }> = {};
-        data.forEach((log) => {
-          const ym = (log.date ?? "").slice(0, 7);
-          if (!ym) return;
-          if (!monthly[ym]) monthly[ym] = { w: 0, l: 0, d: 0 };
-          const e2 = decodeEntry(log.notes ?? "");
-          if (!e2) return;
-          if (e2.result === "win") monthly[ym].w++;
-          else if (e2.result === "loss") monthly[ym].l++;
-          else if (e2.result === "draw") monthly[ym].d++;
+
+        // 月別集計
+        const monthMap: Record<string, MonthStats> = {};
+        data.forEach((l: { notes: string; date: string }) => {
+          const ym = l.date.slice(0, 7);
+          if (!monthMap[ym]) {
+            const m = parseInt(ym.split("-")[1], 10);
+            monthMap[ym] = { ym, label: `${m}月`, win: 0, loss: 0, draw: 0, total: 0 };
+          }
+          monthMap[ym].total++;
+          const entry = decodeEntry(l.notes);
+          if (!entry) return;
+          if (entry.result === "win") monthMap[ym].win++;
+          else if (entry.result === "loss") monthMap[ym].loss++;
+          else if (entry.result === "draw") monthMap[ym].draw++;
         });
-        setMonthlyBreakdown(monthly);
+        const months = Object.values(monthMap).sort((a, b) => a.ym.localeCompare(b.ym));
+        setMonthlyStats(months);
       }
       setLoading(false);
     };
@@ -163,7 +177,7 @@ export default function CompetitionStats({ userId }: Props) {
   return (
     <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
       <div className="flex items-center justify-between mb-3">
-        <h4 className="text-sm font-medium text-gray-300">🏆 試合戦縿</h4>
+        <h4 className="text-sm font-medium text-gray-300">🏆 試合戦績</h4>
         <span className="text-[10px] text-gray-500">計{record.total}試合</span>
       </div>
 
@@ -173,7 +187,7 @@ export default function CompetitionStats({ userId }: Props) {
         {decoded > 0 && (
           <div className="relative flex-shrink-0">
             <svg width="80" height="80" viewBox="0 0 80 80">
-              {/* 背景ドラック */}
+              {/* 背景トラック */}
               <circle
                 cx="40" cy="40" r={donutR}
                 fill="none"
@@ -286,24 +300,44 @@ export default function CompetitionStats({ userId }: Props) {
           </div>
         </div>
       )}
-          {Object.keys(monthlyBreakdown).length > 1 && (
+
+      {/* 月別勝敗バー（3試合以上 かつ 2ヶ月以上ある場合） */}
+      {record.total >= 3 && monthlyStats.length >= 2 && (
         <div className="mt-4 pt-3 border-t border-gray-700/50">
-          <p className="text-xs text-gray-500 mb-2">月別成績</p>
-          <div className="flex flex-col gap-1">
-            {Object.entries(monthlyBreakdown)
-              .sort((a, b) => b[0].localeCompare(a[0]))
-              .slice(0, 6)
-              .map(([ym, v]) => (
-                <div key={ym} className="flex items-center gap-2 text-xs">
-                  <span className="text-gray-500 w-16">{ym.slice(0, 4)}年{parseInt(ym.slice(5))}月</span>
-                  <span className="text-green-400">▲{v.w}</span>
-                  <span className="text-red-400">▼{v.l}</span>
-                  {v.d > 0 && <span className="text-gray-400">—{v.d}</span>}
+          <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wide">月別</p>
+          {(() => {
+            const maxTotal = Math.max(...monthlyStats.map((m) => m.total), 1);
+            return monthlyStats.slice(-6).map((m) => (
+              <div key={m.ym} className="flex items-center gap-2 mb-1.5">
+                <span className="text-[10px] text-gray-500 w-8 flex-shrink-0 text-right">{m.label}</span>
+                <div className="flex-1 h-4 bg-gray-800 rounded-sm overflow-hidden flex">
+                  {m.win > 0 && (
+                    <div
+                      className="h-full bg-green-500/80"
+                      style={{ width: `${(m.win / maxTotal) * 100}%` }}
+                    />
+                  )}
+                  {m.draw > 0 && (
+                    <div
+                      className="h-full bg-yellow-500/80"
+                      style={{ width: `${(m.draw / maxTotal) * 100}%` }}
+                    />
+                  )}
+                  {m.loss > 0 && (
+                    <div
+                      className="h-full bg-red-500/80"
+                      style={{ width: `${(m.loss / maxTotal) * 100}%` }}
+                    />
+                  )}
                 </div>
-              ))}
-          </div>
+                <span className="text-[10px] text-gray-400 w-16 flex-shrink-0">
+                  {m.win}勝{m.loss > 0 ? `${m.loss}敗` : ""}{m.draw > 0 ? `${m.draw}分` : ""}
+                </span>
+              </div>
+            ));
+          })()}
         </div>
       )}
-</div>
+    </div>
   );
 }
