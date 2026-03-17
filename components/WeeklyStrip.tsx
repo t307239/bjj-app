@@ -27,6 +27,7 @@ const TYPE_CONFIG: Record<string, { label: string; color: string }> = {
 export default function WeeklyStrip({ userId }: Props) {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [prevWeekCount, setPrevWeekCount] = useState<number | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -36,6 +37,8 @@ export default function WeeklyStrip({ userId }: Props) {
       const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
       const monday = new Date(now);
       monday.setDate(now.getDate() - daysToMonday);
+      const prevMonday = new Date(monday);
+      prevMonday.setDate(monday.getDate() - 7);
       const sunday = new Date(monday);
       sunday.setDate(monday.getDate() + 6);
 
@@ -43,10 +46,16 @@ export default function WeeklyStrip({ userId }: Props) {
         .from("training_logs")
         .select("date, type")
         .eq("user_id", userId)
-        .gte("date", toLocalDateStr(monday))
+        .gte("date", toLocalDateStr(prevMonday))
         .lte("date", toLocalDateStr(sunday));
 
-      if (data) setLogs(data);
+      if (data) {
+        const mondayStr = toLocalDateStr(monday);
+        const prevMondayStr = toLocalDateStr(prevMonday);
+        setLogs(data.filter((l) => l.date >= mondayStr));
+        const prevDates = new Set(data.filter((l) => l.date >= prevMondayStr && l.date < mondayStr).map((l) => l.date));
+        setPrevWeekCount(prevDates.size);
+      }
       setLoading(false);
     };
     load();
@@ -89,7 +98,7 @@ export default function WeeklyStrip({ userId }: Props) {
       <div className="flex items-center justify-between mb-2">
         <h4 className="text-xs font-medium text-gray-400">今週の練習状況</h4>
         <span className="text-[10px] text-gray-600">
-          {trainedThisWeek}/{totalPastDays}日
+          {trainedThisWeek}/{totalPastDays}日{prevWeekCount !== null && ` / 先週${prevWeekCount}日`}
         </span>
       </div>
       <div className="flex gap-1.5 mb-3">
