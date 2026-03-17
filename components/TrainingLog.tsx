@@ -33,7 +33,7 @@ function formatDuration(min: number): string {
   return m > 0 ? `${h}h${m}m` : `${h}h`;
 }
 
-// 試合詳細データのエンコード/デコード（DBスキーマ変更不要）
+// 試合詳細データのエンc��〰D@食限不要）
 type CompData = { result: string; opponent: string; finish: string; event: string };
 const COMP_PREFIX = "__comp__";
 
@@ -57,20 +57,20 @@ function decodeCompNotes(notes: string): { comp: CompData | null; userNotes: str
 }
 
 const RESULT_LABELS: Record<string, { label: string; color: string }> = {
-  win:  { label: "勝利 🏆", color: "text-green-400" },
+  win:  { label: "囝利 🏆", color: "text-green-400" },
   loss: { label: "敗北", color: "text-red-400" },
   draw: { label: "引き分け", color: "text-yellow-400" },
 };
 
 function buildXShareUrl(entry: { date: string; duration_min: number; type: string; notes: string }): string {
   const typeLabels: Record<string, string> = {
-    gi: "道衣(Gi)", nogi: "ノーギ", drilling: "ドリル", competition: "試合", open_mat: "オープンマット",
+    gi: "道衣(Gi)", nogi: "ノーギ", drilling: "ドリレ", competition: "試合", open_mat: "オープーマット",
   };
   const dur = entry.duration_min >= 60
     ? `${Math.floor(entry.duration_min / 60)}時間${entry.duration_min % 60 > 0 ? `${entry.duration_min % 60}分` : ""}`
-    : `${entry.duration_min}分`;
+    : `${entry.duration_min}m`;
   const lines = [
-    `🥋 BJJ練習しました！ (${entry.date})`,
+    `🥋 BJJ練習しみした！ (${entry.date})`,
     `⏱ ${dur} | ${typeLabels[entry.type] ?? entry.type}`,
     entry.notes ? `📝 ${entry.notes}` : "",
     "",
@@ -168,6 +168,9 @@ export default function TrainingLog({ userId }: Props) {
   const [compForm, setCompForm] = useState<CompData>({
     result: "win", opponent: "", finish: "", event: "",
   });
+  const [editCompForm, setEditCompForm] = useState<CompData>({
+    result: "win", opponent: "", finish: "", event: "",
+  });
   const supabase = createClient();
 
   // 初回データ読み込み
@@ -233,9 +236,9 @@ export default function TrainingLog({ userId }: Props) {
       });
       setCompForm({ result: "win", opponent: "", finish: "", event: "" });
       setShowForm(false);
-      setToast({ message: "練習を記録しました！", type: "success" });
+      setToast({ message: "練習を記録しみした！", type: "success" });
     } else {
-      setToast({ message: "保存に失敗しました", type: "error" });
+      setToast({ message: "保存に失敗しみした", type: "error" });
     }
     setLoading(false);
   };
@@ -267,13 +270,21 @@ export default function TrainingLog({ userId }: Props) {
       type: entry.type,
       notes: entry.notes,
     });
+    if (entry.type === "competition") {
+      const { comp } = decodeCompNotes(entry.notes);
+      if (comp) setEditCompForm(comp);
+      else setEditCompForm({ result: "win", opponent: "", finish: "", event: "" });
+    }
   };
 
   const handleUpdate = async (e: React.FormEvent, id: string) => {
     e.preventDefault();
+    const finalEditNotes = editForm.type === "competition"
+      ? encodeCompNotes(editCompForm, editForm.notes)
+      : editForm.notes;
     const { data, error } = await supabase
       .from("training_logs")
-      .update(editForm)
+      .update({ ...editForm, notes: finalEditNotes })
       .eq("id", id)
       .eq("user_id", userId)
       .select()
@@ -419,7 +430,7 @@ export default function TrainingLog({ userId }: Props) {
               </div>
             </div>
           )}
-          {/* 今月サマリー行 */}
+          {/* $��月サマリー行 */}
           <div className="flex items-center gap-4 text-sm">
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-[#e94560]">{monthEntries.length}</div>
@@ -495,7 +506,7 @@ export default function TrainingLog({ userId }: Props) {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="日付ほタイプ・メモで検索..."
+            placeholder="日付・タイプ・メモ#��検索..."
             className="w-full bg-[#16213e] text-white rounded-xl pl-9 pr-9 py-2 text-sm border border-gray-700 focus:outline-none focus:border-[#e94560]/60 placeholder-gray-600"
           />
           {searchQuery && (
@@ -802,6 +813,45 @@ export default function TrainingLog({ userId }: Props) {
                       <option key={t.value} value={t.value}>{t.label}</option>
                     ))}
                   </select>
+                  {editForm.type === "competition" && (
+                    <div className="mb-2 bg-red-500/5 border border-red-500/20 rounded-xl p-2 space-y-1.5">
+                      <p className="text-[10px] text-red-400 font-semibold">🏆 試合詳細</p>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <select
+                          value={editCompForm.result}
+                          onChange={(e) => setEditCompForm({ ...editCompForm, result: e.target.value })}
+                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400"
+                        >
+                          <option value="win">勝利 🏆</option>
+                          <option value="loss">敗北</option>
+                          <option value="draw">引き分け</option>
+                        </select>
+                        <input
+                          type="text"
+                          value={editCompForm.opponent}
+                          onChange={(e) => setEditCompForm({ ...editCompForm, opponent: e.target.value })}
+                          placeholder="対戦相手"
+                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <input
+                          type="text"
+                          value={editCompForm.finish}
+                          onChange={(e) => setEditCompForm({ ...editCompForm, finish: e.target.value })}
+                          placeholder="フィニッシュ技"
+                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                        />
+                        <input
+                          type="text"
+                          value={editCompForm.event}
+                          onChange={(e) => setEditCompForm({ ...editCompForm, event: e.target.value })}
+                          placeholder="大会名"
+                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                        />
+                      </div>
+                    </div>
+                  )}
                   <textarea
                     value={editForm.notes}
                     onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
@@ -926,7 +976,7 @@ export default function TrainingLog({ userId }: Props) {
             disabled={loadingMore}
             className="text-gray-400 hover:text-white text-sm border border-gray-700 hover:border-gray-500 px-6 py-2 rounded-full transition-colors disabled:opacity-50"
           >
-            {loadingMore ? "読み込み中..." : "アっと見る"}
+            {loadingMore ? "読み込み中..." : "もっと見る"}
           </button>
         </div>
       )}
