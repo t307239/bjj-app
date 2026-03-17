@@ -104,6 +104,10 @@ export default async function DashboardPage() {
     `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
 
   const firstDayOfMonth = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-01`;
+  // 先月の開始日・終了日
+  const prevMonthDate = new Date(now);
+  prevMonthDate.setUTCMonth(prevMonthDate.getUTCMonth() - 1);
+  const firstDayOfPrevMonth = `${prevMonthDate.getUTCFullYear()}-${String(prevMonthDate.getUTCMonth() + 1).padStart(2, "0")}-01`;
   // 今週の月曜日を計算
   const dayOfWeek = now.getUTCDay(); // 0=Sun, 1=Mon...
   const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
@@ -111,6 +115,7 @@ export default async function DashboardPage() {
 
   const [
     { count: monthCount },
+    { count: prevMonthCount },
     { count: weekCount },
     { count: techniqueCount },
     { data: recentLogs },
@@ -120,6 +125,12 @@ export default async function DashboardPage() {
       .select("*", { count: "exact", head: true })
       .eq("user_id", user.id)
       .gte("date", firstDayOfMonth),
+    supabase
+      .from("training_logs")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .gte("date", firstDayOfPrevMonth)
+      .lt("date", firstDayOfMonth),
     supabase
       .from("training_logs")
       .select("*", { count: "exact", head: true })
@@ -195,6 +206,14 @@ export default async function DashboardPage() {
               {monthCount ?? 0}
             </div>
             <div className="text-gray-400 text-xs mt-1">今月の練習</div>
+            {prevMonthCount !== null && prevMonthCount !== undefined && (
+              <div className={`text-[10px] mt-0.5 ${
+                (monthCount ?? 0) >= prevMonthCount ? "text-green-400" : "text-red-400"
+              }`}>
+                {(monthCount ?? 0) >= prevMonthCount ? "▲" : "▼"}
+                {Math.abs((monthCount ?? 0) - prevMonthCount)} vs 先月
+              </div>
+            )}
           </div>
           <div className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-yellow-400/40 transition-colors">
             <div className="text-2xl font-bold text-yellow-400">
