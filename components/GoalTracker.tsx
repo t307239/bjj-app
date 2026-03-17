@@ -327,7 +327,25 @@ export default function GoalTracker({ userId }: Props) {
                 </button>
               </div>
               {data.weeklyGoal > 0 ? (
-                <ProgressBar current={data.weekCount} target={data.weeklyGoal} />
+                <>
+                  <ProgressBar current={data.weekCount} target={data.weeklyGoal} />
+                  {(() => {
+                    const now = new Date(Date.now() + 9 * 3600000);
+                    const dow = now.getUTCDay(); // 0=Sun
+                    const daysLeftInWeek = dow === 0 ? 0 : 7 - dow; // 今日含まない残り日数
+                    const needed = Math.max(0, data.weeklyGoal - data.weekCount);
+                    if (needed === 0) return null;
+                    if (daysLeftInWeek === 0) return (
+                      <p className="text-[10px] text-gray-600 mt-1.5">今週残り0日 · あと{needed}回</p>
+                    );
+                    return (
+                      <p className="text-[10px] text-gray-500 mt-1.5">
+                        あと<span className="text-[#e94560] font-semibold">{needed}</span>回 · 残{daysLeftInWeek}日
+                        {needed <= daysLeftInWeek ? " ✓ 達成可能" : " ⚠ ペースアップ"}
+                      </p>
+                    );
+                  })()}
+                </>
               ) : (
                 <p className="text-xs text-gray-600 mt-1">目標未設定（タップして設定）</p>
               )}
