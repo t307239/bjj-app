@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { LocaleProvider } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: {
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
     title: "BJJ App",
   },
   robots: {
-    index: false, // プライベートアプリのためインデックス不要
+    index: false,
     follow: false,
   },
 };
@@ -55,7 +56,9 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
       </head>
       <body className="min-h-screen bg-[#1a1a2e] text-white antialiased">
-        {children}
+        <LocaleProvider>
+          {children}
+        </LocaleProvider>
       </body>
     </html>
   );
