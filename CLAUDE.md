@@ -1,3 +1,28 @@
+- Day 4eu (2026/03/17): **Batch R — TrainingLogフィルター集計・ CompetitionStats月別トレンド・StreakFreeze確認ダイアログ・TechniqueLogカテゴリ数・WeeklyStrip先週比較** 🎉
+  **実装内容（5コミット）**:
+    - R1: `components/TrainingLog.tsx` 修正（commit: `8606bfb8`）✅ — フィルター適用時の集計バー表示
+      - `filtersActive` / `filteredTotalMins` / `filteredTotalFmt` 変数追加
+      - フィルター適用中の時に「N件 • Nh」集計バー表示（青色バッジ）
+    - R2: `components/CompetitionStats.tsx` 修正（commit: `d237f0a8`）✅ — 月別W/Lトレンド表示
+      - `monthlyBreakdown` state：`Record<string, \{ w: number; l: number; d: number \}>`
+      - 過去6ケ月の勝敗分布を月別バッジで表示（新しい順）
+    - R3: `components/StreakFreeze.tsx` 修正（commit: `bc512133`）✅ — フリーズ使用確認ダイアログ
+      - `confirmingFreeze` state追加
+      - フリーズボタンクリック→「本当に使用しますか？」インライン確認 UI表示
+      - 「はい」ボタンで実行、「キャンセル」ボタンでキャンセル
+    - R4: `components/TechniqueLog.tsx` 修正（commit: `5e0751f1`）✅ — カテゴリ別テクニック数行
+      - 統計カード内にカテゴリ別チップ行追加（ガードN・パスN・サブミッションN…）
+      - `CATEGORIES.map` で全カテゴリの実数表示（数、0のカテゴリは非表示）
+    - R5: `components/WeeklyStrip.tsx` 修正（commit: `a32e3cbd`）✅ — 先週練習日数比較
+      - `prevWeekCount` state追加
+      - クエリ範囲を先週月曜まで拡大、フィルタリングで今週/先週を分離
+      - ヘッダーに「N/N日 / 先週N日」を表示
+  **バグチェック**: 5ファイル全確認 ✅ TOTAL ISSUES: 0
+  **次の優先タスク**（優先度順）:
+    1. **Supabase Migration** — `profiles` テーブルに `streak_freeze_count` / `streak_freeze_last_used` カラム追加が必要
+    2. **Batch S** — 次の5タスク実装
+    3. **BJJ Wiki UI更新** — ユーザーが後回しにする意向
+
 ## 📝 開発ログ
 - Day 4et (2026/03/17): **Batch Q — StreakFreeze履歴・GoalTrackerペースチップ・CsvExport試合デコード・TechniqueLog重複チェック・Login JSON-LD** 🎉
   **実装内容（6コミット）**:
