@@ -3,6 +3,7 @@
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
 
 const errorMessages: Record<string, string> = {
   auth: "認証に失敗しました。もう一度お試しください。",
@@ -65,6 +66,8 @@ function LoginForm() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-4 bg-[#1a1a2e]">
       <div className="w-full max-w-sm">
+
+        {/* ヘッダー */}
         <div className="text-center mb-8">
           <div className="text-5xl mb-3">🥋</div>
           <h1 className="text-2xl font-bold text-white">BJJ App をはじめる</h1>
@@ -78,7 +81,8 @@ function LoginForm() {
         </Suspense>
 
         <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700 space-y-3">
-          {/* Google */}
+
+          {/* Google — 最も一般的なので最上位 */}
           <button
             onClick={signInWithGoogle}
             className="w-full flex items-center justify-center gap-3 bg-white text-gray-900 font-semibold py-3 px-4 rounded-xl hover:bg-gray-100 transition-colors"
@@ -159,8 +163,25 @@ function LoginForm() {
           </div>
         </div>
 
-        <p className="text-center text-gray-600 text-xs mt-6">
-          ログインすることで利用規約とプライバシーポリシーに同意します
+        {/* ゲストモードリンク */}
+        <div className="text-center mt-5">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-1.5 text-gray-500 hover:text-gray-300 text-sm transition-colors"
+          >
+            <span>👀</span>
+            <span>登録なしで試してみる</span>
+            <span className="text-xs">→</span>
+          </Link>
+          <p className="text-gray-700 text-xs mt-1">データはブラウザに保存、後で同期できます</p>
+        </div>
+
+        <p className="text-center text-gray-600 text-xs mt-4">
+          ログインすることで
+          <a href="#" className="hover:text-gray-400 underline mx-0.5">利用規約</a>
+          と
+          <a href="#" className="hover:text-gray-400 underline mx-0.5">プライバシーポリシー</a>
+          に同意します
         </p>
       </div>
     </main>
