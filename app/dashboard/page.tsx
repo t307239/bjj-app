@@ -4,8 +4,10 @@ import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import TrainingLog from "@/components/TrainingLog";
 import TrainingChart from "@/components/TrainingChart";
+import TrainingBarChart from "@/components/TrainingBarChart";
 import TrainingCalendar from "@/components/TrainingCalendar";
 import GoalTracker from "@/components/GoalTracker";
+import CsvExport from "@/components/CsvExport";
 import GuestDashboard from "@/components/GuestDashboard";
 import GuestMigration from "@/components/GuestMigration";
 
@@ -22,7 +24,6 @@ export async function generateMetadata(): Promise<Metadata> {
     return { title: "ダッシュボード | BJJ App" };
   }
 
-  // プロフィールと総練習数を並列取得
   const [{ data: profile }, { count: totalCount }] = await Promise.all([
     supabase
       .from("profiles")
@@ -38,7 +39,6 @@ export async function generateMetadata(): Promise<Metadata> {
   const belt = profile?.belt ?? "white";
   const count = totalCount ?? 0;
 
-  // BJJ歴（月）を計算
   let months = 0;
   if (profile?.start_date) {
     const start = new Date(profile.start_date);
@@ -79,7 +79,6 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 未認証はゲストモードで表示
   if (!user) {
     return <GuestDashboard />;
   }
@@ -93,15 +92,13 @@ export default async function DashboardPage() {
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
-  // サーバーサイドで統計データを取得（JST = UTC+9 補正）
   const JST_OFFSET = 9 * 60 * 60 * 1000;
-  const now = new Date(Date.now() + JST_OFFSET); // JST時刻
+  const now = new Date(Date.now() + JST_OFFSET);
   const toJSTStr = (d: Date) =>
     `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
 
   const firstDayOfMonth = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-01`;
-  // 今週の月曜日を計算
-  const dayOfWeek = now.getUTCDay(); // 0=Sun, 1=Mon...
+  const dayOfWeek = now.getUTCDay();
   const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
   const firstDayOfWeek = toJSTStr(new Date(now.getTime() - daysToMonday * 86400000));
 
@@ -133,7 +130,6 @@ export default async function DashboardPage() {
       .limit(60),
   ]);
 
-  // 連続練習日数を計算
   let streak = 0;
   if (recentLogs && recentLogs.length > 0) {
     const dates = [
@@ -162,10 +158,8 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#1a1a2e] pb-20 sm:pb-0">
       <NavBar displayName={displayName} avatarUrl={avatarUrl} />
-      {/* ゲストデータの自動マージ（ログイン直後） */}
       <GuestMigration userId={user.id} />
 
-      {/* メインコンテンツ */}
       <main className="max-w-4xl mx-auto px-4 py-6">
         <div className="mb-6">
           <h2 className="text-2xl font-bold">おかえり、{displayName} 👋</h2>
@@ -184,26 +178,19 @@ export default async function DashboardPage() {
           </p>
         </div>
 
-        {/* クイックスタッツ */}
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-[#e94560]/40 transition-colors">
-            <div className="text-2xl font-bold text-[#e94560]">
-              {monthCount ?? 0}
-            </div>
+            <div className="text-2xl font-bold text-[#e94560]">{monthCount ?? 0}</div>
             <div className="text-gray-400 text-xs mt-1">今月の練習</div>
           </div>
           <div className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-yellow-400/40 transition-colors">
-            <div className="text-2xl font-bold text-yellow-400">
-              {weekCount ?? 0}
-            </div>
+            <div className="text-2xl font-bold text-yellow-400">{weekCount ?? 0}</div>
             <div className="text-gray-400 text-xs mt-1">今週の練習</div>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3 mb-6">
           <Link href="/techniques" className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-blue-400/40 transition-colors block">
-            <div className="text-2xl font-bold text-blue-400">
-              {techniqueCount ?? 0}
-            </div>
+            <div className="text-2xl font-bold text-blue-400">{techniqueCount ?? 0}</div>
             <div className="text-gray-400 text-xs mt-1">習得テクニック</div>
           </Link>
           <Link href="/profile" className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-green-400/40 transition-colors block">
@@ -212,16 +199,15 @@ export default async function DashboardPage() {
           </Link>
         </div>
 
-        {/* 目標トラッカー */}
         <GoalTracker userId={user.id} />
-
-        {/* 月カレンダー */}
         <TrainingCalendar userId={user.id} />
-
-        {/* アクティビティヒートマップ */}
+        <TrainingBarChart userId={user.id} />
         <TrainingChart userId={user.id} />
 
-        {/* 練習記録コンポーネント */}
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-medium text-gray-400">練習記録</h3>
+          <CsvExport userId={user.id} />
+        </div>
         <TrainingLog userId={user.id} />
       </main>
     </div>
