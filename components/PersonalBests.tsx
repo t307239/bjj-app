@@ -11,7 +11,7 @@ type Bests = {
   maxSessionMin: number;
   longestStreak: number;
   bestMonthCount: number;
-  bestMonthLabel: string;
+  bestWeekCount: number;
   avgSessionMin: number;
   avgMonthly: number;
 };
@@ -41,6 +41,7 @@ export default function PersonalBests({ userId }: Props) {
       const totalMinutes = logs.reduce((s, l) => s + (l.duration_min ?? 0), 0);
       const maxSessionMin = Math.max(...logs.map((l) => l.duration_min ?? 0));
 
+      // 最長連続日数
       const uniqueDates = [...new Set(logs.map((l: { date: string }) => l.date))].sort();
       let maxStreak = uniqueDates.length > 0 ? 1 : 0;
       let curStreak = 1;
@@ -56,6 +57,7 @@ export default function PersonalBests({ userId }: Props) {
         }
       }
 
+      // 月間最多
       const monthCounts: Record<string, number> = {};
       logs.forEach((l: { date: string }) => {
         const ym = l.date.slice(0, 7);
@@ -64,10 +66,21 @@ export default function PersonalBests({ userId }: Props) {
       const bestMonthCount = Object.values(monthCounts).length > 0
         ? Math.max(...Object.values(monthCounts))
         : totalSessions;
-      const bestMonthKey = Object.entries(monthCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "";
-      const bestMonthLabel = bestMonthKey
-        ? bestMonthKey.slice(0, 4) + "年" + String(parseInt(bestMonthKey.slice(5, 7))) + "月"
-        : "";
+
+      // 週間最多（月曜日起点）
+      const weekCounts: Record<string, number> = {};
+      logs.forEach((l: { date: string }) => {
+        const d = new Date(l.date + "T00:00:00");
+        const dow = d.getDay();
+        const daysToMon = dow === 0 ? 6 : dow - 1;
+        const mon = new Date(d);
+        mon.setDate(d.getDate() - daysToMon);
+        const weekKey = `${mon.getFullYear()}-${String(mon.getMonth() + 1).padStart(2, "0")}-${String(mon.getDate()).padStart(2, "0")}`;
+        weekCounts[weekKey] = (weekCounts[weekKey] ?? 0) + 1;
+      });
+      const bestWeekCount = Object.values(weekCounts).length > 0
+        ? Math.max(...Object.values(weekCounts))
+        : 0;
 
       const avgSessionMin = totalSessions > 0 ? Math.round(totalMinutes / totalSessions) : 0;
       const monthKeys = Object.keys(monthCounts);
@@ -75,7 +88,7 @@ export default function PersonalBests({ userId }: Props) {
         ? Math.round(totalSessions / monthKeys.length)
         : totalSessions;
 
-      setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, bestMonthLabel, avgSessionMin, avgMonthly });
+      setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, bestWeekCount, avgSessionMin, avgMonthly });
     };
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,11 +100,13 @@ export default function PersonalBests({ userId }: Props) {
     { icon: "🏋️", label: "総練習回数", value: `${bests.totalSessions}回` },
     { icon: "⏱️", label: "総練習時間", value: fmtTime(bests.totalMinutes) },
     { icon: "🔥", label: "最長連続日", value: `${bests.longestStreak}日` },
-    { icon: "📅", label: "月間最多", value: `${bests.bestMonthCount}回`, sub: bests.bestMonthLabel },
+    { icon: "📅", label: "月間最多", value: `${bests.bestMonthCount}回` },
     { icon: "⌛", label: "平均時間/回", value: fmtTime(bests.avgSessionMin) },
     { icon: "📈", label: "月平均", value: `${bests.avgMonthly}回` },
+    { icon: "🗓️", label: "週間最多", value: `${bests.bestWeekCount}回` },
   ];
 
+  // Xシェア用テキスト生成
   const buildShareText = () => {
     const lines = [
       `🥋 BJJ練習記録`,
@@ -131,15 +146,12 @@ export default function PersonalBests({ userId }: Props) {
             <div className="text-lg mb-0.5">{item.icon}</div>
             <div className="text-base font-bold text-white">{item.value}</div>
             <div className="text-[10px] text-gray-500 mt-0.5">{item.label}</div>
-            {"sub" in item && (item as {sub?: string}).sub && (
-              <div className="text-[9px] text-green-500/70 mt-0.5">⭐ {(item as {sub?: string}).sub}</div>
-            )}
           </div>
         ))}
       </div>
       {bests.maxSessionMin > 0 && (
         <div className="mt-2 text-center text-[10px] text-gray-600">
-          最長セッション: {fmtTime(bests.maxSessionMin)} · 最多月: {bests.bestMonthCount}回
+          最長セッション: {fmtTime(bests.maxSessionMin)} · 月平均: {bests.avgMonthly}回
         </div>
       )}
     </div>
