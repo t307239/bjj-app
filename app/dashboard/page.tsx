@@ -10,6 +10,7 @@ import CompetitionStats from "@/components/CompetitionStats";
 import PersonalBests from "@/components/PersonalBests";
 import TrainingCalendar from "@/components/TrainingCalendar";
 import GoalTracker from "@/components/GoalTracker";
+import WeeklyStrip from "@/components/WeeklyStrip";
 import GuestDashboard from "@/components/GuestDashboard";
 import GuestMigration from "@/components/GuestMigration";
 
@@ -234,6 +235,9 @@ export default async function DashboardPage() {
             <div className="text-gray-400 text-xs mt-1">連続練習日</div>
           </Link>
         </div>
+
+        {/* 今週の練習状況 */}
+        <WeeklyStrip userId={user.id} />
 
         {/* 目標トラッカー */}
         <GoalTracker userId={user.id} />
