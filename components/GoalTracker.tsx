@@ -272,6 +272,21 @@ export default function GoalTracker({ userId }: Props) {
     if (!allGoalsAchieved) prevAchieved.current = false;
   }, [allGoalsAchieved]);
 
+  // 今月の残り日数と月間目標ペース計算
+  const daysLeftInMonth = (() => {
+    const now = new Date();
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    return lastDay - now.getDate();
+  })();
+  const daysInMonth = (() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  })();
+  const daysSoFar = daysInMonth - daysLeftInMonth;
+  const monthlyPace = data.monthlyGoal > 0 && daysSoFar > 0
+    ? Math.round((data.monthCount / daysSoFar) * daysInMonth)
+    : null;
+
   return (
     <>
       {toast && (
@@ -349,6 +364,12 @@ export default function GoalTracker({ userId }: Props) {
                   <span className="text-sm font-medium text-gray-200">今月の目標</span>
                   {data.monthCount >= data.monthlyGoal && data.monthlyGoal > 0 && (
                     <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">達成！</span>
+                  )}
+                  {daysLeftInMonth > 0 && data.monthlyGoal > 0 && data.monthCount < data.monthlyGoal && (
+                    <span className="text-[10px] bg-gray-700/50 text-gray-400 px-1.5 py-0.5 rounded">あと{daysLeftInMonth}日</span>
+                  )}
+                  {monthlyPace !== null && data.monthlyGoal > 0 && data.monthCount < data.monthlyGoal && (
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${monthlyPace >= data.monthlyGoal ? "bg-green-500/10 text-green-500" : "bg-yellow-500/10 text-yellow-400"}`}>ペース:{monthlyPace}回見込</span>
                   )}
                 </div>
                 <button className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors">
