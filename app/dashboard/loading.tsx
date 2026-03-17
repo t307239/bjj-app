@@ -37,7 +37,23 @@ export default function DashboardLoading() {
           ))}
         </div>
 
-        {/* GoalTrackerスケルトン */}
+        {/* WeeklyStripスケルトン */}
+        <div className="bg-[#16213e] rounded-xl px-4 py-3 border border-gray-700 mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="h-3 w-24 bg-gray-700 rounded animate-pulse" />
+            <div className="h-3 w-8 bg-gray-800 rounded animate-pulse" />
+          </div>
+          <div className="flex gap-1.5">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                <div className="w-7 h-7 rounded-full bg-gray-700 animate-pulse" />
+                <div className="h-2 w-3 bg-gray-800 rounded animate-pulse" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+                {/* GoalTrackerスケルトン */}
         <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-4 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-700">
             <div className="h-4 w-24 bg-gray-700 rounded animate-pulse" />
@@ -56,7 +72,7 @@ export default function DashboardLoading() {
         <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
           <div className="h-4 w-24 bg-gray-700 rounded animate-pulse mb-3" />
           <div className="grid grid-cols-2 gap-2">
-            {[0, 1, 2, 3].map((i) => (
+            {[0, 1, 2, 3, 4, 5].map((i) => (
               <div key={i} className="bg-gray-800/40 rounded-xl p-3 text-center">
                 <div className="h-5 w-6 bg-gray-700 rounded animate-pulse mx-auto mb-1" />
                 <div className="h-4 w-14 bg-gray-700 rounded animate-pulse mx-auto mb-1" />
