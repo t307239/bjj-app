@@ -85,13 +85,45 @@ export default function DashboardLoading() {
           <div className="h-4 w-32 bg-gray-700 rounded animate-pulse mb-3" />
           <div className="flex items-end gap-1 h-24">
             {Array.from({ length: 12 }).map((_, i) => (
-              <div
-                key={i}
-                className="flex-1 bg-gray-700 rounded animate-pulse"
-                style={{ height: `${30 + Math.random() * 60}%` }}
-              />
+              <div key={i} className="flex-1 bg-gray-700 rounded animate-pulse" style={{ height: `${30 + (i % 4) * 15}%` }} />
             ))}
           </div>
+        </div>
+
+        {/* TrainingTypeChartスケルトン */}
+        <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
+          <div className="h-4 w-28 bg-gray-700 rounded animate-pulse mb-3" />
+          <div className="flex items-center gap-4">
+            <div className="w-20 h-20 rounded-full bg-gray-700 animate-pulse flex-shrink-0" />
+            <div className="flex-1 space-y-2">
+              {[0, 1, 2, 3].map((i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-gray-700 animate-pulse flex-shrink-0" />
+                  <div className="h-3 bg-gray-700 rounded animate-pulse" style={{ width: `${50 + i * 10}%` }} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* CompetitionStatsスケルトン */}
+        <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
+          <div className="flex justify-between mb-3">
+            <div className="h-4 w-24 bg-gray-700 rounded animate-pulse" />
+            <div className="h-3 w-16 bg-gray-800 rounded animate-pulse" />
+          </div>
+          <div className="flex items-center gap-4 mb-3">
+            <div className="w-20 h-20 rounded-full bg-gray-700 animate-pulse flex-shrink-0" />
+            <div className="flex-1 grid grid-cols-3 gap-1.5">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="bg-gray-800/40 rounded-xl p-2 text-center">
+                  <div className="h-6 w-6 bg-gray-700 rounded animate-pulse mx-auto mb-1" />
+                  <div className="h-3 w-8 bg-gray-800 rounded animate-pulse mx-auto" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="h-1 bg-gray-700 rounded animate-pulse" />
         </div>
 
         {/* ログスケルトン */}
