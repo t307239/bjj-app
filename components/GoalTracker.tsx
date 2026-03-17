@@ -11,8 +11,10 @@ type Props = {
 type GoalData = {
   weeklyGoal: number;
   monthlyGoal: number;
+  techniqueGoal: number;
   weekCount: number;
   monthCount: number;
+  techniqueCount: number;
 };
 
 function ProgressBar({ current, target }: { current: number; target: number }) {
@@ -104,12 +106,14 @@ export default function GoalTracker({ userId }: Props) {
   const [data, setData] = useState<GoalData>({
     weeklyGoal: 0,
     monthlyGoal: 0,
+    techniqueGoal: 0,
     weekCount: 0,
     monthCount: 0,
+    techniqueCount: 0,
   });
   const [loading, setLoading] = useState(true);
   const [schemaReady, setSchemaReady] = useState(true);
-  const [editing, setEditing] = useState<"weekly" | "monthly" | null>(null);
+  const [editing, setEditing] = useState<"weekly" | "monthly" | "technique" | null>(null);
   const [editValue, setEditValue] = useState(0);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
@@ -125,7 +129,7 @@ export default function GoalTracker({ userId }: Props) {
         .toISOString()
         .split("T")[0];
 
-      const [{ count: mc }, { count: wc }, profileRes] = await Promise.all([
+      const [{ count: mc }, { count: wc }, { count: tc }, profileRes] = await Promise.all([
         supabase
           .from("training_logs")
           .select("*", { count: "exact", head: true })
@@ -137,12 +141,17 @@ export default function GoalTracker({ userId }: Props) {
           .eq("user_id", userId)
           .gte("date", firstDayOfWeek),
         supabase
+          .from("techniques")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", userId),
+        supabase
           .from("profiles")
-          .select("weekly_goal, monthly_goal")
+          .select("weekly_goal, monthly_goal, technique_goal")
           .eq("id", userId)
           .single(),
       ]);
 
+      // スキーマ未対応チェック（カラム非存在）
       if (profileRes.error && profileRes.error.code === "42703") {
         setSchemaReady(false);
         setLoading(false);
@@ -152,8 +161,10 @@ export default function GoalTracker({ userId }: Props) {
       setData({
         weeklyGoal: profileRes.data?.weekly_goal ?? 0,
         monthlyGoal: profileRes.data?.monthly_goal ?? 0,
+        techniqueGoal: (profileRes.data as { technique_goal?: number } | null)?.technique_goal ?? 0,
         weekCount: wc ?? 0,
         monthCount: mc ?? 0,
+        techniqueCount: tc ?? 0,
       });
       setLoading(false);
     };
@@ -161,14 +172,20 @@ export default function GoalTracker({ userId }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  const startEdit = (type: "weekly" | "monthly") => {
-    setEditValue(type === "weekly" ? data.weeklyGoal : data.monthlyGoal);
+  const startEdit = (type: "weekly" | "monthly" | "technique") => {
+    setEditValue(
+      type === "weekly" ? data.weeklyGoal
+      : type === "monthly" ? data.monthlyGoal
+      : data.techniqueGoal
+    );
     setEditing(type);
   };
 
   const saveGoal = async () => {
     if (!editing) return;
-    const col = editing === "weekly" ? "weekly_goal" : "monthly_goal";
+    const col = editing === "weekly" ? "weekly_goal"
+      : editing === "monthly" ? "monthly_goal"
+      : "technique_goal";
     const { error } = await supabase
       .from("profiles")
       .upsert({ id: userId, [col]: editValue }, { onConflict: "id" });
@@ -178,6 +195,7 @@ export default function GoalTracker({ userId }: Props) {
         ...prev,
         weeklyGoal: editing === "weekly" ? editValue : prev.weeklyGoal,
         monthlyGoal: editing === "monthly" ? editValue : prev.monthlyGoal,
+        techniqueGoal: editing === "technique" ? editValue : prev.techniqueGoal,
       }));
       setToast({ message: "目標を設定しました！", type: "success" });
     } else {
@@ -200,7 +218,7 @@ export default function GoalTracker({ userId }: Props) {
     );
   }
 
-  const hasGoals = data.weeklyGoal > 0 || data.monthlyGoal > 0;
+  const hasGoals = data.weeklyGoal > 0 || data.monthlyGoal > 0 || data.techniqueGoal > 0;
 
   return (
     <>
@@ -216,6 +234,7 @@ export default function GoalTracker({ userId }: Props) {
         </div>
 
         <div className="p-4 space-y-3">
+          {/* 週間目標 */}
           {editing === "weekly" ? (
             <GoalEditor
               label="今週"
@@ -249,6 +268,7 @@ export default function GoalTracker({ userId }: Props) {
             </div>
           )}
 
+          {/* 月間目標 */}
           {editing === "monthly" ? (
             <GoalEditor
               label="今月"
@@ -276,6 +296,40 @@ export default function GoalTracker({ userId }: Props) {
               </div>
               {data.monthlyGoal > 0 ? (
                 <ProgressBar current={data.monthCount} target={data.monthlyGoal} />
+              ) : (
+                <p className="text-xs text-gray-600 mt-1">目標未設定（タップして設定）</p>
+              )}
+            </div>
+          )}
+
+          {/* テクニック目標 */}
+          {editing === "technique" ? (
+            <GoalEditor
+              label="テクニック習得数"
+              current={data.techniqueCount}
+              value={editValue}
+              onChange={(v) => setEditValue(Math.min(500, v))}
+              onSave={saveGoal}
+              onCancel={() => setEditing(null)}
+            />
+          ) : (
+            <div
+              className="bg-gray-800/40 rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-800/60 transition-colors"
+              onClick={() => startEdit("technique")}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-200">🥋 テクニック目標</span>
+                  {data.techniqueCount >= data.techniqueGoal && data.techniqueGoal > 0 && (
+                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">達成！</span>
+                  )}
+                </div>
+                <button className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors">
+                  {data.techniqueGoal > 0 ? "変更" : "＋ 設定"}
+                </button>
+              </div>
+              {data.techniqueGoal > 0 ? (
+                <ProgressBar current={data.techniqueCount} target={data.techniqueGoal} />
               ) : (
                 <p className="text-xs text-gray-600 mt-1">目標未設定（タップして設定）</p>
               )}
