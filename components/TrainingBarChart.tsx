@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 type MonthData = {
-  month: string;
-  label: string;
+  month: string;   // "2026-03"
+  label: string;   // "3月"
   count: number;
   minutes: number;
 };
@@ -22,6 +22,7 @@ export default function TrainingBarChart({ userId }: Props) {
 
   useEffect(() => {
     const load = async () => {
+      // 過去6ヶ月分取得
       const since = new Date();
       since.setMonth(since.getMonth() - 5);
       since.setDate(1);
@@ -34,6 +35,7 @@ export default function TrainingBarChart({ userId }: Props) {
         .gte("date", sinceStr);
 
       if (logs) {
+        // 過去6ヶ月のバケットを初期化
         const buckets: Record<string, { count: number; minutes: number }> = {};
         for (let i = 5; i >= 0; i--) {
           const d = new Date();
@@ -53,7 +55,11 @@ export default function TrainingBarChart({ userId }: Props) {
 
         const result: MonthData[] = Object.entries(buckets).map(([month, val]) => {
           const m = month.split("-")[1];
-          return { month, label: `${parseInt(m)}月`, ...val };
+          return {
+            month,
+            label: `${parseInt(m)}月`,
+            ...val,
+          };
         });
         setData(result);
       }
@@ -79,8 +85,20 @@ export default function TrainingBarChart({ userId }: Props) {
   const totalCount = data.reduce((s, d) => s + d.count, 0);
   const totalMinutes = data.reduce((s, d) => s + d.minutes, 0);
 
+  // ローカル日付で今月キーを計算（タイムゾーンバグ修正）
+  const now = new Date();
+  const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
+  // 平均ライン（データのある月のみ対象）
+  const activeBars = data.filter((d) => (view === "count" ? d.count : d.minutes) > 0);
+  const avgVal = activeBars.length > 0
+    ? activeBars.reduce((s, d) => s + (view === "count" ? d.count : d.minutes), 0) / activeBars.length
+    : 0;
+  const avgPct = maxVal > 0 ? (avgVal / maxVal) * 100 : 0;
+
   return (
     <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
+      {/* ヘッダー */}
       <div className="flex items-center justify-between mb-3">
         <div>
           <h4 className="text-sm font-medium text-gray-300">月別練習グラフ</h4>
@@ -92,7 +110,9 @@ export default function TrainingBarChart({ userId }: Props) {
           <button
             onClick={() => setView("count")}
             className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors ${
-              view === "count" ? "bg-[#e94560] text-white" : "bg-gray-700/50 text-gray-400 hover:text-white"
+              view === "count"
+                ? "bg-[#e94560] text-white"
+                : "bg-gray-700/50 text-gray-400 hover:text-white"
             }`}
           >
             回数
@@ -100,7 +120,9 @@ export default function TrainingBarChart({ userId }: Props) {
           <button
             onClick={() => setView("minutes")}
             className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors ${
-              view === "minutes" ? "bg-[#e94560] text-white" : "bg-gray-700/50 text-gray-400 hover:text-white"
+              view === "minutes"
+                ? "bg-[#e94560] text-white"
+                : "bg-gray-700/50 text-gray-400 hover:text-white"
             }`}
           >
             時間
@@ -108,31 +130,64 @@ export default function TrainingBarChart({ userId }: Props) {
         </div>
       </div>
 
-      <div className="flex items-end gap-1.5" style={{ height: "120px" }}>
-        {data.map((d) => {
-          const val = view === "count" ? d.count : d.minutes;
-          const pct = val > 0 ? Math.max((val / maxVal) * 100, 5) : 0;
-          const label = view === "count" ? `${val}回` : formatMinutes(val);
-          const isCurrentMonth = d.month === new Date().toISOString().substring(0, 7);
+      {/* バーグラフ（相対ポジションで平均ラインを重ねる） */}
+      <div className="relative" style={{ height: "120px" }}>
+        {/* 平均ライン */}
+        {avgPct > 0 && (
+          <div
+            className="absolute left-0 right-0 border-t border-dashed border-gray-500/50 pointer-events-none"
+            style={{ bottom: `${avgPct}%` }}
+            title={`平均: ${view === "count" ? `${Math.round(avgVal)}回` : formatMinutes(Math.round(avgVal))}`}
+          />
+        )}
+        <div className="flex items-end gap-1.5 h-full">
+          {data.map((d) => {
+            const val = view === "count" ? d.count : d.minutes;
+            const pct = val > 0 ? Math.max((val / maxVal) * 100, 5) : 0;
+            const label = view === "count"
+              ? `${val}回`
+              : formatMinutes(val);
+            const isCurrentMonth = d.month === currentMonthKey;
 
-          return (
-            <div key={d.month} className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
-              <span className={`text-[9px] leading-none transition-opacity ${val > 0 ? "opacity-100" : "opacity-0"} ${isCurrentMonth ? "text-[#e94560]" : "text-gray-500"}`}>
-                {label}
-              </span>
-              <div
-                className={`w-full rounded-t-md transition-all ${
-                  isCurrentMonth ? "bg-[#e94560]" : val > 0 ? "bg-[#e94560]/50" : "bg-gray-800"
-                }`}
-                style={{ height: `${pct}%`, minHeight: val > 0 ? "4px" : "0px" }}
-              />
-              <span className={`text-[10px] leading-none ${isCurrentMonth ? "text-white font-semibold" : "text-gray-500"}`}>
-                {d.label}
-              </span>
-            </div>
-          );
-        })}
+            return (
+              <div key={d.month} className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
+                {/* 値ラベル */}
+                <span
+                  className={`text-[9px] leading-none transition-opacity ${
+                    val > 0 ? "opacity-100" : "opacity-0"
+                  } ${isCurrentMonth ? "text-[#e94560]" : "text-gray-500"}`}
+                >
+                  {label}
+                </span>
+                {/* バー */}
+                <div
+                  className={`w-full rounded-t-md transition-all ${
+                    isCurrentMonth
+                      ? "bg-[#e94560]"
+                      : val > 0
+                      ? "bg-[#e94560]/50"
+                      : "bg-gray-800"
+                  }`}
+                  style={{ height: `${pct}%`, minHeight: val > 0 ? "4px" : "0px" }}
+                />
+                {/* 月ラベル */}
+                <span
+                  className={`text-[10px] leading-none ${
+                    isCurrentMonth ? "text-white font-semibold" : "text-gray-500"
+                  }`}
+                >
+                  {d.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
+      {avgPct > 0 && (
+        <div className="text-[10px] text-gray-600 text-right mt-1">
+          平均 {view === "count" ? `${Math.round(avgVal)}回/月` : `${formatMinutes(Math.round(avgVal))}/月`}
+        </div>
+      )}
     </div>
   );
 }
