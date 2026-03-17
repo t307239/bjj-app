@@ -161,6 +161,7 @@ export default function TrainingLog({ userId }: Props) {
     notes: "",
   });
   const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
   const [compForm, setCompForm] = useState<CompData>({
     result: "win", opponent: "", finish: "", event: "",
   });
@@ -313,10 +314,21 @@ export default function TrainingLog({ userId }: Props) {
   };
   const periodStart = getPeriodStart();
 
-  // タイプフィルター + 期間フィルター
+  // タイプフィルター + 期間フィルター + キーワード検索
   const filtered = entries
     .filter((e) => filterType === "all" || e.type === filterType)
-    .filter((e) => !periodStart || e.date >= periodStart);
+    .filter((e) => !periodStart || e.date >= periodStart)
+    .filter((e) => {
+      if (!searchQuery.trim()) return true;
+      const q = searchQuery.toLowerCase();
+      const { userNotes } = decodeCompNotes(e.notes);
+      const typeLabel = TRAINING_TYPES.find((t) => t.value === e.type)?.label ?? e.type;
+      return (
+        e.date.includes(q) ||
+        typeLabel.toLowerCase().includes(q) ||
+        userNotes.toLowerCase().includes(q)
+      );
+    });
 
   // 今月の合計時間
   const thisMonth = getLocalDateString().slice(0, 7);
@@ -372,6 +384,32 @@ export default function TrainingLog({ userId }: Props) {
           + 記録を追加
         </button>
       </div>
+
+      {/* キーワード検索 */}
+      {!initialLoading && entries.length > 0 && (
+        <div className="relative mb-2">
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="日付・タイプ・メモで検索..."
+            className="w-full bg-[#16213e] text-white rounded-xl pl-9 pr-9 py-2 text-sm border border-gray-700 focus:outline-none focus:border-[#e94560]/60 placeholder-gray-600"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
+      )}
 
       {/* 期間フィルター */}
       {!initialLoading && entries.length > 0 && (
@@ -578,7 +616,7 @@ export default function TrainingLog({ userId }: Props) {
 
       {!initialLoading && entries.length > 0 && filtered.length === 0 && (
         <div className="text-center py-8 text-gray-500 text-sm">
-          このタイプの記録はありません
+          {searchQuery ? `「${searchQuery}」に一致する記録はありません` : "このフィルターに一致する記録はありません"}
         </div>
       )}
 
