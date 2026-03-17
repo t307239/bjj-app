@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 type MonthData = {
-  month: string;   // "2026-03"
-  label: string;   // "3月"
+  month: string;
+  label: string;
   count: number;
   minutes: number;
 };
@@ -15,16 +15,17 @@ type Props = {
 };
 
 export default function TrainingBarChart({ userId }: Props) {
-  const [data, setData] = useState<MonthData[]>([]);
+  const [data6, setData6] = useState<MonthData[]>([]);
+  const [data12, setData12] = useState<MonthData[]>([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<"count" | "minutes">("count");
+  const [range, setRange] = useState<6 | 12>(6);
   const supabase = createClient();
 
   useEffect(() => {
     const load = async () => {
-      // 過去6ヶ月分取得
       const since = new Date();
-      since.setMonth(since.getMonth() - 5);
+      since.setMonth(since.getMonth() - 11);
       since.setDate(1);
       const sinceStr = `${since.getFullYear()}-${String(since.getMonth() + 1).padStart(2, "0")}-01`;
 
@@ -35,33 +36,30 @@ export default function TrainingBarChart({ userId }: Props) {
         .gte("date", sinceStr);
 
       if (logs) {
-        // 過去6ヶ月のバケットを初期化
-        const buckets: Record<string, { count: number; minutes: number }> = {};
-        for (let i = 5; i >= 0; i--) {
-          const d = new Date();
-          d.setDate(1);
-          d.setMonth(d.getMonth() - i);
-          const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-          buckets[key] = { count: 0, minutes: 0 };
-        }
-
-        logs.forEach((l: { date: string; duration_min: number }) => {
-          const key = l.date.substring(0, 7);
-          if (buckets[key]) {
-            buckets[key].count++;
-            buckets[key].minutes += l.duration_min || 0;
+        const buildBuckets = (months: number): MonthData[] => {
+          const buckets: Record<string, { count: number; minutes: number }> = {};
+          for (let i = months - 1; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(1);
+            d.setMonth(d.getMonth() - i);
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+            buckets[key] = { count: 0, minutes: 0 };
           }
-        });
+          logs.forEach((l: { date: string; duration_min: number }) => {
+            const key = l.date.substring(0, 7);
+            if (buckets[key]) {
+              buckets[key].count++;
+              buckets[key].minutes += l.duration_min || 0;
+            }
+          });
+          return Object.entries(buckets).map(([month, val]) => {
+            const m = month.split("-")[1];
+            return { month, label: `${parseInt(m)}月`, ...val };
+          });
+        };
 
-        const result: MonthData[] = Object.entries(buckets).map(([month, val]) => {
-          const m = month.split("-")[1];
-          return {
-            month,
-            label: `${parseInt(m)}月`,
-            ...val,
-          };
-        });
-        setData(result);
+        setData6(buildBuckets(6));
+        setData12(buildBuckets(12));
       }
       setLoading(false);
     };
@@ -70,6 +68,9 @@ export default function TrainingBarChart({ userId }: Props) {
   }, [userId]);
 
   if (loading) return null;
+
+  const data = range === 6 ? data6 : data12;
+
   if (data.every((d) => d.count === 0)) return null;
 
   const maxVal = Math.max(...data.map((d) => (view === "count" ? d.count : d.minutes)), 1);
@@ -85,11 +86,9 @@ export default function TrainingBarChart({ userId }: Props) {
   const totalCount = data.reduce((s, d) => s + d.count, 0);
   const totalMinutes = data.reduce((s, d) => s + d.minutes, 0);
 
-  // ローカル日付で今月キーを計算（タイムゾーンバグ修正）
   const now = new Date();
   const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 
-  // 平均ライン（データのある月のみ対象）
   const activeBars = data.filter((d) => (view === "count" ? d.count : d.minutes) > 0);
   const avgVal = activeBars.length > 0
     ? activeBars.reduce((s, d) => s + (view === "count" ? d.count : d.minutes), 0) / activeBars.length
@@ -98,15 +97,28 @@ export default function TrainingBarChart({ userId }: Props) {
 
   return (
     <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
-      {/* ヘッダー */}
       <div className="flex items-center justify-between mb-3">
         <div>
           <h4 className="text-sm font-medium text-gray-300">月別練習グラフ</h4>
           <p className="text-[10px] text-gray-600 mt-0.5">
-            過去6ヶ月: 計{totalCount}回 · {formatMinutes(totalMinutes)}
+            過去{range}ヶ月: 計{totalCount}回 · {formatMinutes(totalMinutes)}
           </p>
         </div>
         <div className="flex gap-1">
+          <div className="flex rounded-lg overflow-hidden border border-gray-700 mr-1">
+            <button
+              onClick={() => setRange(6)}
+              className={`text-[11px] px-2 py-1 transition-colors ${range === 6 ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-gray-300"}`}
+            >
+              6月
+            </button>
+            <button
+              onClick={() => setRange(12)}
+              className={`text-[11px] px-2 py-1 transition-colors ${range === 12 ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-gray-300"}`}
+            >
+              12月
+            </button>
+          </div>
           <button
             onClick={() => setView("count")}
             className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors ${
@@ -130,9 +142,7 @@ export default function TrainingBarChart({ userId }: Props) {
         </div>
       </div>
 
-      {/* バーグラフ（相対ポジションで平均ラインを重ねる） */}
       <div className="relative" style={{ height: "120px" }}>
-        {/* 平均ライン */}
         {avgPct > 0 && (
           <div
             className="absolute left-0 right-0 border-t border-dashed border-gray-500/50 pointer-events-none"
@@ -140,28 +150,24 @@ export default function TrainingBarChart({ userId }: Props) {
             title={`平均: ${view === "count" ? `${Math.round(avgVal)}回` : formatMinutes(Math.round(avgVal))}`}
           />
         )}
-        <div className="flex items-end gap-1.5 h-full">
+        <div className="flex items-end gap-1 h-full">
           {data.map((d) => {
             const val = view === "count" ? d.count : d.minutes;
             const pct = val > 0 ? Math.max((val / maxVal) * 100, 5) : 0;
-            const label = view === "count"
-              ? `${val}回`
-              : formatMinutes(val);
+            const label = view === "count" ? `${val}回` : formatMinutes(val);
             const isCurrentMonth = d.month === currentMonthKey;
 
             return (
               <div key={d.month} className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
-                {/* 値ラベル */}
                 <span
-                  className={`text-[9px] leading-none transition-opacity ${
-                    val > 0 ? "opacity-100" : "opacity-0"
+                  className={`leading-none transition-opacity ${range === 12 ? "text-[8px]" : "text-[9px]"} ${
+                    val > 0 && (range === 6 || isCurrentMonth) ? "opacity-100" : "opacity-0"
                   } ${isCurrentMonth ? "text-[#e94560]" : "text-gray-500"}`}
                 >
                   {label}
                 </span>
-                {/* バー */}
                 <div
-                  className={`w-full rounded-t-md transition-all ${
+                  className={`w-full rounded-t-sm transition-all ${
                     isCurrentMonth
                       ? "bg-[#e94560]"
                       : val > 0
@@ -170,9 +176,8 @@ export default function TrainingBarChart({ userId }: Props) {
                   }`}
                   style={{ height: `${pct}%`, minHeight: val > 0 ? "4px" : "0px" }}
                 />
-                {/* 月ラベル */}
                 <span
-                  className={`text-[10px] leading-none ${
+                  className={`leading-none ${range === 12 ? "text-[8px]" : "text-[10px]"} ${
                     isCurrentMonth ? "text-white font-semibold" : "text-gray-500"
                   }`}
                 >
