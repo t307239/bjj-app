@@ -19,6 +19,12 @@ type Props = {
 
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
 
+// JST対応: toISOString()はUTCなので、ローカル日付を返すヘルパー
+function getLocalDateString(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 function formatDuration(min: number): string {
   if (min < 60) return `${min}m`;
   const h = Math.floor(min / 60);
@@ -92,9 +98,9 @@ export default function TrainingLog({ userId }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
-  const today = new Date().toISOString().split("T")[0];
+  const today = getLocalDateString();
   const [form, setForm] = useState({
-    date: new Date().toISOString().split("T")[0],
+    date: getLocalDateString(),
     duration_min: 60,
     type: "gi",
     notes: "",
@@ -107,6 +113,7 @@ export default function TrainingLog({ userId }: Props) {
   });
   const supabase = createClient();
 
+  // 初回データ読み込み
   useEffect(() => {
     const loadEntries = async () => {
       setInitialLoading(true);
@@ -132,12 +139,13 @@ export default function TrainingLog({ userId }: Props) {
     e.preventDefault();
     setFormError(null);
 
+    // バリデーション
     if (form.date > today) {
       setFormError("未来の日付は記録できません");
       return;
     }
     if (form.duration_min < 1 || form.duration_min > 480) {
-      setFormError("練習時間は1〜480分の範囲で入力してください");
+      setFormError("練習時間は1～480分の範囲で入力してください");
       return;
     }
 
@@ -152,7 +160,7 @@ export default function TrainingLog({ userId }: Props) {
     if (!error && data) {
       setEntries([data, ...entries]);
       setForm({
-        date: new Date().toISOString().split("T")[0],
+        date: getLocalDateString(),
         duration_min: 60,
         type: "gi",
         notes: "",
@@ -233,7 +241,7 @@ export default function TrainingLog({ userId }: Props) {
     ? entries
     : entries.filter((e) => e.type === filterType);
 
-  const thisMonth = new Date().toISOString().slice(0, 7);
+  const thisMonth = getLocalDateString().slice(0, 7);
   const monthEntries = entries.filter((e) => e.date.startsWith(thisMonth));
   const monthTotalMins = monthEntries.reduce((sum, e) => sum + e.duration_min, 0);
   const monthHoursDisplay = monthTotalMins >= 60
@@ -272,7 +280,6 @@ export default function TrainingLog({ userId }: Props) {
           )}
         </div>
       )}
-
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-lg font-semibold">練習記録</h3>
         <button
@@ -282,7 +289,6 @@ export default function TrainingLog({ userId }: Props) {
           + 記録を追加
         </button>
       </div>
-
       {!initialLoading && entries.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide">
           <button
@@ -312,7 +318,6 @@ export default function TrainingLog({ userId }: Props) {
           ))}
         </div>
       )}
-
       {showForm && (
         <form
           onSubmit={handleSubmit}
@@ -340,7 +345,6 @@ export default function TrainingLog({ userId }: Props) {
               onChange={(v) => setForm({ ...form, duration_min: v })}
             />
           </div>
-
           <div className="mb-3">
             <label className="block text-gray-400 text-xs mb-1">練習タイプ</label>
             <select
@@ -355,7 +359,6 @@ export default function TrainingLog({ userId }: Props) {
               ))}
             </select>
           </div>
-
           <div className="mb-4">
             <label className="block text-gray-400 text-xs mb-1">メモ</label>
             <textarea
@@ -366,7 +369,6 @@ export default function TrainingLog({ userId }: Props) {
               className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400 resize-none"
             />
           </div>
-
           <div className="flex gap-2">
             <button
               type="submit"
@@ -385,14 +387,12 @@ export default function TrainingLog({ userId }: Props) {
           </div>
         </form>
       )}
-
       {initialLoading && (
         <div className="text-center py-8 text-gray-500">
           <div className="inline-block w-6 h-6 border-2 border-gray-600 border-t-[#e94560] rounded-full animate-spin mb-2" />
           <p className="text-sm">読み込み中...</p>
         </div>
       )}
-
       {!initialLoading && entries.length === 0 && (
         <div className="text-center py-12">
           <div className="text-5xl mb-4">🥋</div>
@@ -406,13 +406,11 @@ export default function TrainingLog({ userId }: Props) {
           </button>
         </div>
       )}
-
       {!initialLoading && entries.length > 0 && filtered.length === 0 && (
         <div className="text-center py-8 text-gray-500 text-sm">
           このタイプの記録はありません
         </div>
       )}
-
       {!initialLoading && filtered.length > 0 && (
         <div className="space-y-3">
           {filtered.map((entry) => (
@@ -507,7 +505,6 @@ export default function TrainingLog({ userId }: Props) {
           ))}
         </div>
       )}
-
       {!initialLoading && hasMore && (
         <div className="text-center mt-4">
           <button
@@ -521,4 +518,4 @@ export default function TrainingLog({ userId }: Props) {
       )}
     </div>
   );
-          }
+                  }
