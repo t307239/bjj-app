@@ -40,12 +40,12 @@ export default function PersonalBests({ userId }: Props) {
       const totalMinutes = logs.reduce((s, l) => s + (l.duration_min ?? 0), 0);
       const maxSessionMin = Math.max(...logs.map((l) => l.duration_min ?? 0));
 
-      const uniqueDates = [...new Set(logs.map((l) => l.date))].sort();
+      const uniqueDates = [...new Set(logs.map((l: { date: string }) => l.date))].sort();
       let maxStreak = uniqueDates.length > 0 ? 1 : 0;
       let curStreak = 1;
       for (let i = 1; i < uniqueDates.length; i++) {
-        const prev = new Date(uniqueDates[i - 1]);
-        const curr = new Date(uniqueDates[i]);
+        const prev = new Date(uniqueDates[i - 1] as string);
+        const curr = new Date(uniqueDates[i] as string);
         const diff = Math.round((curr.getTime() - prev.getTime()) / 86400000);
         if (diff === 1) {
           curStreak++;
@@ -56,7 +56,7 @@ export default function PersonalBests({ userId }: Props) {
       }
 
       const monthCounts: Record<string, number> = {};
-      logs.forEach((l) => {
+      logs.forEach((l: { date: string }) => {
         const ym = l.date.slice(0, 7);
         monthCounts[ym] = (monthCounts[ym] ?? 0) + 1;
       });
@@ -87,9 +87,39 @@ export default function PersonalBests({ userId }: Props) {
     { icon: "📈", label: "月平均", value: `${bests.avgMonthly}回` },
   ];
 
+  const buildShareText = () => {
+    const lines = [
+      `🥋 BJJ練習記録`,
+      `📊 総練習回数: ${bests.totalSessions}回`,
+      `⏱️ 総練習時間: ${fmtTime(bests.totalMinutes)}`,
+      `🔥 最長連続日: ${bests.longestStreak}日`,
+      `📅 月間最多: ${bests.bestMonthCount}回`,
+      ``,
+      `#BJJ #柔術 #BJJApp`,
+    ];
+    return lines.join("\n");
+  };
+
+  const handleShare = () => {
+    const text = buildShareText();
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
-      <h4 className="text-sm font-medium text-gray-300 mb-3">📊 累計記録</h4>
+      <div className="flex items-center justify-between mb-3">
+        <h4 className="text-sm font-medium text-gray-300">📊 累計記録</h4>
+        <button
+          onClick={handleShare}
+          className="flex items-center gap-1 text-[11px] text-gray-400 hover:text-white bg-gray-800/60 hover:bg-gray-700 border border-gray-700 hover:border-gray-500 px-2.5 py-1 rounded-lg transition-colors"
+        >
+          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+          シェア
+        </button>
+      </div>
       <div className="grid grid-cols-2 gap-2">
         {items.map((item) => (
           <div key={item.label} className="bg-gray-800/40 rounded-xl p-3 text-center">
