@@ -13,6 +13,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
   const [using, setUsing] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [dismissed, setDismissed] = useState(false);
+  const [confirmingFreeze, setConfirmingFreeze] = useState(false);
 
   const supabase = createClient();
 
@@ -113,13 +114,33 @@ export default function StreakFreeze({ userId, streak }: Props) {
             </button>
           </div>
           <div className="flex gap-2 mt-3">
-            <button
-              onClick={useFreeze}
-              disabled={freezeCount <= 0 || using}
-              className="flex-1 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 disabled:opacity-40 text-white text-sm font-semibold transition-colors"
-            >
-              {using ? "使用中…" : `❄️ フリーズを使う (残${freezeCount})`}
-            </button>
+            {!confirmingFreeze ? (
+              <button
+                onClick={() => setConfirmingFreeze(true)}
+                disabled={freezeCount <= 0 || using}
+                className="flex-1 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 disabled:opacity-40 text-white text-sm font-semibold transition-colors"
+              >
+                {using ? "使用中…" : `❄️ フリーズを使う (残${freezeCount})`}
+              </button>
+            ) : (
+              <div className="flex-1 flex flex-col gap-2">
+                <p className="text-xs text-center text-gray-300">本当にフリーズを使用しますか？</p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => { setConfirmingFreeze(false); useFreeze(); }}
+                    className="flex-1 py-1.5 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold"
+                  >
+                    はい
+                  </button>
+                  <button
+                    onClick={() => setConfirmingFreeze(false)}
+                    className="flex-1 py-1.5 rounded-lg bg-gray-600 hover:bg-gray-500 text-white text-xs"
+                  >
+                    キャンセル
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
