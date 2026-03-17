@@ -22,6 +22,7 @@ type Stats = {
 
 type Props = {
   userId: string;
+  hideAccount?: boolean;
 };
 
 function getLocalDateString(): string {
@@ -253,7 +254,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
   );
 }
 
-export default function ProfileForm({ userId }: Props) {
+export default function ProfileForm({ userId, hideAccount }: Props) {
   const [profile, setProfile] = useState<Profile>({ belt: "white", stripe: 0, gym: "", bio: "", start_date: "" });
   const [stats, setStats] = useState<Stats | null>(null);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -313,7 +314,7 @@ export default function ProfileForm({ userId }: Props) {
       ) : (
         <ProfileViewCard profile={profile} stats={stats} onEdit={() => setIsEditing(true)} />
       )}
-      <DeleteAccountSection userId={userId} supabase={supabase} />
+      {!hideAccount && <DeleteAccountSection userId={userId} supabase={supabase} />}
     </div>
   );
 }
