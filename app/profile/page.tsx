@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import ProfileForm from "@/components/ProfileForm";
+import PersonalBests from "@/components/PersonalBests";
 
 export const metadata: Metadata = {
   title: "プロフィール",
@@ -51,6 +52,9 @@ export default async function ProfilePage() {
             <p className="text-gray-400 text-sm">{user.email}</p>
           </div>
         </div>
+
+        {/* 累計記録 */}
+        <PersonalBests userId={user.id} />
 
         <ProfileForm userId={user.id} />
       </main>
