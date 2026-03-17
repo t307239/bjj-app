@@ -334,6 +334,18 @@ export default function TechniqueLog({ userId }: Props) {
               </div>
             );
           })()}
+        <div className="mt-3 pt-2 border-t border-gray-700/50">
+          <div className="flex flex-wrap gap-1.5">
+            {CATEGORIES.map((cat) => {
+              const cnt = techniques.filter((t) => t.category === cat.value).length;
+              return cnt > 0 ? (
+                <span key={cat.value} className="text-[10px] bg-gray-700/60 text-gray-300 px-2 py-0.5 rounded-full whitespace-nowrap">
+                  {cat.label}&nbsp;{cnt}
+                </span>
+              ) : null;
+            })}
+          </div>
+        </div>
         </div>
       )}
 
