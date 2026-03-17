@@ -12,18 +12,22 @@ type CompRecord = {
   loss: number;
   draw: number;
   total: number;
+  winBySub: number;   // 一本勝ち（finishあり）
+  lossBySub: number;  // 一本負け（finishあり）
 };
+
+type CompEntry = { result: string; finish: string };
 
 // 試合ノートのデコード（TrainingLogと同じロジック）
 const COMP_PREFIX = "__comp__";
 
-function decodeResult(notes: string): string | null {
+function decodeEntry(notes: string): CompEntry | null {
   if (!notes || !notes.startsWith(COMP_PREFIX)) return null;
   const nl = notes.indexOf("\n");
   const jsonStr = nl === -1 ? notes.slice(COMP_PREFIX.length) : notes.slice(COMP_PREFIX.length, nl);
   try {
-    const comp = JSON.parse(jsonStr) as { result: string };
-    return comp.result;
+    const comp = JSON.parse(jsonStr) as { result: string; finish?: string };
+    return { result: comp.result, finish: comp.finish ?? "" };
   } catch {
     return null;
   }
@@ -43,13 +47,25 @@ export default function CompetitionStats({ userId }: Props) {
         .eq("type", "competition");
 
       if (data) {
-        const rec: CompRecord = { win: 0, loss: 0, draw: 0, total: 0 };
+        const rec: CompRecord = { win: 0, loss: 0, draw: 0, total: 0, winBySub: 0, lossBySub: 0 };
         data.forEach((l: { notes: string }) => {
-          const result = decodeResult(l.notes);
-          if (result === "win") { rec.win++; rec.total++; }
-          else if (result === "loss") { rec.loss++; rec.total++; }
-          else if (result === "draw") { rec.draw++; rec.total++; }
-          else { rec.total++; }
+          const entry = decodeEntry(l.notes);
+          if (!entry) { rec.total++; return; }
+          const hasSub = entry.finish.trim() !== "";
+          if (entry.result === "win") {
+            rec.win++;
+            rec.total++;
+            if (hasSub) rec.winBySub++;
+          } else if (entry.result === "loss") {
+            rec.loss++;
+            rec.total++;
+            if (hasSub) rec.lossBySub++;
+          } else if (entry.result === "draw") {
+            rec.draw++;
+            rec.total++;
+          } else {
+            rec.total++;
+          }
         });
         setRecord(rec);
       }
@@ -63,6 +79,9 @@ export default function CompetitionStats({ userId }: Props) {
 
   const decoded = record.win + record.loss + record.draw;
   const winPct = decoded > 0 ? Math.round((record.win / decoded) * 100) : 0;
+  const winByDecision = record.win - record.winBySub;
+  const lossToSub = record.lossBySub;
+  const showBreakdown = record.win > 0 && (record.winBySub > 0 || winByDecision > 0);
 
   return (
     <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
@@ -71,6 +90,7 @@ export default function CompetitionStats({ userId }: Props) {
         <span className="text-[10px] text-gray-500">計{record.total}試合</span>
       </div>
 
+      {/* W/L/D */}
       <div className="grid grid-cols-3 gap-2 mb-3">
         <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3 text-center">
           <div className="text-2xl font-bold text-green-400">{record.win}</div>
@@ -86,6 +106,28 @@ export default function CompetitionStats({ userId }: Props) {
         </div>
       </div>
 
+      {/* 勝利内訳 */}
+      {showBreakdown && (
+        <div className="flex gap-2 mb-3">
+          {record.winBySub > 0 && (
+            <span className="text-[10px] bg-green-500/10 border border-green-500/20 text-green-400 px-2 py-1 rounded-full">
+              一本 {record.winBySub}
+            </span>
+          )}
+          {winByDecision > 0 && (
+            <span className="text-[10px] bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
+              判定 {winByDecision}
+            </span>
+          )}
+          {lossToSub > 0 && (
+            <span className="text-[10px] bg-red-500/10 border border-red-500/20 text-red-400 px-2 py-1 rounded-full">
+              一本負 {lossToSub}
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* 勝率バー */}
       {decoded > 0 && (
         <div>
           <div className="flex justify-between items-center mb-1">
@@ -95,7 +137,7 @@ export default function CompetitionStats({ userId }: Props) {
           <div className="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
             <div
               className="h-full bg-green-400 rounded-full transition-all duration-500"
-              style={{ width: winPct + "%" }}
+              style={{ width: `${winPct}%` }}
             />
           </div>
         </div>
