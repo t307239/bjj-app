@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import TrainingLog from "@/components/TrainingLog";
 import TrainingChart from "@/components/TrainingChart";
 import TrainingCalendar from "@/components/TrainingCalendar";
 import GoalTracker from "@/components/GoalTracker";
+import GuestDashboard from "@/components/GuestDashboard";
+import GuestMigration from "@/components/GuestMigration";
 
 export const metadata: Metadata = {
   title: "ダッシュボード",
@@ -18,8 +19,9 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // 未認証はゲストモードで表示
   if (!user) {
-    redirect("/login");
+    return <GuestDashboard />;
   }
 
   const displayName =
@@ -33,13 +35,12 @@ export default async function DashboardPage() {
 
   // サーバーサイドで統計データを取得（JST = UTC+9 補正）
   const JST_OFFSET = 9 * 60 * 60 * 1000;
-  const now = new Date(Date.now() + JST_OFFSET); // JST時刻
+  const now = new Date(Date.now() + JST_OFFSET);
   const toJSTStr = (d: Date) =>
     `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
 
   const firstDayOfMonth = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-01`;
-  // 今週の月曜日を計算
-  const dayOfWeek = now.getUTCDay(); // 0=Sun, 1=Mon...
+  const dayOfWeek = now.getUTCDay();
   const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
   const firstDayOfWeek = toJSTStr(new Date(now.getTime() - daysToMonday * 86400000));
 
@@ -100,7 +101,10 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#1a1a2e] pb-20 sm:pb-0">
       <NavBar displayName={displayName} avatarUrl={avatarUrl} />
+      {/* ゲストデータの自動マージ（ログイン直後） */}
+      <GuestMigration userId={user.id} />
 
+      {/* メインコンテンツ */}
       <main className="max-w-4xl mx-auto px-4 py-6">
         <div className="mb-6">
           <h2 className="text-2xl font-bold">おかえり、{displayName} 👋</h2>
@@ -119,6 +123,7 @@ export default async function DashboardPage() {
           </p>
         </div>
 
+        {/* クイックスタッツ */}
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-[#e94560]/40 transition-colors">
             <div className="text-2xl font-bold text-[#e94560]">
@@ -146,9 +151,16 @@ export default async function DashboardPage() {
           </Link>
         </div>
 
+        {/* 目標トラッカー */}
         <GoalTracker userId={user.id} />
+
+        {/* 月カレンダー */}
         <TrainingCalendar userId={user.id} />
+
+        {/* アクティビティヒートマップ */}
         <TrainingChart userId={user.id} />
+
+        {/* 練習記録コンポーネント */}
         <TrainingLog userId={user.id} />
       </main>
     </div>
