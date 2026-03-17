@@ -938,3 +938,5 @@ export default function TrainingLog({ userId }: Props) {
     </div>
   );
 }
+
+// v20260317
