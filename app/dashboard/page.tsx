@@ -15,6 +15,7 @@ import GuestDashboard from "@/components/GuestDashboard";
 import GuestMigration from "@/components/GuestMigration";
 import StreakProtect from "@/components/StreakProtect";
 import DailyRecommend from "@/components/DailyRecommend";
+import DailyQuote from "@/components/DailyQuote";
 import StreakFreeze from "@/components/StreakFreeze";
 import AchievementBadge from "@/components/AchievementBadge";
 
@@ -276,6 +277,9 @@ export default async function DashboardPage() {
 
         {/* ストリークフリーズ */}
         <StreakFreeze userId={user.id} streak={streak} />
+
+        {/* 今日の名言 */}
+        <DailyQuote />
 
         {/* 今日のおすすめ */}
         <DailyRecommend userId={user.id} />
