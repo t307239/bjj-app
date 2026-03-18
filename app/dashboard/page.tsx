@@ -37,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const [{ data: profile }, { count: totalCount }, { data: recentLogsForStreak }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("belt, start_date")
+      .select("belt, start_date, is_pro")
       .eq("id", user.id)
       .single(),
     supabase
@@ -54,6 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const belt = profile?.belt ?? "white";
   const count = totalCount ?? 0;
+  const isPro = profile?.is_pro ?? false;
 
   // BJJ歴（月）を計算
   let months = 0;
@@ -325,7 +326,7 @@ export default async function DashboardPage() {
         <TrainingChart userId={user.id} />
 
         {/* 練習記録コンポーネント（CsvExport内蔵） */}
-        <TrainingLog userId={user.id} />
+        <TrainingLog userId={user.id} isPro={isPro} />
       </main>
     </div>
   );

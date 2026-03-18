@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import ProGate from "@/components/ProGate";
 
 type Props = {
   userId: string;
+  isPro?: boolean;
 };
 
 const TRAINING_TYPE_LABELS: Record<string, string> = {
@@ -67,7 +69,7 @@ function ExportBtn({
   );
 }
 
-export default function CsvExport({ userId }: Props) {
+export default function CsvExport({ userId, isPro = false }: Props) {
   const [loadingLogs, setLoadingLogs] = useState(false);
   const [loadingTech, setLoadingTech] = useState(false);
   const supabase = createClient();
@@ -86,7 +88,7 @@ export default function CsvExport({ userId }: Props) {
         return;
       }
 
-      // 試合詳細を含む拡張ヘッダc��
+      // 試合詳細を含む拡張ヘッダc��
       const headers = ["日付", "タイプ", "時間(分)", "試合結果", "対戦相手", "決め技", "大会名", "メモ"];
       const rows = logs.map((l: { date: string; type: string; duration_min: number; notes: string }) => {
         const { comp, userNotes } = decodeCompNotes(l.notes ?? "");
@@ -166,9 +168,11 @@ export default function CsvExport({ userId }: Props) {
   };
 
   return (
-    <div className="flex gap-2">
-      <ExportBtn label="CSV出力" onClick={handleExport} loading={loadingLogs} />
-      <ExportBtn label="技術CSV" onClick={handleExportTechniques} loading={loadingTech} />
-    </div>
+    <ProGate isPro={isPro} feature="CSVエクスポート" userId={userId}>
+      <div className="flex gap-2">
+        <ExportBtn label="CSV出力" onClick={handleExport} loading={loadingLogs} />
+        <ExportBtn label="技術CSV" onClick={handleExportTechniques} loading={loadingTech} />
+      </div>
+    </ProGate>
   );
 }
