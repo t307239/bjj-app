@@ -23,6 +23,44 @@ type Props = {
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
 
 // JST対応: toISOString()はUTCなので、ローカル日付を返すヘルパー
+// ミニドーナツチャート（月次タイプ分布）
+function MiniTypeDonut({ entries }: { entries: { type: string }[] }) {
+  const TYPE_COLORS_RAW: Record<string, string> = {
+    gi: "#3b82f6", nogi: "#f97316", drilling: "#a855f7", competition: "#e94560", open_mat: "#22c55e",
+  };
+  const counts: Record<string, number> = {};
+  entries.forEach((e) => { counts[e.type] = (counts[e.type] ?? 0) + 1; });
+  const total = Object.values(counts).reduce((s, v) => s + v, 0);
+  if (total === 0) return null;
+
+  const cx = 20, cy = 20, R = 18, r = 10;
+  let cumAngle = -Math.PI / 2;
+  const slices = Object.entries(counts).map(([type, count]) => {
+    const angle = (count / total) * 2 * Math.PI;
+    const start = cumAngle;
+    const end = cumAngle + angle;
+    cumAngle = end;
+    const x1 = cx + R * Math.cos(start), y1 = cy + R * Math.sin(start);
+    const x2 = cx + R * Math.cos(end),   y2 = cy + R * Math.sin(end);
+    const ix1 = cx + r * Math.cos(end),  iy1 = cy + r * Math.sin(end);
+    const ix2 = cx + r * Math.cos(start),iy2 = cy + r * Math.sin(start);
+    const large = angle > Math.PI ? 1 : 0;
+    const path = `M ${x1} ${y1} A ${R} ${R} 0 ${large} 1 ${x2} ${y2} L ${ix1} ${iy1} A ${r} ${r} 0 ${large} 0 ${ix2} ${iy2} Z`;
+    return { type, path, color: TYPE_COLORS_RAW[type] ?? "#9ca3af" };
+  });
+
+  return (
+    <svg viewBox="0 0 40 40" className="w-10 h-10 flex-shrink-0">
+      {slices.map((s) => (
+        <path key={s.type} d={s.path} fill={s.color} opacity={0.85} />
+      ))}
+      <text x={cx} y={cy + 3} textAnchor="middle" fill="white" fontSize="7" fontWeight="bold">
+        {total}
+      </text>
+    </svg>
+  );
+}
+
 function getLocalDateString(): string {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -426,6 +464,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           )}
           {/* 今月サマリー行 */}
           <div className="flex items-center gap-4 text-sm">
+            <MiniTypeDonut entries={monthEntries} />
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-[#e94560]">{monthEntries.length}</div>
               <div className="text-gray-400 text-xs">今月の練習</div>
