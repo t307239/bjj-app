@@ -127,11 +127,11 @@ function DurationPicker({
 }
 
 const TRAINING_TYPES = [
-  { value: "gi", label: "道衣 (Gi)", color: "bg-blue-500/20 text-blue-300" },
-  { value: "nogi", label: "ノーギ (No-Gi)", color: "bg-orange-500/20 text-orange-300" },
-  { value: "drilling", label: "ドリル", color: "bg-purple-500/20 text-purple-300" },
-  { value: "competition", label: "試合", color: "bg-red-500/20 text-red-300" },
-  { value: "open_mat", label: "オープンマット", color: "bg-green-500/20 text-green-300" },
+  { value: "gi", label: "道衣 (Gi)", color: "bg-blue-500/20 text-blue-300", icon: "🥋" },
+  { value: "nogi", label: "ノーギ (No-Gi)", color: "bg-orange-500/20 text-orange-300", icon: "👕" },
+  { value: "drilling", label: "ドリル", color: "bg-purple-500/20 text-purple-300", icon: "🎯" },
+  { value: "competition", label: "試合", color: "bg-red-500/20 text-red-300", icon: "🏆" },
+  { value: "open_mat", label: "オープンマット", color: "bg-green-500/20 text-green-300", icon: "🤝" },
 ];
 
 export default function TrainingLog({ userId, isPro = false }: Props) {
@@ -460,7 +460,8 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-gray-700/60">
                 {typePills.map((t) => (
                   <span key={t.value} className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${t.color}`}>
-                    {t.label.split(" ")[0]}
+                    <span>{t.icon}</span>
+                    <span>{t.label.split(" ")[0]}</span>
                     <span className="opacity-80">×{t.count}</span>
                   </span>
                 ))}
@@ -873,8 +874,9 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${TRAINING_TYPES.find((t) => t.value === entry.type)?.color || "bg-gray-700 text-gray-300"}`}>
-                        {TRAINING_TYPES.find((t) => t.value === entry.type)?.label || entry.type}
+                      <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${TRAINING_TYPES.find((t) => t.value === entry.type)?.color || "bg-gray-700 text-gray-300"}`}>
+                        <span>{TRAINING_TYPES.find((t) => t.value === entry.type)?.icon || "🥋"}</span>
+                        <span>{TRAINING_TYPES.find((t) => t.value === entry.type)?.label || entry.type}</span>
                       </span>
                       <span className="text-gray-400 text-xs">{entry.date}</span>
                     </div>

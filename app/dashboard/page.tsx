@@ -20,6 +20,7 @@ import AchievementBadge from "@/components/AchievementBadge";
 import InstallBanner from "@/components/InstallBanner";
 import InsightsBanner from "@/components/InsightsBanner";
 import DailyWikiTip from "@/components/DailyWikiTip";
+import WikiQuickLinks from "@/components/WikiQuickLinks";
 import ProUpgradeBanner from "@/components/ProUpgradeBanner";
 
 const BASE_URL =
@@ -308,6 +309,9 @@ export default async function DashboardPage() {
 
         {/* 今日のBJJ Wiki知識 */}
         <DailyWikiTip />
+
+        {/* BJJ Wiki クイックリンク（日替わり技術3選） */}
+        <WikiQuickLinks />
 
         {/* 今週の練習状況 */}
         <WeeklyStrip userId={user.id} />
