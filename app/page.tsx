@@ -59,30 +59,30 @@ export default async function Home() {
           href="/login"
           className="text-sm text-gray-400 hover:text-white transition-colors"
         >
-          ログイン
+          Log in
         </Link>
       </nav>
 
-      {/* ヒーロー */}
+      {/* Hero */}
       <section className="flex-1 flex flex-col items-center justify-center px-4 py-16 text-center">
         <div className="max-w-2xl mx-auto">
-          {/* バッジ */}
+          {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-[#16213e] border border-[#e94560]/30 rounded-full px-4 py-1.5 text-sm text-[#e94560] mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-[#e94560] animate-pulse" />
-            無料で始められます
+            Free to start
           </div>
 
           <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            BJJの成長を、
+            Prove your BJJ growth
             <br />
             <span className="bg-gradient-to-r from-[#e94560] to-pink-400 bg-clip-text text-transparent">
-              データで証明する。
+              with real data.
             </span>
           </h1>
 
           <p className="text-gray-400 text-lg md:text-xl mb-10 leading-relaxed">
-            練習回数・テクニック・連続記録を一元管理。<br className="hidden md:block" />
-            毎日の積み重ねが、帯昇格への道を切り開く。
+            Track sessions, techniques, and streaks in one place.<br className="hidden md:block" />
+            Every day you log is a step closer to your next belt.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
@@ -90,22 +90,22 @@ export default async function Home() {
               href="/login"
               className="inline-flex items-center justify-center gap-2 bg-[#e94560] hover:bg-[#c73652] text-white font-bold py-4 px-8 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#e94560]/20"
             >
-              無料で始める →
+              Get started free →
             </Link>
             <a
               href="#preview"
               className="inline-flex items-center justify-center gap-2 bg-[#16213e] hover:bg-[#1a2a4a] text-gray-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-gray-700"
             >
-              アプリを見る ↓
+              See the app ↓
             </a>
           </div>
 
           <p className="text-gray-600 text-sm">
-            GitHub / Google アカウントで即スタート。クレジットカード不要。
+            Sign in with GitHub or Google. No credit card needed.
           </p>
           <p className="text-gray-700 text-xs mt-3">
             <Link href="/dashboard" className="hover:text-gray-500 underline transition-colors">
-              登録なしで体験する →
+              Try without signing up →
             </Link>
           </p>
         </div>
@@ -184,7 +184,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 社会的証拠（ソーシャルプルーフ） */}
+      {/* Social Proof */}
       <section className="px-4 py-16 bg-[#0f0e17]">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
@@ -192,25 +192,25 @@ export default async function Home() {
               <span className="text-sm text-[#e94560]">✓ 3,500+ BJJ practitioners trust BJJ App</span>
             </div>
             <h2 className="text-2xl font-bold text-gray-200">
-              📊 リアルな練習データ
+              📊 Real training data
             </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-[#16213e] rounded-2xl p-6 border border-[#e94560]/30 text-center">
               <div className="text-3xl font-bold text-[#e94560] mb-1">5,000+</div>
-              <p className="text-gray-400 text-xs">練習セッション記録</p>
+              <p className="text-gray-400 text-xs">Sessions logged</p>
             </div>
             <div className="bg-[#16213e] rounded-2xl p-6 border border-[#e94560]/30 text-center">
               <div className="text-3xl font-bold text-[#e94560] mb-1">1,200+</div>
-              <p className="text-gray-400 text-xs">テクニック登録数</p>
+              <p className="text-gray-400 text-xs">Techniques saved</p>
             </div>
             <div className="bg-[#16213e] rounded-2xl p-6 border border-[#e94560]/30 text-center">
               <div className="text-3xl font-bold text-[#e94560] mb-1">🔥 30+</div>
-              <p className="text-gray-400 text-xs">最長ストリーク日数</p>
+              <p className="text-gray-400 text-xs">Longest streak (days)</p>
             </div>
             <div className="bg-[#16213e] rounded-2xl p-6 border border-[#e94560]/30 text-center">
-              <div className="text-3xl font-bold text-[#e94560] mb-1">無料</div>
-              <p className="text-gray-400 text-xs">すべての基本機能</p>
+              <div className="text-3xl font-bold text-[#e94560] mb-1">Free</div>
+              <p className="text-gray-400 text-xs">All core features</p>
             </div>
           </div>
         </div>
@@ -219,130 +219,130 @@ export default async function Home() {
       {/* How it works */}
       <section className="px-4 py-16 max-w-5xl mx-auto w-full">
         <h2 className="text-2xl font-bold text-center mb-12 text-gray-200">
-          📈 3ステップで成長を可視化
+          📈 3 steps to visible progress
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-[#e94560]/20 rounded-full text-xl mb-4">
               1️⃣
             </div>
-            <h3 className="font-bold text-lg text-gray-200 mb-3">Log（記録）</h3>
+            <h3 className="font-bold text-lg text-gray-200 mb-3">Log</h3>
             <p className="text-gray-400 text-sm">
-              毎回の練習を記録。日付・時間・タイプ・メモをサッと入力するだけ。スマホからも簡単。
+              Record every session. Date, duration, type, and notes in seconds. Works great on mobile.
             </p>
           </div>
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-xl mb-4">
               2️⃣
             </div>
-            <h3 className="font-bold text-lg text-gray-200 mb-3">Track（追跡）</h3>
+            <h3 className="font-bold text-lg text-gray-200 mb-3">Track</h3>
             <p className="text-gray-400 text-sm">
-              ダッシュボードにリアルタイムで反映。ストリーク・目標進捗・習得テクニック数が一目で見える。
+              Your dashboard updates in real time. Streak, goal progress, and technique count at a glance.
             </p>
           </div>
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-green-500/20 rounded-full text-xl mb-4">
               3️⃣
             </div>
-            <h3 className="font-bold text-lg text-gray-200 mb-3">Improve（改善）</h3>
+            <h3 className="font-bold text-lg text-gray-200 mb-3">Improve</h3>
             <p className="text-gray-400 text-sm">
-              弱点の見える化で練習の質が変わる。データが成長を証明し、モチベーションが続く。
+              Spot your weak areas and fix them. Data proves your progress and keeps motivation high.
             </p>
           </div>
         </div>
       </section>
 
-      {/* アプリプレビューセクション */}
+      {/* App Preview */}
       <section id="preview" className="px-4 py-16 bg-[#16213e]/30">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-3 text-gray-200">
-            こんな感じで使えます
+            Here&apos;s what it looks like
           </h2>
-          <p className="text-gray-500 text-center text-sm mb-12">登録後すぐに使える。全機能が永久無料。</p>
+          <p className="text-gray-500 text-center text-sm mb-12">Ready to use right after sign-up. All features free forever.</p>
 
           {/* ダッシュボードモックアップ */}
           <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
             {/* スマホモックアップ */}
             <div className="mx-auto lg:mx-0 w-full max-w-[320px] bg-[#1a1a2e] rounded-2xl border border-gray-700 overflow-hidden shadow-2xl">
-              {/* ヘッダー */}
+              {/* Header */}
               <div className="bg-[#16213e] border-b border-gray-700 px-4 py-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-base">🥋</span>
                   <span className="text-sm font-semibold">BJJ App</span>
                 </div>
                 <div className="flex gap-4">
-                  <span className="text-[11px] text-gray-500">練習</span>
-                  <span className="text-[11px] text-gray-500">技</span>
-                  <span className="text-[11px] text-gray-500">設定</span>
+                  <span className="text-[11px] text-gray-500">Log</span>
+                  <span className="text-[11px] text-gray-500">Tech</span>
+                  <span className="text-[11px] text-gray-500">Profile</span>
                 </div>
               </div>
 
               <div className="p-4">
-                {/* あいさつ */}
+                {/* Greeting */}
                 <div className="mb-4">
-                  <h3 className="text-base font-bold">おかえり、道場生 🥋</h3>
-                  <p className="text-[11px] text-gray-500">2026年3月17日（火）</p>
+                  <h3 className="text-base font-bold">Welcome back, grappler 🥋</h3>
+                  <p className="text-[11px] text-gray-500">Tuesday, March 17, 2026</p>
                 </div>
 
-                {/* スタッツグリッド */}
+                {/* Stats grid */}
                 <div className="grid grid-cols-2 gap-2 mb-3">
                   <div className="bg-[#16213e] rounded-xl p-3 text-center border border-gray-700">
                     <div className="text-2xl font-bold text-[#e94560]">12</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">今月の練習</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">This month</div>
                   </div>
                   <div className="bg-[#16213e] rounded-xl p-3 text-center border border-gray-700">
                     <div className="text-2xl font-bold text-blue-400">3</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">今週の練習</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">This week</div>
                   </div>
                   <div className="bg-[#16213e] rounded-xl p-3 text-center border border-gray-700">
                     <div className="text-2xl font-bold text-purple-400">47</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">習得テクニック</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">Techniques</div>
                   </div>
                   <div className="bg-[#16213e] rounded-xl p-3 text-center border border-gray-700">
                     <div className="text-xl font-bold text-orange-400">🔥 5</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">連続練習日</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">Day streak</div>
                   </div>
                 </div>
 
-                {/* 目標トラッカー */}
+                {/* Goal tracker */}
                 <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-3 overflow-hidden">
                   <div className="px-3 py-2 border-b border-gray-700">
-                    <span className="text-xs font-medium text-gray-300">🎯 練習目標</span>
+                    <span className="text-xs font-medium text-gray-300">🎯 Training goals</span>
                   </div>
                   <div className="p-3 space-y-3">
                     <div>
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-[11px] text-gray-400">今週の目標</span>
+                        <span className="text-[11px] text-gray-400">Weekly goal</span>
                         <span className="text-[10px] text-yellow-400">75%</span>
                       </div>
                       <div className="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
                         <div className="h-full bg-yellow-400 rounded-full" style={{ width: "75%" }} />
                       </div>
-                      <div className="text-[10px] text-gray-600 mt-1">3 / 4回</div>
+                      <div className="text-[10px] text-gray-600 mt-1">3 / 4 sessions</div>
                     </div>
                     <div>
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-[11px] text-gray-400">今月の目標</span>
-                        <span className="text-[10px] text-green-400">✓ 達成！</span>
+                        <span className="text-[11px] text-gray-400">Monthly goal</span>
+                        <span className="text-[10px] text-green-400">✓ Done!</span>
                       </div>
                       <div className="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
                         <div className="h-full bg-green-400 rounded-full" style={{ width: "100%" }} />
                       </div>
-                      <div className="text-[10px] text-gray-600 mt-1">12 / 12回</div>
+                      <div className="text-[10px] text-gray-600 mt-1">12 / 12 sessions</div>
                     </div>
                   </div>
                 </div>
 
-                {/* 練習ログサンプル */}
+                {/* Recent sessions */}
                 <div className="space-y-2">
-                  <div className="text-[11px] text-gray-500 font-medium mb-1">最近の練習</div>
+                  <div className="text-[11px] text-gray-500 font-medium mb-1">Recent sessions</div>
                   <div className="bg-[#16213e] rounded-xl p-3 border border-gray-700">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-xs font-medium">2026/03/17</div>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-[10px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded">Gi</span>
-                          <span className="text-[10px] text-gray-500">1時間30分</span>
+                          <span className="text-[10px] text-gray-500">1h 30m</span>
                         </div>
                       </div>
                     </div>
@@ -353,7 +353,7 @@ export default async function Home() {
                         <div className="text-xs font-medium">2026/03/15</div>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-[10px] bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded">NoGi</span>
-                          <span className="text-[10px] text-gray-500">1時間</span>
+                          <span className="text-[10px] text-gray-500">1h</span>
                         </div>
                       </div>
                     </div>
@@ -362,41 +362,41 @@ export default async function Home() {
               </div>
             </div>
 
-            {/* 右側：機能ハイライト */}
+            {/* Feature highlights */}
             <div className="flex-1 max-w-md mx-auto lg:mx-0 space-y-4 pt-4">
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#e94560]/20 rounded-xl flex items-center justify-center text-xl flex-shrink-0">📊</div>
                 <div>
-                  <h3 className="font-semibold text-gray-200 mb-1">練習をすべて記録</h3>
-                  <p className="text-gray-500 text-sm">Gi・NoGi・ドリル・試合など種類別に記録。練習時間もカレンダーで振り返れる。</p>
+                  <h3 className="font-semibold text-gray-200 mb-1">Log every session</h3>
+                  <p className="text-gray-500 text-sm">Track Gi, NoGi, drilling, comp, and open mat. Review your calendar anytime.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center text-xl flex-shrink-0">🎯</div>
                 <div>
-                  <h3 className="font-semibold text-gray-200 mb-1">週間・月間ゴール設定</h3>
-                  <p className="text-gray-500 text-sm">練習目標を設定してプログレスバーで追跡。達成すると緑に変わってモチベーション維持。</p>
+                  <h3 className="font-semibold text-gray-200 mb-1">Set weekly &amp; monthly goals</h3>
+                  <p className="text-gray-500 text-sm">Track your target with a progress bar. Turns green when you hit it.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center text-xl flex-shrink-0">📚</div>
                 <div>
-                  <h3 className="font-semibold text-gray-200 mb-1">テクニック帳で弱点把握</h3>
-                  <p className="text-gray-500 text-sm">習得したテクニックをポジション別に整理。習熟度★で自分の弱点が一目でわかる。</p>
+                  <h3 className="font-semibold text-gray-200 mb-1">Spot your weak areas</h3>
+                  <p className="text-gray-500 text-sm">Organize techniques by position. Star ratings show where you need work.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-orange-500/20 rounded-xl flex items-center justify-center text-xl flex-shrink-0">🔥</div>
                 <div>
-                  <h3 className="font-semibold text-gray-200 mb-1">連続練習ストリーク</h3>
-                  <p className="text-gray-500 text-sm">何日連続で練習できているか自動カウント。ストリークを守るために道場に行きたくなる。</p>
+                  <h3 className="font-semibold text-gray-200 mb-1">Build a streak</h3>
+                  <p className="text-gray-500 text-sm">Auto-counts your consecutive training days. Hard to let it break.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-green-500/20 rounded-xl flex items-center justify-center text-xl flex-shrink-0">📅</div>
                 <div>
-                  <h3 className="font-semibold text-gray-200 mb-1">カレンダーで振り返り</h3>
-                  <p className="text-gray-500 text-sm">月カレンダーで練習日を可視化。カラードットで練習タイプも一目瞭然。</p>
+                  <h3 className="font-semibold text-gray-200 mb-1">Calendar view</h3>
+                  <p className="text-gray-500 text-sm">See your training days on a monthly calendar with color-coded type dots.</p>
                 </div>
               </div>
 
@@ -405,7 +405,7 @@ export default async function Home() {
                   href="/login"
                   className="inline-flex items-center justify-center gap-2 bg-[#e94560] hover:bg-[#c73652] text-white font-bold py-3 px-8 rounded-full transition-all hover:scale-105 w-full text-center"
                 >
-                  自分のデータを記録する →
+                  Start logging your data →
                 </Link>
               </div>
             </div>
@@ -413,99 +413,99 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 機能紹介 */}
+      {/* Features */}
       <section className="px-4 py-16 max-w-5xl mx-auto w-full">
         <h2 className="text-2xl font-bold text-center mb-10 text-gray-200">
-          すべての機能が無料
+          All features, free
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700 hover:border-[#e94560]/40 transition-colors">
             <div className="text-3xl mb-3">📊</div>
-            <h3 className="font-bold text-lg mb-2">練習ログ</h3>
+            <h3 className="font-bold text-lg mb-2">Training Log</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
-              日付・時間・練習タイプ・メモを記録。今月の練習数と総練習時間を自動集計。
+              Log date, duration, type, and notes. Auto-totals your monthly sessions and training time.
             </p>
           </div>
           <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700 hover:border-[#e94560]/40 transition-colors">
             <div className="text-3xl mb-3">📚</div>
-            <h3 className="font-bold text-lg mb-2">テクニック帳</h3>
+            <h3 className="font-bold text-lg mb-2">Technique Journal</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
-              習得したテクニックをポジション別に整理。習熟度を追跡して弱点を把握。
+              Organize techniques by position. Track mastery levels to spot and fix weak areas.
             </p>
           </div>
           <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700 hover:border-[#e94560]/40 transition-colors">
             <div className="text-3xl mb-3">🔥</div>
-            <h3 className="font-bold text-lg mb-2">連続記録</h3>
+            <h3 className="font-bold text-lg mb-2">Streak Tracker</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
-              何日連続で練習できているか自動カウント。習慣化のモチベーションに。
+              Automatically counts your consecutive training days. The streak keeps you coming back.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ユーザーの声 */}
+      {/* Testimonials */}
       <section className="px-4 py-16 max-w-5xl mx-auto w-full">
         <h2 className="text-2xl font-bold text-center mb-10 text-gray-200">
-          道場生の声
+          What Practitioners Say
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700">
             <div className="flex items-center gap-1 mb-3 text-yellow-400 text-sm">★★★★★</div>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
-              「練習記録を続けていたら、3ヶ月で帯昇格できました。データがあると上達が実感できますね。」
+              &ldquo;After 3 months of tracking, I got promoted to blue belt. Having the data makes the progress so real.&rdquo;
             </p>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-[#e94560]/20 rounded-full flex items-center justify-center text-sm">T</div>
               <div>
-                <div className="text-xs font-medium text-gray-300">T.K. さん</div>
-                <div className="text-xs text-gray-600">青帯 / 練習歴2年</div>
+                <div className="text-xs font-medium text-gray-300">T.K.</div>
+                <div className="text-xs text-gray-600">Blue Belt / 2 years training</div>
               </div>
             </div>
           </div>
           <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700">
             <div className="flex items-center gap-1 mb-3 text-yellow-400 text-sm">★★★★★</div>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
-              「テクニック帳が最高です。自分の弱点がはっきりわかって、次の練習で集中できる。」
+              &ldquo;The technique journal is awesome. I can clearly see my weak spots and focus on them next session.&rdquo;
             </p>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center text-sm">S</div>
               <div>
-                <div className="text-xs font-medium text-gray-300">S.M. さん</div>
-                <div className="text-xs text-gray-600">白帯 / 練習歴6ヶ月</div>
+                <div className="text-xs font-medium text-gray-300">S.M.</div>
+                <div className="text-xs text-gray-600">White Belt / 6 months training</div>
               </div>
             </div>
           </div>
           <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700">
             <div className="flex items-center gap-1 mb-3 text-yellow-400 text-sm">★★★★★</div>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
-              「ストリーク機能のおかげで週4練習が習慣になった。三日坊主の自分が変わりました。」
+              &ldquo;The streak feature got me training 4x a week consistently. I used to quit everything after 3 days.&rdquo;
             </p>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center text-sm">R</div>
               <div>
-                <div className="text-xs font-medium text-gray-300">R.Y. さん</div>
-                <div className="text-xs text-gray-600">紫帯 / 練習歴5年</div>
+                <div className="text-xs font-medium text-gray-300">R.Y.</div>
+                <div className="text-xs text-gray-600">Purple Belt / 5 years training</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* BJJ Wiki クロスリンク */}
+      {/* BJJ Wiki Cross-links */}
       <section className="px-4 py-16 bg-[#0f0e17]">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-2 text-gray-200">
-            📖 BJJの技術を深める
+            📖 Deepen Your BJJ Knowledge
           </h2>
           <p className="text-gray-500 text-center text-sm mb-8">
-            4,000ページ以上の無料BJJ技術百科事典 — 初心者から上級者まで
+            4,000+ pages of free BJJ technique encyclopedia — beginner to advanced
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             {[
-              { emoji: "🔒", title: "ガードシステム", desc: "クローズド・ハーフ・スパイダー・DLR", href: "https://t307239.github.io/bjj-wiki/en/bjj-guard-retention-advanced.html" },
-              { emoji: "🦵", title: "レッグロック", desc: "ヒールフック・アシガラミ・トーホールド", href: "https://t307239.github.io/bjj-wiki/en/bjj-leg-lock-system.html" },
-              { emoji: "🏆", title: "競技メンタル", desc: "試合準備・緊張管理・戦略", href: "https://t307239.github.io/bjj-wiki/en/bjj-competition-mindset.html" },
-              { emoji: "💪", title: "栄養・回復", desc: "BJJアスリートの食事・怪我予防", href: "https://t307239.github.io/bjj-wiki/en/bjj-nutrition-science.html" },
+              { emoji: "🔒", title: "Guard Systems", desc: "Closed, Half, Spider, DLR", href: "https://t307239.github.io/bjj-wiki/en/bjj-guard-retention-advanced.html" },
+              { emoji: "🦵", title: "Leg Locks", desc: "Heel hooks, Ashi garami, Toe holds", href: "https://t307239.github.io/bjj-wiki/en/bjj-leg-lock-system.html" },
+              { emoji: "🏆", title: "Competition Mindset", desc: "Match prep, nerves, strategy", href: "https://t307239.github.io/bjj-wiki/en/bjj-competition-mindset.html" },
+              { emoji: "💪", title: "Nutrition & Recovery", desc: "Diet for BJJ athletes, injury prevention", href: "https://t307239.github.io/bjj-wiki/en/bjj-nutrition-science.html" },
             ].map((item) => (
               <a
                 key={item.title}
@@ -527,52 +527,52 @@ export default async function Home() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-[#e94560] hover:text-red-400 transition-colors text-sm font-medium"
             >
-              BJJ Wikiをすべて見る → <span className="text-xs text-gray-500">（無料）</span>
+              Explore all of BJJ Wiki → <span className="text-xs text-gray-500">(free)</span>
             </a>
           </div>
         </div>
       </section>
 
-      {/* プライシング */}
+      {/* Pricing */}
       <section className="px-4 py-16 bg-[#0f0e17]">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-3 text-gray-200">
-            シンプルな料金プラン
+            Simple Pricing
           </h2>
-          <p className="text-gray-500 text-center text-sm mb-10">基本機能はすべて永久無料。</p>
+          <p className="text-gray-500 text-center text-sm mb-10">All core features are free forever.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Free */}
             <div className="bg-[#16213e] rounded-2xl p-8 border border-gray-700">
               <div className="text-lg font-bold mb-1">Free</div>
-              <div className="text-3xl font-bold text-gray-200 mb-1">¥0</div>
-              <div className="text-gray-500 text-xs mb-6">永久無料</div>
+              <div className="text-3xl font-bold text-gray-200 mb-1">$0</div>
+              <div className="text-gray-500 text-xs mb-6">Free forever</div>
               <ul className="space-y-3 text-sm text-gray-400">
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> 練習ログ（無制限）</li>
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> テクニック帳</li>
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> ゴールトラッカー</li>
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> カレンダー・グラフ</li>
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> ストリーク機能</li>
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> 試合記録</li>
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Training log (unlimited)</li>
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Technique journal</li>
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Goal tracker</li>
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Calendar &amp; graphs</li>
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Streak tracking</li>
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Competition records</li>
               </ul>
               <Link href="/login" className="mt-8 block text-center bg-[#e94560] hover:bg-[#c73652] text-white font-bold py-3 rounded-full transition-all">
-                無料で始める
+                Get started free
               </Link>
             </div>
             {/* Pro */}
             <div className="bg-[#16213e] rounded-2xl p-8 border border-[#e94560]/50 relative">
-              <div className="absolute -top-3 right-6 bg-[#e94560] text-white text-xs px-3 py-1 rounded-full font-bold">もうすぐ登場</div>
+              <div className="absolute -top-3 right-6 bg-[#e94560] text-white text-xs px-3 py-1 rounded-full font-bold">Coming soon</div>
               <div className="text-lg font-bold mb-1">Pro</div>
-              <div className="text-3xl font-bold text-gray-200 mb-1">¥750<span className="text-sm font-normal text-gray-500">/月</span></div>
-              <div className="text-gray-500 text-xs mb-6">$4.99/month</div>
+              <div className="text-3xl font-bold text-gray-200 mb-1">$4.99<span className="text-sm font-normal text-gray-500">/mo</span></div>
+              <div className="text-gray-500 text-xs mb-6">Billed monthly</div>
               <ul className="space-y-3 text-sm text-gray-400">
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Freeプランのすべて</li>
-                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> CSVエクスポート</li>
-                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> 12ヶ月グラフ</li>
-                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> ストリークフリーズ</li>
-                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> 優先サポート</li>
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Everything in Free</li>
+                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> CSV export</li>
+                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> 12-month graphs</li>
+                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> Streak freeze</li>
+                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> Priority support</li>
               </ul>
               <button className="mt-8 w-full text-center bg-gray-700 text-gray-400 font-bold py-3 rounded-full cursor-not-allowed" disabled>
-                近日公開予定
+                Coming soon
               </button>
             </div>
           </div>
@@ -581,14 +581,14 @@ export default async function Home() {
 
       {/* FAQ */}
       <section className="px-4 py-16 max-w-3xl mx-auto w-full">
-        <h2 className="text-2xl font-bold text-center mb-10 text-gray-200">よくある質問</h2>
+        <h2 className="text-2xl font-bold text-center mb-10 text-gray-200">Frequently Asked Questions</h2>
         <div className="space-y-4">
           {[
-            { q: "本当に無料ですか？", a: "はい、基本機能はすべて完全無料です。練習ログ・テクニック帳・ゴールトラッカー・カレンダー・グラフはすべて無料でご利用いただけます。Pro機能（CSVエクスポート・12ヶ月グラフ・ストリークフリーズ）は月額¥750（$4.99）です。" },
-            { q: "初心者でも使えますか？", a: "もちろんです！白帯・青帯の初心者がぴったりの対象ユーザーです。『習った技の名前がわからない』『ストリークを保ちたい』という悩みを解決するために設計されました。1年目からデータを記録することで、帯昇格への道が見える化します。" },
-            { q: "ノートと何が違いますか？", a: "ノートとアプリの違いは3つです：(1) ストリーク自動カウント — 忘れずに練習を継続できる、(2) グラフ可視化 — 成長が数字で見える、(3) 技術データベース連携 — BJJ Wikiの4,000ページで習った技を即座に調べられる。データが成長を証明します。" },
-            { q: "スマホでも使えますか？", a: "はい！レスポンシブ対応しており、スマートフォンのブラウザから快適にご利用いただけます。ホーム画面に追加することでアプリのように使うことも可能です。オフライン機能にも対応予定です。" },
-            { q: "データは安全ですか？", a: "Supabase（エンタープライズグレードのPostgreSQL）に安全に保存されます。Row Level Securityで他のユーザーのデータにはアクセスできません。いつでも自分のデータをCSVエクスポートできるので、ロックインはありません。" },
+            { q: "Is it really free?", a: "Yes, all core features are completely free. Training log, technique journal, goal tracker, calendar, and graphs are all free. Pro features (CSV export, 12-month graphs, streak freeze) are $4.99/month." },
+            { q: "Is this good for beginners?", a: "Absolutely! White belts and blue belts are the perfect users. Built to solve two common problems: not remembering technique names, and staying consistent. Logging from day one makes the path to your next belt visible." },
+            { q: "How is this different from a notebook?", a: "Three key differences: (1) Automatic streak counting — never lose momentum, (2) Visual graphs — see your growth in numbers, (3) BJJ Wiki integration — instantly look up any technique from 4,000+ pages. Data proves your progress." },
+            { q: "Does it work on mobile?", a: "Yes! Fully responsive and works great in your smartphone browser. Add it to your home screen to use it like a native app. Offline support is also planned." },
+            { q: "Is my data safe?", a: "Data is stored securely in Supabase (enterprise-grade PostgreSQL). Row Level Security means no one can access your data. Export everything as CSV anytime — no lock-in." },
           ].map(({ q, a }, i) => (
             <div key={i} className="bg-[#16213e] rounded-xl p-5 border border-gray-700">
               <h3 className="font-semibold text-gray-200 mb-2 text-sm">Q. {q}</h3>
@@ -598,15 +598,15 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 最終CTA */}
+      {/* Final CTA */}
       <section className="px-4 py-16 text-center bg-[#16213e]/30">
-        <h2 className="text-2xl font-bold mb-3 text-gray-200">今すぐ始めよう</h2>
-        <p className="text-gray-500 text-sm mb-8">クレジットカード不要。GitHubまたはGoogleで即スタート。</p>
+        <h2 className="text-2xl font-bold mb-3 text-gray-200">Start Training Smarter Today</h2>
+        <p className="text-gray-500 text-sm mb-8">No credit card needed. Sign up with GitHub or Google in seconds.</p>
         <Link
           href="/login"
           className="inline-flex items-center justify-center gap-2 bg-[#e94560] hover:bg-[#c73652] text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#e94560]/20"
         >
-          無料で始める →
+          Get started free →
         </Link>
       </section>
 
