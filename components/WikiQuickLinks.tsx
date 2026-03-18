@@ -68,8 +68,21 @@ const QUICK_LINK_SETS: QuickLink[][] = [
   ],
 ];
 
+// 新着ページ（最新バッチ）
+const NEW_LINKS: QuickLink[] = [
+  { emoji: "🦵", title: "アドバンスドレッグロックシステム", slug: "bjj-advanced-leg-lock-systems", tag: "新着" },
+  { emoji: "🏆", title: "競技ゲームプランニング", slug: "bjj-competition-game-planning", tag: "新着" },
+  { emoji: "🥋", title: "GiとノーギのBJJ比較", slug: "bjj-gi-vs-nogi-comparison", tag: "新着" },
+  { emoji: "⚫", title: "黒帯コンセプト", slug: "bjj-black-belt-concepts", tag: "新着" },
+  { emoji: "🔗", title: "サブミッションチェーン", slug: "bjj-submission-chain-attacks", tag: "新着" },
+  { emoji: "🤼", title: "BJJのためのレスリング", slug: "bjj-wrestling-integration", tag: "新着" },
+  { emoji: "🔙", title: "バックシステム上級", slug: "bjj-back-system-advanced", tag: "新着" },
+  { emoji: "🌀", title: "ガードコンセプト上級", slug: "bjj-guard-concepts-advanced", tag: "新着" },
+  { emoji: "📋", title: "競技準備上級", slug: "bjj-competition-prep-advanced", tag: "新着" },
+];
+
 // 全リンクをフラット化
-const ALL_LINKS: QuickLink[] = QUICK_LINK_SETS.flat();
+const ALL_LINKS: QuickLink[] = [...QUICK_LINK_SETS.flat(), ...NEW_LINKS];
 
 // ユニークカテゴリ一覧
 const CATEGORIES = Array.from(new Set(ALL_LINKS.map((l) => l.tag)));
@@ -88,6 +101,7 @@ const CATEGORY_EMOJI: Record<string, string> = {
   "メンタル": "🧠",
   "競技": "🏆",
   "フィジカル": "💪",
+  "新着": "✨",
 };
 
 export default function WikiQuickLinks() {

@@ -77,6 +77,17 @@ const WIKI_TIPS: WikiTip[] = [
   { slug: "bjj-positional-drilling-system", titleJa: "ポジショナルドリリングシステム", descJa: "ポジション別の構造化ドリルで技術を自動化する方法", category: "テクニック" },
   { slug: "bjj-guard-attacks-advanced-system", titleJa: "ガードアタック上級システム", descJa: "コンビネーションアタックで相手を崩す高度なガード攻撃", category: "ガード" },
   { slug: "bjj-passing-systems-complete", titleJa: "パッシングシステム完全版", descJa: "プレッシャー・スピード・レッグドラッグの統合パスシステム", category: "パッシング" },
+  // Batch 342-346
+  { slug: "bjj-advanced-leg-lock-systems", titleJa: "アドバンスドレッグロックシステム", descJa: "アシガラミエントリーからヒールフックメカニクスまでのモダンレッグロック体系", category: "レッグロック" },
+  { slug: "bjj-competition-game-planning", titleJa: "競技ゲームプランニング", descJa: "ブラケット分析・Aゲーム構築・試合中の調整法", category: "競技" },
+  { slug: "bjj-gi-vs-nogi-comparison", titleJa: "GiとノーギのBJJ比較", descJa: "グリップ差・ガードゲーム・ペース・トレーニング推奨の違い", category: "テクニック" },
+  { slug: "bjj-black-belt-concepts", titleJa: "黒帯コンセプト", descJa: "効率性・感受性・原則ベースの理解で極意を掴む", category: "アドバンスト" },
+  // Batch 347-351
+  { slug: "bjj-submission-chain-attacks", titleJa: "サブミッションチェーンアタック", descJa: "サブミッションをつなげて止められない攻撃シーケンスを作る方法", category: "サブミッション" },
+  { slug: "bjj-wrestling-integration", titleJa: "BJJのためのレスリング統合", descJa: "レスリングのテイクダウンとスクランブルをBJJゲームに統合する方法", category: "テイクダウン" },
+  { slug: "bjj-back-system-advanced", titleJa: "バックシステム上級", descJa: "上級者のための完全なバックコントロール・維持・攻撃システム", category: "ポジション" },
+  { slug: "bjj-guard-concepts-advanced", titleJa: "ガードコンセプト上級", descJa: "ガードプレイのハイレベルな概念的フレームワーク", category: "ガード" },
+  { slug: "bjj-competition-prep-advanced", titleJa: "競技準備上級", descJa: "経験豊富な競技者のためのエリートレベル競技準備戦略", category: "競技" },
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
