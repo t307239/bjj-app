@@ -178,6 +178,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export default function DailyWikiTip() {
   const [showNext, setShowNext] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const today = new Date(Date.now() + 9 * 60 * 60 * 1000);
   const dayOfYear = Math.floor(
@@ -194,11 +195,30 @@ export default function DailyWikiTip() {
   const nextBadgeClass = CATEGORY_COLORS[tipNext.category] ?? "bg-gray-500/20 text-gray-300";
 
   return (
-    <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700/40">
+    <div className="bg-[#16213e] rounded-xl border border-gray-700/40 overflow-hidden">
+      <button
+        onClick={() => setIsOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-700/20 transition-colors text-left"
+      >
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-base flex-shrink-0">📚</span>
+          <span className="text-xs text-gray-400 font-medium flex-shrink-0">今日のBJJ知識</span>
+          {!isOpen && (
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium truncate ${badgeClass}`}>
+              {tip.category}
+            </span>
+          )}
+        </div>
+        <svg
+          className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ml-2 ${isOpen ? "rotate-180" : ""}`}
+          fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {isOpen && (<div className="px-4 pb-4 pt-1 border-t border-gray-700/40">
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-base">📚</span>
-        <span className="text-xs text-gray-400 font-medium">今日のBJJ知識</span>
-        <span className={`ml-auto text-[10px] px-2 py-0.5 rounded-full font-medium ${badgeClass}`}>
+        <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${badgeClass}`}>
           {tip.category}
         </span>
       </div>
@@ -248,6 +268,7 @@ export default function DailyWikiTip() {
           </a>
         </div>
       </div>
+      </div>)}
     </div>
   );
 }

@@ -87,6 +87,7 @@ export default function CompetitionStats({ userId }: Props) {
   const [record, setRecord] = useState<CompRecord | null>(null);
   const [monthlyStats, setMonthlyStats] = useState<MonthStats[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -180,11 +181,27 @@ export default function CompetitionStats({ userId }: Props) {
   const donutR = 28;
 
   return (
-    <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-4 overflow-hidden">
+      <button
+        onClick={() => setIsOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-700/20 transition-colors text-left"
+      >
         <h4 className="text-sm font-medium text-gray-300">🏆 試合戦績</h4>
-        <span className="text-[10px] text-gray-500">計{record.total}試合</span>
-      </div>
+        <div className="flex items-center gap-2">
+          {!isOpen && (
+            <span className="text-[10px] text-gray-500">
+              {record.win}勝{record.loss}敗{record.draw > 0 ? `${record.draw}分` : ""} · 計{record.total}試合
+            </span>
+          )}
+          <svg
+            className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </button>
+      {isOpen && (<div className="p-4 border-t border-gray-700">
 
       {/* ドーナツチャート + W/L/D 暪並び */}
       <div className="flex items-center gap-4 mb-3">
@@ -359,6 +376,7 @@ export default function CompetitionStats({ userId }: Props) {
           })()}
         </div>
       )}
+      </div>)}
     </div>
   );
 }

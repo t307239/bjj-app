@@ -166,6 +166,7 @@ const CATEGORY_EMOJI: Record<string, string> = {
 
 export default function WikiQuickLinks() {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   // 年の通算日でセットをローテーション（JST）
   const now = new Date(Date.now() + 9 * 60 * 60 * 1000);
@@ -179,65 +180,84 @@ export default function WikiQuickLinks() {
     : ALL_LINKS.filter((l) => l.tag === selectedTag).slice(0, 9);
 
   return (
-    <div className="bg-[#16213e]/60 rounded-xl p-4 border border-gray-700/30">
-      <div className="flex items-center gap-2 mb-3">
-        <span className="text-base">🔗</span>
-        <span className="text-xs text-gray-400 font-medium">BJJ技術リファレンス</span>
-        <a
-          href="https://t307239.github.io/bjj-wiki/ja/index.html"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="ml-auto text-[10px] text-[#e94560]/70 hover:text-[#e94560] transition-colors"
+    <div className="bg-[#16213e]/60 rounded-xl border border-gray-700/30 mb-4 overflow-hidden">
+      <button
+        onClick={() => setIsOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-700/20 transition-colors text-left"
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-base">🔗</span>
+          <span className="text-xs text-gray-400 font-medium">BJJ技術リファレンス</span>
+          {!isOpen && selectedTag && (
+            <span className="text-[10px] text-gray-500">{CATEGORY_EMOJI[selectedTag]} {selectedTag}</span>
+          )}
+        </div>
+        <svg
+          className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+          fill="none" stroke="currentColor" viewBox="0 0 24 24"
         >
-          Wiki全体を見る →
-        </a>
-      </div>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {isOpen && (<div className="px-4 pb-4 border-t border-gray-700/30">
+        <div className="flex items-center justify-between pt-3 mb-3">
+          <span className="text-[10px] text-gray-500">今日のおすすめ</span>
+          <a
+            href="https://t307239.github.io/bjj-wiki/ja/index.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] text-[#e94560]/70 hover:text-[#e94560] transition-colors"
+          >
+            Wiki全体を見る →
+          </a>
+        </div>
 
-      {/* カテゴリフィルターピル */}
-      <div className="flex gap-1 flex-wrap mb-3">
-        <button
-          onClick={() => setSelectedTag(null)}
-          className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
-            selectedTag === null
-              ? "bg-[#e94560] border-[#e94560] text-white"
-              : "border-gray-600 text-gray-400 hover:border-gray-400 hover:text-gray-200"
-          }`}
-        >
-          今日
-        </button>
-        {CATEGORIES.map((cat) => (
+        {/* カテゴリフィルターピル */}
+        <div className="flex gap-1 flex-wrap mb-3">
           <button
-            key={cat}
-            onClick={() => setSelectedTag(selectedTag === cat ? null : cat)}
+            onClick={() => setSelectedTag(null)}
             className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
-              selectedTag === cat
+              selectedTag === null
                 ? "bg-[#e94560] border-[#e94560] text-white"
                 : "border-gray-600 text-gray-400 hover:border-gray-400 hover:text-gray-200"
             }`}
           >
-            {CATEGORY_EMOJI[cat] ?? ""} {cat}
+            今日
           </button>
-        ))}
-      </div>
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedTag(selectedTag === cat ? null : cat)}
+              className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
+                selectedTag === cat
+                  ? "bg-[#e94560] border-[#e94560] text-white"
+                  : "border-gray-600 text-gray-400 hover:border-gray-400 hover:text-gray-200"
+              }`}
+            >
+              {CATEGORY_EMOJI[cat] ?? ""} {cat}
+            </button>
+          ))}
+        </div>
 
-      <div className="grid grid-cols-3 gap-2">
-        {displayLinks.map((link) => (
-          <a
-            key={link.slug}
-            href={`${WIKI_BASE}/${link.slug}.html`}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => trackWikiClick(link.slug, link.tag)}
-            className="flex flex-col items-center text-center p-2.5 rounded-lg bg-[#0f3460]/50 hover:bg-[#0f3460] border border-gray-700/30 hover:border-[#e94560]/30 transition-all group"
-          >
-            <span className="text-lg mb-1">{link.emoji}</span>
-            <span className="text-[10px] text-gray-300 group-hover:text-white font-medium leading-tight line-clamp-2">
-              {link.title}
-            </span>
-            <span className="text-[9px] text-gray-500 mt-1">{link.tag}</span>
-          </a>
-        ))}
-      </div>
+        <div className="grid grid-cols-3 gap-2">
+          {displayLinks.map((link) => (
+            <a
+              key={link.slug}
+              href={`${WIKI_BASE}/${link.slug}.html`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackWikiClick(link.slug, link.tag)}
+              className="flex flex-col items-center text-center p-2.5 rounded-lg bg-[#0f3460]/50 hover:bg-[#0f3460] border border-gray-700/30 hover:border-[#e94560]/30 transition-all group"
+            >
+              <span className="text-lg mb-1">{link.emoji}</span>
+              <span className="text-[10px] text-gray-300 group-hover:text-white font-medium leading-tight line-clamp-2">
+                {link.title}
+              </span>
+              <span className="text-[9px] text-gray-500 mt-1">{link.tag}</span>
+            </a>
+          ))}
+        </div>
+      </div>)}
     </div>
   );
 }
