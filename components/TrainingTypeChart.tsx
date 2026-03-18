@@ -143,6 +143,51 @@ function DonutChart({ data }: { data: TypeCount[] }) {
   );
 }
 
+function MiniSparkline({ logs, typeValue, color }: {
+  logs: { date: string; type: string }[];
+  typeValue: string;
+  color: string;
+}) {
+  const now = new Date();
+  const months: number[] = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const count = logs.filter((l) => l.type === typeValue && l.date.startsWith(key)).length;
+    months.push(count);
+  }
+  const maxVal = Math.max(...months, 1);
+  const W = 48;
+  const H = 16;
+  const pts = months.map((v, i) => {
+    const x = (i / (months.length - 1)) * W;
+    const y = H - (v / maxVal) * H;
+    return `${x},${y}`;
+  }).join(" ");
+
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="flex-shrink-0 opacity-70">
+      <polyline
+        points={pts}
+        fill="none"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {months.map((v, i) => (
+        <circle
+          key={i}
+          cx={(i / (months.length - 1)) * W}
+          cy={H - (v / maxVal) * H}
+          r={i === 5 ? 2 : 1}
+          fill={i === 5 ? color : "transparent"}
+        />
+      ))}
+    </svg>
+  );
+}
+
 function MonthlyTrend({ logs, typeValue, typeLabel, color }: {
   logs: { date: string; type: string }[];
   typeValue: string;
@@ -294,7 +339,7 @@ export default function TrainingTypeChart({ userId }: Props) {
                     {d.totalMins > 0 && (
                       <span className="text-[10px] text-gray-600 w-8 text-right">{fmtMins(d.totalMins)}</span>
                     )}
-                    <span className="text-[9px] text-gray-700">{isSelected ? "▲" : "▶"}</span>
+                    <MiniSparkline logs={allLogs} typeValue={d.value} color={d.color} />
                   </div>
                 );
               })}

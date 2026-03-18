@@ -145,9 +145,17 @@ export default function PersonalBests({ userId }: Props) {
           {bests.lastMonthCount > 0 && (() => {
             const diff = bests.thisMonthCount - bests.lastMonthCount;
             const pct = Math.round(Math.abs(diff) / bests.lastMonthCount * 100);
-            if (diff > 0) return <span className="text-[10px] text-green-400">▲ 今月 +{diff}回（+{pct}%）先月比</span>;
-            if (diff < 0) return <span className="text-[10px] text-red-400">▼ 今月 {diff}回（-{pct}%）先月比</span>;
-            return <span className="text-[10px] text-gray-500">= 今月 先月と同ペース</span>;
+            if (diff > 0) return (
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-green-300 bg-green-500/15 border border-green-500/30 px-2 py-0.5 rounded-full mt-0.5">
+                ▲ +{diff}回 · +{pct}% 先月比
+              </span>
+            );
+            if (diff < 0) return (
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-red-300 bg-red-500/15 border border-red-500/30 px-2 py-0.5 rounded-full mt-0.5">
+                ▼ {diff}回 · -{pct}% 先月比
+              </span>
+            );
+            return <span className="text-[10px] text-gray-500 mt-0.5">= 先月と同ペース</span>;
           })()}
         </div>
         <button
