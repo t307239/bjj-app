@@ -136,6 +136,7 @@ export default function GoalTracker({ userId }: Props) {
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [monthHistory, setMonthHistory] = useState<MonthHistory[]>([]);
   const [weekHistory, setWeekHistory] = useState<WeekHistory[]>([]);
+  const [currentWeekDayGrid, setCurrentWeekDayGrid] = useState<boolean[]>(Array(7).fill(false));
 
   const supabase = createClient();
 
@@ -209,6 +210,18 @@ export default function GoalTracker({ userId }: Props) {
           .select("date")
           .eq("user_id", userId)
           .gte("date", fourWeeksAgoStr);
+
+        // 今週の曜日別達成グリッド（月=0...日=6）
+        const dayGrid: boolean[] = Array(7).fill(false);
+        (wLogs ?? []).forEach((l) => {
+          if (l.date >= thisWeekStart) {
+            const d = new Date(l.date + "T00:00:00Z");
+            const dow = d.getUTCDay(); // 0=Sun
+            const idx = dow === 0 ? 6 : dow - 1; // Mon=0...Sun=6
+            dayGrid[idx] = true;
+          }
+        });
+        setCurrentWeekDayGrid(dayGrid);
 
         const wh: WeekHistory[] = [];
         for (let i = 3; i >= 0; i--) {
@@ -416,6 +429,45 @@ export default function GoalTracker({ userId }: Props) {
               {data.weeklyGoal > 0 ? (
                 <>
                   <ProgressBar current={data.weekCount} target={data.weeklyGoal} />
+                  {/* 曜日別達成グリッド */}
+                  {(() => {
+                    const DAY_LABELS = ["月", "火", "水", "木", "金", "土", "日"];
+                    const jstNowGrid = new Date(Date.now() + 9 * 3600000);
+                    const dowNow = jstNowGrid.getUTCDay(); // 0=Sun
+                    const todayIdx = dowNow === 0 ? 6 : dowNow - 1; // Mon=0...Sun=6
+                    return (
+                      <div className="mt-2 flex items-center gap-1">
+                        {DAY_LABELS.map((label, i) => {
+                          const isPast = i < todayIdx;
+                          const isToday = i === todayIdx;
+                          const isFuture = i > todayIdx;
+                          const trained = currentWeekDayGrid[i];
+                          return (
+                            <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
+                              <div
+                                className={`w-full h-5 rounded flex items-center justify-center text-[9px] font-bold transition-colors ${
+                                  trained
+                                    ? "bg-green-500/30 border border-green-500/50 text-green-300"
+                                    : isToday
+                                    ? "bg-[#e94560]/20 border border-[#e94560]/50 text-[#e94560]"
+                                    : isPast
+                                    ? "bg-gray-700/50 text-gray-600"
+                                    : "bg-gray-800/30 text-gray-700"
+                                }`}
+                              >
+                                {trained ? "✓" : isToday ? "・" : ""}
+                              </div>
+                              <span className={`text-[8px] leading-none ${
+                                isToday ? "text-gray-300 font-semibold" : isFuture ? "text-gray-700" : "text-gray-600"
+                              }`}>
+                                {label}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
                   {(() => {
                     const now = new Date(Date.now() + 9 * 3600000);
                     const dow = now.getUTCDay(); // 0=Sun

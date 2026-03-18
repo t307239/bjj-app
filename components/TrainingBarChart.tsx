@@ -3,11 +3,14 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 
+type TypeBreakdown = Record<string, number>;
+
 type MonthData = {
   month: string;
   label: string;
   count: number;
   minutes: number;
+  typeBreakdown: TypeBreakdown;
 };
 
 type LogEntry = {
@@ -37,6 +40,17 @@ const TYPE_COLORS: Record<string, string> = {
   open_mat: "bg-green-500/70",
 };
 
+// Inline style colors for stacked segments
+const TYPE_HEX: Record<string, string> = {
+  gi: "#3b82f6",
+  nogi: "#f97316",
+  drilling: "#a855f7",
+  competition: "#e94560",
+  open_mat: "#22c55e",
+};
+
+const TYPE_ORDER = ["gi", "nogi", "drilling", "competition", "open_mat"];
+
 export default function TrainingBarChart({ userId, isPro = false }: Props) {
   const [data6, setData6] = useState<MonthData[]>([]);
   const [data12, setData12] = useState<MonthData[]>([]);
@@ -58,25 +72,27 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
 
       const { data: logs } = await supabase
         .from("training_logs")
-        .select("date, duration_min")
+        .select("date, duration_min, type")
         .eq("user_id", userId)
         .gte("date", sinceStr);
 
       if (logs) {
         const buildBuckets = (months: number): MonthData[] => {
-          const buckets: Record<string, { count: number; minutes: number }> = {};
+          const buckets: Record<string, { count: number; minutes: number; typeBreakdown: TypeBreakdown }> = {};
           for (let i = months - 1; i >= 0; i--) {
             const d = new Date();
             d.setDate(1);
             d.setMonth(d.getMonth() - i);
             const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-            buckets[key] = { count: 0, minutes: 0 };
+            buckets[key] = { count: 0, minutes: 0, typeBreakdown: {} };
           }
-          logs.forEach((l: { date: string; duration_min: number }) => {
+          logs.forEach((l: { date: string; duration_min: number; type: string }) => {
             const key = l.date.substring(0, 7);
             if (buckets[key]) {
               buckets[key].count++;
               buckets[key].minutes += l.duration_min || 0;
+              const t = l.type || "gi";
+              buckets[key].typeBreakdown[t] = (buckets[key].typeBreakdown[t] ?? 0) + 1;
             }
           });
           return Object.entries(buckets).map(([month, val]) => {
@@ -157,6 +173,11 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         return `${y}年${parseInt(m)}月`;
       })()
     : null;
+
+  // Compute type legend for currently visible data (only types that appear)
+  const allTypes = new Set<string>();
+  data.forEach((d) => Object.keys(d.typeBreakdown).forEach((t) => allTypes.add(t)));
+  const visibleTypes = TYPE_ORDER.filter((t) => allTypes.has(t));
 
   return (
     <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
@@ -261,6 +282,16 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-gray-900 border border-gray-600 rounded-lg px-2 py-1.5 text-center pointer-events-none z-20 whitespace-nowrap shadow-lg">
                       <div className="text-[11px] font-semibold text-white">{d.label}</div>
                       <div className="text-[10px] text-gray-300 mt-0.5">{d.count}回 · {formatMinutes(d.minutes)}</div>
+                      {/* Type breakdown in tooltip */}
+                      {view === "count" && Object.keys(d.typeBreakdown).length > 1 && (
+                        <div className="flex gap-1 mt-1 justify-center flex-wrap">
+                          {TYPE_ORDER.filter((t) => d.typeBreakdown[t] > 0).map((t) => (
+                            <span key={t} className="text-[9px] px-1 py-0.5 rounded" style={{ background: TYPE_HEX[t] + "30", color: TYPE_HEX[t] }}>
+                              {TYPE_LABELS[t] ?? t}×{d.typeBreakdown[t]}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
                   <span
@@ -270,18 +301,36 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                   >
                     {label}
                   </span>
-                  <div
-                    className={`w-full rounded-t-sm transition-all ${
-                      isSelected
-                        ? "bg-yellow-400"
-                        : isCurrentMonth
-                        ? "bg-[#e94560]"
-                        : val > 0
-                        ? "bg-[#e94560]/50 group-hover:bg-[#e94560]/70"
-                        : "bg-gray-800"
-                    }`}
-                    style={{ height: `${pct}%`, minHeight: val > 0 ? "4px" : "0px" }}
-                  />
+                  {/* Stacked bar (count mode) or single bar (minutes mode) */}
+                  {view === "count" && val > 0 && !isSelected ? (
+                    <div
+                      className="w-full rounded-t-sm overflow-hidden flex flex-col-reverse"
+                      style={{ height: `${pct}%`, minHeight: val > 0 ? "4px" : "0px" }}
+                    >
+                      {TYPE_ORDER.filter((t) => (d.typeBreakdown[t] ?? 0) > 0).map((t) => {
+                        const segPct = ((d.typeBreakdown[t] ?? 0) / d.count) * 100;
+                        return (
+                          <div
+                            key={t}
+                            style={{ height: `${segPct}%`, background: TYPE_HEX[t] + (isCurrentMonth ? "cc" : "80"), minHeight: "2px" }}
+                          />
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div
+                      className={`w-full rounded-t-sm transition-all ${
+                        isSelected
+                          ? "bg-yellow-400"
+                          : isCurrentMonth
+                          ? "bg-[#e94560]"
+                          : val > 0
+                          ? "bg-[#e94560]/50 group-hover:bg-[#e94560]/70"
+                          : "bg-gray-800"
+                      }`}
+                      style={{ height: `${pct}%`, minHeight: val > 0 ? "4px" : "0px" }}
+                    />
+                  )}
                   <span
                     className={`leading-none ${range === 12 ? "text-[8px]" : "text-[10px]"} ${
                       isSelected
@@ -302,6 +351,18 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
       {avgPct > 0 && (
         <div className="text-[10px] text-gray-600 text-right mt-1">
           平均 {view === "count" ? `${Math.round(avgVal)}回/月` : `${formatMinutes(Math.round(avgVal))}/月`}
+        </div>
+      )}
+
+      {/* Type legend (count view only) */}
+      {view === "count" && visibleTypes.length > 1 && (
+        <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 pt-2 border-t border-gray-700/40">
+          {visibleTypes.map((t) => (
+            <span key={t} className="flex items-center gap-1 text-[9px] text-gray-400">
+              <span className="w-2 h-2 rounded-sm inline-block" style={{ background: TYPE_HEX[t] }} />
+              {TYPE_LABELS[t] ?? t}
+            </span>
+          ))}
         </div>
       )}
 

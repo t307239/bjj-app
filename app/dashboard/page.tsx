@@ -215,6 +215,19 @@ export default async function DashboardPage() {
   const monthHoursStr = monthTotalMins >= 60
     ? `${Math.floor(monthTotalMins / 60)}h${monthTotalMins % 60 > 0 ? `${monthTotalMins % 60}m` : ""}`
     : monthTotalMins > 0 ? `${monthTotalMins}m` : null;
+  // 月間トレーニング強度バッジ（平均セッション時間ベース）
+  const monthSessionCount = monthCount ?? 0;
+  const avgSessionMin = monthSessionCount > 0 ? Math.round(monthTotalMins / monthSessionCount) : 0;
+  const intensityBadge: { label: string; emoji: string; color: string } | null =
+    monthSessionCount >= 2
+      ? avgSessionMin >= 90
+        ? { label: "ハード強度", emoji: "🔥", color: "text-red-400" }
+        : avgSessionMin >= 60
+        ? { label: "中強度", emoji: "💪", color: "text-orange-400" }
+        : avgSessionMin >= 30
+        ? { label: "軽め", emoji: "📈", color: "text-yellow-400" }
+        : { label: "入門", emoji: "🌱", color: "text-green-400" }
+      : null;
 
   const isPro = profileData?.is_pro ?? false;
 
@@ -291,6 +304,11 @@ export default async function DashboardPage() {
             {monthHoursStr && (
               <div className="text-[10px] mt-0.5 text-purple-400/80 font-medium">
                 ⏱️ {monthHoursStr}
+              </div>
+            )}
+            {intensityBadge && (
+              <div className={`text-[10px] mt-0.5 font-medium ${intensityBadge.color}`}>
+                {intensityBadge.emoji} {intensityBadge.label}（平均{avgSessionMin}分/回）
               </div>
             )}
             {remainingDays > 0 && (
