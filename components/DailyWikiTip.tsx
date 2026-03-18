@@ -105,6 +105,12 @@ const WIKI_TIPS: WikiTip[] = [
   { slug: "bjj-leg-entanglement-entries", titleJa: "レッグエンタングルメントエントリー", descJa: "ガード・スクランブル・パッシングからの体系的レッグエンタングルメントエントリー", category: "レッグロック" },
   { slug: "bjj-back-take-advanced-system", titleJa: "バックテイク上級システム", descJa: "アームドラッグ・ベリンボロ・タートル崩しとバックからのフィニッシングチェーン", category: "バックコントロール" },
   { slug: "bjj-submission-finishing-details", titleJa: "サブミッションフィニッシング詳細", descJa: "アームバー・トライアングル・裸絞め・ヒールフックの技術的フィニッシング詳細", category: "サブミッション" },
+  // Batch 367-371
+  { slug: "bjj-guard-development-system", titleJa: "ガード開発システム", descJa: "体系的なガード構築・強化・切り替えのフレームワーク", category: "ガード" },
+  { slug: "bjj-reaction-training-bjj", titleJa: "BJJリアクショントレーニング", descJa: "スクランブル・カウンター・チェーン反応速度を高める方法", category: "テクニック" },
+  { slug: "bjj-chest-to-chest-control", titleJa: "チェスト・トゥ・チェストコントロール", descJa: "密着コントロール・プレッシャー・サブミッションの統合システム", category: "ポジション" },
+  { slug: "bjj-offense-first-bjj", titleJa: "オフェンスファーストBJJ", descJa: "常に先手を取り主導権を握る積極的なゲームプランニング", category: "アドバンスト" },
+  { slug: "bjj-submission-matrix", titleJa: "サブミッションマトリックス", descJa: "全ポジションから全サブミッションへの体系的チェーンマップ", category: "サブミッション" },
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
