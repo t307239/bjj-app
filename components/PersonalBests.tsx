@@ -11,6 +11,7 @@ type Bests = {
   maxSessionMin: number;
   longestStreak: number;
   bestMonthCount: number;
+  bestMonthKey: string;
   bestWeekCount: number;
   avgSessionMin: number;
   avgMonthly: number;
@@ -68,6 +69,7 @@ export default function PersonalBests({ userId }: Props) {
       const bestMonthCount = Object.values(monthCounts).length > 0
         ? Math.max(...Object.values(monthCounts))
         : totalSessions;
+      const bestMonthKey = Object.entries(monthCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "";
 
       // 週間最多（月曜日起点）
       const weekCounts: Record<string, number> = {};
@@ -99,7 +101,7 @@ export default function PersonalBests({ userId }: Props) {
       const thisMonthCount = monthCounts[thisYM] ?? 0;
       const lastMonthCount = monthCounts[lastYM] ?? 0;
 
-      setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, bestWeekCount, avgSessionMin, avgMonthly, thisMonthCount, lastMonthCount });
+      setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, bestMonthKey, bestWeekCount, avgSessionMin, avgMonthly, thisMonthCount, lastMonthCount });
     };
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -107,14 +109,21 @@ export default function PersonalBests({ userId }: Props) {
 
   if (!bests) return null;
 
+  const bestMonthLabel = bests.bestMonthKey
+    ? (() => {
+        const [y, m] = bests.bestMonthKey.split("-");
+        return `${y}年${parseInt(m)}月`;
+      })()
+    : "";
+
   const items = [
-    { icon: "🏋️", label: "総練習回数", value: `${bests.totalSessions}回` },
-    { icon: "⏱️", label: "総練習時間", value: fmtTime(bests.totalMinutes) },
-    { icon: "🔥", label: "最長連続日", value: `${bests.longestStreak}日` },
-    { icon: "📅", label: "月間最多", value: `${bests.bestMonthCount}回` },
-    { icon: "⌛", label: "平均時間/回", value: fmtTime(bests.avgSessionMin) },
-    { icon: "📈", label: "月平均", value: `${bests.avgMonthly}回` },
-    { icon: "🗓️", label: "週間最多", value: `${bests.bestWeekCount}回` },
+    { icon: "🏋️", label: "総練習回数", value: `${bests.totalSessions}回`, sub: "" },
+    { icon: "⏱️", label: "総練習時間", value: fmtTime(bests.totalMinutes), sub: "" },
+    { icon: "🔥", label: "最長連続日", value: `${bests.longestStreak}日`, sub: "" },
+    { icon: "📅", label: "月間最多", value: `${bests.bestMonthCount}回`, sub: bestMonthLabel },
+    { icon: "⌛", label: "平均時間/回", value: fmtTime(bests.avgSessionMin), sub: "" },
+    { icon: "📈", label: "月平均", value: `${bests.avgMonthly}回`, sub: "" },
+    { icon: "🗓️", label: "週間最多", value: `${bests.bestWeekCount}回`, sub: "" },
   ];
 
   // Xシェア用テキスト生成
@@ -170,10 +179,18 @@ export default function PersonalBests({ userId }: Props) {
       </div>
       <div className="grid grid-cols-2 gap-2">
         {items.map((item) => (
-          <div key={item.label} className="bg-gray-800/40 rounded-xl p-3 text-center">
+          <div
+            key={item.label}
+            className={`rounded-xl p-3 text-center ${
+              item.sub ? "bg-yellow-500/10 border border-yellow-500/25" : "bg-gray-800/40"
+            }`}
+          >
             <div className="text-lg mb-0.5">{item.icon}</div>
             <div className="text-base font-bold text-white">{item.value}</div>
             <div className="text-[10px] text-gray-500 mt-0.5">{item.label}</div>
+            {item.sub && (
+              <div className="text-[9px] text-yellow-400/80 mt-0.5 leading-none">⭐ {item.sub}</div>
+            )}
           </div>
         ))}
       </div>
