@@ -37,21 +37,28 @@ export async function POST(req: Request) {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        const userId = session.metadata?.userId;
+        // Payment Links use client_reference_id; programmatic checkout uses metadata.userId
+        const userId = session.client_reference_id ?? session.metadata?.userId;
         const customerId =
           typeof session.customer === "string"
             ? session.customer
-            : session.customer?.id ?? null;
+            : (session.customer as Stripe.Customer | null)?.id ?? null;
 
         if (userId) {
-          await supabase
+          const { error } = await supabase
             .from("profiles")
             .update({
               is_pro: true,
               stripe_customer_id: customerId,
             })
             .eq("id", userId);
-          console.log(`✅ User ${userId} upgraded to Pro`);
+          if (error) {
+            console.error(`❌ Failed to update is_pro for user ${userId}:`, error);
+          } else {
+            console.log(`✅ User ${userId} upgraded to Pro (customer: ${customerId})`);
+          }
+        } else {
+          console.warn("⚠️ checkout.session.completed: no userId found in client_reference_id or metadata");
         }
         break;
       }
