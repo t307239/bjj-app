@@ -71,6 +71,12 @@ const WIKI_TIPS: WikiTip[] = [
   { slug: "bjj-periodization-training", titleJa: "BJJのピリオダイゼーション", descJa: "マクロ・メソサイクルで競技パフォーマンスを最大化", category: "フィジカル" },
   { slug: "bjj-nutrition-timing", titleJa: "BJJの栄養タイミング", descJa: "トレーニング前・中・後の栄養補給プロトコル", category: "栄養" },
   { slug: "bjj-mental-performance", titleJa: "メンタルパフォーマンスBJJ", descJa: "ビジュアライゼーション・自信構築・試合不安管理", category: "メンタル" },
+  // Batch 337-341
+  { slug: "bjj-advanced-concepts-guide", titleJa: "BJJアドバンスドコンセプト", descJa: "高レベル柔術の概念的フレームワークと原則体系", category: "アドバンスト" },
+  { slug: "bjj-flow-rolling-advanced", titleJa: "フローローリング上級", descJa: "技術向上のためのフロー状態ロール入門と応用", category: "アドバンスト" },
+  { slug: "bjj-positional-drilling-system", titleJa: "ポジショナルドリリングシステム", descJa: "ポジション別の構造化ドリルで技術を自動化する方法", category: "テクニック" },
+  { slug: "bjj-guard-attacks-advanced-system", titleJa: "ガードアタック上級システム", descJa: "コンビネーションアタックで相手を崩す高度なガード攻撃", category: "ガード" },
+  { slug: "bjj-passing-systems-complete", titleJa: "パッシングシステム完全版", descJa: "プレッシャー・スピード・レッグドラッグの統合パスシステム", category: "パッシング" },
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -90,6 +96,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   "アドバンスト": "bg-rose-500/20 text-rose-300",
   "ビギナー": "bg-sky-500/20 text-sky-300",
   "グリップ": "bg-amber-500/20 text-amber-300",
+  "テクニック": "bg-blue-600/20 text-blue-200",
 };
 
 export default function DailyWikiTip() {

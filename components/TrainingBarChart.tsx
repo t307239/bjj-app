@@ -170,13 +170,13 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         <div className="flex gap-1">
           <div className="flex rounded-lg overflow-hidden border border-gray-700 mr-1">
             <button
-              onClick={() => setRange(6)}
+              onClick={() => { setRange(6); setSelectedMonth(null); }}
               className={`text-[11px] px-2 py-1 transition-colors ${range === 6 ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-gray-300"}`}
             >
               6月
             </button>
             <button
-              onClick={() => setRange(12)}
+              onClick={() => { setRange(12); setSelectedMonth(null); }}
               className={`text-[11px] px-2 py-1 transition-colors ${range === 12 ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-gray-300"}`}
             >
               12月
