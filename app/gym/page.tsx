@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import GymWaitlistForm from "@/components/GymWaitlistForm";
 
 export const metadata: Metadata = {
   title: "BJJ App for Academies - Keep Your Students Engaged",
@@ -255,6 +256,21 @@ export default function GymPage() {
             <p className="text-gray-500 text-center text-xs mt-8">
               📩 Email us for custom plans. 14-day free trial included.
             </p>
+          </div>
+        </section>
+
+        {/* Waitlist Section */}
+        <section className="px-4 py-16 bg-[#16213e]/20">
+          <div className="max-w-md mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-200 mb-3">
+                Get Early Access
+              </h2>
+              <p className="text-gray-500 text-sm leading-relaxed">
+                Gym features are in private beta. Join the waitlist and we'll reach out when your spot is ready.
+              </p>
+            </div>
+            <GymWaitlistForm />
           </div>
         </section>
 
