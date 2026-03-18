@@ -23,7 +23,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   guard: "ガード",
   passing: "パス",
   submissions: "サブミッション",
-  takedowns: "テイクダc��ン",
+  takedowns: "テイクダウン",
   escapes: "エスケープ",
   back: "バック",
   mount: "マウント",

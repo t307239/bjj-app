@@ -88,7 +88,7 @@ export default function CsvExport({ userId, isPro = false }: Props) {
         return;
       }
 
-      // 試合詳細を含む拡張ヘッダc��
+      // 試合詳細を含む拡張ヘッダー
       const headers = ["日付", "タイプ", "時間(分)", "試合結果", "対戦相手", "決め技", "大会名", "メモ"];
       const rows = logs.map((l: { date: string; type: string; duration_min: number; notes: string }) => {
         const { comp, userNotes } = decodeCompNotes(l.notes ?? "");

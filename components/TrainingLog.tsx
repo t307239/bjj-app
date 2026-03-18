@@ -34,7 +34,7 @@ function formatDuration(min: number): string {
   return m > 0 ? `${h}h${m}m` : `${h}h`;
 }
 
-// 試合詳細データのエンc��〰D@食限不要）
+// 試合詳細データのエンコード関数（再定義不要）
 type CompData = { result: string; opponent: string; finish: string; event: string };
 const COMP_PREFIX = "__comp__";
 
@@ -431,7 +431,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               </div>
             </div>
           )}
-          {/* $��月サマリー行 */}
+          {/* 今月サマリー行 */}
           <div className="flex items-center gap-4 text-sm">
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-[#e94560]">{monthEntries.length}</div>
@@ -507,7 +507,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="日付・タイプ・メモ#��検索..."
+            placeholder="日付・タイプ・メモで検索..."
             className="w-full bg-[#16213e] text-white rounded-xl pl-9 pr-9 py-2 text-sm border border-gray-700 focus:outline-none focus:border-[#e94560]/60 placeholder-gray-600"
           />
           {searchQuery && (
