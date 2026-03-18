@@ -9,10 +9,30 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 type Profile = {
   belt: string;
   stripe: number;
-  gym: string;
+  gym: string;   // = gym_name in Supabase profiles table (B2B Trojan horse key field)
   bio: string;
   start_date: string;
 };
+
+/*
+ * B2B Trojan Horse — 将来の自動メール機能のための集計クエリ
+ *
+ * 同じジムのユーザーが10人以上集まったら、道場主に自動メールを送る:
+ *
+ * SELECT gym, COUNT(*) as user_count
+ * FROM profiles
+ * WHERE gym IS NOT NULL AND gym != ''
+ * GROUP BY gym
+ * HAVING COUNT(*) >= 10
+ * ORDER BY user_count DESC;
+ *
+ * → 結果を `gym_owner_emails` テーブルと照合し、
+ *   未送信の道場に Beehiiv / SendGrid 経由で自動メール送信:
+ *   「あなたの道場の生徒が{N}人このアプリを使っています。
+ *    月$49で全員の練習データを確認できます。14日無料試用どうぞ」
+ *
+ * Note: gym = gym_name フィールド。schemas では profiles.gym カラムを使用。
+ */
 
 type Stats = {
   totalCount: number;
@@ -178,7 +198,15 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
       return;
     }
     const { error } = await supabase.from("profiles").upsert(
-      { id: user.id, belt: form.belt, stripe: form.stripe, gym: form.gym, bio: form.bio, start_date: form.start_date || null },
+      {
+        id: user.id,
+        belt: form.belt,
+        stripe: form.stripe,
+        gym: form.gym,          // existing column
+        // gym_name: form.gym,  // TODO: add gym_name column via migration when B2B aggregation query is activated
+        bio: form.bio,
+        start_date: form.start_date || null,
+      },
       { onConflict: "id" }
     );
     if (!error) {
@@ -228,7 +256,8 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
           </div>
         </div>
         <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700">
-          <label className="block text-gray-300 text-sm font-medium mb-2">道場・ジム名</label>
+          <label className="block text-gray-300 text-sm font-medium mb-1">道場・ジム名</label>
+          <p className="text-gray-600 text-[10px] mb-2">同じジムの仲間を繋ぐために使われます</p>
           <input type="text" value={form.gym} onChange={(e) => setForm({ ...form, gym: e.target.value })} placeholder="例: Gracie Academy Tokyo" className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400" />
         </div>
         <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700">
