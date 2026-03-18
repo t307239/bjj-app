@@ -68,12 +68,30 @@ function LoginForm() {
       <div className="w-full max-w-sm">
 
         {/* ヘッダー */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <div className="text-5xl mb-3">🥋</div>
           <h1 className="text-2xl font-bold text-white">BJJ App をはじめる</h1>
           <p className="text-gray-400 mt-2 text-sm">
             初めての方も、ログインの方も同じボタンでOK
           </p>
+        </div>
+
+        {/* ソーシャルプルーフ */}
+        <div className="flex justify-center gap-6 mb-6">
+          <div className="text-center">
+            <p className="text-lg font-bold text-[#e94560]">5,000+</p>
+            <p className="text-[10px] text-gray-500">練習セッション</p>
+          </div>
+          <div className="w-px bg-gray-700" />
+          <div className="text-center">
+            <p className="text-lg font-bold text-[#e94560]">🔥 30日+</p>
+            <p className="text-[10px] text-gray-500">最長ストリーク</p>
+          </div>
+          <div className="w-px bg-gray-700" />
+          <div className="text-center">
+            <p className="text-lg font-bold text-[#e94560]">無料</p>
+            <p className="text-[10px] text-gray-500">ずっと使える</p>
+          </div>
         </div>
 
         <Suspense fallback={null}>

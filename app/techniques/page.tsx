@@ -16,7 +16,22 @@ const jsonLd = {
   "name": "BJJテクニック帳",
   "description": "Brazilian Jiu-Jitsuのテクニックを記録・管理するリスト",
   "url": "https://bjj-app-one.vercel.app/techniques",
+  "isPartOf": {
+    "@type": "WebApplication",
+    "name": "BJJ App",
+    "url": "https://bjj-app-one.vercel.app",
+  },
 };
+
+// BJJ Wikiへの関連リンク（技術学習誘導）
+const WIKI_LINKS = [
+  { href: "https://bjj-wiki.com/ja/bjj-guard-passing-fundamentals.html", label: "ガードパスの基礎" },
+  { href: "https://bjj-wiki.com/ja/bjj-sweep-fundamentals.html", label: "スウィープの基礎" },
+  { href: "https://bjj-wiki.com/ja/bjj-triangle-choke-guide.html", label: "トライアングルチョーク" },
+  { href: "https://bjj-wiki.com/ja/bjj-leg-lock-system.html", label: "レッグロックシステム" },
+  { href: "https://bjj-wiki.com/ja/bjj-mount-system.html", label: "マウントシステム" },
+  { href: "https://bjj-wiki.com/ja/bjj-back-control-system.html", label: "バックコントロール" },
+];
 
 export default async function TechniquesPage() {
   const supabase = await createClient();
@@ -54,6 +69,30 @@ export default async function TechniquesPage() {
         </div>
 
         <TechniqueLog userId={user.id} />
+
+        {/* BJJ Wiki 関連学習リンク */}
+        <div className="mt-8 bg-[#16213e] rounded-xl p-4 border border-gray-700/40">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-base">📚</span>
+            <h3 className="text-sm font-semibold text-gray-200">BJJ Wiki で技術を深める</h3>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {WIKI_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs bg-[#1a1a2e] hover:bg-[#0f3460] text-gray-400 hover:text-[#e94560] px-3 py-1.5 rounded-full border border-gray-700 hover:border-[#e94560]/40 transition-all"
+              >
+                {link.label} →
+              </a>
+            ))}
+          </div>
+          <p className="text-[10px] text-gray-600 mt-2">
+            BJJ Wikiで各テクニックの詳細解説・動画・ドリルを無料で学べます
+          </p>
+        </div>
 
         <AffiliateSection />
       </main>

@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
 
+const STRIPE_PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
+
 type Props = { userId: string; streak: number };
 
 // streak_freeze_last_used カラムを JSON 配列文字列として再利用
@@ -33,6 +35,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
   const [using, setUsing] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [dismissed, setDismissed] = useState(false);
+  const [isPro, setIsPro] = useState(false);
 
   const supabase = createClient();
 
@@ -40,11 +43,12 @@ export default function StreakFreeze({ userId, streak }: Props) {
     const load = async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("streak_freeze_count, streak_freeze_last_used")
+        .select("streak_freeze_count, streak_freeze_last_used, is_pro")
         .eq("id", userId)
         .single();
       setFreezeCount(data?.streak_freeze_count ?? 0);
       setHistoryDates(parseHistory(data?.streak_freeze_last_used ?? null));
+      setIsPro(data?.is_pro ?? false);
       setLoading(false);
     };
     load();
@@ -192,6 +196,41 @@ export default function StreakFreeze({ userId, streak }: Props) {
           )}
         </div>
       )}
+
+      {/* フリーズ残量0 → Proアップグレード CTA */}
+      {showStatus && freezeCount === 0 && !isPro && streak >= 3 && (
+        <div className="bg-[#16213e] rounded-xl px-4 py-3 mb-4 border border-blue-500/20">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-base opacity-40">❄️</span>
+              <div>
+                <p className="text-xs font-medium text-gray-400">ストリークフリーズ残量: 0</p>
+                <p className="text-[11px] text-gray-600">Proプランで無制限フリーズ取得</p>
+              </div>
+            </div>
+            <a
+              href={userId ? `${STRIPE_PAYMENT_LINK}?client_reference_id=${userId}` : STRIPE_PAYMENT_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] bg-[#e94560]/80 hover:bg-[#e94560] text-white px-3 py-1.5 rounded-lg transition-colors font-semibold whitespace-nowrap"
+              onClick={() => {
+                if (typeof gtag !== "undefined") {
+                  gtag("event", "upgrade_click", { feature: "streak_freeze_refill" });
+                }
+              }}
+            >
+              Pro へ ↗
+            </a>
+          </div>
+        </div>
+      )}
     </>
   );
 }
+
+// Type declaration for gtag
+declare function gtag(
+  command: string,
+  action: string,
+  params?: Record<string, string>
+): void;

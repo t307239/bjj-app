@@ -19,6 +19,7 @@ import StreakFreeze from "@/components/StreakFreeze";
 import AchievementBadge from "@/components/AchievementBadge";
 import InstallBanner from "@/components/InstallBanner";
 import InsightsBanner from "@/components/InsightsBanner";
+import DailyWikiTip from "@/components/DailyWikiTip";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app-one.vercel.app";
@@ -300,6 +301,9 @@ export default async function DashboardPage() {
 
         {/* 今日のおすすめ */}
         <DailyRecommend userId={user.id} />
+
+        {/* 今日のBJJ Wiki知識 */}
+        <DailyWikiTip />
 
         {/* 今週の練習状況 */}
         <WeeklyStrip userId={user.id} />
