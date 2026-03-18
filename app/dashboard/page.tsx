@@ -158,6 +158,7 @@ export default async function DashboardPage() {
     { count: techniqueCount },
     { count: totalCount },
     { data: recentLogs },
+    { data: profileData },
   ] = await Promise.all([
     supabase
       .from("training_logs")
@@ -189,7 +190,14 @@ export default async function DashboardPage() {
       .eq("user_id", user.id)
       .order("date", { ascending: false })
       .limit(60),
+    supabase
+      .from("profiles")
+      .select("is_pro")
+      .eq("id", user.id)
+      .single(),
   ]);
+
+  const isPro = (profileData as { is_pro?: boolean } | null)?.is_pro ?? false;
 
   // 連続練習日数を計算
   let streak = 0;
