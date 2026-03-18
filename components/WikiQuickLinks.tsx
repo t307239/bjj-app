@@ -1,5 +1,9 @@
+"use client";
+
 // WikiQuickLinks — ダッシュボードのBJJ Wiki クイックリンクカード
-// サーバーコンポーネント（hooks不要）: 日替わり3リンク表示
+// カテゴリフィルター付き（今日の日替わりセット + カテゴリ別フィルタリング）
+
+import { useState } from "react";
 
 const WIKI_BASE = "https://t307239.github.io/bjj-wiki/ja";
 
@@ -64,19 +68,47 @@ const QUICK_LINK_SETS: QuickLink[][] = [
   ],
 ];
 
+// 全リンクをフラット化
+const ALL_LINKS: QuickLink[] = QUICK_LINK_SETS.flat();
+
+// ユニークカテゴリ一覧
+const CATEGORIES = Array.from(new Set(ALL_LINKS.map((l) => l.tag)));
+
+// カテゴリ絵文字マップ
+const CATEGORY_EMOJI: Record<string, string> = {
+  "サブミッション": "🔺",
+  "攻撃": "⚔️",
+  "ディフェンス": "🛡️",
+  "ガード": "🌀",
+  "レッグロック": "🦵",
+  "ポジション": "🏔️",
+  "エスケープ": "🔓",
+  "テイクダウン": "🚀",
+  "パッシング": "💨",
+  "メンタル": "🧠",
+  "競技": "🏆",
+  "フィジカル": "💪",
+};
+
 export default function WikiQuickLinks() {
-  // 年の通算日でセットをローテーション（サーバーコンポーネント: Date.now()使用可能）
-  const now = new Date(Date.now() + 9 * 60 * 60 * 1000); // JST
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+
+  // 年の通算日でセットをローテーション（JST）
+  const now = new Date(Date.now() + 9 * 60 * 60 * 1000);
   const dayOfYear = Math.floor(
     (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000
   );
-  const linkSet = QUICK_LINK_SETS[dayOfYear % QUICK_LINK_SETS.length];
+  const todaySet = QUICK_LINK_SETS[dayOfYear % QUICK_LINK_SETS.length];
+
+  const displayLinks = selectedTag === null
+    ? todaySet
+    : ALL_LINKS.filter((l) => l.tag === selectedTag).slice(0, 9);
 
   return (
     <div className="bg-[#16213e]/60 rounded-xl p-4 border border-gray-700/30">
       <div className="flex items-center gap-2 mb-3">
         <span className="text-base">🔗</span>
-        <span className="text-xs text-gray-400 font-medium">今日の技術リファレンス</span>
+        <span className="text-xs text-gray-400 font-medium">BJJ技術リファレンス</span>
         <a
           href="https://t307239.github.io/bjj-wiki/ja/index.html"
           target="_blank"
@@ -86,8 +118,36 @@ export default function WikiQuickLinks() {
           Wiki全体を見る →
         </a>
       </div>
+
+      {/* カテゴリフィルターピル */}
+      <div className="flex gap-1 flex-wrap mb-3">
+        <button
+          onClick={() => setSelectedTag(null)}
+          className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
+            selectedTag === null
+              ? "bg-[#e94560] border-[#e94560] text-white"
+              : "border-gray-600 text-gray-400 hover:border-gray-400 hover:text-gray-200"
+          }`}
+        >
+          今日
+        </button>
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelectedTag(selectedTag === cat ? null : cat)}
+            className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
+              selectedTag === cat
+                ? "bg-[#e94560] border-[#e94560] text-white"
+                : "border-gray-600 text-gray-400 hover:border-gray-400 hover:text-gray-200"
+            }`}
+          >
+            {CATEGORY_EMOJI[cat] ?? ""} {cat}
+          </button>
+        ))}
+      </div>
+
       <div className="grid grid-cols-3 gap-2">
-        {linkSet.map((link) => (
+        {displayLinks.map((link) => (
           <a
             key={link.slug}
             href={`${WIKI_BASE}/${link.slug}.html`}

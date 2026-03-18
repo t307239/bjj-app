@@ -14,6 +14,8 @@ type Bests = {
   bestWeekCount: number;
   avgSessionMin: number;
   avgMonthly: number;
+  thisMonthCount: number;
+  lastMonthCount: number;
 };
 
 function fmtTime(min: number): string {
@@ -88,7 +90,16 @@ export default function PersonalBests({ userId }: Props) {
         ? Math.round(totalSessions / monthKeys.length)
         : totalSessions;
 
-      setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, bestWeekCount, avgSessionMin, avgMonthly });
+      // 今月vs先月
+      const jstNow = new Date(Date.now() + 9 * 3600000);
+      const thisYM = `${jstNow.getUTCFullYear()}-${String(jstNow.getUTCMonth() + 1).padStart(2, "0")}`;
+      const lastDate = new Date(jstNow);
+      lastDate.setUTCMonth(lastDate.getUTCMonth() - 1);
+      const lastYM = `${lastDate.getUTCFullYear()}-${String(lastDate.getUTCMonth() + 1).padStart(2, "0")}`;
+      const thisMonthCount = monthCounts[thisYM] ?? 0;
+      const lastMonthCount = monthCounts[lastYM] ?? 0;
+
+      setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, bestWeekCount, avgSessionMin, avgMonthly, thisMonthCount, lastMonthCount });
     };
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -129,7 +140,16 @@ export default function PersonalBests({ userId }: Props) {
   return (
     <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
       <div className="flex items-center justify-between mb-3">
-        <h4 className="text-sm font-medium text-gray-300">📊 累計記録</h4>
+        <div>
+          <h4 className="text-sm font-medium text-gray-300">📊 累計記録</h4>
+          {bests.lastMonthCount > 0 && (() => {
+            const diff = bests.thisMonthCount - bests.lastMonthCount;
+            const pct = Math.round(Math.abs(diff) / bests.lastMonthCount * 100);
+            if (diff > 0) return <span className="text-[10px] text-green-400">▲ 今月 +{diff}回（+{pct}%）先月比</span>;
+            if (diff < 0) return <span className="text-[10px] text-red-400">▼ 今月 {diff}回（-{pct}%）先月比</span>;
+            return <span className="text-[10px] text-gray-500">= 今月 先月と同ペース</span>;
+          })()}
+        </div>
         <button
           onClick={handleShare}
           className="flex items-center gap-1 text-[11px] text-gray-400 hover:text-white bg-gray-800/60 hover:bg-gray-700 border border-gray-700 hover:border-gray-500 px-2.5 py-1 rounded-lg transition-colors"

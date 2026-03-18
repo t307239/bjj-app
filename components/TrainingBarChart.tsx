@@ -46,6 +46,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
   const [selectedLogs, setSelectedLogs] = useState<LogEntry[]>([]);
   const [selectedLoading, setSelectedLoading] = useState(false);
+  const [hoveredMonth, setHoveredMonth] = useState<string | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -250,10 +251,18 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
               return (
                 <div
                   key={d.month}
-                  className={`flex-1 flex flex-col items-center justify-end gap-1 h-full cursor-pointer group`}
+                  className={`flex-1 flex flex-col items-center justify-end gap-1 h-full cursor-pointer group relative`}
                   onClick={() => setSelectedMonth(isSelected ? null : d.month)}
-                  title={d.count > 0 ? `${d.label}: クリックして詳細を表示` : undefined}
+                  onMouseEnter={() => val > 0 && setHoveredMonth(d.month)}
+                  onMouseLeave={() => setHoveredMonth(null)}
                 >
+                  {/* Hover tooltip */}
+                  {hoveredMonth === d.month && val > 0 && (
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-gray-900 border border-gray-600 rounded-lg px-2 py-1.5 text-center pointer-events-none z-20 whitespace-nowrap shadow-lg">
+                      <div className="text-[11px] font-semibold text-white">{d.label}</div>
+                      <div className="text-[10px] text-gray-300 mt-0.5">{d.count}回 · {formatMinutes(d.minutes)}</div>
+                    </div>
+                  )}
                   <span
                     className={`leading-none transition-opacity ${range === 12 ? "text-[8px]" : "text-[9px]"} ${
                       val > 0 && (range === 6 || isCurrentMonth) ? "opacity-100" : "opacity-0"
