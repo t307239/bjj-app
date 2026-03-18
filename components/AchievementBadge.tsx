@@ -7,16 +7,28 @@ interface AchievementBadgeProps {
   totalCount: number;
 }
 
-const MILESTONES = [1, 10, 30, 50, 100, 200, 365] as const;
+const MILESTONES = [
+  1, 7, 10, 30, 50, 100, 200, 365, 500, 1000,
+] as const;
 
-const MILESTONE_DATA: Record<number, { emoji: string; text: string }> = {
-  1: { emoji: "🎯", text: "初めての練習記録！BJJジャーニー開始！" },
-  10: { emoji: "🔥", text: "10回達成！習慣化してきた！" },
-  30: { emoji: "💪", text: "30回突破！本当の挑戦が始まる！" },
-  50: { emoji: "⭐", text: "50回！ブルーベルトへの道！" },
-  100: { emoji: "🏆", text: "100回！本物のBJJ戦士！" },
-  200: { emoji: "👊", text: "200回！マスターへの道！" },
-  365: { emoji: "🥋", text: "365回！1年間の継続！本物のBJJライフ！" },
+const MILESTONE_DATA: Record<
+  number,
+  { emoji: string; text: string; subtext?: string }
+> = {
+  1: { emoji: "🎯", text: "初めての練習記録！", subtext: "BJJジャーニー開始！" },
+  7: { emoji: "🔥", text: "7日間連続練習！", subtext: "習慣化の入口に到達！" },
+  10: { emoji: "💪", text: "10回達成！", subtext: "本当の挑戦が始まる！" },
+  30: { emoji: "🏆", text: "30回突破！", subtext: "1ヶ月の継続力を証明！" },
+  50: { emoji: "⭐", text: "50回達成！", subtext: "ブルーベルトへの確実な一歩！" },
+  100: { emoji: "👊", text: "100回！", subtext: "本物のBJJ戦士の仲間入り！" },
+  200: { emoji: "🥋", text: "200回達成！", subtext: "マスターへの道が見えてきた！" },
+  365: { emoji: "💎", text: "365回！", subtext: "1年間の継続！本物のBJJライフ！" },
+  500: { emoji: "🎖️", text: "500回達成！", subtext: "バイセプカラー達成者クラス！" },
+  1000: {
+    emoji: "👑",
+    text: "1,000回達成！",
+    subtext: "BJJレジェンド級の継続力！",
+  },
 };
 
 export default function AchievementBadge({
@@ -88,9 +100,9 @@ export default function AchievementBadge({
           <div className="relative z-10">
             <div className="text-8xl mb-4 drop-shadow-lg">{data.emoji}</div>
             <h2 className="text-3xl font-bold text-white mb-2">
-              {milestone}回達成！
+              {data.text}
             </h2>
-            <p className="text-lg text-white font-semibold mb-6">{data.text}</p>
+            <p className="text-lg text-white font-semibold mb-6">{data.subtext || ""}</p>
 
             {/* Buttons */}
             <div className="flex gap-3 justify-center">

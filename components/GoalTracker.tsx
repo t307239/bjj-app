@@ -354,6 +354,17 @@ export default function GoalTracker({ userId }: Props) {
     return cnt;
   })();
 
+  // 連続達成週数（直近から遡って連続している週数）
+  const consecutiveAchievedWeeks = (() => {
+    if (weekHistory.length === 0) return 0;
+    let cnt = 0;
+    for (let i = weekHistory.length - 1; i >= 0; i--) {
+      if (weekHistory[i].achieved) cnt++;
+      else break;
+    }
+    return cnt;
+  })();
+
   return (
     <>
       {toast && (
@@ -492,27 +503,36 @@ export default function GoalTracker({ userId }: Props) {
                   })()}
                   {/* 週間達成履歴ヒートマップ（過去4週） */}
                   {weekHistory.length > 0 && (
-                    <div className="mt-2.5 flex items-center gap-1.5">
-                      {weekHistory.map((w) => (
-                        <div key={w.weekStart} className="flex-1 flex flex-col items-center gap-0.5">
-                          <div
-                            className={`w-full h-6 rounded flex items-center justify-center text-[9px] font-bold transition-colors ${
-                              w.isCurrent
-                                ? w.achieved
-                                  ? "bg-green-500/30 border border-green-500/50 text-green-300"
-                                  : "bg-[#e94560]/20 border border-[#e94560]/40 text-[#e94560]"
-                                : w.achieved
-                                ? "bg-green-500/25 text-green-400"
-                                : "bg-gray-700/60 text-gray-600"
-                            }`}
-                          >
-                            {w.achieved ? "✓" : w.count > 0 ? w.count : "−"}
+                    <div className="mt-2.5">
+                      <div className="flex items-center gap-1.5">
+                        {weekHistory.map((w) => (
+                          <div key={w.weekStart} className="flex-1 flex flex-col items-center gap-0.5">
+                            <div
+                              className={`w-full h-6 rounded flex items-center justify-center text-[9px] font-bold transition-colors ${
+                                w.isCurrent
+                                  ? w.achieved
+                                    ? "bg-green-500/30 border border-green-500/50 text-green-300"
+                                    : "bg-[#e94560]/20 border border-[#e94560]/40 text-[#e94560]"
+                                  : w.achieved
+                                  ? "bg-green-500/25 text-green-400"
+                                  : "bg-gray-700/60 text-gray-600"
+                              }`}
+                            >
+                              {w.achieved ? "✓" : w.count > 0 ? w.count : "−"}
+                            </div>
+                            <span className={`text-[8px] leading-none ${w.isCurrent ? "text-gray-300" : "text-gray-600"}`}>
+                              {w.label}
+                            </span>
                           </div>
-                          <span className={`text-[8px] leading-none ${w.isCurrent ? "text-gray-300" : "text-gray-600"}`}>
-                            {w.label}
+                        ))}
+                      </div>
+                      {consecutiveAchievedWeeks >= 2 && (
+                        <div className="mt-1.5 flex justify-center">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-green-500/15 border border-green-500/30 text-green-300 px-2 py-0.5 rounded-full">
+                            🔥 {consecutiveAchievedWeeks}週連続達成中
                           </span>
                         </div>
-                      ))}
+                      )}
                     </div>
                   )}
                 </>

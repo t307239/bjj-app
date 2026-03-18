@@ -46,18 +46,46 @@ function MiniTypeDonut({ entries }: { entries: { type: string }[] }) {
     const ix2 = cx + r * Math.cos(start),iy2 = cy + r * Math.sin(start);
     const large = angle > Math.PI ? 1 : 0;
     const path = `M ${x1} ${y1} A ${R} ${R} 0 ${large} 1 ${x2} ${y2} L ${ix1} ${iy1} A ${r} ${r} 0 ${large} 0 ${ix2} ${iy2} Z`;
-    return { type, path, color: TYPE_COLORS_RAW[type] ?? "#9ca3af" };
+    return { type, path, color: TYPE_COLORS_RAW[type] ?? "#9ca3af", count };
   });
 
   return (
     <svg viewBox="0 0 40 40" className="w-10 h-10 flex-shrink-0">
       {slices.map((s) => (
-        <path key={s.type} d={s.path} fill={s.color} opacity={0.85} />
+        <path key={s.type} d={s.path} fill={s.color} opacity={0.85} title={`${s.type}: ${s.count}回`} />
       ))}
       <text x={cx} y={cy + 3} textAnchor="middle" fill="white" fontSize="7" fontWeight="bold">
         {total}
       </text>
     </svg>
+  );
+}
+
+// スタックバー（月次タイプ別比率）
+function MonthTypeStackBar({ entries }: { entries: { type: string }[] }) {
+  const TYPE_COLORS: Record<string, string> = {
+    gi: "#3b82f6", nogi: "#f97316", drilling: "#a855f7", competition: "#e94560", open_mat: "#22c55e",
+  };
+  const counts: Record<string, number> = {};
+  TRAINING_TYPES.forEach((t) => { counts[t.value] = entries.filter((e) => e.type === t.value).length; });
+  const total = Object.values(counts).reduce((s, v) => s + v, 0);
+  if (total === 0) return null;
+
+  const segments = TRAINING_TYPES
+    .filter((t) => counts[t.value] > 0)
+    .map((t) => ({ ...t, count: counts[t.value], percent: (counts[t.value] / total) * 100 }));
+
+  return (
+    <div className="w-full h-6 rounded-full flex overflow-hidden gap-0.5 bg-[#0f3460]/50 p-0.5">
+      {segments.map((seg) => (
+        <div
+          key={seg.value}
+          className={`flex-1 rounded-full transition-all`}
+          style={{ backgroundColor: TYPE_COLORS[seg.value], width: `${seg.percent}%`, minWidth: seg.percent > 10 ? "auto" : "2px" }}
+          title={`${seg.label}: ${seg.count}回 (${seg.percent.toFixed(0)}%)`}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -479,7 +507,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             </div>
           )}
           {/* 今月サマリー行 */}
-          <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-4 text-sm mb-3">
             <MiniTypeDonut entries={monthEntries} />
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-[#e94560]">{monthEntries.length}</div>
@@ -498,6 +526,13 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               <div className="text-gray-400 text-xs">平均/回</div>
             </div>
           </div>
+          {/* タイプ別スタックバー */}
+          {monthEntries.length > 0 && (
+            <div className="mb-3">
+              <div className="text-xs text-gray-500 mb-1">練習タイプ別</div>
+              <MonthTypeStackBar entries={monthEntries} />
+            </div>
+          )}
           {/* 今月タイプ別内訳ピル */}
           {(() => {
             const typePills = TRAINING_TYPES

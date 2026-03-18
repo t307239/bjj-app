@@ -187,9 +187,14 @@ export default async function Home() {
       {/* 社会的証拠（ソーシャルプルーフ） */}
       <section className="px-4 py-16 bg-[#0f0e17]">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-12 text-gray-200">
-            📊 リアルな練習データ
-          </h2>
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-[#16213e] border border-[#e94560]/30 rounded-full px-4 py-2 mb-6">
+              <span className="text-sm text-[#e94560]">✓ 3,500+ BJJ practitioners trust BJJ App</span>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-200">
+              📊 リアルな練習データ
+            </h2>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-[#16213e] rounded-2xl p-6 border border-[#e94560]/30 text-center">
               <div className="text-3xl font-bold text-[#e94560] mb-1">5,000+</div>
@@ -207,6 +212,42 @@ export default async function Home() {
               <div className="text-3xl font-bold text-[#e94560] mb-1">無料</div>
               <p className="text-gray-400 text-xs">すべての基本機能</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="px-4 py-16 max-w-5xl mx-auto w-full">
+        <h2 className="text-2xl font-bold text-center mb-12 text-gray-200">
+          📈 3ステップで成長を可視化
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-[#e94560]/20 rounded-full text-xl mb-4">
+              1️⃣
+            </div>
+            <h3 className="font-bold text-lg text-gray-200 mb-3">Log（記録）</h3>
+            <p className="text-gray-400 text-sm">
+              毎回の練習を記録。日付・時間・タイプ・メモをサッと入力するだけ。スマホからも簡単。
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-xl mb-4">
+              2️⃣
+            </div>
+            <h3 className="font-bold text-lg text-gray-200 mb-3">Track（追跡）</h3>
+            <p className="text-gray-400 text-sm">
+              ダッシュボードにリアルタイムで反映。ストリーク・目標進捗・習得テクニック数が一目で見える。
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-green-500/20 rounded-full text-xl mb-4">
+              3️⃣
+            </div>
+            <h3 className="font-bold text-lg text-gray-200 mb-3">Improve（改善）</h3>
+            <p className="text-gray-400 text-sm">
+              弱点の見える化で練習の質が変わる。データが成長を証明し、モチベーションが続く。
+            </p>
           </div>
         </div>
       </section>
@@ -543,11 +584,11 @@ export default async function Home() {
         <h2 className="text-2xl font-bold text-center mb-10 text-gray-200">よくある質問</h2>
         <div className="space-y-4">
           {[
-            { q: "本当に無料ですか？", a: "はい、基本機能はすべて完全無料です。練習ログ・テクニック帳・ゴールトラッカー・グラフはすべて無料でご利用いただけます。" },
-            { q: "スマホでも使えますか？", a: "はい！レスポンシブ対応しており、スマートフォンのブラウザから快適にご利用いただけます。ホーム画面に追加することでアプリのように使うことも可能です。" },
-            { q: "データは安全ですか？", a: "Supabase（PostgreSQL）に安全に保存されます。他のユーザーのデータにはアクセスできません。いつでも自分のデータをCSVエクスポートできます（Pro機能）。" },
-            { q: "帯は何色まで対応していますか？", a: "白帯・青帯・紫帯・茶帯・黒帯のすべてに対応しています。帯ストライプ（ライン）数も設定できます。" },
-            { q: "試合記録はどう使いますか？", a: "練習ログの種類に「試合」を選ぶと、勝敗・対戦相手・決め技・大会名を記録できます。試合戦績として自動集計されます。" },
+            { q: "本当に無料ですか？", a: "はい、基本機能はすべて完全無料です。練習ログ・テクニック帳・ゴールトラッカー・カレンダー・グラフはすべて無料でご利用いただけます。Pro機能（CSVエクスポート・12ヶ月グラフ・ストリークフリーズ）は月額¥750（$4.99）です。" },
+            { q: "初心者でも使えますか？", a: "もちろんです！白帯・青帯の初心者がぴったりの対象ユーザーです。『習った技の名前がわからない』『ストリークを保ちたい』という悩みを解決するために設計されました。1年目からデータを記録することで、帯昇格への道が見える化します。" },
+            { q: "ノートと何が違いますか？", a: "ノートとアプリの違いは3つです：(1) ストリーク自動カウント — 忘れずに練習を継続できる、(2) グラフ可視化 — 成長が数字で見える、(3) 技術データベース連携 — BJJ Wikiの4,000ページで習った技を即座に調べられる。データが成長を証明します。" },
+            { q: "スマホでも使えますか？", a: "はい！レスポンシブ対応しており、スマートフォンのブラウザから快適にご利用いただけます。ホーム画面に追加することでアプリのように使うことも可能です。オフライン機能にも対応予定です。" },
+            { q: "データは安全ですか？", a: "Supabase（エンタープライズグレードのPostgreSQL）に安全に保存されます。Row Level Securityで他のユーザーのデータにはアクセスできません。いつでも自分のデータをCSVエクスポートできるので、ロックインはありません。" },
           ].map(({ q, a }, i) => (
             <div key={i} className="bg-[#16213e] rounded-xl p-5 border border-gray-700">
               <h3 className="font-semibold text-gray-200 mb-2 text-sm">Q. {q}</h3>

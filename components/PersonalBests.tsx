@@ -18,6 +18,7 @@ type Bests = {
   thisMonthCount: number;
   lastMonthCount: number;
   dowCounts: number[]; // [月, 火, 水, 木, 金, 土, 日]
+  monthlyIntensity: { ym: string; avgSessionMin: number }[]; // Last 6 months
 };
 
 function fmtTime(min: number): string {
@@ -25,6 +26,50 @@ function fmtTime(min: number): string {
   const h = Math.floor(min / 60);
   const m = min % 60;
   return m > 0 ? `${h}h${m}m` : `${h}h`;
+}
+
+function IntensitySparkline({ data }: { data: { ym: string; avgSessionMin: number }[] }) {
+  if (data.length === 0) return null;
+
+  // Find max for scaling
+  const maxIntensity = Math.max(...data.map((d) => d.avgSessionMin), 90);
+  const minIntensity = Math.min(...data.map((d) => d.avgSessionMin), 30);
+
+  // SVG dimensions
+  const width = 96;
+  const height = 20;
+  const padding = 2;
+  const graphWidth = width - padding * 2;
+  const graphHeight = height - padding * 2;
+
+  // Points for polyline
+  const points = data
+    .map((d, i) => {
+      const x = padding + (i / Math.max(1, data.length - 1)) * graphWidth;
+      const ratio = (d.avgSessionMin - minIntensity) / Math.max(1, maxIntensity - minIntensity);
+      const y = padding + graphHeight - ratio * graphHeight;
+      return `${x},${y}`;
+    })
+    .join(" ");
+
+  // Current month is last
+  const currentMonth = data[data.length - 1];
+
+  return (
+    <div className="flex items-center gap-2">
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-24 h-5 flex-shrink-0">
+        {/* Grid line at middle */}
+        <line x1={padding} y1={padding + graphHeight / 2} x2={width - padding} y2={padding + graphHeight / 2} stroke="#4b5563" strokeWidth="0.5" opacity="0.3" />
+        {/* Sparkline */}
+        <polyline points={points} fill="none" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        {/* Current month dot */}
+        {data.length > 0 && (
+          <circle cx={width - padding} cy={padding + graphHeight - ((currentMonth.avgSessionMin - minIntensity) / Math.max(1, maxIntensity - minIntensity)) * graphHeight} r="1.5" fill="#3b82f6" />
+        )}
+      </svg>
+      <span className="text-[10px] text-gray-500 flex-shrink-0">{fmtTime(currentMonth.avgSessionMin)}</span>
+    </div>
+  );
 }
 
 export default function PersonalBests({ userId }: Props) {
@@ -111,7 +156,18 @@ export default function PersonalBests({ userId }: Props) {
       const thisMonthCount = monthCounts[thisYM] ?? 0;
       const lastMonthCount = monthCounts[lastYM] ?? 0;
 
-      setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, bestMonthKey, bestWeekCount, avgSessionMin, avgMonthly, thisMonthCount, lastMonthCount, dowCounts: dowArr });
+      // 過去6ヶ月の月別intensity（平均時間/回）
+      const monthlyIntensity: { ym: string; avgSessionMin: number }[] = [];
+      const sortedMonths = Object.keys(monthCounts).sort();
+      const last6Months = sortedMonths.slice(Math.max(0, sortedMonths.length - 6));
+      last6Months.forEach((ym) => {
+        const monthLogs = logs.filter((l: { date: string }) => l.date.startsWith(ym));
+        const monthMins = monthLogs.reduce((s: number, l: { duration_min: number }) => s + (l.duration_min ?? 0), 0);
+        const avgMin = monthLogs.length > 0 ? Math.round(monthMins / monthLogs.length) : 0;
+        monthlyIntensity.push({ ym, avgSessionMin: avgMin });
+      });
+
+      setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, bestMonthKey, bestWeekCount, avgSessionMin, avgMonthly, thisMonthCount, lastMonthCount, dowCounts: dowArr, monthlyIntensity });
     };
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -242,6 +298,13 @@ export default function PersonalBests({ userId }: Props) {
           </div>
         );
       })()}
+      {/* 6ヶ月の月別強度推移 */}
+      {bests.monthlyIntensity.length > 0 && (
+        <div className="mt-3 pt-3 border-t border-gray-700/50">
+          <p className="text-[10px] text-gray-400 mb-2">📈 過去6ヶ月の平均時間</p>
+          <IntensitySparkline data={bests.monthlyIntensity} />
+        </div>
+      )}
     </div>
   );
 }
