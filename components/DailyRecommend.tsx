@@ -92,6 +92,7 @@ export default function DailyRecommend({ userId }: Props) {
   const [tech, setTech] = useState<Technique | null>(null);
   const [tip, setTip] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -131,7 +132,30 @@ export default function DailyRecommend({ userId }: Props) {
   }
 
   return (
-    <div className="mb-4 space-y-3">
+    <div className="mb-4">
+      {/* アコーディオンヘッダー */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between bg-[#16213e] hover:bg-[#1a2547] rounded-xl px-4 py-3 border border-gray-700 transition-colors active:scale-95 transform"
+      >
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-base flex-shrink-0">🎯</span>
+          <span className="text-sm font-medium text-gray-300 flex-shrink-0">今日の練習テーマ</span>
+          {!isOpen && tech && (
+            <span className="text-xs text-[#e94560] font-semibold truncate ml-1">— {tech.name}</span>
+          )}
+        </div>
+        <svg
+          className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+          fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {/* 展開コンテンツ */}
+      {isOpen && (
+      <div className="mt-2 space-y-3">
       {/* 今日のおすすめテクニック */}
       {tech && (
         <div className="bg-gradient-to-r from-[#1a1a2e] to-[#16213e] rounded-xl p-4 border border-[#e94560]/30">
@@ -182,6 +206,8 @@ export default function DailyRecommend({ userId }: Props) {
           </div>
         </div>
       </div>
+      </div>
+      )}
     </div>
   );
 }

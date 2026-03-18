@@ -74,6 +74,7 @@ function IntensitySparkline({ data }: { data: { ym: string; avgSessionMin: numbe
 
 export default function PersonalBests({ userId }: Props) {
   const [bests, setBests] = useState<Bests | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -213,7 +214,31 @@ export default function PersonalBests({ userId }: Props) {
   };
 
   return (
-    <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
+    <div className="mb-4">
+      {/* アコーディオンヘッダー */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between bg-[#16213e] hover:bg-[#1a2547] rounded-xl px-4 py-3 border border-gray-700 transition-colors active:scale-95 transform"
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-gray-300">📊 累計記録</span>
+          {!isOpen && (
+            <span className="text-xs text-gray-500 font-normal">
+              {bests.totalSessions}回 · {bests.longestStreak}日連続
+            </span>
+          )}
+        </div>
+        <svg
+          className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {/* 展開コンテンツ */}
+      {isOpen && (
+      <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mt-2">
       <div className="flex items-center justify-between mb-3">
         <div>
           <h4 className="text-sm font-medium text-gray-300">📊 累計記録</h4>
@@ -304,6 +329,8 @@ export default function PersonalBests({ userId }: Props) {
           <p className="text-[10px] text-gray-400 mb-2">📈 過去6ヶ月の平均時間</p>
           <IntensitySparkline data={bests.monthlyIntensity} />
         </div>
+      )}
+      </div>
       )}
     </div>
   );

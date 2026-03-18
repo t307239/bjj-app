@@ -296,6 +296,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       .single();
 
     if (!error && data) {
+      if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([50]);
       setEntries([data, ...entries]);
       setForm({
         date: getLocalDateString(),
@@ -305,9 +306,9 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       });
       setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
       setShowForm(false);
-      setToast({ message: "練習を記録しみした！", type: "success" });
+      setToast({ message: "練習を記録しました！", type: "success" });
     } else {
-      setToast({ message: "保存に失敗しみした", type: "error" });
+      setToast({ message: "保存に失敗しました", type: "error" });
     }
     setLoading(false);
   };
@@ -323,6 +324,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       .eq("user_id", userId);
 
     if (!error) {
+      if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([30, 20, 30]);
       setEntries(entries.filter((e) => e.id !== id));
       setToast({ message: "記録を削除しました", type: "success" });
     } else {
@@ -609,7 +611,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="print:hidden bg-[#e94560] hover:bg-[#c73652] text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors"
+          className="print:hidden bg-[#e94560] hover:bg-[#c73652] active:scale-95 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all"
         >
           + 記録を追加
         </button>
@@ -881,7 +883,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-colors"
+              className="flex-1 bg-[#e94560] hover:bg-[#c73652] active:scale-95 disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-all"
             >
               {loading ? "保存中..." : "保存"}
             </button>
@@ -904,17 +906,25 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         </div>
       )}
 
-      {/* 記録一覧 */}
+      {/* 記録一覧 / Empty State */}
       {!initialLoading && entries.length === 0 && (
-        <div className="text-center py-12">
-          <div className="text-5xl mb-4">🥋</div>
-          <p className="text-gray-300 font-semibold mb-1">練習記録がまだありません</p>
-          <p className="text-gray-500 text-sm mb-5">最初の練習を記録して、成長の旅を始めよう！</p>
+        <div className="text-center py-12 px-4">
+          <div className="text-6xl mb-4 animate-bounce inline-block">🥋</div>
+          <p className="text-white font-bold text-lg mb-1">練習記録がまだありません</p>
+          <p className="text-gray-400 text-sm mb-2">最初の練習を記録して、成長の旅を始めよう！</p>
+          <div className="flex justify-center gap-4 text-xs text-gray-600 mb-6">
+            <span>✓ 無料で使える</span>
+            <span>✓ データはクラウド保存</span>
+            <span>✓ 継続を可視化</span>
+          </div>
           <button
-            onClick={() => setShowForm(true)}
-            className="bg-[#e94560] hover:bg-[#c73652] text-white text-sm font-semibold py-2.5 px-6 rounded-full transition-colors"
+            onClick={() => {
+              if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([50]);
+              setShowForm(true);
+            }}
+            className="bg-[#e94560] hover:bg-[#c73652] active:scale-95 text-white text-sm font-bold py-3 px-8 rounded-full transition-all shadow-lg shadow-[#e94560]/30 animate-pulse hover:animate-none"
           >
-            + 最初の練習を記録
+            + 最初の練習を記録する
           </button>
         </div>
       )}
@@ -1154,6 +1164,19 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           </button>
         </div>
       )}
+
+      {/* FAB: スマホのみ固定表示 */}
+      <button
+        onClick={() => {
+          if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([50]);
+          setShowForm(true);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+        className="md:hidden fixed bottom-20 right-4 z-50 w-14 h-14 bg-[#e94560] hover:bg-[#c73652] active:scale-95 text-white text-2xl font-bold rounded-full shadow-lg shadow-[#e94560]/40 transition-all flex items-center justify-center print:hidden"
+        aria-label="練習を記録"
+      >
+        +
+      </button>
     </div>
   );
 }
