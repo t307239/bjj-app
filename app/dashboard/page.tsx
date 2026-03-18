@@ -32,10 +32,10 @@ const getCachedProfile = cache(async (userId: string) => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("profiles")
-    .select("belt, start_date, is_pro")
+    .select("belt, start_date, is_pro, gym_name")
     .eq("id", userId)
     .single();
-  return data as { belt: string; start_date: string | null; is_pro: boolean } | null;
+  return data as { belt: string; start_date: string | null; is_pro: boolean; gym_name: string | null } | null;
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -230,6 +230,7 @@ export default async function DashboardPage() {
       : null;
 
   const isPro = profileData?.is_pro ?? false;
+  const gymName = profileData?.gym_name ?? null;
 
   // 連続練習日数を計算
   let streak = 0;
@@ -344,6 +345,25 @@ export default async function DashboardPage() {
 
         {/* Proアップグレードバナー（非Proユーザー向け） */}
         <ProUpgradeBanner isPro={isPro} />
+
+        {/* ジム名未設定の場合にB2Bプロンプトバナーを表示 */}
+        {!gymName && (
+          <Link
+            href="/profile"
+            className="flex items-center gap-3 bg-[#16213e]/80 border border-blue-500/20 hover:border-blue-500/50 rounded-xl px-4 py-3 mb-3 transition-colors group"
+          >
+            <span className="text-xl">🏫</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-blue-300 text-sm font-semibold group-hover:text-blue-200">
+                ジム・アカデミー名を設定しましょう
+              </p>
+              <p className="text-gray-500 text-xs truncate">
+                プロフィールに道場名を追加すると、B2B連携機能が使えます →
+              </p>
+            </div>
+            <span className="text-gray-600 group-hover:text-gray-400 text-sm">›</span>
+          </Link>
+        )}
 
         {/* 練習インサイト */}
         <InsightsBanner userId={user.id} />
