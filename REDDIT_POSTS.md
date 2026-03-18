@@ -177,3 +177,125 @@ Anyone else change their training approach for competition? Or am I being too ri
 ---
 
 *Remember: Redditors have strong spam radar. Be genuine, answer questions first, mention the tool only when it helps the person. The best marketing is helping someone solve their actual problem.*
+
+---
+
+## 🚀 Posting Execution Checklist
+
+### Account Requirements (Before First Post)
+- [ ] Reddit account age: **minimum 30 days old** (new accounts get auto-filtered)
+- [ ] Karma: **at least 100 comment karma + 50 post karma** before posting
+- [ ] Browse r/bjj for 1-2 weeks first: upvote, leave genuine comments, become a "real" member
+- [ ] r/bjj specific: some posts require account age > 60 days — check sidebar
+- [ ] Verify email on Reddit account (reduces shadow-ban risk)
+- [ ] Profile has normal Reddit history (not just BJJ/app posts — that looks like a shill account)
+
+---
+
+### Pre-Post Checklist (Before Each Post)
+- [ ] Read the subreddit's sidebar rules — every time, they change
+- [ ] Search if similar topic was posted in the last 7 days (avoid duplicate perception)
+- [ ] Check if post type requires flair
+- [ ] Review the template and customize with **your real training data** (fake numbers feel fake)
+- [ ] Remove/change any links if it's your first 3 posts (Reddit shadow-bans new accounts with links)
+- [ ] Preview post on mobile AND desktop Reddit
+- [ ] Title is under 300 characters and includes a hook in the first 10 words
+
+---
+
+### Step-by-Step Posting Procedure
+
+**For New Posts (Templates 1, 4, 5):**
+1. Go to the subreddit (reddit.com/r/bjj)
+2. Click "Create Post"
+3. Choose flair if required (usually "Discussion" or "Training")
+4. Paste title from template → **customize to your real stats**
+5. Paste body → **edit to make it feel personal and current**
+6. Remove any hyperlinks if account is < 90 days old
+7. Post at optimal time (see schedule below)
+8. **Stay online for 30-60 min after posting** — respond to every comment within the first hour (Reddit algorithm rewards early engagement)
+9. Do NOT delete if it gets downvotes — looks suspicious
+
+**For Comment Replies (Templates 2, 3):**
+1. Browse r/bjj's "New" and "Hot" tabs for threads about: tracking, consistency, habit, tools, beginner tips
+2. Read the full thread before commenting
+3. Upvote the OP and 2-3 other comments first
+4. Write comment — **lead with the answer, tool mention comes last**
+5. Reply from the template but **make it sound like you just typed it naturally**
+6. Check back in 2-3 hours to respond to any replies
+
+---
+
+### 4-Week Posting Calendar
+
+| Week | Day | Action | Template | Subreddit |
+|------|-----|--------|----------|-----------|
+| 1 | Mon | Browse & comment only | — | r/bjj |
+| 1 | Wed | Reply to tracking thread | Template 3 | r/bjjwhitebelt |
+| 1 | Sat | Post milestone | Template 1 | r/bjj |
+| 2 | Tue | Reply to technique thread | Template 2 | r/bjj |
+| 2 | Thu | Browse & comment only | — | r/bjjcompetition |
+| 2 | Sun | Post technique tip | Template 4 | r/bjj |
+| 3 | Mon | Reply to motivation thread | Template 3 | r/bjjwhitebelt |
+| 3 | Fri | Post comp prep (if near event) | Template 5 | r/bjjcompetition |
+| 4 | Wed | Reply to consistency thread | Template 2 | r/bjj |
+| 4 | Sat | New milestone post (updated stats) | Template 1 (fresh) | r/bjj |
+
+**Rules:**
+- Max **2 posts/week across all subreddits** (total, not per sub)
+- Never post same-ish content to multiple subreddits same day
+- At least 3 days between posts in the same subreddit
+
+---
+
+### Post-Posting Engagement (Critical)
+- [ ] Reply to every comment in the first 60 minutes
+- [ ] Upvote anyone who comments (even critical comments)
+- [ ] If someone asks "what app is this?" — answer naturally: "It's called BJJ App, it's free at bjj-app-one.vercel.app — happy to share if you want"
+- [ ] If someone asks for a feature you don't have, say "noted, that's a good idea" (genuine)
+- [ ] Thank negative feedback: "fair point, I'll work on that" builds credibility
+- [ ] **Do NOT ask people to "check it out" or "download it"** — let curiosity drive them
+- [ ] Cross-post to BJJ Discord servers 24h later if post performed well (>50 upvotes)
+
+---
+
+### Spam Avoidance Rules
+1. **The 1-in-10 rule**: For every 1 post mentioning the app, make 9 genuine comments about BJJ with no promotion
+2. **Never post the same link twice** within 7 days
+3. **Vary your phrasing**: "tracking app" ≠ "BJJ app" ≠ "habit tracker" — change it each time
+4. **No "I made this" framing** in the post title
+5. **Wait 2+ days** between any two posts across all subreddits
+6. **Report to mods** if your post gets removed without explanation (often fixable by removing a link)
+7. **Never buy upvotes or ask friends to upvote** — Reddit detects it and bans the post
+
+---
+
+### Tracking Sheet
+
+Copy this into a spreadsheet to track all posts:
+
+```
+Date | Subreddit | Post Type | Template # | Title/Thread | Upvotes | Comments | App Mentions | Action Taken
+-----|-----------|-----------|------------|-------------|---------|----------|--------------|-------------
+     |           |           |            |             |         |          |              |
+```
+
+**Goal benchmarks:**
+- Week 1: 2 comments, 0 posts (warming up account)
+- Week 2: 1 post, 3 comments → target 50 upvotes
+- Week 3: 2 posts, 5 comments → target 100+ upvotes on best post
+- Month 2: One post should hit 500+ upvotes = viral BJJ community traction
+
+---
+
+### If a Post Goes Viral (>500 upvotes)
+
+1. **Pin a comment** with the direct app link (top comment improves CTR)
+2. **Update the post with a data update** 24h later ("edit: 200 sessions now, AMA")
+3. **Cross-post to r/Fitness, r/MMA** if the topic generalizes
+4. **Screenshot and save** for testimonial/social proof on the landing page
+5. **Look at who commented** — are there gym owners? DM them about the B2B plan
+
+---
+
+*Last updated: 2026-03-19 | Track results weekly and iterate on what's working*
