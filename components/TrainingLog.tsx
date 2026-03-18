@@ -390,12 +390,21 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     ? `${Math.floor(monthTotalMins / 60)}h${monthTotalMins % 60 > 0 ? `${monthTotalMins % 60}m` : ""}`
     : `${monthTotalMins}m`;
 
-  // 月末予測（JST）
+  // 月末予測 + 先月同期比（JST）
   const jstNowLog = new Date(Date.now() + 9 * 3600000);
   const curDayLog = jstNowLog.getUTCDate();
   const daysInMonthLog = new Date(jstNowLog.getUTCFullYear(), jstNowLog.getUTCMonth() + 1, 0).getUTCDate();
   const monthProjected = curDayLog > 0 ? Math.round(monthEntries.length / curDayLog * daysInMonthLog) : 0;
   const remainingDaysLog = daysInMonthLog - curDayLog;
+  // 先月同期比: 先月のYYYY-MMを算出し、同じ日付まで（1日〜curDayLog日）の件数を集計
+  const prevMonthDate = new Date(jstNowLog.getUTCFullYear(), jstNowLog.getUTCMonth() - 1, 1);
+  const prevMonthYM = `${prevMonthDate.getFullYear()}-${String(prevMonthDate.getMonth() + 1).padStart(2, "0")}`;
+  const lastMonthSamePeriod = entries.filter((e) => {
+    if (!e.date.startsWith(prevMonthYM)) return false;
+    const day = parseInt(e.date.slice(8, 10), 10);
+    return day <= curDayLog;
+  }).length;
+  const monthDelta = monthEntries.length - lastMonthSamePeriod;
 
   // 今週のサマリー（月曜日起点）
   const nowForWeek = new Date();
@@ -507,14 +516,29 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               </div>
             );
           })()}
-          {/* 月末予測バッジ */}
-          {monthEntries.length > 0 && remainingDaysLog > 0 && (
-            <div className="mt-3 pt-3 border-t border-gray-700/60 flex items-center gap-2">
-              <span className="text-[10px] text-gray-500">このペースで</span>
-              <span className="inline-flex items-center gap-1 bg-[#e94560]/10 border border-[#e94560]/25 text-[#e94560] text-xs font-bold px-2.5 py-0.5 rounded-full">
-                📈 月末{monthProjected}回見込み
-              </span>
-              <span className="text-[10px] text-gray-500">（残{remainingDaysLog}日）</span>
+          {/* 月末予測バッジ + 先月同期比 */}
+          {monthEntries.length > 0 && (
+            <div className="mt-3 pt-3 border-t border-gray-700/60 flex flex-wrap items-center gap-2">
+              {remainingDaysLog > 0 && (
+                <>
+                  <span className="text-[10px] text-gray-500">このペースで</span>
+                  <span className="inline-flex items-center gap-1 bg-[#e94560]/10 border border-[#e94560]/25 text-[#e94560] text-xs font-bold px-2.5 py-0.5 rounded-full">
+                    📈 月末{monthProjected}回見込み
+                  </span>
+                  <span className="text-[10px] text-gray-500">（残{remainingDaysLog}日）</span>
+                </>
+              )}
+              {lastMonthSamePeriod > 0 && (
+                <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${
+                  monthDelta > 0
+                    ? "bg-green-500/15 border border-green-500/30 text-green-300"
+                    : monthDelta < 0
+                    ? "bg-red-500/15 border border-red-500/30 text-red-300"
+                    : "bg-gray-700/50 border border-gray-600/50 text-gray-400"
+                }`}>
+                  {monthDelta > 0 ? `▲${monthDelta}` : monthDelta < 0 ? `▼${Math.abs(monthDelta)}` : "="} 先月同期比
+                </span>
+              )}
             </div>
           )}
           {hasMore && (

@@ -170,6 +170,7 @@ export default async function DashboardPage() {
     { count: techniqueCount },
     { count: totalCount },
     { data: recentLogs },
+    { data: monthMinData },
   ] = await Promise.all([
     supabase
       .from("training_logs")
@@ -201,7 +202,19 @@ export default async function DashboardPage() {
       .eq("user_id", user.id)
       .order("date", { ascending: false })
       .limit(60),
+    supabase
+      .from("training_logs")
+      .select("duration_min")
+      .eq("user_id", user.id)
+      .gte("date", firstDayOfMonth),
   ]);
+  // 今月の合計練習時間（分→時間表示）
+  const monthTotalMins = (monthMinData ?? []).reduce(
+    (sum: number, r: { duration_min: number }) => sum + (r.duration_min ?? 0), 0
+  );
+  const monthHoursStr = monthTotalMins >= 60
+    ? `${Math.floor(monthTotalMins / 60)}h${monthTotalMins % 60 > 0 ? `${monthTotalMins % 60}m` : ""}`
+    : monthTotalMins > 0 ? `${monthTotalMins}m` : null;
 
   const isPro = profileData?.is_pro ?? false;
 
@@ -273,6 +286,11 @@ export default async function DashboardPage() {
               }`}>
                 {(monthCount ?? 0) >= prevMonthCount ? "▲" : "▼"}
                 {Math.abs((monthCount ?? 0) - prevMonthCount)} vs 先月
+              </div>
+            )}
+            {monthHoursStr && (
+              <div className="text-[10px] mt-0.5 text-purple-400/80 font-medium">
+                ⏱️ {monthHoursStr}
               </div>
             )}
             {remainingDays > 0 && (

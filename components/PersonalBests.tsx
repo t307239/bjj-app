@@ -17,6 +17,7 @@ type Bests = {
   avgMonthly: number;
   thisMonthCount: number;
   lastMonthCount: number;
+  dowCounts: number[]; // [月, 火, 水, 木, 金, 土, 日]
 };
 
 function fmtTime(min: number): string {
@@ -92,6 +93,15 @@ export default function PersonalBests({ userId }: Props) {
         ? Math.round(totalSessions / monthKeys.length)
         : totalSessions;
 
+      // 曜日別練習頻度（月=0, 火=1, 水=2, 木=3, 金=4, 土=5, 日=6）
+      const dowArr = [0, 0, 0, 0, 0, 0, 0];
+      logs.forEach((l: { date: string }) => {
+        const d = new Date(l.date + "T00:00:00");
+        const dow = d.getDay(); // 0=Sun, 1=Mon ... 6=Sat
+        const idx = dow === 0 ? 6 : dow - 1; // Mon=0 ... Sun=6
+        dowArr[idx]++;
+      });
+
       // 今月vs先月
       const jstNow = new Date(Date.now() + 9 * 3600000);
       const thisYM = `${jstNow.getUTCFullYear()}-${String(jstNow.getUTCMonth() + 1).padStart(2, "0")}`;
@@ -101,7 +111,7 @@ export default function PersonalBests({ userId }: Props) {
       const thisMonthCount = monthCounts[thisYM] ?? 0;
       const lastMonthCount = monthCounts[lastYM] ?? 0;
 
-      setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, bestMonthKey, bestWeekCount, avgSessionMin, avgMonthly, thisMonthCount, lastMonthCount });
+      setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, bestMonthKey, bestWeekCount, avgSessionMin, avgMonthly, thisMonthCount, lastMonthCount, dowCounts: dowArr });
     };
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -199,6 +209,39 @@ export default function PersonalBests({ userId }: Props) {
           最長セッション: {fmtTime(bests.maxSessionMin)} · 月平均: {bests.avgMonthly}回
         </div>
       )}
+      {/* 曜日別練習頻度ミニグラフ */}
+      {bests.totalSessions >= 5 && (() => {
+        const DOW_LABELS = ["月", "火", "水", "木", "金", "土", "日"];
+        const maxDow = Math.max(...bests.dowCounts, 1);
+        const bestDowIdx = bests.dowCounts.indexOf(Math.max(...bests.dowCounts));
+        return (
+          <div className="mt-3 pt-3 border-t border-gray-700/50">
+            <div className="flex items-end justify-between gap-1 h-10">
+              {bests.dowCounts.map((count, i) => {
+                const pct = count / maxDow;
+                const isBest = i === bestDowIdx && count > 0;
+                return (
+                  <div key={i} className="flex flex-col items-center gap-0.5 flex-1">
+                    <div
+                      className="w-full rounded-t transition-all"
+                      style={{
+                        height: `${Math.max(pct * 32, count > 0 ? 4 : 1)}px`,
+                        background: isBest ? "#e94560" : count > 0 ? "#374151" : "#1f2937",
+                      }}
+                    />
+                    <span className={`text-[9px] leading-none ${isBest ? "text-[#e94560] font-bold" : "text-gray-600"}`}>
+                      {DOW_LABELS[i]}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-[9px] text-gray-600 text-center mt-1">
+              よく練習する曜日: <span className="text-[#e94560] font-medium">{DOW_LABELS[bestDowIdx]}曜日</span>（{bests.dowCounts[bestDowIdx]}回）
+            </p>
+          </div>
+        );
+      })()}
     </div>
   );
 }
