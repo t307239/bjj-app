@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
+import { getAffiliateLink } from "@/lib/affiliateMap";
 
 type Technique = {
   id: string;
@@ -21,7 +22,7 @@ const CATEGORIES = [
   { value: "guard", label: "ガード" },
   { value: "passing", label: "パス" },
   { value: "submissions", label: "サブミッション" },
-  { value: "takedowns", label: "テイクダc��ン" },
+  { value: "takedowns", label: "テイクダc��ン" },
   { value: "escapes", label: "エスケープ" },
   { value: "back", label: "バック" },
   { value: "mount", label: "マウント" },
@@ -636,6 +637,22 @@ export default function TechniqueLog({ userId }: Props) {
                     )}
                   </div>
                   <div className="flex gap-1 ml-3 flex-shrink-0">
+                    {(() => {
+                      const dvdLink = getAffiliateLink(technique.name);
+                      return dvdLink ? (
+                        <a
+                          href={dvdLink}
+                          target="_blank"
+                          rel="noopener noreferrer sponsored"
+                          className="text-gray-600 hover:text-orange-400 transition-colors p-1"
+                          title="BJJ Fanatics DVDを見る"
+                        >
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                          </svg>
+                        </a>
+                      ) : null;
+                    })()}
                     <button
                       onClick={() => startEdit(technique)}
                       className="text-gray-600 hover:text-blue-400 transition-colors p-1"
