@@ -373,6 +373,48 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* BJJ Wiki クロスリンク */}
+      <section className="px-4 py-16 bg-[#0f0e17]">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-2 text-gray-200">
+            📖 BJJの技術を深める
+          </h2>
+          <p className="text-gray-500 text-center text-sm mb-8">
+            4,000ページ以上の無料BJJ技術百科事典 — 初心者から上級者まで
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+            {[
+              { emoji: "🔒", title: "ガードシステム", desc: "クローズド・ハーフ・スパイダー・DLR", href: "https://t307239.github.io/bjj-wiki/en/bjj-guard-retention-advanced.html" },
+              { emoji: "🦵", title: "レッグロック", desc: "ヒールフック・アシガラミ・トーホールド", href: "https://t307239.github.io/bjj-wiki/en/bjj-leg-lock-system.html" },
+              { emoji: "🏆", title: "競技メンタル", desc: "試合準備・緊張管理・戦略", href: "https://t307239.github.io/bjj-wiki/en/bjj-competition-mindset.html" },
+              { emoji: "💪", title: "栄養・回復", desc: "BJJアスリートの食事・怪我予防", href: "https://t307239.github.io/bjj-wiki/en/bjj-nutrition-science.html" },
+            ].map((item) => (
+              <a
+                key={item.title}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#16213e] rounded-xl p-4 border border-gray-700 hover:border-[#e94560]/40 transition-colors block"
+              >
+                <div className="text-2xl mb-2">{item.emoji}</div>
+                <div className="text-sm font-semibold text-gray-200 mb-1">{item.title}</div>
+                <div className="text-[11px] text-gray-500">{item.desc}</div>
+              </a>
+            ))}
+          </div>
+          <div className="text-center">
+            <a
+              href="https://t307239.github.io/bjj-wiki/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-[#e94560] hover:text-red-400 transition-colors text-sm font-medium"
+            >
+              BJJ Wikiをすべて見る → <span className="text-xs text-gray-500">（無料）</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* プライシング */}
       <section className="px-4 py-16 bg-[#0f0e17]">
         <div className="max-w-3xl mx-auto">
