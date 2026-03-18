@@ -94,10 +94,68 @@ function DonutChart({ data }: { data: TypeCount[] }) {
   );
 }
 
+function MonthlyTrend({ logs, typeValue, typeLabel, color }: {
+  logs: { date: string; type: string }[];
+  typeValue: string;
+  typeLabel: string;
+  color: string;
+}) {
+  // Build 6-month buckets for this type
+  const now = new Date();
+  const months: { key: string; label: string; count: number }[] = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const label = `${d.getMonth() + 1}月`;
+    months.push({ key, label, count: 0 });
+  }
+  logs.forEach((l) => {
+    if (l.type !== typeValue) return;
+    const mk = l.date.substring(0, 7);
+    const m = months.find((x) => x.key === mk);
+    if (m) m.count++;
+  });
+
+  const maxCount = Math.max(...months.map((m) => m.count), 1);
+
+  return (
+    <div className="mt-3 pt-3 border-t border-gray-700/50">
+      <p className="text-[10px] text-gray-500 mb-2">
+        <span style={{ color }} className="font-semibold">{typeLabel}</span> の月別推移（過去6ヶ月）
+      </p>
+      <div className="flex items-end gap-1.5 h-12">
+        {months.map((m) => {
+          const pct = m.count > 0 ? Math.max((m.count / maxCount) * 100, 8) : 0;
+          const isCurrentMonth = m.key === months[5].key;
+          return (
+            <div key={m.key} className="flex-1 flex flex-col items-center justify-end gap-0.5">
+              <span className="text-[8px] text-gray-600 leading-none">
+                {m.count > 0 ? m.count : ""}
+              </span>
+              <div
+                className="w-full rounded-t-sm transition-all"
+                style={{
+                  height: `${pct}%`,
+                  minHeight: m.count > 0 ? "3px" : "0",
+                  backgroundColor: isCurrentMonth ? color : `${color}66`,
+                }}
+              />
+              <span className={`text-[8px] leading-none ${isCurrentMonth ? "text-white font-semibold" : "text-gray-600"}`}>
+                {m.label}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function TrainingTypeChart({ userId }: Props) {
   const [allLogs, setAllLogs] = useState<{ date: string; type: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<Period>("all");
+  const [selectedType, setSelectedType] = useState<string | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -168,18 +226,38 @@ export default function TrainingTypeChart({ userId }: Props) {
               .sort((a, b) => b.count - a.count)
               .map((d) => {
                 const pct = Math.round((d.count / total) * 100);
+                const isSelected = selectedType === d.value;
                 return (
-                  <div key={d.value} className="flex items-center gap-2">
+                  <div
+                    key={d.value}
+                    className={`flex items-center gap-2 cursor-pointer rounded-lg px-1 py-0.5 transition-colors ${
+                      isSelected ? "bg-gray-700/40" : "hover:bg-gray-700/20"
+                    }`}
+                    onClick={() => setSelectedType(isSelected ? null : d.value)}
+                    title="クリックして月別推移を表示"
+                  >
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${d.bg}`} />
-                    <span className="text-xs text-gray-400 flex-1 truncate">{d.label}</span>
+                    <span className={`text-xs flex-1 truncate ${isSelected ? "text-white font-medium" : "text-gray-400"}`}>{d.label}</span>
                     <span className="text-xs font-medium text-white">{d.count}回</span>
                     <span className="text-[10px] text-gray-600 w-7 text-right">{pct}%</span>
+                    <span className="text-[9px] text-gray-700">{isSelected ? "▲" : "▶"}</span>
                   </div>
                 );
               })}
           </div>
         </div>
       )}
+      {selectedType && (() => {
+        const typeDef = TYPE_DEFS.find((d) => d.value === selectedType);
+        return typeDef ? (
+          <MonthlyTrend
+            logs={allLogs}
+            typeValue={selectedType}
+            typeLabel={typeDef.label}
+            color={typeDef.color}
+          />
+        ) : null;
+      })()}
     </div>
   );
 }
