@@ -8,7 +8,7 @@ import TrainingChart from "@/components/TrainingChart";
 import TrainingBarChart from "@/components/TrainingBarChart";
 import TrainingTypeChart from "@/components/TrainingTypeChart";
 import CompetitionStats from "@/components/CompetitionStats";
-import PersonalBests from "@/components/PersonalBests";
+// PersonalBests はプロフィールページのみに表示
 import TrainingCalendar from "@/components/TrainingCalendar";
 import GoalTracker from "@/components/GoalTracker";
 import WeeklyStrip from "@/components/WeeklyStrip";
@@ -421,8 +421,7 @@ export default async function DashboardPage() {
         {/* 目標トラッカー */}
         <GoalTracker userId={user.id} />
 
-        {/* 累計記録 */}
-        <PersonalBests userId={user.id} />
+        {/* 累計記録はプロフィールページに移動 */}
 
         {/* 月カレンダー */}
         <TrainingCalendar userId={user.id} />
