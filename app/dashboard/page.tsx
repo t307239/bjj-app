@@ -158,6 +158,8 @@ export default async function DashboardPage() {
   const dayOfWeek = now.getUTCDay(); // 0=Sun, 1=Mon...
   const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
   const firstDayOfWeek = toJSTStr(new Date(now.getTime() - daysToMonday * 86400000));
+  // 今週の残り日数（日曜=0残り、月=6残り）
+  const daysLeftInWeek = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
 
   const profileData = await getCachedProfile(user.id);
 
@@ -324,6 +326,38 @@ export default async function DashboardPage() {
 
         {/* BJJ Wiki クイックリンク（日替わり技術3選） */}
         <WikiQuickLinks />
+
+        {/* 今週の目標達成ペース通知 */}
+        {(() => {
+          const wGoal = (profileData as { weekly_goal?: number } | null)?.weekly_goal ?? 0;
+          const wCount = weekCount ?? 0;
+          if (wGoal <= 0) return null;
+          const needed = Math.max(0, wGoal - wCount);
+          if (needed === 0) return (
+            <div className="bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-2.5 mb-3 flex items-center gap-3">
+              <span className="text-lg">🎯</span>
+              <div>
+                <p className="text-green-400 text-sm font-semibold">今週の目標達成！</p>
+                <p className="text-gray-400 text-xs">週間目標{wGoal}回 · 達成{wCount}回</p>
+              </div>
+            </div>
+          );
+          const onPace = daysLeftInWeek >= needed;
+          return (
+            <div className={`${onPace ? "bg-blue-500/10 border-blue-500/30" : "bg-yellow-500/10 border-yellow-500/30"} border rounded-xl px-4 py-2.5 mb-3 flex items-center gap-3`}>
+              <span className="text-lg">{onPace ? "📅" : "⚡"}</span>
+              <div className="flex-1">
+                <p className={`${onPace ? "text-blue-300" : "text-yellow-300"} text-sm font-semibold`}>
+                  今週の目標まであと{needed}回
+                </p>
+                <p className="text-gray-400 text-xs">
+                  {wCount}/{wGoal}回達成 · 残{daysLeftInWeek}日
+                  {onPace ? " ✓ このペースで達成可能" : " ⚠ ペースアップが必要"}
+                </p>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* 今週の練習状況 */}
         <WeeklyStrip userId={user.id} />

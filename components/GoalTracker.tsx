@@ -354,17 +354,34 @@ export default function GoalTracker({ userId }: Props) {
           )}
         </div>
 
-        {/* 全目標達成バナー */}
+        {/* 全目標達成バナー（Confetti風アニメーション） */}
         {allGoalsAchieved && !editing && (
-          <div className="mx-4 mt-3 rounded-xl bg-green-500/10 border border-green-500/30 px-4 py-3 text-center">
-            <div className="text-xl mb-0.5">🎉</div>
-            <div className="text-sm font-semibold text-green-400">全目標達成！</div>
-            <div className="text-[11px] text-gray-400 mt-0.5">
+          <div className="mx-4 mt-3 rounded-xl bg-green-500/10 border border-green-500/30 px-4 py-3 text-center relative overflow-hidden">
+            <style>{`
+              @keyframes cf-fall {
+                0%   { transform: translateY(-8px) rotate(0deg);   opacity: 1; }
+                100% { transform: translateY(68px) rotate(600deg); opacity: 0; }
+              }
+              .cf-p { position:absolute; width:6px; height:6px; border-radius:1px; animation: cf-fall linear infinite; top:0; }
+              .cf-p:nth-child(1){left:6%;  background:#e94560; animation-duration:1.3s; animation-delay:0s;}
+              .cf-p:nth-child(2){left:17%; background:#4ade80; animation-duration:1.5s; animation-delay:.15s;}
+              .cf-p:nth-child(3){left:29%; background:#facc15; animation-duration:1.2s; animation-delay:.05s;}
+              .cf-p:nth-child(4){left:41%; background:#60a5fa; animation-duration:1.6s; animation-delay:.3s;}
+              .cf-p:nth-child(5){left:54%; background:#e94560; animation-duration:1.4s; animation-delay:.1s;}
+              .cf-p:nth-child(6){left:66%; background:#a78bfa; animation-duration:1.3s; animation-delay:.25s;}
+              .cf-p:nth-child(7){left:78%; background:#4ade80; animation-duration:1.5s; animation-delay:.4s;}
+              .cf-p:nth-child(8){left:90%; background:#facc15; animation-duration:1.2s; animation-delay:.2s;}
+            `}</style>
+            <div className="cf-p"/><div className="cf-p"/><div className="cf-p"/><div className="cf-p"/>
+            <div className="cf-p"/><div className="cf-p"/><div className="cf-p"/><div className="cf-p"/>
+            <div className="text-2xl mb-1 animate-bounce">🎉</div>
+            <div className="text-sm font-bold text-green-400">全目標達成！</div>
+            <div className="text-[11px] text-gray-400 mt-1">
               {consecutiveAchievedMonths >= 3
                 ? `🔥 ${consecutiveAchievedMonths}ヶ月連続達成中！黒帯への道が開いている`
                 : consecutiveAchievedMonths >= 2
                 ? `✨ ${consecutiveAchievedMonths}ヶ月連続達成！習慣が身についています`
-                : "素晴らしい！この調子で続けよう"}
+                : "🌟 素晴らしい！この調子で続けよう"}
             </div>
           </div>
         )}

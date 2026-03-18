@@ -104,6 +104,12 @@ const NEW_LINKS: QuickLink[] = [
   { emoji: "🦵", title: "ニーオンベリー上級", slug: "bjj-knee-on-belly-advanced", tag: "新着" },
   { emoji: "✝️", title: "クルシフィックスシステム", slug: "bjj-crucifix-position-system", tag: "新着" },
   { emoji: "🌀", title: "ツイスターシステム", slug: "bjj-twister-system", tag: "新着" },
+  // Batch 362-366
+  { emoji: "🕷️", title: "ラバーガード上級", slug: "bjj-rubber-guard-advanced", tag: "新着" },
+  { emoji: "🕳️", title: "ディープハーフマスタリー", slug: "bjj-deep-half-guard-mastery", tag: "新着" },
+  { emoji: "🦿", title: "レッグエンタングルメントエントリー", slug: "bjj-leg-entanglement-entries", tag: "新着" },
+  { emoji: "🎯", title: "バックテイク上級", slug: "bjj-back-take-advanced-system", tag: "新着" },
+  { emoji: "🏁", title: "サブミッションフィニッシング詳細", slug: "bjj-submission-finishing-details", tag: "新着" },
 ];
 
 // 全リンクをフラット化

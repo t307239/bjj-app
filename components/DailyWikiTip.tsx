@@ -100,6 +100,11 @@ const WIKI_TIPS: WikiTip[] = [
   { slug: "bjj-knee-on-belly-advanced", titleJa: "ニーオンベリー上級", descJa: "ニーオンベリーからのアームバー・トライアングル・移行システム", category: "ポジション" },
   { slug: "bjj-crucifix-position-system", titleJa: "クルシフィックスシステム", descJa: "クルシフィックスポジションのエントリー・コントロール・フィニッシュメソッド", category: "ポジション" },
   { slug: "bjj-twister-system", titleJa: "ツイスターシステム", descJa: "ツイスターサイド・エントリー・フィニッシュのEDIガードシステム完全解説", category: "テクニック" },
+  { slug: "bjj-rubber-guard-advanced", titleJa: "ラバーガード上級システム", descJa: "ミッションコントロール・ニューヨーク・ジュークローとサブミッションチェーン", category: "ガード" },
+  { slug: "bjj-deep-half-guard-mastery", titleJa: "ディープハーフガードマスタリー", descJa: "ウェイタースウィープ・ホーマーシンプソン・バックテイクとレッグアタック", category: "ガード" },
+  { slug: "bjj-leg-entanglement-entries", titleJa: "レッグエンタングルメントエントリー", descJa: "ガード・スクランブル・パッシングからの体系的レッグエンタングルメントエントリー", category: "レッグロック" },
+  { slug: "bjj-back-take-advanced-system", titleJa: "バックテイク上級システム", descJa: "アームドラッグ・ベリンボロ・タートル崩しとバックからのフィニッシングチェーン", category: "バックコントロール" },
+  { slug: "bjj-submission-finishing-details", titleJa: "サブミッションフィニッシング詳細", descJa: "アームバー・トライアングル・裸絞め・ヒールフックの技術的フィニッシング詳細", category: "サブミッション" },
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -120,6 +125,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   "ビギナー": "bg-sky-500/20 text-sky-300",
   "グリップ": "bg-amber-500/20 text-amber-300",
   "テクニック": "bg-blue-600/20 text-blue-200",
+  "バックコントロール": "bg-fuchsia-500/20 text-fuchsia-300",
 };
 
 export default function DailyWikiTip() {
