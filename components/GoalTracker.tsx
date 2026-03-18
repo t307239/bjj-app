@@ -39,10 +39,13 @@ function ProgressBar({ current, target }: { current: number; target: number }) {
       </div>
       <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all duration-500 ${
-            done ? "bg-green-400" : pct >= 70 ? "bg-yellow-400" : "bg-[#e94560]"
-          }`}
-          style={{ width: `${pct}%` }}
+          className="h-full rounded-full transition-all duration-500"
+          style={{
+            width: `${pct}%`,
+            background: done
+              ? "#4ade80"
+              : "linear-gradient(to right, #e94560 0%, #f97316 35%, #eab308 65%, #4ade80 100%)",
+          }}
         />
       </div>
     </div>

@@ -1,5 +1,9 @@
+"use client";
+
 // DailyWikiTip — 日替わりBJJ Wikiページ推薦コンポーネント
-// 年の通算日でWikiページをローテーション表示
+// 年の通算日でWikiページをローテーション表示 + 次のヒントプレビュー
+
+import { useState } from "react";
 
 const WIKI_BASE = "https://t307239.github.io/bjj-wiki";
 
@@ -61,6 +65,12 @@ const WIKI_TIPS: WikiTip[] = [
   // ビギナー
   { slug: "bjj-complete-beginners-guide", titleJa: "BJJ完全初心者ガイド", descJa: "初心者が知るべき基礎知識と最初の一歩", category: "ビギナー" },
   { slug: "bjj-blue-belt-guide", titleJa: "青帯へのロードマップ", descJa: "白帯から青帯昇格に必要なスキルと心構え", category: "ビギナー" },
+  // Batch 332-336
+  { slug: "bjj-grip-fighting-advanced", titleJa: "グリップファイティング上級", descJa: "グリップ支配・ブレイク・シークエンスの高度な体系", category: "グリップ" },
+  { slug: "bjj-competition-tactics-advanced", titleJa: "競技タクティクス上級", descJa: "ゲームプラン開発・ブラケット管理・メンタル強化", category: "競技" },
+  { slug: "bjj-periodization-training", titleJa: "BJJのピリオダイゼーション", descJa: "マクロ・メソサイクルで競技パフォーマンスを最大化", category: "フィジカル" },
+  { slug: "bjj-nutrition-timing", titleJa: "BJJの栄養タイミング", descJa: "トレーニング前・中・後の栄養補給プロトコル", category: "栄養" },
+  { slug: "bjj-mental-performance", titleJa: "メンタルパフォーマンスBJJ", descJa: "ビジュアライゼーション・自信構築・試合不安管理", category: "メンタル" },
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -79,9 +89,12 @@ const CATEGORY_COLORS: Record<string, string> = {
   "栄養": "bg-lime-500/20 text-lime-300",
   "アドバンスト": "bg-rose-500/20 text-rose-300",
   "ビギナー": "bg-sky-500/20 text-sky-300",
+  "グリップ": "bg-amber-500/20 text-amber-300",
 };
 
 export default function DailyWikiTip() {
+  const [showNext, setShowNext] = useState(false);
+
   const today = new Date(Date.now() + 9 * 60 * 60 * 1000);
   const dayOfYear = Math.floor(
     (today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) /
@@ -91,7 +104,10 @@ export default function DailyWikiTip() {
   const tipNext = WIKI_TIPS[(dayOfYear + 1) % WIKI_TIPS.length];
   const lang = tip.lang ?? "ja";
   const wikiUrl = `${WIKI_BASE}/${lang}/${tip.slug}.html`;
+  const nextLang = tipNext.lang ?? "ja";
+  const nextUrl = `${WIKI_BASE}/${nextLang}/${tipNext.slug}.html`;
   const badgeClass = CATEGORY_COLORS[tip.category] ?? "bg-gray-500/20 text-gray-300";
+  const nextBadgeClass = CATEGORY_COLORS[tipNext.category] ?? "bg-gray-500/20 text-gray-300";
 
   return (
     <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700/40">
@@ -116,9 +132,37 @@ export default function DailyWikiTip() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
           </svg>
         </a>
-        <span className="text-[10px] text-gray-600">
-          明日: {tipNext.category}
-        </span>
+        <button
+          onClick={() => setShowNext((v) => !v)}
+          className="text-[10px] text-gray-600 hover:text-gray-400 transition-colors flex items-center gap-1"
+        >
+          {showNext ? "▲ 閉じる" : `明日: ${tipNext.category} ▼`}
+        </button>
+      </div>
+
+      {/* 次のヒントプレビュー — スライドアニメーション */}
+      <div
+        className="overflow-hidden transition-all duration-300 ease-in-out"
+        style={{ maxHeight: showNext ? "160px" : "0px" }}
+      >
+        <div className="mt-3 pt-3 border-t border-gray-700/40">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-[10px] text-gray-600">明日のヒント</span>
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${nextBadgeClass}`}>
+              {tipNext.category}
+            </span>
+          </div>
+          <h4 className="text-xs font-semibold text-gray-300 mb-1 leading-snug">{tipNext.titleJa}</h4>
+          <p className="text-[11px] text-gray-500 mb-2 leading-relaxed">{tipNext.descJa}</p>
+          <a
+            href={nextUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-[11px] text-gray-600 hover:text-[#e94560] transition-colors"
+          >
+            <span>先読みする →</span>
+          </a>
+        </div>
       </div>
     </div>
   );

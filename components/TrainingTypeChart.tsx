@@ -7,11 +7,12 @@ type TypeCount = {
   value: string;
   label: string;
   count: number;
+  totalMins: number;
   color: string;
   bg: string;
 };
 
-const TYPE_DEFS: Omit<TypeCount, "count">[] = [
+const TYPE_DEFS: Omit<TypeCount, "count" | "totalMins">[] = [
   { value: "gi",          label: "道衣 (Gi)",       color: "#3b82f6", bg: "bg-blue-500" },
   { value: "nogi",        label: "ノーギ",           color: "#f97316", bg: "bg-orange-500" },
   { value: "drilling",    label: "ドリル",           color: "#a855f7", bg: "bg-purple-500" },
@@ -40,7 +41,16 @@ function getPeriodStart(period: Period): string | null {
   return toLocalDateStr(monday);
 }
 
+function fmtMins(mins: number): string {
+  if (mins <= 0) return "";
+  if (mins < 60) return `${mins}m`;
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return m > 0 ? `${h}h${m}m` : `${h}h`;
+}
+
 function DonutChart({ data }: { data: TypeCount[] }) {
+  const [hovered, setHovered] = useState<string | null>(null);
   const total = data.reduce((s, d) => s + d.count, 0);
   if (total === 0) return null;
 
@@ -79,17 +89,56 @@ function DonutChart({ data }: { data: TypeCount[] }) {
       return { ...d, path, pct: Math.round((d.count / total) * 100) };
     });
 
+  const hoveredSlice = hovered ? slices.find((s) => s.value === hovered) : null;
+
   return (
-    <svg viewBox="0 0 120 120" className="w-28 h-28 flex-shrink-0">
+    <svg
+      viewBox="0 0 120 120"
+      className="w-28 h-28 flex-shrink-0"
+      onMouseLeave={() => setHovered(null)}
+    >
       {slices.map((s) => (
-        <path key={s.value} d={s.path} fill={s.color} opacity={0.85} />
+        <path
+          key={s.value}
+          d={s.path}
+          fill={s.color}
+          opacity={hovered ? (hovered === s.value ? 1 : 0.35) : 0.85}
+          className="cursor-pointer transition-opacity duration-150"
+          onMouseEnter={() => setHovered(s.value)}
+        />
       ))}
-      <text x={cx} y={cy - 4} textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">
-        {total}
-      </text>
-      <text x={cx} y={cy + 10} textAnchor="middle" fill="#9ca3af" fontSize="7">
-        練習回数
-      </text>
+
+      {hoveredSlice ? (
+        <>
+          {/* Label */}
+          <text x={cx} y={cy - 12} textAnchor="middle" fill="white" fontSize="7" fontWeight="600">
+            {hoveredSlice.label}
+          </text>
+          {/* Count */}
+          <text x={cx} y={cy + 1} textAnchor="middle" fill="white" fontSize="13" fontWeight="bold">
+            {hoveredSlice.count}回
+          </text>
+          {/* Percentage */}
+          <text x={cx} y={cy + 13} textAnchor="middle" fill={hoveredSlice.color} fontSize="8" fontWeight="600">
+            {hoveredSlice.pct}%
+          </text>
+          {/* Total time (if available) */}
+          {hoveredSlice.totalMins > 0 && (
+            <text x={cx} y={cy + 23} textAnchor="middle" fill="#9ca3af" fontSize="7">
+              {fmtMins(hoveredSlice.totalMins)}
+            </text>
+          )}
+        </>
+      ) : (
+        <>
+          <text x={cx} y={cy - 4} textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">
+            {total}
+          </text>
+          <text x={cx} y={cy + 10} textAnchor="middle" fill="#9ca3af" fontSize="7">
+            練習回数
+          </text>
+        </>
+      )}
     </svg>
   );
 }
@@ -100,7 +149,6 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color }: {
   typeLabel: string;
   color: string;
 }) {
-  // Build 6-month buckets for this type
   const now = new Date();
   const months: { key: string; label: string; count: number }[] = [];
   for (let i = 5; i >= 0; i--) {
@@ -152,7 +200,7 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color }: {
 }
 
 export default function TrainingTypeChart({ userId }: Props) {
-  const [allLogs, setAllLogs] = useState<{ date: string; type: string }[]>([]);
+  const [allLogs, setAllLogs] = useState<{ date: string; type: string; duration_min: number | null }[]>([]);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<Period>("all");
   const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -162,11 +210,11 @@ export default function TrainingTypeChart({ userId }: Props) {
     const load = async () => {
       const { data: logs } = await supabase
         .from("training_logs")
-        .select("date, type")
+        .select("date, type, duration_min")
         .eq("user_id", userId);
 
       if (logs) {
-        setAllLogs(logs as { date: string; type: string }[]);
+        setAllLogs(logs as { date: string; type: string; duration_min: number | null }[]);
       }
       setLoading(false);
     };
@@ -182,13 +230,16 @@ export default function TrainingTypeChart({ userId }: Props) {
     : allLogs;
 
   const counts: Record<string, number> = {};
+  const mins: Record<string, number> = {};
   filteredLogs.forEach((l) => {
     counts[l.type] = (counts[l.type] ?? 0) + 1;
+    mins[l.type] = (mins[l.type] ?? 0) + (l.duration_min ?? 0);
   });
 
   const data: TypeCount[] = TYPE_DEFS.map((def) => ({
     ...def,
     count: counts[def.value] ?? 0,
+    totalMins: mins[def.value] ?? 0,
   }));
 
   const total = data.reduce((s, d) => s + d.count, 0);
@@ -240,6 +291,9 @@ export default function TrainingTypeChart({ userId }: Props) {
                     <span className={`text-xs flex-1 truncate ${isSelected ? "text-white font-medium" : "text-gray-400"}`}>{d.label}</span>
                     <span className="text-xs font-medium text-white">{d.count}回</span>
                     <span className="text-[10px] text-gray-600 w-7 text-right">{pct}%</span>
+                    {d.totalMins > 0 && (
+                      <span className="text-[10px] text-gray-600 w-8 text-right">{fmtMins(d.totalMins)}</span>
+                    )}
                     <span className="text-[9px] text-gray-700">{isSelected ? "▲" : "▶"}</span>
                   </div>
                 );
