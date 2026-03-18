@@ -111,6 +111,48 @@ const WIKI_TIPS: WikiTip[] = [
   { slug: "bjj-chest-to-chest-control", titleJa: "チェスト・トゥ・チェストコントロール", descJa: "密着コントロール・プレッシャー・サブミッションの統合システム", category: "ポジション" },
   { slug: "bjj-offense-first-bjj", titleJa: "オフェンスファーストBJJ", descJa: "常に先手を取り主導権を握る積極的なゲームプランニング", category: "アドバンスト" },
   { slug: "bjj-submission-matrix", titleJa: "サブミッションマトリックス", descJa: "全ポジションから全サブミッションへの体系的チェーンマップ", category: "サブミッション" },
+  // Batch 372-376
+  { slug: "bjj-guard-sweeps-masterclass", titleJa: "ガードスウィープマスタークラス", descJa: "ヒップバンプ・シザー・フラワー・サイドスウィープを状況別に使い分ける", category: "スウィープ" },
+  { slug: "bjj-submission-setup-chains", titleJa: "サブミッションセットアップチェーン", descJa: "アームバー→トライアングル→オモプラータの連鎖を止められない攻撃に変える", category: "サブミッション" },
+  { slug: "bjj-mma-guard-work", titleJa: "MMAのためのガードワーク", descJa: "打撃環境でのガード・サブミッション・スウィープの最適戦略", category: "テクニック" },
+  { slug: "bjj-defensive-guard-play", titleJa: "ディフェンシブガードプレイ", descJa: "スペース管理・フレーム・リガードで崩れないガードを作る方法", category: "ディフェンス" },
+  { slug: "bjj-transition-game-advanced", titleJa: "トランジションゲーム上級", descJa: "ポジション間のスムーズな移行でペースを支配する高度な戦略", category: "アドバンスト" },
+  // Batch 377-381
+  { slug: "bjj-attacking-from-turtle-advanced", titleJa: "タートルからの上級攻撃", descJa: "タートルポジションからのバックテイク・チョーク・レッグ攻撃の体系", category: "ポジション" },
+  { slug: "bjj-conditioning-science", titleJa: "BJJコンディショニング科学", descJa: "エネルギーシステム・疲労管理・ピーキングの科学的アプローチ", category: "フィジカル" },
+  { slug: "bjj-guard-setups-masterclass", titleJa: "ガードセットアップマスタークラス", descJa: "スタンドアップからのガードプル・座りガード・ジャンプガードの完全ガイド", category: "ガード" },
+  { slug: "bjj-back-control-finishing-details", titleJa: "バックコントロールフィニッシング詳細", descJa: "裸絞め・ボウアンドアロー・アームロックのフィニッシング技術的詳細", category: "バックコントロール" },
+  { slug: "bjj-sweeps-to-submissions", titleJa: "スウィープからサブミッションへ", descJa: "スウィープをサブミッション攻撃に繋げる連鎖メカニクス", category: "スウィープ" },
+  // Batch 382-386
+  { slug: "bjj-sweeps-to-submissions-chain-mechanics", titleJa: "スウィープ→サブミッションチェーンメカニクス", descJa: "スウィープ完了後のサブミッション追求のタイミングと角度", category: "テクニック" },
+  { slug: "bjj-pressure-game", titleJa: "プレッシャーゲーム", descJa: "体重・フレーム破壊・圧力パスで相手を制圧するシステム", category: "パッシング" },
+  { slug: "bjj-back-attacks-advanced", titleJa: "バックアタック上級", descJa: "シートベルトからの多角的アタックと防御崩しの高度技術", category: "バックコントロール" },
+  { slug: "bjj-escapes-masterclass", titleJa: "エスケープマスタークラス", descJa: "最悪のポジションから脱出するための原則と実践的テクニック集", category: "エスケープ" },
+  { slug: "bjj-competition-rules-complete", titleJa: "競技ルール完全ガイド", descJa: "IBJJF・ADCC・EBIなど主要大会のルール差異を完全解説", category: "競技" },
+  // Batch 387-391
+  { slug: "bjj-advanced-combinations", titleJa: "アドバンスドコンビネーション", descJa: "複数のテクニックを組み合わせた止められない攻撃パターン", category: "アドバンスト" },
+  { slug: "bjj-drilling-methodology", titleJa: "ドリリング方法論", descJa: "技術習得を加速させるドリルの構造・量・パートナーワーク", category: "テクニック" },
+  { slug: "bjj-flow-rolling-mastery", titleJa: "フローローリングマスタリー", descJa: "フロー状態でロールする方法と技術向上への活用法", category: "アドバンスト" },
+  { slug: "bjj-conditioning-science-advanced", titleJa: "コンディショニング科学上級", descJa: "VO2max・無酸素閾値・試合特異的コンディショニングの科学", category: "フィジカル" },
+  { slug: "bjj-nutrition-timing-advanced", titleJa: "栄養タイミング上級", descJa: "試合日・減量・大会後回復の最適栄養プロトコル", category: "栄養" },
+  // Batch 392-396
+  { slug: "bjj-guard-systems-advanced", titleJa: "ガードシステム上級", descJa: "複数のガードを組み合わせた統合的ガードゲームの構築法", category: "ガード" },
+  { slug: "bjj-pressure-game-advanced", titleJa: "プレッシャーゲーム上級", descJa: "エリートレベルの圧力パスと体重コントロールのコンセプト", category: "パッシング" },
+  { slug: "bjj-back-attacks-masterclass", titleJa: "バックアタックマスタークラス", descJa: "世界チャンピオンが使うバック攻撃の詳細メカニクス", category: "バックコントロール" },
+  { slug: "bjj-escapes-advanced", titleJa: "エスケープ上級", descJa: "難しいポジションからの脱出と即時カウンター攻撃の組み合わせ", category: "エスケープ" },
+  { slug: "bjj-competition-rules-detailed", titleJa: "競技ルール詳細解説", descJa: "ペナルティ・アドバンテージ・VTBルールの戦略的活用法", category: "競技" },
+  // Batch 402-406
+  { slug: "bjj-guard-pulling-strategy", titleJa: "ガードプル戦略", descJa: "スタンドアップからガードプルへの移行タイミングと戦略", category: "ガード" },
+  { slug: "bjj-open-guard-mastery", titleJa: "オープンガードマスタリー", descJa: "オープンガードのポジション管理・スウィープ・サブミッション体系", category: "ガード" },
+  { slug: "bjj-top-pressure-advanced", titleJa: "トッププレッシャー上級", descJa: "サイドコントロール・ニーオンベリー・マウントでの重量配分とプレッシャー", category: "ポジション" },
+  { slug: "bjj-submission-hunting", titleJa: "サブミッションハンティング", descJa: "常にサブミッションを狙い続けるアグレッシブなゲームプラン", category: "サブミッション" },
+  { slug: "bjj-tournament-preparation", titleJa: "トーナメント準備完全版", descJa: "大会12週前からの準備・ピーキング・当日戦略の完全ガイド", category: "競技" },
+  // Batch 407-411
+  { slug: "bjj-passing-guard-fundamentals", titleJa: "ガードパス基礎原則", descJa: "ガードパスに必要な姿勢・圧力・タイミングの基本原則", category: "パッシング" },
+  { slug: "bjj-closed-guard-attacks", titleJa: "クローズドガード攻撃", descJa: "クローズドガードからのスウィープ・チョーク・アームロックの完全システム", category: "ガード" },
+  { slug: "bjj-side-control-positions", titleJa: "サイドコントロールポジション", descJa: "サイドコントロールの種類・移行・攻撃オプションの体系的ガイド", category: "ポジション" },
+  { slug: "bjj-back-take-entries", titleJa: "バックテイクエントリー", descJa: "各ポジションからバックを取るための体系的なエントリーシステム", category: "バックコントロール" },
+  { slug: "bjj-knee-on-belly-control", titleJa: "ニーオンベリーコントロール", descJa: "ニーオンベリーでの圧力・維持・サブミッション攻撃の詳細ガイド", category: "ポジション" },
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {

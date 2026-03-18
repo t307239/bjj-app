@@ -116,6 +116,29 @@ const NEW_LINKS: QuickLink[] = [
   { emoji: "🤝", title: "チェスト・トゥ・チェストコントロール", slug: "bjj-chest-to-chest-control", tag: "新着" },
   { emoji: "⚔️", title: "オフェンスファーストBJJ", slug: "bjj-offense-first-bjj", tag: "新着" },
   { emoji: "🗺️", title: "サブミッションマトリックス", slug: "bjj-submission-matrix", tag: "新着" },
+  // Batch 372-376
+  { emoji: "🌊", title: "ガードスウィープマスター", slug: "bjj-guard-sweeps-masterclass", tag: "新着" },
+  { emoji: "🔗", title: "サブミッションチェーン", slug: "bjj-submission-setup-chains", tag: "新着" },
+  { emoji: "🥊", title: "MMAガードワーク", slug: "bjj-mma-guard-work", tag: "新着" },
+  { emoji: "🛡️", title: "ディフェンシブガード", slug: "bjj-defensive-guard-play", tag: "新着" },
+  { emoji: "⚡", title: "トランジションゲーム上級", slug: "bjj-transition-game-advanced", tag: "新着" },
+  // Batch 377-381
+  { emoji: "🐢", title: "タートル上級攻撃", slug: "bjj-attacking-from-turtle-advanced", tag: "新着" },
+  { emoji: "🔬", title: "BJJコンディショニング科学", slug: "bjj-conditioning-science", tag: "新着" },
+  { emoji: "🎯", title: "ガードセットアップ", slug: "bjj-guard-setups-masterclass", tag: "新着" },
+  { emoji: "🏁", title: "バックコントロール詳細", slug: "bjj-back-control-finishing-details", tag: "新着" },
+  { emoji: "🔄", title: "スウィープ→サブミッション", slug: "bjj-sweeps-to-submissions", tag: "新着" },
+  // Batch 402-411
+  { emoji: "⬇️", title: "ガードプル戦略", slug: "bjj-guard-pulling-strategy", tag: "新着" },
+  { emoji: "🌐", title: "オープンガードマスタリー", slug: "bjj-open-guard-mastery", tag: "新着" },
+  { emoji: "🏋️", title: "トッププレッシャー上級", slug: "bjj-top-pressure-advanced", tag: "新着" },
+  { emoji: "🎣", title: "サブミッションハンティング", slug: "bjj-submission-hunting", tag: "新着" },
+  { emoji: "📅", title: "トーナメント準備完全版", slug: "bjj-tournament-preparation", tag: "新着" },
+  { emoji: "🚧", title: "ガードパス基礎原則", slug: "bjj-passing-guard-fundamentals", tag: "新着" },
+  { emoji: "🔒", title: "クローズドガード攻撃", slug: "bjj-closed-guard-attacks", tag: "新着" },
+  { emoji: "↔️", title: "サイドコントロール体系", slug: "bjj-side-control-positions", tag: "新着" },
+  { emoji: "🎯", title: "バックテイクエントリー", slug: "bjj-back-take-entries", tag: "新着" },
+  { emoji: "🦵", title: "ニーオンベリーコントロール", slug: "bjj-knee-on-belly-control", tag: "新着" },
 ];
 
 // 全リンクをフラット化
