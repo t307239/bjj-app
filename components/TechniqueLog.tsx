@@ -22,7 +22,7 @@ const CATEGORIES = [
   { value: "guard", label: "ガード" },
   { value: "passing", label: "パス" },
   { value: "submissions", label: "サブミッション" },
-  { value: "takedowns", label: "テイクダc��ン" },
+  { value: "takedowns", label: "テイクダウン" },
   { value: "escapes", label: "エスケープ" },
   { value: "back", label: "バック" },
   { value: "mount", label: "マウント" },
