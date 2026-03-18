@@ -97,7 +97,7 @@ function decodeCompNotes(notes: string): { comp: CompData | null; userNotes: str
 }
 
 const RESULT_LABELS: Record<string, { label: string; color: string }> = {
-  win:  { label: "囝利 🏆", color: "text-green-400" },
+  win:  { label: "勝利 🏆", color: "text-green-400" },
   loss: { label: "敗北", color: "text-red-400" },
   draw: { label: "引き分け", color: "text-yellow-400" },
 };
