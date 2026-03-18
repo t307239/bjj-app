@@ -94,6 +94,12 @@ const WIKI_TIPS: WikiTip[] = [
   { slug: "bjj-turtle-top-attacks", titleJa: "タートルトップ攻撃", descJa: "クロックチョーク・バックテイク・レッグ攻撃でタートルを崩す方法", category: "ポジション" },
   { slug: "bjj-open-guard-transitions", titleJa: "オープンガードトランジション", descJa: "DLR・スパイダー・バタフライ・Xガード間のシームレスな切り替え方法", category: "ガード" },
   { slug: "bjj-scramble-systems", titleJa: "スクランブルシステム", descJa: "リガード・インバージョン・スタンドアップスクランブルでカオスに勝つ方法", category: "テクニック" },
+  // Batch 357-361
+  { slug: "bjj-closed-guard-systems", titleJa: "クローズドガードシステム", descJa: "クラシックとモダンのクローズドガード攻撃・スウィープ・サブミッションシステム", category: "ガード" },
+  { slug: "bjj-north-south-position-attacks", titleJa: "ノースサウス攻撃システム", descJa: "ノースサウスポジションからのキムラ・チョーク・サブミッション体系", category: "ポジション" },
+  { slug: "bjj-knee-on-belly-advanced", titleJa: "ニーオンベリー上級", descJa: "ニーオンベリーからのアームバー・トライアングル・移行システム", category: "ポジション" },
+  { slug: "bjj-crucifix-position-system", titleJa: "クルシフィックスシステム", descJa: "クルシフィックスポジションのエントリー・コントロール・フィニッシュメソッド", category: "ポジション" },
+  { slug: "bjj-twister-system", titleJa: "ツイスターシステム", descJa: "ツイスターサイド・エントリー・フィニッシュのEDIガードシステム完全解説", category: "テクニック" },
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {

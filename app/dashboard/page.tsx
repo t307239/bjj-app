@@ -104,7 +104,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = `${beltLabel} · 総${count}回練習 · BJJ歴${months}ヶ月 — BJJ Appで毎日の練習を記録中`;
 
   return {
-    title: "ダッシュボード",
+    title: count > 0 ? `ダッシュボード — ${count}回練習` : "ダッシュボード",
     openGraph: {
       title,
       description,
