@@ -7,6 +7,19 @@ import { useState } from "react";
 
 const WIKI_BASE = "https://t307239.github.io/bjj-wiki/ja";
 
+// GA4イベント送信ヘルパー
+function trackWikiClick(slug: string, tag: string) {
+  try {
+    if (typeof window !== "undefined" && typeof (window as { gtag?: (...args: unknown[]) => void }).gtag === "function") {
+      (window as { gtag: (...args: unknown[]) => void }).gtag("event", "wiki_link_click", {
+        event_category: "BJJ Wiki",
+        event_label: slug,
+        wiki_tag: tag,
+      });
+    }
+  } catch { /* silent */ }
+}
+
 type QuickLink = {
   emoji: string;
   title: string;
@@ -79,6 +92,12 @@ const NEW_LINKS: QuickLink[] = [
   { emoji: "🔙", title: "バックシステム上級", slug: "bjj-back-system-advanced", tag: "新着" },
   { emoji: "🌀", title: "ガードコンセプト上級", slug: "bjj-guard-concepts-advanced", tag: "新着" },
   { emoji: "📋", title: "競技準備上級", slug: "bjj-competition-prep-advanced", tag: "新着" },
+  // Batch 352-356
+  { emoji: "👘", title: "道衣チョークシステム", slug: "bjj-gi-choke-systems", tag: "新着" },
+  { emoji: "🌓", title: "上級ハーフガード", slug: "bjj-half-guard-advanced", tag: "新着" },
+  { emoji: "🐢", title: "タートルトップ攻撃", slug: "bjj-turtle-top-attacks", tag: "新着" },
+  { emoji: "🔀", title: "オープンガードトランジション", slug: "bjj-open-guard-transitions", tag: "新着" },
+  { emoji: "🌪️", title: "スクランブルシステム", slug: "bjj-scramble-systems", tag: "新着" },
 ];
 
 // 全リンクをフラット化
@@ -167,6 +186,7 @@ export default function WikiQuickLinks() {
             href={`${WIKI_BASE}/${link.slug}.html`}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackWikiClick(link.slug, link.tag)}
             className="flex flex-col items-center text-center p-2.5 rounded-lg bg-[#0f3460]/50 hover:bg-[#0f3460] border border-gray-700/30 hover:border-[#e94560]/30 transition-all group"
           >
             <span className="text-lg mb-1">{link.emoji}</span>

@@ -88,6 +88,12 @@ const WIKI_TIPS: WikiTip[] = [
   { slug: "bjj-back-system-advanced", titleJa: "バックシステム上級", descJa: "上級者のための完全なバックコントロール・維持・攻撃システム", category: "ポジション" },
   { slug: "bjj-guard-concepts-advanced", titleJa: "ガードコンセプト上級", descJa: "ガードプレイのハイレベルな概念的フレームワーク", category: "ガード" },
   { slug: "bjj-competition-prep-advanced", titleJa: "競技準備上級", descJa: "経験豊富な競技者のためのエリートレベル競技準備戦略", category: "競技" },
+  // Batch 352-356
+  { slug: "bjj-gi-choke-systems", titleJa: "道衣チョークシステム", descJa: "クロスカラー・ボウアンドアロー・エゼキエル・野球バットチョークをマスター", category: "サブミッション" },
+  { slug: "bjj-half-guard-advanced", titleJa: "上級ハーフガード", descJa: "ディープハーフ・ロックダウン・アンダーフック争いの完全ガイド", category: "ガード" },
+  { slug: "bjj-turtle-top-attacks", titleJa: "タートルトップ攻撃", descJa: "クロックチョーク・バックテイク・レッグ攻撃でタートルを崩す方法", category: "ポジション" },
+  { slug: "bjj-open-guard-transitions", titleJa: "オープンガードトランジション", descJa: "DLR・スパイダー・バタフライ・Xガード間のシームレスな切り替え方法", category: "ガード" },
+  { slug: "bjj-scramble-systems", titleJa: "スクランブルシステム", descJa: "リガード・インバージョン・スタンドアップスクランブルでカオスに勝つ方法", category: "テクニック" },
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
