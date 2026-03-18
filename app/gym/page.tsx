@@ -76,7 +76,7 @@ export default function GymPage() {
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
-                href="mailto:gym@bjjapp.io?subject=BJJ%20App%20Academy%20Inquiry"
+                href="mailto:hello@bjj-app.co?subject=BJJ%20App%20Academy%20Inquiry"
                 className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-8 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
               >
                 Request Access →
@@ -214,7 +214,7 @@ export default function GymPage() {
                   </li>
                 </ul>
                 <a
-                  href="mailto:gym@bjjapp.io?subject=Starter%20Plan%20Inquiry"
+                  href="mailto:hello@bjj-app.co?subject=Starter%20Plan%20Inquiry"
                   className="w-full block text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-full transition-all"
                 >
                   Request Access
@@ -246,7 +246,7 @@ export default function GymPage() {
                   </li>
                 </ul>
                 <a
-                  href="mailto:gym@bjjapp.io?subject=Pro%20Plan%20Inquiry"
+                  href="mailto:hello@bjj-app.co?subject=Pro%20Plan%20Inquiry"
                   className="w-full block text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-full transition-all"
                 >
                   Request Access
@@ -321,7 +321,7 @@ export default function GymPage() {
             14-day free trial. No credit card required. Cancel anytime.
           </p>
           <a
-            href="mailto:gym@bjjapp.io?subject=BJJ%20App%20Academy%20Demo%20Request"
+            href="mailto:hello@bjj-app.co?subject=BJJ%20App%20Academy%20Demo%20Request"
             className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
           >
             Request Demo →

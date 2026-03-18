@@ -6,9 +6,9 @@ import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 
 const errorMessages: Record<string, string> = {
-  auth: "認証に失敗しました。もう一度お試しください。",
-  callback: "ログインエラーが発生しました。再度お試しください。",
-  access_denied: "アクセスが拒否されました。",
+  auth: "Authentication failed. Please try again.",
+  callback: "Login error. Please try again.",
+  access_denied: "Access denied.",
 };
 
 function ErrorBanner() {
@@ -17,7 +17,7 @@ function ErrorBanner() {
   if (!error) return null;
   return (
     <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 mb-4 text-red-400 text-sm text-center">
-      {errorMessages[error] ?? "エラーが発生しました。もう一度お試しください。"}
+      {errorMessages[error] ?? "An error occurred. Please try again."}
     </div>
   );
 }
@@ -47,7 +47,7 @@ function LoginForm() {
     e.preventDefault();
     setEmailError(null);
     if (!email || !email.includes("@")) {
-      setEmailError("有効なメールアドレスを入力してください");
+      setEmailError("Please enter a valid email address.");
       return;
     }
     setEmailLoading(true);
@@ -56,7 +56,7 @@ function LoginForm() {
       options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
     });
     if (error) {
-      setEmailError("メール送信に失敗しました。もう一度お試しください。");
+      setEmailError("Failed to send email. Please try again.");
     } else {
       setEmailSent(true);
     }
@@ -70,27 +70,27 @@ function LoginForm() {
         {/* ヘッダー */}
         <div className="text-center mb-6">
           <div className="text-5xl mb-3">🥋</div>
-          <h1 className="text-2xl font-bold text-white">BJJ App をはじめる</h1>
+          <h1 className="text-2xl font-bold text-white">Get started with BJJ App</h1>
           <p className="text-gray-400 mt-2 text-sm">
-            初めての方も、ログインの方も同じボタンでOK
+            Sign up or log in — same button, no password needed
           </p>
         </div>
 
         {/* ソーシャルプルーフ */}
         <div className="flex justify-center gap-6 mb-6">
           <div className="text-center">
-            <p className="text-lg font-bold text-[#e94560]">5,000+</p>
-            <p className="text-[10px] text-gray-500">練習セッション</p>
+            <p className="text-lg font-bold text-[#e94560]">Free</p>
+            <p className="text-[10px] text-gray-500">forever</p>
           </div>
           <div className="w-px bg-gray-700" />
           <div className="text-center">
-            <p className="text-lg font-bold text-[#e94560]">🔥 30日+</p>
-            <p className="text-[10px] text-gray-500">最長ストリーク</p>
+            <p className="text-lg font-bold text-[#e94560]">🔥 Streaks</p>
+            <p className="text-[10px] text-gray-500">keep you going</p>
           </div>
           <div className="w-px bg-gray-700" />
           <div className="text-center">
-            <p className="text-lg font-bold text-[#e94560]">無料</p>
-            <p className="text-[10px] text-gray-500">ずっと使える</p>
+            <p className="text-lg font-bold text-[#e94560]">No&nbsp;password</p>
+            <p className="text-[10px] text-gray-500">magic link login</p>
           </div>
         </div>
 
@@ -117,7 +117,7 @@ function LoginForm() {
           {/* 区切り */}
           <div className="flex items-center gap-3 py-1">
             <div className="flex-1 h-px bg-gray-700" />
-            <span className="text-gray-500 text-xs">またはメールで</span>
+            <span className="text-gray-500 text-xs">or continue with email</span>
             <div className="flex-1 h-px bg-gray-700" />
           </div>
 
@@ -125,20 +125,20 @@ function LoginForm() {
           {emailSent ? (
             <div className="bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-5 text-center">
               <div className="text-3xl mb-2">📬</div>
-              <p className="text-green-400 text-sm font-semibold">メールを送りました！</p>
+              <p className="text-green-400 text-sm font-semibold">Check your email!</p>
               <p className="text-gray-400 text-xs mt-2 leading-relaxed">
-                <span className="text-white">{email}</span> に<br />
-                ログイン用のリンクを送りました。<br />
-                メールを開いてリンクをタップしてください。
+                We sent a login link to<br />
+                <span className="text-white">{email}</span>.<br />
+                Open the email and tap the link to sign in.
               </p>
               <p className="text-gray-600 text-xs mt-3">
-                ※ 届かない場合は迷惑メールフォルダもご確認ください
+                Can&apos;t find it? Check your spam folder.
               </p>
               <button
                 onClick={() => { setEmailSent(false); setEmail(""); }}
                 className="text-gray-500 text-xs mt-4 hover:text-gray-300 transition-colors underline"
               >
-                別のメールアドレスで試す
+                Try a different email address
               </button>
             </div>
           ) : (
@@ -150,7 +150,7 @@ function LoginForm() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="メールアドレスを入力"
+                placeholder="Enter your email address"
                 autoComplete="email"
                 className="w-full bg-[#0f3460] text-white rounded-xl px-4 py-3 text-sm border border-gray-600 focus:outline-none focus:border-blue-400 placeholder-gray-500"
               />
@@ -159,10 +159,10 @@ function LoginForm() {
                 disabled={emailLoading}
                 className="w-full bg-[#e94560] hover:bg-[#c73652] text-white font-semibold py-3 px-4 rounded-xl transition-colors disabled:opacity-50 text-sm"
               >
-                {emailLoading ? "送信中..." : "ログインリンクをメールで受け取る"}
+                {emailLoading ? "Sending…" : "Send me a login link"}
               </button>
               <p className="text-[11px] text-gray-600 text-center pt-0.5">
-                パスワード不要 · 登録も同時にできます
+                No password · Sign up at the same time
               </p>
             </form>
           )}
@@ -188,17 +188,17 @@ function LoginForm() {
             className="inline-flex items-center gap-1.5 text-gray-500 hover:text-gray-300 text-sm transition-colors"
           >
             <span>👀</span>
-            <span>登録なしで試してみる</span>
+            <span>Try without signing up</span>
             <span className="text-xs">→</span>
           </Link>
-          <p className="text-gray-700 text-xs mt-1">データはブラウザに保存、後で同期できます</p>
+          <p className="text-gray-700 text-xs mt-1">Data saved in browser · sync later</p>
         </div>
 
         <p className="text-center text-gray-600 text-xs mt-4">
-          ログインすることで
-          <a href="#" className="hover:text-gray-400 underline mx-0.5">利用規約</a>
-          と
-          <a href="#" className="hover:text-gray-400 underline mx-0.5">プライバシーポリシー</a>
+          By continuing you agree to our
+          <Link href="/terms" className="hover:text-gray-400 underline mx-0.5">Terms of Service</Link>
+          {" & "}
+          <Link href="/privacy" className="hover:text-gray-400 underline mx-0.5">Privacy Policy</Link>
           に同意します
         </p>
       </div>

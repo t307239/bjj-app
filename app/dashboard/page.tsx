@@ -45,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { title: "ダッシュボード | BJJ App" };
+    return { title: "Dashboard | BJJ App" };
   }
 
   // プロフィールはキャッシュから、総練習数とストリーク用ログを並列取得
@@ -78,9 +78,9 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   const BELT_LABELS: Record<string, string> = {
-    white: "白帯", blue: "青帯", purple: "紫帯", brown: "茶帯", black: "黒帯",
+    white: "White Belt", blue: "Blue Belt", purple: "Purple Belt", brown: "Brown Belt", black: "Black Belt",
   };
-  const beltLabel = BELT_LABELS[belt] ?? "白帯";
+  const beltLabel = BELT_LABELS[belt] ?? "White Belt";
 
   // メタデータ用ストリーク計算（簡易版）
   let metaStreak = 0;
@@ -100,15 +100,15 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   const ogImageUrl = `${BASE_URL}/api/og?belt=${belt}&count=${count}&months=${months}&streak=${metaStreak}`;
-  const title = `BJJの記録 — ${count}回練習達成！ | BJJ App`;
-  const description = `${beltLabel} · 総${count}回練習 · BJJ歴${months}ヶ月 — BJJ Appで毎日の練習を記録中`;
+  const title = `BJJ Training Log — ${count} Sessions! | BJJ App`;
+  const description = `${beltLabel} · ${count} total sessions · ${months} months of BJJ — tracking every roll with BJJ App`;
 
   return {
-    title: count > 0 ? `ダッシュボード — ${count}回練習` : "ダッシュボード",
+    title: count > 0 ? `Dashboard — ${count} sessions` : "Dashboard | BJJ App",
     openGraph: {
       title,
       description,
-      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: "BJJ App 練習記録" }],
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: "BJJ App Training Record" }],
     },
     twitter: {
       card: "summary_large_image",
@@ -134,7 +134,7 @@ export default async function DashboardPage() {
     user.user_metadata?.full_name ||
     user.user_metadata?.name ||
     user.email?.split("@")[0] ||
-    "選手";
+    "Athlete";
 
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
@@ -221,12 +221,12 @@ export default async function DashboardPage() {
   const intensityBadge: { label: string; emoji: string; color: string } | null =
     monthSessionCount >= 2
       ? avgSessionMin >= 90
-        ? { label: "ハード強度", emoji: "🔥", color: "text-red-400" }
+        ? { label: "Hard intensity", emoji: "🔥", color: "text-red-400" }
         : avgSessionMin >= 60
-        ? { label: "中強度", emoji: "💪", color: "text-orange-400" }
+        ? { label: "Moderate intensity", emoji: "💪", color: "text-orange-400" }
         : avgSessionMin >= 30
-        ? { label: "軽め", emoji: "📈", color: "text-yellow-400" }
-        : { label: "入門", emoji: "🌱", color: "text-green-400" }
+        ? { label: "Light training", emoji: "📈", color: "text-yellow-400" }
+        : { label: "Getting started", emoji: "🌱", color: "text-green-400" }
       : null;
 
   const isPro = profileData?.is_pro ?? false;
@@ -271,19 +271,19 @@ export default async function DashboardPage() {
       {/* メインコンテンツ */}
       <main className="max-w-4xl mx-auto px-4 py-6">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold">おかえり、{displayName} 👋</h2>
+          <h2 className="text-2xl font-bold">Welcome back, {displayName} 👋</h2>
           <p className="text-gray-400 text-sm mt-1">
             {streak >= 30
-              ? `🔥 ${streak}日連続！圧倒的な継続力です。`
+              ? `🔥 ${streak}-day streak — unstoppable consistency!`
               : streak >= 14
-              ? `💪 ${streak}日連続！素晴らしいペースです。`
+              ? `💪 ${streak}-day streak — excellent pace!`
               : streak >= 7
-              ? `⚡ ${streak}日連続！勢いが出てきました！`
+              ? `⚡ ${streak}-day streak — you're on a roll!`
               : streak >= 3
-              ? `🎯 ${streak}日連続！良い習慣が育っています。`
+              ? `🎯 ${streak}-day streak — great habit forming!`
               : streak >= 1
-              ? "今日も練習頑張ろう！"
-              : "今日から新しい練習を記録しよう！"}
+              ? "Keep it up — log today's session!"
+              : "Start fresh — log your first session today!"}
           </p>
         </div>
 
@@ -293,13 +293,13 @@ export default async function DashboardPage() {
             <div className="text-2xl font-bold text-[#e94560]">
               {monthCount ?? 0}
             </div>
-            <div className="text-gray-400 text-xs mt-1">今月の練習</div>
+            <div className="text-gray-400 text-xs mt-1">This Month</div>
             {prevMonthCount !== null && prevMonthCount !== undefined && (
               <div className={`text-[10px] mt-0.5 ${
                 (monthCount ?? 0) >= prevMonthCount ? "text-green-400" : "text-red-400"
               }`}>
                 {(monthCount ?? 0) >= prevMonthCount ? "▲" : "▼"}
-                {Math.abs((monthCount ?? 0) - prevMonthCount)} vs 先月
+                {Math.abs((monthCount ?? 0) - prevMonthCount)} vs last mo.
               </div>
             )}
             {monthHoursStr && (
@@ -309,15 +309,15 @@ export default async function DashboardPage() {
             )}
             {intensityBadge && (
               <div className={`text-[10px] mt-0.5 font-medium ${intensityBadge.color}`}>
-                {intensityBadge.emoji} {intensityBadge.label}（平均{avgSessionMin}分/回）
+                {intensityBadge.emoji} {intensityBadge.label} (avg {avgSessionMin}min)
               </div>
             )}
             {remainingDays > 0 && (
               <div className="text-[10px] mt-0.5 text-gray-500">
-                あと{remainingDays}日
+                {remainingDays}d left
                 {(monthCount ?? 0) > 0 && currentDayOfMonth > 0 && (
                   <span className="text-blue-400/80">
-                    {" · "}予測{Math.round((monthCount ?? 0) / currentDayOfMonth * daysInMonth)}回
+                    {" · "}proj. {Math.round((monthCount ?? 0) / currentDayOfMonth * daysInMonth)}
                   </span>
                 )}
               </div>
@@ -327,7 +327,7 @@ export default async function DashboardPage() {
             <div className="text-2xl font-bold text-yellow-400">
               {weekCount ?? 0}
             </div>
-            <div className="text-gray-400 text-xs mt-1">今週の練習</div>
+            <div className="text-gray-400 text-xs mt-1">This Week</div>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3 mb-6">
@@ -335,11 +335,11 @@ export default async function DashboardPage() {
             <div className="text-2xl font-bold text-blue-400">
               {techniqueCount ?? 0}
             </div>
-            <div className="text-gray-400 text-xs mt-1">習得テクニック</div>
+            <div className="text-gray-400 text-xs mt-1">Techniques</div>
           </Link>
           <Link href="/profile" className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-green-400/40 transition-colors block">
             <div className="text-2xl font-bold text-green-400">{streak}</div>
-            <div className="text-gray-400 text-xs mt-1">連続練習日</div>
+            <div className="text-gray-400 text-xs mt-1">Day Streak</div>
           </Link>
         </div>
 
@@ -355,10 +355,10 @@ export default async function DashboardPage() {
             <span className="text-xl">🏫</span>
             <div className="flex-1 min-w-0">
               <p className="text-blue-300 text-sm font-semibold group-hover:text-blue-200">
-                ジム・アカデミー名を設定しましょう
+                Add your gym or academy name
               </p>
               <p className="text-gray-500 text-xs truncate">
-                プロフィールに道場名を追加すると、B2B連携機能が使えます →
+                Add your gym to your profile to unlock B2B features →
               </p>
             </div>
             <span className="text-gray-600 group-hover:text-gray-400 text-sm">›</span>
@@ -393,8 +393,8 @@ export default async function DashboardPage() {
             <div className="bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-2.5 mb-3 flex items-center gap-3">
               <span className="text-lg">🎯</span>
               <div>
-                <p className="text-green-400 text-sm font-semibold">今週の目標達成！</p>
-                <p className="text-gray-400 text-xs">週間目標{wGoal}回 · 達成{wCount}回</p>
+                <p className="text-green-400 text-sm font-semibold">Weekly goal reached!</p>
+                <p className="text-gray-400 text-xs">Goal: {wGoal} · Done: {wCount}</p>
               </div>
             </div>
           );
@@ -404,11 +404,11 @@ export default async function DashboardPage() {
               <span className="text-lg">{onPace ? "📅" : "⚡"}</span>
               <div className="flex-1">
                 <p className={`${onPace ? "text-blue-300" : "text-yellow-300"} text-sm font-semibold`}>
-                  今週の目標まであと{needed}回
+                  {needed} more session{needed !== 1 ? "s" : ""} to hit your weekly goal
                 </p>
                 <p className="text-gray-400 text-xs">
-                  {wCount}/{wGoal}回達成 · 残{daysLeftInWeek}日
-                  {onPace ? " ✓ このペースで達成可能" : " ⚠ ペースアップが必要"}
+                  {wCount}/{wGoal} done · {daysLeftInWeek}d left
+                  {onPace ? " ✓ on pace" : " ⚠ pick up the pace"}
                 </p>
               </div>
             </div>

@@ -6,15 +6,15 @@ import TechniqueLog from "@/components/TechniqueLog";
 import AffiliateSection from "@/components/AffiliateSection";
 
 export const metadata: Metadata = {
-  title: "テクニック帳",
-  description: "習得したBJJテクニックをポジション別に記録・整理。習熟度を追跡して弱点を把握しよう。",
+  title: "Technique Journal | BJJ App",
+  description: "Log and organize every BJJ technique you've learned by position. Track mastery levels and identify weak spots.",
 };
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  "name": "BJJテクニック帳",
-  "description": "Brazilian Jiu-Jitsuのテクニックを記録・管理するリスト",
+  "name": "BJJ Technique Journal",
+  "description": "A personal record of Brazilian Jiu-Jitsu techniques, organized by position and mastery level",
   "url": "https://bjj-app-one.vercel.app/techniques",
   "isPartOf": {
     "@type": "WebApplication",

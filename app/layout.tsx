@@ -8,21 +8,21 @@ export const metadata: Metadata = {
     template: "%s | BJJ App",
   },
   description:
-    "Brazilian Jiu-Jitsuの練習を記録・管理・分析。練習回数・テクニック・連続記録を追跡してあなたの成長を可視化。",
+    "Track your Brazilian Jiu-Jitsu training — log sessions, record techniques, maintain streaks, and visualize your progress.",
   manifest: "/manifest.json",
-  keywords: ["BJJ", "ブラジリアン柔術", "練習記録", "テクニック管理", "格闘技"],
+  keywords: ["BJJ", "Brazilian Jiu-Jitsu", "training tracker", "technique log", "martial arts"],
   authors: [{ name: "BJJ App" }],
   openGraph: {
     type: "website",
-    locale: "ja_JP",
+    locale: "en_US",
     title: "BJJ App - Brazilian Jiu-Jitsu Tracker",
-    description: "BJJの練習を記録・管理・成長させよう",
+    description: "Track your BJJ training — log sessions, record techniques, and grow.",
     siteName: "BJJ App",
   },
   twitter: {
     card: "summary",
     title: "BJJ App",
-    description: "BJJの練習を記録・管理・成長させよう",
+    description: "Track your BJJ training — log sessions, record techniques, and grow.",
   },
   appleWebApp: {
     capable: true,
@@ -48,7 +48,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja">
+    <html lang="en">
       <head>
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <link rel="icon" href="/favicon.ico" sizes="any" />

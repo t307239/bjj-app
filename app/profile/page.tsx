@@ -5,15 +5,15 @@ import NavBar from "@/components/NavBar";
 import ProfileTabs from "@/components/ProfileTabs";
 
 export const metadata: Metadata = {
-  title: "プロフィール",
-  description: "BJJ練習の累計記録・帯・ジム・目標を管理するプロフィールページ。",
+  title: "Profile | BJJ App",
+  description: "Manage your BJJ profile — belt rank, gym, goals, and lifetime training stats.",
 };
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ProfilePage",
-  "name": "BJJ App プロフィール",
-  "description": "Brazilian Jiu-Jitsuの練習記録・帯・目標を管理",
+  "name": "BJJ App Profile",
+  "description": "Manage your Brazilian Jiu-Jitsu training profile, belt rank, and goals",
   "url": "https://bjj-app-one.vercel.app/profile",
 };
 
@@ -31,7 +31,7 @@ export default async function ProfilePage() {
     user.user_metadata?.full_name ||
     user.user_metadata?.name ||
     user.email?.split("@")[0] ||
-    "選手";
+    "Athlete";
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
