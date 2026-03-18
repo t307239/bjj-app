@@ -20,6 +20,7 @@ import AchievementBadge from "@/components/AchievementBadge";
 import InstallBanner from "@/components/InstallBanner";
 import InsightsBanner from "@/components/InsightsBanner";
 import DailyWikiTip from "@/components/DailyWikiTip";
+import ProUpgradeBanner from "@/components/ProUpgradeBanner";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app-one.vercel.app";
@@ -289,6 +290,9 @@ export default async function DashboardPage() {
             <div className="text-gray-400 text-xs mt-1">連続練習日</div>
           </Link>
         </div>
+
+        {/* Proアップグレードバナー（非Proユーザー向け） */}
+        <ProUpgradeBanner isPro={isPro} />
 
         {/* 練習インサイト */}
         <InsightsBanner userId={user.id} />

@@ -25,6 +25,7 @@ export default function WeeklyStrip({ userId }: Props) {
   const [trainedDates, setTrainedDates] = useState<Set<string>>(new Set());
   const [weekTotalMins, setWeekTotalMins] = useState(0);
   const [lastWeekCount, setLastWeekCount] = useState<number | null>(null);
+  const [lastWeekMins, setLastWeekMins] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
@@ -51,7 +52,7 @@ export default function WeeklyStrip({ userId }: Props) {
       const lastMondayStr = toLocalDateStr(lastMonday);
       const lastSundayStr = toLocalDateStr(lastSunday);
 
-      const [{ data: logs }, { count: prevCount }] = await Promise.all([
+      const [{ data: logs }, { data: lastWeekLogs }] = await Promise.all([
         supabase
           .from("training_logs")
           .select("date, duration_min")
@@ -60,7 +61,7 @@ export default function WeeklyStrip({ userId }: Props) {
           .lte("date", sundayStr),
         supabase
           .from("training_logs")
-          .select("*", { count: "exact", head: true })
+          .select("date, duration_min")
           .eq("user_id", userId)
           .gte("date", lastMondayStr)
           .lte("date", lastSundayStr),
@@ -70,7 +71,13 @@ export default function WeeklyStrip({ userId }: Props) {
         setTrainedDates(new Set(logs.map((l: { date: string; duration_min: number }) => l.date)));
         setWeekTotalMins(logs.reduce((sum: number, l: { date: string; duration_min: number }) => sum + (l.duration_min ?? 0), 0));
       }
-      setLastWeekCount(prevCount ?? 0);
+      if (lastWeekLogs) {
+        setLastWeekCount(lastWeekLogs.length);
+        setLastWeekMins(lastWeekLogs.reduce((sum: number, l: { date: string; duration_min: number }) => sum + (l.duration_min ?? 0), 0));
+      } else {
+        setLastWeekCount(0);
+        setLastWeekMins(0);
+      }
       setLoading(false);
     };
     load();
@@ -112,8 +119,33 @@ export default function WeeklyStrip({ userId }: Props) {
             <span className="text-[10px] text-gray-500">· {fmtMins(weekTotalMins)}</span>
           )}
           {lastWeekCount !== null && lastWeekCount > 0 && (
-            <span className={`text-[10px] font-medium ${trainedThisWeek > lastWeekCount ? "text-green-400" : trainedThisWeek < lastWeekCount ? "text-gray-500" : "text-gray-500"}`}>
-              {trainedThisWeek > lastWeekCount ? `▲${trainedThisWeek - lastWeekCount} 先週比` : trainedThisWeek < lastWeekCount ? `先週${lastWeekCount}回` : `= 先週`}
+            <span className={`text-[10px] font-medium ${
+              trainedThisWeek > lastWeekCount
+                ? "text-green-400"
+                : trainedThisWeek < lastWeekCount
+                ? "text-red-400/70"
+                : "text-gray-500"
+            }`}>
+              {trainedThisWeek > lastWeekCount
+                ? `▲${trainedThisWeek - lastWeekCount}回`
+                : trainedThisWeek < lastWeekCount
+                ? `▼${lastWeekCount - trainedThisWeek}回`
+                : "= 先週"} 先週比
+            </span>
+          )}
+          {lastWeekMins !== null && lastWeekMins > 0 && weekTotalMins > 0 && (
+            <span className={`text-[10px] font-medium ${
+              weekTotalMins > lastWeekMins
+                ? "text-green-400"
+                : weekTotalMins < lastWeekMins
+                ? "text-red-400/70"
+                : "text-gray-500"
+            }`}>
+              {weekTotalMins > lastWeekMins
+                ? `▲${fmtMins(weekTotalMins - lastWeekMins)}`
+                : weekTotalMins < lastWeekMins
+                ? `▼${fmtMins(lastWeekMins - weekTotalMins)}`
+                : "= 時間"}
             </span>
           )}
         </div>
