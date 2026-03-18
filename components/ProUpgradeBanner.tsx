@@ -9,9 +9,9 @@ type Props = {
 const PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
 
 const PRO_FEATURES = [
-  "CSVエクスポート",
-  "詳細グラフ（12ヶ月）",
-  "StreakFreeze追加",
+  "練習CSVエクスポート",
+  "12ヶ月グラフ閲覧",
+  "StreakFreezeチケット",
 ];
 
 export default function ProUpgradeBanner({ isPro }: Props) {
