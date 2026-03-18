@@ -1,5 +1,3 @@
-"use client";
-
 // DailyWikiTip — 日替わりBJJ Wikiページ推薦コンポーネント
 // 年の通算日でWikiページをローテーション表示
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
@@ -26,6 +27,17 @@ import ProUpgradeBanner from "@/components/ProUpgradeBanner";
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app-one.vercel.app";
 
+// React.cache で プロフィール二重クエリを最適化
+const getCachedProfile = cache(async (userId: string) => {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("profiles")
+    .select("belt, start_date, is_pro")
+    .eq("id", userId)
+    .single();
+  return data as { belt: string; start_date: string | null; is_pro: boolean } | null;
+});
+
 export async function generateMetadata(): Promise<Metadata> {
   const supabase = await createClient();
   const {
@@ -36,13 +48,9 @@ export async function generateMetadata(): Promise<Metadata> {
     return { title: "ダッシュボード | BJJ App" };
   }
 
-  // プロフィールと総練習数を並列取得
-  const [{ data: profile }, { count: totalCount }, { data: recentLogsForStreak }] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("belt, start_date, is_pro")
-      .eq("id", user.id)
-      .single(),
+  // プロフィールはキャッシュから、総練習数とストリーク用ログを並列取得
+  const profile = await getCachedProfile(user.id);
+  const [{ count: totalCount }, { data: recentLogsForStreak }] = await Promise.all([
     supabase
       .from("training_logs")
       .select("*", { count: "exact", head: true })
@@ -151,6 +159,8 @@ export default async function DashboardPage() {
   const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
   const firstDayOfWeek = toJSTStr(new Date(now.getTime() - daysToMonday * 86400000));
 
+  const profileData = await getCachedProfile(user.id);
+
   const [
     { count: monthCount },
     { count: prevMonthCount },
@@ -158,7 +168,6 @@ export default async function DashboardPage() {
     { count: techniqueCount },
     { count: totalCount },
     { data: recentLogs },
-    { data: profileData },
   ] = await Promise.all([
     supabase
       .from("training_logs")
@@ -190,14 +199,9 @@ export default async function DashboardPage() {
       .eq("user_id", user.id)
       .order("date", { ascending: false })
       .limit(60),
-    supabase
-      .from("profiles")
-      .select("is_pro")
-      .eq("id", user.id)
-      .single(),
   ]);
 
-  const isPro = (profileData as { is_pro?: boolean } | null)?.is_pro ?? false;
+  const isPro = profileData?.is_pro ?? false;
 
   // 連続練習日数を計算
   let streak = 0;
@@ -334,7 +338,7 @@ export default async function DashboardPage() {
         <TrainingCalendar userId={user.id} />
 
         {/* 月別練習グラフ */}
-        <TrainingBarChart userId={user.id} />
+        <TrainingBarChart userId={user.id} isPro={isPro} />
 
         {/* 練習タイプ分布 */}
         <TrainingTypeChart userId={user.id} />

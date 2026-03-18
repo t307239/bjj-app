@@ -18,6 +18,7 @@ type LogEntry = {
 
 type Props = {
   userId: string;
+  isPro?: boolean;
 };
 
 const TYPE_LABELS: Record<string, string> = {
@@ -36,7 +37,7 @@ const TYPE_COLORS: Record<string, string> = {
   open_mat: "bg-green-500/70",
 };
 
-export default function TrainingBarChart({ userId }: Props) {
+export default function TrainingBarChart({ userId, isPro = false }: Props) {
   const [data6, setData6] = useState<MonthData[]>([]);
   const [data12, setData12] = useState<MonthData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -203,64 +204,92 @@ export default function TrainingBarChart({ userId }: Props) {
         </div>
       </div>
 
-      <div className="relative" style={{ height: "120px" }}>
-        {avgPct > 0 && (
-          <div
-            className="absolute left-0 right-0 border-t border-dashed border-gray-500/50 pointer-events-none"
-            style={{ bottom: `${avgPct}%` }}
-            title={`平均: ${view === "count" ? `${Math.round(avgVal)}回` : formatMinutes(Math.round(avgVal))}`}
-          />
-        )}
-        <div className="flex items-end gap-1 h-full">
-          {data.map((d) => {
-            const val = view === "count" ? d.count : d.minutes;
-            const pct = val > 0 ? Math.max((val / maxVal) * 100, 5) : 0;
-            const label = view === "count" ? `${val}回` : formatMinutes(val);
-            const isCurrentMonth = d.month === currentMonthKey;
-            const isSelected = d.month === selectedMonth;
-
-            return (
-              <div
-                key={d.month}
-                className={`flex-1 flex flex-col items-center justify-end gap-1 h-full cursor-pointer group`}
-                onClick={() => setSelectedMonth(isSelected ? null : d.month)}
-                title={d.count > 0 ? `${d.label}: クリックして詳細を表示` : undefined}
-              >
-                <span
-                  className={`leading-none transition-opacity ${range === 12 ? "text-[8px]" : "text-[9px]"} ${
-                    val > 0 && (range === 6 || isCurrentMonth) ? "opacity-100" : "opacity-0"
-                  } ${isCurrentMonth ? "text-[#e94560]" : "text-gray-500"}`}
-                >
-                  {label}
-                </span>
-                <div
-                  className={`w-full rounded-t-sm transition-all ${
-                    isSelected
-                      ? "bg-yellow-400"
-                      : isCurrentMonth
-                      ? "bg-[#e94560]"
-                      : val > 0
-                      ? "bg-[#e94560]/50 group-hover:bg-[#e94560]/70"
-                      : "bg-gray-800"
-                  }`}
-                  style={{ height: `${pct}%`, minHeight: val > 0 ? "4px" : "0px" }}
-                />
-                <span
-                  className={`leading-none ${range === 12 ? "text-[8px]" : "text-[10px]"} ${
-                    isSelected
-                      ? "text-yellow-400 font-semibold"
-                      : isCurrentMonth
-                      ? "text-white font-semibold"
-                      : "text-gray-500"
-                  }`}
-                >
-                  {d.label}
-                </span>
-              </div>
-            );
-          })}
+      {range === 12 && !isPro ? (
+        <div className="relative" style={{ height: "120px" }}>
+          <div className="filter blur-sm pointer-events-none opacity-50">
+            <div className="flex items-end gap-1 h-full">
+              {data.map((d) => {
+                const val = view === "count" ? d.count : d.minutes;
+                const pct = val > 0 ? Math.max((val / maxVal) * 100, 5) : 0;
+                const isCurrentMonth = d.month === currentMonthKey;
+                return (
+                  <div
+                    key={d.month}
+                    className={`flex-1 rounded-t-sm`}
+                    style={{ height: `${pct}%`, minHeight: val > 0 ? "4px" : "0px", background: isCurrentMonth ? "#e94560" : "#e945604d" }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#1a1a2e]/80 rounded-xl">
+            <span className="text-2xl mb-2">🔒</span>
+            <p className="text-sm font-semibold text-gray-200">12ヶ月表示はProプランで</p>
+            <a href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#"} className="mt-3 bg-[#e94560] hover:bg-[#c73652] text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
+              Proにアップグレード
+            </a>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="relative" style={{ height: "120px" }}>
+          {avgPct > 0 && (
+            <div
+              className="absolute left-0 right-0 border-t border-dashed border-gray-500/50 pointer-events-none"
+              style={{ bottom: `${avgPct}%` }}
+              title={`平均: ${view === "count" ? `${Math.round(avgVal)}回` : formatMinutes(Math.round(avgVal))}`}
+            />
+          )}
+          <div className="flex items-end gap-1 h-full">
+            {data.map((d) => {
+              const val = view === "count" ? d.count : d.minutes;
+              const pct = val > 0 ? Math.max((val / maxVal) * 100, 5) : 0;
+              const label = view === "count" ? `${val}回` : formatMinutes(val);
+              const isCurrentMonth = d.month === currentMonthKey;
+              const isSelected = d.month === selectedMonth;
+
+              return (
+                <div
+                  key={d.month}
+                  className={`flex-1 flex flex-col items-center justify-end gap-1 h-full cursor-pointer group`}
+                  onClick={() => setSelectedMonth(isSelected ? null : d.month)}
+                  title={d.count > 0 ? `${d.label}: クリックして詳細を表示` : undefined}
+                >
+                  <span
+                    className={`leading-none transition-opacity ${range === 12 ? "text-[8px]" : "text-[9px]"} ${
+                      val > 0 && (range === 6 || isCurrentMonth) ? "opacity-100" : "opacity-0"
+                    } ${isCurrentMonth ? "text-[#e94560]" : "text-gray-500"}`}
+                  >
+                    {label}
+                  </span>
+                  <div
+                    className={`w-full rounded-t-sm transition-all ${
+                      isSelected
+                        ? "bg-yellow-400"
+                        : isCurrentMonth
+                        ? "bg-[#e94560]"
+                        : val > 0
+                        ? "bg-[#e94560]/50 group-hover:bg-[#e94560]/70"
+                        : "bg-gray-800"
+                    }`}
+                    style={{ height: `${pct}%`, minHeight: val > 0 ? "4px" : "0px" }}
+                  />
+                  <span
+                    className={`leading-none ${range === 12 ? "text-[8px]" : "text-[10px]"} ${
+                      isSelected
+                        ? "text-yellow-400 font-semibold"
+                        : isCurrentMonth
+                        ? "text-white font-semibold"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {d.label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
       {avgPct > 0 && (
         <div className="text-[10px] text-gray-600 text-right mt-1">
           平均 {view === "count" ? `${Math.round(avgVal)}回/月` : `${formatMinutes(Math.round(avgVal))}/月`}
