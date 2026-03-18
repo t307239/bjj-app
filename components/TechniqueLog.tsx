@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
-import { getAffiliateLink } from "@/lib/affiliateMap";
+import { getAffiliateInfo } from "@/lib/affiliateMap";
 
 type Technique = {
   id: string;
@@ -638,18 +638,17 @@ export default function TechniqueLog({ userId }: Props) {
                   </div>
                   <div className="flex gap-1 ml-3 flex-shrink-0">
                     {(() => {
-                      const dvdLink = getAffiliateLink(technique.name);
-                      return dvdLink ? (
+                      const dvdInfo = getAffiliateInfo(technique.name);
+                      return dvdInfo ? (
                         <a
-                          href={dvdLink}
+                          href={dvdInfo.url}
                           target="_blank"
                           rel="noopener noreferrer sponsored"
-                          className="text-gray-600 hover:text-orange-400 transition-colors p-1"
-                          title="BJJ Fanatics DVDを見る"
+                          className="flex items-center gap-1 text-[10px] font-medium text-orange-400/80 hover:text-orange-300 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/20 hover:border-orange-500/40 px-2 py-1 rounded-lg transition-all whitespace-nowrap"
+                          title={`${dvdInfo.title} by ${dvdInfo.instructor}`}
                         >
-                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                          </svg>
+                          <span>📼</span>
+                          <span>{dvdInfo.instructor.split(" ").slice(-1)[0]}</span>
                         </a>
                       ) : null;
                     })()}

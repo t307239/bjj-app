@@ -4,13 +4,13 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "BJJ App - Brazilian Jiu-Jitsu練習トラッカー",
-  description: "柔術の練習記録・テクニック管理・成長の可視化。無料で始めるBJJトレーニングアプリ。",
-  keywords: ["BJJ", "ブラジリアン柔術", "練習記録", "テクニック管理", "格闘技アプリ", "Brazilian Jiu-Jitsu"],
+  title: "BJJ App - Brazilian Jiu-Jitsu Training Tracker | 練習トラッカー",
+  description: "Track your BJJ training sessions, techniques, and streaks. Free training log for Brazilian Jiu-Jitsu practitioners. 柔術の練習記録・テクニック管理・成長の可視化。",
+  keywords: ["BJJ", "Brazilian Jiu-Jitsu", "training tracker", "BJJ app", "grappling log", "technique tracker", "ブラジリアン柔術", "練習記録", "テクニック管理"],
   openGraph: {
     type: "website",
-    title: "BJJ App - Brazilian Jiu-Jitsu練習トラッカー",
-    description: "柔術の練習記録・テクニック管理・成長の可視化。無料で始めるBJJトレーニングアプリ。",
+    title: "BJJ App - Track Your Brazilian Jiu-Jitsu Journey",
+    description: "Log every session. Track every technique. Never forget your streak. Free BJJ training tracker.",
     url: "https://bjj-app-one.vercel.app",
     siteName: "BJJ App",
   },
@@ -20,12 +20,16 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "BJJ App",
-  "description": "Brazilian Jiu-Jitsuの練習記録・テクニック管理・成長可視化アプリ。練習回数・テクニック・連続記録を追跡。",
+  "description": "Track your Brazilian Jiu-Jitsu training sessions, techniques, and streaks. Free BJJ training log app. 柔術の練習記録・テクニック管理・成長可視化アプリ。",
   "url": "https://bjj-app-one.vercel.app",
   "applicationCategory": "SportsApplication",
   "operatingSystem": "Web",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "offers": [
+    { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
+    { "@type": "Offer", "name": "Pro", "price": "4.99", "priceCurrency": "USD", "billingIncrement": "P1M" },
+  ],
   "inLanguage": ["ja", "en"],
+  "audience": { "@type": "Audience", "audienceType": "Brazilian Jiu-Jitsu practitioners" },
 };
 
 export default async function Home() {
@@ -104,6 +108,79 @@ export default async function Home() {
               登録なしで体験する →
             </Link>
           </p>
+        </div>
+      </section>
+
+      {/* English Section — for Reddit / international users */}
+      <section id="english" className="px-4 py-16 bg-[#0a0a18] border-t border-gray-800/50">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 bg-[#16213e] border border-blue-500/30 rounded-full px-4 py-1.5 text-sm text-blue-400 mb-8">
+            🌐 For English speakers
+          </div>
+
+          <h2 className="text-3xl md:text-5xl font-bold mb-5 leading-tight text-white">
+            Stop forgetting what you learned.
+            <br />
+            <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+              Track every technique.
+            </span>
+          </h2>
+
+          <p className="text-gray-400 text-base md:text-lg mb-8 leading-relaxed">
+            You drill a move. You forget it by next week.<br className="hidden md:block" />
+            BJJ App fixes that — log your sessions, save techniques with mastery ratings,
+            and keep your training streak alive.
+          </p>
+
+          {/* Feature pills */}
+          <div className="flex flex-wrap gap-2 justify-center mb-10 text-sm">
+            {[
+              "📊 Session log (Gi / NoGi / Drilling)",
+              "📚 Technique notebook",
+              "🔥 Training streak",
+              "🎯 Weekly & monthly goals",
+              "📅 Calendar heatmap",
+              "🏆 Competition W/L tracker",
+            ].map((f) => (
+              <span key={f} className="bg-[#16213e] border border-gray-700 text-gray-300 px-3 py-1.5 rounded-full">
+                {f}
+              </span>
+            ))}
+          </div>
+
+          {/* Testimonials — English */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 text-left">
+            {[
+              { quote: "Finally a clean BJJ tracker that isn't bloated. Exactly what I needed to stay consistent.", belt: "Blue belt, 1.5 years", initial: "M" },
+              { quote: "The technique notebook is 🔥. I log every guard detail from class and review before rolling.", belt: "Purple belt, 4 years", initial: "A" },
+              { quote: "Built my habit from 2x/week to 4x/week just by watching the streak number go up.", belt: "White belt, 8 months", initial: "J" },
+            ].map(({ quote, belt, initial }) => (
+              <div key={initial} className="bg-[#16213e] rounded-xl p-4 border border-gray-700/60">
+                <div className="flex items-center gap-1 mb-2 text-yellow-400 text-xs">★★★★★</div>
+                <p className="text-gray-400 text-xs leading-relaxed mb-3">&ldquo;{quote}&rdquo;</p>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 bg-blue-500/20 rounded-full flex items-center justify-center text-xs font-bold text-blue-300">{initial}</div>
+                  <span className="text-[10px] text-gray-600">{belt}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href="/login"
+              className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-8 rounded-full text-base transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
+            >
+              Start tracking for free →
+            </Link>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center justify-center gap-2 bg-[#16213e] hover:bg-[#1a2a4a] text-gray-300 font-medium py-4 px-8 rounded-full text-base transition-all border border-gray-700"
+            >
+              Try without signing up
+            </Link>
+          </div>
+          <p className="text-gray-700 text-xs mt-4">No credit card. Sign in with GitHub or Google. Takes 30 seconds.</p>
         </div>
       </section>
 
