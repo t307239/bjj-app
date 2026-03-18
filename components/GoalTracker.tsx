@@ -24,6 +24,14 @@ type MonthHistory = {
   achieved: boolean;
 };
 
+type WeekHistory = {
+  weekStart: string; // "2026-03-10"
+  label: string;     // "今週" / "先週" / "2週前" / "3週前"
+  count: number;
+  achieved: boolean;
+  isCurrent: boolean;
+};
+
 function ProgressBar({ current, target }: { current: number; target: number }) {
   const pct = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
   const done = current >= target && target > 0;
@@ -127,6 +135,7 @@ export default function GoalTracker({ userId }: Props) {
   const [editValue, setEditValue] = useState(0);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [monthHistory, setMonthHistory] = useState<MonthHistory[]>([]);
+  const [weekHistory, setWeekHistory] = useState<WeekHistory[]>([]);
 
   const supabase = createClient();
 
@@ -179,6 +188,47 @@ export default function GoalTracker({ userId }: Props) {
         monthCount: mc ?? 0,
         techniqueCount: tc ?? 0,
       });
+
+      const wGoal = profileRes.data?.weekly_goal ?? 0;
+
+      // 過去4週の週間達成履歴（JST基準）
+      if (wGoal > 0) {
+        const jstMs = Date.now() + 9 * 3600000;
+        const jstD = new Date(jstMs);
+        const dow = jstD.getUTCDay(); // 0=Sun
+        const daysToMon = dow === 0 ? 6 : dow - 1;
+        const thisWeekMonMs = jstMs - daysToMon * 86400000;
+        const tw = new Date(thisWeekMonMs);
+        const thisWeekStart = `${tw.getUTCFullYear()}-${String(tw.getUTCMonth() + 1).padStart(2, "0")}-${String(tw.getUTCDate()).padStart(2, "0")}`;
+        const fourWeeksAgoMs = thisWeekMonMs - 3 * 7 * 86400000;
+        const fw = new Date(fourWeeksAgoMs);
+        const fourWeeksAgoStr = `${fw.getUTCFullYear()}-${String(fw.getUTCMonth() + 1).padStart(2, "0")}-${String(fw.getUTCDate()).padStart(2, "0")}`;
+
+        const { data: wLogs } = await supabase
+          .from("training_logs")
+          .select("date")
+          .eq("user_id", userId)
+          .gte("date", fourWeeksAgoStr);
+
+        const wh: WeekHistory[] = [];
+        for (let i = 3; i >= 0; i--) {
+          const wStartMs = thisWeekMonMs - i * 7 * 86400000;
+          const wEndMs = wStartMs + 6 * 86400000;
+          const ws = new Date(wStartMs);
+          const we = new Date(wEndMs);
+          const wsStr = `${ws.getUTCFullYear()}-${String(ws.getUTCMonth() + 1).padStart(2, "0")}-${String(ws.getUTCDate()).padStart(2, "0")}`;
+          const weStr = `${we.getUTCFullYear()}-${String(we.getUTCMonth() + 1).padStart(2, "0")}-${String(we.getUTCDate()).padStart(2, "0")}`;
+          const cnt = (wLogs ?? []).filter((l) => l.date >= wsStr && l.date <= weStr).length;
+          wh.push({
+            weekStart: wsStr,
+            label: i === 0 ? "今週" : i === 1 ? "先週" : i === 2 ? "2週前" : "3週前",
+            count: cnt,
+            achieved: cnt >= wGoal,
+            isCurrent: i === 0,
+          });
+        }
+        setWeekHistory(wh);
+      }
 
       // 過去6ヶ月の達成履歴を計算
       if (mGoal > 0) {
@@ -371,6 +421,31 @@ export default function GoalTracker({ userId }: Props) {
                       </p>
                     );
                   })()}
+                  {/* 週間達成履歴ヒートマップ（過去4週） */}
+                  {weekHistory.length > 0 && (
+                    <div className="mt-2.5 flex items-center gap-1.5">
+                      {weekHistory.map((w) => (
+                        <div key={w.weekStart} className="flex-1 flex flex-col items-center gap-0.5">
+                          <div
+                            className={`w-full h-6 rounded flex items-center justify-center text-[9px] font-bold transition-colors ${
+                              w.isCurrent
+                                ? w.achieved
+                                  ? "bg-green-500/30 border border-green-500/50 text-green-300"
+                                  : "bg-[#e94560]/20 border border-[#e94560]/40 text-[#e94560]"
+                                : w.achieved
+                                ? "bg-green-500/25 text-green-400"
+                                : "bg-gray-700/60 text-gray-600"
+                            }`}
+                          >
+                            {w.achieved ? "✓" : w.count > 0 ? w.count : "−"}
+                          </div>
+                          <span className={`text-[8px] leading-none ${w.isCurrent ? "text-gray-300" : "text-gray-600"}`}>
+                            {w.label}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </>
               ) : (
                 <p className="text-xs text-gray-600 mt-1">目標未設定（タップして設定）</p>
