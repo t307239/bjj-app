@@ -102,8 +102,17 @@ function formatDuration(min: number): string {
 }
 
 // 試合詳細データのエンコード関数（再定義不要）
-type CompData = { result: string; opponent: string; finish: string; event: string };
+type CompData = { result: string; opponent: string; finish: string; event: string; opponent_rank: string; gi_type: string; };
 const COMP_PREFIX = "__comp__";
+
+const BELT_RANKS = [
+  { value: "", label: "不明" },
+  { value: "white", label: "白帯" },
+  { value: "blue", label: "青帯" },
+  { value: "purple", label: "紫帯" },
+  { value: "brown", label: "茶帯" },
+  { value: "black", label: "黒帯" },
+];
 
 function encodeCompNotes(comp: CompData, userNotes: string): string {
   const filled = Object.values(comp).some((v) => v.trim() !== "");
@@ -226,10 +235,10 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const [trainedToday, setTrainedToday] = useState<boolean | null>(null);
   const [compForm, setCompForm] = useState<CompData>({
-    result: "win", opponent: "", finish: "", event: "",
+    result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi",
   });
   const [editCompForm, setEditCompForm] = useState<CompData>({
-    result: "win", opponent: "", finish: "", event: "",
+    result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi",
   });
   const supabase = createClient();
 
@@ -294,7 +303,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         type: "gi",
         notes: "",
       });
-      setCompForm({ result: "win", opponent: "", finish: "", event: "" });
+      setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
       setShowForm(false);
       setToast({ message: "練習を記録しみした！", type: "success" });
     } else {
@@ -333,7 +342,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     if (entry.type === "competition") {
       const { comp } = decodeCompNotes(entry.notes);
       if (comp) setEditCompForm(comp);
-      else setEditCompForm({ result: "win", opponent: "", finish: "", event: "" });
+      else setEditCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
     }
   };
 
@@ -829,6 +838,31 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                   />
                 </div>
               </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-gray-400 text-xs mb-1">相手の帯（任意）</label>
+                  <select
+                    value={compForm.opponent_rank}
+                    onChange={(e) => setCompForm({ ...compForm, opponent_rank: e.target.value })}
+                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-red-400"
+                  >
+                    {BELT_RANKS.map((b) => (
+                      <option key={b.value} value={b.value}>{b.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-gray-400 text-xs mb-1">道着区分</label>
+                  <select
+                    value={compForm.gi_type}
+                    onChange={(e) => setCompForm({ ...compForm, gi_type: e.target.value })}
+                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-red-400"
+                  >
+                    <option value="gi">道衣 (Gi)</option>
+                    <option value="nogi">ノーギ (NoGi)</option>
+                  </select>
+                </div>
+              </div>
             </div>
           )}
 
@@ -960,6 +994,25 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                           className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
                         />
                       </div>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <select
+                          value={editCompForm.opponent_rank}
+                          onChange={(e) => setEditCompForm({ ...editCompForm, opponent_rank: e.target.value })}
+                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400"
+                        >
+                          {BELT_RANKS.map((b) => (
+                            <option key={b.value} value={b.value}>{b.label}</option>
+                          ))}
+                        </select>
+                        <select
+                          value={editCompForm.gi_type}
+                          onChange={(e) => setEditCompForm({ ...editCompForm, gi_type: e.target.value })}
+                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400"
+                        >
+                          <option value="gi">道衣</option>
+                          <option value="nogi">ノーギ</option>
+                        </select>
+                      </div>
                     </div>
                   )}
                   <textarea
@@ -1002,7 +1055,17 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                               <span className={`text-xs font-semibold ${RESULT_LABELS[comp.result]?.color ?? "text-gray-400"}`}>
                                 {RESULT_LABELS[comp.result]?.label ?? comp.result}
                               </span>
-                              {comp.opponent && <span className="text-xs text-gray-400">vs {comp.opponent}</span>}
+                              {comp.gi_type && (
+                                <span className={`text-xs px-1.5 py-0.5 rounded ${comp.gi_type === "nogi" ? "bg-orange-500/20 text-orange-400" : "bg-blue-500/20 text-blue-400"}`}>
+                                  {comp.gi_type === "nogi" ? "NoGi" : "Gi"}
+                                </span>
+                              )}
+                              {comp.opponent && (
+                                <span className="text-xs text-gray-400">
+                                  vs {comp.opponent}
+                                  {comp.opponent_rank && <span className="ml-1 text-gray-500">({BELT_RANKS.find((b) => b.value === comp.opponent_rank)?.label ?? comp.opponent_rank})</span>}
+                                </span>
+                              )}
                               {comp.finish && <span className="text-xs text-gray-500">by {comp.finish}</span>}
                               {comp.event && <span className="text-xs text-gray-500">🏟 {comp.event}</span>}
                             </div>

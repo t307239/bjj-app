@@ -16,9 +16,11 @@ type CompRecord = {
   lossBySub: number;  // 一本負け（finishあり）
   currentWinStreak: number;  // 現在の連勝数
   bestWinStreak: number;     // 最長連勝記録
+  gi_count: number;          // 道衣試合数
+  nogi_count: number;        // ノーギ試合数
 };
 
-type CompEntry = { result: string; finish: string };
+type CompEntry = { result: string; finish: string; gi_type: string; opponent_rank: string };
 
 type MonthStats = {
   ym: string;    // "2026-03"
@@ -37,8 +39,8 @@ function decodeEntry(notes: string): CompEntry | null {
   const nl = notes.indexOf("\n");
   const jsonStr = nl === -1 ? notes.slice(COMP_PREFIX.length) : notes.slice(COMP_PREFIX.length, nl);
   try {
-    const comp = JSON.parse(jsonStr) as { result: string; finish?: string };
-    return { result: comp.result, finish: comp.finish ?? "" };
+    const comp = JSON.parse(jsonStr) as { result: string; finish?: string; gi_type?: string; opponent_rank?: string };
+    return { result: comp.result, finish: comp.finish ?? "", gi_type: comp.gi_type ?? "gi", opponent_rank: comp.opponent_rank ?? "" };
   } catch {
     return null;
   }
@@ -97,13 +99,16 @@ export default function CompetitionStats({ userId }: Props) {
         .order("date", { ascending: true });
 
       if (data) {
-        const rec: CompRecord = { win: 0, loss: 0, draw: 0, total: 0, winBySub: 0, lossBySub: 0, currentWinStreak: 0, bestWinStreak: 0 };
+        const rec: CompRecord = { win: 0, loss: 0, draw: 0, total: 0, winBySub: 0, lossBySub: 0, currentWinStreak: 0, bestWinStreak: 0, gi_count: 0, nogi_count: 0 };
         // Build ordered results for streak calculation
         const results: string[] = [];
         data.forEach((l: { notes: string; date: string }) => {
           const entry = decodeEntry(l.notes);
           if (!entry) { rec.total++; results.push("unknown"); return; }
           const hasSub = entry.finish.trim() !== "";
+          // Gi/NoGi集計
+          if (entry.gi_type === "nogi") rec.nogi_count++;
+          else rec.gi_count++;
           if (entry.result === "win") {
             rec.win++;
             rec.total++;
@@ -262,6 +267,22 @@ export default function CompetitionStats({ userId }: Props) {
           {lossToSub > 0 && (
             <span className="text-[10px] bg-red-500/10 border border-red-500/20 text-red-400 px-2 py-1 rounded-full">
               一本負 {lossToSub}
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* Gi / NoGi内訳 */}
+      {(record.gi_count > 0 || record.nogi_count > 0) && (
+        <div className="flex gap-2 mb-3">
+          {record.gi_count > 0 && (
+            <span className="text-[10px] bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
+              道衣 {record.gi_count}試合
+            </span>
+          )}
+          {record.nogi_count > 0 && (
+            <span className="text-[10px] bg-orange-500/10 border border-orange-500/20 text-orange-400 px-2 py-1 rounded-full">
+              ノーギ {record.nogi_count}試合
             </span>
           )}
         </div>
