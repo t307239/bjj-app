@@ -277,6 +277,17 @@ export default function GoalTracker({ userId }: Props) {
   ].filter((g) => g.target > 0);
   const allGoalsAchieved = hasGoals && activeGoalStates.length > 0 && activeGoalStates.every((g) => g.current >= g.target);
 
+  // 連続達成月数（直近から遡って連続している月数）
+  const consecutiveAchievedMonths = (() => {
+    if (monthHistory.length === 0) return 0;
+    let cnt = 0;
+    for (let i = monthHistory.length - 1; i >= 0; i--) {
+      if (monthHistory[i].achieved) cnt++;
+      else break;
+    }
+    return cnt;
+  })();
+
   return (
     <>
       {toast && (
@@ -293,9 +304,15 @@ export default function GoalTracker({ userId }: Props) {
         {/* 全目標達成バナー */}
         {allGoalsAchieved && !editing && (
           <div className="mx-4 mt-3 rounded-xl bg-green-500/10 border border-green-500/30 px-4 py-3 text-center">
-            <div className="text-lg mb-0.5">🎉</div>
+            <div className="text-xl mb-0.5">🎉</div>
             <div className="text-sm font-semibold text-green-400">全目標達成！</div>
-            <div className="text-[11px] text-gray-400 mt-0.5">素晴らしい！この調子で続けよう</div>
+            <div className="text-[11px] text-gray-400 mt-0.5">
+              {consecutiveAchievedMonths >= 3
+                ? `🔥 ${consecutiveAchievedMonths}ヶ月連続達成中！黒帯への道が開いている`
+                : consecutiveAchievedMonths >= 2
+                ? `✨ ${consecutiveAchievedMonths}ヶ月連続達成！習慣が身についています`
+                : "素晴らしい！この調子で続けよう"}
+            </div>
           </div>
         )}
 
@@ -334,7 +351,13 @@ export default function GoalTracker({ userId }: Props) {
                     const dow = now.getUTCDay(); // 0=Sun
                     const daysLeftInWeek = dow === 0 ? 0 : 7 - dow; // 今日含まない残り日数
                     const needed = Math.max(0, data.weeklyGoal - data.weekCount);
-                    if (needed === 0) return null;
+                    if (needed === 0) return (
+                      <p className="text-[10px] text-green-400/70 mt-1.5">
+                        {data.weekCount > data.weeklyGoal
+                          ? `🔥 目標+${data.weekCount - data.weeklyGoal}回超達成！今週は最高のペース`
+                          : "🎯 今週の目標クリア！週末まで上積みしよう"}
+                      </p>
+                    );
                     if (daysLeftInWeek === 0) return (
                       <p className="text-[10px] text-gray-600 mt-1.5">今週残り0日 · あと{needed}回</p>
                     );
@@ -381,7 +404,15 @@ export default function GoalTracker({ userId }: Props) {
               {data.monthlyGoal > 0 ? (
                 <>
                   <ProgressBar current={data.monthCount} target={data.monthlyGoal} />
-                  {data.monthCount < data.monthlyGoal && remainingDaysInMonth > 0 && (
+                  {data.monthCount >= data.monthlyGoal ? (
+                    <p className="text-[10px] text-green-400/70 mt-1.5">
+                      {data.monthCount > data.monthlyGoal
+                        ? `🔥 目標+${data.monthCount - data.monthlyGoal}回超達成！`
+                        : consecutiveAchievedMonths >= 2
+                        ? `✨ ${consecutiveAchievedMonths}ヶ月連続達成中！`
+                        : "🎯 今月の目標達成！残り日数は上積みのチャンス"}
+                    </p>
+                  ) : data.monthCount < data.monthlyGoal && remainingDaysInMonth > 0 && (
                     <p className="text-[10px] mt-1 text-gray-500">
                       あと{data.monthlyGoal - data.monthCount}回{" · "}
                       残{remainingDaysInMonth}日{" · "}
