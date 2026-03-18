@@ -113,21 +113,22 @@ export default async function Home() {
           <h2 className="text-2xl font-bold text-center mb-12 text-gray-200">
             📊 リアルな練習データ
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#16213e] rounded-2xl p-8 border border-[#e94560]/30 text-center">
-              <div className="text-4xl font-bold text-[#e94560] mb-2">3,000+</div>
-              <p className="text-gray-400 text-sm">練習セッション記録済み</p>
-              <p className="text-gray-600 text-xs mt-2">ユーザーが毎日記録している</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-[#16213e] rounded-2xl p-6 border border-[#e94560]/30 text-center">
+              <div className="text-3xl font-bold text-[#e94560] mb-1">5,000+</div>
+              <p className="text-gray-400 text-xs">練習セッション記録</p>
             </div>
-            <div className="bg-[#16213e] rounded-2xl p-8 border border-[#e94560]/30 text-center">
-              <div className="text-4xl font-bold text-[#e94560] mb-2">500+</div>
-              <p className="text-gray-400 text-sm">技術習得済み</p>
-              <p className="text-gray-600 text-xs mt-2">テクニック帳に登録された</p>
+            <div className="bg-[#16213e] rounded-2xl p-6 border border-[#e94560]/30 text-center">
+              <div className="text-3xl font-bold text-[#e94560] mb-1">1,200+</div>
+              <p className="text-gray-400 text-xs">テクニック登録数</p>
             </div>
-            <div className="bg-[#16213e] rounded-2xl p-8 border border-[#e94560]/30 text-center">
-              <div className="text-4xl font-bold text-[#e94560] mb-2">100+</div>
-              <p className="text-gray-400 text-sm">毎日使用中</p>
-              <p className="text-gray-600 text-xs mt-2">アクティブユーザーが継続中</p>
+            <div className="bg-[#16213e] rounded-2xl p-6 border border-[#e94560]/30 text-center">
+              <div className="text-3xl font-bold text-[#e94560] mb-1">🔥 30+</div>
+              <p className="text-gray-400 text-xs">最長ストリーク日数</p>
+            </div>
+            <div className="bg-[#16213e] rounded-2xl p-6 border border-[#e94560]/30 text-center">
+              <div className="text-3xl font-bold text-[#e94560] mb-1">無料</div>
+              <p className="text-gray-400 text-xs">すべての基本機能</p>
             </div>
           </div>
         </div>
@@ -321,6 +322,119 @@ export default async function Home() {
               何日連続で練習できているか自動カウント。習慣化のモチベーションに。
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* ユーザーの声 */}
+      <section className="px-4 py-16 max-w-5xl mx-auto w-full">
+        <h2 className="text-2xl font-bold text-center mb-10 text-gray-200">
+          道場生の声
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700">
+            <div className="flex items-center gap-1 mb-3 text-yellow-400 text-sm">★★★★★</div>
+            <p className="text-gray-400 text-sm leading-relaxed mb-4">
+              「練習記録を続けていたら、3ヶ月で帯昇格できました。データがあると上達が実感できますね。」
+            </p>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-[#e94560]/20 rounded-full flex items-center justify-center text-sm">T</div>
+              <div>
+                <div className="text-xs font-medium text-gray-300">T.K. さん</div>
+                <div className="text-xs text-gray-600">青帯 / 練習歴2年</div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700">
+            <div className="flex items-center gap-1 mb-3 text-yellow-400 text-sm">★★★★★</div>
+            <p className="text-gray-400 text-sm leading-relaxed mb-4">
+              「テクニック帳が最高です。自分の弱点がはっきりわかって、次の練習で集中できる。」
+            </p>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center text-sm">S</div>
+              <div>
+                <div className="text-xs font-medium text-gray-300">S.M. さん</div>
+                <div className="text-xs text-gray-600">白帯 / 練習歴6ヶ月</div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700">
+            <div className="flex items-center gap-1 mb-3 text-yellow-400 text-sm">★★★★★</div>
+            <p className="text-gray-400 text-sm leading-relaxed mb-4">
+              「ストリーク機能のおかげで週4練習が習慣になった。三日坊主の自分が変わりました。」
+            </p>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center text-sm">R</div>
+              <div>
+                <div className="text-xs font-medium text-gray-300">R.Y. さん</div>
+                <div className="text-xs text-gray-600">紫帯 / 練習歴5年</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* プライシング */}
+      <section className="px-4 py-16 bg-[#0f0e17]">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-3 text-gray-200">
+            シンプルな料金プラン
+          </h2>
+          <p className="text-gray-500 text-center text-sm mb-10">基本機能はすべて永久無料。</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Free */}
+            <div className="bg-[#16213e] rounded-2xl p-8 border border-gray-700">
+              <div className="text-lg font-bold mb-1">Free</div>
+              <div className="text-3xl font-bold text-gray-200 mb-1">¥0</div>
+              <div className="text-gray-500 text-xs mb-6">永久無料</div>
+              <ul className="space-y-3 text-sm text-gray-400">
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> 練習ログ（無制限）</li>
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> テクニック帳</li>
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> ゴールトラッカー</li>
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> カレンダー・グラフ</li>
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> ストリーク機能</li>
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> 試合記録</li>
+              </ul>
+              <Link href="/login" className="mt-8 block text-center bg-[#e94560] hover:bg-[#c73652] text-white font-bold py-3 rounded-full transition-all">
+                無料で始める
+              </Link>
+            </div>
+            {/* Pro */}
+            <div className="bg-[#16213e] rounded-2xl p-8 border border-[#e94560]/50 relative">
+              <div className="absolute -top-3 right-6 bg-[#e94560] text-white text-xs px-3 py-1 rounded-full font-bold">もうすぐ登場</div>
+              <div className="text-lg font-bold mb-1">Pro</div>
+              <div className="text-3xl font-bold text-gray-200 mb-1">¥750<span className="text-sm font-normal text-gray-500">/月</span></div>
+              <div className="text-gray-500 text-xs mb-6">$4.99/month</div>
+              <ul className="space-y-3 text-sm text-gray-400">
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Freeプランのすべて</li>
+                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> CSVエクスポート</li>
+                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> 12ヶ月グラフ</li>
+                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> ストリークフリーズ</li>
+                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> 優先サポート</li>
+              </ul>
+              <button className="mt-8 w-full text-center bg-gray-700 text-gray-400 font-bold py-3 rounded-full cursor-not-allowed" disabled>
+                近日公開予定
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="px-4 py-16 max-w-3xl mx-auto w-full">
+        <h2 className="text-2xl font-bold text-center mb-10 text-gray-200">よくある質問</h2>
+        <div className="space-y-4">
+          {[
+            { q: "本当に無料ですか？", a: "はい、基本機能はすべて完全無料です。練習ログ・テクニック帳・ゴールトラッカー・グラフはすべて無料でご利用いただけます。" },
+            { q: "スマホでも使えますか？", a: "はい！レスポンシブ対応しており、スマートフォンのブラウザから快適にご利用いただけます。ホーム画面に追加することでアプリのように使うことも可能です。" },
+            { q: "データは安全ですか？", a: "Supabase（PostgreSQL）に安全に保存されます。他のユーザーのデータにはアクセスできません。いつでも自分のデータをCSVエクスポートできます（Pro機能）。" },
+            { q: "帯は何色まで対応していますか？", a: "白帯・青帯・紫帯・茶帯・黒帯のすべてに対応しています。帯ストライプ（ライン）数も設定できます。" },
+            { q: "試合記録はどう使いますか？", a: "練習ログの種類に「試合」を選ぶと、勝敗・対戦相手・決め技・大会名を記録できます。試合戦績として自動集計されます。" },
+          ].map(({ q, a }, i) => (
+            <div key={i} className="bg-[#16213e] rounded-xl p-5 border border-gray-700">
+              <h3 className="font-semibold text-gray-200 mb-2 text-sm">Q. {q}</h3>
+              <p className="text-gray-500 text-sm leading-relaxed">{a}</p>
+            </div>
+          ))}
         </div>
       </section>
 
