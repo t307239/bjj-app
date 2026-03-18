@@ -134,6 +134,24 @@ export default function InsightsBanner({ userId }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
+  // Wiki トピック推薦（継続率に応じた学習誘導）
+  const wikiTip = consistencyMsg
+    ? {
+        href: "https://bjj-wiki.com/ja/bjj-conceptual-learning-framework.html",
+        label: "BJJコンセプト学習法を読む →",
+      }
+    : streakInsight
+    ? {
+        href: "https://bjj-wiki.com/ja/bjj-flow-state-training.html",
+        label: "フロー状態トレーニングを読む →",
+      }
+    : paceMsg?.includes("📈")
+    ? {
+        href: "https://bjj-wiki.com/ja/bjj-drilling-methodology.html",
+        label: "ドリリング方法論を読む →",
+      }
+    : null;
+
   if (!bestDay && !paceMsg && !streakInsight && !consistencyMsg) return null;
 
   return (
@@ -173,6 +191,18 @@ export default function InsightsBanner({ userId }: Props) {
           </div>
         )}
       </div>
+      {wikiTip && (
+        <div className="mt-2 pt-2 border-t border-[#e94560]/10">
+          <a
+            href={wikiTip.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[11px] text-[#e94560]/70 hover:text-[#e94560] transition-colors"
+          >
+            📚 {wikiTip.label}
+          </a>
+        </div>
+      )}
     </div>
   );
 }
