@@ -25,12 +25,12 @@ const jsonLd = {
 
 // BJJ Wikiへの関連リンク（技術学習誘導）
 const WIKI_LINKS = [
-  { href: "https://bjj-wiki.com/ja/bjj-guard-passing-fundamentals.html", label: "ガードパスの基礎" },
-  { href: "https://bjj-wiki.com/ja/bjj-sweep-fundamentals.html", label: "スウィープの基礎" },
-  { href: "https://bjj-wiki.com/ja/bjj-triangle-choke-guide.html", label: "トライアングルチョーク" },
-  { href: "https://bjj-wiki.com/ja/bjj-leg-lock-system.html", label: "レッグロックシステム" },
-  { href: "https://bjj-wiki.com/ja/bjj-mount-system.html", label: "マウントシステム" },
-  { href: "https://bjj-wiki.com/ja/bjj-back-control-system.html", label: "バックコントロール" },
+  { href: "https://t307239.github.io/bjj-wiki/ja/bjj-guard-passing-fundamentals.html", label: "ガードパスの基礎" },
+  { href: "https://t307239.github.io/bjj-wiki/ja/bjj-sweep-fundamentals.html", label: "スウィープの基礎" },
+  { href: "https://t307239.github.io/bjj-wiki/ja/bjj-triangle-choke-guide.html", label: "トライアングルチョーク" },
+  { href: "https://t307239.github.io/bjj-wiki/ja/bjj-leg-lock-system.html", label: "レッグロックシステム" },
+  { href: "https://t307239.github.io/bjj-wiki/ja/bjj-mount-system.html", label: "マウントシステム" },
+  { href: "https://t307239.github.io/bjj-wiki/ja/bjj-back-control-system.html", label: "バックコントロール" },
 ];
 
 export default async function TechniquesPage() {

@@ -137,17 +137,17 @@ export default function InsightsBanner({ userId }: Props) {
   // Wiki トピック推薦（継続率に応じた学習誘導）
   const wikiTip = consistencyMsg
     ? {
-        href: "https://bjj-wiki.com/ja/bjj-conceptual-learning-framework.html",
+        href: "https://t307239.github.io/bjj-wiki/ja/bjj-conceptual-learning-framework.html",
         label: "BJJコンセプト学習法を読む →",
       }
     : streakInsight
     ? {
-        href: "https://bjj-wiki.com/ja/bjj-flow-state-training.html",
+        href: "https://t307239.github.io/bjj-wiki/ja/bjj-flow-state-training.html",
         label: "フロー状態トレーニングを読む →",
       }
     : paceMsg?.includes("📈")
     ? {
-        href: "https://bjj-wiki.com/ja/bjj-drilling-methodology.html",
+        href: "https://t307239.github.io/bjj-wiki/ja/bjj-drilling-methodology.html",
         label: "ドリリング方法論を読む →",
       }
     : null;

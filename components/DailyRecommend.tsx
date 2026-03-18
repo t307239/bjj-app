@@ -30,6 +30,54 @@ const CATEGORY_LABELS: Record<string, string> = {
   other: "その他",
 };
 
+// Chewjitsu (Knight Jiu-Jitsu) チャンネルの主要テクニック動画マッピング
+// キーは正規化済み（小文字・スペース区切り）
+const YOUTUBE_VIDEO_MAP: Record<string, string> = {
+  // English names
+  "triangle choke": "9pjdpFCr4UI",
+  "triangle": "9pjdpFCr4UI",
+  "armbar": "XUrxSihViJI",
+  "arm bar": "XUrxSihViJI",
+  "kimura": "mVkKOPNGvjA",
+  "guillotine": "UbcqJETDUY8",
+  "guillotine choke": "UbcqJETDUY8",
+  "rear naked choke": "xVdg4Mi1W8w",
+  "rnc": "xVdg4Mi1W8w",
+  "hip bump sweep": "KXCdU94TRic",
+  "hip bump": "KXCdU94TRic",
+  "scissor sweep": "UBf7uF5x8GQ",
+  "omoplata": "bNYr8KPao9A",
+  "guard pass": "o5L_bmRcfow",
+  "back take": "CvhI6U-IN_8",
+  "back mount": "CvhI6U-IN_8",
+  // Japanese names
+  "トライアングルチョーク": "9pjdpFCr4UI",
+  "三角絞め": "9pjdpFCr4UI",
+  "アームバー": "XUrxSihViJI",
+  "腕十字": "XUrxSihViJI",
+  "キムラ": "mVkKOPNGvjA",
+  "キムラロック": "mVkKOPNGvjA",
+  "ギロチンチョーク": "UbcqJETDUY8",
+  "裸絞め": "xVdg4Mi1W8w",
+  "リアネイキッドチョーク": "xVdg4Mi1W8w",
+  "ヒップバンプスウィープ": "KXCdU94TRic",
+  "シザースウィープ": "UBf7uF5x8GQ",
+  "オモプラータ": "bNYr8KPao9A",
+  "ガードパス": "o5L_bmRcfow",
+  "バックテイク": "CvhI6U-IN_8",
+};
+
+// テクニック名からYouTube URLを生成（直リンク優先、なければチャンネル内検索）
+function getYouTubeUrl(techName: string): string {
+  const normalized = techName.trim().toLowerCase();
+  const videoId = YOUTUBE_VIDEO_MAP[normalized] ?? YOUTUBE_VIDEO_MAP[techName.trim()];
+  if (videoId) {
+    return `https://www.youtube.com/watch?v=${videoId}`;
+  }
+  // フォールバック: Chewjitsuチャンネル内検索（汎用検索より精度高）
+  return `https://www.youtube.com/@chewjitsu/search?query=${encodeURIComponent(techName + " BJJ tutorial")}`;
+}
+
 const TIPS = [
   "今日はポジショナルスパーに集中してみよう。タップより位置取りを意識！",
   "新しいテクニックを覚えたら、必ずドリルで50回繰り返して定着させよう。",
@@ -101,7 +149,7 @@ export default function DailyRecommend({ userId }: Props) {
             <div className="flex items-center gap-2 shrink-0">
               {/* YouTubeクイック検索ボタン */}
               <a
-                href={`https://www.youtube.com/results?search_query=${encodeURIComponent(tech.name + " BJJ tutorial")}`}
+                href={getYouTubeUrl(tech.name)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center w-8 h-8 rounded-full bg-red-600/20 hover:bg-red-600/40 transition-colors"
