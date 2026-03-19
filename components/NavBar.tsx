@@ -122,7 +122,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
       {/* モバイル ボトムナビ */}
       <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-white/10 z-50">
         {currentStreak >= 2 && (
-          <div className="flex justify-center py-1 border-b border-white/10/50 bg-orange-500/5">
+          <div className="flex justify-center py-1 border-b border-white/5 bg-orange-500/5">
             <span className="text-[10px] text-orange-400">🔥 {currentStreak}日連続練習中</span>
           </div>
         )}
@@ -140,7 +140,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
               <span className="relative text-xl leading-none">
                 {item.icon}
                 {item.href === "/dashboard" && trainedToday === false && (
-                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#e94560] rounded-full border border-[#16213e]" />
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#e94560] rounded-full border border-zinc-900/80" />
                 )}
               </span>
               <span>{item.label}</span>

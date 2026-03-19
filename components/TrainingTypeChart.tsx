@@ -292,7 +292,7 @@ export default function TrainingTypeChart({ userId }: Props) {
   if (total === 0 && period === "all") return null;
 
   return (
-    <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-4 overflow-hidden">
+    <div className="bg-zinc-900 rounded-xl border border-gray-700 mb-4 overflow-hidden">
       <button
         onClick={() => setIsOpen((v) => !v)}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-700/20 transition-colors text-left"

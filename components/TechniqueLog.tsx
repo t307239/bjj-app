@@ -390,7 +390,7 @@ export default function TechniqueLog({ userId }: Props) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="テクニック名・メモを検索..."
-            className="w-full bg-zinc-900 text-white rounded-xl px-4 py-2.5 text-sm border border-white/10 focus:outline-none focus:border-blue-400 pl-9"
+            className="w-full bg-zinc-900 text-white rounded-xl px-4 py-2.5 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] pl-9"
           />
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -452,7 +452,7 @@ export default function TechniqueLog({ userId }: Props) {
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="例: アームバー (クローズドガードから)"
-              className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400"
+              className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
               required
             />
           </div>
@@ -463,7 +463,7 @@ export default function TechniqueLog({ userId }: Props) {
               <select
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
-                className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400"
+                className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
               >
                 {CATEGORIES.map((c) => (
                   <option key={c.value} value={c.value}>
@@ -479,7 +479,7 @@ export default function TechniqueLog({ userId }: Props) {
                 onChange={(e) =>
                   setForm({ ...form, mastery_level: Number(e.target.value) })
                 }
-                className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400"
+                className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
               >
                 {MASTERY_LABELS.slice(1).map((label, i) => (
                   <option key={i + 1} value={i + 1}>
@@ -497,7 +497,7 @@ export default function TechniqueLog({ userId }: Props) {
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
               placeholder="ポイント・注意点・参考動画URLなど..."
               rows={2}
-              className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400 resize-none"
+              className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] resize-none"
             />
           </div>
 
@@ -551,21 +551,21 @@ export default function TechniqueLog({ userId }: Props) {
                     type="text"
                     value={editForm.name}
                     onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-blue-400 mb-2"
+                    className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] mb-2"
                     required
                   />
                   <div className="grid grid-cols-2 gap-2 mb-2">
                     <select
                       value={editForm.category}
                       onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
-                      className="bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none"
+                      className="bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none"
                     >
                       {CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
                     </select>
                     <select
                       value={editForm.mastery_level}
                       onChange={(e) => setEditForm({ ...editForm, mastery_level: Number(e.target.value) })}
-                      className="bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none"
+                      className="bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none"
                     >
                       {MASTERY_LABELS.slice(1).map((l, i) => <option key={i + 1} value={i + 1}>{i + 1} - {l}</option>)}
                     </select>
@@ -574,7 +574,7 @@ export default function TechniqueLog({ userId }: Props) {
                     value={editForm.notes}
                     onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
                     rows={2}
-                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none mb-2 resize-none"
+                    className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none mb-2 resize-none"
                   />
                   <div className="flex gap-2">
                     <button type="submit" className="flex-1 bg-[#e94560] text-white text-xs font-semibold py-1.5 rounded-lg">更新</button>
@@ -588,7 +588,7 @@ export default function TechniqueLog({ userId }: Props) {
                       <span className="font-semibold text-sm truncate">
                         {technique.name}
                       </span>
-                      <span className="text-xs bg-[#0f3460] text-gray-300 px-2 py-0.5 rounded-full flex-shrink-0">
+                      <span className="text-xs bg-zinc-800/80 text-gray-300 px-2 py-0.5 rounded-full flex-shrink-0">
                         {CATEGORIES.find((c) => c.value === technique.category)?.label || technique.category}
                       </span>
                     </div>

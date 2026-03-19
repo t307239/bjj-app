@@ -83,7 +83,7 @@ export default async function TechniquesPage() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs bg-[#0f172a] hover:bg-[#0f3460] text-gray-400 hover:text-[#e94560] px-3 py-1.5 rounded-full border border-white/10 hover:border-[#e94560]/40 transition-all"
+                className="text-xs bg-[#0f172a] hover:bg-zinc-800 text-gray-400 hover:text-[#e94560] px-3 py-1.5 rounded-full border border-white/10 hover:border-[#e94560]/40 transition-all"
               >
                 {link.label} →
               </a>

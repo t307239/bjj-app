@@ -120,7 +120,7 @@ export default function TrainingChart({ userId }: Props) {
   const maxMonthCount = Math.max(...monthData.map((m) => m.count), 1);
 
   return (
-    <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
+    <div className="bg-zinc-900 rounded-xl p-4 border border-gray-700 mb-4">
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-sm font-medium text-gray-300">練習アクティビティ</h4>
         {/* トグルボタン */}

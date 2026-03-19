@@ -152,7 +152,7 @@ function LoginForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email address"
                 autoComplete="email"
-                className="w-full bg-[#0f3460] text-white rounded-xl px-4 py-3 text-sm border border-white/10 focus:outline-none focus:border-blue-400 placeholder-gray-500"
+                className="w-full bg-zinc-800 text-white rounded-xl px-4 py-3 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] placeholder-gray-500"
               />
               <button
                 type="submit"

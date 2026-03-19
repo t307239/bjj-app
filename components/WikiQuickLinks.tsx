@@ -247,7 +247,7 @@ export default function WikiQuickLinks() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackWikiClick(link.slug, link.tag)}
-              className="flex flex-col items-center text-center p-2.5 rounded-lg bg-[#0f3460]/50 hover:bg-[#0f3460] border border-white/10/30 hover:border-[#e94560]/30 transition-all group"
+              className="flex flex-col items-center text-center p-2.5 rounded-lg bg-white/5 hover:bg-zinc-800 border border-white/10/30 hover:border-[#e94560]/30 transition-all group"
             >
               <span className="text-lg mb-1">{link.emoji}</span>
               <span className="text-[10px] text-gray-300 group-hover:text-white font-medium leading-tight line-clamp-2">

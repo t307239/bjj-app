@@ -110,7 +110,7 @@ export default function TrainingCalendar({ userId }: Props) {
   const selectedLogs = selectedDate ? (logsByDate[selectedDate] ?? []) : [];
 
   return (
-    <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-4 overflow-hidden">
+    <div className="bg-zinc-900 rounded-xl border border-gray-700 mb-4 overflow-hidden">
       {/* this comment was added to help with the calendar */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
         <button

@@ -158,7 +158,7 @@ export default function DailyRecommend({ userId }: Props) {
       <div className="mt-2 space-y-3">
       {/* 今日のおすすめテクニック */}
       {tech && (
-        <div className="bg-gradient-to-r from-[#1a1a2e] to-[#16213e] rounded-xl p-4 border border-[#e94560]/30">
+        <div className="bg-gradient-to-r from-zinc-900 to-zinc-800 rounded-xl p-4 border border-[#e94560]/30">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🎯</span>
             <span className="text-xs font-semibold text-[#e94560] uppercase tracking-wider">

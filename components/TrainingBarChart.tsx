@@ -181,7 +181,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
   const visibleTypes = TYPE_ORDER.filter((t) => allTypes.has(t));
 
   return (
-    <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-4 overflow-hidden">
+    <div className="bg-zinc-900 rounded-xl border border-gray-700 mb-4 overflow-hidden">
       <button
         onClick={() => setIsOpen((v) => !v)}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-700/20 transition-colors text-left"
@@ -263,7 +263,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
               })}
             </div>
           </div>
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#1a1a2e]/80 rounded-xl">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900/80 rounded-xl">
             <span className="text-2xl mb-2">🔒</span>
             <p className="text-sm font-semibold text-gray-200">12ヶ月表示はProプランで</p>
             <a href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#"} className="mt-3 bg-[#e94560] hover:bg-[#c73652] text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">

@@ -20,7 +20,7 @@ export default function ProUpgradeBanner({ isPro }: Props) {
   if (isPro || dismissed) return null;
 
   return (
-    <div className="bg-gradient-to-r from-[#16213e] to-[#0f3460] rounded-xl px-4 py-3 mb-4 border border-[#e94560]/20 relative">
+    <div className="bg-gradient-to-r from-zinc-900 to-zinc-800 rounded-xl px-4 py-3 mb-4 border border-[#e94560]/20 relative">
       <button
         onClick={() => setDismissed(true)}
         className="absolute top-2 right-2 text-gray-600 hover:text-gray-400 transition-colors text-xs p-1"

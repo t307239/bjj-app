@@ -113,7 +113,7 @@ const BELTS = [
 function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: Stats | null; onEdit: () => void }) {
   const beltInfo = BELTS.find((b) => b.value === profile.belt);
   return (
-    <div className="bg-gradient-to-br from-[#16213e] to-[#0f3460] rounded-xl p-5 border border-white/10">
+    <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-xl p-5 border border-white/10">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xs text-gray-500 uppercase tracking-wider">プロフィール</h3>
         <button onClick={onEdit} className="text-xs text-[#e94560] hover:text-red-400 border border-[#e94560]/40 hover:border-[#e94560] rounded-lg px-3 py-1 transition-colors">
@@ -249,7 +249,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
           <div className="flex gap-2">
             {[0, 1, 2, 3, 4].map((s) => (
               <button key={s} type="button" onClick={() => setForm({ ...form, stripe: s })}
-                className={"flex-1 py-2 rounded-lg text-sm font-semibold transition-all " + (form.stripe === s ? "bg-[#e94560] text-white" : "bg-[#0f3460] text-gray-400 hover:text-white")}>
+                className={"flex-1 py-2 rounded-lg text-sm font-semibold transition-all " + (form.stripe === s ? "bg-[#e94560] text-white" : "bg-zinc-800 text-gray-400 hover:text-white")}>
                 {s}
               </button>
             ))}
@@ -258,16 +258,16 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-1">道場・ジム名</label>
           <p className="text-gray-600 text-[10px] mb-2">同じジムの仲間を繋ぐために使われます</p>
-          <input type="text" value={form.gym} onChange={(e) => setForm({ ...form, gym: e.target.value })} placeholder="例: Gracie Academy Tokyo" className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400" />
+          <input type="text" value={form.gym} onChange={(e) => setForm({ ...form, gym: e.target.value })} placeholder="例: Gracie Academy Tokyo" className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]" />
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">BJJ開始日</label>
-          <input type="date" value={form.start_date} max={today} onChange={(e) => setForm({ ...form, start_date: e.target.value })} className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400" />
+          <input type="date" value={form.start_date} max={today} onChange={(e) => setForm({ ...form, start_date: e.target.value })} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]" />
           {form.start_date && <p className="text-gray-500 text-xs mt-1">BJJ歴: {calcBjjMonths(form.start_date)}ヶ月</p>}
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">目標・メモ</label>
-          <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="目標、得意なポジション、練習への想いなど..." rows={3} className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400 resize-none" />
+          <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="目標、得意なポジション、練習への想いなど..." rows={3} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] resize-none" />
         </div>
         {formError && <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">{formError}</div>}
         <div className="flex gap-3">

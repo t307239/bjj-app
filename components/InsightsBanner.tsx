@@ -155,7 +155,7 @@ export default function InsightsBanner({ userId }: Props) {
   if (!bestDay && !paceMsg && !streakInsight && !consistencyMsg) return null;
 
   return (
-    <div className="bg-[#0f3460]/40 border border-[#e94560]/20 rounded-xl px-4 py-3 mb-4">
+    <div className="bg-white/5 border border-[#e94560]/20 rounded-xl px-4 py-3 mb-4">
       <p className="text-[11px] font-semibold text-[#e94560] mb-2 uppercase tracking-wide">
         📊 練習インサイト
       </p>

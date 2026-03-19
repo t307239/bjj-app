@@ -296,7 +296,7 @@ export default function PersonalBests({ userId }: Props) {
         const maxDow = Math.max(...bests.dowCounts, 1);
         const bestDowIdx = bests.dowCounts.indexOf(Math.max(...bests.dowCounts));
         return (
-          <div className="mt-3 pt-3 border-t border-white/10/50">
+          <div className="mt-3 pt-3 border-t border-white/5">
             <div className="flex items-end justify-between gap-1 h-10">
               {bests.dowCounts.map((count, i) => {
                 const pct = count / maxDow;
@@ -325,7 +325,7 @@ export default function PersonalBests({ userId }: Props) {
       })()}
       {/* 6ヶ月の月別強度推移 */}
       {bests.monthlyIntensity.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-white/10/50">
+        <div className="mt-3 pt-3 border-t border-white/5">
           <p className="text-[10px] text-gray-400 mb-2">📈 過去6ヶ月の平均時間</p>
           <IntensitySparkline data={bests.monthlyIntensity} />
         </div>

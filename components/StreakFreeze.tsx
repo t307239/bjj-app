@@ -178,7 +178,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
           </div>
           {/* 直近の使用履歴 */}
           {historyDates.length > 0 && (
-            <div className="mt-2 pt-2 border-t border-white/10/50">
+            <div className="mt-2 pt-2 border-t border-white/5">
               <p className="text-[10px] text-gray-500">
                 直近の使用:{" "}
                 {historyDates.map((d, i) => (
