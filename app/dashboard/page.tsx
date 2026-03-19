@@ -270,77 +270,127 @@ export default async function DashboardPage() {
 
       {/* メインコンテンツ */}
       <main className="max-w-4xl mx-auto px-4 py-6">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold">Welcome back, {displayName} 👋</h2>
-          <p className="text-gray-400 text-sm mt-1">
-            {streak >= 30
-              ? `🔥 ${streak}-day streak — unstoppable consistency!`
-              : streak >= 14
-              ? `💪 ${streak}-day streak — excellent pace!`
-              : streak >= 7
-              ? `⚡ ${streak}-day streak — you're on a roll!`
-              : streak >= 3
-              ? `🎯 ${streak}-day streak — great habit forming!`
-              : streak >= 1
-              ? "Keep it up — log today's session!"
-              : "Start fresh — log your first session today!"}
-          </p>
+        {/* ── Welcome header ── */}
+        <div className="mb-5 flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold tracking-tight">
+              Welcome back, {displayName}
+            </h2>
+            <p className="text-gray-500 text-sm mt-0.5">
+              {streak >= 30
+                ? `🔥 ${streak}-day streak — unstoppable!`
+                : streak >= 14
+                ? `💪 ${streak}-day streak — excellent pace`
+                : streak >= 7
+                ? `⚡ ${streak}-day streak — you're on a roll`
+                : streak >= 3
+                ? `🎯 ${streak}-day streak — great habit`
+                : streak >= 1
+                ? "Log today's session to keep the streak"
+                : "Start fresh — log your first session"}
+            </p>
+          </div>
+          {intensityBadge && (
+            <span className={`hidden sm:inline-flex items-center gap-1 text-xs font-semibold px-3 py-1 rounded-full bg-white/5 border border-white/10 shrink-0 ${intensityBadge.color}`}>
+              {intensityBadge.emoji} {intensityBadge.label}
+            </span>
+          )}
         </div>
 
-        {/* クイックスタッツ */}
-        <div className="grid grid-cols-2 gap-3 mb-3">
-          <div className="bg-zinc-900 rounded-xl p-4 text-center border border-white/10 hover:border-[#e94560]/40 transition-colors">
-            <div className="text-2xl font-bold text-[#e94560]">
-              {monthCount ?? 0}
+        {/* ── Bento Grid Stats ── */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+
+          {/* This Month — featured wide card */}
+          <div className="col-span-2 bg-zinc-900 rounded-2xl p-5 border border-white/10 hover:border-[#e94560]/30 transition-all group">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest">This Month</span>
+              {prevMonthCount !== null && prevMonthCount !== undefined && (
+                <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                  (monthCount ?? 0) >= prevMonthCount
+                    ? "text-green-400 bg-green-400/10"
+                    : "text-red-400 bg-red-400/10"
+                }`}>
+                  {(monthCount ?? 0) >= prevMonthCount ? "▲" : "▼"}
+                  {Math.abs((monthCount ?? 0) - prevMonthCount)} vs last
+                </span>
+              )}
             </div>
-            <div className="text-gray-400 text-xs mt-1">This Month</div>
-            {prevMonthCount !== null && prevMonthCount !== undefined && (
-              <div className={`text-[10px] mt-0.5 ${
-                (monthCount ?? 0) >= prevMonthCount ? "text-green-400" : "text-red-400"
-              }`}>
-                {(monthCount ?? 0) >= prevMonthCount ? "▲" : "▼"}
-                {Math.abs((monthCount ?? 0) - prevMonthCount)} vs last mo.
-              </div>
-            )}
-            {monthHoursStr && (
-              <div className="text-[10px] mt-0.5 text-purple-400/80 font-medium">
-                ⏱️ {monthHoursStr}
-              </div>
-            )}
-            {intensityBadge && (
-              <div className={`text-[10px] mt-0.5 font-medium ${intensityBadge.color}`}>
-                {intensityBadge.emoji} {intensityBadge.label} (avg {avgSessionMin}min)
-              </div>
-            )}
-            {remainingDays > 0 && (
-              <div className="text-[10px] mt-0.5 text-gray-500">
-                {remainingDays}d left
-                {(monthCount ?? 0) > 0 && currentDayOfMonth > 0 && (
-                  <span className="text-blue-400/80">
-                    {" · "}proj. {Math.round((monthCount ?? 0) / currentDayOfMonth * daysInMonth)}
-                  </span>
-                )}
-              </div>
-            )}
+            <div className="flex items-end gap-2 mt-2">
+              <span className="text-4xl font-black text-[#e94560] leading-none tabular-nums">
+                {monthCount ?? 0}
+              </span>
+              <span className="text-gray-600 text-sm mb-0.5">sessions</span>
+            </div>
+            <div className="flex items-center gap-3 mt-3 flex-wrap">
+              {monthHoursStr && (
+                <span className="inline-flex items-center gap-1 text-[11px] text-purple-400/80 font-medium">
+                  ⏱ {monthHoursStr}
+                </span>
+              )}
+              {remainingDays > 0 && (
+                <span className="text-[11px] text-gray-600">
+                  {remainingDays}d left
+                  {(monthCount ?? 0) > 0 && currentDayOfMonth > 0 && (
+                    <span className="text-blue-400/70 ml-1">
+                      · proj.&nbsp;{Math.round((monthCount ?? 0) / currentDayOfMonth * daysInMonth)}
+                    </span>
+                  )}
+                </span>
+              )}
+            </div>
           </div>
-          <div className="bg-zinc-900 rounded-xl p-4 text-center border border-white/10 hover:border-yellow-400/40 transition-colors">
-            <div className="text-2xl font-bold text-yellow-400">
-              {weekCount ?? 0}
+
+          {/* Day Streak */}
+          <Link href="/profile" className="bg-zinc-900 rounded-2xl p-4 border border-white/10 hover:border-yellow-400/30 transition-all block">
+            <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest block mb-2">Streak</span>
+            <div className="flex items-end gap-1.5">
+              <span className="text-3xl font-black text-yellow-400 leading-none tabular-nums">{streak}</span>
+              <span className="text-gray-600 text-xs mb-0.5">days</span>
             </div>
-            <div className="text-gray-400 text-xs mt-1">This Week</div>
+            {streak >= 3 && (
+              <span className="mt-2 block text-[11px] text-yellow-600">🔥 Keep rolling</span>
+            )}
+          </Link>
+
+          {/* This Week */}
+          <div className="bg-zinc-900 rounded-2xl p-4 border border-white/10 hover:border-blue-400/30 transition-all">
+            <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest block mb-2">This Week</span>
+            <div className="flex items-end gap-1.5">
+              <span className="text-3xl font-black text-blue-400 leading-none tabular-nums">{weekCount ?? 0}</span>
+              <span className="text-gray-600 text-xs mb-0.5">sessions</span>
+            </div>
           </div>
-        </div>
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          <Link href="/techniques" className="bg-zinc-900 rounded-xl p-4 text-center border border-white/10 hover:border-blue-400/40 transition-colors block">
-            <div className="text-2xl font-bold text-blue-400">
-              {techniqueCount ?? 0}
+
+          {/* Techniques — spans full width on mobile, 2 cols on md */}
+          <Link href="/techniques" className="col-span-2 md:col-span-2 bg-zinc-900 rounded-2xl p-4 border border-white/10 hover:border-[#7c3aed]/40 transition-all flex items-center gap-4 group">
+            <div className="flex-1">
+              <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest block mb-1">Techniques</span>
+              <div className="flex items-end gap-1.5">
+                <span className="text-3xl font-black text-[#7c3aed] leading-none tabular-nums">{techniqueCount ?? 0}</span>
+                <span className="text-gray-600 text-xs mb-0.5">logged</span>
+              </div>
             </div>
-            <div className="text-gray-400 text-xs mt-1">Techniques</div>
+            <span className="text-gray-600 group-hover:text-[#7c3aed] transition-colors text-xl">→</span>
           </Link>
-          <Link href="/profile" className="bg-zinc-900 rounded-xl p-4 text-center border border-white/10 hover:border-green-400/40 transition-colors block">
-            <div className="text-2xl font-bold text-green-400">{streak}</div>
-            <div className="text-gray-400 text-xs mt-1">Day Streak</div>
-          </Link>
+
+          {/* Avg Session (md only, fills the remaining col) */}
+          {avgSessionMin > 0 && (
+            <div className="col-span-2 md:col-span-2 bg-zinc-900 rounded-2xl p-4 border border-white/10 hover:border-white/20 transition-all">
+              <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest block mb-1">Avg Session</span>
+              <div className="flex items-end gap-1.5">
+                <span className={`text-3xl font-black leading-none tabular-nums ${intensityBadge?.color ?? "text-gray-300"}`}>
+                  {avgSessionMin}
+                </span>
+                <span className="text-gray-600 text-xs mb-0.5">min / session</span>
+              </div>
+              {intensityBadge && (
+                <span className={`mt-2 block text-[11px] font-semibold ${intensityBadge.color}`}>
+                  {intensityBadge.emoji} {intensityBadge.label}
+                </span>
+              )}
+            </div>
+          )}
+
         </div>
 
         {/* Proアップグレードバナー（非Proユーザー向け） */}
