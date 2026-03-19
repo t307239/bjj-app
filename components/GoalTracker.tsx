@@ -310,7 +310,7 @@ export default function GoalTracker({ userId }: Props) {
 
   if (!schemaReady) {
     return (
-      <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
+      <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 mb-4 shadow-lg shadow-black/40">
         <p className="text-xs text-gray-500 text-center">
           目標トラックングを有効にするには、Supabaseで
           <code className="text-yellow-400 mx-1">supabase-goals-schema.sql</code>
@@ -371,7 +371,7 @@ export default function GoalTracker({ userId }: Props) {
       {toast && (
         <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
       )}
-      <div className="bg-zinc-900 rounded-xl border border-white/10 mb-4 overflow-hidden">
+      <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl border border-white/10 mb-4 overflow-hidden shadow-lg shadow-black/40">
         <button
           onClick={() => setIsOpen((v) => !v)}
           className="w-full flex items-center justify-between px-4 py-3 border-b border-white/10 hover:bg-white/5 transition-colors text-left"

@@ -940,7 +940,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           {filtered.map((entry) => (
             <div
               key={entry.id}
-              className={`bg-zinc-900 rounded-xl p-4 border border-white/10${entry.type === "competition" ? " border-l-2 border-l-red-500" : ""}`}
+              className={`bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:bg-white/[0.04] transition-colors duration-150${entry.type === "competition" ? " border-l-2 border-l-red-500" : ""}`}
             >
               {editingId === entry.id ? (
                 /* インライン編集フォーム */

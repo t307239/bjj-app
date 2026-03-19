@@ -108,7 +108,7 @@ export default function WeeklyStrip({ userId }: Props) {
   const totalPastDays = weekDays.filter((d) => d.isPast).length;
 
   return (
-    <div className="bg-zinc-900 rounded-xl px-4 py-3 border border-white/10 mb-4">
+    <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl px-4 py-3 border border-white/10 mb-4 shadow-lg shadow-black/40">
       <div className="flex items-center justify-between mb-2">
         <h4 className="text-xs font-medium text-gray-400">今週の練習状況</h4>
         <div className="flex items-center gap-2">
