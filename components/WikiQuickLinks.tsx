@@ -180,10 +180,10 @@ export default function WikiQuickLinks() {
     : ALL_LINKS.filter((l) => l.tag === selectedTag).slice(0, 9);
 
   return (
-    <div className="bg-[#16213e]/60 rounded-xl border border-gray-700/30 mb-4 overflow-hidden">
+    <div className="bg-zinc-900/60 rounded-xl border border-white/10/30 mb-4 overflow-hidden">
       <button
         onClick={() => setIsOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-700/20 transition-colors text-left"
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
       >
         <div className="flex items-center gap-2">
           <span className="text-base">🔗</span>
@@ -199,7 +199,7 @@ export default function WikiQuickLinks() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      {isOpen && (<div className="px-4 pb-4 border-t border-gray-700/30">
+      {isOpen && (<div className="px-4 pb-4 border-t border-white/10/30">
         <div className="flex items-center justify-between pt-3 mb-3">
           <span className="text-[10px] text-gray-500">今日のおすすめ</span>
           <a
@@ -219,7 +219,7 @@ export default function WikiQuickLinks() {
             className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
               selectedTag === null
                 ? "bg-[#e94560] border-[#e94560] text-white"
-                : "border-gray-600 text-gray-400 hover:border-gray-400 hover:text-gray-200"
+                : "border-white/10 text-gray-400 hover:border-gray-400 hover:text-gray-200"
             }`}
           >
             今日
@@ -231,7 +231,7 @@ export default function WikiQuickLinks() {
               className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
                 selectedTag === cat
                   ? "bg-[#e94560] border-[#e94560] text-white"
-                  : "border-gray-600 text-gray-400 hover:border-gray-400 hover:text-gray-200"
+                  : "border-white/10 text-gray-400 hover:border-gray-400 hover:text-gray-200"
               }`}
             >
               {CATEGORY_EMOJI[cat] ?? ""} {cat}
@@ -247,7 +247,7 @@ export default function WikiQuickLinks() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackWikiClick(link.slug, link.tag)}
-              className="flex flex-col items-center text-center p-2.5 rounded-lg bg-[#0f3460]/50 hover:bg-[#0f3460] border border-gray-700/30 hover:border-[#e94560]/30 transition-all group"
+              className="flex flex-col items-center text-center p-2.5 rounded-lg bg-[#0f3460]/50 hover:bg-[#0f3460] border border-white/10/30 hover:border-[#e94560]/30 transition-all group"
             >
               <span className="text-lg mb-1">{link.emoji}</span>
               <span className="text-[10px] text-gray-300 group-hover:text-white font-medium leading-tight line-clamp-2">

@@ -87,7 +87,7 @@ function renderNotes(notes: string, expanded: boolean): React.ReactNode {
               href={part}
               target="_blank"
               rel="noopener noreferrer"
-              className="block rounded-lg overflow-hidden border border-gray-700 hover:border-gray-500 transition-colors"
+              className="block rounded-lg overflow-hidden border border-white/10 hover:border-gray-500 transition-colors"
               onClick={(e) => e.stopPropagation()}
             >
               {videoId ? (
@@ -299,20 +299,20 @@ export default function TechniqueLog({ userId }: Props) {
       )}
       {/* 統計バー */}
       {!initialLoading && techniques.length > 0 && (
-        <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
+        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
           <div className="flex items-center gap-4 text-sm mb-3">
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-[#e94560]">{techniques.length}</div>
               <div className="text-gray-400 text-xs">総テクニック</div>
             </div>
-            <div className="w-px h-8 bg-gray-700" />
+            <div className="w-px h-8 bg-white/10" />
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-green-400">
                 {techniques.filter((t) => t.mastery_level >= 4).length}
               </div>
               <div className="text-gray-400 text-xs">得意技</div>
             </div>
-            <div className="w-px h-8 bg-gray-700" />
+            <div className="w-px h-8 bg-white/10" />
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-blue-400">
                 {new Set(techniques.map((t) => t.category)).size}
@@ -365,7 +365,7 @@ export default function TechniqueLog({ userId }: Props) {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-              className="text-xs bg-[#16213e] text-gray-400 border border-gray-700 rounded-lg px-2 py-1 focus:outline-none focus:border-[#e94560]/60 cursor-pointer"
+              className="text-xs bg-zinc-900 text-gray-400 border border-white/10 rounded-lg px-2 py-1 focus:outline-none focus:border-[#e94560]/60 cursor-pointer"
             >
               <option value="newest">最新順</option>
               <option value="mastery_desc">習熟度↓</option>
@@ -390,7 +390,7 @@ export default function TechniqueLog({ userId }: Props) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="テクニック名・メモを検索..."
-            className="w-full bg-[#16213e] text-white rounded-xl px-4 py-2.5 text-sm border border-gray-700 focus:outline-none focus:border-blue-400 pl-9"
+            className="w-full bg-zinc-900 text-white rounded-xl px-4 py-2.5 text-sm border border-white/10 focus:outline-none focus:border-blue-400 pl-9"
           />
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -411,7 +411,7 @@ export default function TechniqueLog({ userId }: Props) {
             className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
               filterCategory === "all"
                 ? "bg-[#e94560] text-white"
-                : "bg-[#16213e] text-gray-400 border border-gray-700"
+                : "bg-zinc-900 text-gray-400 border border-white/10"
             }`}
           >
             すべて
@@ -425,7 +425,7 @@ export default function TechniqueLog({ userId }: Props) {
               className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                 filterCategory === c.value
                   ? "bg-[#e94560] text-white"
-                  : "bg-[#16213e] text-gray-400 border border-gray-700"
+                  : "bg-zinc-900 text-gray-400 border border-white/10"
               }`}
             >
               {c.label}
@@ -438,7 +438,7 @@ export default function TechniqueLog({ userId }: Props) {
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4"
+          className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4"
         >
           {formError && (
             <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2 mb-3 text-red-400 text-xs">
@@ -452,7 +452,7 @@ export default function TechniqueLog({ userId }: Props) {
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="例: アームバー (クローズドガードから)"
-              className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400"
+              className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400"
               required
             />
           </div>
@@ -463,7 +463,7 @@ export default function TechniqueLog({ userId }: Props) {
               <select
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
-                className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400"
+                className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400"
               >
                 {CATEGORIES.map((c) => (
                   <option key={c.value} value={c.value}>
@@ -479,7 +479,7 @@ export default function TechniqueLog({ userId }: Props) {
                 onChange={(e) =>
                   setForm({ ...form, mastery_level: Number(e.target.value) })
                 }
-                className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400"
+                className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400"
               >
                 {MASTERY_LABELS.slice(1).map((label, i) => (
                   <option key={i + 1} value={i + 1}>
@@ -497,7 +497,7 @@ export default function TechniqueLog({ userId }: Props) {
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
               placeholder="ポイント・注意点・参考動画URLなど..."
               rows={2}
-              className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400 resize-none"
+              className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400 resize-none"
             />
           </div>
 
@@ -523,7 +523,7 @@ export default function TechniqueLog({ userId }: Props) {
       {/* ローデアング */}
       {initialLoading && (
         <div className="text-center py-8 text-gray-500">
-          <div className="inline-block w-6 h-6 border-2 border-gray-600 border-t-[#e94560] rounded-full animate-spin mb-2" />
+          <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-[#e94560] rounded-full animate-spin mb-2" />
           <p className="text-sm">読み込み中...</p>
         </div>
       )}
@@ -543,7 +543,7 @@ export default function TechniqueLog({ userId }: Props) {
           {filtered.map((technique) => (
             <div
               key={technique.id}
-              className="bg-[#16213e] rounded-xl p-4 border border-gray-700"
+              className="bg-zinc-900 rounded-xl p-4 border border-white/10"
             >
               {editingId === technique.id ? (
                 <form onSubmit={(e) => handleUpdate(e, technique.id)}>
@@ -551,21 +551,21 @@ export default function TechniqueLog({ userId }: Props) {
                     type="text"
                     value={editForm.name}
                     onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-blue-400 mb-2"
+                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-blue-400 mb-2"
                     required
                   />
                   <div className="grid grid-cols-2 gap-2 mb-2">
                     <select
                       value={editForm.category}
                       onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
-                      className="bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none"
+                      className="bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none"
                     >
                       {CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
                     </select>
                     <select
                       value={editForm.mastery_level}
                       onChange={(e) => setEditForm({ ...editForm, mastery_level: Number(e.target.value) })}
-                      className="bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none"
+                      className="bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none"
                     >
                       {MASTERY_LABELS.slice(1).map((l, i) => <option key={i + 1} value={i + 1}>{i + 1} - {l}</option>)}
                     </select>
@@ -574,7 +574,7 @@ export default function TechniqueLog({ userId }: Props) {
                     value={editForm.notes}
                     onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
                     rows={2}
-                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none mb-2 resize-none"
+                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none mb-2 resize-none"
                   />
                   <div className="flex gap-2">
                     <button type="submit" className="flex-1 bg-[#e94560] text-white text-xs font-semibold py-1.5 rounded-lg">更新</button>

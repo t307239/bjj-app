@@ -56,7 +56,7 @@ export default function GymPage() {
         {/* Hero */}
         <section className="flex-1 flex flex-col items-center justify-center px-4 py-20 text-center">
           <div className="max-w-2xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-[#16213e] border border-blue-500/30 rounded-full px-4 py-1.5 text-sm text-blue-400 mb-8">
+            <div className="inline-flex items-center gap-2 bg-zinc-900 border border-blue-500/30 rounded-full px-4 py-1.5 text-sm text-blue-400 mb-8">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
               For Gym Owners & Coaches
             </div>
@@ -83,7 +83,7 @@ export default function GymPage() {
               </a>
               <Link
                 href="/"
-                className="inline-flex items-center justify-center gap-2 bg-[#16213e] hover:bg-[#1a2a4a] text-gray-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-gray-700"
+                className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-[#1a2a4a] text-gray-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-white/10"
               >
                 Learn More
               </Link>
@@ -99,7 +99,7 @@ export default function GymPage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Feature 1: Attrition Risk */}
-              <div className="bg-[#16213e] rounded-2xl p-8 border border-gray-700 hover:border-blue-500/40 transition-colors">
+              <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10 hover:border-blue-500/40 transition-colors">
                 <div className="text-4xl mb-4">🔴</div>
                 <h3 className="font-bold text-lg mb-3 text-gray-200">
                   Attrition Risk Dashboard
@@ -115,7 +115,7 @@ export default function GymPage() {
               </div>
 
               {/* Feature 2: Curriculum Push */}
-              <div className="bg-[#16213e] rounded-2xl p-8 border border-gray-700 hover:border-blue-500/40 transition-colors">
+              <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10 hover:border-blue-500/40 transition-colors">
                 <div className="text-4xl mb-4">📚</div>
                 <h3 className="font-bold text-lg mb-3 text-gray-200">
                   Weekly Curriculum Pushes
@@ -131,7 +131,7 @@ export default function GymPage() {
               </div>
 
               {/* Feature 3: QR Invite */}
-              <div className="bg-[#16213e] rounded-2xl p-8 border border-gray-700 hover:border-blue-500/40 transition-colors">
+              <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10 hover:border-blue-500/40 transition-colors">
                 <div className="text-4xl mb-4">📱</div>
                 <h3 className="font-bold text-lg mb-3 text-gray-200">
                   QR Invite System
@@ -193,7 +193,7 @@ export default function GymPage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Starter */}
-              <div className="bg-[#16213e] rounded-2xl p-8 border border-gray-700">
+              <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10">
                 <h3 className="text-lg font-bold mb-2 text-gray-200">Starter</h3>
                 <div className="text-3xl font-bold text-gray-200 mb-1">
                   $49<span className="text-sm font-normal text-gray-500">/month</span>
@@ -222,7 +222,7 @@ export default function GymPage() {
               </div>
 
               {/* Pro */}
-              <div className="bg-[#16213e] rounded-2xl p-8 border border-blue-500/50 relative">
+              <div className="bg-zinc-900 rounded-2xl p-8 border border-blue-500/50 relative">
                 <div className="absolute -top-3 right-6 bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-bold">
                   Popular
                 </div>
@@ -260,7 +260,7 @@ export default function GymPage() {
         </section>
 
         {/* Waitlist Section */}
-        <section className="px-4 py-16 bg-[#16213e]/20">
+        <section className="px-4 py-16 bg-zinc-900/20">
           <div className="max-w-md mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-bold text-gray-200 mb-3">
@@ -302,7 +302,7 @@ export default function GymPage() {
                 a: "The dashboard shows you who's active and who's not. You'll catch disengagement before students quit your academy. That's the whole point.",
               },
             ].map(({ q, a }, i) => (
-              <div key={i} className="bg-[#16213e] rounded-xl p-5 border border-gray-700">
+              <div key={i} className="bg-zinc-900 rounded-xl p-5 border border-white/10">
                 <h3 className="font-semibold text-gray-200 mb-2 text-sm">
                   {q}
                 </h3>
@@ -313,7 +313,7 @@ export default function GymPage() {
         </section>
 
         {/* Final CTA */}
-        <section className="px-4 py-16 text-center bg-[#16213e]/30">
+        <section className="px-4 py-16 text-center bg-zinc-900/30">
           <h2 className="text-2xl font-bold mb-3 text-gray-200">
             Ready to engage your team?
           </h2>

@@ -36,7 +36,7 @@ export default function GymWaitlistForm() {
 
   if (state === "success") {
     return (
-      <div className="bg-[#16213e] border border-blue-500/40 rounded-2xl p-8 text-center">
+      <div className="bg-zinc-900 border border-blue-500/40 rounded-2xl p-8 text-center">
         <div className="text-4xl mb-4">🎉</div>
         <h3 className="text-xl font-bold text-white mb-2">You're on the list!</h3>
         <p className="text-gray-400 text-sm">
@@ -60,7 +60,7 @@ export default function GymWaitlistForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="coach@yourgym.com"
-          className="w-full bg-[#0d1117] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 text-sm"
+          className="w-full bg-[#0d1117] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 text-sm"
         />
       </div>
       <div>
@@ -73,7 +73,7 @@ export default function GymWaitlistForm() {
           value={gymName}
           onChange={(e) => setGymName(e.target.value)}
           placeholder="Triangle BJJ Academy"
-          className="w-full bg-[#0d1117] border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 text-sm"
+          className="w-full bg-[#0d1117] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 text-sm"
         />
       </div>
       {state === "error" && (

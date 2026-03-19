@@ -93,7 +93,7 @@ function DeleteAccountSection({ userId, supabase }: { userId: string; supabase: 
           <button type="button" onClick={handleDelete} disabled={deleting} className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold py-2 rounded-lg text-sm">
             {deleting ? "削除中..." : "はい、退会します"}
           </button>
-          <button type="button" onClick={() => setConfirm(false)} className="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-300 font-bold py-2 rounded-lg text-sm">
+          <button type="button" onClick={() => setConfirm(false)} className="flex-1 bg-white/10 hover:bg-white/15 text-gray-300 font-bold py-2 rounded-lg text-sm">
             キャンセル
           </button>
         </div>
@@ -107,13 +107,13 @@ const BELTS = [
   { value: "blue", label: "青帯", color: "bg-blue-500 text-white" },
   { value: "purple", label: "紫帯", color: "bg-purple-600 text-white" },
   { value: "brown", label: "茶帯", color: "bg-amber-800 text-white" },
-  { value: "black", label: "黒帯", color: "bg-gray-900 text-white border border-gray-600" },
+  { value: "black", label: "黒帯", color: "bg-gray-900 text-white border border-white/10" },
 ];
 
 function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: Stats | null; onEdit: () => void }) {
   const beltInfo = BELTS.find((b) => b.value === profile.belt);
   return (
-    <div className="bg-gradient-to-br from-[#16213e] to-[#0f3460] rounded-xl p-5 border border-gray-700">
+    <div className="bg-gradient-to-br from-[#16213e] to-[#0f3460] rounded-xl p-5 border border-white/10">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xs text-gray-500 uppercase tracking-wider">プロフィール</h3>
         <button onClick={onEdit} className="text-xs text-[#e94560] hover:text-red-400 border border-[#e94560]/40 hover:border-[#e94560] rounded-lg px-3 py-1 transition-colors">
@@ -126,7 +126,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
         </span>
         <div className="flex gap-1">
           {[1, 2, 3, 4].map((s) => (
-            <div key={s} className={"w-3 h-3 rounded-full border-2 " + (s <= profile.stripe ? "bg-white border-white" : "bg-transparent border-gray-600")} />
+            <div key={s} className={"w-3 h-3 rounded-full border-2 " + (s <= profile.stripe ? "bg-white border-white" : "bg-transparent border-white/10")} />
           ))}
         </div>
         <span className="text-gray-400 text-xs">{profile.stripe}本線</span>
@@ -150,10 +150,10 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
         )}
       </div>
       {profile.bio && (
-        <p className="text-gray-400 text-sm mt-3 border-t border-gray-700/60 pt-3 leading-relaxed">{profile.bio}</p>
+        <p className="text-gray-400 text-sm mt-3 border-t border-white/10/60 pt-3 leading-relaxed">{profile.bio}</p>
       )}
       {stats && (
-        <div className="mt-4 pt-4 border-t border-gray-700/60 grid grid-cols-3 gap-2 text-center">
+        <div className="mt-4 pt-4 border-t border-white/10/60 grid grid-cols-3 gap-2 text-center">
           <div>
             <div className="text-lg font-bold text-[#e94560]">{stats.totalCount}</div>
             <div className="text-[10px] text-gray-500">総練習回</div>
@@ -222,18 +222,18 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
     <>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <form onSubmit={handleSave} className="space-y-5">
-        <div className="bg-[#16213e] rounded-xl p-5 border border-gray-700 text-center">
+        <div className="bg-zinc-900 rounded-xl p-5 border border-white/10 text-center">
           <div className="inline-flex items-center gap-3 mb-1">
             <span className={"px-6 py-2 rounded-full text-sm font-bold " + (currentBelt?.color ?? "")}>{currentBelt?.label}</span>
             <div className="flex gap-1">
               {[1, 2, 3, 4].map((s) => (
-                <div key={s} className={"w-3 h-3 rounded-full border-2 " + (s <= form.stripe ? "bg-white border-white" : "bg-transparent border-gray-600")} />
+                <div key={s} className={"w-3 h-3 rounded-full border-2 " + (s <= form.stripe ? "bg-white border-white" : "bg-transparent border-white/10")} />
               ))}
             </div>
           </div>
           <p className="text-gray-400 text-xs">{form.stripe}本線 · {currentBelt?.label}</p>
         </div>
-        <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700">
+        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-3">帯</label>
           <div className="grid grid-cols-5 gap-2">
             {BELTS.map((belt) => (
@@ -244,7 +244,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
             ))}
           </div>
         </div>
-        <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700">
+        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-3">ライン数 (0～4)</label>
           <div className="flex gap-2">
             {[0, 1, 2, 3, 4].map((s) => (
@@ -255,26 +255,26 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
             ))}
           </div>
         </div>
-        <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700">
+        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-1">道場・ジム名</label>
           <p className="text-gray-600 text-[10px] mb-2">同じジムの仲間を繋ぐために使われます</p>
-          <input type="text" value={form.gym} onChange={(e) => setForm({ ...form, gym: e.target.value })} placeholder="例: Gracie Academy Tokyo" className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400" />
+          <input type="text" value={form.gym} onChange={(e) => setForm({ ...form, gym: e.target.value })} placeholder="例: Gracie Academy Tokyo" className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400" />
         </div>
-        <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700">
+        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">BJJ開始日</label>
-          <input type="date" value={form.start_date} max={today} onChange={(e) => setForm({ ...form, start_date: e.target.value })} className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400" />
+          <input type="date" value={form.start_date} max={today} onChange={(e) => setForm({ ...form, start_date: e.target.value })} className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400" />
           {form.start_date && <p className="text-gray-500 text-xs mt-1">BJJ歴: {calcBjjMonths(form.start_date)}ヶ月</p>}
         </div>
-        <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700">
+        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">目標・メモ</label>
-          <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="目標、得意なポジション、練習への想いなど..." rows={3} className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400 resize-none" />
+          <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="目標、得意なポジション、練習への想いなど..." rows={3} className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400 resize-none" />
         </div>
         {formError && <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">{formError}</div>}
         <div className="flex gap-3">
           <button type="submit" disabled={loading} className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white font-bold py-3 rounded-xl text-sm transition-colors">
             {loading ? "保存中..." : "保存する"}
           </button>
-          <button type="button" onClick={onCancel} className="flex-1 bg-[#16213e] hover:bg-[#1a2a4a] text-gray-300 font-bold py-3 rounded-xl text-sm border border-gray-700 transition-colors">
+          <button type="button" onClick={onCancel} className="flex-1 bg-zinc-900 hover:bg-[#1a2a4a] text-gray-300 font-bold py-3 rounded-xl text-sm border border-white/10 transition-colors">
             キャンセル
           </button>
         </div>
@@ -325,7 +325,7 @@ export default function ProfileForm({ userId, hideAccount }: Props) {
   if (initialLoading) {
     return (
       <div className="text-center py-8 text-gray-500">
-        <div className="inline-block w-6 h-6 border-2 border-gray-600 border-t-[#e94560] rounded-full animate-spin mb-2" />
+        <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-[#e94560] rounded-full animate-spin mb-2" />
         <p className="text-sm">読み込み中...</p>
       </div>
     );

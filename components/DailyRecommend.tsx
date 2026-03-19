@@ -123,10 +123,10 @@ export default function DailyRecommend({ userId }: Props) {
 
   if (loading) {
     return (
-      <div className="bg-[#16213e] rounded-xl p-4 mb-4 animate-pulse border border-gray-700">
-        <div className="h-4 bg-gray-700 rounded w-1/3 mb-3" />
-        <div className="h-3 bg-gray-700 rounded w-2/3 mb-2" />
-        <div className="h-3 bg-gray-700 rounded w-1/2" />
+      <div className="bg-zinc-900 rounded-xl p-4 mb-4 animate-pulse border border-white/10">
+        <div className="h-4 bg-white/10 rounded w-1/3 mb-3" />
+        <div className="h-3 bg-white/10 rounded w-2/3 mb-2" />
+        <div className="h-3 bg-white/10 rounded w-1/2" />
       </div>
     );
   }
@@ -136,7 +136,7 @@ export default function DailyRecommend({ userId }: Props) {
       {/* アコーディオンヘッダー */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between bg-[#16213e] hover:bg-[#1a2547] rounded-xl px-4 py-3 border border-gray-700 transition-colors active:scale-95 transform"
+        className="w-full flex items-center justify-between bg-zinc-900 hover:bg-[#1a2547] rounded-xl px-4 py-3 border border-white/10 transition-colors active:scale-95 transform"
       >
         <div className="flex items-center gap-2 min-w-0">
           <span className="text-base flex-shrink-0">🎯</span>
@@ -195,7 +195,7 @@ export default function DailyRecommend({ userId }: Props) {
       )}
 
       {/* 今日のトレーニングヒント */}
-      <div className="bg-[#16213e] rounded-xl p-4 border border-yellow-400/20">
+      <div className="bg-zinc-900 rounded-xl p-4 border border-yellow-400/20">
         <div className="flex items-start gap-2">
           <span className="text-base mt-0.5">💡</span>
           <div>

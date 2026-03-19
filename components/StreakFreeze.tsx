@@ -118,7 +118,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
 
       {/* 危機警告 + フリーズ使用 */}
       {showWarning && (
-        <div className="bg-[#1a1a2e] border border-blue-500/40 rounded-xl p-4 mb-4">
+        <div className="bg-[#0f172a] border border-blue-500/40 rounded-xl p-4 mb-4">
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-start gap-2">
               <span className="text-xl mt-0.5">❄️</span>
@@ -158,7 +158,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
 
       {/* ステータス表示（危機でない時） */}
       {showStatus && freezeCount > 0 && (
-        <div className="bg-[#16213e] rounded-xl px-4 py-3 mb-4 border border-gray-700">
+        <div className="bg-zinc-900 rounded-xl px-4 py-3 mb-4 border border-white/10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-base">❄️</span>
@@ -178,7 +178,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
           </div>
           {/* 直近の使用履歴 */}
           {historyDates.length > 0 && (
-            <div className="mt-2 pt-2 border-t border-gray-700/50">
+            <div className="mt-2 pt-2 border-t border-white/10/50">
               <p className="text-[10px] text-gray-500">
                 直近の使用:{" "}
                 {historyDates.map((d, i) => (
@@ -199,7 +199,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
 
       {/* フリーズ残量0 → Proアップグレード CTA */}
       {showStatus && freezeCount === 0 && !isPro && streak >= 3 && (
-        <div className="bg-[#16213e] rounded-xl px-4 py-3 mb-4 border border-blue-500/20">
+        <div className="bg-zinc-900 rounded-xl px-4 py-3 mb-4 border border-blue-500/20">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-base opacity-40">❄️</span>

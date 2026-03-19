@@ -22,11 +22,11 @@ function AccountSection({ userId }: { userId: string }) {
 
   return (
     <div className="space-y-4">
-      <div className="bg-[#16213e] rounded-xl p-5 border border-gray-700">
+      <div className="bg-zinc-900 rounded-xl p-5 border border-white/10">
         <h3 className="text-gray-400 text-sm font-semibold mb-3">アプリ設定</h3>
         <p className="text-gray-600 text-xs">今後の設定項目がここに追加されます。</p>
       </div>
-      <div className="bg-[#16213e] rounded-xl p-5 border border-red-900/30">
+      <div className="bg-zinc-900 rounded-xl p-5 border border-red-900/30">
         <h3 className="text-red-500/70 text-xs uppercase tracking-wider mb-3">危険な操作</h3>
         {!confirm ? (
           <button
@@ -54,7 +54,7 @@ function AccountSection({ userId }: { userId: string }) {
               <button
                 type="button"
                 onClick={() => setConfirm(false)}
-                className="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-300 font-bold py-2 rounded-lg text-sm"
+                className="flex-1 bg-white/10 hover:bg-white/15 text-gray-300 font-bold py-2 rounded-lg text-sm"
               >
                 キャンセル
               </button>
@@ -79,7 +79,7 @@ export default function ProfileTabs({ userId }: { userId: string }) {
 
   return (
     <div>
-      <div className="flex gap-1 bg-[#16213e] rounded-xl p-1 mb-6 border border-gray-700">
+      <div className="flex gap-1 bg-zinc-900 rounded-xl p-1 mb-6 border border-white/10">
         {TABS.map((tab) => (
           <button
             key={tab.id}

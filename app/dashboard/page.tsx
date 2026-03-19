@@ -259,7 +259,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1a1a2e] pb-20 sm:pb-0">
+    <div className="min-h-screen bg-[#0f172a] pb-20 sm:pb-0">
       <InstallBanner />
       <NavBar displayName={displayName} avatarUrl={avatarUrl} />
       {/* ゲストデータの自動マージ（ログイン直後） */}
@@ -289,7 +289,7 @@ export default async function DashboardPage() {
 
         {/* クイックスタッツ */}
         <div className="grid grid-cols-2 gap-3 mb-3">
-          <div className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-[#e94560]/40 transition-colors">
+          <div className="bg-zinc-900 rounded-xl p-4 text-center border border-white/10 hover:border-[#e94560]/40 transition-colors">
             <div className="text-2xl font-bold text-[#e94560]">
               {monthCount ?? 0}
             </div>
@@ -323,7 +323,7 @@ export default async function DashboardPage() {
               </div>
             )}
           </div>
-          <div className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-yellow-400/40 transition-colors">
+          <div className="bg-zinc-900 rounded-xl p-4 text-center border border-white/10 hover:border-yellow-400/40 transition-colors">
             <div className="text-2xl font-bold text-yellow-400">
               {weekCount ?? 0}
             </div>
@@ -331,13 +331,13 @@ export default async function DashboardPage() {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3 mb-6">
-          <Link href="/techniques" className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-blue-400/40 transition-colors block">
+          <Link href="/techniques" className="bg-zinc-900 rounded-xl p-4 text-center border border-white/10 hover:border-blue-400/40 transition-colors block">
             <div className="text-2xl font-bold text-blue-400">
               {techniqueCount ?? 0}
             </div>
             <div className="text-gray-400 text-xs mt-1">Techniques</div>
           </Link>
-          <Link href="/profile" className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700 hover:border-green-400/40 transition-colors block">
+          <Link href="/profile" className="bg-zinc-900 rounded-xl p-4 text-center border border-white/10 hover:border-green-400/40 transition-colors block">
             <div className="text-2xl font-bold text-green-400">{streak}</div>
             <div className="text-gray-400 text-xs mt-1">Day Streak</div>
           </Link>
@@ -350,7 +350,7 @@ export default async function DashboardPage() {
         {!gymName && (
           <Link
             href="/profile"
-            className="flex items-center gap-3 bg-[#16213e]/80 border border-blue-500/20 hover:border-blue-500/50 rounded-xl px-4 py-3 mb-3 transition-colors group"
+            className="flex items-center gap-3 bg-white/5 border border-blue-500/20 hover:border-blue-500/50 rounded-xl px-4 py-3 mb-3 transition-colors group"
           >
             <span className="text-xl">🏫</span>
             <div className="flex-1 min-w-0">

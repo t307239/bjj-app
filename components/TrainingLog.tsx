@@ -193,7 +193,7 @@ function DurationPicker({
           max={480}
           step={15}
           className={`w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border focus:outline-none focus:border-blue-400 ${
-            isPreset ? "border-gray-600" : "border-[#e94560]"
+            isPreset ? "border-white/10" : "border-[#e94560]"
           }`}
         />
         <span className="text-gray-500 text-xs flex-shrink-0">分</span>
@@ -489,24 +489,24 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
 
       {/* 週次・月次サマリー */}
       {!initialLoading && entries.length > 0 && (
-        <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
+        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
           {/* 今週サマリー行 */}
           {weekEntries.length > 0 && (
-            <div className="flex items-center gap-3 mb-3 pb-3 border-b border-gray-700/60">
+            <div className="flex items-center gap-3 mb-3 pb-3 border-b border-white/10/60">
               <span className="text-[10px] font-semibold text-yellow-400/80 uppercase tracking-wide flex-shrink-0">今週</span>
               <div className="flex items-center gap-3 flex-1">
                 <div className="flex items-center gap-1.5">
                   <span className="text-sm font-bold text-yellow-400">{weekEntries.length}</span>
                   <span className="text-[10px] text-gray-500">回</span>
                 </div>
-                <div className="w-px h-4 bg-gray-700" />
+                <div className="w-px h-4 bg-white/10" />
                 <div className="flex items-center gap-1.5">
                   <span className="text-sm font-bold text-yellow-400/80">{weekHoursDisplay}</span>
                   <span className="text-[10px] text-gray-500">合計</span>
                 </div>
                 {weekEntries.length > 0 && (
                   <>
-                    <div className="w-px h-4 bg-gray-700" />
+                    <div className="w-px h-4 bg-white/10" />
                     <div className="flex items-center gap-1.5">
                       <span className="text-xs text-gray-400">
                         {formatDuration(Math.round(weekTotalMins / weekEntries.length))}/回
@@ -524,12 +524,12 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               <div className="text-lg font-bold text-[#e94560]">{monthEntries.length}</div>
               <div className="text-gray-400 text-xs">今月の練習</div>
             </div>
-            <div className="w-px h-8 bg-gray-700" />
+            <div className="w-px h-8 bg-white/10" />
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-blue-400">{monthHoursDisplay}</div>
               <div className="text-gray-400 text-xs">今月の時間</div>
             </div>
-            <div className="w-px h-8 bg-gray-700" />
+            <div className="w-px h-8 bg-white/10" />
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-purple-400">
                 {monthEntries.length > 0 ? formatDuration(Math.round(monthTotalMins / monthEntries.length)) : "-"}
@@ -551,7 +551,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               .filter((t) => t.count > 0);
             if (typePills.length === 0) return null;
             return (
-              <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-gray-700/60">
+              <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-white/10/60">
                 {typePills.map((t) => (
                   <span key={t.value} className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${t.color}`}>
                     <span>{t.icon}</span>
@@ -564,7 +564,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           })()}
           {/* 月末予測バッジ + 先月同期比 */}
           {monthEntries.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-gray-700/60 flex flex-wrap items-center gap-2">
+            <div className="mt-3 pt-3 border-t border-white/10/60 flex flex-wrap items-center gap-2">
               {remainingDaysLog > 0 && (
                 <>
                   <span className="text-[10px] text-gray-500">このペースで</span>
@@ -580,7 +580,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                     ? "bg-green-500/15 border border-green-500/30 text-green-300"
                     : monthDelta < 0
                     ? "bg-red-500/15 border border-red-500/30 text-red-300"
-                    : "bg-gray-700/50 border border-gray-600/50 text-gray-400"
+                    : "bg-white/10/50 border border-white/10/50 text-gray-400"
                 }`}>
                   {monthDelta > 0 ? `▲${monthDelta}` : monthDelta < 0 ? `▼${Math.abs(monthDelta)}` : "="} 先月同期比
                 </span>
@@ -601,7 +601,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           <button
             onClick={() => window.print()}
             title="印刷 / PDF保存"
-            className="print:hidden flex items-center gap-1 text-[11px] text-gray-400 hover:text-gray-200 bg-[#16213e] border border-gray-700 hover:border-gray-500 px-2 py-1.5 rounded-lg transition-colors"
+            className="print:hidden flex items-center gap-1 text-[11px] text-gray-400 hover:text-gray-200 bg-zinc-900 border border-white/10 hover:border-gray-500 px-2 py-1.5 rounded-lg transition-colors"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -628,7 +628,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="日付・タイプ・メモで検索..."
-            className="w-full bg-[#16213e] text-white rounded-xl pl-9 pr-9 py-2 text-sm border border-gray-700 focus:outline-none focus:border-[#e94560]/60 placeholder-gray-600"
+            className="w-full bg-zinc-900 text-white rounded-xl pl-9 pr-9 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#e94560]/60 placeholder-gray-600"
           />
           {searchQuery && (
             <button
@@ -655,7 +655,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                 className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                   periodFilter === p
                     ? "bg-[#e94560] text-white"
-                    : "bg-[#16213e] text-gray-400 border border-gray-700"
+                    : "bg-zinc-900 text-gray-400 border border-white/10"
                 }`}
               >
                 {label}
@@ -673,7 +673,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             value={dateFrom}
             max={dateTo || today}
             onChange={(e) => setDateFrom(e.target.value)}
-            className="flex-1 bg-[#16213e] text-white text-xs rounded-lg px-2 py-1.5 border border-gray-700 focus:outline-none focus:border-[#e94560]/60"
+            className="flex-1 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1.5 border border-white/10 focus:outline-none focus:border-[#e94560]/60"
           />
           <span className="text-gray-600 text-xs">〜</span>
           <input
@@ -682,7 +682,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             min={dateFrom}
             max={today}
             onChange={(e) => setDateTo(e.target.value)}
-            className="flex-1 bg-[#16213e] text-white text-xs rounded-lg px-2 py-1.5 border border-gray-700 focus:outline-none focus:border-[#e94560]/60"
+            className="flex-1 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1.5 border border-white/10 focus:outline-none focus:border-[#e94560]/60"
           />
           {(dateFrom || dateTo) && (
             <button onClick={() => { setDateFrom(""); setDateTo(""); }} className="text-gray-500 hover:text-white text-xs px-2">
@@ -697,7 +697,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         <div className="flex gap-1.5 mb-2">
           <button
             onClick={() => { setDateFrom(""); setDateTo(""); }}
-            className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors text-gray-600 border border-gray-800 hover:border-gray-700 hover:text-gray-400"
+            className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors text-gray-600 border border-gray-800 hover:border-white/10 hover:text-gray-400"
           >
             📅 日付絞込
           </button>
@@ -712,7 +712,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
               filterType === "all"
                 ? "bg-[#e94560] text-white"
-                : "bg-[#16213e] text-gray-400 border border-gray-700"
+                : "bg-zinc-900 text-gray-400 border border-white/10"
             }`}
           >
             すべて
@@ -726,7 +726,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                 filterType === t.value
                   ? "bg-[#e94560] text-white"
-                  : "bg-[#16213e] text-gray-400 border border-gray-700"
+                  : "bg-zinc-900 text-gray-400 border border-white/10"
               }`}
             >
               {t.label}
@@ -739,7 +739,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4"
+          className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4"
         >
           {formError && (
             <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2 mb-3 text-red-400 text-xs">
@@ -764,7 +764,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               value={form.date}
               max={today}
               onChange={(e) => setForm({ ...form, date: e.target.value })}
-              className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400"
+              className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400"
               required
             />
           </div>
@@ -780,7 +780,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             <select
               value={form.type}
               onChange={(e) => setForm({ ...form, type: e.target.value })}
-              className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400"
+              className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400"
             >
               {TRAINING_TYPES.map((t) => (
                 <option key={t.value} value={t.value}>
@@ -800,7 +800,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                   <select
                     value={compForm.result}
                     onChange={(e) => setCompForm({ ...compForm, result: e.target.value })}
-                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-red-400"
+                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400"
                   >
                     <option value="win">勝利 🏆</option>
                     <option value="loss">敗北</option>
@@ -814,7 +814,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                     value={compForm.opponent}
                     onChange={(e) => setCompForm({ ...compForm, opponent: e.target.value })}
                     placeholder="相手の名前"
-                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
                   />
                 </div>
               </div>
@@ -826,7 +826,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                     value={compForm.finish}
                     onChange={(e) => setCompForm({ ...compForm, finish: e.target.value })}
                     placeholder="例: ヒールフック"
-                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
                   />
                 </div>
                 <div>
@@ -836,7 +836,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                     value={compForm.event}
                     onChange={(e) => setCompForm({ ...compForm, event: e.target.value })}
                     placeholder="例: 東京オープン"
-                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
                   />
                 </div>
               </div>
@@ -846,7 +846,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                   <select
                     value={compForm.opponent_rank}
                     onChange={(e) => setCompForm({ ...compForm, opponent_rank: e.target.value })}
-                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-red-400"
+                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400"
                   >
                     {BELT_RANKS.map((b) => (
                       <option key={b.value} value={b.value}>{b.label}</option>
@@ -858,7 +858,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                   <select
                     value={compForm.gi_type}
                     onChange={(e) => setCompForm({ ...compForm, gi_type: e.target.value })}
-                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-red-400"
+                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400"
                   >
                     <option value="gi">道衣 (Gi)</option>
                     <option value="nogi">ノーギ (NoGi)</option>
@@ -875,7 +875,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
               placeholder="今日の練習のポイント、気づきなど..."
               rows={2}
-              className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-gray-600 focus:outline-none focus:border-blue-400 resize-none"
+              className="w-full bg-[#0f3460] text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-blue-400 resize-none"
             />
           </div>
 
@@ -901,7 +901,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       {/* ローディング */}
       {initialLoading && (
         <div className="text-center py-8 text-gray-500">
-          <div className="inline-block w-6 h-6 border-2 border-gray-600 border-t-[#e94560] rounded-full animate-spin mb-2" />
+          <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-[#e94560] rounded-full animate-spin mb-2" />
           <p className="text-sm">読み込み中...</p>
         </div>
       )}
@@ -940,7 +940,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           {filtered.map((entry) => (
             <div
               key={entry.id}
-              className={`bg-[#16213e] rounded-xl p-4 border border-gray-700${entry.type === "competition" ? " border-l-2 border-l-red-500" : ""}`}
+              className={`bg-zinc-900 rounded-xl p-4 border border-white/10${entry.type === "competition" ? " border-l-2 border-l-red-500" : ""}`}
             >
               {editingId === entry.id ? (
                 /* インライン編集フォーム */
@@ -951,7 +951,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                       value={editForm.date}
                       max={today}
                       onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
-                      className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-blue-400 mb-2"
+                      className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-blue-400 mb-2"
                     />
                     <DurationPicker
                       value={editForm.duration_min}
@@ -961,7 +961,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                   <select
                     value={editForm.type}
                     onChange={(e) => setEditForm({ ...editForm, type: e.target.value })}
-                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-blue-400 mb-2"
+                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-blue-400 mb-2"
                   >
                     {TRAINING_TYPES.map((t) => (
                       <option key={t.value} value={t.value}>{t.label}</option>
@@ -974,7 +974,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                         <select
                           value={editCompForm.result}
                           onChange={(e) => setEditCompForm({ ...editCompForm, result: e.target.value })}
-                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400"
+                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400"
                         >
                           <option value="win">勝利 🏆</option>
                           <option value="loss">敗北</option>
@@ -985,7 +985,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                           value={editCompForm.opponent}
                           onChange={(e) => setEditCompForm({ ...editCompForm, opponent: e.target.value })}
                           placeholder="対戦相手"
-                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-1.5">
@@ -994,21 +994,21 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                           value={editCompForm.finish}
                           onChange={(e) => setEditCompForm({ ...editCompForm, finish: e.target.value })}
                           placeholder="フィニッシュ技"
-                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
                         />
                         <input
                           type="text"
                           value={editCompForm.event}
                           onChange={(e) => setEditCompForm({ ...editCompForm, event: e.target.value })}
                           placeholder="大会名"
-                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-1.5">
                         <select
                           value={editCompForm.opponent_rank}
                           onChange={(e) => setEditCompForm({ ...editCompForm, opponent_rank: e.target.value })}
-                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400"
+                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400"
                         >
                           {BELT_RANKS.map((b) => (
                             <option key={b.value} value={b.value}>{b.label}</option>
@@ -1017,7 +1017,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                         <select
                           value={editCompForm.gi_type}
                           onChange={(e) => setEditCompForm({ ...editCompForm, gi_type: e.target.value })}
-                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-gray-600 focus:outline-none focus:border-red-400"
+                          className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400"
                         >
                           <option value="gi">道衣</option>
                           <option value="nogi">ノーギ</option>
@@ -1029,7 +1029,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                     value={editForm.notes}
                     onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
                     rows={2}
-                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-gray-600 focus:outline-none focus:border-blue-400 resize-none mb-2"
+                    className="w-full bg-[#0f3460] text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-blue-400 resize-none mb-2"
                   />
                   <div className="flex gap-2">
                     <button type="submit" className="flex-1 bg-[#e94560] text-white text-xs font-semibold py-1.5 rounded-lg">
@@ -1045,7 +1045,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${TRAINING_TYPES.find((t) => t.value === entry.type)?.color || "bg-gray-700 text-gray-300"}`}>
+                      <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${TRAINING_TYPES.find((t) => t.value === entry.type)?.color || "bg-white/10 text-gray-300"}`}>
                         <span>{TRAINING_TYPES.find((t) => t.value === entry.type)?.icon || "🥋"}</span>
                         <span>{TRAINING_TYPES.find((t) => t.value === entry.type)?.label || entry.type}</span>
                       </span>
@@ -1158,7 +1158,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           <button
             onClick={handleLoadMore}
             disabled={loadingMore}
-            className="text-gray-400 hover:text-white text-sm border border-gray-700 hover:border-gray-500 px-6 py-2 rounded-full transition-colors disabled:opacity-50"
+            className="text-gray-400 hover:text-white text-sm border border-white/10 hover:border-gray-500 px-6 py-2 rounded-full transition-colors disabled:opacity-50"
           >
             {loadingMore ? "読み込み中..." : "もっと見る"}
           </button>

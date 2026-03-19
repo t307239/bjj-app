@@ -218,7 +218,7 @@ export default function PersonalBests({ userId }: Props) {
       {/* アコーディオンヘッダー */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between bg-[#16213e] hover:bg-[#1a2547] rounded-xl px-4 py-3 border border-gray-700 transition-colors active:scale-95 transform"
+        className="w-full flex items-center justify-between bg-zinc-900 hover:bg-[#1a2547] rounded-xl px-4 py-3 border border-white/10 transition-colors active:scale-95 transform"
       >
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-gray-300">📊 累計記録</span>
@@ -238,7 +238,7 @@ export default function PersonalBests({ userId }: Props) {
 
       {/* 展開コンテンツ */}
       {isOpen && (
-      <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mt-2">
+      <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mt-2">
       <div className="flex items-center justify-between mb-3">
         <div>
           <h4 className="text-sm font-medium text-gray-300">📊 累計記録</h4>
@@ -260,7 +260,7 @@ export default function PersonalBests({ userId }: Props) {
         </div>
         <button
           onClick={handleShare}
-          className="flex items-center gap-1 text-[11px] text-gray-400 hover:text-white bg-gray-800/60 hover:bg-gray-700 border border-gray-700 hover:border-gray-500 px-2.5 py-1 rounded-lg transition-colors"
+          className="flex items-center gap-1 text-[11px] text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-gray-500 px-2.5 py-1 rounded-lg transition-colors"
         >
           <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -273,7 +273,7 @@ export default function PersonalBests({ userId }: Props) {
           <div
             key={item.label}
             className={`rounded-xl p-3 text-center ${
-              item.sub ? "bg-yellow-500/10 border border-yellow-500/25" : "bg-gray-800/40"
+              item.sub ? "bg-yellow-500/10 border border-yellow-500/25" : "bg-white/5"
             }`}
           >
             <div className="text-lg mb-0.5">{item.icon}</div>
@@ -296,7 +296,7 @@ export default function PersonalBests({ userId }: Props) {
         const maxDow = Math.max(...bests.dowCounts, 1);
         const bestDowIdx = bests.dowCounts.indexOf(Math.max(...bests.dowCounts));
         return (
-          <div className="mt-3 pt-3 border-t border-gray-700/50">
+          <div className="mt-3 pt-3 border-t border-white/10/50">
             <div className="flex items-end justify-between gap-1 h-10">
               {bests.dowCounts.map((count, i) => {
                 const pct = count / maxDow;
@@ -325,7 +325,7 @@ export default function PersonalBests({ userId }: Props) {
       })()}
       {/* 6ヶ月の月別強度推移 */}
       {bests.monthlyIntensity.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-gray-700/50">
+        <div className="mt-3 pt-3 border-t border-white/10/50">
           <p className="text-[10px] text-gray-400 mb-2">📈 過去6ヶ月の平均時間</p>
           <IntensitySparkline data={bests.monthlyIntensity} />
         </div>

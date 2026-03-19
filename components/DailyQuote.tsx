@@ -24,7 +24,7 @@ export default function DailyQuote() {
   );
   const quote = QUOTES[dayOfYear % QUOTES.length];
   return (
-    <div className="bg-[#16213e]/60 rounded-xl px-4 py-3 border border-gray-700/50 mb-4">
+    <div className="bg-zinc-900/60 rounded-xl px-4 py-3 border border-white/10/50 mb-4">
       <p className="text-gray-300 text-xs leading-relaxed italic pl-4 border-l-2 border-[#e94560]/40">
         {quote.text}
       </p>

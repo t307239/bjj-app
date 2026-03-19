@@ -108,7 +108,7 @@ export default function WeeklyStrip({ userId }: Props) {
   const totalPastDays = weekDays.filter((d) => d.isPast).length;
 
   return (
-    <div className="bg-[#16213e] rounded-xl px-4 py-3 border border-gray-700 mb-4">
+    <div className="bg-zinc-900 rounded-xl px-4 py-3 border border-white/10 mb-4">
       <div className="flex items-center justify-between mb-2">
         <h4 className="text-xs font-medium text-gray-400">今週の練習状況</h4>
         <div className="flex items-center gap-2">
@@ -164,8 +164,8 @@ export default function WeeklyStrip({ userId }: Props) {
                     : day.isToday
                     ? "border-2 border-[#e94560]/50 bg-transparent"
                     : isFuture
-                    ? "bg-gray-800/40"
-                    : "bg-gray-700/50"
+                    ? "bg-white/5"
+                    : "bg-white/10/50"
                 }`}
               >
                 {trained && (

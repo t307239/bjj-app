@@ -55,7 +55,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
         <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
       </head>
-      <body className="min-h-screen bg-[#1a1a2e] text-white antialiased">
+      <body className="min-h-screen bg-[#0f172a] text-white antialiased">
         <LocaleProvider>
           {children}
         </LocaleProvider>

@@ -67,7 +67,7 @@ export default async function Home() {
       <section className="flex-1 flex flex-col items-center justify-center px-4 py-16 text-center">
         <div className="max-w-2xl mx-auto">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-[#16213e] border border-[#e94560]/30 rounded-full px-4 py-1.5 text-sm text-[#e94560] mb-8">
+          <div className="inline-flex items-center gap-2 bg-zinc-900 border border-[#e94560]/30 rounded-full px-4 py-1.5 text-sm text-[#e94560] mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-[#e94560] animate-pulse" />
             Free to start
           </div>
@@ -94,7 +94,7 @@ export default async function Home() {
             </Link>
             <a
               href="#preview"
-              className="inline-flex items-center justify-center gap-2 bg-[#16213e] hover:bg-[#1a2a4a] text-gray-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-gray-700"
+              className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-[#1a2a4a] text-gray-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-white/10"
             >
               See the app ↓
             </a>
@@ -114,7 +114,7 @@ export default async function Home() {
       {/* English Section — for Reddit / international users */}
       <section id="english" className="px-4 py-16 bg-[#0a0a18] border-t border-gray-800/50">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-[#16213e] border border-blue-500/30 rounded-full px-4 py-1.5 text-sm text-blue-400 mb-8">
+          <div className="inline-flex items-center gap-2 bg-zinc-900 border border-blue-500/30 rounded-full px-4 py-1.5 text-sm text-blue-400 mb-8">
             🌐 For English speakers
           </div>
 
@@ -142,7 +142,7 @@ export default async function Home() {
               "📅 Calendar heatmap",
               "🏆 Competition W/L tracker",
             ].map((f) => (
-              <span key={f} className="bg-[#16213e] border border-gray-700 text-gray-300 px-3 py-1.5 rounded-full">
+              <span key={f} className="bg-zinc-900 border border-white/10 text-gray-300 px-3 py-1.5 rounded-full">
                 {f}
               </span>
             ))}
@@ -155,7 +155,7 @@ export default async function Home() {
               { quote: "The technique notebook is 🔥. I log every guard detail from class and review before rolling.", belt: "Purple belt, 4 years", initial: "A" },
               { quote: "Built my habit from 2x/week to 4x/week just by watching the streak number go up.", belt: "White belt, 8 months", initial: "J" },
             ].map(({ quote, belt, initial }) => (
-              <div key={initial} className="bg-[#16213e] rounded-xl p-4 border border-gray-700/60">
+              <div key={initial} className="bg-zinc-900 rounded-xl p-4 border border-white/10/60">
                 <div className="flex items-center gap-1 mb-2 text-yellow-400 text-xs">★★★★★</div>
                 <p className="text-gray-400 text-xs leading-relaxed mb-3">&ldquo;{quote}&rdquo;</p>
                 <div className="flex items-center gap-2">
@@ -175,7 +175,7 @@ export default async function Home() {
             </Link>
             <Link
               href="/dashboard"
-              className="inline-flex items-center justify-center gap-2 bg-[#16213e] hover:bg-[#1a2a4a] text-gray-300 font-medium py-4 px-8 rounded-full text-base transition-all border border-gray-700"
+              className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-[#1a2a4a] text-gray-300 font-medium py-4 px-8 rounded-full text-base transition-all border border-white/10"
             >
               Try without signing up
             </Link>
@@ -188,7 +188,7 @@ export default async function Home() {
       <section className="px-4 py-16 bg-[#0f0e17]">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-[#16213e] border border-[#e94560]/30 rounded-full px-4 py-2 mb-6">
+            <div className="inline-flex items-center gap-2 bg-zinc-900 border border-[#e94560]/30 rounded-full px-4 py-2 mb-6">
               <span className="text-sm text-[#e94560]">✓ 3,500+ BJJ practitioners trust BJJ App</span>
             </div>
             <h2 className="text-2xl font-bold text-gray-200">
@@ -196,19 +196,19 @@ export default async function Home() {
             </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-[#16213e] rounded-2xl p-6 border border-[#e94560]/30 text-center">
+            <div className="bg-zinc-900 rounded-2xl p-6 border border-[#e94560]/30 text-center">
               <div className="text-3xl font-bold text-[#e94560] mb-1">5,000+</div>
               <p className="text-gray-400 text-xs">Sessions logged</p>
             </div>
-            <div className="bg-[#16213e] rounded-2xl p-6 border border-[#e94560]/30 text-center">
+            <div className="bg-zinc-900 rounded-2xl p-6 border border-[#e94560]/30 text-center">
               <div className="text-3xl font-bold text-[#e94560] mb-1">1,200+</div>
               <p className="text-gray-400 text-xs">Techniques saved</p>
             </div>
-            <div className="bg-[#16213e] rounded-2xl p-6 border border-[#e94560]/30 text-center">
+            <div className="bg-zinc-900 rounded-2xl p-6 border border-[#e94560]/30 text-center">
               <div className="text-3xl font-bold text-[#e94560] mb-1">🔥 30+</div>
               <p className="text-gray-400 text-xs">Longest streak (days)</p>
             </div>
-            <div className="bg-[#16213e] rounded-2xl p-6 border border-[#e94560]/30 text-center">
+            <div className="bg-zinc-900 rounded-2xl p-6 border border-[#e94560]/30 text-center">
               <div className="text-3xl font-bold text-[#e94560] mb-1">Free</div>
               <p className="text-gray-400 text-xs">All core features</p>
             </div>
@@ -253,7 +253,7 @@ export default async function Home() {
       </section>
 
       {/* App Preview */}
-      <section id="preview" className="px-4 py-16 bg-[#16213e]/30">
+      <section id="preview" className="px-4 py-16 bg-zinc-900/30">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-3 text-gray-200">
             Here&apos;s what it looks like
@@ -263,9 +263,9 @@ export default async function Home() {
           {/* ダッシュボードモックアップ */}
           <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
             {/* スマホモックアップ */}
-            <div className="mx-auto lg:mx-0 w-full max-w-[320px] bg-[#1a1a2e] rounded-2xl border border-gray-700 overflow-hidden shadow-2xl">
+            <div className="mx-auto lg:mx-0 w-full max-w-[320px] bg-[#0f172a] rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
               {/* Header */}
-              <div className="bg-[#16213e] border-b border-gray-700 px-4 py-3 flex items-center justify-between">
+              <div className="bg-zinc-900 border-b border-white/10 px-4 py-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-base">🥋</span>
                   <span className="text-sm font-semibold">BJJ App</span>
@@ -286,27 +286,27 @@ export default async function Home() {
 
                 {/* Stats grid */}
                 <div className="grid grid-cols-2 gap-2 mb-3">
-                  <div className="bg-[#16213e] rounded-xl p-3 text-center border border-gray-700">
+                  <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     <div className="text-2xl font-bold text-[#e94560]">12</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">This month</div>
                   </div>
-                  <div className="bg-[#16213e] rounded-xl p-3 text-center border border-gray-700">
+                  <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     <div className="text-2xl font-bold text-blue-400">3</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">This week</div>
                   </div>
-                  <div className="bg-[#16213e] rounded-xl p-3 text-center border border-gray-700">
+                  <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     <div className="text-2xl font-bold text-purple-400">47</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">Techniques</div>
                   </div>
-                  <div className="bg-[#16213e] rounded-xl p-3 text-center border border-gray-700">
+                  <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     <div className="text-xl font-bold text-orange-400">🔥 5</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">Day streak</div>
                   </div>
                 </div>
 
                 {/* Goal tracker */}
-                <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-3 overflow-hidden">
-                  <div className="px-3 py-2 border-b border-gray-700">
+                <div className="bg-zinc-900 rounded-xl border border-white/10 mb-3 overflow-hidden">
+                  <div className="px-3 py-2 border-b border-white/10">
                     <span className="text-xs font-medium text-gray-300">🎯 Training goals</span>
                   </div>
                   <div className="p-3 space-y-3">
@@ -315,7 +315,7 @@ export default async function Home() {
                         <span className="text-[11px] text-gray-400">Weekly goal</span>
                         <span className="text-[10px] text-yellow-400">75%</span>
                       </div>
-                      <div className="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                      <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-yellow-400 rounded-full" style={{ width: "75%" }} />
                       </div>
                       <div className="text-[10px] text-gray-600 mt-1">3 / 4 sessions</div>
@@ -325,7 +325,7 @@ export default async function Home() {
                         <span className="text-[11px] text-gray-400">Monthly goal</span>
                         <span className="text-[10px] text-green-400">✓ Done!</span>
                       </div>
-                      <div className="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                      <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-green-400 rounded-full" style={{ width: "100%" }} />
                       </div>
                       <div className="text-[10px] text-gray-600 mt-1">12 / 12 sessions</div>
@@ -336,7 +336,7 @@ export default async function Home() {
                 {/* Recent sessions */}
                 <div className="space-y-2">
                   <div className="text-[11px] text-gray-500 font-medium mb-1">Recent sessions</div>
-                  <div className="bg-[#16213e] rounded-xl p-3 border border-gray-700">
+                  <div className="bg-zinc-900 rounded-xl p-3 border border-white/10">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-xs font-medium">2026/03/17</div>
@@ -347,7 +347,7 @@ export default async function Home() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-[#16213e] rounded-xl p-3 border border-gray-700 opacity-60">
+                  <div className="bg-zinc-900 rounded-xl p-3 border border-white/10 opacity-60">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-xs font-medium">2026/03/15</div>
@@ -419,21 +419,21 @@ export default async function Home() {
           All features, free
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700 hover:border-[#e94560]/40 transition-colors">
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-[#e94560]/40 transition-colors">
             <div className="text-3xl mb-3">📊</div>
             <h3 className="font-bold text-lg mb-2">Training Log</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
               Log date, duration, type, and notes. Auto-totals your monthly sessions and training time.
             </p>
           </div>
-          <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700 hover:border-[#e94560]/40 transition-colors">
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-[#e94560]/40 transition-colors">
             <div className="text-3xl mb-3">📚</div>
             <h3 className="font-bold text-lg mb-2">Technique Journal</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
               Organize techniques by position. Track mastery levels to spot and fix weak areas.
             </p>
           </div>
-          <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700 hover:border-[#e94560]/40 transition-colors">
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-[#e94560]/40 transition-colors">
             <div className="text-3xl mb-3">🔥</div>
             <h3 className="font-bold text-lg mb-2">Streak Tracker</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
@@ -449,7 +449,7 @@ export default async function Home() {
           What Practitioners Say
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700">
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10">
             <div className="flex items-center gap-1 mb-3 text-yellow-400 text-sm">★★★★★</div>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
               &ldquo;After 3 months of tracking, I got promoted to blue belt. Having the data makes the progress so real.&rdquo;
@@ -462,7 +462,7 @@ export default async function Home() {
               </div>
             </div>
           </div>
-          <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700">
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10">
             <div className="flex items-center gap-1 mb-3 text-yellow-400 text-sm">★★★★★</div>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
               &ldquo;The technique journal is awesome. I can clearly see my weak spots and focus on them next session.&rdquo;
@@ -475,7 +475,7 @@ export default async function Home() {
               </div>
             </div>
           </div>
-          <div className="bg-[#16213e] rounded-2xl p-6 border border-gray-700">
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10">
             <div className="flex items-center gap-1 mb-3 text-yellow-400 text-sm">★★★★★</div>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
               &ldquo;The streak feature got me training 4x a week consistently. I used to quit everything after 3 days.&rdquo;
@@ -512,7 +512,7 @@ export default async function Home() {
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-[#16213e] rounded-xl p-4 border border-gray-700 hover:border-[#e94560]/40 transition-colors block"
+                className="bg-zinc-900 rounded-xl p-4 border border-white/10 hover:border-[#e94560]/40 transition-colors block"
               >
                 <div className="text-2xl mb-2">{item.emoji}</div>
                 <div className="text-sm font-semibold text-gray-200 mb-1">{item.title}</div>
@@ -542,7 +542,7 @@ export default async function Home() {
           <p className="text-gray-500 text-center text-sm mb-10">All core features are free forever.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Free */}
-            <div className="bg-[#16213e] rounded-2xl p-8 border border-gray-700">
+            <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10">
               <div className="text-lg font-bold mb-1">Free</div>
               <div className="text-3xl font-bold text-gray-200 mb-1">$0</div>
               <div className="text-gray-500 text-xs mb-6">Free forever</div>
@@ -559,7 +559,7 @@ export default async function Home() {
               </Link>
             </div>
             {/* Pro */}
-            <div className="bg-[#16213e] rounded-2xl p-8 border border-[#e94560]/50 relative">
+            <div className="bg-zinc-900 rounded-2xl p-8 border border-[#e94560]/50 relative">
               <div className="absolute -top-3 right-6 bg-[#e94560] text-white text-xs px-3 py-1 rounded-full font-bold">Coming soon</div>
               <div className="text-lg font-bold mb-1">Pro</div>
               <div className="text-3xl font-bold text-gray-200 mb-1">$4.99<span className="text-sm font-normal text-gray-500">/mo</span></div>
@@ -571,7 +571,7 @@ export default async function Home() {
                 <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> Streak freeze</li>
                 <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> Priority support</li>
               </ul>
-              <button className="mt-8 w-full text-center bg-gray-700 text-gray-400 font-bold py-3 rounded-full cursor-not-allowed" disabled>
+              <button className="mt-8 w-full text-center bg-white/10 text-gray-400 font-bold py-3 rounded-full cursor-not-allowed" disabled>
                 Coming soon
               </button>
             </div>
@@ -590,7 +590,7 @@ export default async function Home() {
             { q: "Does it work on mobile?", a: "Yes! Fully responsive and works great in your smartphone browser. Add it to your home screen to use it like a native app. Offline support is also planned." },
             { q: "Is my data safe?", a: "Data is stored securely in Supabase (enterprise-grade PostgreSQL). Row Level Security means no one can access your data. Export everything as CSV anytime — no lock-in." },
           ].map(({ q, a }, i) => (
-            <div key={i} className="bg-[#16213e] rounded-xl p-5 border border-gray-700">
+            <div key={i} className="bg-zinc-900 rounded-xl p-5 border border-white/10">
               <h3 className="font-semibold text-gray-200 mb-2 text-sm">Q. {q}</h3>
               <p className="text-gray-500 text-sm leading-relaxed">{a}</p>
             </div>
@@ -599,7 +599,7 @@ export default async function Home() {
       </section>
 
       {/* Final CTA */}
-      <section className="px-4 py-16 text-center bg-[#16213e]/30">
+      <section className="px-4 py-16 text-center bg-zinc-900/30">
         <h2 className="text-2xl font-bold mb-3 text-gray-200">Start Training Smarter Today</h2>
         <p className="text-gray-500 text-sm mb-8">No credit card needed. Sign up with GitHub or Google in seconds.</p>
         <Link

@@ -83,7 +83,7 @@ export default function GuestDashboard() {
   const typeInfo = (t: string) => TRAINING_TYPES.find((tt) => tt.value === t) ?? TRAINING_TYPES[0];
 
   return (
-    <div className="min-h-screen bg-[#1a1a2e] pb-20 sm:pb-0">
+    <div className="min-h-screen bg-[#0f172a] pb-20 sm:pb-0">
       {/* ゲストバナー */}
       <div className="bg-gradient-to-r from-[#e94560]/90 to-[#0f3460]/90 px-4 py-3 text-center">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
@@ -109,11 +109,11 @@ export default function GuestDashboard() {
 
         {/* ゲストステータス */}
         <div className="grid grid-cols-2 gap-3 mb-6">
-          <div className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700">
+          <div className="bg-zinc-900 rounded-xl p-4 text-center border border-white/10">
             <div className="text-2xl font-bold text-[#e94560]">{logs.length}</div>
             <div className="text-gray-400 text-xs mt-1">{t("guest.sessions")}</div>
           </div>
-          <div className="bg-[#16213e] rounded-xl p-4 text-center border border-gray-700">
+          <div className="bg-zinc-900 rounded-xl p-4 text-center border border-white/10">
             <div className="text-2xl font-bold text-yellow-400">
               {logs.reduce((s, l) => s + l.duration_min, 0)}
             </div>
@@ -122,7 +122,7 @@ export default function GuestDashboard() {
         </div>
 
         {/* 練習記録セクション */}
-        <div className="bg-[#16213e] rounded-xl border border-gray-700 p-4 mb-6">
+        <div className="bg-zinc-900 rounded-xl border border-white/10 p-4 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-white">{t("training.title")}</h3>
             <button
@@ -135,14 +135,14 @@ export default function GuestDashboard() {
 
           {/* 入力フォーム */}
           {showForm && (
-            <div className="space-y-3 mb-4 border border-gray-600 rounded-xl p-4 bg-[#0f3460]/30">
+            <div className="space-y-3 mb-4 border border-white/10 rounded-xl p-4 bg-[#0f3460]/30">
               <div className="flex gap-2">
                 <input
                   type="date"
                   value={date}
                   max={getLocalDateString()}
                   onChange={(e) => setDate(e.target.value)}
-                  className="flex-1 bg-[#0f3460] text-white text-sm rounded-lg px-3 py-2 border border-gray-600 focus:outline-none focus:border-blue-400"
+                  className="flex-1 bg-[#0f3460] text-white text-sm rounded-lg px-3 py-2 border border-white/10 focus:outline-none focus:border-blue-400"
                 />
               </div>
               {/* 時間プリセット */}
@@ -157,7 +157,7 @@ export default function GuestDashboard() {
                       className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
                         duration === d
                           ? "bg-[#e94560] border-[#e94560] text-white"
-                          : "bg-[#0f3460] border-gray-600 text-gray-400 hover:text-white"
+                          : "bg-[#0f3460] border-white/10 text-gray-400 hover:text-white"
                       }`}
                     >
                       {d}分
@@ -173,7 +173,7 @@ export default function GuestDashboard() {
                     type="button"
                     onClick={() => setType(t.value)}
                     className={`px-3 py-1 rounded-full text-xs border transition-colors ${
-                      type === t.value ? t.color + " ring-1 ring-white/30" : "bg-gray-800 text-gray-500 border-gray-700 hover:text-gray-300"
+                      type === t.value ? t.color + " ring-1 ring-white/30" : "bg-gray-800 text-gray-500 border-white/10 hover:text-gray-300"
                     }`}
                   >
                     {t.label}
@@ -185,7 +185,7 @@ export default function GuestDashboard() {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="メモ（任意）"
-                className="w-full bg-[#0f3460] text-white text-sm rounded-lg px-3 py-2 border border-gray-600 focus:outline-none focus:border-blue-400"
+                className="w-full bg-[#0f3460] text-white text-sm rounded-lg px-3 py-2 border border-white/10 focus:outline-none focus:border-blue-400"
               />
               <button
                 onClick={handleAdd}
@@ -231,7 +231,7 @@ export default function GuestDashboard() {
         <div className={`rounded-xl border p-5 text-center transition-all ${
           logs.length >= 3
             ? "bg-gradient-to-br from-[#e94560]/20 to-[#0f3460] border-[#e94560]/50"
-            : "bg-[#16213e] border-gray-700"
+            : "bg-zinc-900 border-white/10"
         }`}>
           {logs.length >= 3 && (
             <p className="text-[#e94560] text-sm font-semibold mb-1">

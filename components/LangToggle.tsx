@@ -10,7 +10,7 @@ export default function LangToggle() {
   return (
     <button
       onClick={toggle}
-      className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold border border-gray-600 text-gray-400 hover:text-white hover:border-gray-400 transition-colors"
+      className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold border border-white/10 text-gray-400 hover:text-white hover:border-gray-400 transition-colors"
       title={locale === "ja" ? "Switch to English" : "日本語に切り替え"}
       aria-label="Toggle language"
     >

@@ -55,7 +55,7 @@ function ExportBtn({
     <button
       onClick={onClick}
       disabled={loading}
-      className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-gray-700 hover:border-gray-500 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+      className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/10 hover:border-gray-500 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
     >
       {loading ? (
         <span className="inline-block w-3 h-3 border border-gray-500 border-t-white rounded-full animate-spin" />

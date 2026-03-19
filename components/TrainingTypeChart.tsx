@@ -249,6 +249,7 @@ export default function TrainingTypeChart({ userId }: Props) {
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<Period>("all");
   const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -291,7 +292,25 @@ export default function TrainingTypeChart({ userId }: Props) {
   if (total === 0 && period === "all") return null;
 
   return (
-    <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
+    <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-4 overflow-hidden">
+      <button
+        onClick={() => setIsOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-700/20 transition-colors text-left"
+      >
+        <h4 className="text-sm font-medium text-gray-300">🥋 練習タイプ分布</h4>
+        <div className="flex items-center gap-2">
+          {!isOpen && total > 0 && (
+            <span className="text-[10px] text-gray-500">{total}回</span>
+          )}
+          <svg
+            className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </button>
+      {isOpen && (<div className="p-4 border-t border-gray-700">
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-sm font-medium text-gray-300">練習タイプ分布</h4>
         <div className="flex rounded-lg overflow-hidden border border-gray-700">
@@ -357,6 +376,7 @@ export default function TrainingTypeChart({ userId }: Props) {
           />
         ) : null;
       })()}
+      </div>)}
     </div>
   );
 }

@@ -69,7 +69,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
   return (
     <>
       {/* デスクトップ/タブレット ヘッダー */}
-      <header className="bg-[#16213e] border-b border-gray-700 px-4 py-3 sticky top-0 z-50">
+      <header className="bg-zinc-900 border-b border-white/10 px-4 py-3 sticky top-0 z-50">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
@@ -120,9 +120,9 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
       </header>
 
       {/* モバイル ボトムナビ */}
-      <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-[#16213e] border-t border-gray-700 z-50">
+      <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-white/10 z-50">
         {currentStreak >= 2 && (
-          <div className="flex justify-center py-1 border-b border-gray-700/50 bg-orange-500/5">
+          <div className="flex justify-center py-1 border-b border-white/10/50 bg-orange-500/5">
             <span className="text-[10px] text-orange-400">🔥 {currentStreak}日連続練習中</span>
           </div>
         )}

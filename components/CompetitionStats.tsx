@@ -181,10 +181,10 @@ export default function CompetitionStats({ userId }: Props) {
   const donutR = 28;
 
   return (
-    <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-4 overflow-hidden">
+    <div className="bg-zinc-900 rounded-xl border border-white/10 mb-4 overflow-hidden">
       <button
         onClick={() => setIsOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-700/20 transition-colors text-left"
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
       >
         <h4 className="text-sm font-medium text-gray-300">🏆 試合戦績</h4>
         <div className="flex items-center gap-2">
@@ -201,7 +201,7 @@ export default function CompetitionStats({ userId }: Props) {
           </svg>
         </div>
       </button>
-      {isOpen && (<div className="p-4 border-t border-gray-700">
+      {isOpen && (<div className="p-4 border-t border-white/10">
 
       {/* ドーナツチャート + W/L/D 暪並び */}
       <div className="flex items-center gap-4 mb-3">
@@ -324,7 +324,7 @@ export default function CompetitionStats({ userId }: Props) {
       {/* 勝率バー */}
       {decoded > 0 && (
         <div>
-          <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden flex">
+          <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden flex">
             <div
               className="h-full bg-green-400 transition-all duration-500"
               style={{ width: `${winPct}%` }}
@@ -341,7 +341,7 @@ export default function CompetitionStats({ userId }: Props) {
 
       {/* 月別勝敗バー（3試合以上 かつ 2ヶ月以上ある場合） */}
       {record.total >= 3 && monthlyStats.length >= 2 && (
-        <div className="mt-4 pt-3 border-t border-gray-700/50">
+        <div className="mt-4 pt-3 border-t border-white/10/50">
           <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wide">月別</p>
           {(() => {
             const maxTotal = Math.max(...monthlyStats.map((m) => m.total), 1);

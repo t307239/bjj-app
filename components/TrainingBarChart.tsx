@@ -61,6 +61,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
   const [selectedLogs, setSelectedLogs] = useState<LogEntry[]>([]);
   const [selectedLoading, setSelectedLoading] = useState(false);
   const [hoveredMonth, setHoveredMonth] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -180,7 +181,25 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
   const visibleTypes = TYPE_ORDER.filter((t) => allTypes.has(t));
 
   return (
-    <div className="bg-[#16213e] rounded-xl p-4 border border-gray-700 mb-4">
+    <div className="bg-[#16213e] rounded-xl border border-gray-700 mb-4 overflow-hidden">
+      <button
+        onClick={() => setIsOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-700/20 transition-colors text-left"
+      >
+        <div>
+          <h4 className="text-sm font-medium text-gray-300">📊 月別練習グラフ</h4>
+          {!isOpen && totalCount > 0 && (
+            <p className="text-[10px] text-gray-500 mt-0.5">計{totalCount}回 · {formatMinutes(totalMinutes)}</p>
+          )}
+        </div>
+        <svg
+          className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+          fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {isOpen && (<div className="p-4 border-t border-gray-700">
       <div className="flex items-center justify-between mb-3">
         <div>
           <h4 className="text-sm font-medium text-gray-300">月別練習グラフ</h4>
@@ -416,6 +435,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           )}
         </div>
       )}
+      </div>)}
     </div>
   );
 }

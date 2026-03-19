@@ -53,7 +53,7 @@ export default async function TechniquesPage() {
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
   return (
-    <div className="min-h-screen bg-[#1a1a2e] pb-20 sm:pb-0">
+    <div className="min-h-screen bg-[#0f172a] pb-20 sm:pb-0">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -71,7 +71,7 @@ export default async function TechniquesPage() {
         <TechniqueLog userId={user.id} />
 
         {/* BJJ Wiki 関連学習リンク */}
-        <div className="mt-8 bg-[#16213e] rounded-xl p-4 border border-gray-700/40">
+        <div className="mt-8 bg-zinc-900 rounded-xl p-4 border border-white/10/40">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-base">📚</span>
             <h3 className="text-sm font-semibold text-gray-200">BJJ Wiki で技術を深める</h3>
@@ -83,7 +83,7 @@ export default async function TechniquesPage() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs bg-[#1a1a2e] hover:bg-[#0f3460] text-gray-400 hover:text-[#e94560] px-3 py-1.5 rounded-full border border-gray-700 hover:border-[#e94560]/40 transition-all"
+                className="text-xs bg-[#0f172a] hover:bg-[#0f3460] text-gray-400 hover:text-[#e94560] px-3 py-1.5 rounded-full border border-white/10 hover:border-[#e94560]/40 transition-all"
               >
                 {link.label} →
               </a>
