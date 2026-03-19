@@ -76,7 +76,7 @@ export default function GymPage() {
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
-                href="mailto:hello@bjj-app.co?subject=BJJ%20App%20Academy%20Inquiry"
+                href="mailto:307239t777@gmail.com?subject=BJJ%20App%20Academy%20Inquiry"
                 className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-8 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
               >
                 Request Access →
@@ -214,7 +214,7 @@ export default function GymPage() {
                   </li>
                 </ul>
                 <a
-                  href="mailto:hello@bjj-app.co?subject=Starter%20Plan%20Inquiry"
+                  href="mailto:307239t777@gmail.com?subject=Starter%20Plan%20Inquiry"
                   className="w-full block text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-full transition-all"
                 >
                   Request Access
@@ -246,7 +246,7 @@ export default function GymPage() {
                   </li>
                 </ul>
                 <a
-                  href="mailto:hello@bjj-app.co?subject=Pro%20Plan%20Inquiry"
+                  href="mailto:307239t777@gmail.com?subject=Pro%20Plan%20Inquiry"
                   className="w-full block text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-full transition-all"
                 >
                   Request Access
@@ -321,7 +321,7 @@ export default function GymPage() {
             14-day free trial. No credit card required. Cancel anytime.
           </p>
           <a
-            href="mailto:hello@bjj-app.co?subject=BJJ%20App%20Academy%20Demo%20Request"
+            href="mailto:307239t777@gmail.com?subject=BJJ%20App%20Academy%20Demo%20Request"
             className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
           >
             Request Demo →
@@ -330,7 +330,12 @@ export default function GymPage() {
 
         {/* Footer */}
         <footer className="px-6 py-8 text-center text-gray-600 text-sm border-t border-gray-800">
-          <p>© 2026 BJJ App. Built by grapplers, for grapplers.</p>
+          <p className="mb-3">© 2026 BJJ App. Built by grapplers, for grapplers.</p>
+          <div className="flex justify-center flex-wrap gap-4 text-xs">
+            <a href="/terms" className="hover:text-gray-400 transition-colors">Terms</a>
+            <a href="/privacy" className="hover:text-gray-400 transition-colors">Privacy</a>
+            <a href="/legal/tokushoho" className="hover:text-gray-400 transition-colors">特定商取引法に基づく表記</a>
+          </div>
         </footer>
       </main>
     </>

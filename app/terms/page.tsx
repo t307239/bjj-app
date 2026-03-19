@@ -61,12 +61,22 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-white mb-3">5. Paid Subscription (Pro)</h2>
             <p className="mb-2">
-              Pro features are available for a monthly subscription fee. Payments are processed
-              securely through Stripe. Subscriptions renew automatically unless cancelled.
+              Pro features are available for a monthly subscription fee (USD $4.99/month, tax inclusive).
+              Payments are processed securely through Stripe (Visa, Mastercard, American Express, JCB).
+            </p>
+            <p className="mb-2">
+              Subscriptions renew automatically on the same date each month. To cancel, go to your
+              account settings at least 24 hours before the next billing date. Cancellation takes
+              effect at the end of the current billing period. No partial-month refunds are provided.
+            </p>
+            <p className="mb-2">
+              Refund requests are accepted within 7 days of the initial charge only. To request a
+              refund, email 307239t777@gmail.com with your account email address. No refund is available
+              for subsequent monthly renewals.
             </p>
             <p>
-              Refunds may be requested within 7 days of a charge by contacting us. We reserve the
-              right to change pricing with 30 days&apos; notice.
+              We reserve the right to change pricing with 30 days&apos; advance notice. Price changes
+              do not apply to the current billing period.
             </p>
           </section>
 
@@ -118,14 +128,23 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-white mb-3">11. Contact</h2>
             <p>
-              For any questions about these Terms, please contact us at the email listed on our
-              GitHub profile.
+              For any questions about these Terms, please contact us at 307239t777@gmail.com.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-white mb-3">12. Governing Law</h2>
+            <p>
+              These Terms are governed by the laws of Japan. Any disputes arising from or in
+              connection with these Terms shall be subject to the exclusive jurisdiction of the
+              Tokyo District Court.
             </p>
           </section>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-gray-800 flex gap-6 text-xs text-gray-600">
+        <div className="mt-12 pt-8 border-t border-gray-800 flex flex-wrap gap-6 text-xs text-gray-600">
           <Link href="/privacy" className="hover:text-gray-400 transition-colors">Privacy Policy</Link>
+          <Link href="/legal/tokushoho" className="hover:text-gray-400 transition-colors">Specified Commercial Transactions Act</Link>
           <Link href="/" className="hover:text-gray-400 transition-colors">← Home</Link>
         </div>
       </div>

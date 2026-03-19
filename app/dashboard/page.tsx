@@ -23,6 +23,7 @@ import InsightsBanner from "@/components/InsightsBanner";
 import DailyWikiTip from "@/components/DailyWikiTip";
 import WikiQuickLinks from "@/components/WikiQuickLinks";
 import ProUpgradeBanner from "@/components/ProUpgradeBanner";
+import BeltProgressCard from "@/components/BeltProgressCard";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app-one.vercel.app";
@@ -32,10 +33,10 @@ const getCachedProfile = cache(async (userId: string) => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("profiles")
-    .select("belt, start_date, is_pro, gym_name")
+    .select("belt, stripe, start_date, is_pro, gym_name")
     .eq("id", userId)
     .single();
-  return data as { belt: string; start_date: string | null; is_pro: boolean; gym_name: string | null } | null;
+  return data as { belt: string; stripe: number; start_date: string | null; is_pro: boolean; gym_name: string | null } | null;
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -231,6 +232,14 @@ export default async function DashboardPage() {
 
   const isPro = profileData?.is_pro ?? false;
   const gymName = profileData?.gym_name ?? null;
+  const belt = profileData?.belt ?? "white";
+  const stripeCount = profileData?.stripe ?? 0;
+  // 帯在籍月数
+  let monthsAtBelt = 0;
+  if (profileData?.start_date) {
+    const startMs = new Date(profileData.start_date).getTime();
+    monthsAtBelt = Math.max(0, Math.floor((Date.now() - startMs) / (1000 * 60 * 60 * 24 * 30)));
+  }
 
   // 連続練習日数を計算
   let streak = 0;
@@ -272,7 +281,11 @@ export default async function DashboardPage() {
       <main className="max-w-4xl mx-auto px-4 py-6">
         {/* ── Welcome header ── */}
         <div className="mb-5 flex items-start justify-between gap-4">
-          <div>
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shrink-0">
+              <span className="text-lg font-black text-zinc-900">柔</span>
+            </div>
+            <div>
             <h2 className="text-xl font-bold tracking-tight">
               Welcome back, {displayName}
             </h2>
@@ -289,6 +302,7 @@ export default async function DashboardPage() {
                 ? "Log today's session to keep the streak"
                 : "Start fresh — log your first session"}
             </p>
+          </div>
           </div>
           {intensityBadge && (
             <span className={`hidden sm:inline-flex items-center gap-1 text-xs font-semibold px-3 py-1 rounded-full bg-white/5 border border-white/10 shrink-0 ${intensityBadge.color}`}>
@@ -360,6 +374,14 @@ export default async function DashboardPage() {
               <span className="text-zinc-600 text-xs mb-0.5">sessions</span>
             </div>
           </div>
+
+          {/* Belt Progress */}
+          <BeltProgressCard
+            belt={belt}
+            stripes={stripeCount}
+            monthsAtBelt={monthsAtBelt}
+            className="col-span-2"
+          />
 
           {/* Techniques — spans full width on mobile, 2 cols on md */}
           <Link href="/techniques" className="col-span-2 md:col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-violet-500/40 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out active:scale-95 flex items-center gap-4 group">

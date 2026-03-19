@@ -137,14 +137,15 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-semibold text-white mb-3">11. Contact</h2>
             <p>
-              For privacy-related inquiries or data deletion requests, please contact us via the
-              GitHub repository associated with this project.
+              For privacy-related inquiries or data deletion requests, please contact us at
+              307239t777@gmail.com.
             </p>
           </section>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-gray-800 flex gap-6 text-xs text-gray-600">
+        <div className="mt-12 pt-8 border-t border-gray-800 flex flex-wrap gap-6 text-xs text-gray-600">
           <Link href="/terms" className="hover:text-gray-400 transition-colors">Terms of Service</Link>
+          <Link href="/legal/tokushoho" className="hover:text-gray-400 transition-colors">Specified Commercial Transactions Act</Link>
           <Link href="/" className="hover:text-gray-400 transition-colors">← Home</Link>
         </div>
       </div>

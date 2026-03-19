@@ -562,7 +562,7 @@ export default async function Home() {
             <div className="bg-zinc-900 rounded-2xl p-8 border border-[#e94560]/50 relative">
               <div className="absolute -top-3 right-6 bg-[#e94560] text-white text-xs px-3 py-1 rounded-full font-bold">Coming soon</div>
               <div className="text-lg font-bold mb-1">Pro</div>
-              <div className="text-3xl font-bold text-gray-200 mb-1">$4.99<span className="text-sm font-normal text-gray-500">/mo</span></div>
+              <div className="text-3xl font-bold text-gray-200 mb-1">$4.99<span className="text-sm font-normal text-gray-500">/mo (tax incl.)</span></div>
               <div className="text-gray-500 text-xs mb-6">Billed monthly</div>
               <ul className="space-y-3 text-sm text-gray-400">
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Everything in Free</li>
@@ -612,7 +612,12 @@ export default async function Home() {
 
       {/* フッター */}
       <footer className="px-6 py-8 text-center text-gray-600 text-sm border-t border-gray-800">
-        <p>© 2026 BJJ App. Made for grapplers, by grapplers.</p>
+        <p className="mb-3">© 2026 BJJ App. Made for grapplers, by grapplers.</p>
+        <div className="flex justify-center flex-wrap gap-4 text-xs">
+          <a href="/terms" className="hover:text-gray-400 transition-colors">Terms</a>
+          <a href="/privacy" className="hover:text-gray-400 transition-colors">Privacy</a>
+          <a href="/legal/tokushoho" className="hover:text-gray-400 transition-colors">特定商取引法に基づく表記</a>
+        </div>
       </footer>
     </main>
     </>

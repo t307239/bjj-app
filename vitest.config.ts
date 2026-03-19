@@ -4,12 +4,15 @@ import path from "path";
 export default defineConfig({
   test: {
     globals: true,
+    // Default environment for pure-logic unit tests
     environment: "node",
+    // Per-file environment overrides via vitest-environment docblock
+    environmentOptions: {},
     include: ["__tests__/**/*.{test,spec}.{ts,tsx}"],
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],
-      include: ["lib/**/*.ts", "app/api/**/*.ts"],
+      include: ["lib/**/*.ts", "app/api/**/*.ts", "components/**/*.{ts,tsx}"],
       exclude: ["lib/supabase/**"],
     },
   },

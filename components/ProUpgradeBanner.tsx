@@ -30,7 +30,7 @@ export default function ProUpgradeBanner({ isPro }: Props) {
       </button>
       <div className="flex items-center justify-between pr-4">
         <div>
-          <p className="text-xs font-semibold text-[#e94560] mb-1">⭐ BJJ App Pro — ¥750/月</p>
+          <p className="text-xs font-semibold text-[#e94560] mb-1">⭐ BJJ App Pro — $4.99/mo (tax incl.)</p>
           <p className="text-[11px] text-gray-400">
             {PRO_FEATURES.join(" · ")}
           </p>
