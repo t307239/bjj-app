@@ -259,7 +259,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f172a] pb-20 sm:pb-0">
+    <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
       <InstallBanner />
       <NavBar displayName={displayName} avatarUrl={avatarUrl} />
       {/* ゲストデータの自動マージ（ログイン直後） */}
@@ -301,9 +301,9 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
 
           {/* This Month — featured wide card */}
-          <div className="col-span-2 bg-zinc-900 rounded-2xl p-5 border border-white/10 hover:border-[#e94560]/30 transition-all group">
+          <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:border-rose-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out group">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest">This Month</span>
+              <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest">This Month</span>
               {prevMonthCount !== null && prevMonthCount !== undefined && (
                 <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
                   (monthCount ?? 0) >= prevMonthCount
@@ -316,10 +316,10 @@ export default async function DashboardPage() {
               )}
             </div>
             <div className="flex items-end gap-2 mt-2">
-              <span className="text-4xl font-black text-[#e94560] leading-none tabular-nums">
+              <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-rose-400 to-orange-400 bg-clip-text text-transparent">
                 {monthCount ?? 0}
               </span>
-              <span className="text-gray-600 text-sm mb-0.5">sessions</span>
+              <span className="text-zinc-600 text-sm mb-0.5">sessions</span>
             </div>
             <div className="flex items-center gap-3 mt-3 flex-wrap">
               {monthHoursStr && (
@@ -328,7 +328,7 @@ export default async function DashboardPage() {
                 </span>
               )}
               {remainingDays > 0 && (
-                <span className="text-[11px] text-gray-600">
+                <span className="text-[11px] text-zinc-600">
                   {remainingDays}d left
                   {(monthCount ?? 0) > 0 && currentDayOfMonth > 0 && (
                     <span className="text-blue-400/70 ml-1">
@@ -341,11 +341,11 @@ export default async function DashboardPage() {
           </div>
 
           {/* Day Streak */}
-          <Link href="/profile" className="bg-zinc-900 rounded-2xl p-4 border border-white/10 hover:border-yellow-400/30 transition-all block">
-            <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest block mb-2">Streak</span>
+          <Link href="/profile" className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-yellow-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out active:scale-95 block">
+            <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest block mb-2">Streak</span>
             <div className="flex items-end gap-1.5">
-              <span className="text-3xl font-black text-yellow-400 leading-none tabular-nums">{streak}</span>
-              <span className="text-gray-600 text-xs mb-0.5">days</span>
+              <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">{streak}</span>
+              <span className="text-zinc-600 text-xs mb-0.5">days</span>
             </div>
             {streak >= 3 && (
               <span className="mt-2 block text-[11px] text-yellow-600">🔥 Keep rolling</span>
@@ -353,35 +353,35 @@ export default async function DashboardPage() {
           </Link>
 
           {/* This Week */}
-          <div className="bg-zinc-900 rounded-2xl p-4 border border-white/10 hover:border-blue-400/30 transition-all">
-            <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest block mb-2">This Week</span>
+          <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-blue-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out">
+            <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest block mb-2">This Week</span>
             <div className="flex items-end gap-1.5">
-              <span className="text-3xl font-black text-blue-400 leading-none tabular-nums">{weekCount ?? 0}</span>
-              <span className="text-gray-600 text-xs mb-0.5">sessions</span>
+              <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">{weekCount ?? 0}</span>
+              <span className="text-zinc-600 text-xs mb-0.5">sessions</span>
             </div>
           </div>
 
           {/* Techniques — spans full width on mobile, 2 cols on md */}
-          <Link href="/techniques" className="col-span-2 md:col-span-2 bg-zinc-900 rounded-2xl p-4 border border-white/10 hover:border-[#7c3aed]/40 transition-all flex items-center gap-4 group">
+          <Link href="/techniques" className="col-span-2 md:col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-violet-500/40 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out active:scale-95 flex items-center gap-4 group">
             <div className="flex-1">
-              <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest block mb-1">Techniques</span>
+              <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest block mb-1">Techniques</span>
               <div className="flex items-end gap-1.5">
-                <span className="text-3xl font-black text-[#7c3aed] leading-none tabular-nums">{techniqueCount ?? 0}</span>
-                <span className="text-gray-600 text-xs mb-0.5">logged</span>
+                <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-violet-400 to-purple-300 bg-clip-text text-transparent">{techniqueCount ?? 0}</span>
+                <span className="text-zinc-600 text-xs mb-0.5">logged</span>
               </div>
             </div>
-            <span className="text-gray-600 group-hover:text-[#7c3aed] transition-colors text-xl">→</span>
+            <span className="text-zinc-600 group-hover:text-violet-400 transition-colors text-xl">→</span>
           </Link>
 
           {/* Avg Session (md only, fills the remaining col) */}
           {avgSessionMin > 0 && (
-            <div className="col-span-2 md:col-span-2 bg-zinc-900 rounded-2xl p-4 border border-white/10 hover:border-white/20 transition-all">
-              <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest block mb-1">Avg Session</span>
+            <div className="col-span-2 md:col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-white/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out">
+              <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest block mb-1">Avg Session</span>
               <div className="flex items-end gap-1.5">
-                <span className={`text-3xl font-black leading-none tabular-nums ${intensityBadge?.color ?? "text-gray-300"}`}>
+                <span className={`text-3xl font-black leading-none tabular-nums ${intensityBadge?.color ?? "text-zinc-300"}`}>
                   {avgSessionMin}
                 </span>
-                <span className="text-gray-600 text-xs mb-0.5">min / session</span>
+                <span className="text-zinc-600 text-xs mb-0.5">min / session</span>
               </div>
               {intensityBadge && (
                 <span className={`mt-2 block text-[11px] font-semibold ${intensityBadge.color}`}>
