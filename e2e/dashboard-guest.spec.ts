@@ -76,4 +76,13 @@ test.describe("Dashboard - Guest Mode", () => {
     const body = await page.textContent("body");
     expect(body!.length).toBeGreaterThan(200);
   });
+
+  // --- VRT（Visual Regression Testing） ---
+
+  test("dashboard guest visual snapshot", async ({ page }) => {
+    await expect(page).toHaveScreenshot("dashboard-guest.png", {
+      fullPage: true,
+      maxDiffPixelRatio: 0.01,
+    });
+  });
 });

@@ -91,4 +91,14 @@ test.describe("Landing Page", () => {
     await page.setViewportSize({ width: 375, height: 812 });
     await expect(page.locator("h1")).toBeVisible();
   });
+
+  // --- VRT（Visual Regression Testing） ---
+
+  test("LP full page visual snapshot", async ({ page }) => {
+    await page.waitForLoadState("networkidle");
+    await expect(page).toHaveScreenshot("lp-full.png", {
+      fullPage: true,
+      maxDiffPixelRatio: 0.01,
+    });
+  });
 });

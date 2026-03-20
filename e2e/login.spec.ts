@@ -70,4 +70,14 @@ test.describe("Login Page", () => {
     const title = await page.title();
     expect(title.length).toBeGreaterThan(0);
   });
+
+  // --- VRT ---
+
+  test("login page visual snapshot", async ({ page }) => {
+    await page.waitForLoadState("networkidle");
+    await expect(page).toHaveScreenshot("login.png", {
+      fullPage: true,
+      maxDiffPixelRatio: 0.01,
+    });
+  });
 });
