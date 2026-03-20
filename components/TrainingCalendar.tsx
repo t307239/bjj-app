@@ -26,12 +26,12 @@ const TYPE_COLORS: Record<string, string> = {
 const TYPE_LABEL: Record<string, string> = {
   gi:          "Gi",
   nogi:        "NoGi",
-  drilling:    "ドリル",
+  drilling:    "Drill",
   competition: "試合",
-  open_mat:    "オープン",
+  open_mat:    "Open",
 };
 
-const WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"];
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 function formatDuration(min: number): string {
   if (min < 60) return `${min}分`;
@@ -83,14 +83,14 @@ export default function TrainingCalendar({ userId }: Props) {
     setSelectedDate(null);
   };
 
-  // 日付ごとのログをまとめる
+  // Group logs by date
   const logsByDate: Record<string, Log[]> = {};
   logs.forEach(log => {
     if (!logsByDate[log.date]) logsByDate[log.date] = [];
     logsByDate[log.date].push(log);
   });
 
-  // カレンダーグリッド */}
+  // Calendar grid */}
   const firstOfMonth = new Date(year, month, 1);
   const startWeekday = firstOfMonth.getDay(); // 0=Sun
   const daysInMonth  = new Date(year, month + 1, 0).getDate();
@@ -99,10 +99,10 @@ export default function TrainingCalendar({ userId }: Props) {
     ...Array(startWeekday).fill(null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
-  // 6↌になるようにpaddingを後ろに追加
+  // Pad rows to fill 6 weeks
   while (cells.length % 7 !== 0) cells.push(null);
 
-  // toISOString()はUTCなのでローカル日付を使用
+  // Use local date (not UTC) for toISOString
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   const totalSessions = logs.length;
   const totalMinutes  = logs.reduce((s, l) => s + (l.duration_min || 0), 0);
@@ -120,10 +120,10 @@ export default function TrainingCalendar({ userId }: Props) {
           ‹
         </button>
         <div className="text-center">
-          <div className="font-bold text-white">{year}围{month + 1}朋</div>
+          <div className="font-bold text-white">{new Date(year, month).toLocaleDateString("en-US", { year: "numeric", month: "long" })}</div>
           {!loading && (
             <div className="text-xs text-gray-500 mt-0.5">
-              {totalSessions}回 · {formatDuration(totalMinutes)}
+              {totalSessions} sessions · {formatDuration(totalMinutes)}
             </div>
           )}
         </div>
@@ -136,7 +136,7 @@ export default function TrainingCalendar({ userId }: Props) {
         </button>
       </div>
 
-      {/* 曜日゙ヘッダを下にるヘレパー */}
+      {/* Weekday headers */}
       <div className="grid grid-cols-7 border-b border-gray-700/50">
         {WEEKDAYS.map((d, i) => (
           <div
@@ -150,9 +150,9 @@ export default function TrainingCalendar({ userId }: Props) {
         ))}
       </div>
 
-      {/* カレンむーグリッド */}
+      {/* Calendar grid */}
       {loading ? (
-        <div className="py-10 text-center text-gray-600 text-sm">読み込み丯〃...</div>
+        <div className="py-10 text-center text-gray-600 text-sm">Loading...</div>
       ) : (
         <div className="grid grid-cols-7">
           {cells.map((day, idx) => {
@@ -207,7 +207,7 @@ export default function TrainingCalendar({ userId }: Props) {
       {selectedDate && selectedLogs.length > 0 && (
         <div className="border-t border-gray-700 px-4 py-3 space-y-2">
           <div className="text-xs text-gray-500 font-medium">
-            {parseInt(selectedDate.split("-")[2])}闥の記録
+            {selectedDate} sessions
           </div>
           {selectedLogs.map(log => (
             <div key={log.id} className="flex items-start gap-3 bg-gray-800/50 rounded-lg px-3 py-2">

@@ -191,7 +191,7 @@ function DurationPicker({
           onChange={(e) => onChange(Number(e.target.value))}
           min={1}
           max={480}
-          step={15}
+          step={1}
           className={`w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border focus:outline-none focus:border-[#7c3aed] ${
             isPreset ? "border-white/10" : "border-[#e94560]"
           }`}
