@@ -9,9 +9,9 @@ type Props = {
 const PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
 
 const PRO_FEATURES = [
-  "練習CSVエクスポート",
-  "12ヶ月グラフ閲覧",
-  "StreakFreezeチケット",
+  "CSV Export",
+  "12-month Charts",
+  "Streak Freeze Tickets",
 ];
 
 export default function ProUpgradeBanner({ isPro }: Props) {
@@ -24,7 +24,7 @@ export default function ProUpgradeBanner({ isPro }: Props) {
       <button
         onClick={() => setDismissed(true)}
         className="absolute top-2 right-2 text-gray-600 hover:text-gray-400 transition-colors text-xs p-1"
-        aria-label="閉じる"
+        aria-label="Close"
       >
         ✕
       </button>
@@ -41,7 +41,7 @@ export default function ProUpgradeBanner({ isPro }: Props) {
           rel="noopener noreferrer"
           className="flex-shrink-0 ml-3 bg-[#e94560] hover:bg-[#c73652] text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
         >
-          アップグレード
+          Upgrade
         </a>
       </div>
     </div>

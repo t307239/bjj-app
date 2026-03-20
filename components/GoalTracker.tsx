@@ -19,14 +19,14 @@ type GoalData = {
 
 type MonthHistory = {
   ym: string;      // "2026-03"
-  label: string;   // "3月"
+  label: string;   // "Mar"
   count: number;
   achieved: boolean;
 };
 
 type WeekHistory = {
   weekStart: string; // "2026-03-10"
-  label: string;     // "今週" / "先週" / "2週前" / "3週前"
+  label: string;     // "This week" / "Last week" / "2 weeks ago" / "3 weeks ago"
   count: number;
   achieved: boolean;
   isCurrent: boolean;
@@ -39,10 +39,10 @@ function ProgressBar({ current, target }: { current: number; target: number }) {
     <div className="mt-2">
       <div className="flex justify-between items-center mb-1">
         <span className={`text-xs font-bold ${done ? "text-green-400" : "text-[#e94560]"}`}>
-          {current} / {target}回
+          {current} / {target} sessions
         </span>
         <span className={`text-[11px] ${done ? "text-green-400" : "text-gray-500"}`}>
-          {done ? "✓ 達成！" : `${pct}%`}
+          {done ? "✓ Done!" : `${pct}%`}
         </span>
       </div>
       <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
@@ -77,7 +77,7 @@ function GoalEditor({
 }) {
   return (
     <div className="bg-white/5 rounded-xl p-4 border border-[#e94560]/30">
-      <div className="text-xs text-gray-400 mb-3">{label}の目標を設定</div>
+      <div className="text-xs text-gray-400 mb-3">Set {label} goal</div>
       <div className="flex items-center gap-3 mb-4">
         <button
           onClick={() => onChange(Math.max(0, value - 1))}
@@ -87,7 +87,7 @@ function GoalEditor({
         </button>
         <div className="flex-1 text-center">
           <span className="text-3xl font-bold text-white">{value}</span>
-          <span className="text-gray-400 text-sm ml-1">回</span>
+          <span className="text-gray-400 text-sm ml-1">sessions</span>
         </div>
         <button
           onClick={() => onChange(Math.min(30, value + 1))}
@@ -98,7 +98,7 @@ function GoalEditor({
       </div>
       {value > 0 && (
         <div className="text-xs text-gray-500 text-center mb-3">
-          現在: {current}回 達成済み
+          Current: {current} sessions done
         </div>
       )}
       <div className="flex gap-2">
@@ -106,14 +106,14 @@ function GoalEditor({
           onClick={onCancel}
           className="flex-1 py-2 rounded-lg bg-white/10 text-gray-300 text-sm hover:bg-white/15 transition-colors"
         >
-          キャンセル
+          Cancel
         </button>
         <button
           onClick={onSave}
           disabled={value === 0}
           className="flex-1 py-2 rounded-lg bg-[#e94560] text-white text-sm font-semibold hover:bg-[#c73652] disabled:opacity-40 transition-colors"
         >
-          設定する
+          Set
         </button>
       </div>
     </div>
@@ -260,7 +260,7 @@ export default function GoalTracker({ userId }: Props) {
             .lt("date", nextYm);
           history.push({
             ym,
-            label: `${d.getMonth() + 1}月`,
+            label: `${d.getMonth() + 1}`,
             count: hc ?? 0,
             achieved: (hc ?? 0) >= mGoal,
           });
@@ -299,9 +299,9 @@ export default function GoalTracker({ userId }: Props) {
         monthlyGoal: editing === "monthly" ? editValue : prev.monthlyGoal,
         techniqueGoal: editing === "technique" ? editValue : prev.techniqueGoal,
       }));
-      setToast({ message: "目標を設定しました！", type: "success" });
+      setToast({ message: "Goal set!", type: "success" });
     } else {
-      setToast({ message: "保存に失敗しました", type: "error" });
+      setToast({ message: "Failed to save", type: "error" });
     }
     setEditing(null);
   };
@@ -312,9 +312,9 @@ export default function GoalTracker({ userId }: Props) {
     return (
       <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 mb-4 shadow-lg shadow-black/40">
         <p className="text-xs text-gray-500 text-center">
-          目標トラックングを有効にするには、Supabaseで
+          To enable goal tracking, run
           <code className="text-yellow-400 mx-1">supabase-goals-schema.sql</code>
-          を実行してください。
+          in Supabase.
         </p>
       </div>
     );
@@ -376,18 +376,18 @@ export default function GoalTracker({ userId }: Props) {
           onClick={() => setIsOpen((v) => !v)}
           className="w-full flex items-center justify-between px-4 py-3 border-b border-white/10 hover:bg-white/5 transition-colors text-left"
         >
-          <h4 className="text-sm font-medium text-gray-300">🎯 練習目標</h4>
+          <h4 className="text-sm font-medium text-gray-300">🎯 Training Goals</h4>
           <div className="flex items-center gap-2">
             {!isOpen && hasGoals && (
               <span className="text-[10px] text-gray-500">
                 {[
-                  data.weeklyGoal > 0 ? `週 ${data.weekCount}/${data.weeklyGoal}` : "",
-                  data.monthlyGoal > 0 ? `月 ${data.monthCount}/${data.monthlyGoal}` : "",
+                  data.weeklyGoal > 0 ? `Weekly ${data.weekCount}/${data.weeklyGoal}` : "",
+                  data.monthlyGoal > 0 ? `Monthly ${data.monthCount}/${data.monthlyGoal}` : "",
                 ].filter(Boolean).join(" · ")}
               </span>
             )}
             {!isOpen && !hasGoals && (
-              <span className="text-[10px] text-gray-600">目標を設定しよう</span>
+              <span className="text-[10px] text-gray-600">Set a goal</span>
             )}
             <svg
               className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
@@ -420,22 +420,22 @@ export default function GoalTracker({ userId }: Props) {
             <div className="cf-p"/><div className="cf-p"/><div className="cf-p"/><div className="cf-p"/>
             <div className="cf-p"/><div className="cf-p"/><div className="cf-p"/><div className="cf-p"/>
             <div className="text-2xl mb-1 animate-bounce">🎉</div>
-            <div className="text-sm font-bold text-green-400">全目標達成！</div>
+            <div className="text-sm font-bold text-green-400">All goals achieved!</div>
             <div className="text-[11px] text-gray-400 mt-1">
               {consecutiveAchievedMonths >= 3
-                ? `🔥 ${consecutiveAchievedMonths}ヶ月連続達成中！黒帯への道が開いている`
+                ? `🔥 ${consecutiveAchievedMonths} months in a row! Path to black belt is opening`
                 : consecutiveAchievedMonths >= 2
-                ? `✨ ${consecutiveAchievedMonths}ヶ月連続達成！習慣が身についています`
-                : "🌟 素晴らしい！この調子で続けよう"}
+                ? `✨ ${consecutiveAchievedMonths} months achieved! Building a habit`
+                : "🌟 Awesome! Keep going!"}
             </div>
           </div>
         )}
 
         <div className="p-4 space-y-3">
-          {/* 週間目標 */}
+          {/* Weekly Goal */}
           {editing === "weekly" ? (
             <GoalEditor
-              label="今週"
+              label="This week"
               current={data.weekCount}
               value={editValue}
               onChange={setEditValue}
@@ -449,21 +449,21 @@ export default function GoalTracker({ userId }: Props) {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-200">今週の目標</span>
+                  <span className="text-sm font-medium text-gray-200">Weekly goal</span>
                   {data.weekCount >= data.weeklyGoal && data.weeklyGoal > 0 && (
-                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">達成！</span>
+                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">Done!</span>
                   )}
                 </div>
                 <button className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors">
-                  {data.weeklyGoal > 0 ? "変更" : "＋ 設定"}
+                  {data.weeklyGoal > 0 ? "Edit" : "+ Set"}
                 </button>
               </div>
               {data.weeklyGoal > 0 ? (
                 <>
                   <ProgressBar current={data.weekCount} target={data.weeklyGoal} />
-                  {/* 曜日別達成グリッド */}
+                  {/* Day-by-day achievement grid */}
                   {(() => {
-                    const DAY_LABELS = ["月", "火", "水", "木", "金", "土", "日"];
+                    const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
                     const jstNowGrid = new Date(Date.now() + 9 * 3600000);
                     const dowNow = jstNowGrid.getUTCDay(); // 0=Sun
                     const todayIdx = dowNow === 0 ? 6 : dowNow - 1; // Mon=0...Sun=6
@@ -508,21 +508,21 @@ export default function GoalTracker({ userId }: Props) {
                     if (needed === 0) return (
                       <p className="text-[10px] text-green-400/70 mt-1.5">
                         {data.weekCount > data.weeklyGoal
-                          ? `🔥 目標+${data.weekCount - data.weeklyGoal}回超達成！今週は最高のペース`
-                          : "🎯 今週の目標クリア！週末まで上積みしよう"}
+                          ? `🔥 Goal +${data.weekCount - data.weeklyGoal} extra! Best pace this week`
+                          : "🎯 Weekly goal cleared! Keep stacking until the weekend"}
                       </p>
                     );
                     if (daysLeftInWeek === 0) return (
-                      <p className="text-[10px] text-gray-600 mt-1.5">今週残り0日 · あと{needed}回</p>
+                      <p className="text-[10px] text-gray-600 mt-1.5">0 days left · {needed} more</p>
                     );
                     return (
                       <p className="text-[10px] text-gray-500 mt-1.5">
-                        あと<span className="text-[#e94560] font-semibold">{needed}</span>回 · 残{daysLeftInWeek}日
-                        {needed <= daysLeftInWeek ? " ✓ 達成可能" : " ⚠ ペースアップ"}
+                        <span className="text-[#e94560] font-semibold">{needed}</span> more · {daysLeftInWeek} days left
+                        {needed <= daysLeftInWeek ? " ✓ On track" : " ⚠ Pick up pace"}
                       </p>
                     );
                   })()}
-                  {/* 週間達成履歴ヒートマップ（過去4週） */}
+                  {/* Weekly achievement heatmap (past 4 weeks) */}
                   {weekHistory.length > 0 && (
                     <div className="mt-2.5">
                       <div className="flex items-center gap-1.5">
@@ -550,7 +550,7 @@ export default function GoalTracker({ userId }: Props) {
                       {consecutiveAchievedWeeks >= 2 && (
                         <div className="mt-1.5 flex justify-center">
                           <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-green-500/15 border border-green-500/30 text-green-300 px-2 py-0.5 rounded-full">
-                            🔥 {consecutiveAchievedWeeks}週連続達成中
+                            🔥 {consecutiveAchievedWeeks} weeks in a row
                           </span>
                         </div>
                       )}
@@ -563,10 +563,10 @@ export default function GoalTracker({ userId }: Props) {
             </div>
           )}
 
-          {/* 月間目標 */}
+          {/* Monthly Goal */}
           {editing === "monthly" ? (
             <GoalEditor
-              label="今月"
+              label="This month"
               current={data.monthCount}
               value={editValue}
               onChange={setEditValue}
@@ -580,13 +580,13 @@ export default function GoalTracker({ userId }: Props) {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-200">今月の目標</span>
+                  <span className="text-sm font-medium text-gray-200">Monthly goal</span>
                   {data.monthCount >= data.monthlyGoal && data.monthlyGoal > 0 && (
-                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">達成！</span>
+                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">Done!</span>
                   )}
                 </div>
                 <button className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors">
-                  {data.monthlyGoal > 0 ? "変更" : "＋ 設定"}
+                  {data.monthlyGoal > 0 ? "Edit" : "+ Set"}
                 </button>
               </div>
               {data.monthlyGoal > 0 ? (
@@ -595,18 +595,18 @@ export default function GoalTracker({ userId }: Props) {
                   {data.monthCount >= data.monthlyGoal ? (
                     <p className="text-[10px] text-green-400/70 mt-1.5">
                       {data.monthCount > data.monthlyGoal
-                        ? `🔥 目標+${data.monthCount - data.monthlyGoal}回超達成！`
+                        ? `🔥 Goal +${data.monthCount - data.monthlyGoal} extra!`
                         : consecutiveAchievedMonths >= 2
-                        ? `✨ ${consecutiveAchievedMonths}ヶ月連続達成中！`
-                        : "🎯 今月の目標達成！残り日数は上積みのチャンス"}
+                        ? `✨ ${consecutiveAchievedMonths} months achieved!`
+                        : "🎯 Monthly goal achieved! Rest of the month is bonus"}
                     </p>
                   ) : data.monthCount < data.monthlyGoal && remainingDaysInMonth > 0 && (
                     <p className="text-[10px] mt-1 text-gray-500">
-                      あと{data.monthlyGoal - data.monthCount}回{" · "}
-                      残{remainingDaysInMonth}日{" · "}
+                      {data.monthlyGoal - data.monthCount} more{" · "}
+                      {remainingDaysInMonth} days left{" · "}
                       {monthlyProjected > 0 ? (
                         <span className={monthOnTrack ? "text-green-400/80" : "text-orange-400/80"}>
-                          {monthOnTrack ? "達成ペース 🎯" : `現ペースで${monthlyProjected}回見込み`}
+                          {monthOnTrack ? "On track 🎯" : `On pace for ${monthlyProjected}`}
                         </span>
                       ) : null}
                     </p>
@@ -618,10 +618,10 @@ export default function GoalTracker({ userId }: Props) {
             </div>
           )}
 
-          {/* テクニック目標 */}
+          {/* Technique Goal */}
           {editing === "technique" ? (
             <GoalEditor
-              label="テクニック習得数"
+              label="Techniques to learn"
               current={data.techniqueCount}
               value={editValue}
               onChange={(v) => setEditValue(Math.min(500, v))}
@@ -635,28 +635,28 @@ export default function GoalTracker({ userId }: Props) {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-200">🥋 テクニック目標</span>
+                  <span className="text-sm font-medium text-gray-200">🥋 Technique goal</span>
                   {data.techniqueCount >= data.techniqueGoal && data.techniqueGoal > 0 && (
-                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">達成！</span>
+                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">Done!</span>
                   )}
                 </div>
                 <button className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors">
-                  {data.techniqueGoal > 0 ? "変更" : "＋ 設定"}
+                  {data.techniqueGoal > 0 ? "Edit" : "+ Set"}
                 </button>
               </div>
               {data.techniqueGoal > 0 ? (
                 <ProgressBar current={data.techniqueCount} target={data.techniqueGoal} />
               ) : (
-                <p className="text-xs text-gray-600 mt-1">目標未設定（タップして設定）</p>
+                <p className="text-xs text-gray-600 mt-1">No goal set (tap to set)</p>
               )}
             </div>
           )}
         </div>
 
-        {/* 月間達成履歴バッジ（月間目標設定時のみ） */}
+        {/* Monthly achievement history badges (when monthly goal is set) */}
         {monthHistory.length > 0 && (
           <div className="border-t border-white/10 px-4 py-3">
-            <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wider">過去6ヶ月の達成履歴</p>
+            <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wider">Past 6 months</p>
             <div className="flex items-end justify-between gap-1">
               {monthHistory.map((m) => (
                 <div key={m.ym} className="flex flex-col items-center gap-1 flex-1">
@@ -676,7 +676,7 @@ export default function GoalTracker({ userId }: Props) {
               ))}
             </div>
             <p className="text-[10px] text-gray-600 mt-2 text-center">
-              {monthHistory.filter((m) => m.achieved).length} / 6ヶ月 達成
+              {monthHistory.filter((m) => m.achieved).length} / 6 months achieved
             </p>
           </div>
         )}

@@ -22,8 +22,8 @@ type Props = {
 
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
 
-// JST対応: toISOString()はUTCなので、ローカル日付を返すヘルパー
-// ミニドーナツチャート（月次タイプ分布）
+// JST helper: toISOString() is UTC, so return local date
+// Mini donut chart (monthly type distribution)
 function MiniTypeDonut({ entries }: { entries: { type: string }[] }) {
   const TYPE_COLORS_RAW: Record<string, string> = {
     gi: "#3b82f6", nogi: "#f97316", drilling: "#a855f7", competition: "#e94560", open_mat: "#22c55e",
@@ -52,7 +52,7 @@ function MiniTypeDonut({ entries }: { entries: { type: string }[] }) {
   return (
     <svg viewBox="0 0 40 40" className="w-10 h-10 flex-shrink-0">
       {slices.map((s) => (
-        <path key={s.type} d={s.path} fill={s.color} opacity={0.85} title={`${s.type}: ${s.count}回`} />
+        <path key={s.type} d={s.path} fill={s.color} opacity={0.85} title={`${s.type}: ${s.count} sessions`} />
       ))}
       <text x={cx} y={cy + 3} textAnchor="middle" fill="white" fontSize="7" fontWeight="bold">
         {total}
@@ -61,7 +61,7 @@ function MiniTypeDonut({ entries }: { entries: { type: string }[] }) {
   );
 }
 
-// スタックバー（月次タイプ別比率）
+// Stack bar (monthly type distribution ratio)
 function MonthTypeStackBar({ entries }: { entries: { type: string }[] }) {
   const TYPE_COLORS: Record<string, string> = {
     gi: "#3b82f6", nogi: "#f97316", drilling: "#a855f7", competition: "#e94560", open_mat: "#22c55e",
@@ -82,7 +82,7 @@ function MonthTypeStackBar({ entries }: { entries: { type: string }[] }) {
           key={seg.value}
           className={`flex-1 rounded-full transition-all`}
           style={{ backgroundColor: TYPE_COLORS[seg.value], width: `${seg.percent}%`, minWidth: seg.percent > 10 ? "auto" : "2px" }}
-          title={`${seg.label}: ${seg.count}回 (${seg.percent.toFixed(0)}%)`}
+          title={`${seg.label}: ${seg.count} sessions (${seg.percent.toFixed(0)}%)`}
         />
       ))}
     </div>
@@ -101,17 +101,17 @@ function formatDuration(min: number): string {
   return m > 0 ? `${h}h${m}m` : `${h}h`;
 }
 
-// 試合詳細データのエンコード関数（再定義不要）
+// Encode competition details (no redefine needed)
 type CompData = { result: string; opponent: string; finish: string; event: string; opponent_rank: string; gi_type: string; };
 const COMP_PREFIX = "__comp__";
 
 const BELT_RANKS = [
-  { value: "", label: "不明" },
-  { value: "white", label: "白帯" },
-  { value: "blue", label: "青帯" },
-  { value: "purple", label: "紫帯" },
-  { value: "brown", label: "茶帯" },
-  { value: "black", label: "黒帯" },
+  { value: "", label: "Unknown" },
+  { value: "white", label: "White Belt" },
+  { value: "blue", label: "Blue Belt" },
+  { value: "purple", label: "Purple Belt" },
+  { value: "brown", label: "Brown Belt" },
+  { value: "black", label: "Black Belt" },
 ];
 
 function encodeCompNotes(comp: CompData, userNotes: string): string {
@@ -134,25 +134,25 @@ function decodeCompNotes(notes: string): { comp: CompData | null; userNotes: str
 }
 
 const RESULT_LABELS: Record<string, { label: string; color: string }> = {
-  win:  { label: "勝利 🏆", color: "text-green-400" },
-  loss: { label: "敗北", color: "text-red-400" },
-  draw: { label: "引き分け", color: "text-yellow-400" },
+  win:  { label: "Win 🏆", color: "text-green-400" },
+  loss: { label: "Loss", color: "text-red-400" },
+  draw: { label: "Draw", color: "text-yellow-400" },
 };
 
 function buildXShareUrl(entry: { date: string; duration_min: number; type: string; notes: string }): string {
   const typeLabels: Record<string, string> = {
-    gi: "道衣(Gi)", nogi: "ノーギ", drilling: "ドリレ", competition: "試合", open_mat: "オープーマット",
+    gi: "Gi", nogi: "No-Gi", drilling: "Drilling", competition: "Competition", open_mat: "Open Mat",
   };
   const dur = entry.duration_min >= 60
-    ? `${Math.floor(entry.duration_min / 60)}時間${entry.duration_min % 60 > 0 ? `${entry.duration_min % 60}分` : ""}`
+    ? `${Math.floor(entry.duration_min / 60)}h${entry.duration_min % 60 > 0 ? `${entry.duration_min % 60}m` : ""}`
     : `${entry.duration_min}m`;
   const lines = [
-    `🥋 BJJ練習しみした！ (${entry.date})`,
+    `🥋 Just trained BJJ! (${entry.date})`,
     `⏱ ${dur} | ${typeLabels[entry.type] ?? entry.type}`,
     entry.notes ? `📝 ${entry.notes}` : "",
     "",
-    "練習記録 → https://bjj-app-one.vercel.app",
-    "#BJJ #柔術 #ブラジリアン柔術",
+    "Training Log → https://bjj-app-one.vercel.app",
+    "#BJJ #JiuJitsu #BrazilianJiuJitsu",
   ].filter(Boolean).join("\n");
   return `https://x.com/intent/tweet?text=${encodeURIComponent(lines)}`;
 }
@@ -167,7 +167,7 @@ function DurationPicker({
   const isPreset = DURATION_PRESETS.includes(value);
   return (
     <div>
-      <label className="block text-gray-400 text-xs mb-1">時間</label>
+      <label className="block text-gray-400 text-xs mb-1">Duration</label>
       <div className="flex flex-wrap gap-1.5 mb-2">
         {DURATION_PRESETS.map((d) => (
           <button
@@ -196,7 +196,7 @@ function DurationPicker({
             isPreset ? "border-white/10" : "border-[#e94560]"
           }`}
         />
-        <span className="text-gray-500 text-xs flex-shrink-0">分</span>
+        <span className="text-gray-500 text-xs flex-shrink-0">min</span>
       </div>
     </div>
   );
@@ -242,7 +242,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
   });
   const supabase = createClient();
 
-  // 初回データ読み込み
+  // Initial data load
   useEffect(() => {
     const loadEntries = async () => {
       setInitialLoading(true);
@@ -274,17 +274,17 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
 
     // バリデーション
     if (form.date > today) {
-      setFormError("未来の日付は記録できません");
+      setFormError("Cannot record future dates");
       return;
     }
     if (form.duration_min < 1 || form.duration_min > 480) {
-      setFormError("練習時間は1〜480分の範囲で入力してください");
+      setFormError("Duration must be between 1-480 minutes");
       return;
     }
 
     setLoading(true);
 
-    // 試合タイプの場合は詳細データをnotesにエンコード
+    // Encode competition details into notes
     const finalNotes = form.type === "competition"
       ? encodeCompNotes(compForm, form.notes)
       : form.notes;
@@ -306,15 +306,15 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       });
       setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
       setShowForm(false);
-      setToast({ message: "練習を記録しました！", type: "success" });
+      setToast({ message: "Session recorded!", type: "success" });
     } else {
-      setToast({ message: "保存に失敗しました", type: "error" });
+      setToast({ message: "Failed to save", type: "error" });
     }
     setLoading(false);
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("この記録を削除しますか？")) return;
+    if (!confirm("Delete this record?")) return;
     setDeletingId(id);
 
     const { error } = await supabase
@@ -326,9 +326,9 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     if (!error) {
       if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([30, 20, 30]);
       setEntries(entries.filter((e) => e.id !== id));
-      setToast({ message: "記録を削除しました", type: "success" });
+      setToast({ message: "Record deleted", type: "success" });
     } else {
-      setToast({ message: "削除に失敗しました", type: "error" });
+      setToast({ message: "Failed to delete", type: "error" });
     }
     setDeletingId(null);
   };
@@ -364,9 +364,9 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     if (!error && data) {
       setEntries(entries.map((e) => (e.id === id ? data : e)));
       setEditingId(null);
-      setToast({ message: "記録を更新しました", type: "success" });
+      setToast({ message: "Record updated", type: "success" });
     } else {
-      setToast({ message: "更新に失敗しました", type: "error" });
+      setToast({ message: "Failed to update", type: "error" });
     }
   };
 
@@ -387,14 +387,14 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     setLoadingMore(false);
   };
 
-  // 期間フィルター計算
+  // Period filter calculation
   const getPeriodStart = (): string | null => {
     if (periodFilter === "all") return null;
     const now = new Date();
     if (periodFilter === "month") {
       return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
     }
-    // week: 今週月曜日
+    // week: this week Monday
     const dayOfWeek = now.getDay();
     const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
     const monday = new Date(now);
@@ -403,7 +403,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
   };
   const periodStart = getPeriodStart();
 
-  // タイプフィルター + 期間フィルター + キーワード検索
+  // Type filter + period filter + keyword search
   const filtered = entries
     .filter((e) => filterType === "all" || e.type === filterType)
     .filter((e) => !periodStart || e.date >= periodStart)
@@ -421,7 +421,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       );
     });
 
-  // 今月の合計時間
+  // This month's total duration
   const thisMonth = getLocalDateString().slice(0, 7);
   const monthEntries = entries.filter((e) => e.date.startsWith(thisMonth));
   const monthTotalMins = monthEntries.reduce((sum, e) => sum + e.duration_min, 0);
@@ -429,13 +429,13 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     ? `${Math.floor(monthTotalMins / 60)}h${monthTotalMins % 60 > 0 ? `${monthTotalMins % 60}m` : ""}`
     : `${monthTotalMins}m`;
 
-  // 月末予測 + 先月同期比（JST）
+  // Month-end projection + month-over-month comparison (JST)
   const jstNowLog = new Date(Date.now() + 9 * 3600000);
   const curDayLog = jstNowLog.getUTCDate();
   const daysInMonthLog = new Date(jstNowLog.getUTCFullYear(), jstNowLog.getUTCMonth() + 1, 0).getUTCDate();
   const monthProjected = curDayLog > 0 ? Math.round(monthEntries.length / curDayLog * daysInMonthLog) : 0;
   const remainingDaysLog = daysInMonthLog - curDayLog;
-  // 先月同期比: 先月のYYYY-MMを算出し、同じ日付まで（1日〜curDayLog日）の件数を集計
+  // Previous month comparison: calculate last month YYYY-MM and count sessions up to same date
   const prevMonthDate = new Date(jstNowLog.getUTCFullYear(), jstNowLog.getUTCMonth() - 1, 1);
   const prevMonthYM = `${prevMonthDate.getFullYear()}-${String(prevMonthDate.getMonth() + 1).padStart(2, "0")}`;
   const lastMonthSamePeriod = entries.filter((e) => {
@@ -445,7 +445,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
   }).length;
   const monthDelta = monthEntries.length - lastMonthSamePeriod;
 
-  // 今週のサマリー（月曜日起点）
+  // This week summary (Monday start)
   const nowForWeek = new Date();
   const dowForWeek = nowForWeek.getDay(); // 0=Sun
   const daysToMon = dowForWeek === 0 ? 6 : dowForWeek - 1;
@@ -467,7 +467,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           onClose={() => setToast(null)}
         />
       )}
-      {/* 今日の練習プロンプト */}
+      {/* Today's training prompt */}
       {!initialLoading && trainedToday === false && (
         <div
           className="bg-[#e94560]/10 border border-[#e94560]/30 rounded-xl px-4 py-3 mb-4 flex items-center gap-3 cursor-pointer hover:bg-[#e94560]/15 transition-colors"
@@ -478,8 +478,8 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         >
           <span className="text-xl flex-shrink-0">🥋</span>
           <div className="flex-1 min-w-0">
-            <p className="text-[#e94560] text-sm font-medium">今日の練習を記録しよう！</p>
-            <p className="text-gray-400 text-xs mt-0.5">タップして練習ログを追加</p>
+            <p className="text-[#e94560] text-sm font-medium">Log today's session!</p>
+            <p className="text-gray-400 text-xs mt-0.5">Tap to add training log</p>
           </div>
           <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -487,29 +487,29 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         </div>
       )}
 
-      {/* 週次・月次サマリー */}
+      {/* Weekly and monthly summary */}
       {!initialLoading && entries.length > 0 && (
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
-          {/* 今週サマリー行 */}
+          {/* This week summary row */}
           {weekEntries.length > 0 && (
             <div className="flex items-center gap-3 mb-3 pb-3 border-b border-white/10/60">
-              <span className="text-[10px] font-semibold text-yellow-400/80 uppercase tracking-wide flex-shrink-0">今週</span>
+              <span className="text-[10px] font-semibold text-yellow-400/80 uppercase tracking-wide flex-shrink-0">This Week</span>
               <div className="flex items-center gap-3 flex-1">
                 <div className="flex items-center gap-1.5">
                   <span className="text-sm font-bold text-yellow-400">{weekEntries.length}</span>
-                  <span className="text-[10px] text-gray-500">回</span>
+                  <span className="text-[10px] text-gray-500">sessions</span>
                 </div>
                 <div className="w-px h-4 bg-white/10" />
                 <div className="flex items-center gap-1.5">
                   <span className="text-sm font-bold text-yellow-400/80">{weekHoursDisplay}</span>
-                  <span className="text-[10px] text-gray-500">合計</span>
+                  <span className="text-[10px] text-gray-500">total</span>
                 </div>
                 {weekEntries.length > 0 && (
                   <>
                     <div className="w-px h-4 bg-white/10" />
                     <div className="flex items-center gap-1.5">
                       <span className="text-xs text-gray-400">
-                        {formatDuration(Math.round(weekTotalMins / weekEntries.length))}/回
+                        {formatDuration(Math.round(weekTotalMins / weekEntries.length))}/session
                       </span>
                     </div>
                   </>
@@ -517,23 +517,23 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               </div>
             </div>
           )}
-          {/* 月次サマリーはBento Gridに表示済みのため省略 */}
-          {/* タイプ別スタックバーはAnalyticsセクションに移動済み */}
-          {/* 月次タイプ別・予測はBento Grid + Analyticsセクションに表示済み */}
+          {/* Monthly summary displayed in Bento Grid */}
+          {/* Type stack bar moved to Analytics section */}
+          {/* Monthly type distribution and projection shown in Bento Grid + Analytics section */}
           {hasMore && (
-            <p className="text-gray-600 text-xs text-center mt-2">※ 追加データあり。「もっと見る」で更新</p>
+            <p className="text-gray-600 text-xs text-center mt-2">※ More data available. Click "Load More" to update</p>
           )}
         </div>
       )}
 
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold">練習記録</h3>
+          <h3 className="text-lg font-semibold">Training Log</h3>
           <CsvExport userId={userId} isPro={isPro} />
-          {/* 印刷ボタン */}
+          {/* Print button */}
           <button
             onClick={() => window.print()}
-            title="印刷 / PDF保存"
+            title="Print / Save as PDF"
             className="print:hidden flex items-center gap-1 text-[11px] text-gray-400 hover:text-gray-200 bg-zinc-900 border border-white/10 hover:border-gray-500 px-2 py-1.5 rounded-lg transition-colors"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -546,11 +546,11 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           onClick={() => setShowForm(!showForm)}
           className="print:hidden bg-[#e94560] hover:bg-[#c73652] active:scale-95 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all"
         >
-          + 記録を追加
+          + Add Session
         </button>
       </div>
 
-      {/* キーワード検索 */}
+      {/* Keyword search */}
       {!initialLoading && entries.length > 0 && (
         <div className="relative mb-2">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -560,7 +560,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="日付・タイプ・メモで検索..."
+            placeholder="Search by date, type, notes..."
             className="w-full bg-zinc-900 text-white rounded-xl pl-9 pr-9 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#e94560]/60 placeholder-gray-600"
           />
           {searchQuery && (
@@ -576,11 +576,11 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         </div>
       )}
 
-      {/* 期間フィルター */}
+      {/* Period filter */}
       {!initialLoading && entries.length > 0 && (
         <div className="flex gap-1.5 mb-2">
           {(["all", "month", "week"] as const).map((p) => {
-            const label = p === "all" ? "全期間" : p === "month" ? "今月" : "今週";
+            const label = p === "all" ? "All Time" : p === "month" ? "This Month" : "This Week";
             return (
               <button
                 key={p}
@@ -598,7 +598,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         </div>
       )}
 
-      {/* 日付範囲フィルター */}
+      {/* Date range filter */}
       {!initialLoading && entries.length > 0 && (dateFrom || dateTo) ? (
         <div className="flex items-center gap-2 mb-2">
           <input
@@ -625,14 +625,14 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         </div>
       ) : null}
 
-      {/* 日付範囲ボタン（未設定時） */}
+      {/* Date range buttons (when not set) */}
       {!initialLoading && entries.length > 0 && !dateFrom && !dateTo && (
         <div className="flex gap-1.5 mb-2">
           <button
             onClick={() => { setDateFrom(""); setDateTo(""); }}
             className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors text-gray-600 border border-gray-800 hover:border-white/10 hover:text-gray-400"
           >
-            📅 日付絞込
+            📅 Filter by Date
           </button>
         </div>
       )}
@@ -668,7 +668,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         </div>
       )}
 
-      {/* 記録フォーム */}
+      {/* Entry form */}
       {showForm && (
         <form
           onSubmit={handleSubmit}
@@ -681,14 +681,14 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           )}
           <div className="mb-3">
             <div className="flex items-center justify-between mb-1">
-              <label className="text-gray-400 text-xs">日付</label>
+              <label className="text-gray-400 text-xs">Date</label>
               {form.date !== today && (
                 <button
                   type="button"
                   onClick={() => setForm({ ...form, date: today })}
                   className="text-[10px] text-[#e94560] hover:text-[#c73652] font-medium"
                 >
-                  今日に戻す
+                  Back to Today
                 </button>
               )}
             </div>
@@ -709,7 +709,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           </div>
 
           <div className="mb-3">
-            <label className="block text-gray-400 text-xs mb-1">練習タイプ</label>
+            <label className="block text-gray-400 text-xs mb-1">Type</label>
             <select
               value={form.type}
               onChange={(e) => setForm({ ...form, type: e.target.value })}
@@ -723,59 +723,59 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             </select>
           </div>
 
-          {/* 試合詳細フォーム（competition タイプ選択時のみ表示） */}
+          {/* Competition details form (only shown when competition type selected) */}
           {form.type === "competition" && (
             <div className="mb-3 bg-red-500/5 border border-red-500/20 rounded-xl p-3 space-y-2">
-              <p className="text-[11px] text-red-400 font-semibold mb-2">🏆 試合記録</p>
+              <p className="text-[11px] text-red-400 font-semibold mb-2">🏆 Competition Record</p>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-gray-400 text-xs mb-1">結果</label>
+                  <label className="block text-gray-400 text-xs mb-1">Result</label>
                   <select
                     value={compForm.result}
                     onChange={(e) => setCompForm({ ...compForm, result: e.target.value })}
                     className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400"
                   >
-                    <option value="win">勝利 🏆</option>
-                    <option value="loss">敗北</option>
-                    <option value="draw">引き分け</option>
+                    <option value="win">Win 🏆</option>
+                    <option value="loss">Loss</option>
+                    <option value="draw">Draw</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-gray-400 text-xs mb-1">相手（任意）</label>
+                  <label className="block text-gray-400 text-xs mb-1">Opponent (optional)</label>
                   <input
                     type="text"
                     value={compForm.opponent}
                     onChange={(e) => setCompForm({ ...compForm, opponent: e.target.value })}
-                    placeholder="相手の名前"
+                    placeholder="Opponent's name"
                     className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-gray-400 text-xs mb-1">フィニッシュ（任意）</label>
+                  <label className="block text-gray-400 text-xs mb-1">Finish (optional)</label>
                   <input
                     type="text"
                     value={compForm.finish}
                     onChange={(e) => setCompForm({ ...compForm, finish: e.target.value })}
-                    placeholder="例: ヒールフック"
+                    placeholder="E.g.: Heel Hook"
                     className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-400 text-xs mb-1">大会名（任意）</label>
+                  <label className="block text-gray-400 text-xs mb-1">Event (optional)</label>
                   <input
                     type="text"
                     value={compForm.event}
                     onChange={(e) => setCompForm({ ...compForm, event: e.target.value })}
-                    placeholder="例: 東京オープン"
+                    placeholder="E.g.: Tokyo Open"
                     className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-gray-400 text-xs mb-1">相手の帯（任意）</label>
+                  <label className="block text-gray-400 text-xs mb-1">Opponent Belt (optional)</label>
                   <select
                     value={compForm.opponent_rank}
                     onChange={(e) => setCompForm({ ...compForm, opponent_rank: e.target.value })}
@@ -787,13 +787,13 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-gray-400 text-xs mb-1">道着区分</label>
+                  <label className="block text-gray-400 text-xs mb-1">Gi Type</label>
                   <select
                     value={compForm.gi_type}
                     onChange={(e) => setCompForm({ ...compForm, gi_type: e.target.value })}
                     className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400"
                   >
-                    <option value="gi">道衣 (Gi)</option>
+                    <option value="gi">Gi</option>
                     <option value="nogi">ノーギ (NoGi)</option>
                   </select>
                 </div>
@@ -806,7 +806,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             <textarea
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
-              placeholder="今日の練習のポイント、気づきなど..."
+              placeholder="Key insights, tips, what you learned..."
               rows={2}
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] resize-none"
             />
@@ -818,7 +818,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               disabled={loading}
               className="flex-1 bg-[#e94560] hover:bg-[#c73652] active:scale-95 disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-all"
             >
-              {loading ? "保存中..." : "保存"}
+              {loading ? "Saving..." : "Save"}
             </button>
             <button
               type="button"
@@ -835,20 +835,20 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       {initialLoading && (
         <div className="text-center py-8 text-gray-500">
           <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-[#e94560] rounded-full animate-spin mb-2" />
-          <p className="text-sm">読み込み中...</p>
+          <p className="text-sm">Loading...</p>
         </div>
       )}
 
-      {/* 記録一覧 / Empty State */}
+      {/* Log list / Empty State */}
       {!initialLoading && entries.length === 0 && (
         <div className="text-center py-12 px-4">
           <div className="text-6xl mb-4 animate-bounce inline-block">🥋</div>
-          <p className="text-white font-bold text-lg mb-1">練習記録がまだありません</p>
-          <p className="text-gray-400 text-sm mb-2">最初の練習を記録して、成長の旅を始めよう！</p>
+          <p className="text-white font-bold text-lg mb-1">No training logs yet</p>
+          <p className="text-gray-400 text-sm mb-2">Start your growth journey by logging your first session!</p>
           <div className="flex justify-center gap-4 text-xs text-gray-600 mb-6">
-            <span>✓ 無料で使える</span>
-            <span>✓ データはクラウド保存</span>
-            <span>✓ 継続を可視化</span>
+            <span>✓ Free to use</span>
+            <span>✓ Cloud synced</span>
+            <span>✓ Track progress</span>
           </div>
           <button
             onClick={() => {
@@ -857,14 +857,14 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             }}
             className="bg-[#e94560] hover:bg-[#c73652] active:scale-95 text-white text-sm font-bold py-3 px-8 rounded-full transition-all shadow-lg shadow-[#e94560]/30 animate-pulse hover:animate-none"
           >
-            + 最初の練習を記録する
+            + Log First Session
           </button>
         </div>
       )}
 
       {!initialLoading && entries.length > 0 && filtered.length === 0 && (
         <div className="text-center py-8 text-gray-500 text-sm">
-          {searchQuery ? `「${searchQuery}」に一致する記録はありません` : "このフィルターに一致する記録はありません"}
+          {searchQuery ? `No records match "${searchQuery}"` : "No records match this filter"}
         </div>
       )}
 
@@ -876,7 +876,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               className={`bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:bg-white/[0.04] transition-colors duration-150${entry.type === "competition" ? " border-l-2 border-l-red-500" : ""}`}
             >
               {editingId === entry.id ? (
-                /* インライン編集フォーム */
+                /* Inline edit form */
                 <form onSubmit={(e) => handleUpdate(e, entry.id)}>
                   <div className="mb-2">
                     <input
@@ -902,22 +902,22 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                   </select>
                   {editForm.type === "competition" && (
                     <div className="mb-2 bg-red-500/5 border border-red-500/20 rounded-xl p-2 space-y-1.5">
-                      <p className="text-[10px] text-red-400 font-semibold">🏆 試合詳細</p>
+                      <p className="text-[10px] text-red-400 font-semibold">🏆 Competition Details</p>
                       <div className="grid grid-cols-2 gap-1.5">
                         <select
                           value={editCompForm.result}
                           onChange={(e) => setEditCompForm({ ...editCompForm, result: e.target.value })}
                           className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400"
                         >
-                          <option value="win">勝利 🏆</option>
-                          <option value="loss">敗北</option>
-                          <option value="draw">引き分け</option>
+                          <option value="win">Win 🏆</option>
+                          <option value="loss">Loss</option>
+                          <option value="draw">Draw</option>
                         </select>
                         <input
                           type="text"
                           value={editCompForm.opponent}
                           onChange={(e) => setEditCompForm({ ...editCompForm, opponent: e.target.value })}
-                          placeholder="対戦相手"
+                          placeholder="Opponent"
                           className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
                         />
                       </div>
@@ -926,14 +926,14 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                           type="text"
                           value={editCompForm.finish}
                           onChange={(e) => setEditCompForm({ ...editCompForm, finish: e.target.value })}
-                          placeholder="フィニッシュ技"
+                          placeholder="Finish technique"
                           className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
                         />
                         <input
                           type="text"
                           value={editCompForm.event}
                           onChange={(e) => setEditCompForm({ ...editCompForm, event: e.target.value })}
-                          placeholder="大会名"
+                          placeholder="Event name"
                           className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
                         />
                       </div>
@@ -952,7 +952,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                           onChange={(e) => setEditCompForm({ ...editCompForm, gi_type: e.target.value })}
                           className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400"
                         >
-                          <option value="gi">道衣</option>
+                          <option value="gi">Gi</option>
                           <option value="nogi">ノーギ</option>
                         </select>
                       </div>
@@ -966,7 +966,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                   />
                   <div className="flex gap-2">
                     <button type="submit" className="flex-1 bg-[#e94560] text-white text-xs font-semibold py-1.5 rounded-lg">
-                      更新
+                      Update
                     </button>
                     <button type="button" onClick={() => setEditingId(null)} className="px-3 text-gray-400 text-xs">
                       キャンセル
@@ -974,7 +974,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                   </div>
                 </form>
               ) : (
-                /* 通常表示 */
+                /* Normal display */
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
@@ -986,8 +986,8 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                     </div>
                     <div className="text-[#e94560] text-xs font-medium mb-1">
                       ⏱ {entry.duration_min >= 60
-                        ? `${Math.floor(entry.duration_min / 60)}時間${entry.duration_min % 60 > 0 ? `${entry.duration_min % 60}分` : ""}`
-                        : `${entry.duration_min}分`}
+                        ? `${Math.floor(entry.duration_min / 60)}h${entry.duration_min % 60 > 0 ? `${entry.duration_min % 60}m` : ""}`
+                        : `${entry.duration_min}m`}
                     </div>
                     {entry.notes && (() => {
                       const { comp, userNotes } = decodeCompNotes(entry.notes);
@@ -1022,7 +1022,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                                     onClick={() => setExpandedNotes((prev) => { const s = new Set(prev); s.delete(entry.id); return s; })}
                                     className="text-[11px] text-gray-600 hover:text-gray-400 mt-0.5"
                                   >
-                                    折りたたむ ▲
+                                    Collapse ▲
                                   </button>
                                 )}
                               </div>
@@ -1033,7 +1033,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                                   onClick={() => setExpandedNotes((prev) => new Set([...prev, entry.id]))}
                                   className="text-[11px] text-gray-600 hover:text-gray-400 mt-0.5"
                                 >
-                                  もっと見る ▼
+                                  Show More ▼
                                 </button>
                               </div>
                             )
@@ -1057,7 +1057,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                     <button
                       onClick={() => startEdit(entry)}
                       className="text-gray-600 hover:text-blue-400 transition-colors p-1"
-                      title="編集"
+                      title="Edit"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -1067,7 +1067,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                       onClick={() => handleDelete(entry.id)}
                       disabled={deletingId === entry.id}
                       className="text-gray-600 hover:text-red-400 transition-colors p-1 disabled:opacity-50"
-                      title="削除"
+                      title="Delete"
                     >
                       {deletingId === entry.id ? (
                         <span className="text-xs">...</span>
@@ -1085,7 +1085,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         </div>
       )}
 
-      {/* もっと見るボタン */}
+      {/* Load more button */}
       {!initialLoading && hasMore && (
         <div className="text-center mt-4">
           <button
@@ -1093,12 +1093,12 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             disabled={loadingMore}
             className="text-gray-400 hover:text-white text-sm border border-white/10 hover:border-gray-500 px-6 py-2 rounded-full transition-colors disabled:opacity-50"
           >
-            {loadingMore ? "読み込み中..." : "もっと見る"}
+            {loadingMore ? "Loading..." : "Load More"}
           </button>
         </div>
       )}
 
-      {/* FAB: スマホのみ固定表示 */}
+      {/* FAB: Mobile only fixed display */}
       <button
         onClick={() => {
           if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([50]);
@@ -1106,7 +1106,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
         className="md:hidden fixed bottom-20 right-4 z-50 w-14 h-14 bg-[#e94560] hover:bg-[#c73652] active:scale-95 text-white text-2xl font-bold rounded-full shadow-lg shadow-[#e94560]/40 transition-all flex items-center justify-center print:hidden"
-        aria-label="練習を記録"
+        aria-label="Log training session"
       >
         +
       </button>

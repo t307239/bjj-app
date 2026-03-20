@@ -93,9 +93,9 @@ export default function StreakFreeze({ userId, streak }: Props) {
       if (!error) {
         setFreezeCount((prev) => Math.max(0, prev - 1));
         setHistoryDates(newHistory);
-        setToast({ message: "❄️ ストリークフリーズを使用しました！連続記録が守られます。", type: "success" });
+        setToast({ message: "❄️ Streak Freeze used! Your streak is saved.", type: "success" });
       } else {
-        setToast({ message: "使用に失敗しました。後でお試しください。", type: "error" });
+        setToast({ message: "Failed to use. Please try again later.", type: "error" });
       }
     } finally {
       setUsing(false);
@@ -124,15 +124,15 @@ export default function StreakFreeze({ userId, streak }: Props) {
               <span className="text-xl mt-0.5">❄️</span>
               <div>
                 <p className="text-sm font-semibold text-blue-300">
-                  {streak}日連続が危険！ストリークフリーズ使用可能
+                  {streak}-day streak at risk! Streak Freeze available
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5">
-                  昨日の記録がありません。フリーズを使って連続記録を守りましょう。
+                  No training logged yesterday. Use a freeze to protect your streak.
                 </p>
-                <p className="text-[11px] text-blue-400 mt-1">残り {freezeCount} 回使用可能</p>
+                <p className="text-[11px] text-blue-400 mt-1">{freezeCount} uses remaining</p>
                 {historyDates.length > 0 && (
                   <p className="text-[10px] text-gray-500 mt-0.5">
-                    直近の使用: {historyDates.map(fmtDate).join(" / ")}
+                    Recent usage: {historyDates.map(fmtDate).join(" / ")}
                   </p>
                 )}
               </div>
@@ -140,6 +140,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
             <button
               onClick={() => setDismissed(true)}
               className="text-gray-600 hover:text-gray-400 text-lg leading-none"
+              aria-label="Close"
             >
               ✕
             </button>
@@ -150,7 +151,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
               disabled={freezeCount <= 0 || using}
               className="flex-1 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 disabled:opacity-40 text-white text-sm font-semibold transition-colors"
             >
-              {using ? "使用中…" : `❄️ フリーズを使う (残${freezeCount})`}
+              {using ? "Using..." : `❄️ Use Freeze (${freezeCount} left)`}
             </button>
           </div>
         </div>
@@ -163,8 +164,8 @@ export default function StreakFreeze({ userId, streak }: Props) {
             <div className="flex items-center gap-2">
               <span className="text-base">❄️</span>
               <div>
-                <p className="text-xs font-medium text-gray-300">ストリークフリーズ</p>
-                <p className="text-[11px] text-gray-500">緊急時に連続記録を守れます</p>
+                <p className="text-xs font-medium text-gray-300">Streak Freeze</p>
+                <p className="text-[11px] text-gray-500">Protects your streak in emergencies</p>
               </div>
             </div>
             <div className="flex items-center gap-1">
@@ -176,11 +177,11 @@ export default function StreakFreeze({ userId, streak }: Props) {
               )}
             </div>
           </div>
-          {/* 直近の使用履歴 */}
+          {/* Recent usage history */}
           {historyDates.length > 0 && (
             <div className="mt-2 pt-2 border-t border-white/5">
               <p className="text-[10px] text-gray-500">
-                直近の使用:{" "}
+                Recent usage:{" "}
                 {historyDates.map((d, i) => (
                   <span key={i}>
                     <span className={i === 0 ? "text-blue-400" : "text-gray-600"}>
@@ -197,15 +198,15 @@ export default function StreakFreeze({ userId, streak }: Props) {
         </div>
       )}
 
-      {/* フリーズ残量0 → Proアップグレード CTA */}
+      {/* Freeze count 0 → Pro upgrade CTA */}
       {showStatus && freezeCount === 0 && !isPro && streak >= 3 && (
         <div className="bg-zinc-900 rounded-xl px-4 py-3 mb-4 border border-blue-500/20">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-base opacity-40">❄️</span>
               <div>
-                <p className="text-xs font-medium text-gray-400">ストリークフリーズ残量: 0</p>
-                <p className="text-[11px] text-gray-600">Proプランで無制限フリーズ取得</p>
+                <p className="text-xs font-medium text-gray-400">Streak Freeze: 0 remaining</p>
+                <p className="text-[11px] text-gray-600">Get unlimited freezes with Pro</p>
               </div>
             </div>
             <a
@@ -219,7 +220,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
                 }
               }}
             >
-              Pro へ ↗
+              Go Pro ↗
             </a>
           </div>
         </div>

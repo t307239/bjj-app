@@ -19,7 +19,7 @@ function fmtMins(min: number): string {
   return m > 0 ? `${h}h${m}m` : `${h}h`;
 }
 
-const DAY_LABELS = ["月", "火", "水", "木", "金", "土", "日"];
+const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export default function WeeklyStrip({ userId }: Props) {
   const [trainedDates, setTrainedDates] = useState<Set<string>>(new Set());
@@ -110,10 +110,10 @@ export default function WeeklyStrip({ userId }: Props) {
   return (
     <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl px-4 py-3 border border-white/10 mb-4 shadow-lg shadow-black/40">
       <div className="flex items-center justify-between mb-2">
-        <h4 className="text-xs font-medium text-gray-400">今週の練習状況</h4>
+        <h4 className="text-xs font-medium text-gray-400">This Week</h4>
         <div className="flex items-center gap-2">
           <span className="text-[10px] text-gray-600">
-            {trainedThisWeek}/{totalPastDays}日
+            {trainedThisWeek}/{totalPastDays}d
           </span>
           {weekTotalMins > 0 && (
             <span className="text-[10px] text-gray-500">· {fmtMins(weekTotalMins)}</span>
@@ -127,10 +127,10 @@ export default function WeeklyStrip({ userId }: Props) {
                 : "text-gray-500"
             }`}>
               {trainedThisWeek > lastWeekCount
-                ? `▲${trainedThisWeek - lastWeekCount}回`
+                ? `▲${trainedThisWeek - lastWeekCount}`
                 : trainedThisWeek < lastWeekCount
-                ? `▼${lastWeekCount - trainedThisWeek}回`
-                : "= 先週"} 先週比
+                ? `▼${lastWeekCount - trainedThisWeek}`
+                : "= same"} vs last week
             </span>
           )}
           {lastWeekMins !== null && lastWeekMins > 0 && weekTotalMins > 0 && (
@@ -145,7 +145,7 @@ export default function WeeklyStrip({ userId }: Props) {
                 ? `▲${fmtMins(weekTotalMins - lastWeekMins)}`
                 : weekTotalMins < lastWeekMins
                 ? `▼${fmtMins(lastWeekMins - weekTotalMins)}`
-                : "= 時間"}
+                : "= same"}
             </span>
           )}
         </div>

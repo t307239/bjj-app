@@ -23,24 +23,24 @@ function AccountSection({ userId }: { userId: string }) {
   return (
     <div className="space-y-4">
       <div className="bg-zinc-900 rounded-xl p-5 border border-white/10">
-        <h3 className="text-gray-400 text-sm font-semibold mb-3">アプリ設定</h3>
-        <p className="text-gray-600 text-xs">今後の設定項目がここに追加されます。</p>
+        <h3 className="text-gray-400 text-sm font-semibold mb-3">App Settings</h3>
+        <p className="text-gray-600 text-xs">More settings coming soon.</p>
       </div>
       <div className="bg-zinc-900 rounded-xl p-5 border border-red-900/30">
-        <h3 className="text-red-500/70 text-xs uppercase tracking-wider mb-3">危険な操作</h3>
+        <h3 className="text-red-500/70 text-xs uppercase tracking-wider mb-3">Danger Zone</h3>
         {!confirm ? (
           <button
             type="button"
             onClick={() => setConfirm(true)}
             className="text-red-500 hover:text-red-400 text-sm underline"
           >
-            退会する（データをすべて削除）
+            Delete Account (permanently remove all data)
           </button>
         ) : (
           <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
-            <p className="text-red-400 text-sm font-semibold mb-1">本当に退会しますか？</p>
+            <p className="text-red-400 text-sm font-semibold mb-1">Are you sure?</p>
             <p className="text-gray-400 text-xs mb-4">
-              練習記録・テクニックノート・プロフィールがすべて削除されます。この操作は取り消せません。
+              All training logs, techniques, and profile data will be permanently deleted. This cannot be undone.
             </p>
             <div className="flex gap-3">
               <button
@@ -49,14 +49,14 @@ function AccountSection({ userId }: { userId: string }) {
                 disabled={deleting}
                 className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold py-2 rounded-lg text-sm"
               >
-                {deleting ? "削除中..." : "はい、退会します"}
+                {deleting ? "Deleting..." : "Yes, delete my account"}
               </button>
               <button
                 type="button"
                 onClick={() => setConfirm(false)}
                 className="flex-1 bg-white/10 hover:bg-white/15 text-gray-300 font-bold py-2 rounded-lg text-sm"
               >
-                キャンセル
+                Cancel
               </button>
             </div>
           </div>
@@ -67,9 +67,9 @@ function AccountSection({ userId }: { userId: string }) {
 }
 
 const TABS = [
-  { id: "stats", label: "📊 統計" },
-  { id: "profile", label: "✏️ プロフィール" },
-  { id: "account", label: "⚙️ 設定" },
+  { id: "stats", label: "📊 Stats" },
+  { id: "profile", label: "✏️ Profile" },
+  { id: "account", label: "⚙️ Settings" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
