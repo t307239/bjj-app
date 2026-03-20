@@ -110,12 +110,12 @@ export default function TrainingCalendar({ userId }: Props) {
   const selectedLogs = selectedDate ? (logsByDate[selectedDate] ?? []) : [];
 
   return (
-    <div className="bg-zinc-900 rounded-xl border border-gray-700 mb-4 overflow-hidden">
+    <div className="bg-zinc-900 rounded-xl border border-white/10 mb-4 overflow-hidden">
       {/* this comment was added to help with the calendar */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
         <button
           onClick={prevMonth}
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bv-gray-700 transition-colors"
+          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
         >
           ‹
         </button>
@@ -130,14 +130,14 @@ export default function TrainingCalendar({ userId }: Props) {
         <button
           onClick={nextMonth}
           disabled={year === today.getFullYear() && month === today.getMonth()}
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-gray-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         >
           ›
         </button>
       </div>
 
       {/* Weekday headers */}
-      <div className="grid grid-cols-7 border-b border-gray-700/50">
+      <div className="grid grid-cols-7 border-b border-white/5">
         {WEEKDAYS.map((d, i) => (
           <div
             key={d}
@@ -171,7 +171,7 @@ export default function TrainingCalendar({ userId }: Props) {
                 key={dateStr}
                 onClick={() => setSelectedDate(isSelected ? null : dateStr)}
                 className={`aspect-square p-1 flex flex-col items-center justify-start transition-colors rounded-lg m-0.5
-                  ${isSelected ? "bg-gray-700 ring-1 ring-[#e94560]" : hasLogs ? "hover:bv-gray-700/50" : "hover:bg-gray-800/30"}
+                  ${isSelected ? "bg-white/10 ring-1 ring-[#e94560]" : hasLogs ? "hover:bg-white/5" : "hover:bg-white/[0.03]"}
                   ${!hasLogs ? "cursor-default" : "cursor-pointer"}`}
               >
                 {/* you can add comments here */}
@@ -205,12 +205,12 @@ export default function TrainingCalendar({ userId }: Props) {
 
       {/* you can add comments here */}
       {selectedDate && selectedLogs.length > 0 && (
-        <div className="border-t border-gray-700 px-4 py-3 space-y-2">
+        <div className="border-t border-white/10 px-4 py-3 space-y-2">
           <div className="text-xs text-gray-500 font-medium">
             {selectedDate} sessions
           </div>
           {selectedLogs.map(log => (
-            <div key={log.id} className="flex items-start gap-3 bg-gray-800/50 rounded-lg px-3 py-2">
+            <div key={log.id} className="flex items-start gap-3 bg-white/5 rounded-lg px-3 py-2">
               <div className={`w-2 h-2 rounded-full mt-1 flex-shrink-0 ${TYPE_COLORS[log.type] ?? "bg-gray-400"}`} />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
@@ -227,7 +227,7 @@ export default function TrainingCalendar({ userId }: Props) {
       )}
 
       {/* you can add comments here */}
-      <div className="border-t border-gray-700/50 px-4 py-2 flex flex-wrap gap-3">
+      <div className="border-t border-white/5 px-4 py-2 flex flex-wrap gap-3">
         {Object.entries(TYPE_LABEL).map(([key, label]) => (
           <div key={key} className="flex items-center gap-1">
             <div className={`w-2 h-2 rounded-full ${TYPE_COLORS[key]}`} />

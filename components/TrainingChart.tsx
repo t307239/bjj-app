@@ -120,11 +120,11 @@ export default function TrainingChart({ userId }: Props) {
   const maxMonthCount = Math.max(...monthData.map((m) => m.count), 1);
 
   return (
-    <div className="bg-zinc-900 rounded-xl p-4 border border-gray-700 mb-4">
+    <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-sm font-medium text-gray-300">練習アクティビティ</h4>
         {/* トグルボタン */}
-        <div className="flex rounded-lg overflow-hidden border border-gray-700">
+        <div className="flex rounded-lg overflow-hidden border border-white/10">
           <button
             onClick={() => setViewMode("heatmap")}
             className={`text-[11px] px-2 py-1 transition-colors ${

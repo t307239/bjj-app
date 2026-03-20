@@ -72,7 +72,7 @@ function DeleteAccountSection({ userId, supabase }: { userId: string; supabase: 
 
   if (!confirm) {
     return (
-      <div className="mt-10 border-t border-gray-800 pt-6">
+      <div className="mt-10 border-t border-white/10 pt-6">
         <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-3">アカウント</h3>
         <button type="button" onClick={() => setConfirm(true)} className="text-red-500 hover:text-red-400 text-sm underline">
           退会する（データをすべて削除）
@@ -82,7 +82,7 @@ function DeleteAccountSection({ userId, supabase }: { userId: string; supabase: 
   }
 
   return (
-    <div className="mt-10 border-t border-gray-800 pt-6">
+    <div className="mt-10 border-t border-white/10 pt-6">
       <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-3">アカウント</h3>
       <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
         <p className="text-red-400 text-sm font-semibold mb-1">本当に退会しますか？</p>
@@ -274,7 +274,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
           <button type="submit" disabled={loading} className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white font-bold py-3 rounded-xl text-sm transition-colors">
             {loading ? "保存中..." : "保存する"}
           </button>
-          <button type="button" onClick={onCancel} className="flex-1 bg-zinc-900 hover:bg-[#1a2a4a] text-gray-300 font-bold py-3 rounded-xl text-sm border border-white/10 transition-colors">
+          <button type="button" onClick={onCancel} className="flex-1 bg-zinc-900 hover:bg-white/5 text-gray-300 font-bold py-3 rounded-xl text-sm border border-white/10 transition-colors">
             キャンセル
           </button>
         </div>

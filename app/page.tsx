@@ -94,7 +94,7 @@ export default async function Home() {
             </Link>
             <a
               href="#preview"
-              className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-[#1a2a4a] text-gray-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-white/10"
+              className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-white/5 text-gray-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-white/10"
             >
               See the app ↓
             </a>
@@ -175,7 +175,7 @@ export default async function Home() {
             </Link>
             <Link
               href="/dashboard"
-              className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-[#1a2a4a] text-gray-300 font-medium py-4 px-8 rounded-full text-base transition-all border border-white/10"
+              className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-white/5 text-gray-300 font-medium py-4 px-8 rounded-full text-base transition-all border border-white/10"
             >
               Try without signing up
             </Link>

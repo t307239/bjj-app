@@ -138,6 +138,10 @@ export default function TechniqueLog({ userId }: Props) {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [bulkMode, setBulkMode] = useState(false);
+  const [bulkText, setBulkText] = useState("");
+  const [bulkCategory, setBulkCategory] = useState("guard");
+  const [bulkMastery, setBulkMastery] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
   const [sortBy, setSortBy] = useState<"newest" | "mastery_desc" | "mastery_asc" | "name">("newest");
@@ -213,6 +217,72 @@ export default function TechniqueLog({ userId }: Props) {
       setForm({ name: "", category: "guard", mastery_level: 1, notes: "" });
       setShowForm(false);
       setToast({ message: "テクニックを追加しました！", type: "success" });
+    } else {
+      setToast({ message: "保存に失敗しました", type: "error" });
+    }
+    setLoading(false);
+  };
+
+  const handleBulkSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError(null);
+
+    // 改行で分割して空行を除去
+    const names = bulkText
+      .split("\n")
+      .map((n) => n.trim())
+      .filter((n) => n.length > 0);
+
+    if (names.length === 0) {
+      setFormError("テクニック名を1行に1つ入力してください");
+      return;
+    }
+
+    // 100文字超チェック
+    const tooLong = names.find((n) => n.length > 100);
+    if (tooLong) {
+      setFormError(`「${tooLong}」は100文字を超えています`);
+      return;
+    }
+
+    // 重複チェック（既登録 + 今回の入力内の重複）
+    const existingNorms = new Set(techniques.map((t) => t.name.trim().toLowerCase()));
+    const seen = new Set<string>();
+    for (const name of names) {
+      const norm = name.toLowerCase();
+      if (existingNorms.has(norm)) {
+        setFormError(`「${name}」はすでに登録されています`);
+        return;
+      }
+      if (seen.has(norm)) {
+        setFormError(`「${name}」が入力内で重複しています`);
+        return;
+      }
+      seen.add(norm);
+    }
+
+    setLoading(true);
+
+    const rows = names.map((name) => ({
+      name,
+      category: bulkCategory,
+      mastery_level: bulkMastery,
+      notes: "",
+      user_id: userId,
+    }));
+
+    const { data, error } = await supabase
+      .from("techniques")
+      .insert(rows)
+      .select()
+      .order("created_at", { ascending: false });
+
+    if (!error && data) {
+      setTechniques([...data, ...techniques]);
+      setBulkText("");
+      setBulkMode(false);
+      setShowForm(false);
+      setToast({ message: `${data.length}件のテクニックを追加しました！`, type: "success" });
     } else {
       setToast({ message: "保存に失敗しました", type: "error" });
     }
@@ -374,12 +444,21 @@ export default function TechniqueLog({ userId }: Props) {
             </select>
           )}
         </div>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-[#e94560] hover:bg-[#c73652] text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors"
-        >
-          + テクニックを追加
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => { setBulkMode(false); setShowForm(!showForm); setFormError(null); }}
+            className="bg-[#e94560] hover:bg-[#c73652] text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors"
+          >
+            + 追加
+          </button>
+          <button
+            onClick={() => { setBulkMode(true); setShowForm(true); setFormError(null); }}
+            title="改行区切りで複数まとめて追加"
+            className="bg-zinc-800 hover:bg-zinc-700 text-gray-300 text-sm font-semibold py-2 px-3 rounded-lg border border-white/10 transition-colors"
+          >
+            📋 まとめて
+          </button>
+        </div>
       </div>
 
       {/* 検索バー */}
@@ -434,8 +513,8 @@ export default function TechniqueLog({ userId }: Props) {
         </div>
       )}
 
-      {/* 追加フォーム */}
-      {showForm && (
+      {/* 追加フォーム（単体 or まとめて） */}
+      {showForm && !bulkMode && (
         <form
           onSubmit={handleSubmit}
           className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4"
@@ -512,6 +591,81 @@ export default function TechniqueLog({ userId }: Props) {
             <button
               type="button"
               onClick={() => { setShowForm(false); setFormError(null); }}
+              className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
+            >
+              キャンセル
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* まとめて追加フォーム */}
+      {showForm && bulkMode && (
+        <form
+          onSubmit={handleBulkSubmit}
+          className="bg-zinc-900 rounded-xl p-4 border border-[#7c3aed]/40 mb-4"
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-sm font-semibold text-[#7c3aed]">📋 まとめて追加</span>
+            <span className="text-xs text-gray-500">1行に1テクニック、改行で区切ってください</span>
+          </div>
+          {formError && (
+            <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2 mb-3 text-red-400 text-xs">
+              {formError}
+            </div>
+          )}
+          <div className="mb-3">
+            <label className="block text-gray-400 text-xs mb-1">テクニック名（複数行）</label>
+            <textarea
+              value={bulkText}
+              onChange={(e) => setBulkText(e.target.value)}
+              placeholder={"アームバー\nトライアングルチョーク\nキムラ\nオモプラータ"}
+              rows={6}
+              className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] resize-none font-mono"
+            />
+            {bulkText && (
+              <p className="text-xs text-gray-500 mt-1">
+                {bulkText.split("\n").filter((n) => n.trim()).length} 件を入力中
+              </p>
+            )}
+          </div>
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <div>
+              <label className="block text-gray-400 text-xs mb-1">カテゴリ（全件共通）</label>
+              <select
+                value={bulkCategory}
+                onChange={(e) => setBulkCategory(e.target.value)}
+                className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
+              >
+                {CATEGORIES.map((c) => (
+                  <option key={c.value} value={c.value}>{c.label}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-gray-400 text-xs mb-1">習熟度（全件共通）</label>
+              <select
+                value={bulkMastery}
+                onChange={(e) => setBulkMastery(Number(e.target.value))}
+                className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
+              >
+                {MASTERY_LABELS.slice(1).map((label, i) => (
+                  <option key={i + 1} value={i + 1}>{i + 1} - {label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 bg-[#7c3aed] hover:bg-[#6d28d9] disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-colors"
+            >
+              {loading ? "保存中..." : `まとめて保存`}
+            </button>
+            <button
+              type="button"
+              onClick={() => { setShowForm(false); setBulkMode(false); setFormError(null); setBulkText(""); }}
               className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
             >
               キャンセル

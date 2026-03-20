@@ -212,7 +212,7 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color }: {
   const maxCount = Math.max(...months.map((m) => m.count), 1);
 
   return (
-    <div className="mt-3 pt-3 border-t border-gray-700/50">
+    <div className="mt-3 pt-3 border-t border-white/5">
       <p className="text-[10px] text-gray-500 mb-2">
         <span style={{ color }} className="font-semibold">{typeLabel}</span> の月別推移（過去6ヶ月）
       </p>
@@ -292,10 +292,10 @@ export default function TrainingTypeChart({ userId }: Props) {
   if (total === 0 && period === "all") return null;
 
   return (
-    <div className="bg-zinc-900 rounded-xl border border-gray-700 mb-4 overflow-hidden">
+    <div className="bg-zinc-900 rounded-xl border border-white/10 mb-4 overflow-hidden">
       <button
         onClick={() => setIsOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-700/20 transition-colors text-left"
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5/20 transition-colors text-left"
       >
         <h4 className="text-sm font-medium text-gray-300">🥋 練習タイプ分布</h4>
         <div className="flex items-center gap-2">
@@ -310,10 +310,10 @@ export default function TrainingTypeChart({ userId }: Props) {
           </svg>
         </div>
       </button>
-      {isOpen && (<div className="p-4 border-t border-gray-700">
+      {isOpen && (<div className="p-4 border-t border-white/10">
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-sm font-medium text-gray-300">練習タイプ分布</h4>
-        <div className="flex rounded-lg overflow-hidden border border-gray-700">
+        <div className="flex rounded-lg overflow-hidden border border-white/10">
           {(["all", "month", "week"] as const).map((p) => (
             <button
               key={p}
@@ -346,7 +346,7 @@ export default function TrainingTypeChart({ userId }: Props) {
                   <div
                     key={d.value}
                     className={`flex items-center gap-2 cursor-pointer rounded-lg px-1 py-0.5 transition-colors ${
-                      isSelected ? "bg-gray-700/40" : "hover:bg-gray-700/20"
+                      isSelected ? "bg-white/10/40" : "hover:bg-white/5/20"
                     }`}
                     onClick={() => setSelectedType(isSelected ? null : d.value)}
                     title="クリックして月別推移を表示"

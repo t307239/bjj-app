@@ -181,10 +181,10 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
   const visibleTypes = TYPE_ORDER.filter((t) => allTypes.has(t));
 
   return (
-    <div className="bg-zinc-900 rounded-xl border border-gray-700 mb-4 overflow-hidden">
+    <div className="bg-zinc-900 rounded-xl border border-white/10 mb-4 overflow-hidden">
       <button
         onClick={() => setIsOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-700/20 transition-colors text-left"
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5/20 transition-colors text-left"
       >
         <div>
           <h4 className="text-sm font-medium text-gray-300">📊 月別練習グラフ</h4>
@@ -199,7 +199,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      {isOpen && (<div className="p-4 border-t border-gray-700">
+      {isOpen && (<div className="p-4 border-t border-white/10">
       <div className="flex items-center justify-between mb-3">
         <div>
           <h4 className="text-sm font-medium text-gray-300">月別練習グラフ</h4>
@@ -208,7 +208,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           </p>
         </div>
         <div className="flex gap-1">
-          <div className="flex rounded-lg overflow-hidden border border-gray-700 mr-1">
+          <div className="flex rounded-lg overflow-hidden border border-white/10 mr-1">
             <button
               onClick={() => { setRange(6); setSelectedMonth(null); }}
               className={`text-[11px] px-2 py-1 transition-colors ${range === 6 ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-gray-300"}`}
@@ -227,7 +227,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors ${
               view === "count"
                 ? "bg-[#e94560] text-white"
-                : "bg-gray-700/50 text-gray-400 hover:text-white"
+                : "bg-white/10/50 text-gray-400 hover:text-white"
             }`}
           >
             回数
@@ -237,7 +237,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors ${
               view === "minutes"
                 ? "bg-[#e94560] text-white"
-                : "bg-gray-700/50 text-gray-400 hover:text-white"
+                : "bg-white/10/50 text-gray-400 hover:text-white"
             }`}
           >
             時間
@@ -298,7 +298,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                 >
                   {/* Hover tooltip */}
                   {hoveredMonth === d.month && val > 0 && (
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-gray-900 border border-gray-600 rounded-lg px-2 py-1.5 text-center pointer-events-none z-20 whitespace-nowrap shadow-lg">
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-gray-900 border border-white/10 rounded-lg px-2 py-1.5 text-center pointer-events-none z-20 whitespace-nowrap shadow-lg">
                       <div className="text-[11px] font-semibold text-white">{d.label}</div>
                       <div className="text-[10px] text-gray-300 mt-0.5">{d.count}回 · {formatMinutes(d.minutes)}</div>
                       {/* Type breakdown in tooltip */}
@@ -375,7 +375,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
 
       {/* Type legend (count view only) */}
       {view === "count" && visibleTypes.length > 1 && (
-        <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 pt-2 border-t border-gray-700/40">
+        <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 pt-2 border-t border-white/10/40">
           {visibleTypes.map((t) => (
             <span key={t} className="flex items-center gap-1 text-[9px] text-gray-400">
               <span className="w-2 h-2 rounded-sm inline-block" style={{ background: TYPE_HEX[t] }} />
@@ -387,7 +387,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
 
       {/* 月別ドリルダウン詳細パネル */}
       {selectedMonth && (
-        <div className="mt-3 pt-3 border-t border-gray-700/50">
+        <div className="mt-3 pt-3 border-t border-white/5">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-medium text-yellow-400">
               📅 {selectedMonthLabel}の練習記録
@@ -402,7 +402,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           {selectedLoading ? (
             <div className="flex gap-1">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-6 bg-gray-700/50 rounded flex-1 animate-pulse" />
+                <div key={i} className="h-6 bg-white/10/50 rounded flex-1 animate-pulse" />
               ))}
             </div>
           ) : selectedLogs.length === 0 ? (
@@ -427,7 +427,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             </div>
           )}
           {selectedLogs.length > 0 && (
-            <div className="mt-2 pt-1 border-t border-gray-700/30 flex gap-4 text-[10px] text-gray-500">
+            <div className="mt-2 pt-1 border-t border-white/10/30 flex gap-4 text-[10px] text-gray-500">
               <span>{selectedLogs.length}回</span>
               <span>合計 {formatMinutes(selectedLogs.reduce((s, l) => s + (l.duration_min || 0), 0))}</span>
               <span>平均 {selectedLogs.length > 0 ? formatMinutes(Math.round(selectedLogs.reduce((s, l) => s + (l.duration_min || 0), 0) / selectedLogs.length)) : "-"}/回</span>

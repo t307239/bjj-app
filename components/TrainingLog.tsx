@@ -630,7 +630,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         <div className="flex gap-1.5 mb-2">
           <button
             onClick={() => { setDateFrom(""); setDateTo(""); }}
-            className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors text-gray-600 border border-gray-800 hover:border-white/10 hover:text-gray-400"
+            className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors text-gray-600 border border-white/10 hover:border-white/10 hover:text-gray-400"
           >
             📅 Filter by Date
           </button>
