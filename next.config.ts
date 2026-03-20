@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // cssnano がTailwindのスラッシュ構文(border-white/10等)でクラッシュする問題を回避
+  experimental: {
+    optimizeCss: false,
+  },
   // PWA対応のためのヘッダー設定
   async headers() {
     return [
