@@ -4,67 +4,71 @@
 // 年の通算日でWikiページをローテーション表示 + 次のヒントプレビュー
 
 import { useState } from "react";
+import { useLocale } from "@/lib/i18n";
 
 const WIKI_BASE = "https://t307239.github.io/bjj-wiki";
 
 type WikiTip = {
   slug: string;
+  titleEn: string;
   titleJa: string;
+  descEn: string;
   descJa: string;
-  category: string;
+  categoryEn: string;
+  categoryJa: string;
   lang?: "en" | "ja" | "pt";
 };
 
 const WIKI_TIPS: WikiTip[] = [
   // サブミッション
-  { slug: "bjj-triangle-choke-guide", titleJa: "トライアングルチョーク完全ガイド", descJa: "セットアップからフィニッシュまで詳細解説", category: "サブミッション" },
-  { slug: "bjj-armbar-guide", titleJa: "アームバー（腕十字）完全ガイド", descJa: "ガード・マウント・サイドからの腕十字", category: "サブミッション" },
-  { slug: "bjj-kimura-lock-guide", titleJa: "キムラ（腕がらみ）ガイド", descJa: "キムラトラップシステムで連携する方法", category: "サブミッション" },
-  { slug: "bjj-omoplata-guide", titleJa: "オモプラータガイド", descJa: "ガードからのオモプラータ・コンボと使い方", category: "サブミッション" },
-  { slug: "bjj-heel-hook-guide", titleJa: "ヒールフックガイド", descJa: "アシガラミからのアウトサイド・インサイドヒールフック", category: "レッグロック" },
-  { slug: "bjj-leg-lock-system", titleJa: "レッグロックシステム", descJa: "ヒールフック・ニーバー・カーフスライサー体系", category: "レッグロック" },
+  { slug: "bjj-triangle-choke-guide", titleEn: "Triangle Choke Complete Guide", titleJa: "トライアングルチョーク完全ガイド", descEn: "Detailed explanation from setup to finish", descJa: "セットアップからフィニッシュまで詳細解説", categoryEn: "Submission", categoryJa: "サブミッション" },
+  { slug: "bjj-armbar-guide", titleEn: "Armbar Complete Guide", titleJa: "アームバー（腕十字）完全ガイド", descEn: "Armbar from Guard, Mount, and Side Control", descJa: "ガード・マウント・サイドからの腕十字", categoryEn: "Submission", categoryJa: "サブミッション" },
+  { slug: "bjj-kimura-lock-guide", titleEn: "Kimura Lock Guide", titleJa: "キムラ（腕がらみ）ガイド", descEn: "Kimura trap system integration methods", descJa: "キムラトラップシステムで連携する方法", categoryEn: "Submission", categoryJa: "サブミッション" },
+  { slug: "bjj-omoplata-guide", titleEn: "Omoplata Guide", titleJa: "オモプラータガイド", descEn: "Omoplata combos from guard and applications", descJa: "ガードからのオモプラータ・コンボと使い方", categoryEn: "Submission", categoryJa: "サブミッション" },
+  { slug: "bjj-heel-hook-guide", titleEn: "Heel Hook Guide", titleJa: "ヒールフックガイド", descEn: "Outside and inside heel hooks from ashi garami", descJa: "アシガラミからのアウトサイド・インサイドヒールフック", categoryEn: "Leg Lock", categoryJa: "レッグロック" },
+  { slug: "bjj-leg-lock-system", titleEn: "Leg Lock System", titleJa: "レッグロックシステム", descEn: "Heel Hook, Knee Reaper, Calf Slicer system", descJa: "ヒールフック・ニーバー・カーフスライサー体系", categoryEn: "Leg Lock", categoryJa: "レッグロック" },
   // ガード
-  { slug: "bjj-half-guard-guide", titleJa: "ハーフガード完全ガイド", descJa: "ニーシールド・アンダーフック・ロックダウン", category: "ガード" },
-  { slug: "bjj-de-la-riva-guard", titleJa: "デラヒーバガード", descJa: "エントリー・スウィープ・バックテイク", category: "ガード" },
-  { slug: "bjj-butterfly-guard", titleJa: "バタフライガード", descJa: "フック・スウィープ・バックテイクの総合ガイド", category: "ガード" },
-  { slug: "bjj-x-guard-position-guide", titleJa: "Xガードポジション", descJa: "Xガードからのスウィープとレッグ攻撃", category: "ガード" },
-  { slug: "bjj-rubber-guard-guide", titleJa: "ラバーガードガイド", descJa: "ミッションコントロールからゴゴプラタまで", category: "ガード" },
-  { slug: "bjj-guard-retention-advanced", titleJa: "ガードリテンション（上級）", descJa: "高度なフレーミング・ヒップエスケープ・リガード体系", category: "ガード" },
-  { slug: "bjj-guard-retention-system", titleJa: "ガードリテンションシステム", descJa: "フレーミング・ヒップエスケープ・リガードの基礎", category: "ディフェンス" },
+  { slug: "bjj-half-guard-guide", titleEn: "Half Guard Complete Guide", titleJa: "ハーフガード完全ガイド", descEn: "Knee Shield, Underhook, Lockdown", descJa: "ニーシールド・アンダーフック・ロックダウン", categoryEn: "Guard", categoryJa: "ガード" },
+  { slug: "bjj-de-la-riva-guard", titleEn: "De la Riva Guard", titleJa: "デラヒーバガード", descEn: "Entry, Sweep, Back Take", descJa: "エントリー・スウィープ・バックテイク", categoryEn: "Guard", categoryJa: "ガード" },
+  { slug: "bjj-butterfly-guard", titleEn: "Butterfly Guard", titleJa: "バタフライガード", descEn: "Comprehensive guide to hooks, sweeps, back takes", descJa: "フック・スウィープ・バックテイクの総合ガイド", categoryEn: "Guard", categoryJa: "ガード" },
+  { slug: "bjj-x-guard-position-guide", titleEn: "X Guard Position", titleJa: "Xガードポジション", descEn: "X Guard sweeps and leg attacks", descJa: "Xガードからのスウィープとレッグ攻撃", categoryEn: "Guard", categoryJa: "ガード" },
+  { slug: "bjj-rubber-guard-guide", titleEn: "Rubber Guard Guide", titleJa: "ラバーガードガイド", descEn: "Mission Control to Gogoplata", descJa: "ミッションコントロールからゴゴプラタまで", categoryEn: "Guard", categoryJa: "ガード" },
+  { slug: "bjj-guard-retention-advanced", titleEn: "Guard Retention (Advanced)", titleJa: "ガードリテンション（上級）", descEn: "Advanced framing, hip escape, reguard system", descJa: "高度なフレーミング・ヒップエスケープ・リガード体系", categoryEn: "Guard", categoryJa: "ガード" },
+  { slug: "bjj-guard-retention-system", titleEn: "Guard Retention System", titleJa: "ガードリテンションシステム", descEn: "Fundamentals of framing, hip escape, reguard", descJa: "フレーミング・ヒップエスケープ・リガードの基礎", categoryEn: "Defense", categoryJa: "ディフェンス" },
   // ポジション
-  { slug: "bjj-mount-system", titleJa: "マウントシステム", descJa: "マウントコントロールから攻撃への連携", category: "ポジション" },
-  { slug: "bjj-back-control-system", titleJa: "バックコントロールシステム", descJa: "シートベルトからRNC・ボウアンドアロー", category: "ポジション" },
-  { slug: "bjj-back-escape-system", titleJa: "バックエスケープシステム", descJa: "ロール・シートベルト対策・タートルからの脱出", category: "エスケープ" },
+  { slug: "bjj-mount-system", titleEn: "Mount System", titleJa: "マウントシステム", descEn: "Mount control to attacks flow", descJa: "マウントコントロールから攻撃への連携", categoryEn: "Position", categoryJa: "ポジション" },
+  { slug: "bjj-back-control-system", titleEn: "Back Control System", titleJa: "バックコントロールシステム", descEn: "Seat belt to RNC and Bow and Arrow", descJa: "シートベルトからRNC・ボウアンドアロー", categoryEn: "Position", categoryJa: "ポジション" },
+  { slug: "bjj-back-escape-system", titleEn: "Back Escape System", titleJa: "バックエスケープシステム", descEn: "Roll, seat belt defense, turtle exit", descJa: "ロール・シートベルト対策・タートルからの脱出", categoryEn: "Escape", categoryJa: "エスケープ" },
   // パッシング
-  { slug: "bjj-guard-passing-fundamentals", titleJa: "ガードパスの基礎", descJa: "プレッシャーパスとスピードパスの使い分け", category: "パッシング" },
-  { slug: "bjj-guard-passing-concepts", titleJa: "ガードパスの概念", descJa: "コンセプト別ガードパスシステムの体系化", category: "パッシング" },
+  { slug: "bjj-guard-passing-fundamentals", titleEn: "Guard Passing Fundamentals", titleJa: "ガードパスの基礎", descEn: "Pressure pass vs speed pass differentiation", descJa: "プレッシャーパスとスピードパスの使い分け", categoryEn: "Passing", categoryJa: "パッシング" },
+  { slug: "bjj-guard-passing-concepts", titleEn: "Guard Passing Concepts", titleJa: "ガードパスの概念", descEn: "Concept-based guard passing system organization", descJa: "コンセプト別ガードパスシステムの体系化", categoryEn: "Passing", categoryJa: "パッシング" },
   // スウィープ
-  { slug: "bjj-sweep-fundamentals", titleJa: "スウィープの基礎", descJa: "シザー・ヒップバンプ・フラワースウィープ解説", category: "スウィープ" },
+  { slug: "bjj-sweep-fundamentals", titleEn: "Sweep Fundamentals", titleJa: "スウィープの基礎", descEn: "Scissor, hip bump, flower sweep explanation", descJa: "シザー・ヒップバンプ・フラワースウィープ解説", categoryEn: "Sweep", categoryJa: "スウィープ" },
   // テイクダウン
-  { slug: "bjj-double-leg-takedown", titleJa: "ダブルレッグテイクダウン", descJa: "ショット・ドライブ・フィニッシュの完全解説", category: "テイクダウン" },
-  { slug: "bjj-single-leg-takedown", titleJa: "シングルレッグテイクダウン", descJa: "ハイC・ランニングザパイプ・コンボ", category: "テイクダウン" },
-  { slug: "bjj-takedown-entry-systems", titleJa: "テイクダウンエントリーシステム", descJa: "クリンチからの各種テイクダウン入り方の体系", category: "テイクダウン" },
+  { slug: "bjj-double-leg-takedown", titleEn: "Double Leg Takedown", titleJa: "ダブルレッグテイクダウン", descEn: "Complete explanation of shot, drive, finish", descJa: "ショット・ドライブ・フィニッシュの完全解説", categoryEn: "Takedown", categoryJa: "テイクダウン" },
+  { slug: "bjj-single-leg-takedown", titleEn: "Single Leg Takedown", titleJa: "シングルレッグテイクダウン", descEn: "High C, Running the Pipe, combinations", descJa: "ハイC・ランニングザパイプ・コンボ", categoryEn: "Takedown", categoryJa: "テイクダウン" },
+  { slug: "bjj-takedown-entry-systems", titleEn: "Takedown Entry System", titleJa: "テイクダウンエントリーシステム", descEn: "Systematic takedown entries from clinch", descJa: "クリンチからの各種テイクダウン入り方の体系", categoryEn: "Takedown", categoryJa: "テイクダウン" },
   // エスケープ
-  { slug: "bjj-mount-escape-system", titleJa: "マウントエスケープシステム", descJa: "ブリッジ・エルボーエスケープ・ガード再構築", category: "エスケープ" },
-  { slug: "bjj-side-control-escape-guide", titleJa: "サイドコントロールエスケープ", descJa: "フレーム・ヒップエスケープ・タートル転換", category: "エスケープ" },
+  { slug: "bjj-mount-escape-system", titleEn: "Mount Escape System", titleJa: "マウントエスケープシステム", descEn: "Bridge, elbow escape, guard reconstruction", descJa: "ブリッジ・エルボーエスケープ・ガード再構築", categoryEn: "Escape", categoryJa: "エスケープ" },
+  { slug: "bjj-side-control-escape-guide", titleEn: "Side Control Escape", titleJa: "サイドコントロールエスケープ", descEn: "Frame, hip escape, turtle transition", descJa: "フレーム・ヒップエスケープ・タートル転換", categoryEn: "Escape", categoryJa: "エスケープ" },
   // 競技・メンタル
-  { slug: "bjj-competition-mindset", titleJa: "BJJ競技メンタル", descJa: "試合前後のメンタル管理と集中力の高め方", category: "メンタル" },
-  { slug: "bjj-competition-preparation", titleJa: "BJJ大会準備ガイド", descJa: "ゲームプラン・メンタル・ウォームアップ", category: "競技" },
-  { slug: "bjj-sport-psychology", titleJa: "BJJのスポーツ心理学", descJa: "集中力・レジリエンス・試合メンタルの鍛え方", category: "メンタル" },
+  { slug: "bjj-competition-mindset", titleEn: "BJJ Competition Mental Game", titleJa: "BJJ競技メンタル", descEn: "Pre/post match mental management and focus", descJa: "試合前後のメンタル管理と集中力の高め方", categoryEn: "Mental", categoryJa: "メンタル" },
+  { slug: "bjj-competition-preparation", titleEn: "BJJ Tournament Preparation Guide", titleJa: "BJJ大会準備ガイド", descEn: "Game plan, mental, warm-up", descJa: "ゲームプラン・メンタル・ウォームアップ", categoryEn: "Competition", categoryJa: "競技" },
+  { slug: "bjj-sport-psychology", titleEn: "BJJ Sport Psychology", titleJa: "BJJのスポーツ心理学", descEn: "Focus, resilience, competition mental training", descJa: "集中力・レジリエンス・試合メンタルの鍛え方", categoryEn: "Mental", categoryJa: "メンタル" },
   // フィジカル・栄養
-  { slug: "bjj-injury-prevention-guide", titleJa: "ケガ予防ガイド", descJa: "BJJに多い怪我の予防法とリスク管理", category: "フィジカル" },
-  { slug: "bjj-nutrition-science", titleJa: "BJJの栄養科学", descJa: "パフォーマンスを最大化する食事と栄養の科学", category: "栄養" },
-  { slug: "bjj-recovery-protocol-bjj", titleJa: "BJJ特化のリカバリー方法", descJa: "練習後の回復を最大化するプロトコル", category: "フィジカル" },
-  { slug: "bjj-recovery-protocols", titleJa: "リカバリープロトコル詳細", descJa: "科学的根拠に基づく最適な回復戦略", category: "フィジカル" },
-  { slug: "bjj-grip-strength-training", titleJa: "グリップ強化トレーニング", descJa: "BJJに特化したグリップ筋力の鍛え方", category: "フィジカル" },
-  { slug: "bjj-bjj-strength-training", titleJa: "BJJのための筋力トレーニング", descJa: "柔術パフォーマンスを向上させるS&Cプログラム", category: "フィジカル" },
+  { slug: "bjj-injury-prevention-guide", titleEn: "Injury Prevention Guide", titleJa: "ケガ予防ガイド", descEn: "Common BJJ injury prevention and risk management", descJa: "BJJに多い怪我の予防法とリスク管理", categoryEn: "Physical", categoryJa: "フィジカル" },
+  { slug: "bjj-nutrition-science", titleEn: "BJJ Nutrition Science", titleJa: "BJJの栄養科学", descEn: "Science of diet and nutrition for performance", descJa: "パフォーマンスを最大化する食事と栄養の科学", categoryEn: "Nutrition", categoryJa: "栄養" },
+  { slug: "bjj-recovery-protocol-bjj", titleEn: "BJJ-Specific Recovery Methods", titleJa: "BJJ特化のリカバリー方法", descEn: "Post-training recovery maximization protocol", descJa: "練習後の回復を最大化するプロトコル", categoryEn: "Physical", categoryJa: "フィジカル" },
+  { slug: "bjj-recovery-protocols", titleEn: "Detailed Recovery Protocols", titleJa: "リカバリープロトコル詳細", descEn: "Science-based optimal recovery strategies", descJa: "科学的根拠に基づく最適な回復戦略", categoryEn: "Physical", categoryJa: "フィジカル" },
+  { slug: "bjj-grip-strength-training", titleEn: "Grip Strength Training", titleJa: "グリップ強化トレーニング", descEn: "BJJ-specific grip strength development", descJa: "BJJに特化したグリップ筋力の鍛え方", categoryEn: "Physical", categoryJa: "フィジカル" },
+  { slug: "bjj-bjj-strength-training", titleEn: "BJJ Strength Training", titleJa: "BJJのための筋力トレーニング", descEn: "S&C programs for BJJ performance", descJa: "柔術パフォーマンスを向上させるS&Cプログラム", categoryEn: "Physical", categoryJa: "フィジカル" },
   // アドバンスト
-  { slug: "bjj-gordons-system-guide", titleJa: "ゴードン・ライアンのシステム", descJa: "ワールドチャンピオンのレッグロックシステム分析", category: "アドバンスト" },
-  { slug: "bjj-marcelo-garcia-system", titleJa: "マルセロ・ガルシアのシステム", descJa: "ギロチン・バック・バタフライの三角体系", category: "アドバンスト" },
-  { slug: "bjj-submission-defense-systems", titleJa: "サブミッションディフェンスシステム", descJa: "各種サブミッションへの防御と脱出の体系", category: "ディフェンス" },
+  { slug: "bjj-gordons-system-guide", titleEn: "Gordon Ryan's System", titleJa: "ゴードン・ライアンのシステム", descEn: "World champion leg lock system analysis", descJa: "ワールドチャンピオンのレッグロックシステム分析", categoryEn: "Advanced", categoryJa: "アドバンスト" },
+  { slug: "bjj-marcelo-garcia-system", titleEn: "Marcelo Garcia's System", titleJa: "マルセロ・ガルシアのシステム", descEn: "Guillotine, Back, Butterfly trinity system", descJa: "ギロチン・バック・バタフライの三角体系", categoryEn: "Advanced", categoryJa: "アドバンスト" },
+  { slug: "bjj-submission-defense-systems", titleEn: "Submission Defense System", titleJa: "サブミッションディフェンスシステム", descEn: "Defense and escape system for all submissions", descJa: "各種サブミッションへの防御と脱出の体系", categoryEn: "Defense", categoryJa: "ディフェンス" },
   // ビギナー
-  { slug: "bjj-complete-beginners-guide", titleJa: "BJJ完全初心者ガイド", descJa: "初心者が知るべき基礎知識と最初の一歩", category: "ビギナー" },
-  { slug: "bjj-blue-belt-guide", titleJa: "青帯へのロードマップ", descJa: "白帯から青帯昇格に必要なスキルと心構え", category: "ビギナー" },
+  { slug: "bjj-complete-beginners-guide", titleEn: "BJJ Complete Beginner Guide", titleJa: "BJJ完全初心者ガイド", descEn: "Essential knowledge and first steps for beginners", descJa: "初心者が知るべき基礎知識と最初の一歩", categoryEn: "Beginner", categoryJa: "ビギナー" },
+  { slug: "bjj-blue-belt-guide", titleEn: "Roadmap to Blue Belt", titleJa: "青帯へのロードマップ", descEn: "Skills and mindset for white to blue belt promotion", descJa: "白帯から青帯昇格に必要なスキルと心構え", categoryEn: "Beginner", categoryJa: "ビギナー" },
   // Batch 332-336
   { slug: "bjj-grip-fighting-advanced", titleJa: "グリップファイティング上級", descJa: "グリップ支配・ブレイク・シークエンスの高度な体系", category: "グリップ" },
   { slug: "bjj-competition-tactics-advanced", titleJa: "競技タクティクス上級", descJa: "ゲームプラン開発・ブラケット管理・メンタル強化", category: "競技" },
@@ -156,6 +160,26 @@ const WIKI_TIPS: WikiTip[] = [
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
+  // English
+  "Submission": "bg-red-500/20 text-red-300",
+  "Leg Lock": "bg-pink-500/20 text-pink-300",
+  "Guard": "bg-blue-500/20 text-blue-300",
+  "Position": "bg-indigo-500/20 text-indigo-300",
+  "Defense": "bg-cyan-500/20 text-cyan-300",
+  "Passing": "bg-orange-500/20 text-orange-300",
+  "Sweep": "bg-yellow-500/20 text-yellow-300",
+  "Takedown": "bg-green-500/20 text-green-300",
+  "Escape": "bg-teal-500/20 text-teal-300",
+  "Competition": "bg-purple-500/20 text-purple-300",
+  "Mental": "bg-violet-500/20 text-violet-300",
+  "Physical": "bg-emerald-500/20 text-emerald-300",
+  "Nutrition": "bg-lime-500/20 text-lime-300",
+  "Advanced": "bg-rose-500/20 text-rose-300",
+  "Beginner": "bg-sky-500/20 text-sky-300",
+  "Grip": "bg-amber-500/20 text-amber-300",
+  "Technique": "bg-blue-600/20 text-blue-200",
+  "Back Control": "bg-fuchsia-500/20 text-fuchsia-300",
+  // Japanese
   "サブミッション": "bg-red-500/20 text-red-300",
   "レッグロック": "bg-pink-500/20 text-pink-300",
   "ガード": "bg-blue-500/20 text-blue-300",
@@ -177,6 +201,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export default function DailyWikiTip() {
+  const { locale, t } = useLocale();
   const [showNext, setShowNext] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -187,12 +212,18 @@ export default function DailyWikiTip() {
   );
   const tip = WIKI_TIPS[dayOfYear % WIKI_TIPS.length];
   const tipNext = WIKI_TIPS[(dayOfYear + 1) % WIKI_TIPS.length];
-  const lang = tip.lang ?? "ja";
+  const lang = tip.lang ?? (locale === "en" ? "en" : "ja");
   const wikiUrl = `${WIKI_BASE}/${lang}/${tip.slug}.html`;
-  const nextLang = tipNext.lang ?? "ja";
+  const nextLang = tipNext.lang ?? (locale === "en" ? "en" : "ja");
   const nextUrl = `${WIKI_BASE}/${nextLang}/${tipNext.slug}.html`;
-  const badgeClass = CATEGORY_COLORS[tip.category] ?? "bg-gray-500/20 text-gray-300";
-  const nextBadgeClass = CATEGORY_COLORS[tipNext.category] ?? "bg-gray-500/20 text-gray-300";
+  const tipTitle = locale === "en" ? tip.titleEn : tip.titleJa;
+  const tipDesc = locale === "en" ? tip.descEn : tip.descJa;
+  const tipCategory = locale === "en" ? tip.categoryEn : tip.categoryJa;
+  const nextTitle = locale === "en" ? tipNext.titleEn : tipNext.titleJa;
+  const nextDesc = locale === "en" ? tipNext.descEn : tipNext.descJa;
+  const nextCategory = locale === "en" ? tipNext.categoryEn : tipNext.categoryJa;
+  const badgeClass = CATEGORY_COLORS[tipCategory] ?? "bg-gray-500/20 text-gray-300";
+  const nextBadgeClass = CATEGORY_COLORS[nextCategory] ?? "bg-gray-500/20 text-gray-300";
 
   return (
     <div className="bg-zinc-900 rounded-xl border border-white/10/40 overflow-hidden">
@@ -202,10 +233,10 @@ export default function DailyWikiTip() {
       >
         <div className="flex items-center gap-2 min-w-0">
           <span className="text-base flex-shrink-0">📚</span>
-          <span className="text-xs text-gray-400 font-medium flex-shrink-0">今日のBJJ知識</span>
+          <span className="text-xs text-gray-400 font-medium flex-shrink-0">{t("wiki.dailyTip")}</span>
           {!isOpen && (
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium truncate ${badgeClass}`}>
-              {tip.category}
+              {tipCategory}
             </span>
           )}
         </div>
@@ -219,11 +250,11 @@ export default function DailyWikiTip() {
       {isOpen && (<div className="px-4 pb-4 pt-1 border-t border-white/10/40">
       <div className="flex items-center gap-2 mb-3">
         <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${badgeClass}`}>
-          {tip.category}
+          {tipCategory}
         </span>
       </div>
-      <h3 className="text-sm font-semibold text-gray-200 mb-1 leading-snug">{tip.titleJa}</h3>
-      <p className="text-xs text-gray-400 mb-3 leading-relaxed">{tip.descJa}</p>
+      <h3 className="text-sm font-semibold text-gray-200 mb-1 leading-snug">{tipTitle}</h3>
+      <p className="text-xs text-gray-400 mb-3 leading-relaxed">{tipDesc}</p>
       <div className="flex items-center justify-between">
         <a
           href={wikiUrl}
@@ -231,7 +262,7 @@ export default function DailyWikiTip() {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 text-xs text-[#e94560] hover:text-[#ff6b6b] transition-colors font-medium"
         >
-          <span>Wikiで詳しく読む</span>
+          <span>{t("wiki.readMore")}</span>
           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
           </svg>
@@ -240,7 +271,7 @@ export default function DailyWikiTip() {
           onClick={() => setShowNext((v) => !v)}
           className="text-[10px] text-gray-600 hover:text-gray-400 transition-colors flex items-center gap-1"
         >
-          {showNext ? "▲ 閉じる" : `明日: ${tipNext.category} ▼`}
+          {showNext ? t("wiki.close") : t("wiki.nextPreview", { category: nextCategory })}
         </button>
       </div>
 
@@ -251,20 +282,20 @@ export default function DailyWikiTip() {
       >
         <div className="mt-3 pt-3 border-t border-white/10/40">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-[10px] text-gray-600">明日のヒント</span>
+            <span className="text-[10px] text-gray-600">{t("wiki.nextHint")}</span>
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${nextBadgeClass}`}>
-              {tipNext.category}
+              {nextCategory}
             </span>
           </div>
-          <h4 className="text-xs font-semibold text-gray-300 mb-1 leading-snug">{tipNext.titleJa}</h4>
-          <p className="text-[11px] text-gray-500 mb-2 leading-relaxed">{tipNext.descJa}</p>
+          <h4 className="text-xs font-semibold text-gray-300 mb-1 leading-snug">{nextTitle}</h4>
+          <p className="text-[11px] text-gray-500 mb-2 leading-relaxed">{nextDesc}</p>
           <a
             href={nextUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-[11px] text-gray-600 hover:text-[#e94560] transition-colors"
           >
-            <span>先読みする →</span>
+            <span>{t("wiki.peekAhead")}</span>
           </a>
         </div>
       </div>

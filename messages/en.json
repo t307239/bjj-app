@@ -373,5 +373,19 @@
   },
   "common": {
     "close": "Close"
+  },
+  "wiki": {
+    "dailyTip": "Today's BJJ Knowledge",
+    "readMore": "Read more on Wiki",
+    "close": "▲ Close",
+    "nextPreview": "Tomorrow: {category} ▼",
+    "nextHint": "Tomorrow's tip",
+    "peekAhead": "Preview →"
+  },
+  "recommend": {
+    "dailyTheme": "Today's Training Theme",
+    "viewYoutube": "Watch on YouTube",
+    "trainingTip": "Today's Tip",
+    "masteryUp": "Improve mastery"
   }
 }

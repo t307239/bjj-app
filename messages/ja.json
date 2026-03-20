@@ -373,5 +373,19 @@
   },
   "common": {
     "close": "閉じる"
+  },
+  "wiki": {
+    "dailyTip": "今日のBJJ知識",
+    "readMore": "Wikiで詳しく読む",
+    "close": "▲ 閉じる",
+    "nextPreview": "明日: {category} ▼",
+    "nextHint": "明日のヒント",
+    "peekAhead": "先読みする →"
+  },
+  "recommend": {
+    "dailyTheme": "今日の練習テーマ",
+    "viewYoutube": "YouTubeで動画を見る",
+    "trainingTip": "今日のヒント",
+    "masteryUp": "習熟度を上げよう"
   }
 }
