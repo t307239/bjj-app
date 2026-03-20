@@ -191,7 +191,7 @@ export default async function Home() {
             <div className="inline-flex items-center gap-2 bg-zinc-900 border border-[#e94560]/30 rounded-full px-4 py-2 mb-6">
               <span className="text-sm text-[#e94560]">✓ 3,500+ BJJ practitioners trust BJJ App</span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-200">
+            <h2 className="text-2xl font-bold text-white">
               📊 Real training data
             </h2>
           </div>
@@ -218,7 +218,7 @@ export default async function Home() {
 
       {/* How it works */}
       <section className="px-4 py-16 max-w-5xl mx-auto w-full">
-        <h2 className="text-2xl font-bold text-center mb-12 text-gray-200">
+        <h2 className="text-2xl font-bold text-center mb-12 text-white">
           📈 3 steps to visible progress
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -226,7 +226,7 @@ export default async function Home() {
             <div className="inline-flex items-center justify-center w-12 h-12 bg-[#e94560]/20 rounded-full text-xl mb-4">
               1️⃣
             </div>
-            <h3 className="font-bold text-lg text-gray-200 mb-3">Log</h3>
+            <h3 className="font-bold text-lg text-white mb-3">Log</h3>
             <p className="text-gray-400 text-sm">
               Record every session. Date, duration, type, and notes in seconds. Works great on mobile.
             </p>
@@ -235,7 +235,7 @@ export default async function Home() {
             <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-xl mb-4">
               2️⃣
             </div>
-            <h3 className="font-bold text-lg text-gray-200 mb-3">Track</h3>
+            <h3 className="font-bold text-lg text-white mb-3">Track</h3>
             <p className="text-gray-400 text-sm">
               Your dashboard updates in real time. Streak, goal progress, and technique count at a glance.
             </p>
@@ -244,7 +244,7 @@ export default async function Home() {
             <div className="inline-flex items-center justify-center w-12 h-12 bg-green-500/20 rounded-full text-xl mb-4">
               3️⃣
             </div>
-            <h3 className="font-bold text-lg text-gray-200 mb-3">Improve</h3>
+            <h3 className="font-bold text-lg text-white mb-3">Improve</h3>
             <p className="text-gray-400 text-sm">
               Spot your weak areas and fix them. Data proves your progress and keeps motivation high.
             </p>
@@ -255,7 +255,7 @@ export default async function Home() {
       {/* App Preview */}
       <section id="preview" className="px-4 py-16 bg-zinc-900/30">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-3 text-gray-200">
+          <h2 className="text-2xl font-bold text-center mb-3 text-white">
             Here&apos;s what it looks like
           </h2>
           <p className="text-gray-500 text-center text-sm mb-12">Ready to use right after sign-up. All features free forever.</p>
@@ -367,35 +367,35 @@ export default async function Home() {
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#e94560]/20 rounded-xl flex items-center justify-center text-xl flex-shrink-0">📊</div>
                 <div>
-                  <h3 className="font-semibold text-gray-200 mb-1">Log every session</h3>
+                  <h3 className="font-semibold text-white mb-1">Log every session</h3>
                   <p className="text-gray-500 text-sm">Track Gi, NoGi, drilling, comp, and open mat. Review your calendar anytime.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center text-xl flex-shrink-0">🎯</div>
                 <div>
-                  <h3 className="font-semibold text-gray-200 mb-1">Set weekly &amp; monthly goals</h3>
+                  <h3 className="font-semibold text-white mb-1">Set weekly &amp; monthly goals</h3>
                   <p className="text-gray-500 text-sm">Track your target with a progress bar. Turns green when you hit it.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center text-xl flex-shrink-0">📚</div>
                 <div>
-                  <h3 className="font-semibold text-gray-200 mb-1">Spot your weak areas</h3>
+                  <h3 className="font-semibold text-white mb-1">Spot your weak areas</h3>
                   <p className="text-gray-500 text-sm">Organize techniques by position. Star ratings show where you need work.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-orange-500/20 rounded-xl flex items-center justify-center text-xl flex-shrink-0">🔥</div>
                 <div>
-                  <h3 className="font-semibold text-gray-200 mb-1">Build a streak</h3>
+                  <h3 className="font-semibold text-white mb-1">Build a streak</h3>
                   <p className="text-gray-500 text-sm">Auto-counts your consecutive training days. Hard to let it break.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-green-500/20 rounded-xl flex items-center justify-center text-xl flex-shrink-0">📅</div>
                 <div>
-                  <h3 className="font-semibold text-gray-200 mb-1">Calendar view</h3>
+                  <h3 className="font-semibold text-white mb-1">Calendar view</h3>
                   <p className="text-gray-500 text-sm">See your training days on a monthly calendar with color-coded type dots.</p>
                 </div>
               </div>
@@ -415,7 +415,7 @@ export default async function Home() {
 
       {/* Features */}
       <section className="px-4 py-16 max-w-5xl mx-auto w-full">
-        <h2 className="text-2xl font-bold text-center mb-10 text-gray-200">
+        <h2 className="text-2xl font-bold text-center mb-10 text-white">
           All features, free
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -445,7 +445,7 @@ export default async function Home() {
 
       {/* Testimonials */}
       <section className="px-4 py-16 max-w-5xl mx-auto w-full">
-        <h2 className="text-2xl font-bold text-center mb-10 text-gray-200">
+        <h2 className="text-2xl font-bold text-center mb-10 text-white">
           What Practitioners Say
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -494,7 +494,7 @@ export default async function Home() {
       {/* BJJ Wiki Cross-links */}
       <section className="px-4 py-16 bg-[#0f0e17]">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-2 text-gray-200">
+          <h2 className="text-2xl font-bold text-center mb-2 text-white">
             📖 Deepen Your BJJ Knowledge
           </h2>
           <p className="text-gray-500 text-center text-sm mb-8">
@@ -515,7 +515,7 @@ export default async function Home() {
                 className="bg-zinc-900 rounded-xl p-4 border border-white/10 hover:border-[#e94560]/40 transition-colors block"
               >
                 <div className="text-2xl mb-2">{item.emoji}</div>
-                <div className="text-sm font-semibold text-gray-200 mb-1">{item.title}</div>
+                <div className="text-sm font-semibold text-white mb-1">{item.title}</div>
                 <div className="text-[11px] text-gray-500">{item.desc}</div>
               </a>
             ))}
@@ -536,7 +536,7 @@ export default async function Home() {
       {/* Pricing */}
       <section className="px-4 py-16 bg-[#0f0e17]">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-3 text-gray-200">
+          <h2 className="text-2xl font-bold text-center mb-3 text-white">
             Simple Pricing
           </h2>
           <p className="text-gray-500 text-center text-sm mb-10">All core features are free forever.</p>
@@ -544,7 +544,7 @@ export default async function Home() {
             {/* Free */}
             <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10">
               <div className="text-lg font-bold mb-1">Free</div>
-              <div className="text-3xl font-bold text-gray-200 mb-1">$0</div>
+              <div className="text-3xl font-bold text-white mb-1">$0</div>
               <div className="text-gray-500 text-xs mb-6">Free forever</div>
               <ul className="space-y-3 text-sm text-gray-400">
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Training log (unlimited)</li>
@@ -562,7 +562,7 @@ export default async function Home() {
             <div className="bg-zinc-900 rounded-2xl p-8 border border-[#e94560]/50 relative">
               <div className="absolute -top-3 right-6 bg-[#e94560] text-white text-xs px-3 py-1 rounded-full font-bold">Coming soon</div>
               <div className="text-lg font-bold mb-1">Pro</div>
-              <div className="text-3xl font-bold text-gray-200 mb-1">$4.99<span className="text-sm font-normal text-gray-500">/mo (tax incl.)</span></div>
+              <div className="text-3xl font-bold text-white mb-1">$4.99<span className="text-sm font-normal text-gray-500">/mo (tax incl.)</span></div>
               <div className="text-gray-500 text-xs mb-6">Billed monthly</div>
               <ul className="space-y-3 text-sm text-gray-400">
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Everything in Free</li>
@@ -581,7 +581,7 @@ export default async function Home() {
 
       {/* FAQ */}
       <section className="px-4 py-16 max-w-3xl mx-auto w-full">
-        <h2 className="text-2xl font-bold text-center mb-10 text-gray-200">Frequently Asked Questions</h2>
+        <h2 className="text-2xl font-bold text-center mb-10 text-white">Frequently Asked Questions</h2>
         <div className="space-y-4">
           {[
             { q: "Is it really free?", a: "Yes, all core features are completely free. Training log, technique journal, goal tracker, calendar, and graphs are all free. Pro features (CSV export, 12-month graphs, streak freeze) are $4.99/month." },
@@ -591,7 +591,7 @@ export default async function Home() {
             { q: "Is my data safe?", a: "Data is stored securely in Supabase (enterprise-grade PostgreSQL). Row Level Security means no one can access your data. Export everything as CSV anytime — no lock-in." },
           ].map(({ q, a }, i) => (
             <div key={i} className="bg-zinc-900 rounded-xl p-5 border border-white/10">
-              <h3 className="font-semibold text-gray-200 mb-2 text-sm">Q. {q}</h3>
+              <h3 className="font-semibold text-white mb-2 text-sm">Q. {q}</h3>
               <p className="text-gray-500 text-sm leading-relaxed">{a}</p>
             </div>
           ))}
@@ -600,7 +600,7 @@ export default async function Home() {
 
       {/* Final CTA */}
       <section className="px-4 py-16 text-center bg-zinc-900/30">
-        <h2 className="text-2xl font-bold mb-3 text-gray-200">Start Training Smarter Today</h2>
+        <h2 className="text-2xl font-bold mb-3 text-white">Start Training Smarter Today</h2>
         <p className="text-gray-500 text-sm mb-8">No credit card needed. Sign up with GitHub or Google in seconds.</p>
         <Link
           href="/login"

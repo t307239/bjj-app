@@ -157,7 +157,11 @@ describe("alias groups resolve to identical URLs", () => {
     ],
     [
       "D'Arce / Anaconda aliases",
-      ["darce", "anaconda"],
+      ["darce", "d'arce", "darce choke"],
+    ],
+    [
+      "Anaconda aliases",
+      ["anaconda", "anaconda choke"],
     ],
     [
       "Escape aliases",
@@ -255,7 +259,7 @@ describe("URL structural invariants", () => {
 // ── Case / whitespace normalization pipeline ──────────────────────────────
 describe("normalization pipeline (case + whitespace)", () => {
   const variants = [
-    ["heel hook",   "HEEL HOOK",    "Heel Hook",   "  heel hook  ", "HEEL  HOOK".toLowerCase().trim()],
+    ["heel hook",   "HEEL HOOK",    "Heel Hook",   "  heel hook  "],
     ["armbar",      "ARMBAR",       "ArmBar",      "  armbar  "],
     ["kimura",      "KIMURA",       "Kimura",      "  kimura  "],
     ["triangle",    "TRIANGLE",     "Triangle",    "  triangle  "],
