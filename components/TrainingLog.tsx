@@ -517,76 +517,9 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               </div>
             </div>
           )}
-          {/* 今月サマリー行 */}
-          <div className="flex items-center gap-4 text-sm mb-3">
-            <MiniTypeDonut entries={monthEntries} />
-            <div className="flex-1 text-center">
-              <div className="text-lg font-bold text-[#e94560]">{monthEntries.length}</div>
-              <div className="text-gray-400 text-xs">今月の練習</div>
-            </div>
-            <div className="w-px h-8 bg-white/10" />
-            <div className="flex-1 text-center">
-              <div className="text-lg font-bold text-blue-400">{monthHoursDisplay}</div>
-              <div className="text-gray-400 text-xs">今月の時間</div>
-            </div>
-            <div className="w-px h-8 bg-white/10" />
-            <div className="flex-1 text-center">
-              <div className="text-lg font-bold text-purple-400">
-                {monthEntries.length > 0 ? formatDuration(Math.round(monthTotalMins / monthEntries.length)) : "-"}
-              </div>
-              <div className="text-gray-400 text-xs">平均/回</div>
-            </div>
-          </div>
-          {/* タイプ別スタックバー */}
-          {monthEntries.length > 0 && (
-            <div className="mb-3">
-              <div className="text-xs text-gray-500 mb-1">練習タイプ別</div>
-              <MonthTypeStackBar entries={monthEntries} />
-            </div>
-          )}
-          {/* 今月タイプ別内訳ピル */}
-          {(() => {
-            const typePills = TRAINING_TYPES
-              .map((t) => ({ ...t, count: monthEntries.filter((e) => e.type === t.value).length }))
-              .filter((t) => t.count > 0);
-            if (typePills.length === 0) return null;
-            return (
-              <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-white/10/60">
-                {typePills.map((t) => (
-                  <span key={t.value} className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${t.color}`}>
-                    <span>{t.icon}</span>
-                    <span>{t.label.split(" ")[0]}</span>
-                    <span className="opacity-80">×{t.count}</span>
-                  </span>
-                ))}
-              </div>
-            );
-          })()}
-          {/* 月末予測バッジ + 先月同期比 */}
-          {monthEntries.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-white/10/60 flex flex-wrap items-center gap-2">
-              {remainingDaysLog > 0 && (
-                <>
-                  <span className="text-[10px] text-gray-500">このペースで</span>
-                  <span className="inline-flex items-center gap-1 bg-[#e94560]/10 border border-[#e94560]/25 text-[#e94560] text-xs font-bold px-2.5 py-0.5 rounded-full">
-                    📈 月末{monthProjected}回見込み
-                  </span>
-                  <span className="text-[10px] text-gray-500">（残{remainingDaysLog}日）</span>
-                </>
-              )}
-              {lastMonthSamePeriod > 0 && (
-                <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${
-                  monthDelta > 0
-                    ? "bg-green-500/15 border border-green-500/30 text-green-300"
-                    : monthDelta < 0
-                    ? "bg-red-500/15 border border-red-500/30 text-red-300"
-                    : "bg-white/10/50 border border-white/5 text-gray-400"
-                }`}>
-                  {monthDelta > 0 ? `▲${monthDelta}` : monthDelta < 0 ? `▼${Math.abs(monthDelta)}` : "="} 先月同期比
-                </span>
-              )}
-            </div>
-          )}
+          {/* 月次サマリーはBento Gridに表示済みのため省略 */}
+          {/* タイプ別スタックバーはAnalyticsセクションに移動済み */}
+          {/* 月次タイプ別・予測はBento Grid + Analyticsセクションに表示済み */}
           {hasMore && (
             <p className="text-gray-600 text-xs text-center mt-2">※ 追加データあり。「もっと見る」で更新</p>
           )}

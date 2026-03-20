@@ -167,12 +167,21 @@ export default function CsvExport({ userId, isPro = false }: Props) {
     }
   };
 
-  return (
-    <ProGate isPro={isPro} feature="CSVエクスポート" userId={userId}>
-      <div className="flex gap-2">
-        <ExportBtn label="CSV出力" onClick={handleExport} loading={loadingLogs} />
-        <ExportBtn label="技術CSV" onClick={handleExportTechniques} loading={loadingTech} />
+  // Pro未加入の場合はボタンを無効化（課金CTAはProUpgradeBannerに集約）
+  if (!isPro) {
+    return (
+      <div className="flex gap-2 opacity-40">
+        <span className="flex items-center gap-1.5 text-xs text-gray-500 border border-white/5 px-3 py-1.5 rounded-lg cursor-not-allowed">
+          🔒 CSV (Pro)
+        </span>
       </div>
-    </ProGate>
+    );
+  }
+
+  return (
+    <div className="flex gap-2">
+      <ExportBtn label="CSV出力" onClick={handleExport} loading={loadingLogs} />
+      <ExportBtn label="技術CSV" onClick={handleExportTechniques} loading={loadingTech} />
+    </div>
   );
 }
