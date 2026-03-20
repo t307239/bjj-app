@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLocale } from "@/lib/i18n";
 
 interface AchievementBadgeProps {
   userId: string;
@@ -11,30 +12,11 @@ const MILESTONES = [
   1, 7, 10, 30, 50, 100, 200, 365, 500, 1000,
 ] as const;
 
-const MILESTONE_DATA: Record<
-  number,
-  { emoji: string; text: string; subtext?: string }
-> = {
-  1: { emoji: "🎯", text: "初めての練習記録！", subtext: "BJJジャーニー開始！" },
-  7: { emoji: "🔥", text: "7日間連続練習！", subtext: "習慣化の入口に到達！" },
-  10: { emoji: "💪", text: "10回達成！", subtext: "本当の挑戦が始まる！" },
-  30: { emoji: "🏆", text: "30回突破！", subtext: "1ヶ月の継続力を証明！" },
-  50: { emoji: "⭐", text: "50回達成！", subtext: "ブルーベルトへの確実な一歩！" },
-  100: { emoji: "👊", text: "100回！", subtext: "本物のBJJ戦士の仲間入り！" },
-  200: { emoji: "🥋", text: "200回達成！", subtext: "マスターへの道が見えてきた！" },
-  365: { emoji: "💎", text: "365回！", subtext: "1年間の継続！本物のBJJライフ！" },
-  500: { emoji: "🎖️", text: "500回達成！", subtext: "バイセプカラー達成者クラス！" },
-  1000: {
-    emoji: "👑",
-    text: "1,000回達成！",
-    subtext: "BJJレジェンド級の継続力！",
-  },
-};
-
 export default function AchievementBadge({
   userId,
   totalCount,
 }: AchievementBadgeProps) {
+  const { t } = useLocale();
   const [showBadge, setShowBadge] = useState(false);
   const [milestone, setMilestone] = useState<number | null>(null);
 
@@ -61,10 +43,14 @@ export default function AchievementBadge({
 
   if (!showBadge || !milestone) return null;
 
-  const data = MILESTONE_DATA[milestone];
+  const milestoneText = t(`achievement.milestone.${milestone}.text`);
+  const milestoneSubtext = t(`achievement.milestone.${milestone}.subtext`);
 
   const handleShare = () => {
-    const text = `BJJアプリで${milestone}回目の練習記録達成！🥋 ${data.text} #BJJ #ブラジリアン柔術 #続ける力`;
+    const text = t("achievement.shareText", {
+      n: milestone,
+      text: milestoneText,
+    });
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
     window.open(url, "_blank");
   };
@@ -98,11 +84,13 @@ export default function AchievementBadge({
 
           {/* Main content */}
           <div className="relative z-10">
-            <div className="text-8xl mb-4 drop-shadow-lg">{data.emoji}</div>
+            <div className="text-8xl mb-4 drop-shadow-lg">
+              {t(`achievement.milestone.${milestone}.emoji`)}
+            </div>
             <h2 className="text-3xl font-bold text-white mb-2">
-              {data.text}
+              {milestoneText}
             </h2>
-            <p className="text-lg text-white font-semibold mb-6">{data.subtext || ""}</p>
+            <p className="text-lg text-white font-semibold mb-6">{milestoneSubtext}</p>
 
             {/* Buttons */}
             <div className="flex gap-3 justify-center">
@@ -110,7 +98,7 @@ export default function AchievementBadge({
                 onClick={handleShare}
                 className="bg-white text-[#e94560] px-6 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors"
               >
-                Xでシェア
+                {t("achievement.shareButton")}
               </button>
               <button
                 onClick={() => setShowBadge(false)}

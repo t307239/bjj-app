@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 
 type Props = { userId: string };
@@ -8,6 +9,7 @@ type Props = { userId: string };
 const DAYS_JA = ["日", "月", "火", "水", "木", "金", "土"];
 
 export default function InsightsBanner({ userId }: Props) {
+  const { t } = useLocale();
   const [bestDay, setBestDay] = useState<string | null>(null);
   const [paceMsg, setPaceMsg] = useState<string | null>(null);
   const [totalStreak, setTotalStreak] = useState<number | null>(null);
@@ -68,7 +70,7 @@ export default function InsightsBanner({ userId }: Props) {
         const maxCount = Math.max(...dayCounts);
         if (maxCount >= 2) {
           const bestDayIdx = dayCounts.indexOf(maxCount);
-          setBestDay(`${DAYS_JA[bestDayIdx]}曜日（${maxCount}回/4週）`);
+          setBestDay(`${DAYS_JA[bestDayIdx]}${t("insights.dayOfWeek")}（${maxCount}回/4週）`);
         }
       }
 
@@ -85,15 +87,15 @@ export default function InsightsBanner({ userId }: Props) {
         if ((prevMonthCount ?? 0) > 0) {
           const diff = projected - (prevMonthCount ?? 0);
           if (diff > 0) {
-            setPaceMsg(`先月比 +${diff}回ペース 📈`);
+            setPaceMsg(t("insights.lastMonthComparePlus", { n: diff }));
           } else if (diff < 0) {
-            setPaceMsg(`先月比 ${diff}回ペース`);
+            setPaceMsg(t("insights.lastMonthCompareMinus", { n: diff }));
           } else {
-            setPaceMsg("先月と同じペース ➡️");
+            setPaceMsg(t("insights.lastMonthCompareSame"));
           }
         } else {
           // 先月データなし（1ヶ月目）
-          setPaceMsg(`今月 ${thisMonthCount}回記録中 ✨`);
+          setPaceMsg(t("insights.thisMonthRecording", { n: thisMonthCount }));
         }
         setTotalStreak(thisMonthCount ?? 0);
       }
@@ -115,7 +117,7 @@ export default function InsightsBanner({ userId }: Props) {
           }
         }
         if (maxStreak >= 3) {
-          setStreakInsight(`最長連続: ${maxStreak}日`);
+          setStreakInsight(t("insights.longestStreak", { n: maxStreak }));
         }
       }
 
@@ -125,7 +127,7 @@ export default function InsightsBanner({ userId }: Props) {
         const rate = Math.round((uniqueTrainedDays / 28) * 100);
         if (rate >= 30) {
           const emoji = rate >= 70 ? "🏆" : rate >= 50 ? "💪" : "📅";
-          setConsistencyMsg(`${emoji} 練習率${rate}%`);
+          setConsistencyMsg(t("insights.consistencyRate", { emoji, rate }));
         }
       }
     };
@@ -157,36 +159,36 @@ export default function InsightsBanner({ userId }: Props) {
   return (
     <div className="bg-zinc-900/50 backdrop-blur-sm border border-[#e94560]/20 rounded-2xl px-4 py-3 mb-4 shadow-lg shadow-black/40">
       <p className="text-[11px] font-semibold text-[#e94560] mb-2 uppercase tracking-wide">
-        📊 練習インサイト
+        📊 {t("insights.title")}
       </p>
       <div className="flex flex-wrap gap-x-5 gap-y-1.5">
         {paceMsg && (
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-gray-500">ペース</span>
+            <span className="text-[10px] text-gray-500">{t("insights.pace")}</span>
             <span className="text-xs text-gray-200 font-medium">{paceMsg}</span>
           </div>
         )}
         {bestDay && (
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-gray-500">よく練習する日</span>
+            <span className="text-[10px] text-gray-500">{t("insights.bestDayOfWeek")}</span>
             <span className="text-xs text-gray-200 font-medium">{bestDay}</span>
           </div>
         )}
         {totalStreak !== null && totalStreak >= 10 && (
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-gray-500">今月</span>
-            <span className="text-xs text-green-400 font-medium">{totalStreak}回達成 🎯</span>
+            <span className="text-[10px] text-gray-500">{t("insights.thisMonth")}</span>
+            <span className="text-xs text-green-400 font-medium">{totalStreak}回{t("insights.achieved")} 🎯</span>
           </div>
         )}
         {streakInsight && (
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-gray-500">記録</span>
+            <span className="text-[10px] text-gray-500">{t("insights.record")}</span>
             <span className="text-xs text-yellow-400 font-medium">🔥 {streakInsight}</span>
           </div>
         )}
         {consistencyMsg && (
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-gray-500">継続率</span>
+            <span className="text-[10px] text-gray-500">{t("insights.consistency")}</span>
             <span className="text-xs text-blue-300 font-medium">{consistencyMsg}</span>
           </div>
         )}

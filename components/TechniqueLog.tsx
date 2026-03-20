@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useLocale } from "@/lib/i18n";
 import Toast from "./Toast";
 import { getAffiliateInfo } from "@/lib/affiliateMap";
 
@@ -18,36 +19,26 @@ type Props = {
   userId: string;
 };
 
-const CATEGORIES = [
-  { value: "guard", label: "ガード" },
-  { value: "passing", label: "パス" },
-  { value: "submissions", label: "サブミッション" },
-  { value: "takedowns", label: "テイクダウン" },
-  { value: "escapes", label: "エスケープ" },
-  { value: "back", label: "バック" },
-  { value: "mount", label: "マウント" },
-  { value: "other", label: "その他" },
-];
+const CATEGORY_VALUES = ["guard", "passing", "submissions", "takedowns", "escapes", "back", "mount", "other"];
 
-const MASTERY_LABELS = ["", "知っている", "練習中", "使える", "得意", "マスター"];
 const MASTERY_COLORS = ["", "text-gray-400", "text-blue-400", "text-yellow-400", "text-orange-400", "text-green-400"];
 
 const NOTE_TRUNCATE = 80;
 
-// 相対日付ヘルパー（「今日追加」「3日前に追加」ななど）
-function relativeDate(dateStr: string): string {
+// 相対日付ヘルパー（t() 関数を受け取って言語対応）
+function relativeDate(dateStr: string, t: (key: string, replacements?: Record<string, any>) => string): string {
   if (!dateStr) return "";
   const now = Date.now();
   const d = new Date(dateStr);
   if (isNaN(d.getTime())) return "";
   const diffMs = now - d.getTime();
   const diffDays = Math.floor(diffMs / 86400000);
-  if (diffDays === 0) return "今日追加";
-  if (diffDays === 1) return "昨日追加";
-  if (diffDays < 7) return `${diffDays}日前に追加`;
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)}週間前に追加`;
-  if (diffDays < 365) return `${Math.floor(diffDays / 30)}ヶ月前に追加`;
-  return `${Math.floor(diffDays / 365)}年前に追加`;
+  if (diffDays === 0) return t("techniques.addedToday");
+  if (diffDays === 1) return t("techniques.addedYesterday");
+  if (diffDays < 7) return t("techniques.addedDaysAgo", { n: diffDays });
+  if (diffDays < 30) return t("techniques.addedWeeksAgo", { n: Math.floor(diffDays / 7) });
+  if (diffDays < 365) return t("techniques.addedMonthsAgo", { n: Math.floor(diffDays / 30) });
+  return t("techniques.addedYearsAgo", { n: Math.floor(diffDays / 365) });
 }
 
 // YouTube URLからビデオIDを抽出
@@ -107,11 +98,7 @@ function renderNotes(notes: string, expanded: boolean): React.ReactNode {
                     </div>
                   </div>
                 </div>
-              ) : (
-                <span className="flex items-center gap-1.5 px-3 py-2 text-blue-400 hover:text-blue-300 text-sm">
-                  🎬 YouTube動画
-                </span>
-              )}
+              ) : null}
             </a>
           </span>
         );
@@ -134,6 +121,7 @@ function renderNotes(notes: string, expanded: boolean): React.ReactNode {
 }
 
 export default function TechniqueLog({ userId }: Props) {
+  const { t } = useLocale();
   const [techniques, setTechniques] = useState<Technique[]>([]);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -188,11 +176,11 @@ export default function TechniqueLog({ userId }: Props) {
 
     // バリデーション
     if (!form.name.trim()) {
-      setFormError("テクニック名を入力してください");
+      setFormError(t("techniques.nameRequired"));
       return;
     }
     if (form.name.trim().length > 100) {
-      setFormError("テクニック名は100文字以内で入力してください");
+      setFormError(t("techniques.nameTooLong"));
       return;
     }
 
@@ -200,7 +188,7 @@ export default function TechniqueLog({ userId }: Props) {
     const nameNorm = form.name.trim().toLowerCase();
     const duplicate = techniques.find((t) => t.name.trim().toLowerCase() === nameNorm);
     if (duplicate) {
-      setFormError(`「${duplicate.name}」はすでに登録されています`);
+      setFormError(t("techniques.duplicate", { name: duplicate.name }));
       return;
     }
 
@@ -216,9 +204,9 @@ export default function TechniqueLog({ userId }: Props) {
       setTechniques([data, ...techniques]);
       setForm({ name: "", category: "guard", mastery_level: 1, notes: "" });
       setShowForm(false);
-      setToast({ message: "テクニックを追加しました！", type: "success" });
+      setToast({ message: t("techniques.addedSingle"), type: "success" });
     } else {
-      setToast({ message: "保存に失敗しました", type: "error" });
+      setToast({ message: t("techniques.saveFailed"), type: "error" });
     }
     setLoading(false);
   };
@@ -234,14 +222,14 @@ export default function TechniqueLog({ userId }: Props) {
       .filter((n) => n.length > 0);
 
     if (names.length === 0) {
-      setFormError("テクニック名を1行に1つ入力してください");
+      setFormError(t("techniques.bulkError"));
       return;
     }
 
     // 100文字超チェック
     const tooLong = names.find((n) => n.length > 100);
     if (tooLong) {
-      setFormError(`「${tooLong}」は100文字を超えています`);
+      setFormError(t("techniques.nameTooLongBulk", { name: tooLong }));
       return;
     }
 
@@ -251,11 +239,11 @@ export default function TechniqueLog({ userId }: Props) {
     for (const name of names) {
       const norm = name.toLowerCase();
       if (existingNorms.has(norm)) {
-        setFormError(`「${name}」はすでに登録されています`);
+        setFormError(t("techniques.duplicate", { name }));
         return;
       }
       if (seen.has(norm)) {
-        setFormError(`「${name}」が入力内で重複しています`);
+        setFormError(t("techniques.duplicateBulk", { name }));
         return;
       }
       seen.add(norm);
@@ -282,15 +270,15 @@ export default function TechniqueLog({ userId }: Props) {
       setBulkText("");
       setBulkMode(false);
       setShowForm(false);
-      setToast({ message: `${data.length}件のテクニックを追加しました！`, type: "success" });
+      setToast({ message: t("techniques.addedBulk", { n: data.length }), type: "success" });
     } else {
-      setToast({ message: "保存に失敗しました", type: "error" });
+      setToast({ message: t("techniques.saveFailed"), type: "error" });
     }
     setLoading(false);
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("このテクニックを削除しますか？")) return;
+    if (!confirm(t("techniques.confirmDelete"))) return;
     setDeletingId(id);
     const { error } = await supabase
       .from("techniques")
@@ -299,9 +287,9 @@ export default function TechniqueLog({ userId }: Props) {
       .eq("user_id", userId);
     if (!error) {
       setTechniques(techniques.filter((t) => t.id !== id));
-      setToast({ message: "テクニックを削除しました", type: "success" });
+      setToast({ message: t("techniques.deleted"), type: "success" });
     } else {
-      setToast({ message: "削除に失敗しました", type: "error" });
+      setToast({ message: t("techniques.deleteFailed"), type: "error" });
     }
     setDeletingId(null);
   };
@@ -323,9 +311,9 @@ export default function TechniqueLog({ userId }: Props) {
     if (!error && data) {
       setTechniques(techniques.map((t) => (t.id === id ? data : t)));
       setEditingId(null);
-      setToast({ message: "テクニックを更新しました", type: "success" });
+      setToast({ message: t("techniques.updated"), type: "success" });
     } else {
-      setToast({ message: "更新に失敗しました", type: "error" });
+      setToast({ message: t("techniques.updateFailed"), type: "error" });
     }
   };
 
@@ -373,27 +361,27 @@ export default function TechniqueLog({ userId }: Props) {
           <div className="flex items-center gap-4 text-sm mb-3">
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-[#e94560]">{techniques.length}</div>
-              <div className="text-gray-400 text-xs">総テクニック</div>
+              <div className="text-gray-400 text-xs">{t("techniques.totalTechniques")}</div>
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-green-400">
                 {techniques.filter((t) => t.mastery_level >= 4).length}
               </div>
-              <div className="text-gray-400 text-xs">得意技</div>
+              <div className="text-gray-400 text-xs">{t("techniques.favorites")}</div>
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div className="flex-1 text-center">
               <div className="text-lg font-bold text-blue-400">
                 {new Set(techniques.map((t) => t.category)).size}
               </div>
-              <div className="text-gray-400 text-xs">カテゴリ数</div>
+              <div className="text-gray-400 text-xs">{t("techniques.categoryCount")}</div>
             </div>
           </div>
           {/* 習熟度分布バー */}
           {(() => {
             const masteryColors = ["", "bg-gray-500", "bg-blue-500", "bg-yellow-500", "bg-orange-500", "bg-green-500"];
-            const masteryLabels = ["", "入門", "基礎", "中級", "上級", "マスター"];
+            const masteryLevelKeys = ["", "1", "2", "3", "4", "5"];
             const counts = [1, 2, 3, 4, 5].map((lvl) =>
               techniques.filter((t) => t.mastery_level === lvl).length
             );
@@ -408,7 +396,7 @@ export default function TechniqueLog({ userId }: Props) {
                         key={i}
                         className={`${masteryColors[i + 1]} transition-all`}
                         style={{ width: `${pct}%` }}
-                        title={`${masteryLabels[i + 1]}: ${cnt}個`}
+                        title={`${t("techniques.masteryLevels." + masteryLevelKeys[i + 1])}: ${cnt}`}
                       />
                     ) : null;
                   })}
@@ -417,7 +405,7 @@ export default function TechniqueLog({ userId }: Props) {
                   {counts.map((cnt, i) =>
                     cnt > 0 ? (
                       <span key={i} className="text-[10px] text-gray-500">
-                        <span className={`${masteryColors[i + 1].replace("bg-", "text-")}`}>●</span> {masteryLabels[i + 1]} {cnt}
+                        <span className={`${masteryColors[i + 1].replace("bg-", "text-")}`}>●</span> {t("techniques.masteryLevels." + masteryLevelKeys[i + 1])} {cnt}
                       </span>
                     ) : null
                   )}
@@ -430,17 +418,17 @@ export default function TechniqueLog({ userId }: Props) {
 
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold">テクニック帳</h3>
+          <h3 className="text-lg font-semibold">{t("techniques.title")}</h3>
           {!initialLoading && techniques.length > 0 && (
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
               className="text-xs bg-zinc-900 text-gray-400 border border-white/10 rounded-lg px-2 py-1 focus:outline-none focus:border-[#e94560]/60 cursor-pointer"
             >
-              <option value="newest">最新順</option>
-              <option value="mastery_desc">習熟度↓</option>
-              <option value="mastery_asc">習熟度↑</option>
-              <option value="name">名前順</option>
+              <option value="newest">{t("techniques.sortNewest")}</option>
+              <option value="mastery_desc">{t("techniques.sortMasteryDesc")}</option>
+              <option value="mastery_asc">{t("techniques.sortMasteryAsc")}</option>
+              <option value="name">{t("techniques.sortName")}</option>
             </select>
           )}
         </div>
@@ -449,14 +437,14 @@ export default function TechniqueLog({ userId }: Props) {
             onClick={() => { setBulkMode(false); setShowForm(!showForm); setFormError(null); }}
             className="bg-[#e94560] hover:bg-[#c73652] text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors"
           >
-            + 追加
+            {t("techniques.add")}
           </button>
           <button
             onClick={() => { setBulkMode(true); setShowForm(true); setFormError(null); }}
-            title="改行区切りで複数まとめて追加"
+            title={t("techniques.bulkDesc")}
             className="bg-zinc-800 hover:bg-zinc-700 text-gray-300 text-sm font-semibold py-2 px-3 rounded-lg border border-white/10 transition-colors"
           >
-            📋 まとめて
+            {t("techniques.bulkAdd")}
           </button>
         </div>
       </div>
@@ -468,7 +456,7 @@ export default function TechniqueLog({ userId }: Props) {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="テクニック名・メモを検索..."
+            placeholder={t("techniques.search")}
             className="w-full bg-zinc-900 text-white rounded-xl px-4 py-2.5 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] pl-9"
           />
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -493,21 +481,21 @@ export default function TechniqueLog({ userId }: Props) {
                 : "bg-zinc-900 text-gray-400 border border-white/10"
             }`}
           >
-            すべて
+            {t("techniques.all")}
           </button>
-          {CATEGORIES.filter((c) =>
-            techniques.some((t) => t.category === c.value)
-          ).map((c) => (
+          {CATEGORY_VALUES.filter((catVal) =>
+            techniques.some((t) => t.category === catVal)
+          ).map((catVal) => (
             <button
-              key={c.value}
-              onClick={() => setFilterCategory(c.value)}
+              key={catVal}
+              onClick={() => setFilterCategory(catVal)}
               className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                filterCategory === c.value
+                filterCategory === catVal
                   ? "bg-[#e94560] text-white"
                   : "bg-zinc-900 text-gray-400 border border-white/10"
               }`}
             >
-              {c.label}
+              {t("techniques.categories." + catVal)}
             </button>
           ))}
         </div>
@@ -525,12 +513,12 @@ export default function TechniqueLog({ userId }: Props) {
             </div>
           )}
           <div className="mb-3">
-            <label className="block text-gray-400 text-xs mb-1">テクニック名</label>
+            <label className="block text-gray-400 text-xs mb-1">{t("techniques.name")}</label>
             <input
               type="text"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="例: アームバー (クローズドガードから)"
+              placeholder={t("techniques.namePlaceholder")}
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
               required
             />
@@ -538,21 +526,21 @@ export default function TechniqueLog({ userId }: Props) {
 
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
-              <label className="block text-gray-400 text-xs mb-1">カテゴリ</label>
+              <label className="block text-gray-400 text-xs mb-1">{t("techniques.category")}</label>
               <select
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
                 className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
               >
-                {CATEGORIES.map((c) => (
-                  <option key={c.value} value={c.value}>
-                    {c.label}
+                {CATEGORY_VALUES.map((catVal) => (
+                  <option key={catVal} value={catVal}>
+                    {t("techniques.categories." + catVal)}
                   </option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-gray-400 text-xs mb-1">習熟度</label>
+              <label className="block text-gray-400 text-xs mb-1">{t("techniques.mastery")}</label>
               <select
                 value={form.mastery_level}
                 onChange={(e) =>
@@ -560,9 +548,9 @@ export default function TechniqueLog({ userId }: Props) {
                 }
                 className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
               >
-                {MASTERY_LABELS.slice(1).map((label, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {i + 1} - {label}
+                {[1, 2, 3, 4, 5].map((level) => (
+                  <option key={level} value={level}>
+                    {level} - {t("techniques.masteryLevels." + level)}
                   </option>
                 ))}
               </select>
@@ -570,11 +558,11 @@ export default function TechniqueLog({ userId }: Props) {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-400 text-xs mb-1">メモ</label>
+            <label className="block text-gray-400 text-xs mb-1">{t("techniques.notes")}</label>
             <textarea
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
-              placeholder="ポイント・注意点・参考動画URLなど..."
+              placeholder={t("techniques.notesPlaceholder")}
               rows={2}
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] resize-none"
             />
@@ -586,14 +574,14 @@ export default function TechniqueLog({ userId }: Props) {
               disabled={loading}
               className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-colors"
             >
-              {loading ? "保存中..." : "保存"}
+              {loading ? t("techniques.saving") : t("techniques.save")}
             </button>
             <button
               type="button"
               onClick={() => { setShowForm(false); setFormError(null); }}
               className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
             >
-              キャンセル
+              {t("techniques.cancel")}
             </button>
           </div>
         </form>
@@ -606,8 +594,8 @@ export default function TechniqueLog({ userId }: Props) {
           className="bg-zinc-900 rounded-xl p-4 border border-[#7c3aed]/40 mb-4"
         >
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-sm font-semibold text-[#7c3aed]">📋 まとめて追加</span>
-            <span className="text-xs text-gray-500">1行に1テクニック、改行で区切ってください</span>
+            <span className="text-sm font-semibold text-[#7c3aed]">{t("techniques.bulkTitle")}</span>
+            <span className="text-xs text-gray-500">{t("techniques.bulkDesc")}</span>
           </div>
           {formError && (
             <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2 mb-3 text-red-400 text-xs">
@@ -615,42 +603,42 @@ export default function TechniqueLog({ userId }: Props) {
             </div>
           )}
           <div className="mb-3">
-            <label className="block text-gray-400 text-xs mb-1">テクニック名（複数行）</label>
+            <label className="block text-gray-400 text-xs mb-1">{t("techniques.nameMultiple")}</label>
             <textarea
               value={bulkText}
               onChange={(e) => setBulkText(e.target.value)}
-              placeholder={"アームバー\nトライアングルチョーク\nキムラ\nオモプラータ"}
+              placeholder={t("techniques.nameMultiplePlaceholder")}
               rows={6}
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] resize-none font-mono"
             />
             {bulkText && (
               <p className="text-xs text-gray-500 mt-1">
-                {bulkText.split("\n").filter((n) => n.trim()).length} 件を入力中
+                {t("techniques.bulkCount", { n: bulkText.split("\n").filter((n) => n.trim()).length })}
               </p>
             )}
           </div>
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div>
-              <label className="block text-gray-400 text-xs mb-1">カテゴリ（全件共通）</label>
+              <label className="block text-gray-400 text-xs mb-1">{t("techniques.categoryMultiple")}</label>
               <select
                 value={bulkCategory}
                 onChange={(e) => setBulkCategory(e.target.value)}
                 className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
               >
-                {CATEGORIES.map((c) => (
-                  <option key={c.value} value={c.value}>{c.label}</option>
+                {CATEGORY_VALUES.map((catVal) => (
+                  <option key={catVal} value={catVal}>{t("techniques.categories." + catVal)}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-gray-400 text-xs mb-1">習熟度（全件共通）</label>
+              <label className="block text-gray-400 text-xs mb-1">{t("techniques.masteryMultiple")}</label>
               <select
                 value={bulkMastery}
                 onChange={(e) => setBulkMastery(Number(e.target.value))}
                 className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
               >
-                {MASTERY_LABELS.slice(1).map((label, i) => (
-                  <option key={i + 1} value={i + 1}>{i + 1} - {label}</option>
+                {[1, 2, 3, 4, 5].map((level) => (
+                  <option key={level} value={level}>{level} - {t("techniques.masteryLevels." + level)}</option>
                 ))}
               </select>
             </div>
@@ -661,14 +649,14 @@ export default function TechniqueLog({ userId }: Props) {
               disabled={loading}
               className="flex-1 bg-[#7c3aed] hover:bg-[#6d28d9] disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-colors"
             >
-              {loading ? "保存中..." : `まとめて保存`}
+              {loading ? t("techniques.saving") : t("techniques.bulkSave")}
             </button>
             <button
               type="button"
               onClick={() => { setShowForm(false); setBulkMode(false); setFormError(null); setBulkText(""); }}
               className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
             >
-              キャンセル
+              {t("techniques.cancel")}
             </button>
           </div>
         </form>
@@ -678,7 +666,7 @@ export default function TechniqueLog({ userId }: Props) {
       {initialLoading && (
         <div className="text-center py-8 text-gray-500">
           <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-[#e94560] rounded-full animate-spin mb-2" />
-          <p className="text-sm">読み込み中...</p>
+          <p className="text-sm">{t("techniques.loading")}</p>
         </div>
       )}
 
@@ -686,8 +674,8 @@ export default function TechniqueLog({ userId }: Props) {
       {!initialLoading && techniques.length === 0 && (
         <div className="text-center py-12 text-gray-500">
           <div className="text-4xl mb-3">📚</div>
-          <p>テクニックがまだありません</p>
-          <p className="text-sm mt-1">最初のテクニックを追加しましょう！</p>
+          <p>{t("techniques.empty")}</p>
+          <p className="text-sm mt-1">{t("techniques.emptyDesc")}</p>
         </div>
       )}
 
@@ -714,14 +702,14 @@ export default function TechniqueLog({ userId }: Props) {
                       onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
                       className="bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none"
                     >
-                      {CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
+                      {CATEGORY_VALUES.map((catVal) => <option key={catVal} value={catVal}>{t("techniques.categories." + catVal)}</option>)}
                     </select>
                     <select
                       value={editForm.mastery_level}
                       onChange={(e) => setEditForm({ ...editForm, mastery_level: Number(e.target.value) })}
                       className="bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none"
                     >
-                      {MASTERY_LABELS.slice(1).map((l, i) => <option key={i + 1} value={i + 1}>{i + 1} - {l}</option>)}
+                      {[1, 2, 3, 4, 5].map((level) => <option key={level} value={level}>{level} - {t("techniques.masteryLevels." + level)}</option>)}
                     </select>
                   </div>
                   <textarea
@@ -731,8 +719,8 @@ export default function TechniqueLog({ userId }: Props) {
                     className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none mb-2 resize-none"
                   />
                   <div className="flex gap-2">
-                    <button type="submit" className="flex-1 bg-[#e94560] text-white text-xs font-semibold py-1.5 rounded-lg">更新</button>
-                    <button type="button" onClick={() => setEditingId(null)} className="px-3 text-gray-400 text-xs">キャンセル</button>
+                    <button type="submit" className="flex-1 bg-[#e94560] text-white text-xs font-semibold py-1.5 rounded-lg">{t("techniques.update")}</button>
+                    <button type="button" onClick={() => setEditingId(null)} className="px-3 text-gray-400 text-xs">{t("techniques.cancel")}</button>
                   </div>
                 </form>
               ) : (
@@ -743,7 +731,7 @@ export default function TechniqueLog({ userId }: Props) {
                         {technique.name}
                       </span>
                       <span className="text-xs bg-zinc-800/80 text-gray-300 px-2 py-0.5 rounded-full flex-shrink-0">
-                        {CATEGORIES.find((c) => c.value === technique.category)?.label || technique.category}
+                        {t("techniques.categories." + technique.category) || technique.category}
                       </span>
                     </div>
                     <div className="flex items-center gap-0.5 mt-0.5">
@@ -756,17 +744,17 @@ export default function TechniqueLog({ userId }: Props) {
                               ? MASTERY_COLORS[technique.mastery_level]
                               : "text-gray-700 hover:text-gray-500"
                           }`}
-                          title={`習熟度${star}: ${MASTERY_LABELS[star]}`}
+                          title={t("techniques.mastery") + ` ${star}: ${t("techniques.masteryLevels." + star)}`}
                         >
                           ★
                         </button>
                       ))}
                       <span className={`text-xs ml-1 ${MASTERY_COLORS[technique.mastery_level]}`}>
-                        {MASTERY_LABELS[technique.mastery_level]}
+                        {t("techniques.masteryLevels." + technique.mastery_level)}
                       </span>
                       {technique.created_at && (
                            <span className="text-[10px] text-gray-600 ml-auto">
-                          {relativeDate(technique.created_at)}
+                          {relativeDate(technique.created_at, t)}
                         </span>
                       )}
                     </div>
@@ -784,7 +772,7 @@ export default function TechniqueLog({ userId }: Props) {
                             })}
                             className="text-[10px] text-blue-500 hover:text-blue-400 mt-0.5"
                           >
-                            {expandedIds.has(technique.id) ? "▲ 折りたたむ" : "▼ 続きを見る"}
+                            {expandedIds.has(technique.id) ? t("techniques.collapse") : t("techniques.expand")}
                           </button>
                         )}
                       </div>
@@ -809,7 +797,7 @@ export default function TechniqueLog({ userId }: Props) {
                     <button
                       onClick={() => startEdit(technique)}
                       className="text-gray-600 hover:text-blue-400 transition-colors p-1"
-                      title="編集"
+                      title={t("techniques.edit")}
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -819,7 +807,7 @@ export default function TechniqueLog({ userId }: Props) {
                       onClick={() => handleDelete(technique.id)}
                       disabled={deletingId === technique.id}
                       className="text-gray-600 hover:text-red-400 transition-colors p-1 disabled:opacity-50"
-                      title="削除"
+                      title={t("techniques.delete")}
                     >
                       {deletingId === technique.id ? (
                         <span className="text-xs">...</span>
@@ -840,7 +828,7 @@ export default function TechniqueLog({ userId }: Props) {
       {/* フィルター結果ゼロ */}
       {!initialLoading && techniques.length > 0 && filtered.length === 0 && (
         <div className="text-center py-8 text-gray-500 text-sm">
-          このカテゴリにテクニックはありません
+          {t("techniques.noResults")}
         </div>
       )}
     </div>

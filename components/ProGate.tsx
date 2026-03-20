@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n";
+
 const STRIPE_PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
 
 interface ProGateProps {
@@ -17,9 +19,11 @@ interface ProGateProps {
 export default function ProGate({
   isPro,
   children,
-  feature = "この機能",
+  feature,
   userId,
 }: ProGateProps) {
+  const { t } = useLocale();
+  const featureText = feature || t("pro.defaultFeature");
   if (isPro) {
     return <>{children}</>;
   }
@@ -40,8 +44,8 @@ export default function ProGate({
       <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-zinc-950/80 backdrop-blur-sm border border-white/10 z-10">
         <div className="text-center px-4">
           <div className="text-2xl mb-2">🔒</div>
-          <p className="text-sm text-[#6b7699] mb-1">{feature}</p>
-          <p className="text-xs text-[#4a5270] mb-4">Pro プランで利用可能</p>
+          <p className="text-sm text-[#6b7699] mb-1">{featureText}</p>
+          <p className="text-xs text-[#4a5270] mb-4">{t("pro.available")}</p>
           <a
             href={paymentUrl}
             target="_blank"
@@ -49,14 +53,14 @@ export default function ProGate({
             className="inline-block bg-[#e94560] hover:bg-[#c73a53] text-white text-sm font-bold px-5 py-2 rounded-lg transition-colors"
             onClick={() => {
               if (typeof gtag !== "undefined") {
-                gtag("event", "upgrade_click", { feature });
+                gtag("event", "upgrade_click", { feature: featureText });
               }
             }}
           >
-            Pro にアップグレード — $4.99/月
+            {t("pro.upgradeButton")}
           </a>
           <p className="text-[10px] text-[#4a5270] mt-2">
-            CSV・PDF・12ヶ月グラフ・StreakFreeze拡張
+            {t("pro.features")}
           </p>
         </div>
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 
 type DayData = {
@@ -26,6 +27,7 @@ function toLocalStr(d: Date): string {
 
 // 過去84日（12週）のヒートマップ + 月別棒グラフ
 export default function TrainingChart({ userId }: Props) {
+  const { t } = useLocale();
   const [data, setData] = useState<DayData[]>([]);
   const [monthData, setMonthData] = useState<MonthData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -122,7 +124,7 @@ export default function TrainingChart({ userId }: Props) {
   return (
     <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
       <div className="flex items-center justify-between mb-3">
-        <h4 className="text-sm font-medium text-gray-300">練習アクティビティ</h4>
+        <h4 className="text-sm font-medium text-gray-300">{t("chart.activity")}</h4>
         {/* トグルボタン */}
         <div className="flex rounded-lg overflow-hidden border border-white/10">
           <button
@@ -133,7 +135,7 @@ export default function TrainingChart({ userId }: Props) {
                 : "text-gray-500 hover:text-gray-300"
             }`}
           >
-            84日
+            {t("chart.days84")}
           </button>
           <button
             onClick={() => setViewMode("monthly")}
@@ -143,7 +145,7 @@ export default function TrainingChart({ userId }: Props) {
                 : "text-gray-500 hover:text-gray-300"
             }`}
           >
-            月別
+            {t("chart.monthly")}
           </button>
         </div>
       </div>
@@ -174,14 +176,14 @@ export default function TrainingChart({ userId }: Props) {
           </div>
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-1 text-[10px] text-gray-600">
-              <span>少</span>
+              <span>{t("chart.less")}</span>
               <div className="w-3 h-3 rounded-sm bg-gray-800" />
               <div className="w-3 h-3 rounded-sm bg-[#e94560]/40" />
               <div className="w-3 h-3 rounded-sm bg-[#e94560]/70" />
               <div className="w-3 h-3 rounded-sm bg-[#e94560]" />
-              <span>多</span>
+              <span>{t("chart.more")}</span>
             </div>
-            <span className="text-[10px] text-gray-500">過去84日: {totalDays}日</span>
+            <span className="text-[10px] text-gray-500">{t("chart.past84Days", { n: totalDays })}</span>
           </div>
         </>
       ) : (
@@ -216,7 +218,7 @@ export default function TrainingChart({ userId }: Props) {
             ))}
           </div>
           <div className="text-[10px] text-gray-500 text-right mt-1">
-            過去6ヶ月: {monthData.reduce((s, m) => s + m.count, 0)}回
+            {t("chart.past6Months")}: {monthData.reduce((s, m) => s + m.count, 0)}回
           </div>
         </>
       )}

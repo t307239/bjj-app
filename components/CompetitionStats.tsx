@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useLocale } from "@/lib/i18n";
 
 type Props = {
   userId: string;
@@ -84,6 +85,7 @@ function DonutSegment({
 }
 
 export default function CompetitionStats({ userId }: Props) {
+  const { t } = useLocale();
   const [record, setRecord] = useState<CompRecord | null>(null);
   const [monthlyStats, setMonthlyStats] = useState<MonthStats[]>([]);
   const [loading, setLoading] = useState(true);
@@ -186,7 +188,7 @@ export default function CompetitionStats({ userId }: Props) {
         onClick={() => setIsOpen((v) => !v)}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
       >
-        <h4 className="text-sm font-medium text-gray-300">🏆 試合戦績</h4>
+        <h4 className="text-sm font-medium text-gray-300">🏆 {t("competition.title")}</h4>
         <div className="flex items-center gap-2">
           {!isOpen && (
             <span className="text-[10px] text-gray-500">
@@ -255,15 +257,15 @@ export default function CompetitionStats({ userId }: Props) {
         <div className="flex-1 grid grid-cols-3 gap-1.5">
           <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-2 text-center">
             <div className="text-xl font-bold text-green-400">{record.win}</div>
-            <div className="text-[10px] text-gray-500">勝利</div>
+            <div className="text-[10px] text-gray-500">{t("competition.wins")}</div>
           </div>
           <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-2 text-center">
             <div className="text-xl font-bold text-red-400">{record.loss}</div>
-            <div className="text-[10px] text-gray-500">敗北</div>
+            <div className="text-[10px] text-gray-500">{t("competition.losses")}</div>
           </div>
           <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-2 text-center">
             <div className="text-xl font-bold text-yellow-400">{record.draw}</div>
-            <div className="text-[10px] text-gray-500">引き分け</div>
+            <div className="text-[10px] text-gray-500">{t("competition.draws")}</div>
           </div>
         </div>
       </div>
@@ -273,12 +275,12 @@ export default function CompetitionStats({ userId }: Props) {
         <div className="flex gap-2 mb-3">
           {record.winBySub > 0 && (
             <span className="text-[10px] bg-green-500/10 border border-green-500/20 text-green-400 px-2 py-1 rounded-full">
-              一本 {record.winBySub}
+              {t("competition.bySubmission")} {record.winBySub}
             </span>
           )}
           {winByDecision > 0 && (
             <span className="text-[10px] bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
-              判定 {winByDecision}
+              {t("competition.byDecision")} {winByDecision}
             </span>
           )}
           {lossToSub > 0 && (
@@ -294,12 +296,12 @@ export default function CompetitionStats({ userId }: Props) {
         <div className="flex gap-2 mb-3">
           {record.gi_count > 0 && (
             <span className="text-[10px] bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
-              道衣 {record.gi_count}試合
+              {t("training.gi")} {record.gi_count}試合
             </span>
           )}
           {record.nogi_count > 0 && (
             <span className="text-[10px] bg-orange-500/10 border border-orange-500/20 text-orange-400 px-2 py-1 rounded-full">
-              ノーギ {record.nogi_count}試合
+              {t("training.nogi")} {record.nogi_count}試合
             </span>
           )}
         </div>
@@ -310,12 +312,12 @@ export default function CompetitionStats({ userId }: Props) {
         <div className="flex gap-2 mb-3">
           {record.currentWinStreak > 0 && (
             <div className="flex items-center gap-1.5 bg-green-500/10 border border-green-500/20 rounded-xl px-3 py-1.5">
-              <span className="text-green-400 text-xs font-medium">🔥 現在 {record.currentWinStreak}連勝中</span>
+              <span className="text-green-400 text-xs font-medium">🔥 {t("competition.currentStreak", { n: record.currentWinStreak })}</span>
             </div>
           )}
           {record.bestWinStreak > 1 && (
             <div className="flex items-center gap-1.5 bg-yellow-500/10 border border-yellow-500/20 rounded-xl px-3 py-1.5">
-              <span className="text-yellow-400 text-xs font-medium">⭐ 最長 {record.bestWinStreak}連勝</span>
+              <span className="text-yellow-400 text-xs font-medium">⭐ {t("competition.bestStreak", { n: record.bestWinStreak })}</span>
             </div>
           )}
         </div>
@@ -342,7 +344,7 @@ export default function CompetitionStats({ userId }: Props) {
       {/* 月別勝敗バー（3試合以上 かつ 2ヶ月以上ある場合） */}
       {record.total >= 3 && monthlyStats.length >= 2 && (
         <div className="mt-4 pt-3 border-t border-white/5">
-          <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wide">月別</p>
+          <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wide">{t("competition.monthly")}</p>
           {(() => {
             const maxTotal = Math.max(...monthlyStats.map((m) => m.total), 1);
             return monthlyStats.slice(-6).map((m) => (

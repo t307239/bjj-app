@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { useLocale } from "@/lib/i18n";
 import Toast from "./Toast";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -57,6 +58,7 @@ function calcBjjMonths(startDate: string): number {
 }
 
 function DeleteAccountSection({ userId, supabase }: { userId: string; supabase: SupabaseClient }) {
+  const { t } = useLocale();
   const router = useRouter();
   const [confirm, setConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -75,7 +77,7 @@ function DeleteAccountSection({ userId, supabase }: { userId: string; supabase: 
       <div className="mt-10 border-t border-white/10 pt-6">
         <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-3">アカウント</h3>
         <button type="button" onClick={() => setConfirm(true)} className="text-red-500 hover:text-red-400 text-sm underline">
-          退会する（データをすべて削除）
+          {t("profile.deleteAccount")}
         </button>
       </div>
     );
@@ -85,7 +87,7 @@ function DeleteAccountSection({ userId, supabase }: { userId: string; supabase: 
     <div className="mt-10 border-t border-white/10 pt-6">
       <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-3">アカウント</h3>
       <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
-        <p className="text-red-400 text-sm font-semibold mb-1">本当に退会しますか？</p>
+        <p className="text-red-400 text-sm font-semibold mb-1">{t("profile.deleteConfirm")}</p>
         <p className="text-gray-400 text-xs mb-4">
           練習記録・テクニックノート・プロフィールがすべて削除されます。この操作は取り消せません。
         </p>
@@ -94,7 +96,7 @@ function DeleteAccountSection({ userId, supabase }: { userId: string; supabase: 
             {deleting ? "削除中..." : "はい、退会します"}
           </button>
           <button type="button" onClick={() => setConfirm(false)} className="flex-1 bg-white/10 hover:bg-white/15 text-gray-300 font-bold py-2 rounded-lg text-sm">
-            キャンセル
+            {t("training.cancel")}
           </button>
         </div>
       </div>
@@ -102,22 +104,26 @@ function DeleteAccountSection({ userId, supabase }: { userId: string; supabase: 
   );
 }
 
-const BELTS = [
-  { value: "white", label: "白帯", color: "bg-white text-gray-900" },
-  { value: "blue", label: "青帯", color: "bg-blue-500 text-white" },
-  { value: "purple", label: "紫帯", color: "bg-purple-600 text-white" },
-  { value: "brown", label: "茶帯", color: "bg-amber-800 text-white" },
-  { value: "black", label: "黒帯", color: "bg-gray-900 text-white border border-white/10" },
-];
+function BELTS({ t }: { t: (key: string, obj?: Record<string, any>) => string }) {
+  return [
+    { value: "white", label: t("profile.belts.white"), color: "bg-white text-gray-900" },
+    { value: "blue", label: t("profile.belts.blue"), color: "bg-blue-500 text-white" },
+    { value: "purple", label: t("profile.belts.purple"), color: "bg-purple-600 text-white" },
+    { value: "brown", label: t("profile.belts.brown"), color: "bg-amber-800 text-white" },
+    { value: "black", label: t("profile.belts.black"), color: "bg-gray-900 text-white border border-white/10" },
+  ];
+}
 
 function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: Stats | null; onEdit: () => void }) {
-  const beltInfo = BELTS.find((b) => b.value === profile.belt);
+  const { t } = useLocale();
+  const belts = BELTS({ t });
+  const beltInfo = belts.find((b) => b.value === profile.belt);
   return (
     <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-xl p-5 border border-white/10">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xs text-gray-500 uppercase tracking-wider">プロフィール</h3>
+        <h3 className="text-xs text-gray-500 uppercase tracking-wider">{t("profile.title")}</h3>
         <button onClick={onEdit} className="text-xs text-[#e94560] hover:text-red-400 border border-[#e94560]/40 hover:border-[#e94560] rounded-lg px-3 py-1 transition-colors">
-          ✏️ 編集
+          ✏️ {t("training.edit")}
         </button>
       </div>
       <div className="flex items-center gap-3 mb-4">
@@ -175,13 +181,15 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
 }
 
 function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSave: (updated: Profile) => void; onCancel: () => void }) {
+  const { t } = useLocale();
   const [form, setForm] = useState<Profile>(profile);
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const today = getLocalDateString();
   const supabase = createClient();
-  const currentBelt = BELTS.find((b) => b.value === form.belt);
+  const belts = BELTS({ t });
+  const currentBelt = belts.find((b) => b.value === form.belt);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -210,10 +218,10 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
       { onConflict: "id" }
     );
     if (!error) {
-      setToast({ message: "プロフィールを保存しました！", type: "success" });
+      setToast({ message: t("profile.saved"), type: "success" });
       setTimeout(() => { setToast(null); onSave(form); }, 1200);
     } else {
-      setToast({ message: "保存に失敗しました: " + (error.message || error.code || "不明なエラー"), type: "error" });
+      setToast({ message: t("profile.saveFailed") + ": " + (error.message || error.code || "不明なエラー"), type: "error" });
     }
     setLoading(false);
   };
@@ -234,9 +242,9 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
           <p className="text-gray-400 text-xs">{form.stripe}本線 · {currentBelt?.label}</p>
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-          <label className="block text-gray-300 text-sm font-medium mb-3">帯</label>
+          <label className="block text-gray-300 text-sm font-medium mb-3">{t("profile.belt")}</label>
           <div className="grid grid-cols-5 gap-2">
-            {BELTS.map((belt) => (
+            {belts.map((belt) => (
               <button key={belt.value} type="button" onClick={() => setForm({ ...form, belt: belt.value })}
                 className={"py-2 rounded-lg text-xs font-semibold transition-all " + belt.color + " " + (form.belt === belt.value ? "ring-2 ring-[#e94560] scale-105" : "opacity-60 hover:opacity-90")}>
                 {belt.label}
@@ -245,7 +253,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
           </div>
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-          <label className="block text-gray-300 text-sm font-medium mb-3">ライン数 (0～4)</label>
+          <label className="block text-gray-300 text-sm font-medium mb-3">{t("profile.stripe")} (0～4)</label>
           <div className="flex gap-2">
             {[0, 1, 2, 3, 4].map((s) => (
               <button key={s} type="button" onClick={() => setForm({ ...form, stripe: s })}
@@ -256,26 +264,26 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
           </div>
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-          <label className="block text-gray-300 text-sm font-medium mb-1">道場・ジム名</label>
+          <label className="block text-gray-300 text-sm font-medium mb-1">{t("profile.gym")}</label>
           <p className="text-gray-600 text-[10px] mb-2">同じジムの仲間を繋ぐために使われます</p>
           <input type="text" value={form.gym} onChange={(e) => setForm({ ...form, gym: e.target.value })} placeholder="例: Gracie Academy Tokyo" className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]" />
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-          <label className="block text-gray-300 text-sm font-medium mb-2">BJJ開始日</label>
+          <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.startDate")}</label>
           <input type="date" value={form.start_date} max={today} onChange={(e) => setForm({ ...form, start_date: e.target.value })} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]" />
           {form.start_date && <p className="text-gray-500 text-xs mt-1">BJJ歴: {calcBjjMonths(form.start_date)}ヶ月</p>}
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-          <label className="block text-gray-300 text-sm font-medium mb-2">目標・メモ</label>
+          <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.bio")}</label>
           <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="目標、得意なポジション、練習への想いなど..." rows={3} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] resize-none" />
         </div>
         {formError && <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">{formError}</div>}
         <div className="flex gap-3">
           <button type="submit" disabled={loading} className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white font-bold py-3 rounded-xl text-sm transition-colors">
-            {loading ? "保存中..." : "保存する"}
+            {loading ? t("profile.saving") : t("profile.save")}
           </button>
           <button type="button" onClick={onCancel} className="flex-1 bg-zinc-900 hover:bg-white/5 text-gray-300 font-bold py-3 rounded-xl text-sm border border-white/10 transition-colors">
-            キャンセル
+            {t("training.cancel")}
           </button>
         </div>
       </form>
@@ -284,6 +292,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
 }
 
 export default function ProfileForm({ userId, hideAccount }: Props) {
+  const { t } = useLocale();
   const [profile, setProfile] = useState<Profile>({ belt: "white", stripe: 0, gym: "", bio: "", start_date: "" });
   const [stats, setStats] = useState<Stats | null>(null);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -326,7 +335,7 @@ export default function ProfileForm({ userId, hideAccount }: Props) {
     return (
       <div className="text-center py-8 text-gray-500">
         <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-[#e94560] rounded-full animate-spin mb-2" />
-        <p className="text-sm">読み込み中...</p>
+        <p className="text-sm">{t("training.loading")}</p>
       </div>
     );
   }
@@ -336,7 +345,7 @@ export default function ProfileForm({ userId, hideAccount }: Props) {
       {isEditing ? (
         <>
           <div className="flex items-center gap-2 mb-2">
-            <h2 className="text-white font-semibold text-sm">プロフィールを編集</h2>
+            <h2 className="text-white font-semibold text-sm">{t("profile.title")}</h2>
           </div>
           <ProfileEditForm profile={profile} onSave={(updated) => { setProfile(updated); setIsEditing(false); }} onCancel={() => setIsEditing(false)} />
         </>

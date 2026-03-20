@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLocale } from "@/lib/i18n";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -8,6 +9,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export default function InstallBanner() {
+  const { t, locale } = useLocale();
   const [dismissed, setDismissed] = useState(true);
   const [platform, setPlatform] = useState<"ios" | "android" | null>(null);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
@@ -49,22 +51,22 @@ export default function InstallBanner() {
         <div className="flex-1">
           {platform === "ios" ? (
             <p className="text-sm font-medium">
-              📲 ホーム画面に追加して、アプリとして使えます！
+              📲 {t("install.ios")}
               <br />
-              <span className="text-xs opacity-90">Safari → 共有ボタン → "ホーム画面に追加"</span>
+              <span className="text-xs opacity-90">{t("install.iosInstructions")}</span>
             </p>
           ) : (
-            <p className="text-sm font-medium">📲 アプリとしてインストールして、オフラインでも使えます！</p>
+            <p className="text-sm font-medium">📲 {t("install.android")}</p>
           )}
         </div>
         <div className="flex gap-2 flex-shrink-0">
           {platform === "android" && (
             <button onClick={handleInstallAndroid} disabled={isInstalling}
               className="px-4 py-2 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-50 text-sm">
-              {isInstalling ? "インストール中..." : "インストール"}
+              {isInstalling ? t("install.installing") : t("install.button")}
             </button>
           )}
-          <button onClick={handleDismiss} className="px-3 py-2 hover:bg-blue-700 rounded-lg transition-colors text-sm font-medium" aria-label="バナーを閉じる">✕</button>
+          <button onClick={handleDismiss} className="px-3 py-2 hover:bg-blue-700 rounded-lg transition-colors text-sm font-medium" aria-label={t("install.close")}>✕</button>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 
 type Props = { userId: string };
@@ -73,6 +74,7 @@ function IntensitySparkline({ data }: { data: { ym: string; avgSessionMin: numbe
 }
 
 export default function PersonalBests({ userId }: Props) {
+  const { t } = useLocale();
   const [bests, setBests] = useState<Bests | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const supabase = createClient();
@@ -184,25 +186,25 @@ export default function PersonalBests({ userId }: Props) {
     : "";
 
   const items = [
-    { icon: "🏋️", label: "総練習回数", value: `${bests.totalSessions}回`, sub: "" },
-    { icon: "⏱️", label: "総練習時間", value: fmtTime(bests.totalMinutes), sub: "" },
-    { icon: "🔥", label: "最長連続日", value: `${bests.longestStreak}日`, sub: "" },
-    { icon: "📅", label: "月間最多", value: `${bests.bestMonthCount}回`, sub: bestMonthLabel },
-    { icon: "⌛", label: "平均時間/回", value: fmtTime(bests.avgSessionMin), sub: "" },
-    { icon: "📈", label: "月平均", value: `${bests.avgMonthly}回`, sub: "" },
-    { icon: "🗓️", label: "週間最多", value: `${bests.bestWeekCount}回`, sub: "" },
+    { icon: "🏋️", label: t("stats.totalSessions"), value: `${bests.totalSessions}回`, sub: "" },
+    { icon: "⏱️", label: t("stats.totalMinutes"), value: fmtTime(bests.totalMinutes), sub: "" },
+    { icon: "🔥", label: t("stats.longestStreak"), value: `${bests.longestStreak}日`, sub: "" },
+    { icon: "📅", label: t("stats.bestMonth"), value: `${bests.bestMonthCount}回`, sub: bestMonthLabel },
+    { icon: "⌛", label: t("stats.avgPerSession"), value: fmtTime(bests.avgSessionMin), sub: "" },
+    { icon: "📈", label: t("stats.monthlyAvg"), value: `${bests.avgMonthly}回`, sub: "" },
+    { icon: "🗓️", label: t("stats.bestWeek"), value: `${bests.bestWeekCount}回`, sub: "" },
   ];
 
   // Xシェア用テキスト生成
   const buildShareText = () => {
     const lines = [
-      `🥋 BJJ練習記録`,
-      `📊 総練習回数: ${bests.totalSessions}回`,
-      `⏱️ 総練習時間: ${fmtTime(bests.totalMinutes)}`,
-      `🔥 最長連続日: ${bests.longestStreak}日`,
-      `📅 月間最多: ${bests.bestMonthCount}回`,
+      `🥋 ${t("stats.BJJRecordTitle")}`,
+      `📊 ${t("stats.totalSessions")}: ${bests.totalSessions}回`,
+      `⏱️ ${t("stats.totalMinutes")}: ${fmtTime(bests.totalMinutes)}`,
+      `🔥 ${t("stats.longestStreak")}: ${bests.longestStreak}日`,
+      `📅 ${t("stats.bestMonth")}: ${bests.bestMonthCount}回`,
       ``,
-      `#BJJ #柔術 #BJJApp`,
+      `#BJJ #${t("stats.BJJHashtag")} #BJJApp`,
     ];
     return lines.join("\n");
   };
@@ -221,10 +223,10 @@ export default function PersonalBests({ userId }: Props) {
         className="w-full flex items-center justify-between bg-zinc-900 hover:bg-white/5 rounded-xl px-4 py-3 border border-white/10 transition-colors active:scale-95 transform"
       >
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-300">📊 累計記録</span>
+          <span className="text-sm font-medium text-gray-300">📊 {t("stats.personalBests")}</span>
           {!isOpen && (
             <span className="text-xs text-gray-500 font-normal">
-              {bests.totalSessions}回 · {bests.longestStreak}日連続
+              {bests.totalSessions}回 · {bests.longestStreak}{t("stats.dayStreak")}
             </span>
           )}
         </div>
@@ -241,21 +243,21 @@ export default function PersonalBests({ userId }: Props) {
       <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mt-2">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h4 className="text-sm font-medium text-gray-300">📊 累計記録</h4>
+          <h4 className="text-sm font-medium text-gray-300">📊 {t("stats.personalBests")}</h4>
           {bests.lastMonthCount > 0 && (() => {
             const diff = bests.thisMonthCount - bests.lastMonthCount;
             const pct = Math.round(Math.abs(diff) / bests.lastMonthCount * 100);
             if (diff > 0) return (
               <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-green-300 bg-green-500/15 border border-green-500/30 px-2 py-0.5 rounded-full mt-0.5">
-                ▲ +{diff}回 · +{pct}% 先月比
+                ▲ +{diff}回 · +{pct}% {t("stats.lastMonthCompare")}
               </span>
             );
             if (diff < 0) return (
               <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-red-300 bg-red-500/15 border border-red-500/30 px-2 py-0.5 rounded-full mt-0.5">
-                ▼ {diff}回 · -{pct}% 先月比
+                ▼ {diff}回 · -{pct}% {t("stats.lastMonthCompare")}
               </span>
             );
-            return <span className="text-[10px] text-gray-500 mt-0.5">= 先月と同ペース</span>;
+            return <span className="text-[10px] text-gray-500 mt-0.5">= {t("stats.samePaceLast")}</span>;
           })()}
         </div>
         <button
@@ -265,7 +267,7 @@ export default function PersonalBests({ userId }: Props) {
           <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
           </svg>
-          シェア
+          {t("stats.share")}
         </button>
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -287,7 +289,7 @@ export default function PersonalBests({ userId }: Props) {
       </div>
       {bests.maxSessionMin > 0 && (
         <div className="mt-2 text-center text-[10px] text-gray-600">
-          最長セッション: {fmtTime(bests.maxSessionMin)} · 月平均: {bests.avgMonthly}回
+          {t("stats.longestSession")}: {fmtTime(bests.maxSessionMin)} · {t("stats.monthlyAvg")}: {bests.avgMonthly}回
         </div>
       )}
       {/* 曜日別練習頻度ミニグラフ */}
@@ -318,7 +320,7 @@ export default function PersonalBests({ userId }: Props) {
               })}
             </div>
             <p className="text-[9px] text-gray-600 text-center mt-1">
-              よく練習する曜日: <span className="text-[#e94560] font-medium">{DOW_LABELS[bestDowIdx]}曜日</span>（{bests.dowCounts[bestDowIdx]}回）
+              {t("stats.bestDayLabel")}: <span className="text-[#e94560] font-medium">{DOW_LABELS[bestDowIdx]}{t("stats.dayOfWeek")}</span>（{bests.dowCounts[bestDowIdx]}回）
             </p>
           </div>
         );
@@ -326,7 +328,7 @@ export default function PersonalBests({ userId }: Props) {
       {/* 6ヶ月の月別強度推移 */}
       {bests.monthlyIntensity.length > 0 && (
         <div className="mt-3 pt-3 border-t border-white/5">
-          <p className="text-[10px] text-gray-400 mb-2">📈 過去6ヶ月の平均時間</p>
+          <p className="text-[10px] text-gray-400 mb-2">📈 {t("stats.last6MonthsAvg")}</p>
           <IntensitySparkline data={bests.monthlyIntensity} />
         </div>
       )}

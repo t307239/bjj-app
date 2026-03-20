@@ -123,7 +123,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
       <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-zinc-950/80 backdrop-blur-xl border-t border-white/[0.08] z-50">
         {currentStreak >= 2 && (
           <div className="flex justify-center py-1 border-b border-white/5 bg-orange-500/5">
-            <span className="text-[10px] text-orange-400">🔥 {currentStreak}日連続練習中</span>
+            <span className="text-[10px] text-orange-400">🔥 {t("nav.streakBadge", { n: currentStreak })}</span>
           </div>
         )}
         <div className="grid grid-cols-3">

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useLocale } from "@/lib/i18n";
 
 type Props = {
   userId: string;
@@ -14,9 +15,9 @@ function getLocalDateString(): string {
 }
 
 export default function StreakProtect({ userId, streak }: Props) {
+  const { t } = useLocale();
   const [trainedToday, setTrainedToday] = useState<boolean | null>(null);
   const [dismissed, setDismissed] = useState(false);
-  const supabase = createClient();
 
   useEffect(() => {
     if (streak < 1) {
@@ -25,6 +26,7 @@ export default function StreakProtect({ userId, streak }: Props) {
     }
     const today = getLocalDateString();
     const check = async () => {
+      const supabase = createClient();
       const { count } = await supabase
         .from("training_logs")
         .select("id", { count: "exact", head: true })
@@ -38,12 +40,7 @@ export default function StreakProtect({ userId, streak }: Props) {
 
   if (trainedToday === null || trainedToday || dismissed || streak < 1) return null;
 
-  const urgencyText =
-    streak >= 30
-      ? `🔥 ${streak}日連続記録が危機！今すぐ練習を記録しよう！`
-      : streak >= 7
-      ? `⚡ ${streak}日連続を守ろう！今日の練習を記録してね`
-      : `📅 ${streak}日連続記録中 — 今日の練習を忘れずに！`;
+  const urgencyText = t("streak.protect", { n: streak });
 
   return (
     <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl px-4 py-3 mb-4 flex items-start gap-3">
@@ -53,13 +50,13 @@ export default function StreakProtect({ userId, streak }: Props) {
           {urgencyText}
         </p>
         <p className="text-yellow-400/60 text-xs mt-0.5">
-          今日の練習を記録するとストリークが維持されます
+          {t("streak.maintainDesc")}
         </p>
       </div>
       <button
         onClick={() => setDismissed(true)}
         className="text-yellow-500/40 hover:text-yellow-400 transition-colors flex-shrink-0 mt-0.5 w-5 h-5 flex items-center justify-center rounded"
-        aria-label="閉じる"
+        aria-label={t("common.close")}
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

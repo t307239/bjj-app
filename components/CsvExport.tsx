@@ -2,23 +2,12 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useLocale } from "@/lib/i18n";
 import ProGate from "@/components/ProGate";
 
 type Props = {
   userId: string;
   isPro?: boolean;
-};
-
-const TRAINING_TYPE_LABELS: Record<string, string> = {
-  gi: "道衣 (Gi)",
-  nogi: "ノーギ",
-  drilling: "ドリル",
-  competition: "試合",
-  open_mat: "オープンマット",
-};
-
-const MASTERY_LABELS: Record<number, string> = {
-  1: "入門", 2: "基礎", 3: "中級", 4: "上級", 5: "マスター",
 };
 
 // 試合詳細デコード（TrainingLog.tsx と同一ロジック）
@@ -70,6 +59,7 @@ function ExportBtn({
 }
 
 export default function CsvExport({ userId, isPro = false }: Props) {
+  const { t } = useLocale();
   const [loadingLogs, setLoadingLogs] = useState(false);
   const [loadingTech, setLoadingTech] = useState(false);
   const supabase = createClient();
@@ -84,20 +74,45 @@ export default function CsvExport({ userId, isPro = false }: Props) {
         .order("date", { ascending: false });
 
       if (error || !logs) {
-        alert("エクスポートに失敗しました");
+        alert(t("csv.exportFailed"));
         return;
       }
 
       // 試合詳細を含む拡張ヘッダー
-      const headers = ["日付", "タイプ", "時間(分)", "試合結果", "対戦相手", "決め技", "大会名", "メモ"];
+      const headers = [
+        t("csv.header.date"),
+        t("csv.header.type"),
+        t("csv.header.duration"),
+        t("csv.header.result"),
+        t("csv.header.opponent"),
+        t("csv.header.finish"),
+        t("csv.header.event"),
+        t("csv.header.notes"),
+      ];
+
+      // Get training type labels from i18n
+      const typeLabels: Record<string, string> = {
+        gi: t("training.gi"),
+        nogi: t("training.nogi"),
+        drilling: t("training.drilling"),
+        competition: t("training.competition"),
+        open_mat: t("training.open_mat"),
+      };
+
+      const resultLabels: Record<string, string> = {
+        win: t("training.competition"),
+        loss: t("csv.loss"),
+        draw: t("csv.draw"),
+      };
+
       const rows = logs.map((l: { date: string; type: string; duration_min: number; notes: string }) => {
         const { comp, userNotes } = decodeCompNotes(l.notes ?? "");
         return [
           l.date,
-          TRAINING_TYPE_LABELS[l.type] ?? l.type,
+          typeLabels[l.type] ?? l.type,
           l.duration_min ?? "",
           // 試合詳細（非試合エントリは空欄）
-          comp ? (RESULT_LABELS[comp.result] ?? comp.result) : "",
+          comp ? (resultLabels[comp.result] ?? comp.result) : "",
           comp ? (comp.opponent ?? "") : "",
           comp ? (comp.finish ?? "") : "",
           comp ? (comp.event ?? "") : "",
@@ -135,15 +150,29 @@ export default function CsvExport({ userId, isPro = false }: Props) {
         .order("name");
 
       if (error || !techs) {
-        alert("エクスポートに失敗しました");
+        alert(t("csv.exportFailed"));
         return;
       }
 
-      const headers = ["テクニック名", "カテゴリ", "習熟度", "メモ"];
+      const headers = [
+        t("csv.header.techName"),
+        t("csv.header.category"),
+        t("csv.header.mastery"),
+        t("csv.header.notes"),
+      ];
+
+      const masteryLabels: Record<number, string> = {
+        1: t("techniques.mastery1"),
+        2: t("techniques.mastery2"),
+        3: t("techniques.mastery3"),
+        4: t("techniques.mastery4"),
+        5: t("techniques.mastery5"),
+      };
+
       const rows = techs.map((t: { name: string; category: string; mastery_level: number; notes: string }) => [
         t.name ?? "",
         t.category ?? "",
-        MASTERY_LABELS[t.mastery_level] ?? String(t.mastery_level ?? ""),
+        masteryLabels[t.mastery_level] ?? String(t.mastery_level ?? ""),
         (t.notes ?? "").replace(/"/g, '""'),
       ]);
 
@@ -172,7 +201,7 @@ export default function CsvExport({ userId, isPro = false }: Props) {
     return (
       <div className="flex gap-2 opacity-40">
         <span className="flex items-center gap-1.5 text-xs text-gray-500 border border-white/5 px-3 py-1.5 rounded-lg cursor-not-allowed">
-          🔒 CSV (Pro)
+          🔒 {t("csv.locked")}
         </span>
       </div>
     );
@@ -180,8 +209,8 @@ export default function CsvExport({ userId, isPro = false }: Props) {
 
   return (
     <div className="flex gap-2">
-      <ExportBtn label="CSV出力" onClick={handleExport} loading={loadingLogs} />
-      <ExportBtn label="技術CSV" onClick={handleExportTechniques} loading={loadingTech} />
+      <ExportBtn label={t("csv.button.training")} onClick={handleExport} loading={loadingLogs} />
+      <ExportBtn label={t("csv.button.techniques")} onClick={handleExportTechniques} loading={loadingTech} />
     </div>
   );
 }

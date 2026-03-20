@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 
 type TypeBreakdown = Record<string, number>;
@@ -52,6 +53,7 @@ const TYPE_HEX: Record<string, string> = {
 const TYPE_ORDER = ["gi", "nogi", "drilling", "competition", "open_mat"];
 
 export default function TrainingBarChart({ userId, isPro = false }: Props) {
+  const { t } = useLocale();
   const [data6, setData6] = useState<MonthData[]>([]);
   const [data12, setData12] = useState<MonthData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -151,7 +153,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
   const formatMinutes = (min: number) => {
     const h = Math.floor(min / 60);
     const m = min % 60;
-    if (h === 0) return `${m}分`;
+    if (h === 0) return `${m}${t("chart.minutes")}`;
     if (m === 0) return `${h}h`;
     return `${h}h${m}m`;
   };
@@ -187,7 +189,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5/20 transition-colors text-left"
       >
         <div>
-          <h4 className="text-sm font-medium text-gray-300">📊 月別練習グラフ</h4>
+          <h4 className="text-sm font-medium text-gray-300">📊 {t("chart.monthlyGraph")}</h4>
           {!isOpen && totalCount > 0 && (
             <p className="text-[10px] text-gray-500 mt-0.5">計{totalCount}回 · {formatMinutes(totalMinutes)}</p>
           )}
@@ -202,9 +204,9 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
       {isOpen && (<div className="p-4 border-t border-white/10">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h4 className="text-sm font-medium text-gray-300">月別練習グラフ</h4>
+          <h4 className="text-sm font-medium text-gray-300">{t("chart.monthlyGraph")}</h4>
           <p className="text-[10px] text-gray-600 mt-0.5">
-            過去{range}ヶ月: 計{totalCount}回 · {formatMinutes(totalMinutes)}
+            {t("chart.pastMonths", { n: range })}: 計{totalCount}回 · {formatMinutes(totalMinutes)}
           </p>
         </div>
         <div className="flex gap-1">
@@ -213,13 +215,13 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
               onClick={() => { setRange(6); setSelectedMonth(null); }}
               className={`text-[11px] px-2 py-1 transition-colors ${range === 6 ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-gray-300"}`}
             >
-              6月
+              6{t("chart.months")}
             </button>
             <button
               onClick={() => { setRange(12); setSelectedMonth(null); }}
               className={`text-[11px] px-2 py-1 transition-colors ${range === 12 ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-gray-300"}`}
             >
-              12月
+              12{t("chart.months")}
             </button>
           </div>
           <button
@@ -230,7 +232,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                 : "bg-white/10/50 text-gray-400 hover:text-white"
             }`}
           >
-            回数
+            {t("chart.count")}
           </button>
           <button
             onClick={() => setView("minutes")}
@@ -240,7 +242,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                 : "bg-white/10/50 text-gray-400 hover:text-white"
             }`}
           >
-            時間
+            {t("chart.duration")}
           </button>
         </div>
       </div>
@@ -265,9 +267,9 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           </div>
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900/80 rounded-xl">
             <span className="text-2xl mb-2">🔒</span>
-            <p className="text-sm font-semibold text-gray-200">12ヶ月表示はProプランで</p>
+            <p className="text-sm font-semibold text-gray-200">{t("chart.proOnly")}</p>
             <a href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#"} className="mt-3 bg-[#e94560] hover:bg-[#c73652] text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
-              Proにアップグレード
+              {t("chart.upgradeToProBtn")}
             </a>
           </div>
         </div>
@@ -277,7 +279,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             <div
               className="absolute left-0 right-0 border-t border-dashed border-gray-500/50 pointer-events-none"
               style={{ bottom: `${avgPct}%` }}
-              title={`平均: ${view === "count" ? `${Math.round(avgVal)}回` : formatMinutes(Math.round(avgVal))}`}
+              title={`${t("chart.average")}: ${view === "count" ? `${Math.round(avgVal)}回` : formatMinutes(Math.round(avgVal))}`}
             />
           )}
           <div className="flex items-end gap-1 h-full">
@@ -369,7 +371,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
       )}
       {avgPct > 0 && (
         <div className="text-[10px] text-gray-600 text-right mt-1">
-          平均 {view === "count" ? `${Math.round(avgVal)}回/月` : `${formatMinutes(Math.round(avgVal))}/月`}
+          {t("chart.average")} {view === "count" ? `${Math.round(avgVal)}回/${t("chart.month")}` : `${formatMinutes(Math.round(avgVal))}/${t("chart.month")}`}
         </div>
       )}
 
@@ -390,13 +392,13 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         <div className="mt-3 pt-3 border-t border-white/5">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-medium text-yellow-400">
-              📅 {selectedMonthLabel}の練習記録
+              📅 {selectedMonthLabel}{t("chart.trainingLog")}
             </span>
             <button
               onClick={() => setSelectedMonth(null)}
               className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
             >
-              ✕ 閉じる
+              ✕ {t("chart.close")}
             </button>
           </div>
           {selectedLoading ? (
@@ -406,7 +408,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
               ))}
             </div>
           ) : selectedLogs.length === 0 ? (
-            <p className="text-[11px] text-gray-600 text-center py-2">記録なし</p>
+            <p className="text-[11px] text-gray-600 text-center py-2">{t("chart.noRecords")}</p>
           ) : (
             <div className="space-y-1 max-h-48 overflow-y-auto">
               {selectedLogs.map((log, idx) => {

@@ -61,7 +61,7 @@ export default function GuestMigration({ userId }: { userId: string }) {
   return (
     <div className="fixed bottom-20 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-4">
       <div className="bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium">
-        <span>{t("guest.migrated", { n: migrated })}</span>
+        <span>✅ {t("guest.migrated", { n: migrated })}</span>
       </div>
     </div>
   );
