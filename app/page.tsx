@@ -502,10 +502,10 @@ export default async function Home() {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             {[
-              { emoji: "🔒", title: "Guard Systems", desc: "Closed, Half, Spider, DLR", href: "https://t307239.github.io/bjj-wiki/en/bjj-guard-retention-advanced.html" },
-              { emoji: "🦵", title: "Leg Locks", desc: "Heel hooks, Ashi garami, Toe holds", href: "https://t307239.github.io/bjj-wiki/en/bjj-leg-lock-system.html" },
-              { emoji: "🏆", title: "Competition Mindset", desc: "Match prep, nerves, strategy", href: "https://t307239.github.io/bjj-wiki/en/bjj-competition-mindset.html" },
-              { emoji: "💪", title: "Nutrition & Recovery", desc: "Diet for BJJ athletes, injury prevention", href: "https://t307239.github.io/bjj-wiki/en/bjj-nutrition-science.html" },
+              { emoji: "🔒", title: "Guard Systems", desc: "Closed, Half, Spider, DLR", href: "https://wiki.bjj-app.net/en/bjj-guard-retention-advanced.html" },
+              { emoji: "🦵", title: "Leg Locks", desc: "Heel hooks, Ashi garami, Toe holds", href: "https://wiki.bjj-app.net/en/bjj-leg-lock-system.html" },
+              { emoji: "🏆", title: "Competition Mindset", desc: "Match prep, nerves, strategy", href: "https://wiki.bjj-app.net/en/bjj-competition-mindset.html" },
+              { emoji: "💪", title: "Nutrition & Recovery", desc: "Diet for BJJ athletes, injury prevention", href: "https://wiki.bjj-app.net/en/bjj-nutrition-science.html" },
             ].map((item) => (
               <a
                 key={item.title}
@@ -522,7 +522,7 @@ export default async function Home() {
           </div>
           <div className="text-center">
             <a
-              href="https://t307239.github.io/bjj-wiki/"
+              href="https://wiki.bjj-app.net/"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-[#e94560] hover:text-red-400 transition-colors text-sm font-medium"

@@ -41,12 +41,26 @@ const LocaleContext = createContext<LocaleContextType>({
   t: (key) => key,
 });
 
+/**
+ * Detect initial locale:
+ * 1. localStorage (user's previous choice) — highest priority
+ * 2. navigator.language (browser setting) — auto-detect
+ * 3. "en" as fallback
+ */
+function detectInitialLocale(): Locale {
+  if (typeof window === "undefined") return "en";
+  const saved = localStorage.getItem(STORAGE_KEY) as Locale | null;
+  if (saved === "en" || saved === "ja") return saved;
+  // Auto-detect from browser language
+  const browserLang = navigator.language || "";
+  return browserLang.startsWith("ja") ? "ja" : "en";
+}
+
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("ja");
+  const [locale, setLocaleState] = useState<Locale>("en");
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY) as Locale | null;
-    if (saved === "en" || saved === "ja") setLocaleState(saved);
+    setLocaleState(detectInitialLocale());
   }, []);
 
   const setLocale = (l: Locale) => {

@@ -6,7 +6,7 @@
 import { useState } from "react";
 import { useLocale } from "@/lib/i18n";
 
-const WIKI_BASE = "https://t307239.github.io/bjj-wiki/ja";
+const WIKI_BASE = "https://wiki.bjj-app.net/ja";
 
 // GA4イベント送信ヘルパー
 function trackWikiClick(slug: string, tag: string) {
