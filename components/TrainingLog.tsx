@@ -208,7 +208,8 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
   const [initialLoading, setInitialLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(false);
-  const PAGE_SIZE = 20;
+  const INITIAL_SIZE = 3;
+  const PAGE_SIZE = 10;
   const [showForm, setShowForm] = useState(false);
   const [filterType, setFilterType] = useState("all");
   const [periodFilter, setPeriodFilter] = useState<"all" | "month" | "week">("all");
@@ -251,11 +252,11 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         .select("*")
         .eq("user_id", userId)
         .order("date", { ascending: false })
-        .limit(PAGE_SIZE + 1);
+        .limit(INITIAL_SIZE + 1);
 
       if (!error && data) {
-        setHasMore(data.length > PAGE_SIZE);
-        const slice = data.slice(0, PAGE_SIZE);
+        setHasMore(data.length > INITIAL_SIZE);
+        const slice = data.slice(0, INITIAL_SIZE);
         setEntries(slice);
         setTrainedToday(slice.some((e: TrainingEntry) => e.date === getLocalDateString()));
       } else {

@@ -133,8 +133,8 @@ export default function TechniqueLog({ userId }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
   const [sortBy, setSortBy] = useState<"newest" | "mastery_desc" | "mastery_asc" | "name">("newest");
-  const [showCount, setShowCount] = useState(20);
-  const TECH_PAGE_SIZE = 20;
+  const [showCount, setShowCount] = useState(3);
+  const TECH_PAGE_SIZE = 10;
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
