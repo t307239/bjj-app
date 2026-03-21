@@ -133,6 +133,8 @@ export default function TechniqueLog({ userId }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
   const [sortBy, setSortBy] = useState<"newest" | "mastery_desc" | "mastery_asc" | "name">("newest");
+  const [showCount, setShowCount] = useState(20);
+  const TECH_PAGE_SIZE = 20;
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
@@ -682,7 +684,7 @@ export default function TechniqueLog({ userId }: Props) {
       {/* テクニック一覧 */}
       {!initialLoading && filtered.length > 0 && (
         <div className="space-y-3">
-          {filtered.map((technique) => (
+          {filtered.slice(0, showCount).map((technique) => (
             <div
               key={technique.id}
               className="bg-zinc-900 rounded-xl p-4 border border-white/10"
@@ -822,6 +824,15 @@ export default function TechniqueLog({ userId }: Props) {
               )}
             </div>
           ))}
+          {/* Show More */}
+          {filtered.length > showCount && (
+            <button
+              onClick={() => setShowCount((prev) => prev + TECH_PAGE_SIZE)}
+              className="w-full py-2.5 text-sm text-gray-400 hover:text-white bg-zinc-900 border border-white/10 hover:border-white/20 rounded-xl transition-colors"
+            >
+              {t("training.loadMore")} ({filtered.length - showCount} more)
+            </button>
+          )}
         </div>
       )}
 
