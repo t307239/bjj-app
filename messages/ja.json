@@ -102,6 +102,14 @@
       "purple": "紫帯",
       "brown": "茶帯",
       "black": "黒帯"
+    },
+    "appSettings": "アプリ設定",
+    "settingsSoon": "設定は近日追加予定です。",
+    "dangerZone": "危険ゾーン",
+    "tabs": {
+      "stats": "統計",
+      "profile": "プロフィール",
+      "settings": "設定"
     }
   },
   "competition": {
@@ -491,7 +499,15 @@
     "waitlistSuccess": "登録完了！",
     "waitlistSuccessDesc": "ジム機能の準備ができたらご連絡します。それまでの間、生徒にBJJ Appをすすめてください — 参加者が増えるほど早く連絡できます。",
     "waitlistError": "エラーが発生しました。もう一度お試しください。",
-    "waitlistNetworkError": "ネットワークエラーです。接続を確認してください。"
+    "waitlistNetworkError": "ネットワークエラーです。接続を確認してください。",
+    "currentGym": "🏫 所属ジム",
+    "unknownGym": "不明なジム",
+    "leaveGym": "ジムを退会",
+    "leaving": "退会中...",
+    "leaveConfirmTitle": "{name}を退会しますか?",
+    "leaveConfirmDesc": "道場主はあなたの練習データを閲覧できなくなります。新しいQRコードで再入会できます。",
+    "shareData": "練習データをジムと共有",
+    "shareDataSub": "頻度と帯のみ。メモは常に非公開。"
   },
   "gymJoin": {
     "title": "{name} に参加する",

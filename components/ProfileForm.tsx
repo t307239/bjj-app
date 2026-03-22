@@ -63,6 +63,7 @@ const CUSTOMER_PORTAL_URL = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL ?
 // ─── Gym Membership Section ───────────────────────────────────────────────────
 
 function GymMembershipSection({ userId, supabase }: { userId: string; supabase: SupabaseClient }) {
+  const { t } = useLocale();
   const [gymName, setGymName] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
   const [gymId, setGymId] = useState<string | null>(null);
@@ -124,9 +125,9 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
   if (confirmLeave) {
     return (
       <div className="bg-zinc-900 border border-white/10 rounded-xl p-4">
-        <p className="text-sm text-white mb-1">Leave <strong>{gymName ?? "gym"}</strong>?</p>
+        <p className="text-sm text-white mb-1">{t("gym.leaveConfirmTitle", { name: gymName ?? t("gym.unknownGym") })}</p>
         <p className="text-xs text-gray-400 mb-4">
-          Your gym owner will no longer see your training data. You can rejoin with a new QR code.
+          {t("gym.leaveConfirmDesc")}
         </p>
         <div className="flex gap-2">
           <button
@@ -134,7 +135,7 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
             className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 py-2 rounded-lg text-sm"
             aria-label="Cancel leaving gym"
           >
-            Cancel
+            {t("training.cancel")}
           </button>
           <button
             onClick={handleLeave}
@@ -142,7 +143,7 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
             className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white py-2 rounded-lg text-sm font-semibold"
             aria-label="Confirm leaving gym"
           >
-            {leaving ? "Leaving..." : "Leave gym"}
+            {leaving ? t("gym.leaving") : t("gym.leaveGym")}
           </button>
         </div>
       </div>
@@ -153,22 +154,22 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
     <div className="bg-zinc-900 border border-white/10 rounded-xl p-4">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <p className="text-sm font-semibold text-white">🏫 Current Gym</p>
-          <p className="text-xs text-gray-400 mt-0.5">{gymName ?? "Unknown gym"}</p>
+          <p className="text-sm font-semibold text-white">{t("gym.currentGym")}</p>
+          <p className="text-xs text-gray-400 mt-0.5">{gymName ?? t("gym.unknownGym")}</p>
         </div>
         <button
           onClick={() => setConfirmLeave(true)}
           className="text-xs text-gray-500 hover:text-red-400 transition-colors"
           aria-label="Leave gym"
         >
-          Leave gym
+          {t("gym.leaveGym")}
         </button>
       </div>
       {/* Data sharing toggle */}
       <div className="flex items-center justify-between pt-3 border-t border-white/10">
         <div>
-          <p className="text-xs text-gray-300">Share training data with gym</p>
-          <p className="text-[10px] text-gray-600 mt-0.5">Frequency &amp; belt only. Notes always private.</p>
+          <p className="text-xs text-gray-300">{t("gym.shareData")}</p>
+          <p className="text-[10px] text-gray-600 mt-0.5">{t("gym.shareDataSub")}</p>
         </div>
         <button
           onClick={handleToggleSharing}

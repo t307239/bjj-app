@@ -102,6 +102,14 @@
       "purple": "Purple",
       "brown": "Brown",
       "black": "Black"
+    },
+    "appSettings": "App Settings",
+    "settingsSoon": "More settings coming soon.",
+    "dangerZone": "Danger Zone",
+    "tabs": {
+      "stats": "Stats",
+      "profile": "Profile",
+      "settings": "Settings"
     }
   },
   "competition": {
@@ -491,7 +499,15 @@
     "waitlistSuccess": "You're on the list!",
     "waitlistSuccessDesc": "We'll reach out when gym features are ready. In the meantime, encourage your students to download BJJ App — the more who join, the sooner we reach out.",
     "waitlistError": "Something went wrong. Please try again.",
-    "waitlistNetworkError": "Network error. Please check your connection."
+    "waitlistNetworkError": "Network error. Please check your connection.",
+    "currentGym": "🏫 Current Gym",
+    "unknownGym": "Unknown gym",
+    "leaveGym": "Leave gym",
+    "leaving": "Leaving...",
+    "leaveConfirmTitle": "Leave {name}?",
+    "leaveConfirmDesc": "Your gym owner will no longer see your training data. You can rejoin with a new QR code.",
+    "shareData": "Share training data with gym",
+    "shareDataSub": "Frequency & belt only. Notes always private."
   },
   "gymJoin": {
     "title": "Join {name}",
