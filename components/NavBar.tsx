@@ -24,8 +24,8 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-      const d = new Date();
-      const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      const jstD = new Date(Date.now() + 9 * 3600000);
+      const today = `${jstD.getUTCFullYear()}-${String(jstD.getUTCMonth() + 1).padStart(2, "0")}-${String(jstD.getUTCDate()).padStart(2, "0")}`;
       const [{ count }, { data: recentLogs }] = await Promise.all([
         supabase
           .from("training_logs")
@@ -44,12 +44,12 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
       if (recentLogs && recentLogs.length > 0) {
         const uniqueDates = [...new Set(recentLogs.map((l: { date: string }) => l.date))].sort().reverse() as string[];
         let streak = 0;
-        let checkDate = new Date(today);
+        let checkDateMs = new Date(today + "T00:00:00Z").getTime(); // UTCとして扱う
         for (const dateStr of uniqueDates) {
-          const check = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, "0")}-${String(checkDate.getDate()).padStart(2, "0")}`;
+          const check = new Date(checkDateMs).toISOString().slice(0, 10);
           if (dateStr === check) {
             streak++;
-            checkDate.setDate(checkDate.getDate() - 1);
+            checkDateMs -= 86400000;
           } else if (dateStr < check) {
             break;
           }
