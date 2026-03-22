@@ -15,13 +15,13 @@ type GuestLog = {
   created_at: string;
 };
 
-const TRAINING_TYPES = [
-  { value: "gi", label: "Gi", color: "bg-blue-500/20 text-blue-300 border-blue-500/40" },
-  { value: "nogi", label: "NoGi", color: "bg-orange-500/20 text-orange-300 border-orange-500/40" },
-  { value: "drilling", label: "ドリル", color: "bg-purple-500/20 text-purple-300 border-purple-500/40" },
-  { value: "competition", label: "試合", color: "bg-red-500/20 text-red-300 border-red-500/40" },
-  { value: "open_mat", label: "オープンマット", color: "bg-green-500/20 text-green-300 border-green-500/40" },
-];
+const TRAINING_TYPE_VALUES = [
+  { value: "gi", color: "bg-blue-500/20 text-blue-300 border-blue-500/40" },
+  { value: "nogi", color: "bg-orange-500/20 text-orange-300 border-orange-500/40" },
+  { value: "drilling", color: "bg-purple-500/20 text-purple-300 border-purple-500/40" },
+  { value: "competition", color: "bg-red-500/20 text-red-300 border-red-500/40" },
+  { value: "open_mat", color: "bg-green-500/20 text-green-300 border-green-500/40" },
+] as const;
 
 const STORAGE_KEY = "bjj_guest_logs";
 const DURATION_PRESETS = [30, 60, 90, 120];
@@ -53,6 +53,12 @@ export default function GuestDashboard() {
   const [type, setType] = useState("gi");
   const [notes, setNotes] = useState("");
   const [showForm, setShowForm] = useState(false);
+
+  // Locale-aware training types (labels from i18n)
+  const TRAINING_TYPES = TRAINING_TYPE_VALUES.map((tt) => ({
+    ...tt,
+    label: t(`training.${tt.value}` as Parameters<typeof t>[0]),
+  }));
 
   useEffect(() => {
     setLogs(loadGuestLogs());
@@ -147,7 +153,7 @@ export default function GuestDashboard() {
               </div>
               {/* 時間プリセット */}
               <div>
-                <p className="text-gray-400 text-xs mb-1.5">練習時間</p>
+                <p className="text-gray-400 text-xs mb-1.5">{t("training.duration")}</p>
                 <div className="flex gap-2 flex-wrap">
                   {DURATION_PRESETS.map((d) => (
                     <button
@@ -160,7 +166,7 @@ export default function GuestDashboard() {
                           : "bg-zinc-800 border-white/10 text-gray-400 hover:text-white"
                       }`}
                     >
-                      {d}分
+                      {d}{t("training.durationUnit")}
                     </button>
                   ))}
                 </div>
@@ -184,14 +190,14 @@ export default function GuestDashboard() {
                 type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="メモ（任意）"
+                placeholder={t("training.memoOptional")}
                 className="w-full bg-zinc-800 text-white text-sm rounded-lg px-3 py-2 border border-white/10 focus:outline-none focus:border-[#7c3aed]"
               />
               <button
                 onClick={handleAdd}
                 className="w-full bg-[#e94560] hover:bg-[#c73652] text-white font-bold py-2 rounded-lg text-sm"
               >
-                記録する
+                {t("training.save")}
               </button>
             </div>
           )}
@@ -212,12 +218,13 @@ export default function GuestDashboard() {
                       {typeInfo(log.type).label}
                     </span>
                     <span className="text-white text-sm">{log.date}</span>
-                    <span className="text-gray-400 text-xs">{log.duration_min}分</span>
+                    <span className="text-gray-400 text-xs">{log.duration_min}{t("training.durationUnit")}</span>
                     {log.notes && <span className="text-gray-500 text-xs truncate">{log.notes}</span>}
                   </div>
                   <button
                     onClick={() => handleDelete(log.id)}
-                    className="text-gray-600 hover:text-red-400 ml-2 flex-shrink-0 text-lg leading-none"
+                    className="text-gray-600 hover:text-red-400 ml-2 flex-shrink-0 text-lg leading-none w-8 h-8 flex items-center justify-center rounded"
+                    aria-label="Delete"
                   >
                     ×
                   </button>
