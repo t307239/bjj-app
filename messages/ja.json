@@ -119,7 +119,8 @@
     "event": "大会名",
     "currentStreak": "現在{n}連勝中",
     "bestStreak": "最長{n}連勝",
-    "monthly": "月別"
+    "monthly": "月別",
+    "matchesSuffix": "試合"
   },
   "guest": {
     "banner": "ゲストモードで体験中",

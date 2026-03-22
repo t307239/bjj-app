@@ -119,7 +119,8 @@
     "event": "Event",
     "currentStreak": "On {n} win streak",
     "bestStreak": "Best streak: {n} wins",
-    "monthly": "Monthly"
+    "monthly": "Monthly",
+    "matchesSuffix": " matches"
   },
   "guest": {
     "banner": "Guest Mode",

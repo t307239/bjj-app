@@ -192,7 +192,7 @@ export default function CompetitionStats({ userId }: Props) {
         <div className="flex items-center gap-2">
           {!isOpen && (
             <span className="text-[10px] text-gray-500">
-              {record.win}勝{record.loss}敗{record.draw > 0 ? `${record.draw}分` : ""} · 計{record.total}試合
+              {record.win}勝{record.loss}敗{record.draw > 0 ? `${record.draw}分` : ""} · 計{record.total}{t("competition.matchesSuffix")}
             </span>
           )}
           <svg
@@ -247,7 +247,7 @@ export default function CompetitionStats({ userId }: Props) {
                 {winPct}%
               </text>
               <text x="40" y="50" textAnchor="middle" style={{ fill: "#71717a", fontSize: "9px" }}>
-                勝率
+                {t("competition.winRate")}
               </text>
             </svg>
           </div>
@@ -296,12 +296,12 @@ export default function CompetitionStats({ userId }: Props) {
         <div className="flex gap-2 mb-3">
           {record.gi_count > 0 && (
             <span className="text-[10px] bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
-              {t("training.gi")} {record.gi_count}試合
+              {t("training.gi")} {record.gi_count}{t("competition.matchesSuffix")}
             </span>
           )}
           {record.nogi_count > 0 && (
             <span className="text-[10px] bg-orange-500/10 border border-orange-500/20 text-orange-400 px-2 py-1 rounded-full">
-              {t("training.nogi")} {record.nogi_count}試合
+              {t("training.nogi")} {record.nogi_count}{t("competition.matchesSuffix")}
             </span>
           )}
         </div>
