@@ -447,6 +447,23 @@
     "past6Months": "Past 6 months",
     "monthsAchieved": "{n} / 6 months achieved"
   },
+  "gymJoin": {
+    "title": "Join {name}",
+    "managedBy": "Managed by: {owner}",
+    "ownerCanSee": "What the gym owner can see:",
+    "canSeeFrequency": "Your training frequency (session count + dates only)",
+    "canSeeBelt": "Your belt rank",
+    "cannotSeeNotes": "Your training notes (always private)",
+    "cannotSeeComp": "Your competition details (always private)",
+    "joining": "Joining...",
+    "joinAndShare": "Yes, join and share my training data",
+    "joinNoShare": "Join without sharing (use app for myself only)",
+    "privacyNote": "You can change your sharing preference anytime in Profile settings. Leaving the gym permanently removes your data from the owner's dashboard.",
+    "error": "Failed to join gym. Please try again.",
+    "transferTitle": "Transfer Gym?",
+    "transferDesc": "You are currently in another gym. Joining {name} will remove you from your current gym, and your previous gym owner will no longer see your data.",
+    "transferYes": "Yes, transfer to {name}"
+  },
   "freeze": {
     "title": "Streak Freeze",
     "protects": "Protects your streak in emergencies",

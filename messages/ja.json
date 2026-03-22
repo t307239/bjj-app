@@ -447,6 +447,23 @@
     "past6Months": "過去6ヶ月",
     "monthsAchieved": "{n} / 6ヶ月達成"
   },
+  "gymJoin": {
+    "title": "{name} に参加する",
+    "managedBy": "管理者：{owner}",
+    "ownerCanSee": "ジムのオーナーが確認できる情報：",
+    "canSeeFrequency": "練習頻度（回数・日付のみ）",
+    "canSeeBelt": "あなたの帯",
+    "cannotSeeNotes": "練習メモ（常に非公開）",
+    "cannotSeeComp": "試合戦績（常に非公開）",
+    "joining": "参加中...",
+    "joinAndShare": "参加して練習データを共有する",
+    "joinNoShare": "データ共有なしで参加する（自分専用で使う）",
+    "privacyNote": "共有設定はプロフィール設定からいつでも変更できます。ジムを退会すると、オーナーのダッシュボードからあなたのデータが削除されます。",
+    "error": "参加に失敗しました。もう一度お試しください。",
+    "transferTitle": "ジムを移籍しますか？",
+    "transferDesc": "あなたは現在別のジムに所属しています。{name} に参加すると現在のジムから退会となり、前のオーナーはあなたのデータを見られなくなります。",
+    "transferYes": "{name} に移籍する"
+  },
   "freeze": {
     "title": "ストリークフリーズ",
     "protects": "緊急時にストリークを守ります",

@@ -230,11 +230,6 @@ export default function GymDashboard({ userId, gym, isGymPro, stripeGymPaymentLi
 
   useEffect(() => { loadMembers(); }, [loadMembers]);
 
-  const showToast = (message: string, type: "success" | "error") => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
-
   // Categorize members
   const greenMembers = members.filter((m) => churnRisk(m.last_training_date, m.sessions_last_30d) === "green");
   const yellowMembers = members.filter((m) => churnRisk(m.last_training_date, m.sessions_last_30d) === "yellow");
