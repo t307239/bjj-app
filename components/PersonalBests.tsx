@@ -178,31 +178,35 @@ export default function PersonalBests({ userId }: Props) {
 
   if (!bests) return null;
 
+  const timesUnit = t("chart.timesUnit");
+  const daysUnit = t("stats.daysUnit");
+
   const bestMonthLabel = bests.bestMonthKey
     ? (() => {
         const [y, m] = bests.bestMonthKey.split("-");
-        return `${y}年${parseInt(m)}月`;
+        const d = new Date(parseInt(y), parseInt(m) - 1, 1);
+        return new Intl.DateTimeFormat(undefined, { year: "numeric", month: "long" }).format(d);
       })()
     : "";
 
   const items = [
-    { icon: "🏋️", label: t("stats.totalSessions"), value: `${bests.totalSessions}回`, sub: "" },
+    { icon: "🏋️", label: t("stats.totalSessions"), value: `${bests.totalSessions}${timesUnit}`, sub: "" },
     { icon: "⏱️", label: t("stats.totalMinutes"), value: fmtTime(bests.totalMinutes), sub: "" },
-    { icon: "🔥", label: t("stats.longestStreak"), value: `${bests.longestStreak}日`, sub: "" },
-    { icon: "📅", label: t("stats.bestMonth"), value: `${bests.bestMonthCount}回`, sub: bestMonthLabel },
+    { icon: "🔥", label: t("stats.longestStreak"), value: `${bests.longestStreak}${daysUnit}`, sub: "" },
+    { icon: "📅", label: t("stats.bestMonth"), value: `${bests.bestMonthCount}${timesUnit}`, sub: bestMonthLabel },
     { icon: "⌛", label: t("stats.avgPerSession"), value: fmtTime(bests.avgSessionMin), sub: "" },
-    { icon: "📈", label: t("stats.monthlyAvg"), value: `${bests.avgMonthly}回`, sub: "" },
-    { icon: "🗓️", label: t("stats.bestWeek"), value: `${bests.bestWeekCount}回`, sub: "" },
+    { icon: "📈", label: t("stats.monthlyAvg"), value: `${bests.avgMonthly}${timesUnit}`, sub: "" },
+    { icon: "🗓️", label: t("stats.bestWeek"), value: `${bests.bestWeekCount}${timesUnit}`, sub: "" },
   ];
 
   // Xシェア用テキスト生成
   const buildShareText = () => {
     const lines = [
       `🥋 ${t("stats.BJJRecordTitle")}`,
-      `📊 ${t("stats.totalSessions")}: ${bests.totalSessions}回`,
+      `📊 ${t("stats.totalSessions")}: ${bests.totalSessions}${timesUnit}`,
       `⏱️ ${t("stats.totalMinutes")}: ${fmtTime(bests.totalMinutes)}`,
-      `🔥 ${t("stats.longestStreak")}: ${bests.longestStreak}日`,
-      `📅 ${t("stats.bestMonth")}: ${bests.bestMonthCount}回`,
+      `🔥 ${t("stats.longestStreak")}: ${bests.longestStreak}${daysUnit}`,
+      `📅 ${t("stats.bestMonth")}: ${bests.bestMonthCount}${timesUnit}`,
       ``,
       `#BJJ #${t("stats.BJJHashtag")} #BJJApp`,
     ];
@@ -226,7 +230,7 @@ export default function PersonalBests({ userId }: Props) {
           <span className="text-sm font-medium text-gray-300">📊 {t("stats.personalBests")}</span>
           {!isOpen && (
             <span className="text-xs text-gray-500 font-normal">
-              {bests.totalSessions}回 · {bests.longestStreak}{t("stats.dayStreak")}
+              {bests.totalSessions}{timesUnit} · {bests.longestStreak}{t("stats.dayStreak")}
             </span>
           )}
         </div>
@@ -249,12 +253,12 @@ export default function PersonalBests({ userId }: Props) {
             const pct = Math.round(Math.abs(diff) / bests.lastMonthCount * 100);
             if (diff > 0) return (
               <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-green-300 bg-green-500/15 border border-green-500/30 px-2 py-0.5 rounded-full mt-0.5">
-                ▲ +{diff}回 · +{pct}% {t("stats.lastMonthCompare")}
+                ▲ +{diff}{timesUnit} · +{pct}% {t("stats.lastMonthCompare")}
               </span>
             );
             if (diff < 0) return (
               <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-red-300 bg-red-500/15 border border-red-500/30 px-2 py-0.5 rounded-full mt-0.5">
-                ▼ {diff}回 · -{pct}% {t("stats.lastMonthCompare")}
+                ▼ {diff}{timesUnit} · -{pct}% {t("stats.lastMonthCompare")}
               </span>
             );
             return <span className="text-[10px] text-gray-500 mt-0.5">= {t("stats.samePaceLast")}</span>;
@@ -289,12 +293,18 @@ export default function PersonalBests({ userId }: Props) {
       </div>
       {bests.maxSessionMin > 0 && (
         <div className="mt-2 text-center text-[10px] text-gray-600">
-          {t("stats.longestSession")}: {fmtTime(bests.maxSessionMin)} · {t("stats.monthlyAvg")}: {bests.avgMonthly}回
+          {t("stats.longestSession")}: {fmtTime(bests.maxSessionMin)} · {t("stats.monthlyAvg")}: {bests.avgMonthly}{timesUnit}
         </div>
       )}
       {/* 曜日別練習頻度ミニグラフ */}
       {bests.totalSessions >= 5 && (() => {
-        const DOW_LABELS = ["月", "火", "水", "木", "金", "土", "日"];
+        // Mon=0 … Sun=6, locale-aware narrow weekday labels (2024-01-01 is Monday)
+        const DOW_LABELS = Array.from({ length: 7 }, (_, i) =>
+          new Intl.DateTimeFormat(undefined, { weekday: "narrow" }).format(new Date(2024, 0, 1 + i))
+        );
+        const DOW_LONG = Array.from({ length: 7 }, (_, i) =>
+          new Intl.DateTimeFormat(undefined, { weekday: "long" }).format(new Date(2024, 0, 1 + i))
+        );
         const maxDow = Math.max(...bests.dowCounts, 1);
         const bestDowIdx = bests.dowCounts.indexOf(Math.max(...bests.dowCounts));
         return (
@@ -320,7 +330,7 @@ export default function PersonalBests({ userId }: Props) {
               })}
             </div>
             <p className="text-[9px] text-gray-600 text-center mt-1">
-              {t("stats.bestDayLabel")}: <span className="text-[#e94560] font-medium">{DOW_LABELS[bestDowIdx]}{t("stats.dayOfWeek")}</span>（{bests.dowCounts[bestDowIdx]}回）
+              {t("stats.bestDayLabel")}: <span className="text-[#e94560] font-medium">{DOW_LONG[bestDowIdx]}</span> ({bests.dowCounts[bestDowIdx]}{timesUnit})
             </p>
           </div>
         );

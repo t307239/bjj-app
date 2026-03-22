@@ -25,13 +25,12 @@ type Props = {
   isPro?: boolean;
 };
 
-const TYPE_LABELS: Record<string, string> = {
-  gi: "道衣",
-  nogi: "ノーギ",
-  drilling: "ドリル",
-  competition: "試合",
-  open_mat: "オープンマット",
-};
+// Locale-aware month label from YYYY-MM string
+function getMonthLabel(ym: string): string {
+  const [y, m] = ym.split("-");
+  const d = new Date(parseInt(y), parseInt(m) - 1, 1);
+  return new Intl.DateTimeFormat(undefined, { month: "short" }).format(d);
+}
 
 const TYPE_COLORS: Record<string, string> = {
   gi: "bg-blue-500/70",
@@ -54,6 +53,14 @@ const TYPE_ORDER = ["gi", "nogi", "drilling", "competition", "open_mat"];
 
 export default function TrainingBarChart({ userId, isPro = false }: Props) {
   const { t } = useLocale();
+  const TYPE_LABELS: Record<string, string> = {
+    gi: t("training.gi"),
+    nogi: t("training.nogi"),
+    drilling: t("training.drilling"),
+    competition: t("training.competition"),
+    open_mat: t("training.open_mat"),
+  };
+  const timesUnit = t("chart.timesUnit");
   const [data6, setData6] = useState<MonthData[]>([]);
   const [data12, setData12] = useState<MonthData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -100,7 +107,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           });
           return Object.entries(buckets).map(([month, val]) => {
             const m = month.split("-")[1];
-            return { month, label: `${parseInt(m)}月`, ...val };
+            return { month, label: getMonthLabel(month), ...val };
           });
         };
 
@@ -173,7 +180,8 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
   const selectedMonthLabel = selectedMonth
     ? (() => {
         const [y, m] = selectedMonth.split("-");
-        return `${y}年${parseInt(m)}月`;
+        const d = new Date(parseInt(y), parseInt(m) - 1, 1);
+        return new Intl.DateTimeFormat(undefined, { year: "numeric", month: "long" }).format(d);
       })()
     : null;
 
@@ -191,7 +199,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         <div>
           <h4 className="text-sm font-medium text-zinc-300">📊 {t("chart.monthlyGraph")}</h4>
           {!isOpen && totalCount > 0 && (
-            <p className="text-[10px] text-gray-500 mt-0.5">計{totalCount}回 · {formatMinutes(totalMinutes)}</p>
+            <p className="text-[10px] text-gray-500 mt-0.5">{t("chart.totalLabel")}{totalCount}{timesUnit} · {formatMinutes(totalMinutes)}</p>
           )}
         </div>
         <svg
@@ -206,7 +214,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         <div>
           <h4 className="text-sm font-medium text-zinc-300">{t("chart.monthlyGraph")}</h4>
           <p className="text-[10px] text-gray-600 mt-0.5">
-            {t("chart.pastMonths", { n: range })}: 計{totalCount}回 · {formatMinutes(totalMinutes)}
+            {t("chart.pastMonths", { n: range })}: {t("chart.totalLabel")}{totalCount}{timesUnit} · {formatMinutes(totalMinutes)}
           </p>
         </div>
         <div className="flex gap-1">
@@ -279,14 +287,14 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             <div
               className="absolute left-0 right-0 border-t border-dashed border-white/10 pointer-events-none"
               style={{ bottom: `${avgPct}%` }}
-              title={`${t("chart.average")}: ${view === "count" ? `${Math.round(avgVal)}回` : formatMinutes(Math.round(avgVal))}`}
+              title={`${t("chart.average")}: ${view === "count" ? `${Math.round(avgVal)}${timesUnit}` : formatMinutes(Math.round(avgVal))}`}
             />
           )}
           <div className="flex items-end gap-1 h-full">
             {data.map((d) => {
               const val = view === "count" ? d.count : d.minutes;
               const pct = val > 0 ? Math.max((val / maxVal) * 100, 5) : 0;
-              const label = view === "count" ? `${val}回` : formatMinutes(val);
+              const label = view === "count" ? `${val}${timesUnit}` : formatMinutes(val);
               const isCurrentMonth = d.month === currentMonthKey;
               const isSelected = d.month === selectedMonth;
 
@@ -302,7 +310,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                   {hoveredMonth === d.month && val > 0 && (
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-zinc-950 border border-white/10 rounded-lg px-2 py-1.5 text-center pointer-events-none z-20 whitespace-nowrap shadow-lg">
                       <div className="text-[11px] font-semibold text-white">{d.label}</div>
-                      <div className="text-[10px] text-zinc-300 mt-0.5">{d.count}回 · {formatMinutes(d.minutes)}</div>
+                      <div className="text-[10px] text-zinc-300 mt-0.5">{d.count}{timesUnit} · {formatMinutes(d.minutes)}</div>
                       {/* Type breakdown in tooltip */}
                       {view === "count" && Object.keys(d.typeBreakdown).length > 1 && (
                         <div className="flex gap-1 mt-1 justify-center flex-wrap">
@@ -371,7 +379,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
       )}
       {avgPct > 0 && (
         <div className="text-[10px] text-gray-600 text-right mt-1">
-          {t("chart.average")} {view === "count" ? `${Math.round(avgVal)}回/${t("chart.month")}` : `${formatMinutes(Math.round(avgVal))}/${t("chart.month")}`}
+          {t("chart.average")} {view === "count" ? `${Math.round(avgVal)}${timesUnit}/${t("chart.month")}` : `${formatMinutes(Math.round(avgVal))}/${t("chart.month")}`}
         </div>
       )}
 
@@ -430,9 +438,9 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           )}
           {selectedLogs.length > 0 && (
             <div className="mt-2 pt-1 border-t border-white/10 flex gap-4 text-[10px] text-gray-500">
-              <span>{selectedLogs.length}回</span>
-              <span>合計 {formatMinutes(selectedLogs.reduce((s, l) => s + (l.duration_min || 0), 0))}</span>
-              <span>平均 {selectedLogs.length > 0 ? formatMinutes(Math.round(selectedLogs.reduce((s, l) => s + (l.duration_min || 0), 0) / selectedLogs.length)) : "-"}/回</span>
+              <span>{selectedLogs.length}{timesUnit}</span>
+              <span>{t("chart.totalLabel")}{formatMinutes(selectedLogs.reduce((s, l) => s + (l.duration_min || 0), 0))}</span>
+              <span>{t("chart.avgLabel")}{selectedLogs.length > 0 ? formatMinutes(Math.round(selectedLogs.reduce((s, l) => s + (l.duration_min || 0), 0) / selectedLogs.length)) : "-"}</span>
             </div>
           )}
         </div>

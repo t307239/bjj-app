@@ -176,7 +176,8 @@
     "lastMonthCompare": "先月比較",
     "samePaceLast": "先月と同じペース",
     "BJJRecordTitle": "BJJ練習記録",
-    "BJJHashtag": "BJJ"
+    "BJJHashtag": "BJJ",
+    "daysUnit": "日"
   },
   "insights": {
     "title": "トレーニングインサイト",
@@ -225,7 +226,9 @@
     "noSessionsThisMonth": "今月の練習記録はありません",
     "monthlyTrendSubtitle": "の月別推移（過去6ヶ月）",
     "clickForTrend": "クリックして月別推移を表示",
-    "sessionsFmt": "{n}回"
+    "sessionsFmt": "{n}回",
+    "totalLabel": "計",
+    "avgLabel": "平均 "
   },
   "install": {
     "ios": "ホーム画面に追加して、アプリとして使えます！",

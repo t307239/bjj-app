@@ -176,7 +176,8 @@
     "lastMonthCompare": "vs last month",
     "samePaceLast": "Same pace as last month",
     "BJJRecordTitle": "BJJ Training Record",
-    "BJJHashtag": "BJJ"
+    "BJJHashtag": "BJJ",
+    "daysUnit": " days"
   },
   "insights": {
     "title": "Training Insights",
@@ -225,7 +226,9 @@
     "noSessionsThisMonth": "No sessions this month",
     "monthlyTrendSubtitle": "Monthly trend (past 6 months)",
     "clickForTrend": "Click to view monthly trend",
-    "sessionsFmt": "{n} sessions"
+    "sessionsFmt": "{n} sessions",
+    "totalLabel": "Total: ",
+    "avgLabel": "Avg: "
   },
   "install": {
     "ios": "Add to Home Screen to use as app!",
