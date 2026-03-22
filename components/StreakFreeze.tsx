@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
+import { useLocale } from "@/lib/i18n";
 
 const STRIPE_PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
 
@@ -29,6 +30,7 @@ function fmtDate(dateStr: string): string {
 }
 
 export default function StreakFreeze({ userId, streak }: Props) {
+  const { t } = useLocale();
   const [freezeCount, setFreezeCount] = useState(0);
   const [historyDates, setHistoryDates] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -96,9 +98,9 @@ export default function StreakFreeze({ userId, streak }: Props) {
       if (!error) {
         setFreezeCount((prev) => Math.max(0, prev - 1));
         setHistoryDates(newHistory);
-        setToast({ message: "❄️ Streak Freeze used! Your streak is saved.", type: "success" });
+        setToast({ message: t("freeze.used"), type: "success" });
       } else {
-        setToast({ message: "Failed to use. Please try again later.", type: "error" });
+        setToast({ message: t("freeze.useFailed"), type: "error" });
       }
     } finally {
       setUsing(false);
@@ -127,15 +129,15 @@ export default function StreakFreeze({ userId, streak }: Props) {
               <span className="text-xl mt-0.5">❄️</span>
               <div>
                 <p className="text-sm font-semibold text-blue-300">
-                  {streak}-day streak at risk! Streak Freeze available
+                  {t("freeze.atRisk", { n: streak })}
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5">
-                  No training logged yesterday. Use a freeze to protect your streak.
+                  {t("freeze.noYesterday")}
                 </p>
-                <p className="text-[11px] text-blue-400 mt-1">{freezeCount} uses remaining</p>
+                <p className="text-[11px] text-blue-400 mt-1">{t("freeze.remaining", { n: freezeCount })}</p>
                 {historyDates.length > 0 && (
                   <p className="text-[10px] text-gray-500 mt-0.5">
-                    Recent usage: {historyDates.map(fmtDate).join(" / ")}
+                    {t("freeze.recentUsage")} {historyDates.map(fmtDate).join(" / ")}
                   </p>
                 )}
               </div>
@@ -154,7 +156,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
               disabled={freezeCount <= 0 || using}
               className="flex-1 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 disabled:opacity-40 text-white text-sm font-semibold transition-colors"
             >
-              {using ? "Using..." : `❄️ Use Freeze (${freezeCount} left)`}
+              {using ? t("freeze.using") : t("freeze.useBtn", { n: freezeCount })}
             </button>
           </div>
         </div>
@@ -167,8 +169,8 @@ export default function StreakFreeze({ userId, streak }: Props) {
             <div className="flex items-center gap-2">
               <span className="text-base">❄️</span>
               <div>
-                <p className="text-xs font-medium text-gray-300">Streak Freeze</p>
-                <p className="text-[11px] text-gray-500">Protects your streak in emergencies</p>
+                <p className="text-xs font-medium text-gray-300">{t("freeze.title")}</p>
+                <p className="text-[11px] text-gray-500">{t("freeze.protects")}</p>
               </div>
             </div>
             <div className="flex items-center gap-1">
@@ -184,7 +186,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
           {historyDates.length > 0 && (
             <div className="mt-2 pt-2 border-t border-white/5">
               <p className="text-[10px] text-gray-500">
-                Recent usage:{" "}
+                {t("freeze.recentUsage")}{" "}
                 {historyDates.map((d, i) => (
                   <span key={i}>
                     <span className={i === 0 ? "text-blue-400" : "text-gray-600"}>
@@ -208,8 +210,8 @@ export default function StreakFreeze({ userId, streak }: Props) {
             <div className="flex items-center gap-2">
               <span className="text-base opacity-40">❄️</span>
               <div>
-                <p className="text-xs font-medium text-gray-400">Streak Freeze: 0 remaining</p>
-                <p className="text-[11px] text-gray-600">Get unlimited freezes with Pro</p>
+                <p className="text-xs font-medium text-gray-400">{t("freeze.zeroRemaining")}</p>
+                <p className="text-[11px] text-gray-600">{t("freeze.getUnlimited")}</p>
               </div>
             </div>
             <a
@@ -223,7 +225,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
                 }
               }}
             >
-              Go Pro ↗
+              {t("freeze.goPro")}
             </a>
           </div>
         </div>

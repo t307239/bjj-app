@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
+import { useLocale } from "@/lib/i18n";
 
 type Props = {
   userId: string;
@@ -32,17 +33,17 @@ type WeekHistory = {
   isCurrent: boolean;
 };
 
-function ProgressBar({ current, target }: { current: number; target: number }) {
+function ProgressBar({ current, target, sessionsUnit, doneLabel }: { current: number; target: number; sessionsUnit: string; doneLabel: string }) {
   const pct = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
   const done = current >= target && target > 0;
   return (
     <div className="mt-2">
       <div className="flex justify-between items-center mb-1">
         <span className={`text-xs font-bold ${done ? "text-green-400" : "text-[#e94560]"}`}>
-          {current} / {target} sessions
+          {current}{sessionsUnit} / {target}{sessionsUnit}
         </span>
         <span className={`text-[11px] ${done ? "text-green-400" : "text-gray-500"}`}>
-          {done ? "✓ Done!" : `${pct}%`}
+          {done ? `✓ ${doneLabel}` : `${pct}%`}
         </span>
       </div>
       <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
@@ -61,14 +62,22 @@ function ProgressBar({ current, target }: { current: number; target: number }) {
 }
 
 function GoalEditor({
-  label,
+  header,
+  currentDoneText,
+  sessionsLabel,
+  cancelLabel,
+  setLabel,
   current,
   value,
   onChange,
   onSave,
   onCancel,
 }: {
-  label: string;
+  header: string;
+  currentDoneText: string;
+  sessionsLabel: string;
+  cancelLabel: string;
+  setLabel: string;
   current: number;
   value: number;
   onChange: (v: number) => void;
@@ -77,7 +86,7 @@ function GoalEditor({
 }) {
   return (
     <div className="bg-white/5 rounded-xl p-4 border border-[#e94560]/30">
-      <div className="text-xs text-gray-400 mb-3">Set {label} goal</div>
+      <div className="text-xs text-gray-400 mb-3">{header}</div>
       <div className="flex items-center gap-3 mb-4">
         <button
           onClick={() => onChange(Math.max(0, value - 1))}
@@ -87,7 +96,7 @@ function GoalEditor({
         </button>
         <div className="flex-1 text-center">
           <span className="text-3xl font-bold text-white">{value}</span>
-          <span className="text-gray-400 text-sm ml-1">sessions</span>
+          <span className="text-gray-400 text-sm ml-1">{sessionsLabel}</span>
         </div>
         <button
           onClick={() => onChange(Math.min(30, value + 1))}
@@ -98,7 +107,7 @@ function GoalEditor({
       </div>
       {value > 0 && (
         <div className="text-xs text-gray-500 text-center mb-3">
-          Current: {current} sessions done
+          {currentDoneText}
         </div>
       )}
       <div className="flex gap-2">
@@ -106,14 +115,14 @@ function GoalEditor({
           onClick={onCancel}
           className="flex-1 py-2 rounded-lg bg-white/10 text-gray-300 text-sm hover:bg-white/15 transition-colors"
         >
-          Cancel
+          {cancelLabel}
         </button>
         <button
           onClick={onSave}
           disabled={value === 0}
           className="flex-1 py-2 rounded-lg bg-[#e94560] text-white text-sm font-semibold hover:bg-[#c73652] disabled:opacity-40 transition-colors"
         >
-          Set
+          {setLabel}
         </button>
       </div>
     </div>
@@ -121,6 +130,7 @@ function GoalEditor({
 }
 
 export default function GoalTracker({ userId }: Props) {
+  const { t } = useLocale();
   const [data, setData] = useState<GoalData>({
     weeklyGoal: 0,
     monthlyGoal: 0,
@@ -299,9 +309,9 @@ export default function GoalTracker({ userId }: Props) {
         monthlyGoal: editing === "monthly" ? editValue : prev.monthlyGoal,
         techniqueGoal: editing === "technique" ? editValue : prev.techniqueGoal,
       }));
-      setToast({ message: "Goal set!", type: "success" });
+      setToast({ message: t("goal.goalSaved"), type: "success" });
     } else {
-      setToast({ message: "Failed to save", type: "error" });
+      setToast({ message: t("goal.goalFailed"), type: "error" });
     }
     setEditing(null);
   };
@@ -376,18 +386,18 @@ export default function GoalTracker({ userId }: Props) {
           onClick={() => setIsOpen((v) => !v)}
           className="w-full flex items-center justify-between px-4 py-3 border-b border-white/10 hover:bg-white/5 transition-colors text-left"
         >
-          <h4 className="text-sm font-medium text-gray-300">🎯 Training Goals</h4>
+          <h4 className="text-sm font-medium text-gray-300">{t("goal.title")}</h4>
           <div className="flex items-center gap-2">
             {!isOpen && hasGoals && (
               <span className="text-[10px] text-gray-500">
                 {[
-                  data.weeklyGoal > 0 ? `Weekly ${data.weekCount}/${data.weeklyGoal}` : "",
-                  data.monthlyGoal > 0 ? `Monthly ${data.monthCount}/${data.monthlyGoal}` : "",
+                  data.weeklyGoal > 0 ? t("goal.compactWeekly", { a: data.weekCount, b: data.weeklyGoal }) : "",
+                  data.monthlyGoal > 0 ? t("goal.compactMonthly", { a: data.monthCount, b: data.monthlyGoal }) : "",
                 ].filter(Boolean).join(" · ")}
               </span>
             )}
             {!isOpen && !hasGoals && (
-              <span className="text-[10px] text-gray-600">Set a goal</span>
+              <span className="text-[10px] text-gray-600">{t("goal.setAGoal")}</span>
             )}
             <svg
               className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
@@ -420,13 +430,13 @@ export default function GoalTracker({ userId }: Props) {
             <div className="cf-p"/><div className="cf-p"/><div className="cf-p"/><div className="cf-p"/>
             <div className="cf-p"/><div className="cf-p"/><div className="cf-p"/><div className="cf-p"/>
             <div className="text-2xl mb-1 animate-bounce">🎉</div>
-            <div className="text-sm font-bold text-green-400">All goals achieved!</div>
+            <div className="text-sm font-bold text-green-400">{t("goal.allAchieved")}</div>
             <div className="text-[11px] text-gray-400 mt-1">
               {consecutiveAchievedMonths >= 3
-                ? `🔥 ${consecutiveAchievedMonths} months in a row! Path to black belt is opening`
+                ? t("goal.monthsInRow", { n: consecutiveAchievedMonths })
                 : consecutiveAchievedMonths >= 2
-                ? `✨ ${consecutiveAchievedMonths} months achieved! Building a habit`
-                : "🌟 Awesome! Keep going!"}
+                ? t("goal.monthsHabit", { n: consecutiveAchievedMonths })
+                : t("goal.keepGoing")}
             </div>
           </div>
         )}
@@ -435,7 +445,11 @@ export default function GoalTracker({ userId }: Props) {
           {/* Weekly Goal */}
           {editing === "weekly" ? (
             <GoalEditor
-              label="This week"
+              header={t("goal.setWeeklyHeader")}
+              currentDoneText={t("goal.currentDone", { n: data.weekCount })}
+              sessionsLabel={t("goal.sessionsPicker")}
+              cancelLabel={t("goal.cancel")}
+              setLabel={t("goal.set")}
               current={data.weekCount}
               value={editValue}
               onChange={setEditValue}
@@ -449,21 +463,24 @@ export default function GoalTracker({ userId }: Props) {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-zinc-100">Weekly goal</span>
+                  <span className="text-sm font-medium text-zinc-100">{t("goal.weekly")}</span>
                   {data.weekCount >= data.weeklyGoal && data.weeklyGoal > 0 && (
-                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">Done!</span>
+                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
                 <button className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors">
-                  {data.weeklyGoal > 0 ? "Edit" : "+ Set"}
+                  {data.weeklyGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>
               {data.weeklyGoal > 0 ? (
                 <>
-                  <ProgressBar current={data.weekCount} target={data.weeklyGoal} />
+                  <ProgressBar current={data.weekCount} target={data.weeklyGoal} sessionsUnit={t("chart.timesUnit")} doneLabel={t("goal.done")} />
                   {/* Day-by-day achievement grid */}
                   {(() => {
-                    const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+                    // Mon=0…Sun=6, locale-aware short weekday (2024-01-01 is Monday)
+                    const DAY_LABELS = Array.from({ length: 7 }, (_, i) =>
+                      new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(new Date(2024, 0, 1 + i))
+                    );
                     const jstNowGrid = new Date(Date.now() + 9 * 3600000);
                     const dowNow = jstNowGrid.getUTCDay(); // 0=Sun
                     const todayIdx = dowNow === 0 ? 6 : dowNow - 1; // Mon=0...Sun=6
@@ -508,17 +525,17 @@ export default function GoalTracker({ userId }: Props) {
                     if (needed === 0) return (
                       <p className="text-[10px] text-green-400/70 mt-1.5">
                         {data.weekCount > data.weeklyGoal
-                          ? `🔥 Goal +${data.weekCount - data.weeklyGoal} extra! Best pace this week`
-                          : "🎯 Weekly goal cleared! Keep stacking until the weekend"}
+                          ? t("goal.extraWeek", { n: data.weekCount - data.weeklyGoal })
+                          : t("goal.weeklyClear")}
                       </p>
                     );
                     if (daysLeftInWeek === 0) return (
-                      <p className="text-[10px] text-gray-600 mt-1.5">0 days left · {needed} more</p>
+                      <p className="text-[10px] text-gray-600 mt-1.5">{t("goal.zeroDaysLeft", { n: needed })}</p>
                     );
                     return (
                       <p className="text-[10px] text-gray-500 mt-1.5">
-                        <span className="text-[#e94560] font-semibold">{needed}</span> more · {daysLeftInWeek} days left
-                        {needed <= daysLeftInWeek ? " ✓ On track" : " ⚠ Pick up pace"}
+                        {t("goal.moreNeeded", { needed, days: daysLeftInWeek })}
+                        {needed <= daysLeftInWeek ? t("goal.onTrackSuffix") : t("goal.pickUpPace")}
                       </p>
                     );
                   })()}
@@ -542,7 +559,7 @@ export default function GoalTracker({ userId }: Props) {
                               {w.achieved ? "✓" : w.count > 0 ? w.count : "-"}
                             </div>
                             <span className={`text-[8px] leading-none ${w.isCurrent ? "text-gray-300" : "text-gray-600"}`}>
-                              {w.label}
+                              {w.isCurrent ? t("goal.thisWeek") : weekHistory.indexOf(w) === weekHistory.length - 2 ? t("goal.lastWeek") : t("goal.weeksAgo", { n: weekHistory.length - 1 - weekHistory.indexOf(w) })}
                             </span>
                           </div>
                         ))}
@@ -550,7 +567,7 @@ export default function GoalTracker({ userId }: Props) {
                       {consecutiveAchievedWeeks >= 2 && (
                         <div className="mt-1.5 flex justify-center">
                           <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-green-500/15 border border-green-500/30 text-green-300 px-2 py-0.5 rounded-full">
-                            🔥 {consecutiveAchievedWeeks} weeks in a row
+                            {t("goal.weeksInRow", { n: consecutiveAchievedWeeks })}
                           </span>
                         </div>
                       )}
@@ -558,7 +575,7 @@ export default function GoalTracker({ userId }: Props) {
                   )}
                 </>
               ) : (
-                <p className="text-xs text-gray-600 mt-1">No goal set — tap to set one</p>
+                <p className="text-xs text-gray-600 mt-1">{t("goal.noGoal")}</p>
               )}
             </div>
           )}
@@ -566,7 +583,11 @@ export default function GoalTracker({ userId }: Props) {
           {/* Monthly Goal */}
           {editing === "monthly" ? (
             <GoalEditor
-              label="This month"
+              header={t("goal.setMonthlyHeader")}
+              currentDoneText={t("goal.currentDone", { n: data.monthCount })}
+              sessionsLabel={t("goal.sessionsPicker")}
+              cancelLabel={t("goal.cancel")}
+              setLabel={t("goal.set")}
               current={data.monthCount}
               value={editValue}
               onChange={setEditValue}
@@ -580,40 +601,39 @@ export default function GoalTracker({ userId }: Props) {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-zinc-100">Monthly goal</span>
+                  <span className="text-sm font-medium text-zinc-100">{t("goal.monthly")}</span>
                   {data.monthCount >= data.monthlyGoal && data.monthlyGoal > 0 && (
-                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">Done!</span>
+                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
                 <button className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors">
-                  {data.monthlyGoal > 0 ? "Edit" : "+ Set"}
+                  {data.monthlyGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>
               {data.monthlyGoal > 0 ? (
                 <>
-                  <ProgressBar current={data.monthCount} target={data.monthlyGoal} />
+                  <ProgressBar current={data.monthCount} target={data.monthlyGoal} sessionsUnit={t("chart.timesUnit")} doneLabel={t("goal.done")} />
                   {data.monthCount >= data.monthlyGoal ? (
                     <p className="text-[10px] text-green-400/70 mt-1.5">
                       {data.monthCount > data.monthlyGoal
-                        ? `🔥 Goal +${data.monthCount - data.monthlyGoal} extra!`
+                        ? t("goal.extraMonth", { n: data.monthCount - data.monthlyGoal })
                         : consecutiveAchievedMonths >= 2
-                        ? `✨ ${consecutiveAchievedMonths} months achieved!`
-                        : "🎯 Monthly goal achieved! Rest of the month is bonus"}
+                        ? t("goal.consecutiveMonths", { n: consecutiveAchievedMonths })
+                        : t("goal.monthlyAchieved")}
                     </p>
                   ) : data.monthCount < data.monthlyGoal && remainingDaysInMonth > 0 && (
                     <p className="text-[10px] mt-1 text-gray-500">
-                      {data.monthlyGoal - data.monthCount} more{" · "}
-                      {remainingDaysInMonth} days left{" · "}
+                      {t("goal.moreNeeded", { needed: data.monthlyGoal - data.monthCount, days: remainingDaysInMonth })}
                       {monthlyProjected > 0 ? (
                         <span className={monthOnTrack ? "text-green-400/80" : "text-orange-400/80"}>
-                          {monthOnTrack ? "On track 🎯" : `On pace for ${monthlyProjected}`}
+                          {monthOnTrack ? t("goal.onTrack") : t("goal.onPaceFor", { n: monthlyProjected })}
                         </span>
                       ) : null}
                     </p>
                   )}
                 </>
               ) : (
-                <p className="text-xs text-gray-600 mt-1">No goal set — tap to set one</p>
+                <p className="text-xs text-gray-600 mt-1">{t("goal.noGoal")}</p>
               )}
             </div>
           )}
@@ -621,7 +641,11 @@ export default function GoalTracker({ userId }: Props) {
           {/* Technique Goal */}
           {editing === "technique" ? (
             <GoalEditor
-              label="Techniques to learn"
+              header={t("goal.setTechniqueHeader")}
+              currentDoneText={t("goal.currentDone", { n: data.techniqueCount })}
+              sessionsLabel={t("goal.sessionsPicker")}
+              cancelLabel={t("goal.cancel")}
+              setLabel={t("goal.set")}
               current={data.techniqueCount}
               value={editValue}
               onChange={(v) => setEditValue(Math.min(500, v))}
@@ -635,19 +659,19 @@ export default function GoalTracker({ userId }: Props) {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-zinc-100">🥋 Technique goal</span>
+                  <span className="text-sm font-medium text-zinc-100">{t("goal.technique")}</span>
                   {data.techniqueCount >= data.techniqueGoal && data.techniqueGoal > 0 && (
-                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">Done!</span>
+                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
                 <button className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors">
-                  {data.techniqueGoal > 0 ? "Edit" : "+ Set"}
+                  {data.techniqueGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>
               {data.techniqueGoal > 0 ? (
-                <ProgressBar current={data.techniqueCount} target={data.techniqueGoal} />
+                <ProgressBar current={data.techniqueCount} target={data.techniqueGoal} sessionsUnit={t("chart.timesUnit")} doneLabel={t("goal.done")} />
               ) : (
-                <p className="text-xs text-gray-600 mt-1">No goal set (tap to set)</p>
+                <p className="text-xs text-gray-600 mt-1">{t("goal.noGoalParen")}</p>
               )}
             </div>
           )}
@@ -656,7 +680,7 @@ export default function GoalTracker({ userId }: Props) {
         {/* Monthly achievement history badges (when monthly goal is set) */}
         {monthHistory.length > 0 && (
           <div className="border-t border-white/10 px-4 py-3">
-            <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wider">Past 6 months</p>
+            <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wider">{t("goal.past6Months")}</p>
             <div className="flex items-end justify-between gap-1">
               {monthHistory.map((m) => (
                 <div key={m.ym} className="flex flex-col items-center gap-1 flex-1">
@@ -676,7 +700,7 @@ export default function GoalTracker({ userId }: Props) {
               ))}
             </div>
             <p className="text-[10px] text-gray-600 mt-2 text-center">
-              {monthHistory.filter((m) => m.achieved).length} / 6 months achieved
+              {t("goal.monthsAchieved", { n: monthHistory.filter((m) => m.achieved).length })}
             </p>
           </div>
         )}
