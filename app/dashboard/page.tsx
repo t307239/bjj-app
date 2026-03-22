@@ -26,7 +26,7 @@ import ProUpgradeBanner from "@/components/ProUpgradeBanner";
 import BeltProgressCard from "@/components/BeltProgressCard";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app-one.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
 // React.cache で プロフィール二重クエリを最適化
 const getCachedProfile = cache(async (userId: string) => {
@@ -415,6 +415,23 @@ export default async function DashboardPage() {
 
         </div>
 
+        {/* ── Log Today CTA ── */}
+        <a
+          href="#training-log"
+          className="flex items-center justify-between gap-4 bg-gradient-to-r from-rose-500/15 to-rose-600/5 border border-rose-500/30 hover:border-rose-500/60 hover:from-rose-500/20 hover:to-rose-600/10 rounded-2xl px-5 py-4 mb-6 transition-all duration-200 group active:scale-[0.99]"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🥋</span>
+            <div>
+              <p className="text-rose-300 font-semibold text-sm group-hover:text-rose-200 transition-colors">
+                Log Today&apos;s Session
+              </p>
+              <p className="text-zinc-500 text-xs mt-0.5">Tap to record your training</p>
+            </div>
+          </div>
+          <span className="text-rose-500/60 group-hover:text-rose-400 group-hover:translate-x-0.5 transition-all text-lg font-light">→</span>
+        </a>
+
         {/* ── Section 1: Nudges & Today ── */}
         <section className="space-y-3 mb-8">
           <ProUpgradeBanner isPro={isPro} />
@@ -501,7 +518,7 @@ export default async function DashboardPage() {
         </section>
 
         {/* ── Section 5: Training Log ── */}
-        <section className="mb-8">
+        <section id="training-log" className="mb-8 scroll-mt-4">
           <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest px-0.5 mb-3">Log</p>
           <TrainingLog userId={user.id} isPro={isPro} />
         </section>
