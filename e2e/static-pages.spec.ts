@@ -63,7 +63,8 @@ test.describe("Gym Page (B2B)", () => {
   });
 
   test("gym page has waitlist form or CTA", async ({ page }) => {
-    await page.goto("/gym");
+    await page.goto("/gym", { waitUntil: "domcontentloaded" });
+    await page.waitForLoadState("networkidle").catch(() => {}); // graceful fallback
     const formOrCTA = page.locator(
       'input[type="email"], a[href*="mailto"], button, form'
     );
@@ -74,12 +75,18 @@ test.describe("Gym Page (B2B)", () => {
 
 test.describe("404 Page", () => {
   test("renders 404 for unknown routes", async ({ page }) => {
-    const response = await page.goto("/this-page-does-not-exist-xyz");
+    const response = await page.goto("/this-page-does-not-exist-xyz", {
+      waitUntil: "domcontentloaded",
+      timeout: 15000,
+    });
     expect(response?.status()).toBe(404);
   });
 
   test("404 page has back-to-home link", async ({ page }) => {
-    await page.goto("/this-page-does-not-exist-xyz");
+    await page.goto("/this-page-does-not-exist-xyz", {
+      waitUntil: "domcontentloaded",
+      timeout: 15000,
+    });
     const homeLink = page.locator('a[href="/"]');
     const count = await homeLink.count();
     if (count > 0) {
@@ -108,7 +115,11 @@ test.describe("PWA Manifest", () => {
 
 test.describe("API Health", () => {
   test("OG image API returns image", async ({ page }) => {
-    const response = await page.goto("/api/og?belt=white&count=10&months=3");
+    test.setTimeout(60000); // OG image generation can be slow locally
+    const response = await page.goto("/api/og?belt=white&count=10&months=3", {
+      waitUntil: "domcontentloaded",
+      timeout: 30000,
+    });
     expect(response?.status()).toBe(200);
     const contentType = response?.headers()["content-type"];
     expect(contentType).toContain("image");

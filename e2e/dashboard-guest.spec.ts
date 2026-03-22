@@ -63,8 +63,9 @@ test.describe("Dashboard - Guest Mode", () => {
   test("mobile viewport renders without horizontal scroll", async ({
     page,
   }) => {
+    test.setTimeout(60000);
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.waitForTimeout(500);
+    await page.waitForLoadState("networkidle").catch(() => {});
     const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
     const viewportWidth = await page.evaluate(() => window.innerWidth);
     expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 10);

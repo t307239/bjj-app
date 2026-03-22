@@ -79,7 +79,7 @@ test.describe("Landing Page", () => {
     const wikiSection = page.getByText(/BJJ Wiki|技術を深める/i);
     // LP has wiki cross-links if section exists
     if (await wikiSection.first().isVisible().catch(() => false)) {
-      const wikiLinks = page.locator('a[href*="bjj-wiki"]');
+      const wikiLinks = page.locator('a[href*="wiki.bjj-app"]');
       const count = await wikiLinks.count();
       expect(count).toBeGreaterThanOrEqual(1);
     }
