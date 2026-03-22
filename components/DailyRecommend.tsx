@@ -110,14 +110,14 @@ export default function DailyRecommend({ userId }: Props) {
 
       if (data && data.length > 0) {
         // 日付ベースで候補をローテーション（毎日変わる）
-        const dayIndex = new Date().getDate() % data.length;
+        const dayIndex = new Date(Date.now() + 9 * 3600000).getUTCDate() % data.length;
         setTech(data[dayIndex]);
       }
 
-      // 今日のヒント（年の通算日でローテーション）
-      const now = new Date();
+      // 今日のヒント（年の通算日でローテーション、JST）
+      const jstNow = new Date(Date.now() + 9 * 3600000);
       const dayOfYear = Math.floor(
-        (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000
+        (jstNow.getTime() - new Date(Date.UTC(jstNow.getUTCFullYear(), 0, 0)).getTime()) / 86400000
       );
       setTipIndex(dayOfYear % TIPS.length);
       setLoading(false);

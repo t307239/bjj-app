@@ -55,8 +55,11 @@ export default function StreakFreeze({ userId, streak }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  const today = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD
-  const yesterday = new Date(Date.now() - 86400000).toLocaleDateString("sv-SE");
+  // JST日付（sv-SEではなくUTC+9で統一）
+  const toJSTStr = (d: Date): string =>
+    `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+  const today = toJSTStr(new Date(Date.now() + 9 * 3600000));
+  const yesterday = toJSTStr(new Date(Date.now() + 9 * 3600000 - 86400000));
   const usedToday = historyDates[0] === today;
 
   const [hadYesterdayLog, setHadYesterdayLog] = useState<boolean | null>(null);

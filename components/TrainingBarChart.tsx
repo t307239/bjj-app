@@ -189,7 +189,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
       >
         <div>
-          <h4 className="text-sm font-medium text-gray-300">📊 {t("chart.monthlyGraph")}</h4>
+          <h4 className="text-sm font-medium text-zinc-300">📊 {t("chart.monthlyGraph")}</h4>
           {!isOpen && totalCount > 0 && (
             <p className="text-[10px] text-gray-500 mt-0.5">計{totalCount}回 · {formatMinutes(totalMinutes)}</p>
           )}
@@ -204,7 +204,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
       {isOpen && (<div className="p-4 border-t border-white/10">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h4 className="text-sm font-medium text-gray-300">{t("chart.monthlyGraph")}</h4>
+          <h4 className="text-sm font-medium text-zinc-300">{t("chart.monthlyGraph")}</h4>
           <p className="text-[10px] text-gray-600 mt-0.5">
             {t("chart.pastMonths", { n: range })}: 計{totalCount}回 · {formatMinutes(totalMinutes)}
           </p>
@@ -213,13 +213,13 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           <div className="flex rounded-lg overflow-hidden border border-white/10 mr-1">
             <button
               onClick={() => { setRange(6); setSelectedMonth(null); }}
-              className={`text-[11px] px-2 py-1 transition-colors ${range === 6 ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-gray-300"}`}
+              className={`text-[11px] px-2 py-1 transition-colors ${range === 6 ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-zinc-300"}`}
             >
               6{t("chart.months")}
             </button>
             <button
               onClick={() => { setRange(12); setSelectedMonth(null); }}
-              className={`text-[11px] px-2 py-1 transition-colors ${range === 12 ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-gray-300"}`}
+              className={`text-[11px] px-2 py-1 transition-colors ${range === 12 ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-zinc-300"}`}
             >
               12{t("chart.months")}
             </button>
@@ -302,7 +302,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                   {hoveredMonth === d.month && val > 0 && (
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-zinc-950 border border-white/10 rounded-lg px-2 py-1.5 text-center pointer-events-none z-20 whitespace-nowrap shadow-lg">
                       <div className="text-[11px] font-semibold text-white">{d.label}</div>
-                      <div className="text-[10px] text-gray-300 mt-0.5">{d.count}回 · {formatMinutes(d.minutes)}</div>
+                      <div className="text-[10px] text-zinc-300 mt-0.5">{d.count}回 · {formatMinutes(d.minutes)}</div>
                       {/* Type breakdown in tooltip */}
                       {view === "count" && Object.keys(d.typeBreakdown).length > 1 && (
                         <div className="flex gap-1 mt-1 justify-center flex-wrap">
@@ -396,7 +396,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             </span>
             <button
               onClick={() => setSelectedMonth(null)}
-              className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
+              className="text-[10px] text-gray-500 hover:text-zinc-300 transition-colors"
             >
               ✕ {t("chart.close")}
             </button>
