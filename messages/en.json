@@ -397,5 +397,24 @@
     "viewYoutube": "Watch on YouTube",
     "trainingTip": "Today's Tip",
     "masteryUp": "Improve mastery"
+  },
+  "affiliate": {
+    "title": "Recommended Instructionals",
+    "viewAll": "View All →",
+    "view": "View →",
+    "disclaimer": "* Affiliate links (BJJ Fanatics)",
+    "level": {
+      "intermediate_advanced": "Int/Advanced",
+      "all": "All Levels",
+      "intermediate": "Intermediate"
+    },
+    "cat": {
+      "all": "All",
+      "guard": "Guard",
+      "submissions": "Submissions",
+      "takedowns": "Takedowns",
+      "back": "Back Attacks",
+      "escapes": "Escapes"
+    }
   }
 }

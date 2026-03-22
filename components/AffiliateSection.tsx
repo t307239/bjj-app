@@ -1,16 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale } from "@/lib/i18n";
 
 const AFF_CODE = "bjjapp";
 const BASE = "https://bjjfanatics.com/products";
 
-const PRODUCTS = [
+type LevelKey = "intermediate_advanced" | "all" | "intermediate";
+
+const PRODUCTS: { id: string; title: string; instructor: string; levelKey: LevelKey; category: string; url: string; emoji: string }[] = [
   {
     id: "danaher-leg-locks",
     title: "Leg Locks: Enter the System",
     instructor: "John Danaher",
-    level: "中〜上級",
+    levelKey: "intermediate_advanced",
     category: "submissions",
     url: `${BASE}/leg-locks-enter-the-system-by-john-danaher?aff=${AFF_CODE}`,
     emoji: "🦵",
@@ -19,7 +22,7 @@ const PRODUCTS = [
     id: "bernardo-half-guard",
     title: "Half Guard: A Complete System",
     instructor: "Bernardo Faria",
-    level: "全レベル",
+    levelKey: "all",
     category: "guard",
     url: `${BASE}/half-guard-a-complete-system-by-bernardo-faria?aff=${AFF_CODE}`,
     emoji: "🛡️",
@@ -28,7 +31,7 @@ const PRODUCTS = [
     id: "marcelo-butterfly",
     title: "Advanced Butterfly Guard",
     instructor: "Marcelo Garcia",
-    level: "中級",
+    levelKey: "intermediate",
     category: "guard",
     url: `${BASE}/advanced-butterfly-guard-by-marcelo-garcia?aff=${AFF_CODE}`,
     emoji: "🦋",
@@ -37,7 +40,7 @@ const PRODUCTS = [
     id: "gordon-wrestling",
     title: "The Wrestling System",
     instructor: "Gordon Ryan",
-    level: "全レベル",
+    levelKey: "all",
     category: "takedowns",
     url: `${BASE}/the-wrestling-system-by-gordon-ryan?aff=${AFF_CODE}`,
     emoji: "🤼",
@@ -46,7 +49,7 @@ const PRODUCTS = [
     id: "danaher-back-attacks",
     title: "Back Attacks: Enter the System",
     instructor: "John Danaher",
-    level: "中〜上級",
+    levelKey: "intermediate_advanced",
     category: "back",
     url: `${BASE}/back-attacks-enter-the-system-by-john-danaher?aff=${AFF_CODE}`,
     emoji: "🎯",
@@ -55,23 +58,17 @@ const PRODUCTS = [
     id: "tom-deblass-escape",
     title: "Escape From Everywhere",
     instructor: "Tom DeBlass",
-    level: "全レベル",
+    levelKey: "all",
     category: "escapes",
     url: `${BASE}/escape-from-everywhere-by-tom-deblass?aff=${AFF_CODE}`,
     emoji: "🔓",
   },
 ];
 
-const CATEGORY_LABELS: Record<string, string> = {
-  all: "すべて",
-  guard: "ガード",
-  submissions: "サブミッション",
-  takedowns: "テイクダウン",
-  back: "バック",
-  escapes: "エスケープ",
-};
+const CATEGORY_KEYS = ["all", "guard", "submissions", "takedowns", "back", "escapes"] as const;
 
 export default function AffiliateSection() {
+  const { t } = useLocale();
   const [filterCat, setFilterCat] = useState("all");
 
   const filtered = filterCat === "all"
@@ -82,7 +79,7 @@ export default function AffiliateSection() {
     <section className="mt-6 mb-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <h2 className="text-base font-bold text-white">📼 おすすめインストラクショナル</h2>
+          <h2 className="text-base font-bold text-white">📼 {t("affiliate.title")}</h2>
           <span className="text-[10px] bg-white/10 text-gray-400 px-2 py-0.5 rounded-full">PR</span>
         </div>
         <a
@@ -91,13 +88,13 @@ export default function AffiliateSection() {
           rel="sponsored noopener noreferrer"
           className="text-[11px] text-gray-500 hover:text-gray-300 transition-colors"
         >
-          すべて見る →
+          {t("affiliate.viewAll")}
         </a>
       </div>
 
       {/* Category filter */}
       <div className="flex gap-1.5 overflow-x-auto pb-2 mb-3 scrollbar-hide">
-        {Object.entries(CATEGORY_LABELS).map(([val, label]) => (
+        {CATEGORY_KEYS.map((val) => (
           <button
             key={val}
             onClick={() => setFilterCat(val)}
@@ -107,7 +104,7 @@ export default function AffiliateSection() {
                 : "bg-zinc-900 text-gray-400 border border-white/10 hover:border-orange-500/40"
             }`}
           >
-            {label}
+            {t(`affiliate.cat.${val}`)}
           </button>
         ))}
       </div>
@@ -130,17 +127,17 @@ export default function AffiliateSection() {
             </div>
             <div className="flex-shrink-0 text-right">
               <span className="text-[10px] bg-white/10 text-gray-400 px-1.5 py-0.5 rounded">
-                {p.level}
+                {t(`affiliate.level.${p.levelKey}`)}
               </span>
               <div className="text-orange-400 text-[10px] mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                見る →
+                {t("affiliate.view")}
               </div>
             </div>
           </a>
         ))}
       </div>
       <p className="text-[9px] text-gray-600 text-center mt-2">
-        ※ リンク先はBJJ Fanatics（アフィリエイト広告）
+        {t("affiliate.disclaimer")}
       </p>
     </section>
   );

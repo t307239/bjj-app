@@ -397,5 +397,24 @@
     "viewYoutube": "YouTubeで動画を見る",
     "trainingTip": "今日のヒント",
     "masteryUp": "習熟度を上げよう"
+  },
+  "affiliate": {
+    "title": "おすすめインストラクショナル",
+    "viewAll": "すべて見る →",
+    "view": "見る →",
+    "disclaimer": "※ リンク先はBJJ Fanatics（アフィリエイト広告）",
+    "level": {
+      "intermediate_advanced": "中〜上級",
+      "all": "全レベル",
+      "intermediate": "中級"
+    },
+    "cat": {
+      "all": "すべて",
+      "guard": "ガード",
+      "submissions": "サブミッション",
+      "takedowns": "テイクダウン",
+      "back": "バック",
+      "escapes": "エスケープ"
+    }
   }
 }
