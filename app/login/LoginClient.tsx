@@ -3,6 +3,7 @@
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useLocale } from "@/lib/i18n";
 import Link from "next/link";
 
 // ─── IAB (In-App Browser) detection ───────────────────────────────────────────
@@ -15,25 +16,26 @@ function isInAppBrowser(): boolean {
 }
 
 // ─── Error banner (from OAuth callback) ───────────────────────────────────────
-const errorMessages: Record<string, string> = {
-  auth: "Authentication failed. Please try again.",
-  callback: "Login error. Please try again.",
-  access_denied: "Access denied.",
-};
-
 function ErrorBanner() {
+  const { t } = useLocale();
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
   if (!error) return null;
+  const errorMessages: Record<string, string> = {
+    auth: t("login.errorAuth"),
+    callback: t("login.errorCallback"),
+    access_denied: t("login.errorDenied"),
+  };
   return (
     <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 mb-4 text-red-400 text-sm text-center">
-      {errorMessages[error] ?? "An error occurred. Please try again."}
+      {errorMessages[error] ?? t("login.errorGeneric")}
     </div>
   );
 }
 
 // ─── IAB warning screen ────────────────────────────────────────────────────────
 function IABWarning() {
+  const { t } = useLocale();
   const [copied, setCopied] = useState(false);
 
   const copyUrl = () => {
@@ -48,20 +50,19 @@ function IABWarning() {
       <div className="w-full max-w-sm text-center">
         <div className="text-5xl mb-4">🌐</div>
         <h1 className="text-xl font-bold text-white mb-2">
-          Open in Safari or Chrome
+          {t("login.iabWarning")}
         </h1>
         <p className="text-gray-400 text-sm leading-relaxed mb-6">
-          Login is not supported in Instagram / LINE / X in-app browsers.
-          Please copy the URL below and open it in your default browser.
+          {t("login.iabDesc")}
         </p>
         <button
           onClick={copyUrl}
           className="w-full bg-[#e94560] hover:bg-[#c73652] text-white font-semibold py-3 px-4 rounded-xl transition-colors text-sm"
         >
-          {copied ? "✓ Copied!" : "Copy URL"}
+          {copied ? t("login.iabCopied") : t("login.iabCopy")}
         </button>
         <p className="text-gray-600 text-xs mt-4">
-          Paste in Safari or Chrome address bar to continue
+          {t("login.iabPaste")}
         </p>
       </div>
     </main>
@@ -70,6 +71,7 @@ function IABWarning() {
 
 // ─── Main login form ───────────────────────────────────────────────────────────
 function LoginForm() {
+  const { t } = useLocale();
   const supabase = createClient();
   const searchParamsInner = useSearchParams();
   const nextPath = searchParamsInner.get("next") ?? "";
@@ -135,27 +137,27 @@ function LoginForm() {
         {/* Header */}
         <div className="text-center mb-6">
           <div className="text-5xl mb-3">🥋</div>
-          <h1 className="text-2xl font-bold text-white">Get started with BJJ App</h1>
+          <h1 className="text-2xl font-bold text-white">{t("login.getStarted")}</h1>
           <p className="text-gray-400 mt-2 text-sm">
-            Sign up or log in — same button, no password needed
+            {t("login.subtitle")}
           </p>
         </div>
 
         {/* Social proof */}
         <div className="flex justify-center gap-6 mb-6">
           <div className="text-center">
-            <p className="text-lg font-bold text-[#e94560]">Free</p>
-            <p className="text-[10px] text-gray-500">forever</p>
+            <p className="text-lg font-bold text-[#e94560]">{t("login.free")}</p>
+            <p className="text-[10px] text-gray-500">{t("login.freeDesc")}</p>
           </div>
           <div className="w-px bg-white/10" />
           <div className="text-center">
-            <p className="text-lg font-bold text-[#e94560]">🔥 Streaks</p>
-            <p className="text-[10px] text-gray-500">keep you going</p>
+            <p className="text-lg font-bold text-[#e94560]">🔥 {t("login.streaks")}</p>
+            <p className="text-[10px] text-gray-500">{t("login.streaksDesc")}</p>
           </div>
           <div className="w-px bg-white/10" />
           <div className="text-center">
-            <p className="text-lg font-bold text-[#e94560]">No&nbsp;password</p>
-            <p className="text-[10px] text-gray-500">magic link login</p>
+            <p className="text-lg font-bold text-[#e94560]">{t("login.noPassword")}</p>
+            <p className="text-[10px] text-gray-500">{t("login.noPasswordDesc")}</p>
           </div>
         </div>
 
@@ -177,8 +179,8 @@ function LoginForm() {
               aria-label="Age confirmation: I am 13 years of age or older"
             />
             <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
-              I am <span className="text-white font-medium">13 years of age or older</span>
-              <span className="text-gray-600"> (required by US law)</span>
+              {t("login.ageConfirmPre")} <span className="text-white font-medium">{t("login.ageConfirm")}</span>
+              <span className="text-gray-600"> {t("login.ageConfirmNote")}</span>
             </span>
           </label>
 
@@ -192,8 +194,8 @@ function LoginForm() {
               aria-label="Training disclaimer: I understand BJJ involves physical risk"
             />
             <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
-              I understand that <span className="text-white font-medium">BJJ involves physical risk</span>{" "}
-              and agree to train responsibly. I will not hold BJJ App liable for any injuries.
+              {t("login.disclaimerPre")} <span className="text-white font-medium">{t("login.disclaimerRisk")}</span>{" "}
+              {t("login.disclaimerPost")}
             </span>
           </label>
         </div>
@@ -214,13 +216,13 @@ function LoginForm() {
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-            <span>Continue with Google</span>
+            <span>{t("login.google")}</span>
           </button>
 
           {/* Divider */}
           <div className="flex items-center gap-3 py-1">
             <div className="flex-1 h-px bg-white/10" />
-            <span className="text-gray-500 text-xs">or continue with email</span>
+            <span className="text-gray-500 text-xs">{t("login.orEmail")}</span>
             <div className="flex-1 h-px bg-white/10" />
           </div>
 
@@ -228,20 +230,20 @@ function LoginForm() {
           {emailSent ? (
             <div className="bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-5 text-center">
               <div className="text-3xl mb-2">📬</div>
-              <p className="text-green-400 text-sm font-semibold">Check your email!</p>
+              <p className="text-green-400 text-sm font-semibold">{t("login.emailSent")}</p>
               <p className="text-gray-400 text-xs mt-2 leading-relaxed">
-                We sent a login link to<br />
+                {t("login.emailSentTo")}<br />
                 <span className="text-white">{email}</span>.<br />
-                Open the email and tap the link to sign in.
+                {t("login.emailSentTap")}
               </p>
               <p className="text-gray-600 text-xs mt-3">
-                Can&apos;t find it? Check your spam folder.
+                {t("login.emailSentSpam")}
               </p>
               <button
                 onClick={() => { setEmailSent(false); setEmail(""); }}
                 className="text-gray-500 text-xs mt-4 hover:text-gray-300 transition-colors underline"
               >
-                Try a different email address
+                {t("login.emailSentRetry")}
               </button>
             </div>
           ) : (
@@ -253,7 +255,7 @@ function LoginForm() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email address"
+                placeholder={t("login.emailPlaceholder")}
                 autoComplete="email"
                 aria-label="Email address"
                 className="w-full bg-zinc-800 text-white rounded-xl px-4 py-3 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] placeholder-gray-500"
@@ -264,10 +266,10 @@ function LoginForm() {
                 aria-label="Send magic login link"
                 className="w-full bg-[#e94560] hover:bg-[#c73652] text-white font-semibold py-3 px-4 rounded-xl transition-colors disabled:opacity-50 text-sm"
               >
-                {emailLoading ? "Sending…" : "Send me a login link"}
+                {emailLoading ? t("login.sending") : t("login.sendLink")}
               </button>
               <p className="text-[11px] text-gray-600 text-center pt-0.5">
-                No password · Sign up at the same time
+                {t("login.noPasswordNote")}
               </p>
             </form>
           )}
@@ -283,7 +285,7 @@ function LoginForm() {
               <svg className="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24">
                 <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
               </svg>
-              GitHub (for developers)
+              {t("login.github")}
             </button>
           </div>
         </div>
@@ -291,7 +293,7 @@ function LoginForm() {
         {/* Hint when checkboxes not yet checked */}
         {!canProceed && (
           <p className="text-center text-gray-600 text-xs mt-2">
-            ↑ Please check both boxes above to continue
+            {t("login.checkboxesRequired")}
           </p>
         )}
 
@@ -302,17 +304,17 @@ function LoginForm() {
             className="inline-flex items-center gap-1.5 text-gray-500 hover:text-gray-300 text-sm transition-colors"
           >
             <span>👀</span>
-            <span>Try without signing up</span>
+            <span>{t("login.guestMode")}</span>
             <span className="text-xs">→</span>
           </Link>
-          <p className="text-gray-700 text-xs mt-1">Data saved in browser · sync later</p>
+          <p className="text-gray-700 text-xs mt-1">{t("login.guestDesc")}</p>
         </div>
 
         <p className="text-center text-gray-600 text-xs mt-4">
-          By continuing you agree to our{" "}
-          <Link href="/terms" className="hover:text-gray-400 underline">Terms of Service</Link>
+          {t("login.termsAgree")}{" "}
+          <Link href="/terms" className="hover:text-gray-400 underline">{t("login.termsLink")}</Link>
           {" & "}
-          <Link href="/privacy" className="hover:text-gray-400 underline">Privacy Policy</Link>
+          <Link href="/privacy" className="hover:text-gray-400 underline">{t("login.privacyLink")}</Link>
         </p>
       </div>
     </main>
