@@ -253,7 +253,7 @@ export default function DailyWikiTip() {
           {tipCategory}
         </span>
       </div>
-      <h3 className="text-sm font-semibold text-gray-200 mb-1 leading-snug">{tipTitle}</h3>
+      <h3 className="text-sm font-semibold text-zinc-100 mb-1 leading-snug">{tipTitle}</h3>
       <p className="text-xs text-gray-400 mb-3 leading-relaxed">{tipDesc}</p>
       <div className="flex items-center justify-between">
         <a

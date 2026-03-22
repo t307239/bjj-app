@@ -173,7 +173,7 @@ export default function GuestDashboard() {
                     type="button"
                     onClick={() => setType(t.value)}
                     className={`px-3 py-1 rounded-full text-xs border transition-colors ${
-                      type === t.value ? t.color + " ring-1 ring-white/30" : "bg-gray-800 text-gray-500 border-white/10 hover:text-gray-300"
+                      type === t.value ? t.color + " ring-1 ring-white/30" : "bg-zinc-900/50 text-gray-500 border-white/10 hover:text-gray-300"
                     }`}
                   >
                     {t.label}

@@ -78,7 +78,7 @@ function renderNotes(notes: string, expanded: boolean): React.ReactNode {
               href={part}
               target="_blank"
               rel="noopener noreferrer"
-              className="block rounded-lg overflow-hidden border border-white/10 hover:border-gray-500 transition-colors"
+              className="block rounded-lg overflow-hidden border border-white/10 hover:border-white/10 transition-colors"
               onClick={(e) => e.stopPropagation()}
             >
               {videoId ? (

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     type: "website",
     title: "BJJ App - Track Your Brazilian Jiu-Jitsu Journey",
     description: "Log every session. Track every technique. Never forget your streak. Free BJJ training tracker.",
-    url: "https://bjj-app-one.vercel.app",
+    url: "https://bjj-app.net",
     siteName: "BJJ App",
   },
 };
@@ -21,7 +21,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "BJJ App",
   "description": "Track your Brazilian Jiu-Jitsu training sessions, techniques, and streaks. Free BJJ training log app. 柔術の練習記録・テクニック管理・成長可視化アプリ。",
-  "url": "https://bjj-app-one.vercel.app",
+  "url": "https://bjj-app.net",
   "applicationCategory": "SportsApplication",
   "operatingSystem": "Web",
   "offers": [
@@ -112,7 +112,7 @@ export default async function Home() {
       </section>
 
       {/* English Section — for Reddit / international users */}
-      <section id="english" className="px-4 py-16 bg-[#0a0a18] border-t border-gray-800/50">
+      <section id="english" className="px-4 py-16 bg-[#0a0a18] border-t border-white/5/50">
         <div className="max-w-2xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-zinc-900 border border-blue-500/30 rounded-full px-4 py-1.5 text-sm text-blue-400 mb-8">
             🌐 For English speakers
@@ -611,7 +611,7 @@ export default async function Home() {
       </section>
 
       {/* フッター */}
-      <footer className="px-6 py-8 text-center text-gray-600 text-sm border-t border-gray-800">
+      <footer className="px-6 py-8 text-center text-gray-600 text-sm border-t border-white/5">
         <p className="mb-3">© 2026 BJJ App. Made for grapplers, by grapplers.</p>
         <div className="flex justify-center flex-wrap gap-4 text-xs">
           <a href="/terms" className="hover:text-gray-400 transition-colors">Terms</a>

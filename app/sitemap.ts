@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app-one.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

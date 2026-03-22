@@ -15,11 +15,11 @@ const jsonLd = {
   "@type": "ItemList",
   "name": "BJJ Technique Journal",
   "description": "A personal record of Brazilian Jiu-Jitsu techniques, organized by position and mastery level",
-  "url": "https://bjj-app-one.vercel.app/techniques",
+  "url": "https://bjj-app.net/techniques",
   "isPartOf": {
     "@type": "WebApplication",
     "name": "BJJ App",
-    "url": "https://bjj-app-one.vercel.app",
+    "url": "https://bjj-app.net",
   },
 };
 
@@ -74,7 +74,7 @@ export default async function TechniquesPage() {
         <div className="mt-8 bg-zinc-900 rounded-xl p-4 border border-white/10/40">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-base">📚</span>
-            <h3 className="text-sm font-semibold text-gray-200">BJJ Wiki で技術を深める</h3>
+            <h3 className="text-sm font-semibold text-zinc-100">BJJ Wiki で技術を深める</h3>
           </div>
           <div className="flex flex-wrap gap-2">
             {WIKI_LINKS.map((link) => (

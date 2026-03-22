@@ -262,7 +262,7 @@ export default function PersonalBests({ userId }: Props) {
         </div>
         <button
           onClick={handleShare}
-          className="flex items-center gap-1 text-[11px] text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-gray-500 px-2.5 py-1 rounded-lg transition-colors"
+          className="flex items-center gap-1 text-[11px] text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/10 px-2.5 py-1 rounded-lg transition-colors"
         >
           <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />

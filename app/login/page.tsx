@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import LoginClient from "./LoginClient";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app-one.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
 export const metadata: Metadata = {
   title: "Sign In | BJJ App",

@@ -24,19 +24,19 @@ export default function PrivacyPage() {
             <p className="mb-3">We collect the following information when you use BJJ App:</p>
             <ul className="list-disc pl-5 space-y-2 text-gray-400">
               <li>
-                <span className="text-gray-200 font-medium">Account information</span> — email address
+                <span className="text-zinc-100 font-medium">Account information</span> — email address
                 and display name provided by your OAuth provider (Google / GitHub) or directly by you
               </li>
               <li>
-                <span className="text-gray-200 font-medium">Training data</span> — session logs,
+                <span className="text-zinc-100 font-medium">Training data</span> — session logs,
                 technique records, streak data, goals, and notes you enter in the app
               </li>
               <li>
-                <span className="text-gray-200 font-medium">Profile data</span> — belt rank, gym name,
+                <span className="text-zinc-100 font-medium">Profile data</span> — belt rank, gym name,
                 BJJ start date, and any other profile fields you choose to fill in
               </li>
               <li>
-                <span className="text-gray-200 font-medium">Usage data</span> — basic analytics via
+                <span className="text-zinc-100 font-medium">Usage data</span> — basic analytics via
                 Google Analytics 4 (anonymized, no personally identifiable information)
               </li>
             </ul>
@@ -66,11 +66,11 @@ export default function PrivacyPage() {
             <h2 className="text-lg font-semibold text-white mb-3">4. Third-Party Services</h2>
             <p className="mb-2">We use the following third-party services:</p>
             <ul className="list-disc pl-5 space-y-2 text-gray-400">
-              <li><span className="text-gray-200">Supabase</span> — database and authentication</li>
-              <li><span className="text-gray-200">Vercel</span> — hosting and deployment</li>
-              <li><span className="text-gray-200">Stripe</span> — payment processing (Pro subscriptions)</li>
-              <li><span className="text-gray-200">Google Analytics 4</span> — anonymized usage analytics</li>
-              <li><span className="text-gray-200">Beehiiv</span> — email newsletter (opt-in only)</li>
+              <li><span className="text-zinc-100">Supabase</span> — database and authentication</li>
+              <li><span className="text-zinc-100">Vercel</span> — hosting and deployment</li>
+              <li><span className="text-zinc-100">Stripe</span> — payment processing (Pro subscriptions)</li>
+              <li><span className="text-zinc-100">Google Analytics 4</span> — anonymized usage analytics</li>
+              <li><span className="text-zinc-100">Beehiiv</span> — email newsletter (opt-in only)</li>
             </ul>
             <p className="mt-3 text-gray-500">
               Each of these services has its own privacy policy. We only share the minimum data
@@ -143,7 +143,7 @@ export default function PrivacyPage() {
           </section>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-gray-800 flex flex-wrap gap-6 text-xs text-gray-600">
+        <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap gap-6 text-xs text-gray-600">
           <Link href="/terms" className="hover:text-gray-400 transition-colors">Terms of Service</Link>
           <Link href="/legal/tokushoho" className="hover:text-gray-400 transition-colors">Specified Commercial Transactions Act</Link>
           <Link href="/" className="hover:text-gray-400 transition-colors">← Home</Link>

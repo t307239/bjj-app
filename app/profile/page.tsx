@@ -14,7 +14,7 @@ const jsonLd = {
   "@type": "ProfilePage",
   "name": "BJJ App Profile",
   "description": "Manage your Brazilian Jiu-Jitsu training profile, belt rank, and goals",
-  "url": "https://bjj-app-one.vercel.app/profile",
+  "url": "https://bjj-app.net/profile",
 };
 
 export default async function ProfilePage() {

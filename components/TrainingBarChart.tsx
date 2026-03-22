@@ -267,7 +267,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           </div>
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900/80 rounded-xl">
             <span className="text-2xl mb-2">🔒</span>
-            <p className="text-sm font-semibold text-gray-200">{t("chart.proOnly")}</p>
+            <p className="text-sm font-semibold text-zinc-100">{t("chart.proOnly")}</p>
             <a href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#"} className="mt-3 bg-[#e94560] hover:bg-[#c73652] text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
               {t("chart.upgradeToProBtn")}
             </a>
@@ -277,7 +277,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         <div className="relative" style={{ height: "120px" }}>
           {avgPct > 0 && (
             <div
-              className="absolute left-0 right-0 border-t border-dashed border-gray-500/50 pointer-events-none"
+              className="absolute left-0 right-0 border-t border-dashed border-white/10/50 pointer-events-none"
               style={{ bottom: `${avgPct}%` }}
               title={`${t("chart.average")}: ${view === "count" ? `${Math.round(avgVal)}回` : formatMinutes(Math.round(avgVal))}`}
             />
@@ -300,7 +300,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                 >
                   {/* Hover tooltip */}
                   {hoveredMonth === d.month && val > 0 && (
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-gray-900 border border-white/10 rounded-lg px-2 py-1.5 text-center pointer-events-none z-20 whitespace-nowrap shadow-lg">
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-zinc-950 border border-white/10 rounded-lg px-2 py-1.5 text-center pointer-events-none z-20 whitespace-nowrap shadow-lg">
                       <div className="text-[11px] font-semibold text-white">{d.label}</div>
                       <div className="text-[10px] text-gray-300 mt-0.5">{d.count}回 · {formatMinutes(d.minutes)}</div>
                       {/* Type breakdown in tooltip */}
@@ -347,7 +347,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                           ? "bg-[#e94560]"
                           : val > 0
                           ? "bg-[#e94560]/50 group-hover:bg-[#e94560]/70"
-                          : "bg-gray-800"
+                          : "bg-zinc-900/50"
                       }`}
                       style={{ height: `${pct}%`, minHeight: val > 0 ? "4px" : "0px" }}
                     />

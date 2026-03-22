@@ -449,7 +449,7 @@ export default function GoalTracker({ userId }: Props) {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-200">Weekly goal</span>
+                  <span className="text-sm font-medium text-zinc-100">Weekly goal</span>
                   {data.weekCount >= data.weeklyGoal && data.weeklyGoal > 0 && (
                     <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">Done!</span>
                   )}
@@ -580,7 +580,7 @@ export default function GoalTracker({ userId }: Props) {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-200">Monthly goal</span>
+                  <span className="text-sm font-medium text-zinc-100">Monthly goal</span>
                   {data.monthCount >= data.monthlyGoal && data.monthlyGoal > 0 && (
                     <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">Done!</span>
                   )}
@@ -635,7 +635,7 @@ export default function GoalTracker({ userId }: Props) {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-200">🥋 Technique goal</span>
+                  <span className="text-sm font-medium text-zinc-100">🥋 Technique goal</span>
                   {data.techniqueCount >= data.techniqueGoal && data.techniqueGoal > 0 && (
                     <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">Done!</span>
                   )}

@@ -60,7 +60,7 @@ export default function GymWaitlistForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="coach@yourgym.com"
-          className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 text-sm"
+          className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#7c3aed] text-sm"
         />
       </div>
       <div>
@@ -73,7 +73,7 @@ export default function GymWaitlistForm() {
           value={gymName}
           onChange={(e) => setGymName(e.target.value)}
           placeholder="Triangle BJJ Academy"
-          className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 text-sm"
+          className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#7c3aed] text-sm"
         />
       </div>
       {state === "error" && (

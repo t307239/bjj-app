@@ -246,7 +246,7 @@ export default function CompetitionStats({ userId }: Props) {
               <text x="40" y="36" textAnchor="middle" className="fill-white" style={{ fill: "white", fontSize: "14px", fontWeight: "bold" }}>
                 {winPct}%
               </text>
-              <text x="40" y="50" textAnchor="middle" style={{ fill: "#9ca3af", fontSize: "9px" }}>
+              <text x="40" y="50" textAnchor="middle" style={{ fill: "#71717a", fontSize: "9px" }}>
                 勝率
               </text>
             </svg>
@@ -350,7 +350,7 @@ export default function CompetitionStats({ userId }: Props) {
             return monthlyStats.slice(-6).map((m) => (
               <div key={m.ym} className="flex items-center gap-2 mb-1.5">
                 <span className="text-[10px] text-gray-500 w-8 flex-shrink-0 text-right">{m.label}</span>
-                <div className="flex-1 h-4 bg-gray-800 rounded-sm overflow-hidden flex">
+                <div className="flex-1 h-4 bg-zinc-900/50 rounded-sm overflow-hidden flex">
                   {m.win > 0 && (
                     <div
                       className="h-full bg-green-500/80"

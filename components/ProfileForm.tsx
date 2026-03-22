@@ -110,7 +110,7 @@ function BELTS({ t }: { t: (key: string, obj?: Record<string, any>) => string })
     { value: "blue", label: t("profile.belts.blue"), color: "bg-blue-500 text-white" },
     { value: "purple", label: t("profile.belts.purple"), color: "bg-purple-600 text-white" },
     { value: "brown", label: t("profile.belts.brown"), color: "bg-amber-800 text-white" },
-    { value: "black", label: t("profile.belts.black"), color: "bg-gray-900 text-white border border-white/10" },
+    { value: "black", label: t("profile.belts.black"), color: "bg-zinc-950 text-white border border-white/10" },
   ];
 }
 

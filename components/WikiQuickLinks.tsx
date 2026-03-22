@@ -235,7 +235,7 @@ export default function WikiQuickLinks() {
             className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
               selectedTag === null
                 ? "bg-[#e94560] border-[#e94560] text-white"
-                : "border-white/10 text-gray-400 hover:border-gray-400 hover:text-gray-200"
+                : "border-white/10 text-gray-400 hover:border-gray-400 hover:text-zinc-100"
             }`}
           >
             {locale === "en" ? "Today" : "今日"}
@@ -265,7 +265,7 @@ export default function WikiQuickLinks() {
                 className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
                   selectedTag === catEn
                     ? "bg-[#e94560] border-[#e94560] text-white"
-                    : "border-white/10 text-gray-400 hover:border-gray-400 hover:text-gray-200"
+                    : "border-white/10 text-gray-400 hover:border-gray-400 hover:text-zinc-100"
                 }`}
               >
                 {CATEGORY_EMOJI[catEn] ?? ""} {displayCat}

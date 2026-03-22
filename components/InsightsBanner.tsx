@@ -165,13 +165,13 @@ export default function InsightsBanner({ userId }: Props) {
         {paceMsg && (
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] text-gray-500">{t("insights.pace")}</span>
-            <span className="text-xs text-gray-200 font-medium">{paceMsg}</span>
+            <span className="text-xs text-zinc-100 font-medium">{paceMsg}</span>
           </div>
         )}
         {bestDay && (
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] text-gray-500">{t("insights.bestDayOfWeek")}</span>
-            <span className="text-xs text-gray-200 font-medium">{bestDay}</span>
+            <span className="text-xs text-zinc-100 font-medium">{bestDay}</span>
           </div>
         )}
         {totalStreak !== null && totalStreak >= 10 && (

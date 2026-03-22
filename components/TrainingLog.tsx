@@ -151,7 +151,7 @@ function buildXShareUrl(entry: { date: string; duration_min: number; type: strin
     `⏱ ${dur} | ${typeLabels[entry.type] ?? entry.type}`,
     entry.notes ? `📝 ${entry.notes}` : "",
     "",
-    "Training Log → https://bjj-app-one.vercel.app",
+    "Training Log → https://bjj-app.net",
     "#BJJ #JiuJitsu #BrazilianJiuJitsu",
   ].filter(Boolean).join("\n");
   return `https://x.com/intent/tweet?text=${encodeURIComponent(lines)}`;
@@ -535,7 +535,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           <button
             onClick={() => window.print()}
             title="Print / Save as PDF"
-            className="print:hidden flex items-center gap-1 text-[11px] text-gray-400 hover:text-gray-200 bg-zinc-900 border border-white/10 hover:border-gray-500 px-2 py-1.5 rounded-lg transition-colors"
+            className="print:hidden flex items-center gap-1 text-[11px] text-gray-400 hover:text-zinc-100 bg-zinc-900 border border-white/10 hover:border-white/10 px-2 py-1.5 rounded-lg transition-colors"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -1092,7 +1092,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           <button
             onClick={handleLoadMore}
             disabled={loadingMore}
-            className="text-gray-400 hover:text-white text-sm border border-white/10 hover:border-gray-500 px-6 py-2 rounded-full transition-colors disabled:opacity-50"
+            className="text-gray-400 hover:text-white text-sm border border-white/10 hover:border-white/10 px-6 py-2 rounded-full transition-colors disabled:opacity-50"
           >
             {loadingMore ? "Loading..." : "Load More"}
           </button>

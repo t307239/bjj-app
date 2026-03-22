@@ -168,7 +168,7 @@ function LoginForm() {
           )}
 
           {/* GitHub — 開発者向けとして下に小さく */}
-          <div className="pt-1 border-t border-gray-800">
+          <div className="pt-1 border-t border-white/5">
             <button
               onClick={signInWithGitHub}
               className="w-full flex items-center justify-center gap-2 text-gray-500 hover:text-gray-300 py-2 px-4 rounded-xl hover:bg-white/10/50 transition-colors text-xs"

@@ -96,7 +96,7 @@ export default function TokushohoPage() {
           />
           <Row
             label="How to Subscribe (申込方法)"
-            value="Create an account at https://bjj-app-one.vercel.app/login, then upgrade to Pro from the dashboard."
+            value="Create an account at https://bjj-app.net/login, then upgrade to Pro from the dashboard."
           />
           <Row
             label="Contract Effective Date (契約成立時期)"

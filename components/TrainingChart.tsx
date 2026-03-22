@@ -103,7 +103,7 @@ export default function TrainingChart({ userId }: Props) {
   if (data.every((d) => d.count === 0)) return null;
 
   const getColor = (count: number) => {
-    if (count === 0) return "bg-gray-800";
+    if (count === 0) return "bg-zinc-900/50";
     if (count === 1) return "bg-[#e94560]/40";
     if (count === 2) return "bg-[#e94560]/70";
     return "bg-[#e94560]";
@@ -177,7 +177,7 @@ export default function TrainingChart({ userId }: Props) {
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-1 text-[10px] text-gray-600">
               <span>{t("chart.less")}</span>
-              <div className="w-3 h-3 rounded-sm bg-gray-800" />
+              <div className="w-3 h-3 rounded-sm bg-zinc-900/50" />
               <div className="w-3 h-3 rounded-sm bg-[#e94560]/40" />
               <div className="w-3 h-3 rounded-sm bg-[#e94560]/70" />
               <div className="w-3 h-3 rounded-sm bg-[#e94560]" />

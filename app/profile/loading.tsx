@@ -13,7 +13,7 @@ export default function ProfileLoading() {
           <div className="w-16 h-16 rounded-full bg-white/10 animate-pulse" />
           <div>
             <div className="h-7 w-32 bg-white/10 rounded animate-pulse mb-2" />
-            <div className="h-4 w-48 bg-gray-800 rounded animate-pulse" />
+            <div className="h-4 w-48 bg-zinc-900/50 rounded animate-pulse" />
           </div>
         </div>
         {/* フォームスケルトン */}
@@ -21,7 +21,7 @@ export default function ProfileLoading() {
           {[0, 1, 2, 3, 4].map((i) => (
             <div key={i} className="bg-zinc-900 rounded-xl p-4 border border-white/10">
               <div className="h-4 w-24 bg-white/10 rounded animate-pulse mb-3" />
-              <div className="h-10 bg-gray-800 rounded-lg animate-pulse" />
+              <div className="h-10 bg-zinc-900/50 rounded-lg animate-pulse" />
             </div>
           ))}
         </div>
