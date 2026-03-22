@@ -83,7 +83,7 @@ function GoalEditor({
           onClick={() => onChange(Math.max(0, value - 1))}
           className="w-9 h-9 rounded-lg bg-white/10 text-white text-lg font-bold hover:bg-white/15 transition-colors"
         >
-          −
+          -
         </button>
         <div className="flex-1 text-center">
           <span className="text-3xl font-bold text-white">{value}</span>
@@ -93,7 +93,7 @@ function GoalEditor({
           onClick={() => onChange(Math.min(30, value + 1))}
           className="w-9 h-9 rounded-lg bg-white/10 text-white text-lg font-bold hover:bg-white/15 transition-colors"
         >
-          ＋
+          +
         </button>
       </div>
       {value > 0 && (
@@ -235,7 +235,7 @@ export default function GoalTracker({ userId }: Props) {
           const cnt = (wLogs ?? []).filter((l) => l.date >= wsStr && l.date <= weStr).length;
           wh.push({
             weekStart: wsStr,
-            label: i === 0 ? "今週" : i === 1 ? "先週" : i === 2 ? "2週前" : "3週前",
+            label: i === 0 ? "This week" : i === 1 ? "Last week" : i === 2 ? "2 weeks ago" : "3 weeks ago",
             count: cnt,
             achieved: cnt >= wGoal,
             isCurrent: i === 0,
@@ -487,7 +487,7 @@ export default function GoalTracker({ userId }: Props) {
                                     : "bg-white/5 text-gray-700"
                                 }`}
                               >
-                                {trained ? "✓" : isToday ? "・" : ""}
+                                {trained ? "✓" : isToday ? "•" : ""}
                               </div>
                               <span className={`text-[8px] leading-none ${
                                 isToday ? "text-gray-300 font-semibold" : isFuture ? "text-gray-700" : "text-gray-600"
@@ -539,7 +539,7 @@ export default function GoalTracker({ userId }: Props) {
                                   : "bg-white/10 text-gray-600"
                               }`}
                             >
-                              {w.achieved ? "✓" : w.count > 0 ? w.count : "−"}
+                              {w.achieved ? "✓" : w.count > 0 ? w.count : "-"}
                             </div>
                             <span className={`text-[8px] leading-none ${w.isCurrent ? "text-gray-300" : "text-gray-600"}`}>
                               {w.label}
@@ -558,7 +558,7 @@ export default function GoalTracker({ userId }: Props) {
                   )}
                 </>
               ) : (
-                <p className="text-xs text-gray-600 mt-1">目標未設定（タップして設定）</p>
+                <p className="text-xs text-gray-600 mt-1">No goal set — tap to set one</p>
               )}
             </div>
           )}
@@ -613,7 +613,7 @@ export default function GoalTracker({ userId }: Props) {
                   )}
                 </>
               ) : (
-                <p className="text-xs text-gray-600 mt-1">目標未設定（タップして設定）</p>
+                <p className="text-xs text-gray-600 mt-1">No goal set — tap to set one</p>
               )}
             </div>
           )}

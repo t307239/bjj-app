@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
-import ProGate from "@/components/ProGate";
+// ProGate import removed — CSV is now free for all users (CCPA/GDPR data portability)
 
 type Props = {
   userId: string;
-  isPro?: boolean;
+  isPro?: boolean; // kept for API compatibility but no longer used to gate export
 };
 
 // 試合詳細デコード（TrainingLog.tsx と同一ロジック）
@@ -25,10 +25,6 @@ function decodeCompNotes(notes: string): { comp: CompData | null; userNotes: str
     return { comp: null, userNotes: notes };
   }
 }
-
-const RESULT_LABELS: Record<string, string> = {
-  win: "勝利", loss: "敗北", draw: "引き分け",
-};
 
 // ExportBtn サブコンポーネント
 function ExportBtn({
@@ -58,7 +54,7 @@ function ExportBtn({
   );
 }
 
-export default function CsvExport({ userId, isPro = false }: Props) {
+export default function CsvExport({ userId }: Props) {
   const { t } = useLocale();
   const [loadingLogs, setLoadingLogs] = useState(false);
   const [loadingTech, setLoadingTech] = useState(false);
@@ -196,16 +192,9 @@ export default function CsvExport({ userId, isPro = false }: Props) {
     }
   };
 
-  // Pro未加入の場合はボタンを無効化（課金CTAはProUpgradeBannerに集約）
-  if (!isPro) {
-    return (
-      <div className="flex gap-2 opacity-40">
-        <span className="flex items-center gap-1.5 text-xs text-gray-500 border border-white/5 px-3 py-1.5 rounded-lg cursor-not-allowed">
-          🔒 {t("csv.locked")}
-        </span>
-      </div>
-    );
-  }
+  // CCPA/GDPR: data portability is a legal right for ALL users, not Pro-only.
+  // Do NOT gate CSV export behind isPro — all users must be able to export their data.
+  // (isPro prop kept for potential future use but no longer used here)
 
   return (
     <div className="flex gap-2">

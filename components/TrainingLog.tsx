@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
+import { useLocale } from "@/lib/i18n";
 import Toast from "./Toast";
 import CsvExport from "./CsvExport";
 
@@ -242,6 +243,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi",
   });
   const supabase = createClient();
+  const { t } = useLocale();
 
   // Initial data load
   useEffect(() => {
@@ -273,23 +275,38 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     e.preventDefault();
     setFormError(null);
 
-    // バリデーション
     if (form.date > today) {
-      setFormError("Cannot record future dates");
+      setFormError(t("training.futureDate"));
       return;
     }
     if (form.duration_min < 1 || form.duration_min > 480) {
-      setFormError("Duration must be between 1-480 minutes");
+      setFormError(t("training.durationRange"));
       return;
     }
-
-    setLoading(true);
 
     // Encode competition details into notes
     const finalNotes = form.type === "competition"
       ? encodeCompNotes(compForm, form.notes)
       : form.notes;
 
+    // ── Optimistic UI: add temp entry immediately ──────────────────────────
+    const optimisticId = `optimistic-${Date.now()}`;
+    const optimisticEntry: TrainingEntry = {
+      id: optimisticId,
+      date: form.date,
+      duration_min: form.duration_min,
+      type: form.type,
+      notes: finalNotes,
+      created_at: new Date().toISOString(),
+    };
+    setEntries((prev) => [optimisticEntry, ...prev]);
+    setTrainedToday(true);
+    setShowForm(false);
+    setForm({ date: getLocalDateString(), duration_min: 60, type: "gi", notes: "" });
+    setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
+    // ──────────────────────────────────────────────────────────────────────
+
+    setLoading(true);
     const { data, error } = await supabase
       .from("training_logs")
       .insert([{ ...form, notes: finalNotes, user_id: userId }])
@@ -298,26 +315,27 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
 
     if (!error && data) {
       if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([50]);
-      setEntries([data, ...entries]);
-      setForm({
-        date: getLocalDateString(),
-        duration_min: 60,
-        type: "gi",
-        notes: "",
-      });
-      setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
-      setShowForm(false);
-      setToast({ message: "Session recorded!", type: "success" });
+      // Replace optimistic entry with real DB entry
+      setEntries((prev) => prev.map((e) => e.id === optimisticId ? data : e));
+      setToast({ message: t("training.saved"), type: "success" });
     } else {
-      setToast({ message: "Failed to save", type: "error" });
+      // Revert optimistic insert on error
+      setEntries((prev) => prev.filter((e) => e.id !== optimisticId));
+      setShowForm(true);
+      setToast({ message: t("training.saveFailed"), type: "error" });
     }
     setLoading(false);
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Delete this record?")) return;
-    setDeletingId(id);
+    if (!confirm(t("training.confirmDelete"))) return;
 
+    // ── Optimistic UI: remove immediately ─────────────────────────────────
+    const removed = entries.find((e) => e.id === id);
+    setEntries((prev) => prev.filter((e) => e.id !== id));
+    // ──────────────────────────────────────────────────────────────────────
+
+    setDeletingId(id);
     const { error } = await supabase
       .from("training_logs")
       .delete()
@@ -326,10 +344,13 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
 
     if (!error) {
       if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([30, 20, 30]);
-      setEntries(entries.filter((e) => e.id !== id));
-      setToast({ message: "Record deleted", type: "success" });
+      setToast({ message: t("training.deleted"), type: "success" });
     } else {
-      setToast({ message: "Failed to delete", type: "error" });
+      // Revert optimistic delete on error
+      if (removed) {
+        setEntries((prev) => [removed, ...prev].sort((a, b) => b.date.localeCompare(a.date)));
+      }
+      setToast({ message: t("training.deleteFailed"), type: "error" });
     }
     setDeletingId(null);
   };
@@ -363,11 +384,11 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       .single();
 
     if (!error && data) {
-      setEntries(entries.map((e) => (e.id === id ? data : e)));
+      setEntries((prev) => prev.map((e) => (e.id === id ? data : e)));
       setEditingId(null);
-      setToast({ message: "Record updated", type: "success" });
+      setToast({ message: t("training.updated"), type: "success" });
     } else {
-      setToast({ message: "Failed to update", type: "error" });
+      setToast({ message: t("training.updateFailed"), type: "error" });
     }
   };
 
@@ -609,7 +630,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             onChange={(e) => setDateFrom(e.target.value)}
             className="flex-1 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1.5 border border-white/10 focus:outline-none focus:border-[#e94560]/60"
           />
-          <span className="text-gray-600 text-xs">〜</span>
+          <span className="text-gray-600 text-xs">–</span>
           <input
             type="date"
             value={dateTo}
@@ -649,7 +670,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                 : "bg-zinc-900 text-gray-400 border border-white/10"
             }`}
           >
-            すべて
+            {t("training.all")}
           </button>
           {TRAINING_TYPES.filter((t) =>
             entries.some((e) => e.type === t.value)
@@ -795,7 +816,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                     className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400"
                   >
                     <option value="gi">Gi</option>
-                    <option value="nogi">ノーギ (NoGi)</option>
+                    <option value="nogi">No-Gi</option>
                   </select>
                 </div>
               </div>
@@ -803,7 +824,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           )}
 
           <div className="mb-4">
-            <label className="block text-gray-400 text-xs mb-1">メモ</label>
+            <label className="block text-gray-400 text-xs mb-1">{t("training.memo")}</label>
             <textarea
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
@@ -826,7 +847,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               onClick={() => { setShowForm(false); setFormError(null); }}
               className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
             >
-              キャンセル
+              {t("training.cancel")}
             </button>
           </div>
         </form>
@@ -954,7 +975,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                           className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400"
                         >
                           <option value="gi">Gi</option>
-                          <option value="nogi">ノーギ</option>
+                          <option value="nogi">No-Gi</option>
                         </select>
                       </div>
                     </div>
@@ -970,7 +991,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                       Update
                     </button>
                     <button type="button" onClick={() => setEditingId(null)} className="px-3 text-gray-400 text-xs">
-                      キャンセル
+                      {t("training.cancel")}
                     </button>
                   </div>
                 </form>
@@ -1049,7 +1070,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-sky-400 transition-colors p-1"
-                      title="Xでシェア"
+                      title={t("training.shareX")}
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />

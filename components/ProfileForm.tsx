@@ -57,7 +57,135 @@ function calcBjjMonths(startDate: string): number {
   );
 }
 
-function DeleteAccountSection({ userId, supabase }: { userId: string; supabase: SupabaseClient }) {
+// Stripe Customer Portal URL — configure in .env.local (Stripe Dashboard > Customer Portal)
+const CUSTOMER_PORTAL_URL = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL ?? "";
+
+// ─── Gym Membership Section ───────────────────────────────────────────────────
+
+function GymMembershipSection({ userId, supabase }: { userId: string; supabase: SupabaseClient }) {
+  const [gymName, setGymName] = useState<string | null>(null);
+  const [sharing, setSharing] = useState(false);
+  const [gymId, setGymId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [leaving, setLeaving] = useState(false);
+  const [confirmLeave, setConfirmLeave] = useState(false);
+  const [toggleLoading, setToggleLoading] = useState(false);
+
+  useEffect(() => {
+    const load = async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("gym_id, share_data_with_gym")
+        .eq("id", userId)
+        .single();
+      if (!data?.gym_id) { setLoading(false); return; }
+      setGymId(data.gym_id);
+      setSharing(data.share_data_with_gym ?? false);
+      // Fetch gym name
+      const { data: gym } = await supabase
+        .from("gyms")
+        .select("name")
+        .eq("id", data.gym_id)
+        .single();
+      setGymName(gym?.name ?? null);
+      setLoading(false);
+    };
+    load();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
+
+  const handleLeave = async () => {
+    setLeaving(true);
+    await supabase
+      .from("profiles")
+      .update({ gym_id: null, share_data_with_gym: false })
+      .eq("id", userId);
+    setGymId(null);
+    setGymName(null);
+    setSharing(false);
+    setConfirmLeave(false);
+    setLeaving(false);
+  };
+
+  const handleToggleSharing = async () => {
+    setToggleLoading(true);
+    const next = !sharing;
+    await supabase
+      .from("profiles")
+      .update({ share_data_with_gym: next })
+      .eq("id", userId);
+    setSharing(next);
+    setToggleLoading(false);
+  };
+
+  if (loading) return null;
+  if (!gymId) return null;
+
+  if (confirmLeave) {
+    return (
+      <div className="bg-zinc-900 border border-white/10 rounded-xl p-4">
+        <p className="text-sm text-white mb-1">Leave <strong>{gymName ?? "gym"}</strong>?</p>
+        <p className="text-xs text-gray-400 mb-4">
+          Your gym owner will no longer see your training data. You can rejoin with a new QR code.
+        </p>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setConfirmLeave(false)}
+            className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 py-2 rounded-lg text-sm"
+            aria-label="Cancel leaving gym"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleLeave}
+            disabled={leaving}
+            className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white py-2 rounded-lg text-sm font-semibold"
+            aria-label="Confirm leaving gym"
+          >
+            {leaving ? "Leaving..." : "Leave gym"}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-zinc-900 border border-white/10 rounded-xl p-4">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <p className="text-sm font-semibold text-white">🏫 Current Gym</p>
+          <p className="text-xs text-gray-400 mt-0.5">{gymName ?? "Unknown gym"}</p>
+        </div>
+        <button
+          onClick={() => setConfirmLeave(true)}
+          className="text-xs text-gray-500 hover:text-red-400 transition-colors"
+          aria-label="Leave gym"
+        >
+          Leave gym
+        </button>
+      </div>
+      {/* Data sharing toggle */}
+      <div className="flex items-center justify-between pt-3 border-t border-white/10">
+        <div>
+          <p className="text-xs text-gray-300">Share training data with gym</p>
+          <p className="text-[10px] text-gray-600 mt-0.5">Frequency &amp; belt only. Notes always private.</p>
+        </div>
+        <button
+          onClick={handleToggleSharing}
+          disabled={toggleLoading}
+          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${sharing ? "bg-[#e94560]" : "bg-zinc-700"}`}
+          aria-label={sharing ? "Disable data sharing" : "Enable data sharing"}
+          role="switch"
+          aria-checked={sharing}
+        >
+          <span className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform ${sharing ? "translate-x-6" : "translate-x-1"}`} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function AccountSection({ userId, supabase }: { userId: string; supabase: SupabaseClient }) {
   const { t } = useLocale();
   const router = useRouter();
   const [confirm, setConfirm] = useState(false);
@@ -72,34 +200,55 @@ function DeleteAccountSection({ userId, supabase }: { userId: string; supabase: 
     router.push("/?deleted=1");
   };
 
-  if (!confirm) {
-    return (
-      <div className="mt-10 border-t border-white/10 pt-6">
-        <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-3">アカウント</h3>
+  return (
+    <div className="mt-10 border-t border-white/10 pt-6 space-y-4">
+      <h3 className="text-gray-500 text-xs uppercase tracking-wider">{t("profile.account")}</h3>
+
+      {/* Stripe Customer Portal — cancel/downgrade without chargeback risk */}
+      {CUSTOMER_PORTAL_URL && (
+        <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
+          <p className="text-gray-400 text-xs mb-2">{t("profile.manageSubDesc")}</p>
+          <a
+            href={CUSTOMER_PORTAL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Manage subscription in Stripe Customer Portal"
+            className="inline-flex items-center gap-1.5 text-xs text-[#e94560] hover:text-red-400 border border-[#e94560]/30 hover:border-[#e94560] rounded-lg px-3 py-1.5 transition-colors"
+          >
+            💳 {t("profile.manageSub")}
+          </a>
+        </div>
+      )}
+
+      {/* Delete account */}
+      {!confirm ? (
         <button type="button" onClick={() => setConfirm(true)} className="text-red-500 hover:text-red-400 text-sm underline">
           {t("profile.deleteAccount")}
         </button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="mt-10 border-t border-white/10 pt-6">
-      <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-3">アカウント</h3>
-      <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
-        <p className="text-red-400 text-sm font-semibold mb-1">{t("profile.deleteConfirm")}</p>
-        <p className="text-gray-400 text-xs mb-4">
-          練習記録・テクニックノート・プロフィールがすべて削除されます。この操作は取り消せません。
-        </p>
-        <div className="flex gap-3">
-          <button type="button" onClick={handleDelete} disabled={deleting} className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold py-2 rounded-lg text-sm">
-            {deleting ? "削除中..." : "はい、退会します"}
-          </button>
-          <button type="button" onClick={() => setConfirm(false)} className="flex-1 bg-white/10 hover:bg-white/15 text-gray-300 font-bold py-2 rounded-lg text-sm">
-            {t("training.cancel")}
-          </button>
+      ) : (
+        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+          <p className="text-red-400 text-sm font-semibold mb-1">{t("profile.deleteConfirm")}</p>
+          <p className="text-gray-400 text-xs mb-4">{t("profile.deleteWarning")}</p>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={deleting}
+              aria-label="Confirm account deletion"
+              className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold py-2 rounded-lg text-sm"
+            >
+              {deleting ? t("profile.deleting") : t("profile.deleteConfirmYes")}
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirm(false)}
+              className="flex-1 bg-white/10 hover:bg-white/15 text-gray-300 font-bold py-2 rounded-lg text-sm"
+            >
+              {t("training.cancel")}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -135,7 +284,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
             <div key={s} className={"w-3 h-3 rounded-full border-2 " + (s <= profile.stripe ? "bg-white border-white" : "bg-transparent border-white/10")} />
           ))}
         </div>
-        <span className="text-gray-400 text-xs">{profile.stripe}本線</span>
+        <span className="text-gray-400 text-xs">{t("profile.stripeCount", { n: profile.stripe })}</span>
       </div>
       <div className="space-y-2">
         {profile.gym && (
@@ -147,12 +296,12 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
         {profile.start_date && (
           <div className="flex items-center gap-2 text-sm text-gray-300">
             <span className="text-gray-500">🥋</span>
-            <span>BJJ歴 {calcBjjMonths(profile.start_date)}ヶ月</span>
-            <span className="text-gray-600 text-xs">（{profile.start_date} ～）</span>
+            <span>{t("profile.bjjHistory", { n: calcBjjMonths(profile.start_date) })}</span>
+            <span className="text-gray-600 text-xs">({profile.start_date} –)</span>
           </div>
         )}
         {!profile.gym && !profile.start_date && (
-          <p className="text-gray-600 text-xs">ジム・開始日が未設定です</p>
+          <p className="text-gray-600 text-xs">{t("profile.gymNotSet")}</p>
         )}
       </div>
       {profile.bio && (
@@ -162,17 +311,17 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
         <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-3 gap-2 text-center">
           <div>
             <div className="text-lg font-bold text-[#e94560]">{stats.totalCount}</div>
-            <div className="text-[10px] text-gray-500">総練習回</div>
+            <div className="text-[10px] text-gray-500">{t("stats.totalSessions")}</div>
           </div>
           <div>
             <div className="text-lg font-bold text-blue-400">
               {stats.totalMinutes >= 60 ? Math.floor(stats.totalMinutes / 60) + "h" : stats.totalMinutes + "m"}
             </div>
-            <div className="text-[10px] text-gray-500">総練習時間</div>
+            <div className="text-[10px] text-gray-500">{t("stats.totalMinutes")}</div>
           </div>
           <div>
             <div className="text-lg font-bold text-purple-400">{stats.techniqueCount}</div>
-            <div className="text-[10px] text-gray-500">テクニック</div>
+            <div className="text-[10px] text-gray-500">{t("dashboard.techniques")}</div>
           </div>
         </div>
       )}
@@ -195,16 +344,25 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
     e.preventDefault();
     setFormError(null);
     if (form.start_date && form.start_date > today) {
-      setFormError("BJJ開始日に未来の日付は設定できません");
+      setFormError(t("profile.futureDateError"));
       return;
     }
     setLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      setFormError("ログイン情報が取得できませんでした");
+      setFormError(t("profile.authError"));
       setLoading(false);
       return;
     }
+    // Check if disclaimer has already been recorded; if not, record it now.
+    // (Migration: supabase/migrations/20260322_add_disclaimer_agreed.sql)
+    const { data: existingProfile } = await supabase
+      .from("profiles")
+      .select("training_disclaimer_agreed_at")
+      .eq("id", user.id)
+      .single();
+    const disclaimerAlreadyRecorded = !!existingProfile?.training_disclaimer_agreed_at;
+
     const { error } = await supabase.from("profiles").upsert(
       {
         id: user.id,
@@ -214,6 +372,11 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
         // gym_name: form.gym,  // TODO: add gym_name column via migration when B2B aggregation query is activated
         bio: form.bio,
         start_date: form.start_date || null,
+        // Training disclaimer: set once, never cleared (legal defense evidence)
+        ...(disclaimerAlreadyRecorded ? {} : {
+          training_disclaimer_agreed: true,
+          training_disclaimer_agreed_at: new Date(Date.now() + 9 * 3600000).toISOString(),
+        }),
       },
       { onConflict: "id" }
     );
@@ -221,7 +384,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
       setToast({ message: t("profile.saved"), type: "success" });
       setTimeout(() => { setToast(null); onSave(form); }, 1200);
     } else {
-      setToast({ message: t("profile.saveFailed") + ": " + (error.message || error.code || "不明なエラー"), type: "error" });
+      setToast({ message: t("profile.saveFailed") + ": " + (error.message || error.code || "Unknown error"), type: "error" });
     }
     setLoading(false);
   };
@@ -239,7 +402,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
               ))}
             </div>
           </div>
-          <p className="text-gray-400 text-xs">{form.stripe}本線 · {currentBelt?.label}</p>
+          <p className="text-gray-400 text-xs">{t("profile.stripeCount", { n: form.stripe })} · {currentBelt?.label}</p>
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-3">{t("profile.belt")}</label>
@@ -253,7 +416,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
           </div>
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-          <label className="block text-gray-300 text-sm font-medium mb-3">{t("profile.stripe")} (0～4)</label>
+          <label className="block text-gray-300 text-sm font-medium mb-3">{t("profile.stripe")} (0–4)</label>
           <div className="flex gap-2">
             {[0, 1, 2, 3, 4].map((s) => (
               <button key={s} type="button" onClick={() => setForm({ ...form, stripe: s })}
@@ -265,17 +428,17 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-1">{t("profile.gym")}</label>
-          <p className="text-gray-600 text-[10px] mb-2">同じジムの仲間を繋ぐために使われます</p>
-          <input type="text" value={form.gym} onChange={(e) => setForm({ ...form, gym: e.target.value })} placeholder="例: Gracie Academy Tokyo" className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]" />
+          <p className="text-gray-600 text-[10px] mb-2">{t("profile.gymSubtext")}</p>
+          <input type="text" value={form.gym} onChange={(e) => setForm({ ...form, gym: e.target.value })} placeholder="e.g. Gracie Academy Tokyo" className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]" />
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.startDate")}</label>
           <input type="date" value={form.start_date} max={today} onChange={(e) => setForm({ ...form, start_date: e.target.value })} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]" />
-          {form.start_date && <p className="text-gray-500 text-xs mt-1">BJJ歴: {calcBjjMonths(form.start_date)}ヶ月</p>}
+          {form.start_date && <p className="text-gray-500 text-xs mt-1">{t("profile.bjjHistory", { n: calcBjjMonths(form.start_date) })}</p>}
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.bio")}</label>
-          <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="目標、得意なポジション、練習への想いなど..." rows={3} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] resize-none" />
+          <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder={t("profile.bioPlaceholder")} rows={3} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] resize-none" />
         </div>
         {formError && <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">{formError}</div>}
         <div className="flex gap-3">
@@ -352,7 +515,8 @@ export default function ProfileForm({ userId, hideAccount }: Props) {
       ) : (
         <ProfileViewCard profile={profile} stats={stats} onEdit={() => setIsEditing(true)} />
       )}
-      {!hideAccount && <DeleteAccountSection userId={userId} supabase={supabase} />}
+      <GymMembershipSection userId={userId} supabase={supabase} />
+      {!hideAccount && <AccountSection userId={userId} supabase={supabase} />}
     </div>
   );
 }

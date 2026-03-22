@@ -50,6 +50,12 @@ export default function GymPage() {
             <Link href="/login" className="text-sm text-gray-400 hover:text-white transition-colors">
               Sign In
             </Link>
+            <Link
+              href="/gym/dashboard"
+              className="text-sm bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-1.5 rounded-full transition-colors"
+            >
+              Open Dashboard →
+            </Link>
           </div>
         </nav>
 
@@ -82,10 +88,10 @@ export default function GymPage() {
                 Request Access →
               </a>
               <Link
-                href="/"
+                href="/gym/dashboard"
                 className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-white/5 text-gray-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-white/10"
               >
-                Learn More
+                Open Dashboard
               </Link>
             </div>
           </div>

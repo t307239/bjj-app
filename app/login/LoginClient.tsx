@@ -1,10 +1,20 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 
+// ─── IAB (In-App Browser) detection ───────────────────────────────────────────
+// Instagram, Facebook, LINE, X/Twitter, TikTok, Snapchat, WeChat OAuth fails
+// because IABs block cookie-based redirects. Must open in real browser.
+function isInAppBrowser(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent;
+  return /Instagram|FBAN|FBAV|Twitter|Line\/|TikTok|Snapchat|MicroMessenger|WeChat/i.test(ua);
+}
+
+// ─── Error banner (from OAuth callback) ───────────────────────────────────────
 const errorMessages: Record<string, string> = {
   auth: "Authentication failed. Please try again.",
   callback: "Login error. Please try again.",
@@ -22,29 +32,84 @@ function ErrorBanner() {
   );
 }
 
+// ─── IAB warning screen ────────────────────────────────────────────────────────
+function IABWarning() {
+  const [copied, setCopied] = useState(false);
+
+  const copyUrl = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center px-4 bg-[#0f172a]">
+      <div className="w-full max-w-sm text-center">
+        <div className="text-5xl mb-4">🌐</div>
+        <h1 className="text-xl font-bold text-white mb-2">
+          Open in Safari or Chrome
+        </h1>
+        <p className="text-gray-400 text-sm leading-relaxed mb-6">
+          Login is not supported in Instagram / LINE / X in-app browsers.
+          Please copy the URL below and open it in your default browser.
+        </p>
+        <button
+          onClick={copyUrl}
+          className="w-full bg-[#e94560] hover:bg-[#c73652] text-white font-semibold py-3 px-4 rounded-xl transition-colors text-sm"
+        >
+          {copied ? "✓ Copied!" : "Copy URL"}
+        </button>
+        <p className="text-gray-600 text-xs mt-4">
+          Paste in Safari or Chrome address bar to continue
+        </p>
+      </div>
+    </main>
+  );
+}
+
+// ─── Main login form ───────────────────────────────────────────────────────────
 function LoginForm() {
   const supabase = createClient();
+  const searchParamsInner = useSearchParams();
+  const nextPath = searchParamsInner.get("next") ?? "";
   const [email, setEmail] = useState("");
   const [emailLoading, setEmailLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
 
+  // COPPA: user must confirm age 13+
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
+  // Training Disclaimer: user must accept physical risk
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
+
+  // Both must be checked before any login action is enabled
+  const canProceed = ageConfirmed && disclaimerAccepted;
+
+  const callbackUrl = () => {
+    const base = `${window.location.origin}/auth/callback`;
+    return nextPath ? `${base}?next=${encodeURIComponent(nextPath)}` : base;
+  };
+
   const signInWithGoogle = async () => {
+    if (!canProceed) return;
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: callbackUrl() },
     });
   };
 
   const signInWithGitHub = async () => {
+    if (!canProceed) return;
     await supabase.auth.signInWithOAuth({
       provider: "github",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: callbackUrl() },
     });
   };
 
   const sendEmailLink = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canProceed) return;
     setEmailError(null);
     if (!email || !email.includes("@")) {
       setEmailError("Please enter a valid email address.");
@@ -53,7 +118,7 @@ function LoginForm() {
     setEmailLoading(true);
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      options: { emailRedirectTo: callbackUrl() },
     });
     if (error) {
       setEmailError("Failed to send email. Please try again.");
@@ -67,7 +132,7 @@ function LoginForm() {
     <main className="min-h-screen flex flex-col items-center justify-center px-4 bg-[#0f172a]">
       <div className="w-full max-w-sm">
 
-        {/* ヘッダー */}
+        {/* Header */}
         <div className="text-center mb-6">
           <div className="text-5xl mb-3">🥋</div>
           <h1 className="text-2xl font-bold text-white">Get started with BJJ App</h1>
@@ -76,7 +141,7 @@ function LoginForm() {
           </p>
         </div>
 
-        {/* ソーシャルプルーフ */}
+        {/* Social proof */}
         <div className="flex justify-center gap-6 mb-6">
           <div className="text-center">
             <p className="text-lg font-bold text-[#e94560]">Free</p>
@@ -98,12 +163,50 @@ function LoginForm() {
           <ErrorBanner />
         </Suspense>
 
-        <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 space-y-3">
+        {/* ── COPPA + Training Disclaimer checkboxes ──────────────────────── */}
+        {/* Required BEFORE any login action. COPPA: 13+ age gate (US federal law).
+            Disclaimer: injury liability (protects against personal-injury claims). */}
+        <div className="bg-zinc-900/80 rounded-xl border border-white/10 px-4 py-3 mb-3 space-y-2.5">
+          {/* Age confirmation (COPPA) */}
+          <label className="flex items-start gap-3 cursor-pointer group">
+            <input
+              type="checkbox"
+              checked={ageConfirmed}
+              onChange={(e) => setAgeConfirmed(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#e94560] flex-shrink-0 cursor-pointer"
+              aria-label="Age confirmation: I am 13 years of age or older"
+            />
+            <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
+              I am <span className="text-white font-medium">13 years of age or older</span>
+              <span className="text-gray-600"> (required by US law)</span>
+            </span>
+          </label>
 
-          {/* Google — 最も一般的なので最上位 */}
+          {/* Training Disclaimer */}
+          <label className="flex items-start gap-3 cursor-pointer group">
+            <input
+              type="checkbox"
+              checked={disclaimerAccepted}
+              onChange={(e) => setDisclaimerAccepted(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#e94560] flex-shrink-0 cursor-pointer"
+              aria-label="Training disclaimer: I understand BJJ involves physical risk"
+            />
+            <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
+              I understand that <span className="text-white font-medium">BJJ involves physical risk</span>{" "}
+              and agree to train responsibly. I will not hold BJJ App liable for any injuries.
+            </span>
+          </label>
+        </div>
+
+        {/* ── Login buttons ─────────────────────────────────────────────────── */}
+        <div className={`bg-zinc-900 rounded-2xl p-6 border border-white/10 space-y-3 transition-opacity ${!canProceed ? "opacity-50 pointer-events-none" : ""}`}>
+
+          {/* Google — most common, top position */}
           <button
             onClick={signInWithGoogle}
-            className="w-full flex items-center justify-center gap-3 bg-white text-gray-900 font-semibold py-3 px-4 rounded-xl hover:bg-gray-100 transition-colors"
+            disabled={!canProceed}
+            aria-label="Sign in with Google"
+            className="w-full flex items-center justify-center gap-3 bg-white text-gray-900 font-semibold py-3 px-4 rounded-xl hover:bg-gray-100 transition-colors disabled:cursor-not-allowed"
           >
             <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -111,17 +214,17 @@ function LoginForm() {
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-            <span>Google アカウントで続ける</span>
+            <span>Continue with Google</span>
           </button>
 
-          {/* 区切り */}
+          {/* Divider */}
           <div className="flex items-center gap-3 py-1">
             <div className="flex-1 h-px bg-white/10" />
             <span className="text-gray-500 text-xs">or continue with email</span>
             <div className="flex-1 h-px bg-white/10" />
           </div>
 
-          {/* メール送信済み */}
+          {/* Email sent confirmation */}
           {emailSent ? (
             <div className="bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-5 text-center">
               <div className="text-3xl mb-2">📬</div>
@@ -152,11 +255,13 @@ function LoginForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email address"
                 autoComplete="email"
+                aria-label="Email address"
                 className="w-full bg-zinc-800 text-white rounded-xl px-4 py-3 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] placeholder-gray-500"
               />
               <button
                 type="submit"
-                disabled={emailLoading}
+                disabled={emailLoading || !canProceed}
+                aria-label="Send magic login link"
                 className="w-full bg-[#e94560] hover:bg-[#c73652] text-white font-semibold py-3 px-4 rounded-xl transition-colors disabled:opacity-50 text-sm"
               >
                 {emailLoading ? "Sending…" : "Send me a login link"}
@@ -167,21 +272,30 @@ function LoginForm() {
             </form>
           )}
 
-          {/* GitHub — 開発者向けとして下に小さく */}
+          {/* GitHub — developer option, bottom small */}
           <div className="pt-1 border-t border-white/5">
             <button
               onClick={signInWithGitHub}
-              className="w-full flex items-center justify-center gap-2 text-gray-500 hover:text-gray-300 py-2 px-4 rounded-xl hover:bg-white/10 transition-colors text-xs"
+              disabled={!canProceed}
+              aria-label="Sign in with GitHub"
+              className="w-full flex items-center justify-center gap-2 text-gray-500 hover:text-gray-300 py-2 px-4 rounded-xl hover:bg-white/10 transition-colors text-xs disabled:cursor-not-allowed"
             >
               <svg className="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24">
                 <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
               </svg>
-              GitHub でログイン（開発者向け）
+              GitHub (for developers)
             </button>
           </div>
         </div>
 
-        {/* ゲストモードリンク */}
+        {/* Hint when checkboxes not yet checked */}
+        {!canProceed && (
+          <p className="text-center text-gray-600 text-xs mt-2">
+            ↑ Please check both boxes above to continue
+          </p>
+        )}
+
+        {/* Guest mode link */}
         <div className="text-center mt-5">
           <Link
             href="/dashboard"
@@ -195,17 +309,25 @@ function LoginForm() {
         </div>
 
         <p className="text-center text-gray-600 text-xs mt-4">
-          By continuing you agree to our
-          <Link href="/terms" className="hover:text-gray-400 underline mx-0.5">Terms of Service</Link>
+          By continuing you agree to our{" "}
+          <Link href="/terms" className="hover:text-gray-400 underline">Terms of Service</Link>
           {" & "}
-          <Link href="/privacy" className="hover:text-gray-400 underline mx-0.5">Privacy Policy</Link>
-          に同意します
+          <Link href="/privacy" className="hover:text-gray-400 underline">Privacy Policy</Link>
         </p>
       </div>
     </main>
   );
 }
 
+// ─── Root export: IAB check first ─────────────────────────────────────────────
 export default function LoginClient() {
+  const [isIAB, setIsIAB] = useState(false);
+
+  // Detect IAB on client side only (SSR safe)
+  useEffect(() => {
+    setIsIAB(isInAppBrowser());
+  }, []);
+
+  if (isIAB) return <IABWarning />;
   return <LoginForm />;
 }
