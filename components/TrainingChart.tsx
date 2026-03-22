@@ -87,7 +87,7 @@ export default function TrainingChart({ userId }: Props) {
           d.setDate(1);
           d.setMonth(d.getMonth() - i);
           const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-          const label = `${d.getMonth() + 1}月`;
+          const label = new Intl.DateTimeFormat(undefined, { month: "short" }).format(d);
           const info = mCounts[ym] || { count: 0, minutes: 0 };
           months.push({ ym, label, count: info.count, minutes: info.minutes });
         }
@@ -115,7 +115,11 @@ export default function TrainingChart({ userId }: Props) {
     weeks.push(data.slice(i * 7, i * 7 + 7));
   }
 
-  const dayLabels = ["日", "月", "火", "水", "木", "金", "土"];
+  // Locale-aware day abbreviations (Sun=0 ... Sat=6)
+  const dayLabels = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(2024, 0, 7 + i); // 2024-01-07 is Sun
+    return new Intl.DateTimeFormat(undefined, { weekday: "narrow" }).format(d);
+  });
   const totalDays = data.filter((d) => d.count > 0).length;
 
   // 月別棒グラフ最大値
@@ -168,7 +172,7 @@ export default function TrainingChart({ userId }: Props) {
                   <div
                     key={di}
                     className={`w-3 h-3 rounded-sm ${getColor(day.count)} transition-colors`}
-                    title={`${day.date}: ${day.count}回`}
+                    title={`${day.date}: ${t("chart.sessionsFmt", { n: day.count })}`}
                   />
                 ))}
               </div>
@@ -200,7 +204,7 @@ export default function TrainingChart({ userId }: Props) {
                   <div
                     className="w-full rounded-t-sm bg-[#e94560]/80 hover:bg-[#e94560] transition-colors"
                     style={{ height: `${Math.max(heightPct, m.count > 0 ? 4 : 0)}%` }}
-                    title={`${m.ym}: ${m.count}回 / ${
+                    title={`${m.ym}: ${t("chart.sessionsFmt", { n: m.count })} / ${
                       m.minutes >= 60
                         ? `${Math.floor(m.minutes / 60)}h${m.minutes % 60 > 0 ? `${m.minutes % 60}m` : ""}`
                         : `${m.minutes}m`
@@ -218,7 +222,7 @@ export default function TrainingChart({ userId }: Props) {
             ))}
           </div>
           <div className="text-[10px] text-gray-500 text-right mt-1">
-            {t("chart.past6Months")}: {monthData.reduce((s, m) => s + m.count, 0)}回
+            {t("chart.past6Months")}: {t("chart.sessionsFmt", { n: monthData.reduce((s, m) => s + m.count, 0) })}
           </div>
         </>
       )}

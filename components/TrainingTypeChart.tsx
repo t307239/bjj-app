@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useLocale } from "@/lib/i18n";
 
 type TypeCount = {
   value: string;
@@ -12,13 +13,13 @@ type TypeCount = {
   bg: string;
 };
 
-const TYPE_DEFS: Omit<TypeCount, "count" | "totalMins">[] = [
-  { value: "gi",          label: "道衣 (Gi)",       color: "#3b82f6", bg: "bg-blue-500" },
-  { value: "nogi",        label: "ノーギ",           color: "#f97316", bg: "bg-orange-500" },
-  { value: "drilling",    label: "ドリル",           color: "#a855f7", bg: "bg-purple-500" },
-  { value: "competition", label: "試合",             color: "#e94560", bg: "bg-red-500" },
-  { value: "open_mat",    label: "オープンマット",   color: "#22c55e", bg: "bg-green-500" },
-];
+const TYPE_DEFS_BASE = [
+  { value: "gi",          color: "#3b82f6", bg: "bg-blue-500" },
+  { value: "nogi",        color: "#f97316", bg: "bg-orange-500" },
+  { value: "drilling",    color: "#a855f7", bg: "bg-purple-500" },
+  { value: "competition", color: "#e94560", bg: "bg-red-500" },
+  { value: "open_mat",    color: "#22c55e", bg: "bg-green-500" },
+] as const;
 
 type Period = "all" | "month" | "week";
 
@@ -49,7 +50,7 @@ function fmtMins(mins: number): string {
   return m > 0 ? `${h}h${m}m` : `${h}h`;
 }
 
-function DonutChart({ data }: { data: TypeCount[] }) {
+function DonutChart({ data, timesUnit, sessionsLabel }: { data: TypeCount[]; timesUnit: string; sessionsLabel: string }) {
   const [hovered, setHovered] = useState<string | null>(null);
   const total = data.reduce((s, d) => s + d.count, 0);
   if (total === 0) return null;
@@ -116,7 +117,7 @@ function DonutChart({ data }: { data: TypeCount[] }) {
           </text>
           {/* Count */}
           <text x={cx} y={cy + 1} textAnchor="middle" fill="white" fontSize="13" fontWeight="bold">
-            {hoveredSlice.count}回
+            {hoveredSlice.count}{timesUnit}
           </text>
           {/* Percentage */}
           <text x={cx} y={cy + 13} textAnchor="middle" fill={hoveredSlice.color} fontSize="8" fontWeight="600">
@@ -135,7 +136,7 @@ function DonutChart({ data }: { data: TypeCount[] }) {
             {total}
           </text>
           <text x={cx} y={cy + 10} textAnchor="middle" fill="#9ca3af" fontSize="7">
-            練習回数
+            {sessionsLabel}
           </text>
         </>
       )}
@@ -188,18 +189,20 @@ function MiniSparkline({ logs, typeValue, color }: {
   );
 }
 
-function MonthlyTrend({ logs, typeValue, typeLabel, color }: {
+function MonthlyTrend({ logs, typeValue, typeLabel, color, trendSubtitle }: {
   logs: { date: string; type: string }[];
   typeValue: string;
   typeLabel: string;
   color: string;
+  trendSubtitle: string;
 }) {
   const now = new Date();
   const months: { key: string; label: string; count: number }[] = [];
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-    const label = `${d.getMonth() + 1}月`;
+    // locale-aware short month label via Intl
+    const label = new Intl.DateTimeFormat(undefined, { month: "short" }).format(d);
     months.push({ key, label, count: 0 });
   }
   logs.forEach((l) => {
@@ -214,7 +217,7 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color }: {
   return (
     <div className="mt-3 pt-3 border-t border-white/5">
       <p className="text-[10px] text-gray-500 mb-2">
-        <span style={{ color }} className="font-semibold">{typeLabel}</span> の月別推移（過去6ヶ月）
+        <span style={{ color }} className="font-semibold">{typeLabel}</span>{trendSubtitle}
       </p>
       <div className="flex items-end gap-1.5 h-12">
         {months.map((m) => {
@@ -245,12 +248,19 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color }: {
 }
 
 export default function TrainingTypeChart({ userId }: Props) {
+  const { t } = useLocale();
   const [allLogs, setAllLogs] = useState<{ date: string; type: string; duration_min: number | null }[]>([]);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<Period>("all");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const supabase = createClient();
+
+  // Locale-aware training type labels
+  const TYPE_DEFS: Omit<TypeCount, "count" | "totalMins">[] = TYPE_DEFS_BASE.map((d) => ({
+    ...d,
+    label: t(`training.${d.value}`),
+  }));
 
   useEffect(() => {
     const load = async () => {
@@ -297,10 +307,10 @@ export default function TrainingTypeChart({ userId }: Props) {
         onClick={() => setIsOpen((v) => !v)}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
       >
-        <h4 className="text-sm font-medium text-gray-300">🥋 練習タイプ分布</h4>
+        <h4 className="text-sm font-medium text-gray-300">🥋 {t("chart.typeDistribution")}</h4>
         <div className="flex items-center gap-2">
           {!isOpen && total > 0 && (
-            <span className="text-[10px] text-gray-500">{total}回</span>
+            <span className="text-[10px] text-gray-500">{total}{t("chart.timesUnit")}</span>
           )}
           <svg
             className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
@@ -312,7 +322,7 @@ export default function TrainingTypeChart({ userId }: Props) {
       </button>
       {isOpen && (<div className="p-4 border-t border-white/10">
       <div className="flex items-center justify-between mb-3">
-        <h4 className="text-sm font-medium text-gray-300">練習タイプ分布</h4>
+        <h4 className="text-sm font-medium text-gray-300">{t("chart.typeDistribution")}</h4>
         <div className="flex rounded-lg overflow-hidden border border-white/10">
           {(["all", "month", "week"] as const).map((p) => (
             <button
@@ -322,7 +332,7 @@ export default function TrainingTypeChart({ userId }: Props) {
                 period === p ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-gray-300"
               }`}
             >
-              {p === "all" ? "全期間" : p === "month" ? "今月" : "今週"}
+              {p === "all" ? t("chart.allTime") : p === "month" ? t("chart.thisMonth") : t("chart.thisWeek")}
             </button>
           ))}
         </div>
@@ -330,11 +340,11 @@ export default function TrainingTypeChart({ userId }: Props) {
 
       {total === 0 ? (
         <div className="text-center py-4 text-gray-600 text-xs">
-          {period === "week" ? "今週" : "今月"}の練習記録はありません
+          {period === "week" ? t("chart.noSessionsThisWeek") : t("chart.noSessionsThisMonth")}
         </div>
       ) : (
         <div className="flex items-center gap-4">
-          <DonutChart data={data} />
+          <DonutChart data={data} timesUnit={t("chart.timesUnit")} sessionsLabel={t("chart.sessions")} />
           <div className="flex-1 space-y-1.5">
             {data
               .filter((d) => d.count > 0)
@@ -349,11 +359,11 @@ export default function TrainingTypeChart({ userId }: Props) {
                       isSelected ? "bg-white/10" : "hover:bg-white/5"
                     }`}
                     onClick={() => setSelectedType(isSelected ? null : d.value)}
-                    title="クリックして月別推移を表示"
+                    title={t("chart.clickForTrend")}
                   >
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${d.bg}`} />
                     <span className={`text-xs flex-1 truncate ${isSelected ? "text-white font-medium" : "text-gray-400"}`}>{d.label}</span>
-                    <span className="text-xs font-medium text-white">{d.count}回</span>
+                    <span className="text-xs font-medium text-white">{d.count}{t("chart.timesUnit")}</span>
                     <span className="text-[10px] text-gray-600 w-7 text-right">{pct}%</span>
                     {d.totalMins > 0 && (
                       <span className="text-[10px] text-gray-600 w-8 text-right">{fmtMins(d.totalMins)}</span>
@@ -373,6 +383,7 @@ export default function TrainingTypeChart({ userId }: Props) {
             typeValue={selectedType}
             typeLabel={typeDef.label}
             color={typeDef.color}
+            trendSubtitle={t("chart.monthlyTrendSubtitle")}
           />
         ) : null;
       })()}

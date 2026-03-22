@@ -99,7 +99,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
           <div className="flex items-center gap-2">
             {currentStreak >= 2 && (
               <span className="hidden sm:flex items-center gap-1 text-[11px] text-orange-400 bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-full">
-                🔥 {currentStreak}日
+                {t("nav.streakBadge", { n: currentStreak })}
               </span>
             )}
             <LangToggle />
