@@ -156,10 +156,10 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
         )}
       </div>
       {profile.bio && (
-        <p className="text-gray-400 text-sm mt-3 border-t border-white/10/60 pt-3 leading-relaxed">{profile.bio}</p>
+        <p className="text-gray-400 text-sm mt-3 border-t border-white/10 pt-3 leading-relaxed">{profile.bio}</p>
       )}
       {stats && (
-        <div className="mt-4 pt-4 border-t border-white/10/60 grid grid-cols-3 gap-2 text-center">
+        <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-3 gap-2 text-center">
           <div>
             <div className="text-lg font-bold text-[#e94560]">{stats.totalCount}</div>
             <div className="text-[10px] text-gray-500">総練習回</div>

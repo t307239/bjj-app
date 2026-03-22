@@ -382,7 +382,7 @@ export default function TechniqueLog({ userId }: Props) {
           </div>
           {/* 習熟度分布バー */}
           {(() => {
-            const masteryColors = ["", "bg-gray-500", "bg-blue-500", "bg-yellow-500", "bg-orange-500", "bg-green-500"];
+            const masteryColors = ["", "bg-zinc-500", "bg-blue-500", "bg-yellow-500", "bg-orange-500", "bg-green-500"];
             const masteryLevelKeys = ["", "1", "2", "3", "4", "5"];
             const counts = [1, 2, 3, 4, 5].map((lvl) =>
               techniques.filter((t) => t.mastery_level === lvl).length

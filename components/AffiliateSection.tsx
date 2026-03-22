@@ -119,7 +119,7 @@ export default function AffiliateSection() {
             href={p.url}
             target="_blank"
             rel="sponsored noopener noreferrer"
-            className="flex items-center gap-3 bg-zinc-900 hover:bg-white/5 rounded-xl p-3 border border-white/10/60 hover:border-orange-500/30 transition-all group"
+            className="flex items-center gap-3 bg-zinc-900 hover:bg-white/5 rounded-xl p-3 border border-white/10 hover:border-orange-500/30 transition-all group"
           >
             <div className="text-2xl flex-shrink-0">{p.emoji}</div>
             <div className="flex-1 min-w-0">
@@ -129,7 +129,7 @@ export default function AffiliateSection() {
               <div className="text-[10px] text-gray-400 mt-0.5">{p.instructor}</div>
             </div>
             <div className="flex-shrink-0 text-right">
-              <span className="text-[10px] bg-white/10/60 text-gray-400 px-1.5 py-0.5 rounded">
+              <span className="text-[10px] bg-white/10 text-gray-400 px-1.5 py-0.5 rounded">
                 {p.level}
               </span>
               <div className="text-orange-400 text-[10px] mt-1 opacity-0 group-hover:opacity-100 transition-opacity">

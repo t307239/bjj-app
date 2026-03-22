@@ -295,7 +295,7 @@ export default function TrainingTypeChart({ userId }: Props) {
     <div className="bg-zinc-900 rounded-xl border border-white/10 mb-4 overflow-hidden">
       <button
         onClick={() => setIsOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5/20 transition-colors text-left"
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
       >
         <h4 className="text-sm font-medium text-gray-300">🥋 練習タイプ分布</h4>
         <div className="flex items-center gap-2">
@@ -346,7 +346,7 @@ export default function TrainingTypeChart({ userId }: Props) {
                   <div
                     key={d.value}
                     className={`flex items-center gap-2 cursor-pointer rounded-lg px-1 py-0.5 transition-colors ${
-                      isSelected ? "bg-white/10/40" : "hover:bg-white/5/20"
+                      isSelected ? "bg-white/10" : "hover:bg-white/5"
                     }`}
                     onClick={() => setSelectedType(isSelected ? null : d.value)}
                     title="クリックして月別推移を表示"

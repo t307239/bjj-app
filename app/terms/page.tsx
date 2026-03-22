@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen bg-[#0f172a] text-gray-300 px-4 py-12">
+    <main className="min-h-screen bg-[#0f172a] text-[#e2e8f0] px-4 py-12">
       <div className="max-w-2xl mx-auto">
         <Link href="/" className="text-sm text-[#e94560] hover:underline mb-8 inline-block">
           ← Back to BJJ App

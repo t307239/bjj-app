@@ -196,7 +196,7 @@ export default function WikiQuickLinks() {
   const getCategoryKey = (catEn: string) => catEn; // Use English key for CATEGORY_EMOJI map
 
   return (
-    <div className="bg-zinc-900/60 rounded-xl border border-white/10/30 mb-4 overflow-hidden">
+    <div className="bg-zinc-900/60 rounded-xl border border-white/10 mb-4 overflow-hidden">
       <button
         onClick={() => setIsOpen((v) => !v)}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
@@ -215,7 +215,7 @@ export default function WikiQuickLinks() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      {isOpen && (<div className="px-4 pb-4 border-t border-white/10/30">
+      {isOpen && (<div className="px-4 pb-4 border-t border-white/10">
         <div className="flex items-center justify-between pt-3 mb-3">
           <span className="text-[10px] text-gray-500">{t("wiki.nextHint")}</span>
           <a
@@ -235,7 +235,7 @@ export default function WikiQuickLinks() {
             className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
               selectedTag === null
                 ? "bg-[#e94560] border-[#e94560] text-white"
-                : "border-white/10 text-gray-400 hover:border-gray-400 hover:text-zinc-100"
+                : "border-white/10 text-gray-400 hover:border-white/20 hover:text-zinc-100"
             }`}
           >
             {locale === "en" ? "Today" : "今日"}
@@ -265,7 +265,7 @@ export default function WikiQuickLinks() {
                 className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
                   selectedTag === catEn
                     ? "bg-[#e94560] border-[#e94560] text-white"
-                    : "border-white/10 text-gray-400 hover:border-gray-400 hover:text-zinc-100"
+                    : "border-white/10 text-gray-400 hover:border-white/20 hover:text-zinc-100"
                 }`}
               >
                 {CATEGORY_EMOJI[catEn] ?? ""} {displayCat}
@@ -282,7 +282,7 @@ export default function WikiQuickLinks() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackWikiClick(link.slug, locale === "en" ? link.tagEn : link.tagJa)}
-              className="flex flex-col items-center text-center p-2.5 rounded-lg bg-white/5 hover:bg-zinc-800 border border-white/10/30 hover:border-[#e94560]/30 transition-all group"
+              className="flex flex-col items-center text-center p-2.5 rounded-lg bg-white/5 hover:bg-zinc-800 border border-white/10 hover:border-[#e94560]/30 transition-all group"
             >
               <span className="text-lg mb-1">{link.emoji}</span>
               <span className="text-[10px] text-gray-300 group-hover:text-white font-medium leading-tight line-clamp-2">

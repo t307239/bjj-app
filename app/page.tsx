@@ -112,7 +112,7 @@ export default async function Home() {
       </section>
 
       {/* English Section — for Reddit / international users */}
-      <section id="english" className="px-4 py-16 bg-[#0a0a18] border-t border-white/5/50">
+      <section id="english" className="px-4 py-16 bg-[#0a0a18] border-t border-white/5">
         <div className="max-w-2xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-zinc-900 border border-blue-500/30 rounded-full px-4 py-1.5 text-sm text-blue-400 mb-8">
             🌐 For English speakers
@@ -142,7 +142,7 @@ export default async function Home() {
               "📅 Calendar heatmap",
               "🏆 Competition W/L tracker",
             ].map((f) => (
-              <span key={f} className="bg-zinc-900 border border-white/10 text-gray-300 px-3 py-1.5 rounded-full">
+              <span key={f} className="bg-zinc-900 border border-white/10 text-zinc-300 px-3 py-1.5 rounded-full">
                 {f}
               </span>
             ))}
@@ -155,7 +155,7 @@ export default async function Home() {
               { quote: "The technique notebook is 🔥. I log every guard detail from class and review before rolling.", belt: "Purple belt, 4 years", initial: "A" },
               { quote: "Built my habit from 2x/week to 4x/week just by watching the streak number go up.", belt: "White belt, 8 months", initial: "J" },
             ].map(({ quote, belt, initial }) => (
-              <div key={initial} className="bg-zinc-900 rounded-xl p-4 border border-white/10/60">
+              <div key={initial} className="bg-zinc-900 rounded-xl p-4 border border-white/10">
                 <div className="flex items-center gap-1 mb-2 text-yellow-400 text-xs">★★★★★</div>
                 <p className="text-gray-400 text-xs leading-relaxed mb-3">&ldquo;{quote}&rdquo;</p>
                 <div className="flex items-center gap-2">

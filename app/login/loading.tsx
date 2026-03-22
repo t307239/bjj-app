@@ -9,7 +9,7 @@ export default function LoginLoading() {
         </div>
         <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 space-y-3">
           <div className="h-12 bg-white/5 rounded-xl animate-pulse" />
-          <div className="h-12 bg-white/10/30 rounded-xl animate-pulse" />
+          <div className="h-12 bg-white/10 rounded-xl animate-pulse" />
         </div>
         <div className="h-3 w-56 bg-zinc-900/50 rounded animate-pulse mx-auto mt-6" />
       </div>

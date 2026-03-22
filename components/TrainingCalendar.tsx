@@ -186,7 +186,7 @@ export default function TrainingCalendar({ userId }: Props) {
                       {dayLogs.slice(0, 3).map((log, i) => (
                         <div
                           key={i}
-                          className={`w-1.5 h-1.5 rounded-full ${TYPE_COLORS[log.type] ?? "bg-gray-400"}`}
+                          className={`w-1.5 h-1.5 rounded-full ${TYPE_COLORS[log.type] ?? "bg-zinc-400"}`}
                         />
                       ))}
                     </div>
@@ -211,7 +211,7 @@ export default function TrainingCalendar({ userId }: Props) {
           </div>
           {selectedLogs.map(log => (
             <div key={log.id} className="flex items-start gap-3 bg-white/5 rounded-lg px-3 py-2">
-              <div className={`w-2 h-2 rounded-full mt-1 flex-shrink-0 ${TYPE_COLORS[log.type] ?? "bg-gray-400"}`} />
+              <div className={`w-2 h-2 rounded-full mt-1 flex-shrink-0 ${TYPE_COLORS[log.type] ?? "bg-zinc-400"}`} />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-medium text-white">{TYPE_LABEL[log.type] ?? log.type}</span>

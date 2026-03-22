@@ -71,7 +71,7 @@ export default async function TechniquesPage() {
         <TechniqueLog userId={user.id} />
 
         {/* BJJ Wiki 関連学習リンク */}
-        <div className="mt-8 bg-zinc-900 rounded-xl p-4 border border-white/10/40">
+        <div className="mt-8 bg-zinc-900 rounded-xl p-4 border border-white/10">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-base">📚</span>
             <h3 className="text-sm font-semibold text-zinc-100">BJJ Wiki で技術を深める</h3>

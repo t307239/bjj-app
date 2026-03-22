@@ -165,7 +165,7 @@ export default function WeeklyStrip({ userId }: Props) {
                     ? "border-2 border-[#e94560]/50 bg-transparent"
                     : isFuture
                     ? "bg-white/5"
-                    : "bg-white/10/50"
+                    : "bg-white/10"
                 }`}
               >
                 {trained && (

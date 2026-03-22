@@ -483,7 +483,7 @@ export default function GoalTracker({ userId }: Props) {
                                     : isToday
                                     ? "bg-[#e94560]/20 border border-[#e94560]/50 text-[#e94560]"
                                     : isPast
-                                    ? "bg-white/10/50 text-gray-600"
+                                    ? "bg-white/10 text-gray-600"
                                     : "bg-white/5 text-gray-700"
                                 }`}
                               >
@@ -536,7 +536,7 @@ export default function GoalTracker({ userId }: Props) {
                                     : "bg-[#e94560]/20 border border-[#e94560]/40 text-[#e94560]"
                                   : w.achieved
                                   ? "bg-green-500/25 text-green-400"
-                                  : "bg-white/10/60 text-gray-600"
+                                  : "bg-white/10 text-gray-600"
                               }`}
                             >
                               {w.achieved ? "✓" : w.count > 0 ? w.count : "−"}

@@ -186,7 +186,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
     <div className="bg-zinc-900 rounded-xl border border-white/10 mb-4 overflow-hidden">
       <button
         onClick={() => setIsOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5/20 transition-colors text-left"
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
       >
         <div>
           <h4 className="text-sm font-medium text-gray-300">📊 {t("chart.monthlyGraph")}</h4>
@@ -229,7 +229,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors ${
               view === "count"
                 ? "bg-[#e94560] text-white"
-                : "bg-white/10/50 text-gray-400 hover:text-white"
+                : "bg-white/10 text-gray-400 hover:text-white"
             }`}
           >
             {t("chart.count")}
@@ -239,7 +239,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors ${
               view === "minutes"
                 ? "bg-[#e94560] text-white"
-                : "bg-white/10/50 text-gray-400 hover:text-white"
+                : "bg-white/10 text-gray-400 hover:text-white"
             }`}
           >
             {t("chart.duration")}
@@ -277,7 +277,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         <div className="relative" style={{ height: "120px" }}>
           {avgPct > 0 && (
             <div
-              className="absolute left-0 right-0 border-t border-dashed border-white/10/50 pointer-events-none"
+              className="absolute left-0 right-0 border-t border-dashed border-white/10 pointer-events-none"
               style={{ bottom: `${avgPct}%` }}
               title={`${t("chart.average")}: ${view === "count" ? `${Math.round(avgVal)}回` : formatMinutes(Math.round(avgVal))}`}
             />
@@ -377,7 +377,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
 
       {/* Type legend (count view only) */}
       {view === "count" && visibleTypes.length > 1 && (
-        <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 pt-2 border-t border-white/10/40">
+        <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 pt-2 border-t border-white/10">
           {visibleTypes.map((t) => (
             <span key={t} className="flex items-center gap-1 text-[9px] text-gray-400">
               <span className="w-2 h-2 rounded-sm inline-block" style={{ background: TYPE_HEX[t] }} />
@@ -404,7 +404,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           {selectedLoading ? (
             <div className="flex gap-1">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-6 bg-white/10/50 rounded flex-1 animate-pulse" />
+                <div key={i} className="h-6 bg-white/10 rounded flex-1 animate-pulse" />
               ))}
             </div>
           ) : selectedLogs.length === 0 ? (
@@ -413,7 +413,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             <div className="space-y-1 max-h-48 overflow-y-auto">
               {selectedLogs.map((log, idx) => {
                 const typeLabel = TYPE_LABELS[log.type] ?? log.type;
-                const typeColor = TYPE_COLORS[log.type] ?? "bg-gray-500/70";
+                const typeColor = TYPE_COLORS[log.type] ?? "bg-zinc-500/70";
                 return (
                   <div key={idx} className="flex items-center gap-2 text-[11px]">
                     <span className="text-gray-500 w-16 flex-shrink-0">{log.date.substring(5).replace("-", "/")}</span>
@@ -429,7 +429,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             </div>
           )}
           {selectedLogs.length > 0 && (
-            <div className="mt-2 pt-1 border-t border-white/10/30 flex gap-4 text-[10px] text-gray-500">
+            <div className="mt-2 pt-1 border-t border-white/10 flex gap-4 text-[10px] text-gray-500">
               <span>{selectedLogs.length}回</span>
               <span>合計 {formatMinutes(selectedLogs.reduce((s, l) => s + (l.duration_min || 0), 0))}</span>
               <span>平均 {selectedLogs.length > 0 ? formatMinutes(Math.round(selectedLogs.reduce((s, l) => s + (l.duration_min || 0), 0) / selectedLogs.length)) : "-"}/回</span>

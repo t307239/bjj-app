@@ -493,7 +493,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
           {/* This week summary row */}
           {weekEntries.length > 0 && (
-            <div className="flex items-center gap-3 mb-3 pb-3 border-b border-white/10/60">
+            <div className="flex items-center gap-3 mb-3 pb-3 border-b border-white/10">
               <span className="text-[10px] font-semibold text-yellow-400/80 uppercase tracking-wide flex-shrink-0">This Week</span>
               <div className="flex items-center gap-3 flex-1">
                 <div className="flex items-center gap-1.5">

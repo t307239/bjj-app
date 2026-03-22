@@ -222,11 +222,11 @@ export default function DailyWikiTip() {
   const nextTitle = locale === "en" ? tipNext.titleEn : tipNext.titleJa;
   const nextDesc = locale === "en" ? tipNext.descEn : tipNext.descJa;
   const nextCategory = locale === "en" ? tipNext.categoryEn : tipNext.categoryJa;
-  const badgeClass = CATEGORY_COLORS[tipCategory] ?? "bg-gray-500/20 text-gray-300";
-  const nextBadgeClass = CATEGORY_COLORS[nextCategory] ?? "bg-gray-500/20 text-gray-300";
+  const badgeClass = CATEGORY_COLORS[tipCategory] ?? "bg-zinc-500/20 text-zinc-300";
+  const nextBadgeClass = CATEGORY_COLORS[nextCategory] ?? "bg-zinc-500/20 text-zinc-300";
 
   return (
-    <div className="bg-zinc-900 rounded-xl border border-white/10/40 overflow-hidden">
+    <div className="bg-zinc-900 rounded-xl border border-white/10 overflow-hidden">
       <button
         onClick={() => setIsOpen((v) => !v)}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
@@ -247,7 +247,7 @@ export default function DailyWikiTip() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      {isOpen && (<div className="px-4 pb-4 pt-1 border-t border-white/10/40">
+      {isOpen && (<div className="px-4 pb-4 pt-1 border-t border-white/10">
       <div className="flex items-center gap-2 mb-3">
         <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${badgeClass}`}>
           {tipCategory}
@@ -280,7 +280,7 @@ export default function DailyWikiTip() {
         className="overflow-hidden transition-all duration-300 ease-in-out"
         style={{ maxHeight: showNext ? "160px" : "0px" }}
       >
-        <div className="mt-3 pt-3 border-t border-white/10/40">
+        <div className="mt-3 pt-3 border-t border-white/10">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-[10px] text-gray-600">{t("wiki.nextHint")}</span>
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${nextBadgeClass}`}>
