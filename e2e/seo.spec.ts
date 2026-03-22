@@ -17,13 +17,13 @@ const PUBLIC_PAGES = [
 test.describe("SEO - Meta Tags", () => {
   for (const { path, name } of PUBLIC_PAGES) {
     test(`${name} (${path}) has <title>`, async ({ page }) => {
-      await page.goto(path);
+      await page.goto(path, { waitUntil: "domcontentloaded" });
       const title = await page.title();
       expect(title.length).toBeGreaterThan(0);
     });
 
     test(`${name} (${path}) has meta description`, async ({ page }) => {
-      await page.goto(path);
+      await page.goto(path, { waitUntil: "domcontentloaded" });
       const desc = page.locator('meta[name="description"]');
       const count = await desc.count();
       if (count > 0) {
@@ -33,7 +33,7 @@ test.describe("SEO - Meta Tags", () => {
     });
 
     test(`${name} (${path}) has charset UTF-8`, async ({ page }) => {
-      await page.goto(path);
+      await page.goto(path, { waitUntil: "domcontentloaded" });
       const charset = page.locator('meta[charset]');
       const count = await charset.count();
       if (count > 0) {
@@ -42,7 +42,7 @@ test.describe("SEO - Meta Tags", () => {
     });
 
     test(`${name} (${path}) has viewport meta`, async ({ page }) => {
-      await page.goto(path);
+      await page.goto(path, { waitUntil: "domcontentloaded" });
       const viewport = page.locator('meta[name="viewport"]');
       await expect(viewport).toBeAttached();
     });
@@ -51,7 +51,7 @@ test.describe("SEO - Meta Tags", () => {
 
 test.describe("SEO - Open Graph", () => {
   test("LP has og:title", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     const ogTitle = page.locator('meta[property="og:title"]');
     const count = await ogTitle.count();
     if (count > 0) {
@@ -61,7 +61,7 @@ test.describe("SEO - Open Graph", () => {
   });
 
   test("LP has og:description", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     const ogDesc = page.locator('meta[property="og:description"]');
     const count = await ogDesc.count();
     if (count > 0) {
@@ -71,7 +71,7 @@ test.describe("SEO - Open Graph", () => {
   });
 
   test("LP has og:url", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     const ogUrl = page.locator('meta[property="og:url"]');
     const count = await ogUrl.count();
     if (count > 0) {
@@ -86,13 +86,13 @@ test.describe("Accessibility Basics", () => {
     test(`${name} (${path}) has lang attribute on <html>`, async ({
       page,
     }) => {
-      await page.goto(path);
+      await page.goto(path, { waitUntil: "domcontentloaded" });
       const lang = await page.getAttribute("html", "lang");
       expect(lang).toBeTruthy();
     });
 
     test(`${name} (${path}) has no duplicate IDs`, async ({ page }) => {
-      await page.goto(path);
+      await page.goto(path, { waitUntil: "domcontentloaded" });
       const duplicateIds = await page.evaluate(() => {
         const ids = Array.from(document.querySelectorAll("[id]")).map(
           (el) => el.id
@@ -113,7 +113,7 @@ test.describe("Accessibility Basics", () => {
     });
 
     test(`${name} (${path}) images have alt attributes`, async ({ page }) => {
-      await page.goto(path);
+      await page.goto(path, { waitUntil: "domcontentloaded" });
       const imagesWithoutAlt = await page.evaluate(() => {
         const imgs = Array.from(document.querySelectorAll("img"));
         return imgs.filter((img) => !img.hasAttribute("alt")).length;
@@ -136,7 +136,7 @@ test.describe("Performance Basics", () => {
     page.on("console", (msg) => {
       if (msg.type() === "error") errors.push(msg.text());
     });
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     await page.waitForTimeout(2000);
     const criticalErrors = errors.filter(
       (e) =>

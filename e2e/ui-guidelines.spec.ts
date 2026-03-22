@@ -44,7 +44,7 @@ const PUBLIC_PAGES = [
 test.describe("UI Guideline Compliance", () => {
   for (const { path, name } of PUBLIC_PAGES) {
     test(`${name} (${path}) has no banned CSS classes`, async ({ page }) => {
-      await page.goto(path);
+      await page.goto(path, { waitUntil: "domcontentloaded" });
       await page.waitForLoadState("networkidle");
 
       for (const selector of BANNED_CLASSES) {
@@ -62,7 +62,7 @@ test.describe("UI Guideline Compliance", () => {
     });
 
     test(`${name} (${path}) uses correct design tokens`, async ({ page }) => {
-      await page.goto(path);
+      await page.goto(path, { waitUntil: "domcontentloaded" });
       await page.waitForLoadState("networkidle");
 
       // Body or main container should use approved dark background
@@ -84,7 +84,7 @@ test.describe("UI Guideline Compliance", () => {
   }
 
   test("Dashboard cards use glassmorphism pattern", async ({ page }) => {
-    await page.goto("/dashboard");
+    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
     await page.waitForLoadState("networkidle");
 
     // Cards should use bg-zinc-900/50 or bg-white/5 (glassmorphism)
@@ -94,7 +94,7 @@ test.describe("UI Guideline Compliance", () => {
   });
 
   test("No legacy opaque borders on dashboard", async ({ page }) => {
-    await page.goto("/dashboard");
+    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
     await page.waitForLoadState("networkidle");
 
     // Check all elements with border classes
@@ -122,7 +122,7 @@ test.describe("UI Guideline Compliance", () => {
   });
 
   test("Focus states use purple accent, not blue", async ({ page }) => {
-    await page.goto("/dashboard");
+    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
     await page.waitForLoadState("networkidle");
 
     const blueFocusCount = await page.evaluate(() => {

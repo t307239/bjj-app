@@ -9,7 +9,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Dashboard - Guest Mode", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard");
+    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
     // Wait for page to fully hydrate
     await page.waitForLoadState("networkidle");
   });

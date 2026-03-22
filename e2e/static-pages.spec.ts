@@ -9,7 +9,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Terms of Service", () => {
   test("renders terms page", async ({ page }) => {
-    await page.goto("/terms");
+    await page.goto("/terms", { waitUntil: "domcontentloaded" });
     await expect(page.locator("body")).toBeVisible();
     const title = await page.title();
     expect(title.length).toBeGreaterThan(0);
@@ -18,7 +18,7 @@ test.describe("Terms of Service", () => {
   });
 
   test("terms page has noindex meta", async ({ page }) => {
-    await page.goto("/terms");
+    await page.goto("/terms", { waitUntil: "domcontentloaded" });
     const robots = page.locator('meta[name="robots"]');
     const count = await robots.count();
     if (count > 0) {
@@ -29,14 +29,14 @@ test.describe("Terms of Service", () => {
 
 test.describe("Privacy Policy", () => {
   test("renders privacy page", async ({ page }) => {
-    await page.goto("/privacy");
+    await page.goto("/privacy", { waitUntil: "domcontentloaded" });
     await expect(page.locator("body")).toBeVisible();
     const body = await page.textContent("body");
     expect(body).toMatch(/privacy|プライバシー|個人情報/i);
   });
 
   test("privacy page has noindex meta", async ({ page }) => {
-    await page.goto("/privacy");
+    await page.goto("/privacy", { waitUntil: "domcontentloaded" });
     const robots = page.locator('meta[name="robots"]');
     const count = await robots.count();
     if (count > 0) {
@@ -47,14 +47,14 @@ test.describe("Privacy Policy", () => {
 
 test.describe("Gym Page (B2B)", () => {
   test("renders gym landing page", async ({ page }) => {
-    await page.goto("/gym");
+    await page.goto("/gym", { waitUntil: "domcontentloaded" });
     await expect(page.locator("body")).toBeVisible();
     const body = await page.textContent("body");
     expect(body).toMatch(/academy|gym|道場|students|生徒/i);
   });
 
   test("gym page has pricing info", async ({ page }) => {
-    await page.goto("/gym");
+    await page.goto("/gym", { waitUntil: "domcontentloaded" });
     const pricing = page.getByText(/\$49|\$99|month/i);
     const count = await pricing.count();
     if (count > 0) {
@@ -97,7 +97,7 @@ test.describe("404 Page", () => {
 
 test.describe("Sitemap", () => {
   test("sitemap.xml is accessible", async ({ page }) => {
-    const response = await page.goto("/sitemap.xml");
+    const response = await page.goto("/sitemap.xml", { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBe(200);
     const body = await page.textContent("body");
     expect(body).toContain("urlset");
@@ -106,7 +106,7 @@ test.describe("Sitemap", () => {
 
 test.describe("PWA Manifest", () => {
   test("manifest.json is accessible", async ({ page }) => {
-    const response = await page.goto("/manifest.json");
+    const response = await page.goto("/manifest.json", { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBe(200);
     const body = await page.textContent("body");
     expect(body).toContain("BJJ");

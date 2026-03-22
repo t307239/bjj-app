@@ -9,7 +9,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Login Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/login");
+    await page.goto("/login", { waitUntil: "domcontentloaded" });
   });
 
   // --- 基本表示 ---
@@ -59,7 +59,7 @@ test.describe("Login Page", () => {
   // --- エラーパラメータ表示 ---
 
   test("shows error message with ?error=auth param", async ({ page }) => {
-    await page.goto("/login?error=auth");
+    await page.goto("/login?error=auth", { waitUntil: "domcontentloaded" });
     // Page should not crash with error parameter
     await expect(page.locator("body")).toBeVisible();
   });
