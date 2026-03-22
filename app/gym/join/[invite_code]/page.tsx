@@ -30,8 +30,7 @@ export default async function GymJoinPage({ params }: Props) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    // Store invite code in session storage via redirect with query param
-    redirect(`/login?redirect=/gym/join/${invite_code}`);
+    redirect(`/login?next=/gym/join/${invite_code}`);
   }
 
   // Fetch gym by invite_code
