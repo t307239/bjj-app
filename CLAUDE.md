@@ -4,6 +4,17 @@
 - **相談が必要な事項**: 作業中に判断が必要な場面が出ても、その場で止まって待つのはNG。「後で相談リスト」に積んで作業を継続し、次のセッション開始時にまとめて確認する。夜間・離席中も止まらず進める。
 
 ## 📝 開発ログ
+- Day 4fo_16 (2026/03/22): **ログイン後の実機画面デバッグ + techniques i18n全修正**
+  - **バグ修正**: TechniqueLog の `techniques.*` 翻訳キーが約60件欠如 → en.json/ja.json に全追加
+    - `techniques.totalTechniques/favorites/categoryCount/masteryLevels.{1-5}/categories.{guard/passing/…}/title/sortNewest/…`
+  - **i18n化**: GymDashboard・Techniques ページヘッダーが hardcoded English → Client Component（`GymDashboardPageHeader.tsx`・`TechniquesPageHeader.tsx`）に移行
+  - **実機確認結果**:
+    - `/techniques` SkillMap: 空状態の表示OK、SkillMap キャンバス正常
+    - `/gym/dashboard` GymRegistrationForm: 正常表示（未登録状態）
+    - `/profile` 統計タブ・プロフィールタブ・設定タブ: 全て正常
+    - GymMembershipSection: gym_id=null のため非表示（正常動作）
+  - TSC 0エラー、commit: `567f396`
+
 - Day 4fe (2026/03/17): **Batch U完了 — TrainingLog試合編集・WeeklyStrip先週比・GoalTrackerペース表示・NavBarストリーク・InsightsBanner継続率** 🎉
   **実装内容（5コミット）**:
     - U1: `components/TrainingLog.tsx` 修正（commit: `8f743c6b`）✅ — 試合編集フォームに`editCompForm`完全復元
