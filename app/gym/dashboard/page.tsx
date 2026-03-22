@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import GymDashboard from "@/components/GymDashboard";
 import GymRegistrationForm from "@/components/GymRegistrationForm";
+import GymDashboardPageHeader from "@/components/GymDashboardPageHeader";
 
 export const metadata: Metadata = {
   title: "Gym Dashboard | BJJ App",
@@ -48,12 +49,7 @@ export default async function GymDashboardPage() {
     <div className="min-h-screen bg-[#0f172a] pb-20 sm:pb-0">
       <NavBar displayName={displayName} avatarUrl={avatarUrl} />
       <main className="max-w-4xl mx-auto px-4 py-6">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold">🏫 Gym Dashboard</h2>
-          <p className="text-gray-400 text-sm mt-1">
-            Track your students and reduce churn
-          </p>
-        </div>
+        <GymDashboardPageHeader />
 
         {gym ? (
           <GymDashboard

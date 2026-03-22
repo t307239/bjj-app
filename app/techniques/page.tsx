@@ -5,6 +5,7 @@ import NavBar from "@/components/NavBar";
 import TechniqueLog from "@/components/TechniqueLog";
 import SkillMap from "@/components/SkillMap";
 import AffiliateSection from "@/components/AffiliateSection";
+import TechniquesPageHeader, { SkillMapSectionHeader, TechniqueLogSectionHeader, WikiLinksHeader, WikiLinksFootnote } from "@/components/TechniquesPageHeader";
 
 export const metadata: Metadata = {
   title: "Technique Journal | BJJ App",
@@ -75,24 +76,11 @@ export default async function TechniquesPage() {
 
       <main className="max-w-4xl mx-auto px-4 py-6">
         {/* Page header */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold">Technique Journal</h2>
-          <p className="text-gray-400 text-sm mt-1">
-            Log techniques, build your skill map, and track mastery
-          </p>
-        </div>
+        <TechniquesPageHeader isPro={isPro} />
 
         {/* Section 1: Skill Map */}
         <section className="mb-8">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-base">🗺️</span>
-            <h3 className="text-sm font-semibold text-zinc-100">Skill Map</h3>
-            {!isPro && (
-              <span className="ml-auto text-xs text-gray-500">
-                Free: up to 10 nodes · 15 edges
-              </span>
-            )}
-          </div>
+          <SkillMapSectionHeader isPro={isPro} />
           <SkillMap
             userId={user.id}
             isPro={isPro}
@@ -102,19 +90,13 @@ export default async function TechniquesPage() {
 
         {/* Section 2: Technique Log */}
         <section className="mb-8">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-base">📝</span>
-            <h3 className="text-sm font-semibold text-zinc-100">Technique Log</h3>
-          </div>
+          <TechniqueLogSectionHeader />
           <TechniqueLog userId={user.id} />
         </section>
 
         {/* BJJ Wiki related learning links */}
         <div className="mt-8 bg-zinc-900 rounded-xl p-4 border border-white/10">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-base">📚</span>
-            <h3 className="text-sm font-semibold text-zinc-100">Learn on BJJ Wiki</h3>
-          </div>
+          <WikiLinksHeader />
           <div className="flex flex-wrap gap-2">
             {WIKI_LINKS.map((link) => (
               <a
@@ -128,9 +110,7 @@ export default async function TechniquesPage() {
               </a>
             ))}
           </div>
-          <p className="text-[10px] text-gray-600 mt-2">
-            Free technique guides, drills, and video breakdowns on BJJ Wiki
-          </p>
+          <WikiLinksFootnote />
         </div>
 
         <AffiliateSection />
