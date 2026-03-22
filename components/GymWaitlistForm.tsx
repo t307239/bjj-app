@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
+import { useLocale } from "@/lib/i18n";
 
 type FormState = "idle" | "loading" | "success" | "error";
 
 export default function GymWaitlistForm() {
+  const { t } = useLocale();
   const [email, setEmail] = useState("");
   const [gymName, setGymName] = useState("");
   const [state, setState] = useState<FormState>("idle");
@@ -25,11 +27,11 @@ export default function GymWaitlistForm() {
         setState("success");
       } else {
         const data = await res.json().catch(() => ({}));
-        setErrorMsg(data.error ?? "Something went wrong. Please try again.");
+        setErrorMsg(data.error ?? t("gym.waitlistError"));
         setState("error");
       }
     } catch {
-      setErrorMsg("Network error. Please check your connection.");
+      setErrorMsg(t("gym.waitlistNetworkError"));
       setState("error");
     }
   }
@@ -38,10 +40,9 @@ export default function GymWaitlistForm() {
     return (
       <div className="bg-zinc-900 border border-blue-500/40 rounded-2xl p-8 text-center">
         <div className="text-4xl mb-4">🎉</div>
-        <h3 className="text-xl font-bold text-white mb-2">You're on the list!</h3>
+        <h3 className="text-xl font-bold text-white mb-2">{t("gym.waitlistSuccess")}</h3>
         <p className="text-gray-400 text-sm">
-          We'll reach out when gym features are ready. In the meantime, encourage
-          your students to download BJJ App — the more who join, the sooner we reach out.
+          {t("gym.waitlistSuccessDesc")}
         </p>
       </div>
     );
@@ -51,7 +52,7 @@ export default function GymWaitlistForm() {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label className="block text-sm text-gray-400 mb-1.5" htmlFor="gym-email">
-          Your email *
+          {t("gym.waitlistEmailLabel")}
         </label>
         <input
           id="gym-email"
@@ -59,20 +60,20 @@ export default function GymWaitlistForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="coach@yourgym.com"
+          placeholder={t("gym.waitlistEmailPlaceholder")}
           className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#7c3aed] text-sm"
         />
       </div>
       <div>
         <label className="block text-sm text-gray-400 mb-1.5" htmlFor="gym-name">
-          Gym / Academy name
+          {t("gym.waitlistGymLabel")}
         </label>
         <input
           id="gym-name"
           type="text"
           value={gymName}
           onChange={(e) => setGymName(e.target.value)}
-          placeholder="Triangle BJJ Academy"
+          placeholder={t("gym.waitlistGymPlaceholder")}
           className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#7c3aed] text-sm"
         />
       </div>
@@ -90,13 +91,13 @@ export default function GymWaitlistForm() {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
-            Joining...
+            {t("gym.waitlistJoining")}
           </>
         ) : (
-          "Join the Waitlist →"
+          t("gym.waitlistJoin")
         )}
       </button>
-      <p className="text-gray-600 text-xs text-center">No spam. We'll email you when gym features launch.</p>
+      <p className="text-gray-600 text-xs text-center">{t("gym.waitlistNoSpam")}</p>
     </form>
   );
 }

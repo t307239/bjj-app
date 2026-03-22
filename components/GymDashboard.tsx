@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
+import { useLocale } from "@/lib/i18n";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -57,6 +58,7 @@ function churnRisk(lastDate: string | null, sessions30d: number): RiskLevel {
 // We use a simple text-based URL display since qrcode lib may not be available
 
 function InviteSection({ gym }: { gym: Gym }) {
+  const { t } = useLocale();
   const [copied, setCopied] = useState(false);
   const inviteUrl = `${typeof window !== "undefined" ? window.location.origin : "https://bjj-app.net"}/gym/join/${gym.invite_code}`;
 
@@ -72,9 +74,9 @@ function InviteSection({ gym }: { gym: Gym }) {
 
   return (
     <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
-      <h3 className="text-sm font-semibold text-white mb-2">📎 Invite Students</h3>
+      <h3 className="text-sm font-semibold text-white mb-2">{t("gym.inviteTitle")}</h3>
       <p className="text-xs text-gray-400 mb-3">
-        Share this link (or print as QR) to invite students. They'll confirm their identity and opt into data sharing.
+        {t("gym.inviteDesc")}
       </p>
       <div className="flex gap-2">
         <code className="flex-1 bg-zinc-800 text-xs text-gray-300 px-3 py-2 rounded-lg overflow-hidden text-ellipsis whitespace-nowrap">
@@ -85,11 +87,11 @@ function InviteSection({ gym }: { gym: Gym }) {
           className="flex-shrink-0 bg-[#e94560] hover:bg-[#c73652] text-white text-xs px-3 py-2 rounded-lg transition-colors"
           aria-label="Copy invite link"
         >
-          {copied ? "Copied!" : "Copy"}
+          {copied ? t("gym.inviteCopied") : t("gym.inviteCopy")}
         </button>
       </div>
       <p className="text-[10px] text-gray-600 mt-2">
-        Invite code: <span className="font-mono">{gym.invite_code}</span>
+        {t("gym.inviteCode")} <span className="font-mono">{gym.invite_code}</span>
       </p>
     </div>
   );
@@ -104,16 +106,17 @@ function ProPaywallBanner({
   riskCount: number;
   stripeGymPaymentLink: string;
 }) {
+  const { t } = useLocale();
   return (
     <div className="bg-[#e94560]/10 border border-[#e94560]/30 rounded-xl p-4 mb-6">
       <div className="flex items-center gap-3">
         <span className="text-2xl flex-shrink-0">🔴</span>
         <div className="flex-1">
           <p className="text-sm font-semibold text-white">
-            {riskCount} student{riskCount !== 1 ? "s" : ""} at churn risk
+            {t("gym.atChurnRisk", { n: riskCount })}
           </p>
           <p className="text-xs text-gray-400 mt-0.5">
-            Upgrade to Gym Pro to see who — and reach out before they quit.
+            {t("gym.upgradeToSee")}
           </p>
         </div>
         <a
@@ -121,7 +124,7 @@ function ProPaywallBanner({
           className="flex-shrink-0 bg-[#e94560] hover:bg-[#c73652] text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
           aria-label="Upgrade to Gym Pro"
         >
-          Upgrade – $49/mo
+          {t("gym.upgradeBtn")}
         </a>
       </div>
     </div>
@@ -131,6 +134,7 @@ function ProPaywallBanner({
 // ─── Belt distribution chart ──────────────────────────────────────────────────
 
 function BeltDistribution({ members }: { members: MemberRow[] }) {
+  const { t } = useLocale();
   const BELTS = ["white", "blue", "purple", "brown", "black"];
   const counts: Record<string, number> = {};
   for (const b of BELTS) counts[b] = 0;
@@ -141,11 +145,11 @@ function BeltDistribution({ members }: { members: MemberRow[] }) {
   const max = Math.max(...Object.values(counts), 1);
 
   const BELT_LABELS: Record<string, string> = {
-    white: "White",
-    blue: "Blue",
-    purple: "Purple",
-    brown: "Brown",
-    black: "Black",
+    white: t("profile.belts.white"),
+    blue: t("profile.belts.blue"),
+    purple: t("profile.belts.purple"),
+    brown: t("profile.belts.brown"),
+    black: t("profile.belts.black"),
   };
 
   const BELT_BG: Record<string, string> = {
@@ -158,7 +162,7 @@ function BeltDistribution({ members }: { members: MemberRow[] }) {
 
   return (
     <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
-      <h3 className="text-sm font-semibold text-white mb-3">🥋 Belt Distribution</h3>
+      <h3 className="text-sm font-semibold text-white mb-3">{t("gym.beltDistribution")}</h3>
       <div className="space-y-2">
         {BELTS.map((belt) => (
           <div key={belt} className="flex items-center gap-2">
@@ -180,6 +184,7 @@ function BeltDistribution({ members }: { members: MemberRow[] }) {
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function GymDashboard({ userId, gym, isGymPro, stripeGymPaymentLink }: Props) {
+  const { t } = useLocale();
   const supabaseRef = useRef(createClient());
   const supabase = supabaseRef.current;
 
@@ -239,7 +244,7 @@ export default function GymDashboard({ userId, gym, isGymPro, stripeGymPaymentLi
   if (loading) {
     return (
       <div className="flex items-center justify-center h-48 text-gray-500 text-sm">
-        Loading...
+        {t("common.loading")}
       </div>
     );
   }
@@ -253,17 +258,17 @@ export default function GymDashboard({ userId, gym, isGymPro, stripeGymPaymentLi
       <div className="grid grid-cols-3 gap-3 mb-6">
         <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
           <div className="text-2xl font-bold text-white">{members.length}</div>
-          <div className="text-xs text-gray-500 mt-0.5">Active members</div>
+          <div className="text-xs text-gray-500 mt-0.5">{t("gym.activeMembers")}</div>
         </div>
         <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
           <div className="text-2xl font-bold text-green-400">{greenMembers.length}</div>
-          <div className="text-xs text-gray-500 mt-0.5">Training well</div>
+          <div className="text-xs text-gray-500 mt-0.5">{t("gym.trainingWell")}</div>
         </div>
         <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
           <div className={`text-2xl font-bold ${atRiskCount > 0 ? "text-[#e94560]" : "text-gray-400"}`}>
             {atRiskCount}
           </div>
-          <div className="text-xs text-gray-500 mt-0.5">At risk</div>
+          <div className="text-xs text-gray-500 mt-0.5">{t("gym.atRisk")}</div>
         </div>
       </div>
 
@@ -281,15 +286,15 @@ export default function GymDashboard({ userId, gym, isGymPro, stripeGymPaymentLi
       {/* Member roster */}
       <div className="mb-2">
         <h3 className="text-sm font-semibold text-white mb-3">
-          🟢 Active Members ({greenMembers.length})
+          {t("gym.activeSection", { n: greenMembers.length })}
         </h3>
 
         {members.length === 0 ? (
           <div className="text-center py-10 bg-zinc-900 border border-white/10 rounded-xl">
             <div className="text-4xl mb-3">🏫</div>
-            <p className="text-gray-300 font-medium mb-1">No members yet</p>
+            <p className="text-gray-300 font-medium mb-1">{t("gym.noMembers")}</p>
             <p className="text-gray-500 text-sm">
-              Share your invite link with students. They'll appear here once they join and enable data sharing.
+              {t("gym.noMembersDesc")}
             </p>
           </div>
         ) : (
@@ -303,7 +308,7 @@ export default function GymDashboard({ userId, gym, isGymPro, stripeGymPaymentLi
             {yellowMembers.length > 0 && (
               <div className="mt-4">
                 <h3 className="text-sm font-semibold text-yellow-400 mb-2">
-                  🟡 Slowing down ({yellowMembers.length})
+                  {t("gym.slowingSection", { n: yellowMembers.length })}
                 </h3>
                 {yellowMembers.map((m) => (
                   <MemberCard
@@ -322,7 +327,7 @@ export default function GymDashboard({ userId, gym, isGymPro, stripeGymPaymentLi
             {redMembers.length > 0 && (
               <div className="mt-4">
                 <h3 className="text-sm font-semibold text-[#e94560] mb-2">
-                  🔴 High churn risk ({redMembers.length})
+                  {t("gym.highRiskSection", { n: redMembers.length })}
                 </h3>
                 {redMembers.map((m) => (
                   <MemberCard
@@ -360,14 +365,15 @@ function MemberCard({
   proRequired?: boolean;
   stripeGymPaymentLink?: string;
 }) {
+  const { t } = useLocale();
   const lastSeenText = member.last_training_date
     ? (() => {
         const days = Math.floor((Date.now() - new Date(member.last_training_date).getTime()) / 86400000);
-        if (days === 0) return "Today";
-        if (days === 1) return "Yesterday";
-        return `${days} days ago`;
+        if (days === 0) return t("gym.today");
+        if (days === 1) return t("gym.yesterday");
+        return t("gym.daysAgo", { n: days });
       })()
-    : "Never";
+    : t("gym.never");
 
   const riskDot: Record<RiskLevel, string> = {
     green: "bg-green-400",
@@ -392,16 +398,16 @@ function MemberCard({
       <div className="flex-1 min-w-0">
         {showDetail ? (
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400">Last seen: {lastSeenText}</span>
+            <span className="text-xs text-gray-400">{t("gym.lastSeen", { text: lastSeenText })}</span>
             <span className="text-xs text-gray-600">·</span>
-            <span className="text-xs text-gray-400">{member.sessions_last_30d} sessions/30d</span>
+            <span className="text-xs text-gray-400">{t("gym.sessionsPerMonth", { n: member.sessions_last_30d })}</span>
           </div>
         ) : proRequired ? (
           <span className="text-xs text-gray-600 italic">
-            🔒 Details hidden —{" "}
+            {t("gym.detailsHidden")}{" "}
             {stripeGymPaymentLink && (
               <a href={stripeGymPaymentLink} className="text-[#e94560] hover:underline">
-                upgrade to see
+                {t("gym.upgradeToSeeLink")}
               </a>
             )}
           </span>

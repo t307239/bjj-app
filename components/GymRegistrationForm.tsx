@@ -3,6 +3,7 @@
 import React, { useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { useLocale } from "@/lib/i18n";
 
 type Props = {
   userId: string;
@@ -12,6 +13,7 @@ export default function GymRegistrationForm({ userId }: Props) {
   const supabaseRef = useRef(createClient());
   const supabase = supabaseRef.current;
   const router = useRouter();
+  const { t } = useLocale();
 
   const [gymName, setGymName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,7 +37,7 @@ export default function GymRegistrationForm({ userId }: Props) {
       .single();
 
     if (gymError || !gym) {
-      setError("Failed to create gym. Please try again.");
+      setError(t("gym.createError"));
       setLoading(false);
       return;
     }
@@ -53,14 +55,14 @@ export default function GymRegistrationForm({ userId }: Props) {
     <div className="max-w-md mx-auto">
       <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 text-center">
         <div className="text-5xl mb-4">🏫</div>
-        <h3 className="text-lg font-bold text-white mb-2">Register your gym</h3>
+        <h3 className="text-lg font-bold text-white mb-2">{t("gym.registerTitle")}</h3>
         <p className="text-sm text-gray-400 mb-6">
-          It's free to get started. Create your gym, get your invite QR code, and start tracking your students.
+          {t("gym.registerDesc")}
         </p>
 
         <input
           type="text"
-          placeholder="Gym name (e.g. Gracie Academy Tokyo)"
+          placeholder={t("gym.gymNamePlaceholder")}
           value={gymName}
           onChange={(e) => setGymName(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && gymName.trim()) handleCreate(); }}
@@ -75,13 +77,13 @@ export default function GymRegistrationForm({ userId }: Props) {
           className="w-full bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-colors"
           aria-label="Create gym"
         >
-          {loading ? "Creating..." : "Create gym (free)"}
+          {loading ? t("gym.creating") : t("gym.createBtn")}
         </button>
 
         {error && <p className="text-red-400 text-xs mt-3">{error}</p>}
 
         <p className="text-[10px] text-gray-600 mt-4">
-          No credit card required to start. Upgrade to Gym Pro ($49/mo) to unlock churn alerts and curriculum broadcasts.
+          {t("gym.noCardRequired")}
         </p>
       </div>
     </div>
