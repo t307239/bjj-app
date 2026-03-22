@@ -9,9 +9,9 @@ type Props = {
   streak: number;
 };
 
-function getLocalDateString(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+function getJSTDateString(): string {
+  const d = new Date(Date.now() + 9 * 3600000);
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
 }
 
 export default function StreakProtect({ userId, streak }: Props) {
@@ -24,7 +24,7 @@ export default function StreakProtect({ userId, streak }: Props) {
       setTrainedToday(true);
       return;
     }
-    const today = getLocalDateString();
+    const today = getJSTDateString();
     const check = async () => {
       const supabase = createClient();
       const { count } = await supabase

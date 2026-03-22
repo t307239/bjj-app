@@ -95,7 +95,7 @@ export default function InsightsBanner({ userId }: Props) {
           }
         } else {
           // 先月データなし（1ヶ月目）
-          setPaceMsg(t("insights.thisMonthRecording", { n: thisMonthCount }));
+          setPaceMsg(t("insights.thisMonthRecording", { n: thisMonthCount ?? 0 }));
         }
         setTotalStreak(thisMonthCount ?? 0);
       }

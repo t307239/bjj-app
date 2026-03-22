@@ -22,6 +22,7 @@ import InstallBanner from "@/components/InstallBanner";
 import InsightsBanner from "@/components/InsightsBanner";
 import DailyWikiTip from "@/components/DailyWikiTip";
 import WikiQuickLinks from "@/components/WikiQuickLinks";
+import CollapsibleSection from "@/components/CollapsibleSection";
 import ProUpgradeBanner from "@/components/ProUpgradeBanner";
 import BeltProgressCard from "@/components/BeltProgressCard";
 
@@ -415,112 +416,86 @@ export default async function DashboardPage() {
 
         </div>
 
-        {/* ── Log Today CTA ── */}
-        <a
-          href="#training-log"
-          className="flex items-center justify-between gap-4 bg-gradient-to-r from-rose-500/15 to-rose-600/5 border border-rose-500/30 hover:border-rose-500/60 hover:from-rose-500/20 hover:to-rose-600/10 rounded-2xl px-5 py-4 mb-6 transition-all duration-200 group active:scale-[0.99]"
-        >
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🥋</span>
-            <div>
-              <p className="text-rose-300 font-semibold text-sm group-hover:text-rose-200 transition-colors">
-                Log Today&apos;s Session
-              </p>
-              <p className="text-zinc-500 text-xs mt-0.5">Tap to record your training</p>
-            </div>
+        {/* ── Section 1: Training Log（プライマリアクション・最優先） ── */}
+        <section className="mb-8">
+          <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest px-0.5 mb-3">Log</p>
+          <TrainingLog userId={user.id} isPro={isPro} />
+        </section>
+
+        {/* ── Section 2: This Week ── */}
+        <section className="mb-8">
+          <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest px-0.5 mb-3">This Week</p>
+          <div className="space-y-3">
+            {/* 週間ペース通知 */}
+            {((): React.ReactNode => {
+              const wGoal = (profileData as { weekly_goal?: number } | null)?.weekly_goal ?? 0;
+              const wCount = weekCount ?? 0;
+              if (wGoal <= 0) return null;
+              const needed = Math.max(0, wGoal - wCount);
+              if (needed === 0) return (
+                <div className="bg-green-500/10 border border-green-500/30 rounded-2xl px-4 py-2.5 flex items-center gap-3">
+                  <span className="text-lg">🎯</span>
+                  <div>
+                    <p className="text-green-400 text-sm font-semibold">Weekly goal reached!</p>
+                    <p className="text-gray-400 text-xs">Goal: {wGoal} · Done: {wCount}</p>
+                  </div>
+                </div>
+              );
+              const onPace = daysLeftInWeek >= needed;
+              return (
+                <div className={`${onPace ? "bg-blue-500/10 border-blue-500/30" : "bg-yellow-500/10 border-yellow-500/30"} border rounded-2xl px-4 py-2.5 flex items-center gap-3`}>
+                  <span className="text-lg">{onPace ? "📅" : "⚡"}</span>
+                  <div className="flex-1">
+                    <p className={`${onPace ? "text-blue-300" : "text-yellow-300"} text-sm font-semibold`}>
+                      {needed} more session{needed !== 1 ? "s" : ""} to hit your weekly goal
+                    </p>
+                    <p className="text-gray-400 text-xs">
+                      {wCount}/{wGoal} done · {daysLeftInWeek}d left
+                      {onPace ? " ✓ on pace" : " ⚠ pick up the pace"}
+                    </p>
+                  </div>
+                </div>
+              );
+            })()}
+            <WeeklyStrip userId={user.id} />
+            <GoalTracker userId={user.id} />
           </div>
-          <span className="text-rose-500/60 group-hover:text-rose-400 group-hover:translate-x-0.5 transition-all text-lg font-light">→</span>
-        </a>
-
-        {/* ── Section 1: Nudges & Today ── */}
-        <section className="space-y-3 mb-8">
-          <ProUpgradeBanner isPro={isPro} />
-
-          {!gymName && (
-            <Link
-              href="/profile"
-              className="flex items-center gap-3 bg-white/5 border border-blue-500/20 hover:border-blue-500/50 rounded-2xl px-4 py-3 transition-colors group"
-            >
-              <span className="text-xl">🏫</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-blue-300 text-sm font-semibold group-hover:text-blue-200">
-                  Add your gym or academy name
-                </p>
-                <p className="text-gray-500 text-xs truncate">
-                  Add your gym to your profile to unlock B2B features →
-                </p>
-              </div>
-              <span className="text-gray-600 group-hover:text-gray-400 text-sm">›</span>
-            </Link>
-          )}
-
-          <InsightsBanner userId={user.id} />
-          <StreakProtect userId={user.id} streak={streak} />
-          <StreakFreeze userId={user.id} streak={streak} />
         </section>
 
-        {/* ── Section 2: Today's Learning ── */}
-        <section className="space-y-3 mb-8">
-          <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest px-0.5">Today</p>
-          <DailyRecommend userId={user.id} />
-          <DailyWikiTip />
-          <WikiQuickLinks />
+        {/* ── Section 3: Today's Learning ── */}
+        <section className="mb-8">
+          <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest px-0.5 mb-3">Today</p>
+          <div className="space-y-3">
+            <DailyRecommend userId={user.id} />
+            <DailyWikiTip />
+            <WikiQuickLinks />
+          </div>
         </section>
 
-        {/* ── Section 3: This Week ── */}
-        <section className="space-y-3 mb-8">
-          <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest px-0.5">This Week</p>
+        {/* ── Section 4: Streak Nudges（最大2つ・条件付き表示） ── */}
+        {(streak >= 1 || !isPro) && (
+          <section className="space-y-3 mb-8">
+            {/* StreakProtect/Freeze は自己管理（内部で表示条件を判断） */}
+            <StreakProtect userId={user.id} streak={streak} />
+            <StreakFreeze userId={user.id} streak={streak} />
+            {/* Pro upsell は streak がない時のみ（競合CTAを避ける） */}
+            {streak === 0 && <ProUpgradeBanner isPro={isPro} />}
+          </section>
+        )}
 
-          {/* 週間ペース通知 */}
-          {(() => {
-            const wGoal = (profileData as { weekly_goal?: number } | null)?.weekly_goal ?? 0;
-            const wCount = weekCount ?? 0;
-            if (wGoal <= 0) return null;
-            const needed = Math.max(0, wGoal - wCount);
-            if (needed === 0) return (
-              <div className="bg-green-500/10 border border-green-500/30 rounded-2xl px-4 py-2.5 flex items-center gap-3">
-                <span className="text-lg">🎯</span>
-                <div>
-                  <p className="text-green-400 text-sm font-semibold">Weekly goal reached!</p>
-                  <p className="text-gray-400 text-xs">Goal: {wGoal} · Done: {wCount}</p>
-                </div>
-              </div>
-            );
-            const onPace = daysLeftInWeek >= needed;
-            return (
-              <div className={`${onPace ? "bg-blue-500/10 border-blue-500/30" : "bg-yellow-500/10 border-yellow-500/30"} border rounded-2xl px-4 py-2.5 flex items-center gap-3`}>
-                <span className="text-lg">{onPace ? "📅" : "⚡"}</span>
-                <div className="flex-1">
-                  <p className={`${onPace ? "text-blue-300" : "text-yellow-300"} text-sm font-semibold`}>
-                    {needed} more session{needed !== 1 ? "s" : ""} to hit your weekly goal
-                  </p>
-                  <p className="text-gray-400 text-xs">
-                    {wCount}/{wGoal} done · {daysLeftInWeek}d left
-                    {onPace ? " ✓ on pace" : " ⚠ pick up the pace"}
-                  </p>
-                </div>
-              </div>
-            );
-          })()}
-
-          <WeeklyStrip userId={user.id} />
-          <GoalTracker userId={user.id} />
-        </section>
-
-        {/* ── Section 4: Analytics ── */}
-        <section className="space-y-3 mb-8">
-          <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest px-0.5">Analytics</p>
+        {/* ── Section 5: Analytics（デスクトップ: 展開済み / モバイル: 折りたたみ） ── */}
+        <CollapsibleSection label="Analytics" defaultOpen={true}>
           <TrainingCalendar userId={user.id} />
           <TrainingBarChart userId={user.id} isPro={isPro} />
           <TrainingTypeChart userId={user.id} />
           <CompetitionStats userId={user.id} />
           <TrainingChart userId={user.id} />
-        </section>
+        </CollapsibleSection>
 
-        {/* ── Section 5: Training Log ── */}
-        <section id="training-log" className="mb-8 scroll-mt-4">
-          <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest px-0.5 mb-3">Log</p>
-          <TrainingLog userId={user.id} isPro={isPro} />
+        {/* ── Section 6: Insights & More（最下部・低緊急度） ── */}
+        <section className="space-y-3 mb-8">
+          <InsightsBanner userId={user.id} />
+          {streak > 0 && <ProUpgradeBanner isPro={isPro} />}
         </section>
       </main>
     </div>

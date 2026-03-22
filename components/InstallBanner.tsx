@@ -18,11 +18,11 @@ export default function InstallBanner() {
   useEffect(() => {
     const isDismissed = localStorage.getItem("bjj_install_dismissed") === "1";
     if (isDismissed) { setDismissed(true); return; }
-    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.navigator.standalone;
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) && !(window.navigator as Navigator & { standalone?: boolean }).standalone;
     if (isIOS) { setPlatform("ios"); setDismissed(false); return; }
-    const handleBeforeInstallPrompt = (e) => {
+    const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
-      setDeferredPrompt(e);
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
       setPlatform("android");
       setDismissed(false);
     };

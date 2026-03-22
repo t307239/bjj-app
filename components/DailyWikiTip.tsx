@@ -10,12 +10,12 @@ const WIKI_BASE = "https://wiki.bjj-app.net";
 
 type WikiTip = {
   slug: string;
-  titleEn: string;
-  titleJa: string;
-  descEn: string;
-  descJa: string;
-  categoryEn: string;
-  categoryJa: string;
+  titleEn?: string;
+  titleJa?: string;
+  descEn?: string;
+  descJa?: string;
+  categoryEn?: string;
+  categoryJa?: string;
   lang?: "en" | "ja" | "pt";
 };
 
@@ -70,93 +70,93 @@ const WIKI_TIPS: WikiTip[] = [
   { slug: "bjj-complete-beginners-guide", titleEn: "BJJ Complete Beginner Guide", titleJa: "BJJ完全初心者ガイド", descEn: "Essential knowledge and first steps for beginners", descJa: "初心者が知るべき基礎知識と最初の一歩", categoryEn: "Beginner", categoryJa: "ビギナー" },
   { slug: "bjj-blue-belt-guide", titleEn: "Roadmap to Blue Belt", titleJa: "青帯へのロードマップ", descEn: "Skills and mindset for white to blue belt promotion", descJa: "白帯から青帯昇格に必要なスキルと心構え", categoryEn: "Beginner", categoryJa: "ビギナー" },
   // Batch 332-336
-  { slug: "bjj-grip-fighting-advanced", titleJa: "グリップファイティング上級", descJa: "グリップ支配・ブレイク・シークエンスの高度な体系", category: "グリップ" },
-  { slug: "bjj-competition-tactics-advanced", titleJa: "競技タクティクス上級", descJa: "ゲームプラン開発・ブラケット管理・メンタル強化", category: "競技" },
-  { slug: "bjj-periodization-training", titleJa: "BJJのピリオダイゼーション", descJa: "マクロ・メソサイクルで競技パフォーマンスを最大化", category: "フィジカル" },
-  { slug: "bjj-nutrition-timing", titleJa: "BJJの栄養タイミング", descJa: "トレーニング前・中・後の栄養補給プロトコル", category: "栄養" },
-  { slug: "bjj-mental-performance", titleJa: "メンタルパフォーマンスBJJ", descJa: "ビジュアライゼーション・自信構築・試合不安管理", category: "メンタル" },
+  { slug: "bjj-grip-fighting-advanced", titleJa: "グリップファイティング上級", descJa: "グリップ支配・ブレイク・シークエンスの高度な体系", categoryJa: "グリップ" },
+  { slug: "bjj-competition-tactics-advanced", titleJa: "競技タクティクス上級", descJa: "ゲームプラン開発・ブラケット管理・メンタル強化", categoryJa: "競技" },
+  { slug: "bjj-periodization-training", titleJa: "BJJのピリオダイゼーション", descJa: "マクロ・メソサイクルで競技パフォーマンスを最大化", categoryJa: "フィジカル" },
+  { slug: "bjj-nutrition-timing", titleJa: "BJJの栄養タイミング", descJa: "トレーニング前・中・後の栄養補給プロトコル", categoryJa: "栄養" },
+  { slug: "bjj-mental-performance", titleJa: "メンタルパフォーマンスBJJ", descJa: "ビジュアライゼーション・自信構築・試合不安管理", categoryJa: "メンタル" },
   // Batch 337-341
-  { slug: "bjj-advanced-concepts-guide", titleJa: "BJJアドバンスドコンセプト", descJa: "高レベル柔術の概念的フレームワークと原則体系", category: "アドバンスト" },
-  { slug: "bjj-flow-rolling-advanced", titleJa: "フローローリング上級", descJa: "技術向上のためのフロー状態ロール入門と応用", category: "アドバンスト" },
-  { slug: "bjj-positional-drilling-system", titleJa: "ポジショナルドリリングシステム", descJa: "ポジション別の構造化ドリルで技術を自動化する方法", category: "テクニック" },
-  { slug: "bjj-guard-attacks-advanced-system", titleJa: "ガードアタック上級システム", descJa: "コンビネーションアタックで相手を崩す高度なガード攻撃", category: "ガード" },
-  { slug: "bjj-passing-systems-complete", titleJa: "パッシングシステム完全版", descJa: "プレッシャー・スピード・レッグドラッグの統合パスシステム", category: "パッシング" },
+  { slug: "bjj-advanced-concepts-guide", titleJa: "BJJアドバンスドコンセプト", descJa: "高レベル柔術の概念的フレームワークと原則体系", categoryJa: "アドバンスト" },
+  { slug: "bjj-flow-rolling-advanced", titleJa: "フローローリング上級", descJa: "技術向上のためのフロー状態ロール入門と応用", categoryJa: "アドバンスト" },
+  { slug: "bjj-positional-drilling-system", titleJa: "ポジショナルドリリングシステム", descJa: "ポジション別の構造化ドリルで技術を自動化する方法", categoryJa: "テクニック" },
+  { slug: "bjj-guard-attacks-advanced-system", titleJa: "ガードアタック上級システム", descJa: "コンビネーションアタックで相手を崩す高度なガード攻撃", categoryJa: "ガード" },
+  { slug: "bjj-passing-systems-complete", titleJa: "パッシングシステム完全版", descJa: "プレッシャー・スピード・レッグドラッグの統合パスシステム", categoryJa: "パッシング" },
   // Batch 342-346
-  { slug: "bjj-advanced-leg-lock-systems", titleJa: "アドバンスドレッグロックシステム", descJa: "アシガラミエントリーからヒールフックメカニクスまでのモダンレッグロック体系", category: "レッグロック" },
-  { slug: "bjj-competition-game-planning", titleJa: "競技ゲームプランニング", descJa: "ブラケット分析・Aゲーム構築・試合中の調整法", category: "競技" },
-  { slug: "bjj-gi-vs-nogi-comparison", titleJa: "GiとノーギのBJJ比較", descJa: "グリップ差・ガードゲーム・ペース・トレーニング推奨の違い", category: "テクニック" },
-  { slug: "bjj-black-belt-concepts", titleJa: "黒帯コンセプト", descJa: "効率性・感受性・原則ベースの理解で極意を掴む", category: "アドバンスト" },
+  { slug: "bjj-advanced-leg-lock-systems", titleJa: "アドバンスドレッグロックシステム", descJa: "アシガラミエントリーからヒールフックメカニクスまでのモダンレッグロック体系", categoryJa: "レッグロック" },
+  { slug: "bjj-competition-game-planning", titleJa: "競技ゲームプランニング", descJa: "ブラケット分析・Aゲーム構築・試合中の調整法", categoryJa: "競技" },
+  { slug: "bjj-gi-vs-nogi-comparison", titleJa: "GiとノーギのBJJ比較", descJa: "グリップ差・ガードゲーム・ペース・トレーニング推奨の違い", categoryJa: "テクニック" },
+  { slug: "bjj-black-belt-concepts", titleJa: "黒帯コンセプト", descJa: "効率性・感受性・原則ベースの理解で極意を掴む", categoryJa: "アドバンスト" },
   // Batch 347-351
-  { slug: "bjj-submission-chain-attacks", titleJa: "サブミッションチェーンアタック", descJa: "サブミッションをつなげて止められない攻撃シーケンスを作る方法", category: "サブミッション" },
-  { slug: "bjj-wrestling-integration", titleJa: "BJJのためのレスリング統合", descJa: "レスリングのテイクダウンとスクランブルをBJJゲームに統合する方法", category: "テイクダウン" },
-  { slug: "bjj-back-system-advanced", titleJa: "バックシステム上級", descJa: "上級者のための完全なバックコントロール・維持・攻撃システム", category: "ポジション" },
-  { slug: "bjj-guard-concepts-advanced", titleJa: "ガードコンセプト上級", descJa: "ガードプレイのハイレベルな概念的フレームワーク", category: "ガード" },
-  { slug: "bjj-competition-prep-advanced", titleJa: "競技準備上級", descJa: "経験豊富な競技者のためのエリートレベル競技準備戦略", category: "競技" },
+  { slug: "bjj-submission-chain-attacks", titleJa: "サブミッションチェーンアタック", descJa: "サブミッションをつなげて止められない攻撃シーケンスを作る方法", categoryJa: "サブミッション" },
+  { slug: "bjj-wrestling-integration", titleJa: "BJJのためのレスリング統合", descJa: "レスリングのテイクダウンとスクランブルをBJJゲームに統合する方法", categoryJa: "テイクダウン" },
+  { slug: "bjj-back-system-advanced", titleJa: "バックシステム上級", descJa: "上級者のための完全なバックコントロール・維持・攻撃システム", categoryJa: "ポジション" },
+  { slug: "bjj-guard-concepts-advanced", titleJa: "ガードコンセプト上級", descJa: "ガードプレイのハイレベルな概念的フレームワーク", categoryJa: "ガード" },
+  { slug: "bjj-competition-prep-advanced", titleJa: "競技準備上級", descJa: "経験豊富な競技者のためのエリートレベル競技準備戦略", categoryJa: "競技" },
   // Batch 352-356
-  { slug: "bjj-gi-choke-systems", titleJa: "道衣チョークシステム", descJa: "クロスカラー・ボウアンドアロー・エゼキエル・野球バットチョークをマスター", category: "サブミッション" },
-  { slug: "bjj-half-guard-advanced", titleJa: "上級ハーフガード", descJa: "ディープハーフ・ロックダウン・アンダーフック争いの完全ガイド", category: "ガード" },
-  { slug: "bjj-turtle-top-attacks", titleJa: "タートルトップ攻撃", descJa: "クロックチョーク・バックテイク・レッグ攻撃でタートルを崩す方法", category: "ポジション" },
-  { slug: "bjj-open-guard-transitions", titleJa: "オープンガードトランジション", descJa: "DLR・スパイダー・バタフライ・Xガード間のシームレスな切り替え方法", category: "ガード" },
-  { slug: "bjj-scramble-systems", titleJa: "スクランブルシステム", descJa: "リガード・インバージョン・スタンドアップスクランブルでカオスに勝つ方法", category: "テクニック" },
+  { slug: "bjj-gi-choke-systems", titleJa: "道衣チョークシステム", descJa: "クロスカラー・ボウアンドアロー・エゼキエル・野球バットチョークをマスター", categoryJa: "サブミッション" },
+  { slug: "bjj-half-guard-advanced", titleJa: "上級ハーフガード", descJa: "ディープハーフ・ロックダウン・アンダーフック争いの完全ガイド", categoryJa: "ガード" },
+  { slug: "bjj-turtle-top-attacks", titleJa: "タートルトップ攻撃", descJa: "クロックチョーク・バックテイク・レッグ攻撃でタートルを崩す方法", categoryJa: "ポジション" },
+  { slug: "bjj-open-guard-transitions", titleJa: "オープンガードトランジション", descJa: "DLR・スパイダー・バタフライ・Xガード間のシームレスな切り替え方法", categoryJa: "ガード" },
+  { slug: "bjj-scramble-systems", titleJa: "スクランブルシステム", descJa: "リガード・インバージョン・スタンドアップスクランブルでカオスに勝つ方法", categoryJa: "テクニック" },
   // Batch 357-361
-  { slug: "bjj-closed-guard-systems", titleJa: "クローズドガードシステム", descJa: "クラシックとモダンのクローズドガード攻撃・スウィープ・サブミッションシステム", category: "ガード" },
-  { slug: "bjj-north-south-position-attacks", titleJa: "ノースサウス攻撃システム", descJa: "ノースサウスポジションからのキムラ・チョーク・サブミッション体系", category: "ポジション" },
-  { slug: "bjj-knee-on-belly-advanced", titleJa: "ニーオンベリー上級", descJa: "ニーオンベリーからのアームバー・トライアングル・移行システム", category: "ポジション" },
-  { slug: "bjj-crucifix-position-system", titleJa: "クルシフィックスシステム", descJa: "クルシフィックスポジションのエントリー・コントロール・フィニッシュメソッド", category: "ポジション" },
-  { slug: "bjj-twister-system", titleJa: "ツイスターシステム", descJa: "ツイスターサイド・エントリー・フィニッシュのEDIガードシステム完全解説", category: "テクニック" },
-  { slug: "bjj-rubber-guard-advanced", titleJa: "ラバーガード上級システム", descJa: "ミッションコントロール・ニューヨーク・ジュークローとサブミッションチェーン", category: "ガード" },
-  { slug: "bjj-deep-half-guard-mastery", titleJa: "ディープハーフガードマスタリー", descJa: "ウェイタースウィープ・ホーマーシンプソン・バックテイクとレッグアタック", category: "ガード" },
-  { slug: "bjj-leg-entanglement-entries", titleJa: "レッグエンタングルメントエントリー", descJa: "ガード・スクランブル・パッシングからの体系的レッグエンタングルメントエントリー", category: "レッグロック" },
-  { slug: "bjj-back-take-advanced-system", titleJa: "バックテイク上級システム", descJa: "アームドラッグ・ベリンボロ・タートル崩しとバックからのフィニッシングチェーン", category: "バックコントロール" },
-  { slug: "bjj-submission-finishing-details", titleJa: "サブミッションフィニッシング詳細", descJa: "アームバー・トライアングル・裸絞め・ヒールフックの技術的フィニッシング詳細", category: "サブミッション" },
+  { slug: "bjj-closed-guard-systems", titleJa: "クローズドガードシステム", descJa: "クラシックとモダンのクローズドガード攻撃・スウィープ・サブミッションシステム", categoryJa: "ガード" },
+  { slug: "bjj-north-south-position-attacks", titleJa: "ノースサウス攻撃システム", descJa: "ノースサウスポジションからのキムラ・チョーク・サブミッション体系", categoryJa: "ポジション" },
+  { slug: "bjj-knee-on-belly-advanced", titleJa: "ニーオンベリー上級", descJa: "ニーオンベリーからのアームバー・トライアングル・移行システム", categoryJa: "ポジション" },
+  { slug: "bjj-crucifix-position-system", titleJa: "クルシフィックスシステム", descJa: "クルシフィックスポジションのエントリー・コントロール・フィニッシュメソッド", categoryJa: "ポジション" },
+  { slug: "bjj-twister-system", titleJa: "ツイスターシステム", descJa: "ツイスターサイド・エントリー・フィニッシュのEDIガードシステム完全解説", categoryJa: "テクニック" },
+  { slug: "bjj-rubber-guard-advanced", titleJa: "ラバーガード上級システム", descJa: "ミッションコントロール・ニューヨーク・ジュークローとサブミッションチェーン", categoryJa: "ガード" },
+  { slug: "bjj-deep-half-guard-mastery", titleJa: "ディープハーフガードマスタリー", descJa: "ウェイタースウィープ・ホーマーシンプソン・バックテイクとレッグアタック", categoryJa: "ガード" },
+  { slug: "bjj-leg-entanglement-entries", titleJa: "レッグエンタングルメントエントリー", descJa: "ガード・スクランブル・パッシングからの体系的レッグエンタングルメントエントリー", categoryJa: "レッグロック" },
+  { slug: "bjj-back-take-advanced-system", titleJa: "バックテイク上級システム", descJa: "アームドラッグ・ベリンボロ・タートル崩しとバックからのフィニッシングチェーン", categoryJa: "バックコントロール" },
+  { slug: "bjj-submission-finishing-details", titleJa: "サブミッションフィニッシング詳細", descJa: "アームバー・トライアングル・裸絞め・ヒールフックの技術的フィニッシング詳細", categoryJa: "サブミッション" },
   // Batch 367-371
-  { slug: "bjj-guard-development-system", titleJa: "ガード開発システム", descJa: "体系的なガード構築・強化・切り替えのフレームワーク", category: "ガード" },
-  { slug: "bjj-reaction-training-bjj", titleJa: "BJJリアクショントレーニング", descJa: "スクランブル・カウンター・チェーン反応速度を高める方法", category: "テクニック" },
-  { slug: "bjj-chest-to-chest-control", titleJa: "チェスト・トゥ・チェストコントロール", descJa: "密着コントロール・プレッシャー・サブミッションの統合システム", category: "ポジション" },
-  { slug: "bjj-offense-first-bjj", titleJa: "オフェンスファーストBJJ", descJa: "常に先手を取り主導権を握る積極的なゲームプランニング", category: "アドバンスト" },
-  { slug: "bjj-submission-matrix", titleJa: "サブミッションマトリックス", descJa: "全ポジションから全サブミッションへの体系的チェーンマップ", category: "サブミッション" },
+  { slug: "bjj-guard-development-system", titleJa: "ガード開発システム", descJa: "体系的なガード構築・強化・切り替えのフレームワーク", categoryJa: "ガード" },
+  { slug: "bjj-reaction-training-bjj", titleJa: "BJJリアクショントレーニング", descJa: "スクランブル・カウンター・チェーン反応速度を高める方法", categoryJa: "テクニック" },
+  { slug: "bjj-chest-to-chest-control", titleJa: "チェスト・トゥ・チェストコントロール", descJa: "密着コントロール・プレッシャー・サブミッションの統合システム", categoryJa: "ポジション" },
+  { slug: "bjj-offense-first-bjj", titleJa: "オフェンスファーストBJJ", descJa: "常に先手を取り主導権を握る積極的なゲームプランニング", categoryJa: "アドバンスト" },
+  { slug: "bjj-submission-matrix", titleJa: "サブミッションマトリックス", descJa: "全ポジションから全サブミッションへの体系的チェーンマップ", categoryJa: "サブミッション" },
   // Batch 372-376
-  { slug: "bjj-guard-sweeps-masterclass", titleJa: "ガードスウィープマスタークラス", descJa: "ヒップバンプ・シザー・フラワー・サイドスウィープを状況別に使い分ける", category: "スウィープ" },
-  { slug: "bjj-submission-setup-chains", titleJa: "サブミッションセットアップチェーン", descJa: "アームバー→トライアングル→オモプラータの連鎖を止められない攻撃に変える", category: "サブミッション" },
-  { slug: "bjj-mma-guard-work", titleJa: "MMAのためのガードワーク", descJa: "打撃環境でのガード・サブミッション・スウィープの最適戦略", category: "テクニック" },
-  { slug: "bjj-defensive-guard-play", titleJa: "ディフェンシブガードプレイ", descJa: "スペース管理・フレーム・リガードで崩れないガードを作る方法", category: "ディフェンス" },
-  { slug: "bjj-transition-game-advanced", titleJa: "トランジションゲーム上級", descJa: "ポジション間のスムーズな移行でペースを支配する高度な戦略", category: "アドバンスト" },
+  { slug: "bjj-guard-sweeps-masterclass", titleJa: "ガードスウィープマスタークラス", descJa: "ヒップバンプ・シザー・フラワー・サイドスウィープを状況別に使い分ける", categoryJa: "スウィープ" },
+  { slug: "bjj-submission-setup-chains", titleJa: "サブミッションセットアップチェーン", descJa: "アームバー→トライアングル→オモプラータの連鎖を止められない攻撃に変える", categoryJa: "サブミッション" },
+  { slug: "bjj-mma-guard-work", titleJa: "MMAのためのガードワーク", descJa: "打撃環境でのガード・サブミッション・スウィープの最適戦略", categoryJa: "テクニック" },
+  { slug: "bjj-defensive-guard-play", titleJa: "ディフェンシブガードプレイ", descJa: "スペース管理・フレーム・リガードで崩れないガードを作る方法", categoryJa: "ディフェンス" },
+  { slug: "bjj-transition-game-advanced", titleJa: "トランジションゲーム上級", descJa: "ポジション間のスムーズな移行でペースを支配する高度な戦略", categoryJa: "アドバンスト" },
   // Batch 377-381
-  { slug: "bjj-attacking-from-turtle-advanced", titleJa: "タートルからの上級攻撃", descJa: "タートルポジションからのバックテイク・チョーク・レッグ攻撃の体系", category: "ポジション" },
-  { slug: "bjj-conditioning-science", titleJa: "BJJコンディショニング科学", descJa: "エネルギーシステム・疲労管理・ピーキングの科学的アプローチ", category: "フィジカル" },
-  { slug: "bjj-guard-setups-masterclass", titleJa: "ガードセットアップマスタークラス", descJa: "スタンドアップからのガードプル・座りガード・ジャンプガードの完全ガイド", category: "ガード" },
-  { slug: "bjj-back-control-finishing-details", titleJa: "バックコントロールフィニッシング詳細", descJa: "裸絞め・ボウアンドアロー・アームロックのフィニッシング技術的詳細", category: "バックコントロール" },
-  { slug: "bjj-sweeps-to-submissions", titleJa: "スウィープからサブミッションへ", descJa: "スウィープをサブミッション攻撃に繋げる連鎖メカニクス", category: "スウィープ" },
+  { slug: "bjj-attacking-from-turtle-advanced", titleJa: "タートルからの上級攻撃", descJa: "タートルポジションからのバックテイク・チョーク・レッグ攻撃の体系", categoryJa: "ポジション" },
+  { slug: "bjj-conditioning-science", titleJa: "BJJコンディショニング科学", descJa: "エネルギーシステム・疲労管理・ピーキングの科学的アプローチ", categoryJa: "フィジカル" },
+  { slug: "bjj-guard-setups-masterclass", titleJa: "ガードセットアップマスタークラス", descJa: "スタンドアップからのガードプル・座りガード・ジャンプガードの完全ガイド", categoryJa: "ガード" },
+  { slug: "bjj-back-control-finishing-details", titleJa: "バックコントロールフィニッシング詳細", descJa: "裸絞め・ボウアンドアロー・アームロックのフィニッシング技術的詳細", categoryJa: "バックコントロール" },
+  { slug: "bjj-sweeps-to-submissions", titleJa: "スウィープからサブミッションへ", descJa: "スウィープをサブミッション攻撃に繋げる連鎖メカニクス", categoryJa: "スウィープ" },
   // Batch 382-386
-  { slug: "bjj-sweeps-to-submissions-chain-mechanics", titleJa: "スウィープ→サブミッションチェーンメカニクス", descJa: "スウィープ完了後のサブミッション追求のタイミングと角度", category: "テクニック" },
-  { slug: "bjj-pressure-game", titleJa: "プレッシャーゲーム", descJa: "体重・フレーム破壊・圧力パスで相手を制圧するシステム", category: "パッシング" },
-  { slug: "bjj-back-attacks-advanced", titleJa: "バックアタック上級", descJa: "シートベルトからの多角的アタックと防御崩しの高度技術", category: "バックコントロール" },
-  { slug: "bjj-escapes-masterclass", titleJa: "エスケープマスタークラス", descJa: "最悪のポジションから脱出するための原則と実践的テクニック集", category: "エスケープ" },
-  { slug: "bjj-competition-rules-complete", titleJa: "競技ルール完全ガイド", descJa: "IBJJF・ADCC・EBIなど主要大会のルール差異を完全解説", category: "競技" },
+  { slug: "bjj-sweeps-to-submissions-chain-mechanics", titleJa: "スウィープ→サブミッションチェーンメカニクス", descJa: "スウィープ完了後のサブミッション追求のタイミングと角度", categoryJa: "テクニック" },
+  { slug: "bjj-pressure-game", titleJa: "プレッシャーゲーム", descJa: "体重・フレーム破壊・圧力パスで相手を制圧するシステム", categoryJa: "パッシング" },
+  { slug: "bjj-back-attacks-advanced", titleJa: "バックアタック上級", descJa: "シートベルトからの多角的アタックと防御崩しの高度技術", categoryJa: "バックコントロール" },
+  { slug: "bjj-escapes-masterclass", titleJa: "エスケープマスタークラス", descJa: "最悪のポジションから脱出するための原則と実践的テクニック集", categoryJa: "エスケープ" },
+  { slug: "bjj-competition-rules-complete", titleJa: "競技ルール完全ガイド", descJa: "IBJJF・ADCC・EBIなど主要大会のルール差異を完全解説", categoryJa: "競技" },
   // Batch 387-391
-  { slug: "bjj-advanced-combinations", titleJa: "アドバンスドコンビネーション", descJa: "複数のテクニックを組み合わせた止められない攻撃パターン", category: "アドバンスト" },
-  { slug: "bjj-drilling-methodology", titleJa: "ドリリング方法論", descJa: "技術習得を加速させるドリルの構造・量・パートナーワーク", category: "テクニック" },
-  { slug: "bjj-flow-rolling-mastery", titleJa: "フローローリングマスタリー", descJa: "フロー状態でロールする方法と技術向上への活用法", category: "アドバンスト" },
-  { slug: "bjj-conditioning-science-advanced", titleJa: "コンディショニング科学上級", descJa: "VO2max・無酸素閾値・試合特異的コンディショニングの科学", category: "フィジカル" },
-  { slug: "bjj-nutrition-timing-advanced", titleJa: "栄養タイミング上級", descJa: "試合日・減量・大会後回復の最適栄養プロトコル", category: "栄養" },
+  { slug: "bjj-advanced-combinations", titleJa: "アドバンスドコンビネーション", descJa: "複数のテクニックを組み合わせた止められない攻撃パターン", categoryJa: "アドバンスト" },
+  { slug: "bjj-drilling-methodology", titleJa: "ドリリング方法論", descJa: "技術習得を加速させるドリルの構造・量・パートナーワーク", categoryJa: "テクニック" },
+  { slug: "bjj-flow-rolling-mastery", titleJa: "フローローリングマスタリー", descJa: "フロー状態でロールする方法と技術向上への活用法", categoryJa: "アドバンスト" },
+  { slug: "bjj-conditioning-science-advanced", titleJa: "コンディショニング科学上級", descJa: "VO2max・無酸素閾値・試合特異的コンディショニングの科学", categoryJa: "フィジカル" },
+  { slug: "bjj-nutrition-timing-advanced", titleJa: "栄養タイミング上級", descJa: "試合日・減量・大会後回復の最適栄養プロトコル", categoryJa: "栄養" },
   // Batch 392-396
-  { slug: "bjj-guard-systems-advanced", titleJa: "ガードシステム上級", descJa: "複数のガードを組み合わせた統合的ガードゲームの構築法", category: "ガード" },
-  { slug: "bjj-pressure-game-advanced", titleJa: "プレッシャーゲーム上級", descJa: "エリートレベルの圧力パスと体重コントロールのコンセプト", category: "パッシング" },
-  { slug: "bjj-back-attacks-masterclass", titleJa: "バックアタックマスタークラス", descJa: "世界チャンピオンが使うバック攻撃の詳細メカニクス", category: "バックコントロール" },
-  { slug: "bjj-escapes-advanced", titleJa: "エスケープ上級", descJa: "難しいポジションからの脱出と即時カウンター攻撃の組み合わせ", category: "エスケープ" },
-  { slug: "bjj-competition-rules-detailed", titleJa: "競技ルール詳細解説", descJa: "ペナルティ・アドバンテージ・VTBルールの戦略的活用法", category: "競技" },
+  { slug: "bjj-guard-systems-advanced", titleJa: "ガードシステム上級", descJa: "複数のガードを組み合わせた統合的ガードゲームの構築法", categoryJa: "ガード" },
+  { slug: "bjj-pressure-game-advanced", titleJa: "プレッシャーゲーム上級", descJa: "エリートレベルの圧力パスと体重コントロールのコンセプト", categoryJa: "パッシング" },
+  { slug: "bjj-back-attacks-masterclass", titleJa: "バックアタックマスタークラス", descJa: "世界チャンピオンが使うバック攻撃の詳細メカニクス", categoryJa: "バックコントロール" },
+  { slug: "bjj-escapes-advanced", titleJa: "エスケープ上級", descJa: "難しいポジションからの脱出と即時カウンター攻撃の組み合わせ", categoryJa: "エスケープ" },
+  { slug: "bjj-competition-rules-detailed", titleJa: "競技ルール詳細解説", descJa: "ペナルティ・アドバンテージ・VTBルールの戦略的活用法", categoryJa: "競技" },
   // Batch 402-406
-  { slug: "bjj-guard-pulling-strategy", titleJa: "ガードプル戦略", descJa: "スタンドアップからガードプルへの移行タイミングと戦略", category: "ガード" },
-  { slug: "bjj-open-guard-mastery", titleJa: "オープンガードマスタリー", descJa: "オープンガードのポジション管理・スウィープ・サブミッション体系", category: "ガード" },
-  { slug: "bjj-top-pressure-advanced", titleJa: "トッププレッシャー上級", descJa: "サイドコントロール・ニーオンベリー・マウントでの重量配分とプレッシャー", category: "ポジション" },
-  { slug: "bjj-submission-hunting", titleJa: "サブミッションハンティング", descJa: "常にサブミッションを狙い続けるアグレッシブなゲームプラン", category: "サブミッション" },
-  { slug: "bjj-tournament-preparation", titleJa: "トーナメント準備完全版", descJa: "大会12週前からの準備・ピーキング・当日戦略の完全ガイド", category: "競技" },
+  { slug: "bjj-guard-pulling-strategy", titleJa: "ガードプル戦略", descJa: "スタンドアップからガードプルへの移行タイミングと戦略", categoryJa: "ガード" },
+  { slug: "bjj-open-guard-mastery", titleJa: "オープンガードマスタリー", descJa: "オープンガードのポジション管理・スウィープ・サブミッション体系", categoryJa: "ガード" },
+  { slug: "bjj-top-pressure-advanced", titleJa: "トッププレッシャー上級", descJa: "サイドコントロール・ニーオンベリー・マウントでの重量配分とプレッシャー", categoryJa: "ポジション" },
+  { slug: "bjj-submission-hunting", titleJa: "サブミッションハンティング", descJa: "常にサブミッションを狙い続けるアグレッシブなゲームプラン", categoryJa: "サブミッション" },
+  { slug: "bjj-tournament-preparation", titleJa: "トーナメント準備完全版", descJa: "大会12週前からの準備・ピーキング・当日戦略の完全ガイド", categoryJa: "競技" },
   // Batch 407-411
-  { slug: "bjj-passing-guard-fundamentals", titleJa: "ガードパス基礎原則", descJa: "ガードパスに必要な姿勢・圧力・タイミングの基本原則", category: "パッシング" },
-  { slug: "bjj-closed-guard-attacks", titleJa: "クローズドガード攻撃", descJa: "クローズドガードからのスウィープ・チョーク・アームロックの完全システム", category: "ガード" },
-  { slug: "bjj-side-control-positions", titleJa: "サイドコントロールポジション", descJa: "サイドコントロールの種類・移行・攻撃オプションの体系的ガイド", category: "ポジション" },
-  { slug: "bjj-back-take-entries", titleJa: "バックテイクエントリー", descJa: "各ポジションからバックを取るための体系的なエントリーシステム", category: "バックコントロール" },
-  { slug: "bjj-knee-on-belly-control", titleJa: "ニーオンベリーコントロール", descJa: "ニーオンベリーでの圧力・維持・サブミッション攻撃の詳細ガイド", category: "ポジション" },
+  { slug: "bjj-passing-guard-fundamentals", titleJa: "ガードパス基礎原則", descJa: "ガードパスに必要な姿勢・圧力・タイミングの基本原則", categoryJa: "パッシング" },
+  { slug: "bjj-closed-guard-attacks", titleJa: "クローズドガード攻撃", descJa: "クローズドガードからのスウィープ・チョーク・アームロックの完全システム", categoryJa: "ガード" },
+  { slug: "bjj-side-control-positions", titleJa: "サイドコントロールポジション", descJa: "サイドコントロールの種類・移行・攻撃オプションの体系的ガイド", categoryJa: "ポジション" },
+  { slug: "bjj-back-take-entries", titleJa: "バックテイクエントリー", descJa: "各ポジションからバックを取るための体系的なエントリーシステム", categoryJa: "バックコントロール" },
+  { slug: "bjj-knee-on-belly-control", titleJa: "ニーオンベリーコントロール", descJa: "ニーオンベリーでの圧力・維持・サブミッション攻撃の詳細ガイド", categoryJa: "ポジション" },
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -222,8 +222,8 @@ export default function DailyWikiTip() {
   const nextTitle = locale === "en" ? tipNext.titleEn : tipNext.titleJa;
   const nextDesc = locale === "en" ? tipNext.descEn : tipNext.descJa;
   const nextCategory = locale === "en" ? tipNext.categoryEn : tipNext.categoryJa;
-  const badgeClass = CATEGORY_COLORS[tipCategory] ?? "bg-zinc-500/20 text-zinc-300";
-  const nextBadgeClass = CATEGORY_COLORS[nextCategory] ?? "bg-zinc-500/20 text-zinc-300";
+  const badgeClass = CATEGORY_COLORS[tipCategory ?? ""] ?? "bg-zinc-500/20 text-zinc-300";
+  const nextBadgeClass = CATEGORY_COLORS[nextCategory ?? ""] ?? "bg-zinc-500/20 text-zinc-300";
 
   return (
     <div className="bg-zinc-900 rounded-xl border border-white/10 overflow-hidden">
@@ -271,7 +271,7 @@ export default function DailyWikiTip() {
           onClick={() => setShowNext((v) => !v)}
           className="text-[10px] text-gray-600 hover:text-gray-400 transition-colors flex items-center gap-1"
         >
-          {showNext ? t("wiki.close") : t("wiki.nextPreview", { category: nextCategory })}
+          {showNext ? t("wiki.close") : t("wiki.nextPreview", { categoryJa: nextCategory ?? "" })}
         </button>
       </div>
 

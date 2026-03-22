@@ -46,9 +46,9 @@ type Props = {
   hideAccount?: boolean;
 };
 
-function getLocalDateString(): string {
-  const d = new Date();
-  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+function getJSTDateString(): string {
+  const d = new Date(Date.now() + 9 * 3600000);
+  return d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0") + "-" + String(d.getUTCDate()).padStart(2, "0");
 }
 
 function calcBjjMonths(startDate: string): number {
@@ -104,7 +104,7 @@ function DeleteAccountSection({ userId, supabase }: { userId: string; supabase: 
   );
 }
 
-function BELTS({ t }: { t: (key: string, obj?: Record<string, any>) => string }) {
+function BELTS({ t }: { t: (key: string, obj?: Record<string, string | number>) => string }) {
   return [
     { value: "white", label: t("profile.belts.white"), color: "bg-white text-gray-900" },
     { value: "blue", label: t("profile.belts.blue"), color: "bg-blue-500 text-white" },
@@ -186,7 +186,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
-  const today = getLocalDateString();
+  const today = getJSTDateString();
   const supabase = createClient();
   const belts = BELTS({ t });
   const currentBelt = belts.find((b) => b.value === form.belt);

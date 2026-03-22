@@ -143,13 +143,13 @@ export default function GoalTracker({ userId }: Props) {
 
   useEffect(() => {
     const load = async () => {
-      const now = new Date();
-      const firstDayOfMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
-      const dayOfWeek = now.getDay();
+      const now = new Date(Date.now() + 9 * 3600000); // JST
+      const firstDayOfMonth = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-01`;
+      const dayOfWeek = now.getUTCDay();
       const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-      const firstDayOfWeek = new Date(now.getTime() - daysToMonday * 86400000)
-        .toISOString()
-        .split("T")[0];
+      const firstDayOfWeekMs = now.getTime() - daysToMonday * 86400000;
+      const firstDayOfWeekD = new Date(firstDayOfWeekMs);
+      const firstDayOfWeek = `${firstDayOfWeekD.getUTCFullYear()}-${String(firstDayOfWeekD.getUTCMonth() + 1).padStart(2, "0")}-${String(firstDayOfWeekD.getUTCDate()).padStart(2, "0")}`;
 
       const [{ count: mc }, { count: wc }, { count: tc }, profileRes] = await Promise.all([
         supabase
@@ -248,10 +248,10 @@ export default function GoalTracker({ userId }: Props) {
       if (mGoal > 0) {
         const history: MonthHistory[] = [];
         for (let i = 5; i >= 0; i--) {
-          const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-          const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-          const nextD = new Date(d.getFullYear(), d.getMonth() + 1, 1);
-          const nextYm = `${nextD.getFullYear()}-${String(nextD.getMonth() + 1).padStart(2, "0")}-01`;
+          const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - i, 1));
+          const ym = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+          const nextD = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1));
+          const nextYm = `${nextD.getUTCFullYear()}-${String(nextD.getUTCMonth() + 1).padStart(2, "0")}-01`;
           const { count: hc } = await supabase
             .from("training_logs")
             .select("*", { count: "exact", head: true })
@@ -260,7 +260,7 @@ export default function GoalTracker({ userId }: Props) {
             .lt("date", nextYm);
           history.push({
             ym,
-            label: `${d.getMonth() + 1}`,
+            label: `${d.getUTCMonth() + 1}`,
             count: hc ?? 0,
             achieved: (hc ?? 0) >= mGoal,
           });

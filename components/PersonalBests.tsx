@@ -123,12 +123,12 @@ export default function PersonalBests({ userId }: Props) {
       // 週間最多（月曜日起点）
       const weekCounts: Record<string, number> = {};
       logs.forEach((l: { date: string }) => {
-        const d = new Date(l.date + "T00:00:00");
-        const dow = d.getDay();
+        const d = new Date(l.date + "T00:00:00Z"); // UTC parsing avoids DST issues
+        const dow = d.getUTCDay();
         const daysToMon = dow === 0 ? 6 : dow - 1;
-        const mon = new Date(d);
-        mon.setDate(d.getDate() - daysToMon);
-        const weekKey = `${mon.getFullYear()}-${String(mon.getMonth() + 1).padStart(2, "0")}-${String(mon.getDate()).padStart(2, "0")}`;
+        const monMs = d.getTime() - daysToMon * 86400000;
+        const mon = new Date(monMs);
+        const weekKey = `${mon.getUTCFullYear()}-${String(mon.getUTCMonth() + 1).padStart(2, "0")}-${String(mon.getUTCDate()).padStart(2, "0")}`;
         weekCounts[weekKey] = (weekCounts[weekKey] ?? 0) + 1;
       });
       const bestWeekCount = Object.values(weekCounts).length > 0

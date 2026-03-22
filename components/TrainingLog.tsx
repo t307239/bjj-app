@@ -52,7 +52,7 @@ function MiniTypeDonut({ entries }: { entries: { type: string }[] }) {
   return (
     <svg viewBox="0 0 40 40" className="w-10 h-10 flex-shrink-0">
       {slices.map((s) => (
-        <path key={s.type} d={s.path} fill={s.color} opacity={0.85} title={`${s.type}: ${s.count} sessions`} />
+        <g key={s.type}><title>{s.type}: {s.count} sessions</title><path d={s.path} fill={s.color} opacity={0.85} /></g>
       ))}
       <text x={cx} y={cy + 3} textAnchor="middle" fill="white" fontSize="7" fontWeight="bold">
         {total}

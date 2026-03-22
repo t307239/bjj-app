@@ -11,8 +11,8 @@ const WIKI_BASE = "https://wiki.bjj-app.net/ja";
 // GA4イベント送信ヘルパー
 function trackWikiClick(slug: string, tag: string) {
   try {
-    if (typeof window !== "undefined" && typeof (window as { gtag?: (...args: unknown[]) => void }).gtag === "function") {
-      (window as { gtag: (...args: unknown[]) => void }).gtag("event", "wiki_link_click", {
+    if (typeof window !== "undefined" && typeof (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag === "function") {
+      (window as unknown as { gtag: (...args: unknown[]) => void }).gtag("event", "wiki_link_click", {
         event_category: "BJJ Wiki",
         event_label: slug,
         wiki_tag: tag,
@@ -141,7 +141,7 @@ const NEW_LINKS: QuickLink[] = [
 const ALL_LINKS: QuickLink[] = [...QUICK_LINK_SETS.flat(), ...NEW_LINKS];
 
 // ユニークカテゴリ一覧
-const CATEGORIES = Array.from(new Set(ALL_LINKS.map((l) => l.tag)));
+const CATEGORIES = Array.from(new Set(ALL_LINKS.map((l) => l.tagEn)));
 
 // カテゴリ絵文字マップ（EN+JA対応）
 const CATEGORY_EMOJI: Record<string, string> = {
