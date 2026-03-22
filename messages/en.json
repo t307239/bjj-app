@@ -398,6 +398,11 @@
     "trainingTip": "Today's Tip",
     "masteryUp": "Improve mastery"
   },
+  "error": {
+    "title": "Something went wrong",
+    "description": "An error occurred while loading the page.",
+    "retry": "Try Again"
+  },
   "affiliate": {
     "title": "Recommended Instructionals",
     "viewAll": "View All →",
