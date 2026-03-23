@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { LocaleProvider } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: {
@@ -56,9 +55,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
       </head>
       <body className="min-h-screen bg-[#0f172a] text-white antialiased">
-        <LocaleProvider>
-          {children}
-        </LocaleProvider>
+        {children}
         <script
           dangerouslySetInnerHTML={{
             __html: `if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{})}`,

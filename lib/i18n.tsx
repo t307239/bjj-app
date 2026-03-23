@@ -1,18 +1,11 @@
-"use client";
+// i18n — English-only static implementation
+// All components can continue using `const { t } = useLocale()` unchanged.
+// LocaleProvider is kept as a no-op for backward compatibility.
 
-import { createContext, useContext, useEffect, useState } from "react";
-import ja from "@/messages/ja.json";
 import en from "@/messages/en.json";
 
-export type Locale = "ja" | "en";
+export type Locale = "en";
 
-type Messages = typeof ja;
-
-const STORAGE_KEY = "bjj_locale";
-
-const messages: Record<Locale, Messages> = { ja, en };
-
-// Flatten nested keys: "nav.home" -> value
 function flattenMessages(obj: Record<string, unknown>, prefix = ""): Record<string, string> {
   return Object.entries(obj).reduce((acc, [key, val]) => {
     const fullKey = prefix ? `${prefix}.${key}` : key;
@@ -25,66 +18,28 @@ function flattenMessages(obj: Record<string, unknown>, prefix = ""): Record<stri
   }, {} as Record<string, string>);
 }
 
-const flatJa = flattenMessages(ja as unknown as Record<string, unknown>);
 const flatEn = flattenMessages(en as unknown as Record<string, unknown>);
-const flatMessages: Record<Locale, Record<string, string>> = { ja: flatJa, en: flatEn };
 
-type LocaleContextType = {
-  locale: Locale;
-  setLocale: (l: Locale) => void;
-  t: (key: string, vars?: Record<string, string | number>) => string;
-};
-
-const LocaleContext = createContext<LocaleContextType>({
-  locale: "ja",
-  setLocale: () => {},
-  t: (key) => key,
-});
-
-/**
- * Detect initial locale:
- * 1. localStorage (user's previous choice) — highest priority
- * 2. navigator.language (browser setting) — auto-detect
- * 3. "en" as fallback
- */
-function detectInitialLocale(): Locale {
-  if (typeof window === "undefined") return "en";
-  const saved = localStorage.getItem(STORAGE_KEY) as Locale | null;
-  if (saved === "en" || saved === "ja") return saved;
-  // Auto-detect from browser language
-  const browserLang = navigator.language || "";
-  return browserLang.startsWith("ja") ? "ja" : "en";
+function t(key: string, vars?: Record<string, string | number>): string {
+  let str = flatEn[key] ?? key;
+  if (vars) {
+    Object.entries(vars).forEach(([k, v]) => {
+      str = str.replace(`{${k}}`, String(v));
+    });
+  }
+  return str;
 }
 
-export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
-
-  useEffect(() => {
-    setLocaleState(detectInitialLocale());
-  }, []);
-
-  const setLocale = (l: Locale) => {
-    setLocaleState(l);
-    localStorage.setItem(STORAGE_KEY, l);
-  };
-
-  const t = (key: string, vars?: Record<string, string | number>): string => {
-    let str = flatMessages[locale][key] ?? flatMessages["ja"][key] ?? key;
-    if (vars) {
-      Object.entries(vars).forEach(([k, v]) => {
-        str = str.replace(`{${k}}`, String(v));
-      });
-    }
-    return str;
-  };
-
-  return (
-    <LocaleContext.Provider value={{ locale, setLocale, t }}>
-      {children}
-    </LocaleContext.Provider>
-  );
-}
-
+/** Drop-in replacement — always returns English locale */
 export function useLocale() {
-  return useContext(LocaleContext);
+  return {
+    locale: "en" as const,
+    setLocale: (_l: Locale) => {},
+    t,
+  };
+}
+
+/** No-op provider kept for backward compatibility */
+export function LocaleProvider({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }

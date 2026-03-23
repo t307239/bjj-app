@@ -4,8 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import LogoutButton from "./LogoutButton";
-import LangToggle from "./LangToggle";
-import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 
 type Props = {
@@ -15,7 +13,6 @@ type Props = {
 
 export default function NavBar({ displayName, avatarUrl }: Props) {
   const pathname = usePathname();
-  const { t } = useLocale();
   const [trainedToday, setTrainedToday] = useState<boolean | null>(null);
   const [currentStreak, setCurrentStreak] = useState<number>(0);
 
@@ -61,9 +58,9 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
   }, [pathname]); // re-check after navigation (e.g. after logging a session)
 
   const NAV_ITEMS = [
-    { href: "/dashboard", label: t("nav.home"), icon: "🏠" },
-    { href: "/techniques", label: t("nav.techniques"), icon: "📚" },
-    { href: "/profile", label: t("nav.profile"), icon: "🏅" },
+    { href: "/dashboard", label: "Home", icon: "🏠" },
+    { href: "/techniques", label: "Techniques", icon: "📚" },
+    { href: "/profile", label: "Profile", icon: "🏅" },
   ];
 
   return (
@@ -99,10 +96,9 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
           <div className="flex items-center gap-2">
             {currentStreak >= 2 && (
               <span className="hidden sm:flex items-center gap-1 text-[11px] text-orange-400 bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-full">
-                {t("nav.streakBadge", { n: currentStreak })}
+                🔥 {currentStreak} days straight
               </span>
             )}
-            <LangToggle />
             {avatarUrl && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -123,7 +119,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
       <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-zinc-950/80 backdrop-blur-xl border-t border-white/[0.08] z-50">
         {currentStreak >= 2 && (
           <div className="flex justify-center py-1 border-b border-white/5 bg-orange-500/5">
-            <span className="text-[10px] text-orange-400">🔥 {t("nav.streakBadge", { n: currentStreak })}</span>
+            <span className="text-[10px] text-orange-400">🔥 {currentStreak} days straight</span>
           </div>
         )}
         <div className="grid grid-cols-3">

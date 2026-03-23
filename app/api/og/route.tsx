@@ -17,14 +17,9 @@ export async function GET(req: NextRequest) {
   const streak = searchParams.get("streak") ?? "0";
   const count  = searchParams.get("count")  ?? "0";
   const months = searchParams.get("months") ?? "0";
-  const locale = searchParams.get("locale") ?? "ja";
-
   const beltInfo = BELT_COLORS[belt] ?? BELT_COLORS.white;
 
-  const labels =
-    locale === "en"
-      ? { belt: beltInfo.labelEn, sessions: "Sessions", streak: "Day Streak", bjjAge: "Months of BJJ", tagline: "Track Your BJJ Journey" }
-      : { belt: beltInfo.label,  sessions: "総練習回数",  streak: "連続練習日",   bjjAge: "BJJ歴（月）",    tagline: "BJJの成長を記録しよう" };
+  const labels = { belt: beltInfo.labelEn, sessions: "Sessions", streak: "Day Streak", bjjAge: "Months of BJJ", tagline: "Track Your BJJ Journey" };
 
   return new ImageResponse(
     (

@@ -176,9 +176,8 @@ const CATEGORY_EMOJI: Record<string, string> = {
 };
 
 export default function WikiQuickLinks() {
-  const { t, locale } = useLocale();
-  // WIKI_BASE uses locale so /en → en.wiki, /ja → ja.wiki (fixes WIKI_BASE hardcode bug)
-  const WIKI_BASE = `https://wiki.bjj-app.net/${locale}`;
+  const { t } = useLocale();
+  const WIKI_BASE = "https://wiki.bjj-app.net/en";
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -191,11 +190,11 @@ export default function WikiQuickLinks() {
 
   const displayLinks = selectedTag === null
     ? todaySet
-    : ALL_LINKS.filter((l) => (locale === "en" ? l.tagEn : l.tagJa) === selectedTag).slice(0, 9);
+    : ALL_LINKS.filter((l) => l.tagEn === selectedTag).slice(0, 9);
 
-  // Get category names for display (bilingual)
-  const getCategoryDisplay = (catEn: string, catJa: string) => locale === "en" ? catEn : catJa;
-  const getCategoryKey = (catEn: string) => catEn; // Use English key for CATEGORY_EMOJI map
+  // Get category names for display (English only)
+  const getCategoryDisplay = (catEn: string, _catJa: string) => catEn;
+  const getCategoryKey = (catEn: string) => catEn;
 
   return (
     <div className="bg-zinc-900/60 rounded-xl border border-white/10 mb-4 overflow-hidden">
@@ -240,26 +239,10 @@ export default function WikiQuickLinks() {
                 : "border-white/10 text-gray-400 hover:border-white/20 hover:text-zinc-100"
             }`}
           >
-            {locale === "en" ? "Today" : "今日"}
+            Today
           </button>
           {CATEGORIES.map((catEn) => {
-            // Map English category names to Japanese for existing data
-            const categoryJa: Record<string, string> = {
-              "Submission": "サブミッション",
-              "Sweep": "攻撃",
-              "Defense": "ディフェンス",
-              "Guard": "ガード",
-              "Leg Lock": "レッグロック",
-              "Position": "ポジション",
-              "Escape": "エスケープ",
-              "Takedown": "テイクダウン",
-              "Passing": "パッシング",
-              "Mental": "メンタル",
-              "Competition": "競技",
-              "Physical": "フィジカル",
-              "New": "新着",
-            };
-            const displayCat = locale === "en" ? catEn : (categoryJa[catEn] || catEn);
+            const displayCat = catEn;
             return (
               <button
                 key={catEn}
@@ -283,14 +266,14 @@ export default function WikiQuickLinks() {
               href={`${WIKI_BASE}/${link.slug}.html`}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => trackWikiClick(link.slug, locale === "en" ? link.tagEn : link.tagJa)}
+              onClick={() => trackWikiClick(link.slug, link.tagEn)}
               className="flex flex-col items-center text-center p-2.5 rounded-lg bg-white/5 hover:bg-zinc-800 border border-white/10 hover:border-[#e94560]/30 transition-all group"
             >
               <span className="text-lg mb-1">{link.emoji}</span>
               <span className="text-[10px] text-gray-300 group-hover:text-white font-medium leading-tight line-clamp-2">
-                {locale === "en" ? link.titleEn : link.titleJa}
+                {link.titleEn}
               </span>
-              <span className="text-[9px] text-gray-500 mt-1">{locale === "en" ? link.tagEn : link.tagJa}</span>
+              <span className="text-[9px] text-gray-500 mt-1">{link.tagEn}</span>
             </a>
           ))}
         </div>
