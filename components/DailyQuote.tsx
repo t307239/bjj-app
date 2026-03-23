@@ -35,7 +35,7 @@ export default function DailyQuote() {
 
   return (
     <div className="bg-zinc-900/60 rounded-xl px-4 py-3 border border-white/5 mb-4">
-      <p className="text-gray-300 text-xs leading-relaxed italic pl-4 border-l-2 border-[#e94560]/40">
+      <p className="text-gray-300 text-xs leading-relaxed italic pl-4 border-l-2 border-white/20">
         {t(quote.textKey)}
       </p>
       <p className="text-gray-600 text-[10px] mt-1.5 pl-4">— {t(quote.authorKey)}</p>
