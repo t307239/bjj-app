@@ -174,7 +174,7 @@ export default function TechniqueLogList({
         <div className="flex gap-2">
           <button
             onClick={() => onShowForm(false)}
-            className="bg-[#e94560] hover:bg-[#c73652] text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors"
+            className="bg-[#10B981] hover:bg-[#0d9668] text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors"
           >
             {t("techniques.add")}
           </button>
@@ -256,7 +256,7 @@ export default function TechniqueLogList({
       {/* ローディング */}
       {initialLoading && (
         <div className="text-center py-8 text-gray-500">
-          <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-[#e94560] rounded-full animate-spin mb-2" />
+          <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin mb-2" />
           <p className="text-sm">{t("techniques.loading")}</p>
         </div>
       )}
