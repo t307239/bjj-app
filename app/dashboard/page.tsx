@@ -395,13 +395,13 @@ export default async function DashboardPage() {
             <div className="flex items-center justify-between mb-1">
               <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest">This Month</span>
               {prevMonthCount !== null && prevMonthCount !== undefined && (
-                <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full whitespace-nowrap ${
                   (monthCount ?? 0) >= prevMonthCount
                     ? "text-green-400 bg-green-400/10"
                     : "text-red-400 bg-red-400/10"
                 }`}>
                   {(monthCount ?? 0) >= prevMonthCount ? "▲" : "▼"}
-                  {Math.abs((monthCount ?? 0) - prevMonthCount)} vs last
+                  {Math.abs((monthCount ?? 0) - prevMonthCount)} vs last month
                 </span>
               )}
             </div>
@@ -457,16 +457,11 @@ export default async function DashboardPage() {
             <div className="col-span-2 md:col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-white/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out">
               <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest block mb-1">Avg Session</span>
               <div className="flex items-end gap-1.5">
-                <span className={`text-3xl font-black leading-none tabular-nums ${intensityBadge?.color ?? "text-zinc-300"}`}>
+                <span className="text-3xl font-black leading-none tabular-nums text-zinc-300">
                   {avgSessionMin}
                 </span>
                 <span className="text-zinc-600 text-xs mb-0.5">min / session</span>
               </div>
-              {intensityBadge && (
-                <span className={`mt-2 block text-[11px] font-semibold ${intensityBadge.color}`}>
-                  {intensityBadge.emoji} {intensityBadge.label}
-                </span>
-              )}
             </div>
           )}
 
