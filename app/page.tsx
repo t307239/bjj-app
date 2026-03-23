@@ -67,8 +67,8 @@ export default async function Home() {
       <section className="flex-1 flex flex-col items-center justify-center px-4 py-16 text-center">
         <div className="max-w-2xl mx-auto">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-zinc-900 border border-[#e94560]/30 rounded-full px-4 py-1.5 text-sm text-[#e94560] mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#e94560] animate-pulse" />
+          <div className="inline-flex items-center gap-2 bg-zinc-900 border border-emerald-400/30 rounded-full px-4 py-1.5 text-sm text-emerald-400 mb-8">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             Free to start
           </div>
 
@@ -88,7 +88,7 @@ export default async function Home() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
             <Link
               href="/login"
-              className="inline-flex items-center justify-center gap-2 bg-[#e94560] hover:bg-[#c73652] text-white font-bold py-4 px-8 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#e94560]/20"
+              className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-4 px-8 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#10B981]/20"
             >
               Get started free →
             </Link>
@@ -188,28 +188,28 @@ export default async function Home() {
       <section className="px-4 py-16 bg-zinc-900/50">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-zinc-900 border border-[#e94560]/30 rounded-full px-4 py-2 mb-6">
-              <span className="text-sm text-[#e94560]">✓ 3,500+ BJJ practitioners trust BJJ App</span>
+            <div className="inline-flex items-center gap-2 bg-zinc-900 border border-white/10 rounded-full px-4 py-2 mb-6">
+              <span className="text-sm text-green-400">✓ 3,500+ BJJ practitioners trust BJJ App</span>
             </div>
             <h2 className="text-2xl font-bold text-white">
               📊 Real training data
             </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-zinc-900 rounded-2xl p-6 border border-[#e94560]/30 text-center">
-              <div className="text-3xl font-bold text-[#e94560] mb-1">5,000+</div>
+            <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
+              <div className="text-3xl font-bold text-white mb-1">5,000+</div>
               <p className="text-gray-400 text-xs">Sessions logged</p>
             </div>
-            <div className="bg-zinc-900 rounded-2xl p-6 border border-[#e94560]/30 text-center">
-              <div className="text-3xl font-bold text-[#e94560] mb-1">1,200+</div>
+            <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
+              <div className="text-3xl font-bold text-white mb-1">1,200+</div>
               <p className="text-gray-400 text-xs">Techniques saved</p>
             </div>
-            <div className="bg-zinc-900 rounded-2xl p-6 border border-[#e94560]/30 text-center">
-              <div className="text-3xl font-bold text-[#e94560] mb-1">🔥 30+</div>
+            <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
+              <div className="text-3xl font-bold text-white mb-1">🔥 30+</div>
               <p className="text-gray-400 text-xs">Longest streak (days)</p>
             </div>
-            <div className="bg-zinc-900 rounded-2xl p-6 border border-[#e94560]/30 text-center">
-              <div className="text-3xl font-bold text-[#e94560] mb-1">Free</div>
+            <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
+              <div className="text-3xl font-bold text-white mb-1">Free</div>
               <p className="text-gray-400 text-xs">All core features</p>
             </div>
           </div>
@@ -223,7 +223,7 @@ export default async function Home() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-[#e94560]/20 rounded-full text-xl mb-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-white/10 rounded-full text-xl mb-4">
               1️⃣
             </div>
             <h3 className="font-bold text-lg text-white mb-3">Log</h3>
@@ -287,7 +287,7 @@ export default async function Home() {
                 {/* Stats grid */}
                 <div className="grid grid-cols-2 gap-2 mb-3">
                   <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
-                    <div className="text-2xl font-bold text-[#e94560]">12</div>
+                    <div className="text-2xl font-bold text-rose-400">12</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">This month</div>
                   </div>
                   <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
@@ -365,7 +365,7 @@ export default async function Home() {
             {/* Feature highlights */}
             <div className="flex-1 max-w-md mx-auto lg:mx-0 space-y-4 pt-4">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-[#e94560]/20 rounded-xl flex items-center justify-center text-xl flex-shrink-0">📊</div>
+                <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-xl flex-shrink-0">📊</div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">Log every session</h3>
                   <p className="text-gray-500 text-sm">Track Gi, NoGi, drilling, comp, and open mat. Review your calendar anytime.</p>
@@ -403,7 +403,7 @@ export default async function Home() {
               <div className="pt-4">
                 <Link
                   href="/login"
-                  className="inline-flex items-center justify-center gap-2 bg-[#e94560] hover:bg-[#c73652] text-white font-bold py-3 px-8 rounded-full transition-all hover:scale-105 w-full text-center"
+                  className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-3 px-8 rounded-full transition-all hover:scale-105 w-full text-center"
                 >
                   Start logging your data →
                 </Link>
@@ -419,21 +419,21 @@ export default async function Home() {
           All features, free
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-[#e94560]/40 transition-colors">
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-colors">
             <div className="text-3xl mb-3">📊</div>
             <h3 className="font-bold text-lg mb-2">Training Log</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
               Log date, duration, type, and notes. Auto-totals your monthly sessions and training time.
             </p>
           </div>
-          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-[#e94560]/40 transition-colors">
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-colors">
             <div className="text-3xl mb-3">📚</div>
             <h3 className="font-bold text-lg mb-2">Technique Journal</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
               Organize techniques by position. Track mastery levels to spot and fix weak areas.
             </p>
           </div>
-          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-[#e94560]/40 transition-colors">
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-colors">
             <div className="text-3xl mb-3">🔥</div>
             <h3 className="font-bold text-lg mb-2">Streak Tracker</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
@@ -455,7 +455,7 @@ export default async function Home() {
               &ldquo;After 3 months of tracking, I got promoted to blue belt. Having the data makes the progress so real.&rdquo;
             </p>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-[#e94560]/20 rounded-full flex items-center justify-center text-sm">T</div>
+              <div className="w-8 h-8 bg-zinc-700 rounded-full flex items-center justify-center text-sm">T</div>
               <div>
                 <div className="text-xs font-medium text-gray-300">T.K.</div>
                 <div className="text-xs text-gray-600">Blue Belt / 2 years training</div>
@@ -512,7 +512,7 @@ export default async function Home() {
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-zinc-900 rounded-xl p-4 border border-white/10 hover:border-[#e94560]/40 transition-colors block"
+                className="bg-zinc-900 rounded-xl p-4 border border-white/10 hover:border-white/30 transition-colors block"
               >
                 <div className="text-2xl mb-2">{item.emoji}</div>
                 <div className="text-sm font-semibold text-white mb-1">{item.title}</div>
@@ -558,22 +558,22 @@ export default async function Home() {
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Streak tracking</li>
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Competition records</li>
               </ul>
-              <Link href="/login" className="mt-8 block text-center bg-[#e94560] hover:bg-[#c73652] text-white font-bold py-3 rounded-full transition-all">
+              <Link href="/login" className="mt-8 block text-center bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-3 rounded-full transition-all">
                 Get started free
               </Link>
             </div>
             {/* Pro */}
-            <div className="bg-zinc-900 rounded-2xl p-8 border border-[#e94560]/50 relative">
-              <div className="absolute -top-3 right-6 bg-[#e94560] text-white text-xs px-3 py-1 rounded-full font-bold">Coming soon</div>
+            <div className="bg-zinc-900 rounded-2xl p-8 border border-yellow-500/50 relative">
+              <div className="absolute -top-3 right-6 bg-yellow-500 text-black text-xs px-3 py-1 rounded-full font-bold">Coming soon</div>
               <div className="text-lg font-bold mb-1">Pro</div>
               <div className="text-3xl font-bold text-white mb-1">$4.99<span className="text-sm font-normal text-gray-500">/mo (tax incl.)</span></div>
               <div className="text-gray-500 text-xs mb-6">Billed monthly</div>
               <ul className="space-y-3 text-sm text-gray-400">
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Everything in Free</li>
-                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> CSV export</li>
-                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> 12-month graphs</li>
-                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> Streak freeze</li>
-                <li className="flex items-center gap-2"><span className="text-[#e94560]">★</span> Priority support</li>
+                <li className="flex items-center gap-2"><span className="text-yellow-400">★</span> CSV export</li>
+                <li className="flex items-center gap-2"><span className="text-yellow-400">★</span> 12-month graphs</li>
+                <li className="flex items-center gap-2"><span className="text-yellow-400">★</span> Streak freeze</li>
+                <li className="flex items-center gap-2"><span className="text-yellow-400">★</span> Priority support</li>
               </ul>
               <button className="mt-8 w-full text-center bg-white/10 text-gray-400 font-bold py-3 rounded-full cursor-not-allowed" disabled>
                 Coming soon
@@ -608,7 +608,7 @@ export default async function Home() {
         <p className="text-gray-500 text-sm mb-8">No credit card needed. Sign up with GitHub or Google in seconds.</p>
         <Link
           href="/login"
-          className="inline-flex items-center justify-center gap-2 bg-[#e94560] hover:bg-[#c73652] text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#e94560]/20"
+          className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#10B981]/20"
         >
           Get started free →
         </Link>
