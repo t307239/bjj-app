@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import LogoutButton from "./LogoutButton";
+import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 import { getLocalDateString } from "@/lib/timezone";
 
@@ -16,6 +17,7 @@ type Props = {
 };
 
 export default function NavBar({ displayName, avatarUrl }: Props) {
+  const { t } = useLocale();
   const pathname = usePathname();
   const [trainedToday, setTrainedToday] = useState<boolean | null>(null);
   const [currentStreak, setCurrentStreak] = useState<number>(0);
@@ -153,7 +155,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
               <button
                 onClick={() => setShowUserMenu((v) => !v)}
                 className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
-                aria-label="User menu"
+                aria-label={t("common.userMenu")}
               >
                 {avatarUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element

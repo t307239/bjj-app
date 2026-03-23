@@ -544,7 +544,10 @@
     "close": "Close",
     "cancel": "Cancel",
     "back": "Back",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "backToTop": "Back to top",
+    "userMenu": "User menu",
+    "dismissNotification": "Dismiss notification"
   },
   "skillmap": {
     "tabRoots": "Entry Points",

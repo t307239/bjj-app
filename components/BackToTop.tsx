@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLocale } from "@/lib/i18n";
 
 // #145: Back to Top FAB — appears after 500px scroll
 export default function BackToTop() {
+  const { t } = useLocale();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -17,7 +19,7 @@ export default function BackToTop() {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      aria-label="Back to top"
+      aria-label={t("common.backToTop")}
       className="fixed bottom-24 right-4 z-50 p-2.5 rounded-full bg-zinc-700/90 hover:bg-zinc-600 border border-white/10 shadow-lg transition-all active:scale-95"
     >
       <svg className="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

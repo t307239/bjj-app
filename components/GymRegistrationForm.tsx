@@ -68,14 +68,14 @@ export default function GymRegistrationForm({ userId }: Props) {
           onKeyDown={(e) => { if (e.key === "Enter" && gymName.trim()) handleCreate(); }}
           className="w-full bg-zinc-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 mb-4 focus:outline-none focus:border-white/30"
           maxLength={80}
-          aria-label="Gym name"
+          aria-label={t("gym.registerTitle")}
         />
 
         <button
           onClick={handleCreate}
           disabled={loading || !gymName.trim()}
           className="w-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-colors"
-          aria-label="Create gym"
+          aria-label={t("gym.createBtn")}
         >
           {loading ? t("gym.creating") : t("gym.createBtn")}
         </button>
