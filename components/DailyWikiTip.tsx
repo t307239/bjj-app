@@ -260,7 +260,7 @@ export default function DailyWikiTip() {
           href={wikiUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-xs text-[#e94560] hover:text-[#ff6b6b] transition-colors font-medium"
+          className="inline-flex items-center gap-1.5 text-xs text-[#3B82F6] hover:text-blue-400 transition-colors font-medium"
         >
           <span>{t("wiki.readMore")}</span>
           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -293,7 +293,7 @@ export default function DailyWikiTip() {
             href={nextUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[11px] text-gray-600 hover:text-[#e94560] transition-colors"
+            className="inline-flex items-center gap-1 text-[11px] text-gray-600 hover:text-gray-300 transition-colors"
           >
             <span>{t("wiki.peekAhead")}</span>
           </a>
