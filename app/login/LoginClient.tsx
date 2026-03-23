@@ -1,6 +1,8 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+"use client";
+
+import { Suspense, useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
@@ -96,6 +98,15 @@ function LoginForm() {
   // Both must be checked before any login action is enabled
   const canProceed = ageConfirmed && disclaimerAccepted;
 
+  // Highlight checkboxes when user tries to proceed without checking them
+  const [nudge, setNudge] = useState(false);
+  const checkboxRef = useRef<HTMLDivElement>(null);
+  function nudgeCheckboxes() {
+    setNudge(true);
+    checkboxRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTimeout(() => setNudge(false), 1500);
+  }
+
   const callbackUrl = () => {
     const base = `${window.location.origin}/auth/callback`;
     const params = new URLSearchParams();
@@ -107,7 +118,7 @@ function LoginForm() {
   };
 
   const signInWithGoogle = async () => {
-    if (!canProceed) return;
+    if (!canProceed) { nudgeCheckboxes(); return; }
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: callbackUrl() },
@@ -115,7 +126,7 @@ function LoginForm() {
   };
 
   const signInWithGitHub = async () => {
-    if (!canProceed) return;
+    if (!canProceed) { nudgeCheckboxes(); return; }
     await supabase.auth.signInWithOAuth({
       provider: "github",
       options: { redirectTo: callbackUrl() },
@@ -124,7 +135,7 @@ function LoginForm() {
 
   const sendEmailLink = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canProceed) return;
+    if (!canProceed) { nudgeCheckboxes(); return; }
     setEmailError(null);
     if (!email || !email.includes("@")) {
       setEmailError("Please enter a valid email address.");
@@ -181,7 +192,12 @@ function LoginForm() {
         {/* ── COPPA + Training Disclaimer checkboxes ──────────────────────── */}
         {/* Required BEFORE any login action. COPPA: 13+ age gate (US federal law).
             Disclaimer: injury liability (protects against personal-injury claims). */}
-        <div className="bg-zinc-900/80 rounded-xl border border-white/10 px-4 py-3 mb-3 space-y-2.5">
+        <div
+          ref={checkboxRef}
+          className={`bg-zinc-900/80 rounded-xl px-4 py-3 mb-3 space-y-2.5 border transition-colors duration-300 ${
+            nudge ? "border-[#10B981] ring-1 ring-[#10B981]/40" : "border-white/10"
+          }`}
+        >
           {/* Age confirmation (COPPA) */}
           <label className="flex items-start gap-3 cursor-pointer group">
             <input
@@ -214,7 +230,7 @@ function LoginForm() {
         </div>
 
         {/* ── Login buttons ─────────────────────────────────────────────────── */}
-        <div className={`bg-zinc-900 rounded-2xl p-6 border border-white/10 space-y-3 transition-opacity ${!canProceed ? "opacity-50 pointer-events-none" : ""}`}>
+        <div className={`bg-zinc-900 rounded-2xl p-6 border border-white/10 space-y-3 transition-opacity ${!canProceed ? "opacity-50" : ""}`}>
 
           {/* Google — most common, top position */}
           <button
