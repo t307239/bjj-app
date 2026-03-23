@@ -514,7 +514,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       )}
 
       {/* Header row — primary CTA only (#8: CSV/PDF moved to secondary row) */}
-      <div className="flex items-center justify-between mb-1">
+      <div className="flex items-center justify-between mb-3">
         <h3 className="text-lg font-semibold">
           Training Log
           {totalCount !== null && totalCount > 0 && (
