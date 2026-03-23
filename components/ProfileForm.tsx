@@ -233,14 +233,14 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
       const res = await fetch("/api/account/delete", { method: "POST" });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        setDeleteError(body.error ?? "Failed to delete account. Please try again.");
+        setDeleteError(body.error ?? t("profile.deleteError"));
         setDeleting(false);
         return;
       }
       await supabase.auth.signOut();
       router.push("/?deleted=1");
     } catch {
-      setDeleteError("Network error. Please try again.");
+      setDeleteError(t("profile.deleteNetworkError"));
       setDeleting(false);
     }
   };
@@ -476,7 +476,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
       setToast({ message: t("profile.saved"), type: "success" });
       setTimeout(() => { setToast(null); onSave(form); }, 1200);
     } else {
-      setToast({ message: t("profile.saveFailed") + ": " + (error.message || error.code || "Unknown error"), type: "error" });
+      setToast({ message: t("profile.saveFailed") + ": " + (error.message || error.code || t("profile.saveFailedUnknown")), type: "error" });
     }
     setLoading(false);
   };
