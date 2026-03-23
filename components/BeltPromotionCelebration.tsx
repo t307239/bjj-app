@@ -27,7 +27,7 @@ function useConfetti(canvasRef: React.RefObject<HTMLCanvasElement | null>, activ
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const COLORS = ["#e94560", "#3b82f6", "#9333ea", "#f59e0b", "#10b981", "#fff"];
+    const COLORS = ["#f97316", "#3b82f6", "#9333ea", "#f59e0b", "#10b981", "#fff"];
     type Particle = { x: number; y: number; vx: number; vy: number; color: string; w: number; h: number; angle: number; spin: number };
     const particles: Particle[] = Array.from({ length: 160 }, () => ({
       x: Math.random() * canvas.width,
