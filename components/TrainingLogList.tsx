@@ -461,7 +461,7 @@ export default function TrainingLogList({
 
       {/* Load more button */}
       {hasMore && (
-        <div className="text-center mt-4">
+        <div className="border-t border-white/5 pt-4 text-center mt-4">
           <button
             onClick={onLoadMore}
             disabled={loadingMore}
