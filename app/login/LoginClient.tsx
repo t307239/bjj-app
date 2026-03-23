@@ -29,6 +29,7 @@ function ErrorBanner() {
     auth: t("login.errorAuth"),
     callback: t("login.errorCallback"),
     access_denied: t("login.errorDenied"),
+    session_expired: "Your session expired. Please sign in again — your unsaved data has been preserved.",
   };
   return (
     <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 mb-4 text-red-400 text-sm text-center">

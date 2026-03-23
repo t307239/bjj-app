@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { useLocale } from "@/lib/i18n";
@@ -134,7 +135,13 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi",
   });
   const supabase = createClient();
+  const router = useRouter();
   const { t } = useLocale();
+  // Idempotency key: client-generated UUID sent as row id to prevent duplicate INSERTs
+  // on network retry. Reset after each successful/failed submit.
+  const idempotencyKey = useRef(
+    typeof crypto !== "undefined" ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`
+  );
 
   // Initial data load
   useEffect(() => {
@@ -210,7 +217,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     setLoading(true);
     const { data, error } = await supabase
       .from("training_logs")
-      .insert([{ ...form, notes: finalNotes, user_id: userId }])
+      .insert([{ id: idempotencyKey.current, ...form, notes: finalNotes, user_id: userId }])
       .select()
       .single();
 
@@ -218,10 +225,27 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([50]);
       setEntries((prev) => prev.map((e) => e.id === optimisticId ? data : e));
       setToast({ message: t("training.saved"), type: "success" });
+      // Rotate idempotency key for next submission
+      idempotencyKey.current = typeof crypto !== "undefined"
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random()}`;
     } else {
       setEntries((prev) => prev.filter((e) => e.id !== optimisticId));
       setShowForm(true);
-      setToast({ message: t("training.saveFailed"), type: "error" });
+      // Detect auth expiry (ITP/Safari session loss) — redirect with form data preserved
+      const isAuthError = error?.code === "401"
+        || error?.message?.toLowerCase().includes("jwt")
+        || error?.message?.toLowerCase().includes("unauthorized");
+      if (isAuthError) {
+        try { localStorage.setItem("pending_training_log", JSON.stringify({ ...form, notes: finalNotes })); } catch { /* ignore */ }
+        router.push("/login?reason=session_expired");
+      } else {
+        setToast({ message: t("training.saveFailed"), type: "error" });
+      }
+      // Reset key so retry uses a fresh UUID
+      idempotencyKey.current = typeof crypto !== "undefined"
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random()}`;
     }
     setLoading(false);
   };
