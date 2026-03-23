@@ -171,7 +171,22 @@ export default function CompetitionStats({ userId }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  if (loading || !record || record.total === 0) return null;
+  if (loading) return null;
+
+  if (!record || record.total === 0) {
+    return (
+      <div className="bg-zinc-900 rounded-xl border border-white/10 mb-4 overflow-hidden">
+        <div className="px-4 py-3 border-b border-white/10">
+          <h4 className="text-sm font-medium text-gray-300">🏆 {t("competition.title")}</h4>
+        </div>
+        <div className="p-6 text-center">
+          <div className="text-3xl mb-2">🥋</div>
+          <p className="text-gray-400 text-sm">{t("competition.noCompetitions")}</p>
+          <p className="text-gray-600 text-xs mt-1">{t("competition.noCompetitionsHint")}</p>
+        </div>
+      </div>
+    );
+  }
 
   const decoded = record.win + record.loss + record.draw;
   const winPct = decoded > 0 ? Math.round((record.win / decoded) * 100) : 0;

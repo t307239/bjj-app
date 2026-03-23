@@ -116,7 +116,18 @@ export default function GymRanking({ userId, gymId }: Props) {
   }, [gymId, userId, supabase]);
 
   if (loading) return null;
-  if (rows.length === 0) return null;
+  if (rows.length === 0) {
+    return (
+      <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-4">
+        <h3 className="text-sm font-semibold text-white mb-3">🏆 {t("gym.rankingTitle")}</h3>
+        <div className="text-center py-6">
+          <div className="text-3xl mb-2">👥</div>
+          <p className="text-gray-400 text-sm">{t("gym.noMembers")}</p>
+          <p className="text-gray-600 text-xs mt-1">{t("gym.noMembersHint")}</p>
+        </div>
+      </div>
+    );
+  }
 
   // Sort by active mode
   const sorted = [...rows].sort((a, b) =>
