@@ -326,8 +326,10 @@ export default function TrainingLogList({
                     </span>
                     <span className="text-gray-400 text-xs">{formatRelativeDate(entry.date)}</span>
                   </div>
-                  <div className="text-zinc-400 text-xs font-medium mb-1">
-                    ⏱{" "}
+                  <div className="inline-flex items-center gap-1 text-zinc-400 text-xs font-medium mb-1">
+                    <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <circle cx="12" cy="12" r="10" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
+                    </svg>
                     {entry.duration_min >= 60
                       ? `${Math.floor(entry.duration_min / 60)}h${
                           entry.duration_min % 60 > 0 ? `${entry.duration_min % 60}m` : ""

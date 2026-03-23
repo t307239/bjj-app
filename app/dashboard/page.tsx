@@ -419,7 +419,10 @@ export default async function DashboardPage() {
             <div className="flex items-center gap-3 mt-3 flex-wrap">
               {monthHoursStr && (
                 <span className="inline-flex items-center gap-1 text-[11px] text-purple-400 font-medium">
-                  ⏱ {monthHoursStr}
+                  <svg className="w-3.5 h-3.5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <circle cx="12" cy="12" r="10" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
+                  </svg>
+                  {monthHoursStr}
                 </span>
               )}
               {remainingDays > 0 && (
