@@ -416,12 +416,12 @@ export default function TrainingLogList({
                       );
                     })()}
                 </div>
-                <div className="flex gap-3 ml-3 flex-shrink-0">
+                <div className="flex gap-1 ml-2 flex-shrink-0">
                   <a
                     href={buildXShareUrl(entry)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-sky-400 transition-colors p-2 -m-1 rounded-lg"
+                    className="text-gray-600 hover:text-sky-400 transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
                     title="Share on X"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -430,7 +430,7 @@ export default function TrainingLogList({
                   </a>
                   <button
                     onClick={() => onStartEdit(entry)}
-                    className="text-gray-600 hover:text-blue-400 transition-colors p-2 -m-1 rounded-lg"
+                    className="text-gray-600 hover:text-blue-400 transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
                     title="Edit"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -445,7 +445,7 @@ export default function TrainingLogList({
                   <button
                     onClick={() => onDelete(entry.id)}
                     disabled={deletingId === entry.id}
-                    className="text-gray-600 hover:text-red-400 transition-colors p-2 -m-1 rounded-lg disabled:opacity-50"
+                    className="text-gray-600 hover:text-red-400 transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center disabled:opacity-50"
                     title="Delete"
                   >
                     {deletingId === entry.id ? (
