@@ -323,13 +323,13 @@ export default function TrainingTypeChart({ userId }: Props) {
       {isOpen && (<div className="p-4 border-t border-white/10">
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-sm font-medium text-gray-300">{t("chart.typeDistribution")}</h4>
-        <div className="flex rounded-lg overflow-hidden border border-white/10">
+        <div className="flex bg-zinc-800 rounded-lg p-0.5">
           {(["all", "month", "week"] as const).map((p) => (
             <button
               key={p}
               onClick={() => setPeriod(p)}
-              className={`text-[11px] px-2 py-1 transition-colors ${
-                period === p ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-gray-300"
+              className={`text-[11px] px-2 py-1 rounded-md transition-all ${
+                period === p ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-gray-200"
               }`}
             >
               {p === "all" ? t("chart.allTime") : p === "month" ? t("chart.thisMonth") : t("chart.thisWeek")}

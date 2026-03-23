@@ -218,40 +218,42 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           </p>
         </div>
         <div className="flex gap-1">
-          <div className="flex rounded-lg overflow-hidden border border-white/10 mr-1">
+          <div className="flex bg-zinc-800 rounded-lg p-0.5 mr-1">
             <button
               onClick={() => { setRange(6); setSelectedMonth(null); }}
-              className={`text-[11px] px-2 py-1 transition-colors ${range === 6 ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-zinc-300"}`}
+              className={`text-[11px] px-2 py-1 rounded-md transition-all ${range === 6 ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-gray-200"}`}
             >
               6{t("chart.months")}
             </button>
             <button
               onClick={() => { setRange(12); setSelectedMonth(null); }}
-              className={`text-[11px] px-2 py-1 transition-colors ${range === 12 ? "bg-[#e94560] text-white" : "text-gray-500 hover:text-zinc-300"}`}
+              className={`text-[11px] px-2 py-1 rounded-md transition-all ${range === 12 ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-gray-200"}`}
             >
               12{t("chart.months")}
             </button>
           </div>
-          <button
-            onClick={() => setView("count")}
-            className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors ${
-              view === "count"
-                ? "bg-[#e94560] text-white"
-                : "bg-white/10 text-gray-400 hover:text-white"
-            }`}
-          >
-            {t("chart.count")}
-          </button>
-          <button
-            onClick={() => setView("minutes")}
-            className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors ${
-              view === "minutes"
-                ? "bg-[#e94560] text-white"
-                : "bg-white/10 text-gray-400 hover:text-white"
-            }`}
-          >
-            {t("chart.duration")}
-          </button>
+          <div className="flex bg-zinc-800 rounded-lg p-0.5">
+            <button
+              onClick={() => setView("count")}
+              className={`text-[11px] px-2.5 py-1 rounded-md transition-all ${
+                view === "count"
+                  ? "bg-zinc-600 text-white shadow-sm"
+                  : "text-gray-400 hover:text-gray-200"
+              }`}
+            >
+              {t("chart.count")}
+            </button>
+            <button
+              onClick={() => setView("minutes")}
+              className={`text-[11px] px-2.5 py-1 rounded-md transition-all ${
+                view === "minutes"
+                  ? "bg-zinc-600 text-white shadow-sm"
+                  : "text-gray-400 hover:text-gray-200"
+              }`}
+            >
+              {t("chart.duration")}
+            </button>
+          </div>
         </div>
       </div>
 
