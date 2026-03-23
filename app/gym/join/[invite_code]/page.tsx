@@ -90,7 +90,11 @@ export default async function GymJoinPage({ params }: Props) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4">
         <div className="text-center">
-          <div className="text-5xl mb-4">✅</div>
+          <div className="flex items-center justify-center mb-4">
+            <svg className="w-14 h-14 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
           <p className="text-white font-bold text-lg mb-2">
             You're already a member of {gym.name}
           </p>
