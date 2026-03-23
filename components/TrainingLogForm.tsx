@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type CompData, BELT_RANKS } from "@/lib/trainingLogHelpers";
 
@@ -83,6 +83,18 @@ export default function TrainingLogForm({
   techniqueSuggestions = [],
 }: Props) {
   const techniqueInputRef = useRef<HTMLInputElement>(null);
+
+  // Warn user if they try to leave with unsaved form data
+  const hasInput = form.notes.trim() !== "" || form.type !== "gi";
+  useEffect(() => {
+    if (!showForm || !hasInput) return;
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [showForm, hasInput]);
 
   // Append selected technique tag to notes, then clear the input
   const handleTechniqueSelect = (value: string) => {
