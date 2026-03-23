@@ -491,13 +491,13 @@ export default async function DashboardPage() {
 
         {/* ── Section 1: Training Log（プライマリアクション・最優先） ── */}
         <section className="mb-8">
-          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-3">Log</p>
+          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">Log</p>
           <TrainingLog userId={user.id} isPro={isPro} />
         </section>
 
         {/* ── Section 2: This Week ── */}
         <section className="mb-8">
-          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-3">This Week</p>
+          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">This Week</p>
           <div className="space-y-3">
             {/* 週間ペース通知 */}
             {((): React.ReactNode => {
@@ -537,7 +537,7 @@ export default async function DashboardPage() {
 
         {/* ── Section 3: Today's Learning ── */}
         <section className="mb-8">
-          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-3">Today</p>
+          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">Today</p>
           <div className="space-y-3">
             {gymCurriculum && (
               <GymCurriculumCard
@@ -555,7 +555,7 @@ export default async function DashboardPage() {
         {/* ── Section 3.5: Gym Leaderboard (opt-in members only) ── */}
         {gymId && shareDataWithGym && (
           <section className="mb-8">
-            <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-3">Your Gym</p>
+            <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">Your Gym</p>
             <GymRanking userId={user.id} gymId={gymId} />
           </section>
         )}
