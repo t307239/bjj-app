@@ -159,7 +159,7 @@ function AddNodeModal({
           <button
             onClick={handleSubmit}
             disabled={saving || !name.trim()}
-            className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white py-2 rounded-xl text-sm font-semibold transition-colors"
+            className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white py-2 rounded-xl text-sm font-semibold transition-colors"
             aria-label={t("skillmap.addBtn")}
           >
             {saving ? "..." : t("skillmap.addBtn")}
@@ -237,7 +237,7 @@ function ConnectEdgeModal({
           <button
             onClick={handleSubmit}
             disabled={saving || !targetId}
-            className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white py-2 rounded-xl text-sm font-semibold transition-colors"
+            className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white py-2 rounded-xl text-sm font-semibold transition-colors"
             aria-label={t("skillmap.connectBtn")}
           >
             {saving ? "..." : t("skillmap.connectBtn")}
