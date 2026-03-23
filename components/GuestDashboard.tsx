@@ -91,7 +91,7 @@ export default function GuestDashboard() {
   return (
     <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
       {/* ゲストバナー */}
-      <div className="bg-gradient-to-r from-[#e94560]/80 to-[#7c3aed]/70 px-4 py-3 text-center">
+      <div className="bg-gradient-to-r from-[#7c3aed]/70 to-[#4f46e5]/60 px-4 py-3 text-center">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
           <p className="text-white text-sm font-medium flex-1 text-center">
             🥋 {t("guest.banner")} —
