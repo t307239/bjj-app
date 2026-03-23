@@ -250,9 +250,9 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
       <h3 className="text-gray-500 text-xs uppercase tracking-wider">{t("profile.account")}</h3>
 
       {/* Stripe Customer Portal — cancel/downgrade without chargeback risk */}
-      {CUSTOMER_PORTAL_URL && (
-        <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
-          <p className="text-gray-400 text-xs mb-2">{t("profile.manageSubDesc")}</p>
+      <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
+        <p className="text-gray-400 text-xs mb-2">{t("profile.manageSubDesc")}</p>
+        {CUSTOMER_PORTAL_URL ? (
           <a
             href={CUSTOMER_PORTAL_URL}
             target="_blank"
@@ -262,8 +262,18 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
           >
             💳 {t("profile.manageSub")}
           </a>
-        </div>
-      )}
+        ) : (
+          <form method="POST" action="/api/stripe/portal">
+            <button
+              type="submit"
+              aria-label="Manage subscription in Stripe Customer Portal"
+              className="inline-flex items-center gap-1.5 text-xs text-[#e94560] hover:text-red-400 border border-[#e94560]/30 hover:border-[#e94560] rounded-lg px-3 py-1.5 transition-colors"
+            >
+              💳 {t("profile.manageSub")}
+            </button>
+          </form>
+        )}
+      </div>
 
       {/* Data export — CCPA/GDPR Right to Data Portability */}
       <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
