@@ -162,8 +162,8 @@ export default function GymPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-2xl mb-4">
-                1️⃣
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-xl font-bold text-blue-400 mb-4">
+                1
               </div>
               <h3 className="font-bold text-lg text-zinc-100 mb-3">Students Download</h3>
               <p className="text-gray-400 text-sm">
@@ -171,8 +171,8 @@ export default function GymPage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-2xl mb-4">
-                2️⃣
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-xl font-bold text-blue-400 mb-4">
+                2
               </div>
               <h3 className="font-bold text-lg text-zinc-100 mb-3">Scan Your QR</h3>
               <p className="text-gray-400 text-sm">
@@ -180,8 +180,8 @@ export default function GymPage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-2xl mb-4">
-                3️⃣
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-xl font-bold text-blue-400 mb-4">
+                3
               </div>
               <h3 className="font-bold text-lg text-zinc-100 mb-3">You Track & Engage</h3>
               <p className="text-gray-400 text-sm">

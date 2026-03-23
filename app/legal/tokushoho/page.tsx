@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Specified Commercial Transactions Act | BJJ App",
+  title: "Specified Commercial Transactions Act",
   description:
     "Disclosure of merchant information required by the Specified Commercial Transactions Act (tokutei shotorihiki ho).",
   robots: { index: false, follow: false },

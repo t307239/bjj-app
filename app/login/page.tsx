@@ -5,10 +5,10 @@ const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
 export const metadata: Metadata = {
-  title: "Sign In | BJJ App",
+  title: "Sign In",
   description: "Sign in to BJJ App — your Brazilian Jiu-Jitsu training tracker. Log sessions, track techniques, and never miss a streak.",
   openGraph: {
-    title: "Sign In | BJJ App",
+    title: "Sign In",
     description: "Sign in to your BJJ training tracker",
     url: `${BASE_URL}/login`,
     siteName: "BJJ App",
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Sign In | BJJ App",
+    title: "Sign In",
     description: "Sign in to BJJ App — track your BJJ training",
   },
 };

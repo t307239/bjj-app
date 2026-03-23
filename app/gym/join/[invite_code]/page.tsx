@@ -6,7 +6,7 @@ import GymJoinClient from "./GymJoinClient";
 import { serverT as t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
-  title: "Join Gym | BJJ App",
+  title: "Join Gym",
   description: "Accept your gym's invitation and start tracking training together.",
 };
 

@@ -223,8 +223,8 @@ export default async function Home() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-white/10 rounded-full text-xl mb-4">
-              1️⃣
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-white/10 rounded-full text-xl font-bold text-white mb-4">
+              1
             </div>
             <h3 className="font-bold text-lg text-white mb-3">Log</h3>
             <p className="text-gray-400 text-sm">
@@ -232,8 +232,8 @@ export default async function Home() {
             </p>
           </div>
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-xl mb-4">
-              2️⃣
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-xl font-bold text-blue-400 mb-4">
+              2
             </div>
             <h3 className="font-bold text-lg text-white mb-3">Track</h3>
             <p className="text-gray-400 text-sm">
@@ -241,8 +241,8 @@ export default async function Home() {
             </p>
           </div>
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-green-500/20 rounded-full text-xl mb-4">
-              3️⃣
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-[#10B981]/20 rounded-full text-xl font-bold text-[#10B981] mb-4">
+              3
             </div>
             <h3 className="font-bold text-lg text-white mb-3">Improve</h3>
             <p className="text-gray-400 text-sm">

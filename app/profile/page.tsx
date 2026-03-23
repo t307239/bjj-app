@@ -6,7 +6,7 @@ import ProfileTabs from "@/components/ProfileTabs";
 import { serverT as t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
-  title: "Profile | BJJ App",
+  title: "Profile",
   description: "Manage your BJJ profile — belt rank, gym, goals, and lifetime training stats.",
 };
 

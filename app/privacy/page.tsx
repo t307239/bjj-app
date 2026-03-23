@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | BJJ App",
+  title: "Privacy Policy",
   description: "Privacy Policy for BJJ App — how we collect, use, and protect your data.",
   robots: { index: false },
 };

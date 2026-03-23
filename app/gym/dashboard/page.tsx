@@ -8,7 +8,7 @@ import GymRegistrationForm from "@/components/GymRegistrationForm";
 import GymDashboardPageHeader from "@/components/GymDashboardPageHeader";
 
 export const metadata: Metadata = {
-  title: "Gym Dashboard | BJJ App",
+  title: "Gym Dashboard",
   description: "Manage your BJJ gym — track member activity and reduce churn.",
 };
 

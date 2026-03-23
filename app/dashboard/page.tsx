@@ -56,7 +56,7 @@ export async function generateMetadata(): Promise<Metadata> {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { title: "Dashboard | BJJ App" };
+    return { title: "Dashboard" };
   }
 
   // プロフィールはキャッシュから、総練習数とストリーク用ログを並列取得
@@ -113,7 +113,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = `${beltLabel} · ${count} total sessions · ${months} months of BJJ — tracking every roll with BJJ App`;
 
   return {
-    title: count > 0 ? `Dashboard — ${count} sessions` : "Dashboard | BJJ App",
+    title: count > 0 ? `Dashboard — ${count} sessions` : "Dashboard",
     openGraph: {
       title,
       description,

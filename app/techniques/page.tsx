@@ -10,7 +10,7 @@ import AffiliateSection from "@/components/AffiliateSection";
 import TechniquesPageHeader, { SkillMapSectionHeader, TechniqueLogSectionHeader, WikiLinksHeader, WikiLinksFootnote } from "@/components/TechniquesPageHeader";
 
 export const metadata: Metadata = {
-  title: "Technique Journal | BJJ App",
+  title: "Technique Journal",
   description: "Log and organize every BJJ technique you've learned by position. Track mastery levels and identify weak spots.",
 };
 
