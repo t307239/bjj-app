@@ -112,7 +112,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
                 >
                   {item.label}
                   {item.href === "/dashboard" && trainedToday === false && (
-                    <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-[#e94560] rounded-full" />
+                    <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-orange-500 rounded-full" />
                   )}
                 </Link>
               ))}
@@ -222,7 +222,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
               <span className="relative text-xl leading-none">
                 {item.icon}
                 {item.href === "/dashboard" && trainedToday === false && (
-                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#e94560] rounded-full border border-zinc-900/80" />
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-orange-500 rounded-full border border-zinc-900/80" />
                 )}
               </span>
               <span>{item.label}</span>
