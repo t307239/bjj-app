@@ -12,7 +12,11 @@ import Link from "next/link";
 function isInAppBrowser(): boolean {
   if (typeof navigator === "undefined") return false;
   const ua = navigator.userAgent;
-  return /Instagram|FBAN|FBAV|Twitter|Line\/|TikTok|Snapchat|MicroMessenger|WeChat/i.test(ua);
+  // Named SNS apps with known IAB patterns
+  if (/Instagram|FBAN|FBAV|Twitter|Line\/|TikTok|Snapchat|MicroMessenger|WeChat/i.test(ua)) return true;
+  // iOS Reddit, Pinterest, etc.: WebKit process without Safari in UA
+  if (/iPhone|iPad|iPod/i.test(ua) && /WebKit/i.test(ua) && !/Safari/i.test(ua)) return true;
+  return false;
 }
 
 // ─── Error banner (from OAuth callback) ───────────────────────────────────────

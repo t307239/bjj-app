@@ -27,6 +27,8 @@ export default function GymJoinClient({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showTransferWarning, setShowTransferWarning] = useState(false);
+  // COPPA: US federal law requires 13+ age confirmation before data collection
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
 
   const handleJoin = async (shareData: boolean) => {
     // If already in another gym, confirm transfer first
@@ -115,10 +117,25 @@ export default function GymJoinClient({
           </ul>
         </div>
 
+        {/* COPPA age confirmation — required by US federal law */}
+        <label className="flex items-start gap-3 cursor-pointer group mb-4">
+          <input
+            type="checkbox"
+            checked={ageConfirmed}
+            onChange={(e) => setAgeConfirmed(e.target.checked)}
+            className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#e94560] flex-shrink-0 cursor-pointer"
+            aria-label="Age confirmation: I am 13 years of age or older"
+          />
+          <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
+            I am <span className="text-white font-medium">13 years of age or older.</span>{" "}
+            <span className="text-gray-600">(required by US law)</span>
+          </span>
+        </label>
+
         {/* Share data CTA */}
         <button
           onClick={() => handleJoin(true)}
-          disabled={loading}
+          disabled={loading || !ageConfirmed}
           className="w-full bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white font-semibold py-3 rounded-xl mb-3 transition-colors"
           aria-label="Join gym and share training data"
         >
@@ -128,7 +145,7 @@ export default function GymJoinClient({
         {/* Join without sharing */}
         <button
           onClick={() => handleJoin(false)}
-          disabled={loading}
+          disabled={loading || !ageConfirmed}
           className="w-full bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 text-gray-300 py-3 rounded-xl text-sm mb-4 transition-colors"
           aria-label="Join gym without sharing data"
         >
