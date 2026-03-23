@@ -215,7 +215,7 @@ export default function TechniqueLogForm({
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-colors"
+          className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-colors"
         >
           {loading ? t("techniques.saving") : t("techniques.bulkSave")}
         </button>

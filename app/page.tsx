@@ -169,7 +169,7 @@ export default async function Home() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/login"
-              className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-8 rounded-full text-base transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
+              className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-4 px-8 rounded-full text-base transition-all hover:scale-105 shadow-lg shadow-[#10B981]/25"
             >
               Start tracking for free →
             </Link>
