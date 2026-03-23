@@ -320,10 +320,10 @@ export default function PersonalBests({ userId }: Props) {
                       className="w-full rounded-t transition-all"
                       style={{
                         height: `${Math.max(pct * 32, count > 0 ? 4 : 1)}px`,
-                        background: isBest ? "#e94560" : count > 0 ? "#374151" : "#1f2937",
+                        background: isBest ? "#10B981" : count > 0 ? "#374151" : "#1f2937",
                       }}
                     />
-                    <span className={`text-[9px] leading-none ${isBest ? "text-[#e94560] font-bold" : "text-gray-600"}`}>
+                    <span className={`text-[9px] leading-none ${isBest ? "text-[#10B981] font-bold" : "text-gray-600"}`}>
                       {DOW_LABELS[i]}
                     </span>
                   </div>
@@ -331,7 +331,7 @@ export default function PersonalBests({ userId }: Props) {
               })}
             </div>
             <p className="text-[9px] text-gray-600 text-center mt-1">
-              {t("stats.bestDayLabel")}: <span className="text-[#e94560] font-medium">{DOW_LONG[bestDowIdx]}</span> ({bests.dowCounts[bestDowIdx]}{timesUnit})
+              {t("stats.bestDayLabel")}: <span className="text-[#10B981] font-medium">{DOW_LONG[bestDowIdx]}</span> ({bests.dowCounts[bestDowIdx]}{timesUnit})
             </p>
           </div>
         );
