@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
           <div style={{ fontSize: "52px" }}>🥋</div>
-          <div style={{ color: "#e94560", fontSize: "40px", fontWeight: "bold", letterSpacing: "-1px" }}>
+          <div style={{ color: "#10B981", fontSize: "40px", fontWeight: "bold", letterSpacing: "-1px" }}>
             BJJ App
           </div>
           {/* Belt badge */}
@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
               border: "1px solid #374151",
             }}
           >
-            <div style={{ color: "#e94560", fontSize: "80px", fontWeight: "bold", lineHeight: 1 }}>
+            <div style={{ color: "#10B981", fontSize: "80px", fontWeight: "bold", lineHeight: 1 }}>
               {count}
             </div>
             <div style={{ color: "#9ca3af", fontSize: "22px", marginTop: "10px" }}>
