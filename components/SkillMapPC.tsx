@@ -127,7 +127,7 @@ function ProModal({
         <p className="text-sm text-gray-400 mb-6">{t("skillmap.proModalBodyPC")}</p>
         <a
           href={stripePaymentLink}
-          className="block w-full bg-[#e94560] text-white font-semibold py-3 rounded-xl mb-3 hover:bg-[#c73652] transition-colors"
+          className="block w-full bg-yellow-500 hover:bg-yellow-400 text-black font-semibold py-3 rounded-xl mb-3 transition-colors"
           aria-label={t("skillmap.upgradeAriaLabel")}
         >
           {t("skillmap.upgradeBtn")}
