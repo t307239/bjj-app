@@ -99,6 +99,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
             <div className="flex items-center gap-2">
               <span className="text-xl">🥋</span>
               <span className="font-bold text-lg">BJJ App</span>
+              <span className="text-[10px] font-semibold text-[#10B981] bg-[#10B981]/10 border border-[#10B981]/30 px-1.5 py-0.5 rounded-full leading-none">β</span>
             </div>
             <nav className="hidden sm:flex items-center gap-1">
               {NAV_ITEMS.map((item) => (
