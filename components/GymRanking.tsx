@@ -207,7 +207,7 @@ export default function GymRanking({ userId, gymId }: Props) {
                 {isMe ? t("gym.rankingMe") : t("gym.rankingAnon")}
               </span>
               <span className="text-xs text-gray-400 font-mono">
-                {val}{mode === "streak" && val > 0 ? "🔥" : ""}
+                {val}{mode === "streak" && val >= 30 ? "🔥" : mode === "streak" && val >= 7 ? "⚡" : ""}
               </span>
             </div>
           );
@@ -227,7 +227,7 @@ export default function GymRanking({ userId, gymId }: Props) {
                 {t("gym.rankingMe")}
               </span>
               <span className="text-xs text-gray-400 font-mono">
-                {getValue(sorted[myRankIdx])}{mode === "streak" && getValue(sorted[myRankIdx]) > 0 ? "🔥" : ""}
+                {getValue(sorted[myRankIdx])}{mode === "streak" && getValue(sorted[myRankIdx]) >= 30 ? "🔥" : mode === "streak" && getValue(sorted[myRankIdx]) >= 7 ? "⚡" : ""}
               </span>
             </div>
           </>
