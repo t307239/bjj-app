@@ -177,7 +177,7 @@ export default function TrainingLogForm({
               <select
                 value={compForm.result}
                 onChange={(e) => setCompForm({ ...compForm, result: e.target.value })}
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30"
               >
                 <option value="win">Win 🏆</option>
                 <option value="loss">Loss</option>
@@ -191,7 +191,7 @@ export default function TrainingLogForm({
                 value={compForm.opponent}
                 onChange={(e) => setCompForm({ ...compForm, opponent: e.target.value })}
                 placeholder="Opponent&apos;s name"
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-500"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
               />
             </div>
           </div>
@@ -203,7 +203,7 @@ export default function TrainingLogForm({
                 value={compForm.finish}
                 onChange={(e) => setCompForm({ ...compForm, finish: e.target.value })}
                 placeholder="E.g.: Heel Hook"
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-500"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
               />
             </div>
             <div>
@@ -213,7 +213,7 @@ export default function TrainingLogForm({
                 value={compForm.event}
                 onChange={(e) => setCompForm({ ...compForm, event: e.target.value })}
                 placeholder="E.g.: Tokyo Open"
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-500"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
               />
             </div>
           </div>
@@ -223,7 +223,7 @@ export default function TrainingLogForm({
               <select
                 value={compForm.opponent_rank}
                 onChange={(e) => setCompForm({ ...compForm, opponent_rank: e.target.value })}
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30"
               >
                 {BELT_RANKS.map((b) => (
                   <option key={b.value} value={b.value}>{b.label}</option>
@@ -235,7 +235,7 @@ export default function TrainingLogForm({
               <select
                 value={compForm.gi_type}
                 onChange={(e) => setCompForm({ ...compForm, gi_type: e.target.value })}
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30"
               >
                 <option value="gi">Gi</option>
                 <option value="nogi">No-Gi</option>
