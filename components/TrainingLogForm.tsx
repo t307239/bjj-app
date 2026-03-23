@@ -193,7 +193,7 @@ export default function TrainingLogForm({
                 type="text"
                 value={compForm.opponent}
                 onChange={(e) => setCompForm({ ...compForm, opponent: e.target.value })}
-                placeholder="Opponent&apos;s name"
+                placeholder={t("competition.opponentPlaceholder")}
                 className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
               />
             </div>
@@ -205,7 +205,7 @@ export default function TrainingLogForm({
                 type="text"
                 value={compForm.finish}
                 onChange={(e) => setCompForm({ ...compForm, finish: e.target.value })}
-                placeholder="E.g.: Heel Hook"
+                placeholder={t("competition.finishPlaceholder")}
                 className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
               />
             </div>
@@ -215,7 +215,7 @@ export default function TrainingLogForm({
                 type="text"
                 value={compForm.event}
                 onChange={(e) => setCompForm({ ...compForm, event: e.target.value })}
-                placeholder="E.g.: Tokyo Open"
+                placeholder={t("competition.eventPlaceholder")}
                 className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
               />
             </div>

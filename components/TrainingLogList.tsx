@@ -239,7 +239,7 @@ export default function TrainingLogList({
                         type="text"
                         value={editCompForm.opponent}
                         onChange={(e) => setEditCompForm({ ...editCompForm, opponent: e.target.value })}
-                        placeholder="Opponent"
+                        placeholder={t("competition.opponentShortPlaceholder")}
                         className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
                       />
                     </div>
@@ -248,14 +248,14 @@ export default function TrainingLogList({
                         type="text"
                         value={editCompForm.finish}
                         onChange={(e) => setEditCompForm({ ...editCompForm, finish: e.target.value })}
-                        placeholder="Finish technique"
+                        placeholder={t("competition.finishShortPlaceholder")}
                         className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
                       />
                       <input
                         type="text"
                         value={editCompForm.event}
                         onChange={(e) => setEditCompForm({ ...editCompForm, event: e.target.value })}
-                        placeholder="Event name"
+                        placeholder={t("competition.eventShortPlaceholder")}
                         className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
                       />
                     </div>

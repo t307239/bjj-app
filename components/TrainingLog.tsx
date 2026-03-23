@@ -568,7 +568,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by notes or technique..."
+            placeholder={t("training.searchPlaceholder")}
             className="w-full bg-zinc-800 text-white rounded-xl pl-9 pr-9 py-2 text-sm border border-white/20 focus:outline-none focus:border-white/30 placeholder-gray-500"
           />
           {searchQuery && (

@@ -60,6 +60,7 @@
     "loaded": "Loaded",
     "more": "More",
     "moreData": "※ More data available. Click 'Load More'",
+    "searchPlaceholder": "Search by notes or technique...",
     "saved": "Session logged!",
     "saveFailed": "Failed to save",
     "deleted": "Session deleted",
@@ -222,7 +223,13 @@
     "formHeader": "🏆 Competition Record",
     "quickTechniqueTag": "Quick technique tag",
     "searchTechniquesPlaceholder": "Search your techniques…",
-    "techAppendNote": "Select a technique to append it to notes"
+    "techAppendNote": "Select a technique to append it to notes",
+    "opponentPlaceholder": "Opponent's name",
+    "opponentShortPlaceholder": "Opponent",
+    "finishPlaceholder": "E.g.: Heel Hook",
+    "finishShortPlaceholder": "Finish technique",
+    "eventPlaceholder": "E.g.: Tokyo Open",
+    "eventShortPlaceholder": "Event name"
   },
   "guest": {
     "banner": "Guest Mode",
