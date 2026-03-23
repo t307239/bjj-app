@@ -127,7 +127,7 @@ export default function TrainingLogForm({
             <button
               type="button"
               onClick={() => setForm({ ...form, date: today })}
-              className="text-[10px] text-[#e94560] hover:text-[#c73652] font-medium"
+              className="text-[10px] text-gray-500 hover:text-white font-medium"
             >
               Back to Today
             </button>

@@ -88,7 +88,7 @@ export default function ProfileTabs({ userId }: { userId: string }) {
             onClick={() => setActiveTab(tab.id)}
             className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all ${
               activeTab === tab.id
-                ? "bg-[#e94560] text-white shadow"
+                ? "bg-zinc-600 text-white shadow"
                 : "text-gray-400 hover:text-white"
             }`}
           >
