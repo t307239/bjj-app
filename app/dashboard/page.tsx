@@ -572,7 +572,7 @@ export default async function DashboardPage() {
         )}
 
         {/* ── Section 5: Analytics（デスクトップ: 展開済み / モバイル: 折りたたみ） ── */}
-        <CollapsibleSection label="Analytics" defaultOpen={false}>
+        <CollapsibleSection label="Analytics" defaultOpen={false} contentHint="Calendar · Charts · Competition">
           <TrainingCalendar userId={user.id} />
           <TrainingBarChart userId={user.id} isPro={isPro} />
           <TrainingTypeChart userId={user.id} />
