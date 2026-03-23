@@ -156,7 +156,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
             <span className="text-[10px] text-orange-400">🔥 {currentStreak} days straight</span>
           </div>
         )}
-        <div className="grid grid-cols-3">
+        <div className="grid grid-cols-3 pb-safe">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}

@@ -19,6 +19,14 @@ html, body {
 .min-h-screen { min-height: 100dvh; }
 .h-screen     { height: 100dvh; }
 
+/* #67: iPhone home indicator safe area — prevents Pro banner / bottom nav overlap */
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+}
+.mb-safe {
+  margin-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 /* #110: Ensure placeholder text meets WCAG AA contrast on dark backgrounds */
 input::placeholder,
 textarea::placeholder {
