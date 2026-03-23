@@ -158,9 +158,9 @@ export default function TrainingLogList({
           {t("training.emptyDesc")}
         </p>
         <div className="flex justify-center gap-4 text-xs text-gray-600 mb-6">
-          <span>✓ Free to use</span>
-          <span>✓ Cloud synced</span>
-          <span>✓ Track progress</span>
+          <span>{t("training.emptyFree")}</span>
+          <span>{t("training.emptyCloud")}</span>
+          <span>{t("training.emptyTrack")}</span>
         </div>
         <button
           onClick={() => {

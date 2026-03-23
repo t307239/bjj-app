@@ -103,7 +103,10 @@
     "updateFailed": "Failed to update",
     "confirmDelete": "Delete this session?",
     "futureDate": "Cannot log future dates",
-    "durationRange": "Duration must be between 1 and 480 minutes"
+    "durationRange": "Duration must be between 1 and 480 minutes",
+    "emptyFree": "✓ Free to use",
+    "emptyCloud": "✓ Cloud synced",
+    "emptyTrack": "✓ Track progress"
   },
   "techniques": {
     "mastery1": "Know it",
