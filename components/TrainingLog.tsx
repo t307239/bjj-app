@@ -461,7 +461,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
 
       {/* Today's training prompt — hide when form is already open (#6 duplicate CTA) or dismissed (#97) */}
       {!initialLoading && trainedToday === false && !showForm && !nudgeDismissed && (
-        <div className="bg-[#e94560]/10 border border-[#e94560]/30 rounded-xl px-4 py-3 mb-4 flex items-center gap-3">
+        <div className="bg-[#10B981]/10 border border-[#10B981]/30 rounded-xl px-4 py-3 mb-4 flex items-center gap-3">
           <span className="text-xl flex-shrink-0">🥋</span>
           <div
             className="flex-1 min-w-0 cursor-pointer"
@@ -470,7 +470,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             tabIndex={0}
             onKeyDown={(e) => e.key === "Enter" && setShowForm(true)}
           >
-            <p className="text-[#e94560] text-sm font-medium">Log today&apos;s session!</p>
+            <p className="text-[#10B981] text-sm font-medium">Log today&apos;s session!</p>
             <p className="text-gray-400 text-xs mt-0.5">Tap to add training log</p>
           </div>
           <button
