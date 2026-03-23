@@ -91,9 +91,8 @@ export default function BeltProgressCard({
       {/* Time at belt */}
       {monthsAtBelt > 0 && (
         <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
-          <span className="text-xs text-zinc-500">Time at belt</span>
           <span className="text-sm font-semibold text-white tabular-nums">
-            {monthsAtBelt} mo
+            {monthsAtBelt} month{monthsAtBelt !== 1 ? "s" : ""} at {label.replace(" Belt", "")}
           </span>
         </div>
       )}

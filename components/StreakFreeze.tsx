@@ -217,7 +217,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
               href={userId ? `${STRIPE_PAYMENT_LINK}?client_reference_id=${userId}` : STRIPE_PAYMENT_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[11px] bg-[#e94560]/80 hover:bg-[#e94560] text-white px-3 py-1.5 rounded-lg transition-colors font-semibold whitespace-nowrap"
+              className="text-xs bg-[#e94560]/80 hover:bg-[#e94560] text-white px-4 py-2.5 rounded-lg transition-colors font-semibold whitespace-nowrap min-h-[44px] flex items-center"
               onClick={() => {
                 if (typeof gtag !== "undefined") {
                   gtag("event", "upgrade_click", { feature: "streak_freeze_refill" });
