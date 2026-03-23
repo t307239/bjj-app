@@ -238,7 +238,7 @@ export default function TrainingLogList({
                         value={editCompForm.opponent}
                         onChange={(e) => setEditCompForm({ ...editCompForm, opponent: e.target.value })}
                         placeholder="Opponent"
-                        className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                        className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-500"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-1.5">
@@ -247,14 +247,14 @@ export default function TrainingLogList({
                         value={editCompForm.finish}
                         onChange={(e) => setEditCompForm({ ...editCompForm, finish: e.target.value })}
                         placeholder="Finish technique"
-                        className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                        className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-500"
                       />
                       <input
                         type="text"
                         value={editCompForm.event}
                         onChange={(e) => setEditCompForm({ ...editCompForm, event: e.target.value })}
                         placeholder="Event name"
-                        className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                        className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-500"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-1.5">
