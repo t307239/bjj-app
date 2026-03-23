@@ -43,7 +43,7 @@ export default function Toast({ message, type = "success", duration = 2500, onCl
             setVisible(false);
             onUndo();
           }}
-          className="text-[#e94560] font-bold text-xs underline underline-offset-2 hover:text-rose-400 transition-colors shrink-0"
+          className="text-white font-bold text-xs underline underline-offset-2 hover:text-gray-300 transition-colors shrink-0"
         >
           Undo
         </button>
