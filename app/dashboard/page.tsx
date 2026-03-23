@@ -28,6 +28,7 @@ import BeltProgressCard from "@/components/BeltProgressCard";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
 import ProStatusBanner from "@/components/ProStatusBanner";
 import GymKickBanner from "@/components/GymKickBanner";
+import GymRanking from "@/components/GymRanking";
 import { getLocalDateString, getYesterdayDateString } from "@/lib/timezone";
 
 const BASE_URL =
@@ -38,10 +39,10 @@ const getCachedProfile = cache(async (userId: string) => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("profiles")
-    .select("belt, stripe, start_date, is_pro, gym_name, weekly_goal, subscription_status, gym_id, gym_kick_notified")
+    .select("belt, stripe, start_date, is_pro, gym_name, weekly_goal, subscription_status, gym_id, gym_kick_notified, share_data_with_gym")
     .eq("id", userId)
     .single();
-  return data as { belt: string; stripe: number; start_date: string | null; is_pro: boolean; gym_name: string | null; weekly_goal?: number | null; subscription_status?: string | null; gym_id?: string | null; gym_kick_notified?: boolean | null } | null;
+  return data as { belt: string; stripe: number; start_date: string | null; is_pro: boolean; gym_name: string | null; weekly_goal?: number | null; subscription_status?: string | null; gym_id?: string | null; gym_kick_notified?: boolean | null; share_data_with_gym?: boolean | null } | null;
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -241,6 +242,9 @@ export default async function DashboardPage() {
   const subscriptionStatus = profileData?.subscription_status ?? null;
   // Show kick banner: gym_kick_notified === false (not null/true) AND gym_id is null
   const showKickBanner = profileData?.gym_kick_notified === false && !profileData?.gym_id;
+  // Show gym ranking when user is an opt-in gym member
+  const gymId = profileData?.gym_id ?? null;
+  const shareDataWithGym = profileData?.share_data_with_gym ?? false;
 
   // Onboarding checklist state
   const hasFirstLog = (totalCount ?? 0) > 0;
@@ -502,6 +506,14 @@ export default async function DashboardPage() {
             <WikiQuickLinks />
           </div>
         </section>
+
+        {/* ── Section 3.5: Gym Leaderboard (opt-in members only) ── */}
+        {gymId && shareDataWithGym && (
+          <section className="mb-8">
+            <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest px-0.5 mb-3">Your Gym</p>
+            <GymRanking userId={user.id} gymId={gymId} />
+          </section>
+        )}
 
         {/* ── Section 4: Streak Nudges（最大2つ・条件付き表示） ── */}
         {(streak >= 1 || !isPro) && (

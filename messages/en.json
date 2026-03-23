@@ -619,7 +619,12 @@
     "kickFailed": "Failed to remove member. Please try again.",
     "kickedBannerTitle": "You were removed from your gym",
     "kickedBannerDesc": "You are no longer a member of your previous gym. You can join a new gym with an invite link.",
-    "kickedBannerDismiss": "Got it"
+    "kickedBannerDismiss": "Got it",
+    "rankingTitle": "Gym Leaderboard",
+    "myRank": "Your rank: #{n}",
+    "rankingMe": "You",
+    "rankingAnon": "Teammate",
+    "rankingFootnote": "Total sessions · Opt-in members only · Names hidden for privacy"
   },
   "gymJoin": {
     "title": "Join {name}",
