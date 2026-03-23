@@ -344,6 +344,8 @@
     "sessions": "sessions",
     "noSessionsThisWeek": "No sessions this week",
     "noSessionsThisMonth": "No sessions this month",
+    "noSessionsYet": "No sessions logged yet",
+    "logToFillChart": "Log your first session to fill this chart!",
     "monthlyTrendSubtitle": "Monthly trend (past 6 months)",
     "clickForTrend": "Click to view monthly trend",
     "sessionsFmt": "{n} sessions",

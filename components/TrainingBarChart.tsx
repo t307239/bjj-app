@@ -154,7 +154,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
 
   const data = range === 6 ? data6 : data12;
 
-  if (data.every((d) => d.count === 0)) return null;
+  const hasData = !data.every((d) => d.count === 0);
 
   const maxVal = Math.max(...data.map((d) => (view === "count" ? d.count : d.minutes)), 1);
 
@@ -198,8 +198,10 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
       >
         <div>
           <h4 className="text-sm font-medium text-zinc-300">📊 {t("chart.monthlyGraph")}</h4>
-          {!isOpen && totalCount > 0 && (
-            <p className="text-[10px] text-gray-500 mt-0.5">{t("chart.totalLabel")}{totalCount}{timesUnit} · {formatMinutes(totalMinutes)}</p>
+          {!isOpen && (
+            <p className="text-[10px] text-gray-500 mt-0.5">
+              {totalCount > 0 ? `${t("chart.totalLabel")}${totalCount}${timesUnit} · ${formatMinutes(totalMinutes)}` : t("chart.noSessionsYet")}
+            </p>
           )}
         </div>
         <svg
@@ -257,7 +259,15 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         </div>
       </div>
 
-      {range === 12 && !isPro ? (
+      {!hasData ? (
+        <div className="flex flex-col items-center justify-center h-24 gap-2">
+          <svg className="w-8 h-8 text-zinc-600 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v18h18M9 17V9m4 8V5m4 12v-4" />
+          </svg>
+          <p className="text-sm text-gray-500">{t("chart.noSessionsYet")}</p>
+          <p className="text-xs text-gray-600">{t("chart.logToFillChart")}</p>
+        </div>
+      ) : range === 12 && !isPro ? (
         <div className="relative" style={{ height: "120px" }}>
           <div className="filter blur-sm pointer-events-none opacity-50">
             <div className="flex items-end gap-1 h-full">

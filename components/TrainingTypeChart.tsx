@@ -299,7 +299,6 @@ export default function TrainingTypeChart({ userId }: Props) {
   }));
 
   const total = data.reduce((s, d) => s + d.count, 0);
-  if (total === 0 && period === "all") return null;
 
   return (
     <div className="bg-zinc-900 rounded-xl border border-white/10 mb-4 overflow-hidden">
@@ -339,9 +338,19 @@ export default function TrainingTypeChart({ userId }: Props) {
       </div>
 
       {total === 0 ? (
-        <div className="text-center py-4 text-gray-600 text-xs">
-          {period === "week" ? t("chart.noSessionsThisWeek") : t("chart.noSessionsThisMonth")}
-        </div>
+        period === "all" ? (
+          <div className="flex flex-col items-center justify-center h-24 gap-2">
+            <svg className="w-8 h-8 text-zinc-600 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m8.66-13l-.87.5M4.21 15.5l-.87.5M19.79 15.5l-.87-.5M4.21 8.5l-.87-.5M21 12h-1M4 12H3m15.36-6.36l-.7.7M6.34 17.66l-.7.7M17.66 17.66l.7.7M6.34 6.34l.7.7" />
+            </svg>
+            <p className="text-sm text-gray-500">{t("chart.noSessionsYet")}</p>
+            <p className="text-xs text-gray-600">{t("chart.logToFillChart")}</p>
+          </div>
+        ) : (
+          <div className="text-center py-4 text-gray-600 text-xs">
+            {period === "week" ? t("chart.noSessionsThisWeek") : t("chart.noSessionsThisMonth")}
+          </div>
+        )
       ) : (
         <div className="flex items-center gap-4">
           <DonutChart data={data} timesUnit={t("chart.timesUnit")} sessionsLabel={t("chart.sessions")} />
