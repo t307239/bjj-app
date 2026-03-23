@@ -72,7 +72,7 @@ function DurationPicker({
           max={480}
           step={1}
           className={`w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border focus:outline-none focus:border-[#7c3aed] ${
-            isPreset ? "border-white/10" : "border-[#e94560]"
+            isPreset ? "border-white/10" : "border-white/30"
           }`}
         />
         <span className="text-gray-500 text-xs flex-shrink-0">min</span>
@@ -139,7 +139,7 @@ export default function TrainingLogList({
   if (initialLoading) {
     return (
       <div className="text-center py-8 text-gray-500">
-        <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-[#e94560] rounded-full animate-spin mb-2" />
+        <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin mb-2" />
         <p className="text-sm">Loading...</p>
       </div>
     );
