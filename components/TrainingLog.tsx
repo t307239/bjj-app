@@ -178,6 +178,21 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     };
 
     loadEntries();
+
+    // Restore pending form data after session-expiry login redirect
+    try {
+      const pending = localStorage.getItem("pending_training_log");
+      if (pending) {
+        const saved = JSON.parse(pending) as typeof form;
+        if (saved && typeof saved === "object") {
+          setForm((prev) => ({ ...prev, ...saved }));
+          setShowForm(true);
+          localStorage.removeItem("pending_training_log");
+          setToast({ message: "Your unsaved session was restored. Please save it.", type: "success" });
+        }
+      }
+    } catch { /* ignore */ }
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
