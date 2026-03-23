@@ -554,7 +554,9 @@
   "beltPromo": {
     "congrats": "Congratulations! 🎉",
     "advanced": "You advanced from {from} to {to}. Keep rolling!",
-    "shareOnX": "Share on X"
+    "shareOnX": "Share on X",
+    "ariaDialog": "Belt promotion celebration",
+    "ariaShareX": "Share belt promotion on X (Twitter)"
   },
   "common": {
     "close": "Close",

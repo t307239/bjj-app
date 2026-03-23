@@ -111,7 +111,7 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
       onClick={onClose}
       aria-modal="true"
       role="dialog"
-      aria-label="Belt promotion celebration"
+      aria-label={t("beltPromo.ariaDialog")}
     >
       {/* Canvas confetti layer (non-interactive) */}
       <canvas
@@ -146,7 +146,7 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 w-full bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-3 rounded-xl mb-3 transition-colors text-sm"
-          aria-label="Share belt promotion on X (Twitter)"
+          aria-label={t("beltPromo.ariaShareX")}
         >
           <svg className="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.743l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
