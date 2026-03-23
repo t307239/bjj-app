@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // #23: Vercelツールバーを本番環境で非表示（dev環境のみ有効）
+  vercelToolbar: process.env.NODE_ENV === "development",
   // TypeScript/ESLintエラーはビルドを止めない（デプロイ優先）
   typescript: {
     ignoreBuildErrors: true,
