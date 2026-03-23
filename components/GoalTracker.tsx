@@ -131,7 +131,7 @@ export default function GoalTracker({ userId }: Props) {
           const cnt = (wLogs ?? []).filter((l) => l.date >= wsStr && l.date <= weStr).length;
           wh.push({
             weekStart: wsStr,
-            label: i === 0 ? "This week" : i === 1 ? "Last week" : i === 2 ? "2 weeks ago" : "3 weeks ago",
+            label: i === 0 ? t("goal.thisWeek") : i === 1 ? t("goal.lastWeek") : t("goal.weeksAgo", { n: i }),
             count: cnt,
             achieved: cnt >= wGoal,
             isCurrent: i === 0,
