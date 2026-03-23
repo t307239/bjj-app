@@ -223,9 +223,12 @@ export default function WikiQuickLinks() {
             href={`${WIKI_BASE}/index.html`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
+            className="inline-flex items-center gap-0.5 text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
           >
-            {t("wiki.peekAhead")} →
+            {t("wiki.peekAhead")}
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
           </a>
         </div>
 
