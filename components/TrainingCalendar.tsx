@@ -25,13 +25,6 @@ const TYPE_COLORS: Record<string, string> = {
   open_mat:    "bg-green-500",
 };
 
-const TYPE_LABEL: Record<string, string> = {
-  gi:          "Gi",
-  nogi:        "NoGi",
-  drilling:    "Drill",
-  competition: "Comp",
-  open_mat:    "Open",
-};
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -44,6 +37,13 @@ function formatDuration(min: number): string {
 
 export default function TrainingCalendar({ userId }: Props) {
   const { t } = useLocale();
+  const TYPE_LABEL: Record<string, string> = {
+    gi:          t("training.calendarGi"),
+    nogi:        t("training.calendarNogi"),
+    drilling:    t("training.calendarDrill"),
+    competition: t("training.calendarComp"),
+    open_mat:    t("training.calendarOpen"),
+  };
   const today = new Date();
   const router = useRouter();
   const [year, setYear]   = useState(today.getFullYear());
@@ -191,7 +191,7 @@ export default function TrainingCalendar({ userId }: Props) {
                     router.push(`?addLog=${dateStr}`);
                   }
                 }}
-                title={!hasLogs && dateStr <= todayStr ? "Tap to log a session on this day" : undefined}
+                title={!hasLogs && dateStr <= todayStr ? t("training.calendarTapToLog") : undefined}
                 className={`aspect-square p-1 flex flex-col items-center justify-start transition-colors rounded-lg m-0.5
                   ${isSelected ? "bg-white/10 ring-1 ring-white/40" : hasLogs ? "hover:bg-white/5" : dateStr <= todayStr ? "hover:bg-white/[0.06] hover:border hover:border-white/10" : "hover:bg-white/[0.03]"}
                   ${!hasLogs && dateStr <= todayStr ? "cursor-pointer" : !hasLogs ? "cursor-default" : "cursor-pointer"}`}

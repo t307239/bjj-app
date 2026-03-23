@@ -57,7 +57,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
             {pageName ?? t("gym.curriculumCardTitle")}
           </p>
           <p className="text-[11px] text-gray-500 mt-0.5">
-            {daysAgo === 0 ? "Sent today" : daysAgo === 1 ? "Sent yesterday" : `Sent ${daysAgo} days ago`}
+            {daysAgo === 0 ? t("gym.sentToday") : daysAgo === 1 ? t("gym.sentYesterday") : t("gym.sentDaysAgo", { n: daysAgo })}
           </p>
         </div>
         <span className="text-xs text-blue-500 font-semibold flex-shrink-0 mt-0.5 group-hover:underline">

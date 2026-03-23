@@ -77,6 +77,12 @@
     "drilling": "Drilling",
     "competition": "Competition",
     "open_mat": "Open Mat",
+    "calendarGi": "Gi",
+    "calendarNogi": "NoGi",
+    "calendarDrill": "Drill",
+    "calendarComp": "Comp",
+    "calendarOpen": "Open",
+    "calendarTapToLog": "Tap to log a session on this day",
     "empty": "No training sessions yet",
     "emptyDesc": "Log your first session and start your journey!",
     "firstRecord": "+ Log First Session",
@@ -718,7 +724,10 @@
     "regenerating": "Regenerating...",
     "regenerateBtn": "🔄 Regenerate QR code (invalidates old links)",
     "removeMemberConfirm": "Remove {name} from your gym? They will be notified.",
-    "removeMemberTitle": "Remove from gym"
+    "removeMemberTitle": "Remove from gym",
+    "sentToday": "Sent today",
+    "sentYesterday": "Sent yesterday",
+    "sentDaysAgo": "Sent {n} days ago"
   },
   "gymJoin": {
     "title": "Join {name}",
