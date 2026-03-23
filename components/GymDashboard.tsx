@@ -21,6 +21,8 @@ type Gym = {
   name: string;
   invite_code: string;
   is_active: boolean;
+  curriculum_url?: string | null;
+  curriculum_set_at?: string | null;
 };
 
 type Props = {
@@ -153,6 +155,98 @@ function ProPaywallBanner({
           {t("gym.upgradeBtn")}
         </a>
       </div>
+    </div>
+  );
+}
+
+// ─── Curriculum dispatch section (Pro only) ──────────────────────────────────
+
+function CurriculumSection({
+  gym,
+  stripeGymPaymentLink,
+  isGymPro,
+}: {
+  gym: Gym;
+  stripeGymPaymentLink: string;
+  isGymPro: boolean;
+}) {
+  const { t } = useLocale();
+  const [url, setUrl] = useState(gym.curriculum_url ?? "");
+  const [dispatching, setDispatching] = useState(false);
+  const [lastSentAt, setLastSentAt] = useState<string | null>(gym.curriculum_set_at ?? null);
+
+  const dispatch = async () => {
+    if (!url.trim()) return;
+    if (!confirm(t("gym.curriculumConfirm"))) return;
+    setDispatching(true);
+    try {
+      const res = await fetch("/api/gym/curriculum", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ curriculum_url: url.trim() }),
+      });
+      if (res.ok) {
+        setLastSentAt(new Date().toISOString());
+      }
+    } finally {
+      setDispatching(false);
+    }
+  };
+
+  if (!isGymPro) {
+    return (
+      <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
+        <div className="flex items-center gap-3">
+          <span className="text-xl flex-shrink-0">📚</span>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-white">{t("gym.curriculumTitle")}</p>
+            <p className="text-xs text-gray-500 mt-0.5">{t("gym.curriculumProRequired")}</p>
+          </div>
+          <a
+            href={stripeGymPaymentLink}
+            className="flex-shrink-0 bg-[#e94560] hover:bg-[#c73652] text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
+          >
+            {t("gym.upgradeBtn")}
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  const sentAgo = lastSentAt
+    ? (() => {
+        const d = Math.floor((Date.now() - new Date(lastSentAt).getTime()) / 86400000);
+        if (d === 0) return t("gym.today");
+        if (d === 1) return t("gym.yesterday");
+        return t("gym.daysAgo", { n: d });
+      })()
+    : null;
+
+  return (
+    <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
+      <h3 className="text-sm font-semibold text-white mb-1">📚 {t("gym.curriculumTitle")}</h3>
+      <p className="text-xs text-gray-500 mb-3">{t("gym.curriculumDesc")}</p>
+      <div className="flex gap-2">
+        <input
+          type="url"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="https://wiki.bjj-app.net/en/..."
+          className="flex-1 bg-zinc-800 text-xs text-gray-200 placeholder-gray-600 px-3 py-2 rounded-lg border border-white/10 focus:outline-none focus:border-[#e94560]/50"
+        />
+        <button
+          onClick={dispatch}
+          disabled={dispatching || !url.trim()}
+          className="flex-shrink-0 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-40 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
+        >
+          {dispatching ? t("gym.curriculumSending") : t("gym.curriculumDispatch")}
+        </button>
+      </div>
+      {sentAgo && (
+        <p className="text-[10px] text-gray-600 mt-2">
+          {t("gym.curriculumLastSent", { text: sentAgo })}
+        </p>
+      )}
     </div>
   );
 }
@@ -303,6 +397,13 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
     <div className="pb-6">
       {/* Invite section */}
       <InviteSection gym={gym} onInviteRegenerated={handleInviteRegenerated} />
+
+      {/* Curriculum dispatch (Pro feature) */}
+      <CurriculumSection
+        gym={gym}
+        stripeGymPaymentLink={stripeGymPaymentLink}
+        isGymPro={isGymPro}
+      />
 
       {/* Stats summary */}
       <div className="grid grid-cols-3 gap-3 mb-6">

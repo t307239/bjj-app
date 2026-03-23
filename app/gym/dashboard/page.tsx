@@ -38,7 +38,7 @@ export default async function GymDashboardPage() {
   // Fetch their gym (even for non-owners — in case data is out of sync)
   const { data: gym } = await supabase
     .from("gyms")
-    .select("id, name, invite_code, is_active")
+    .select("id, name, invite_code, is_active, curriculum_url, curriculum_set_at")
     .eq("owner_id", user.id)
     .single();
 

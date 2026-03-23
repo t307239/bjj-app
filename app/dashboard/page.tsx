@@ -29,6 +29,7 @@ import OnboardingChecklist from "@/components/OnboardingChecklist";
 import ProStatusBanner from "@/components/ProStatusBanner";
 import GymKickBanner from "@/components/GymKickBanner";
 import GymRanking from "@/components/GymRanking";
+import GymCurriculumCard from "@/components/GymCurriculumCard";
 import { getLocalDateString, getYesterdayDateString } from "@/lib/timezone";
 
 const BASE_URL =
@@ -245,6 +246,25 @@ export default async function DashboardPage() {
   // Show gym ranking when user is an opt-in gym member
   const gymId = profileData?.gym_id ?? null;
   const shareDataWithGym = profileData?.share_data_with_gym ?? false;
+
+  // Fetch gym curriculum (only if user is an opt-in member)
+  let gymCurriculum: { curriculum_url: string; curriculum_set_at: string } | null = null;
+  if (gymId && shareDataWithGym) {
+    const sevenDaysAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+    const { data: gymData } = await supabase
+      .from("gyms")
+      .select("curriculum_url, curriculum_set_at")
+      .eq("id", gymId)
+      .not("curriculum_url", "is", null)
+      .gte("curriculum_set_at", sevenDaysAgo)
+      .single();
+    if (gymData?.curriculum_url && gymData?.curriculum_set_at) {
+      gymCurriculum = {
+        curriculum_url: gymData.curriculum_url,
+        curriculum_set_at: gymData.curriculum_set_at,
+      };
+    }
+  }
 
   // Onboarding checklist state
   const hasFirstLog = (totalCount ?? 0) > 0;
@@ -501,6 +521,13 @@ export default async function DashboardPage() {
         <section className="mb-8">
           <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest px-0.5 mb-3">Today</p>
           <div className="space-y-3">
+            {gymCurriculum && (
+              <GymCurriculumCard
+                curriculumUrl={gymCurriculum.curriculum_url}
+                curriculumSetAt={gymCurriculum.curriculum_set_at}
+                gymName={gymName}
+              />
+            )}
             <DailyRecommend userId={user.id} />
             <DailyWikiTip />
             <WikiQuickLinks />

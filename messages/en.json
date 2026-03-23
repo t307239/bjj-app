@@ -624,7 +624,16 @@
     "myRank": "Your rank: #{n}",
     "rankingMe": "You",
     "rankingAnon": "Teammate",
-    "rankingFootnote": "Total sessions · Opt-in members only · Names hidden for privacy"
+    "rankingFootnote": "Total sessions · Opt-in members only · Names hidden for privacy",
+    "curriculumTitle": "Curriculum Dispatch",
+    "curriculumDesc": "Send a BJJ Wiki article to all opt-in members. They'll see it in their Today's Learning section.",
+    "curriculumProRequired": "Upgrade to Gym Pro to dispatch curriculum to your members.",
+    "curriculumConfirm": "Send this article to all opt-in members?",
+    "curriculumDispatch": "Dispatch",
+    "curriculumSending": "Sending...",
+    "curriculumLastSent": "Last dispatched: {text}",
+    "curriculumCardTitle": "📚 Today's Curriculum from your gym",
+    "curriculumCardCta": "View article →"
   },
   "gymJoin": {
     "title": "Join {name}",
