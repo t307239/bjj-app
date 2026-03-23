@@ -350,7 +350,13 @@
     "errorAuth": "Authentication failed. Please try again.",
     "errorCallback": "Login error. Please try again.",
     "errorDenied": "Access denied.",
-    "errorGeneric": "An error occurred. Please try again."
+    "errorGeneric": "An error occurred. Please try again.",
+    "ariaAgeConfirm": "Age confirmation: I am 13 years of age or older",
+    "ariaDisclaimerConfirm": "Training disclaimer: I understand BJJ involves physical risk",
+    "ariaSignInGoogle": "Sign in with Google",
+    "ariaEmailAddress": "Email address",
+    "ariaSendMagicLink": "Send magic login link",
+    "ariaSignInGitHub": "Sign in with GitHub"
   },
   "stats": {
     "personalBests": "Personal Records",
@@ -778,7 +784,10 @@
     "error": "Failed to join gym. Please try again.",
     "transferTitle": "Transfer Gym?",
     "transferDesc": "You are currently in another gym. Joining {name} will remove you from your current gym, and your previous gym owner will no longer see your data.",
-    "transferYes": "Yes, transfer to {name}"
+    "transferYes": "Yes, transfer to {name}",
+    "ariaAgeConfirm": "Age confirmation: I am 13 years of age or older",
+    "ariaJoinShare": "Join gym and share training data",
+    "ariaJoinNoShare": "Join gym without sharing data"
   },
   "onboarding": {
     "title": "Getting Started",

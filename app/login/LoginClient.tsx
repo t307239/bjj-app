@@ -189,7 +189,7 @@ function LoginForm() {
               checked={ageConfirmed}
               onChange={(e) => setAgeConfirmed(e.target.checked)}
               className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#10B981] flex-shrink-0 cursor-pointer"
-              aria-label="Age confirmation: I am 13 years of age or older"
+              aria-label={t("login.ariaAgeConfirm")}
             />
             <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
               {t("login.ageConfirmPre")} <span className="text-white font-medium">{t("login.ageConfirm")}</span>
@@ -204,7 +204,7 @@ function LoginForm() {
               checked={disclaimerAccepted}
               onChange={(e) => setDisclaimerAccepted(e.target.checked)}
               className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#10B981] flex-shrink-0 cursor-pointer"
-              aria-label="Training disclaimer: I understand BJJ involves physical risk"
+              aria-label={t("login.ariaDisclaimerConfirm")}
             />
             <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
               {t("login.disclaimerPre")} <span className="text-white font-medium">{t("login.disclaimerRisk")}</span>{" "}
@@ -220,7 +220,7 @@ function LoginForm() {
           <button
             onClick={signInWithGoogle}
             disabled={!canProceed}
-            aria-label="Sign in with Google"
+            aria-label={t("login.ariaSignInGoogle")}
             className="w-full flex items-center justify-center gap-3 bg-white text-gray-900 font-semibold py-3 px-4 rounded-xl hover:bg-gray-100 transition-colors disabled:cursor-not-allowed"
           >
             <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
@@ -270,13 +270,13 @@ function LoginForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t("login.emailPlaceholder")}
                 autoComplete="email"
-                aria-label="Email address"
+                aria-label={t("login.ariaEmailAddress")}
                 className="w-full bg-zinc-800 text-white rounded-xl px-4 py-3 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
               />
               <button
                 type="submit"
                 disabled={emailLoading || !canProceed}
-                aria-label="Send magic login link"
+                aria-label={t("login.ariaSendMagicLink")}
                 className="w-full bg-[#10B981] hover:bg-[#0d9668] text-white font-semibold py-3 px-4 rounded-xl transition-colors disabled:opacity-50 text-sm"
               >
                 {emailLoading ? t("login.sending") : t("login.sendLink")}
@@ -292,7 +292,7 @@ function LoginForm() {
             <button
               onClick={signInWithGitHub}
               disabled={!canProceed}
-              aria-label="Sign in with GitHub"
+              aria-label={t("login.ariaSignInGitHub")}
               className="w-full flex items-center justify-center gap-2 text-gray-500 hover:text-gray-300 py-2 px-4 rounded-xl hover:bg-white/10 transition-colors text-xs disabled:cursor-not-allowed"
             >
               <svg className="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24">

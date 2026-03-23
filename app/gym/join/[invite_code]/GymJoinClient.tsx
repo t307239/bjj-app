@@ -136,7 +136,7 @@ export default function GymJoinClient({
             checked={ageConfirmed}
             onChange={(e) => setAgeConfirmed(e.target.checked)}
             className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#10B981] flex-shrink-0 cursor-pointer"
-            aria-label="Age confirmation: I am 13 years of age or older"
+            aria-label={t("gymJoin.ariaAgeConfirm")}
           />
           <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
             I am <span className="text-white font-medium">13 years of age or older.</span>{" "}
@@ -149,7 +149,7 @@ export default function GymJoinClient({
           onClick={() => handleJoin(true)}
           disabled={loading || !ageConfirmed}
           className="w-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white font-semibold py-3 rounded-xl mb-3 transition-colors"
-          aria-label="Join gym and share training data"
+          aria-label={t("gymJoin.ariaJoinShare")}
         >
           {loading ? t("gymJoin.joining") : t("gymJoin.joinAndShare")}
         </button>
@@ -159,7 +159,7 @@ export default function GymJoinClient({
           onClick={() => handleJoin(false)}
           disabled={loading || !ageConfirmed}
           className="w-full bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 text-gray-300 py-3 rounded-xl text-sm mb-4 transition-colors"
-          aria-label="Join gym without sharing data"
+          aria-label={t("gymJoin.ariaJoinNoShare")}
         >
           {t("gymJoin.joinNoShare")}
         </button>
