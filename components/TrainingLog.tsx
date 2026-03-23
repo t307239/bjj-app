@@ -645,36 +645,55 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         </div>
       )}
 
-      {/* Type filter */}
-      {!initialLoading && entries.length > 0 && (
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide">
-          <button
-            onClick={() => setFilterType("all")}
-            className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-              filterType === "all"
-                ? "bg-zinc-600 text-white"
-                : "bg-zinc-900 text-gray-400 border border-white/10"
-            }`}
-          >
-            {t("training.all")}
-          </button>
-          {TRAINING_TYPES.filter((t) =>
-            entries.some((e) => e.type === t.value)
-          ).map((t) => (
+      {/* Type filter — #9: max 3 pills, overflow types in select dropdown */}
+      {!initialLoading && entries.length > 0 && (() => {
+        const usedTypes = TRAINING_TYPES.filter((tt) => entries.some((e) => e.type === tt.value));
+        const pillTypes = usedTypes.slice(0, 2); // "All" + 2 = max 3 pills
+        const dropdownTypes = usedTypes.slice(2);
+        return (
+          <div className="flex items-center gap-1.5 mb-4 flex-wrap">
             <button
-              key={t.value}
-              onClick={() => setFilterType(t.value)}
+              onClick={() => setFilterType("all")}
               className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                filterType === t.value
+                filterType === "all"
                   ? "bg-zinc-600 text-white"
                   : "bg-zinc-900 text-gray-400 border border-white/10"
               }`}
             >
-              {t.label}
+              {t("training.all")}
             </button>
-          ))}
-        </div>
-      )}
+            {pillTypes.map((tt) => (
+              <button
+                key={tt.value}
+                onClick={() => setFilterType(tt.value)}
+                className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                  filterType === tt.value
+                    ? "bg-zinc-600 text-white"
+                    : "bg-zinc-900 text-gray-400 border border-white/10"
+                }`}
+              >
+                {tt.label}
+              </button>
+            ))}
+            {dropdownTypes.length > 0 && (
+              <select
+                value={dropdownTypes.some((tt) => tt.value === filterType) ? filterType : ""}
+                onChange={(e) => e.target.value && setFilterType(e.target.value as typeof filterType)}
+                className={`flex-shrink-0 text-xs rounded-full px-2 py-1 border transition-colors cursor-pointer bg-zinc-900 border-white/10 ${
+                  dropdownTypes.some((tt) => tt.value === filterType)
+                    ? "text-white bg-zinc-600"
+                    : "text-gray-400"
+                }`}
+              >
+                <option value="">More ▾</option>
+                {dropdownTypes.map((tt) => (
+                  <option key={tt.value} value={tt.value}>{tt.label}</option>
+                ))}
+              </select>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Entry list */}
       <TrainingLogList
