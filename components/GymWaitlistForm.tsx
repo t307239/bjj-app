@@ -83,7 +83,7 @@ export default function GymWaitlistForm() {
       <button
         type="submit"
         disabled={state === "loading" || !email.trim()}
-        className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-full transition-all text-sm flex items-center justify-center gap-2"
+        className="w-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-full transition-all text-sm flex items-center justify-center gap-2"
       >
         {state === "loading" ? (
           <>

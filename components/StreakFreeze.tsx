@@ -155,7 +155,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
             <button
               onClick={useFreeze}
               disabled={freezeCount <= 0 || using}
-              className="flex-1 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 disabled:opacity-40 text-white text-sm font-semibold transition-colors"
+              className="flex-1 py-2 rounded-lg bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-white text-sm font-semibold transition-colors"
             >
               {using ? t("freeze.using") : t("freeze.useBtn", { n: freezeCount })}
             </button>
