@@ -92,6 +92,8 @@
     "loadMore": "Load More",
     "loading": "Loading...",
     "printPDF": "Print / Save as PDF",
+    "dismissForToday": "Dismiss for today",
+    "logSession": "Log training session",
     "restoredDraft": "Your unsaved session was restored. Please save it.",
     "shareX": "Share on X",
     "edit": "Edit",

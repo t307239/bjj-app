@@ -476,7 +476,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           <button
             onClick={(e) => { e.stopPropagation(); setNudgeDismissed(true); }}
             className="text-gray-600 hover:text-gray-400 transition-colors flex-shrink-0 p-1 rounded"
-            aria-label="Dismiss for today"
+            aria-label={t("training.dismissForToday")}
           >
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -732,7 +732,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
         className="md:hidden fixed bottom-20 right-4 z-50 w-14 h-14 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-2xl font-bold rounded-full shadow-lg shadow-[#10B981]/40 transition-all flex items-center justify-center print:hidden"
-        aria-label="Log training session"
+        aria-label={t("training.logSession")}
       >
         +
       </button>

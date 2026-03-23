@@ -48,7 +48,7 @@ export default function GymKickBanner({ userId }: { userId: string }) {
         onClick={dismiss}
         disabled={dismissing}
         className="flex-shrink-0 text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-2 py-1 transition-colors disabled:opacity-50 mt-0.5"
-        aria-label="Dismiss notification"
+        aria-label={t("gym.kickedBannerDismiss")}
       >
         {dismissing ? "…" : t("gym.kickedBannerDismiss")}
       </button>
