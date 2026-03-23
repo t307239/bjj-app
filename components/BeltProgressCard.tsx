@@ -65,20 +65,22 @@ export default function BeltProgressCard({
         </div>
       </div>
 
-      {/* Belt visual */}
+      {/* Belt visual (#86: authentic BJJ belt with promo bar) */}
       <div className="flex items-center gap-4">
-        <div className="relative">
-          <div className={`h-14 w-28 rounded-md ${bgClass}`} />
-          <div className="absolute right-2 top-1/2 flex -translate-y-1/2 gap-0.5">
+        <div className="flex items-center rounded-sm overflow-hidden h-10 w-32 shadow-sm">
+          {/* Main belt body */}
+          <div className={`flex-1 h-full relative ${bgClass}`}>
+            {/* Stripe markers */}
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className={`h-10 w-1.5 rounded-full ${
-                  i < stripes ? "bg-white" : "bg-white/15"
-                }`}
+                className={`absolute top-0 h-full w-1.5 ${i < stripes ? "bg-white/80" : "bg-white/15"}`}
+                style={{ right: `${(i + 1) * 8}px` }}
               />
             ))}
           </div>
+          {/* Black promotion bar at the end (authentic BJJ belt tip) */}
+          <div className="w-5 h-full bg-black/80 flex-shrink-0" />
         </div>
         <div>
           <p className="text-lg font-bold text-white">{label}</p>
