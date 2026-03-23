@@ -175,7 +175,7 @@ export default function InsightsBanner({ userId }: Props) {
         {totalStreak !== null && totalStreak >= 10 && (
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] text-gray-500">{t("insights.thisMonth")}</span>
-            <span className="text-xs text-green-400 font-medium">{totalStreak}回{t("insights.achieved")} 🎯</span>
+            <span className="text-xs text-green-400 font-medium">{totalStreak}× {t("insights.achieved")} 🎯</span>
           </div>
         )}
         {streakInsight && (
