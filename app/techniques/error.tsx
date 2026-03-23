@@ -24,7 +24,7 @@ export default function TechniquesError({
       </p>
       <button
         onClick={reset}
-        className="bg-[#e94560] hover:bg-[#c73652] text-white font-semibold py-2 px-6 rounded-full text-sm transition-colors"
+        className="bg-zinc-700 hover:bg-zinc-600 text-white font-semibold py-2 px-6 rounded-full text-sm transition-colors"
       >
         {t("error.retry")}
       </button>
