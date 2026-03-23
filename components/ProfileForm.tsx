@@ -529,16 +529,16 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-1">{t("profile.gym")}</label>
           <p className="text-gray-600 text-[10px] mb-2">{t("profile.gymSubtext")}</p>
-          <input type="text" value={form.gym} onChange={(e) => setForm({ ...form, gym: e.target.value })} placeholder="e.g. Gracie Academy Tokyo" className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]" />
+          <input type="text" value={form.gym} onChange={(e) => setForm({ ...form, gym: e.target.value })} placeholder="e.g. Gracie Academy Tokyo" className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30" />
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.startDate")}</label>
-          <input type="date" value={form.start_date} max={today} onChange={(e) => setForm({ ...form, start_date: e.target.value })} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]" />
+          <input type="date" value={form.start_date} max={today} onChange={(e) => setForm({ ...form, start_date: e.target.value })} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30" />
           {form.start_date && <p className="text-gray-500 text-xs mt-1">{t("profile.bjjHistory", { n: calcBjjMonths(form.start_date) })}</p>}
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.bio")}</label>
-          <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder={t("profile.bioPlaceholder")} rows={3} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] resize-none" />
+          <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder={t("profile.bioPlaceholder")} rows={3} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 resize-none" />
         </div>
         {formError && <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">{formError}</div>}
         <div className="flex gap-3">

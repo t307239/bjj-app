@@ -46,7 +46,7 @@ function DurationPicker({
         min={1}
         max={480}
         onChange={(e) => onChange(parseInt(e.target.value) || 60)}
-        className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
+        className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
         placeholder="Custom minutes"
       />
     </div>
@@ -138,7 +138,7 @@ export default function TrainingLogForm({
           value={form.date}
           max={today}
           onChange={(e) => setForm({ ...form, date: e.target.value })}
-          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
+          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
           required
         />
       </div>
@@ -157,7 +157,7 @@ export default function TrainingLogForm({
         <select
           value={form.type}
           onChange={(e) => setForm({ ...form, type: e.target.value })}
-          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
+          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
         >
           {TRAINING_TYPES.map((t) => (
             <option key={t.value} value={t.value}>
@@ -260,7 +260,7 @@ export default function TrainingLogForm({
               const val = e.target.value;
               if (techniqueSuggestions.includes(val)) handleTechniqueSelect(val);
             }}
-            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] placeholder-gray-500"
+            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
           />
           <datalist id="technique-autocomplete-list">
             {techniqueSuggestions.map((name) => (
@@ -279,7 +279,7 @@ export default function TrainingLogForm({
           onChange={(e) => setForm({ ...form, notes: e.target.value })}
           placeholder="Key insights, tips, what you learned..."
           rows={2}
-          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] resize-none"
+          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 resize-none"
         />
       </div>
 

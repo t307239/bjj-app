@@ -148,7 +148,7 @@ export default function GuestDashboard() {
                   value={date}
                   max={getLocalDateString()}
                   onChange={(e) => setDate(e.target.value)}
-                  className="flex-1 bg-zinc-800 text-white text-sm rounded-lg px-3 py-2 border border-white/10 focus:outline-none focus:border-[#7c3aed]"
+                  className="flex-1 bg-zinc-800 text-white text-sm rounded-lg px-3 py-2 border border-white/10 focus:outline-none focus:border-white/30"
                 />
               </div>
               {/* 時間プリセット */}
@@ -191,7 +191,7 @@ export default function GuestDashboard() {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder={t("training.memoOptional")}
-                className="w-full bg-zinc-800 text-white text-sm rounded-lg px-3 py-2 border border-white/10 focus:outline-none focus:border-[#7c3aed]"
+                className="w-full bg-zinc-800 text-white text-sm rounded-lg px-3 py-2 border border-white/10 focus:outline-none focus:border-white/30"
               />
               <button
                 onClick={handleAdd}

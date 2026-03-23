@@ -271,7 +271,7 @@ function LoginForm() {
                 placeholder={t("login.emailPlaceholder")}
                 autoComplete="email"
                 aria-label="Email address"
-                className="w-full bg-zinc-800 text-white rounded-xl px-4 py-3 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] placeholder-gray-500"
+                className="w-full bg-zinc-800 text-white rounded-xl px-4 py-3 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
               />
               <button
                 type="submit"

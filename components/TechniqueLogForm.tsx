@@ -66,7 +66,7 @@ export default function TechniqueLogForm({
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             placeholder={t("techniques.namePlaceholder")}
-            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
+            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
             required
           />
         </div>
@@ -79,7 +79,7 @@ export default function TechniqueLogForm({
             <select
               value={form.category}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
-              className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
+              className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
             >
               {CATEGORY_VALUES.map((catVal) => (
                 <option key={catVal} value={catVal}>
@@ -97,7 +97,7 @@ export default function TechniqueLogForm({
               onChange={(e) =>
                 setForm({ ...form, mastery_level: Number(e.target.value) })
               }
-              className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
+              className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
             >
               {[1, 2, 3, 4, 5].map((level) => (
                 <option key={level} value={level}>
@@ -117,7 +117,7 @@ export default function TechniqueLogForm({
             onChange={(e) => setForm({ ...form, notes: e.target.value })}
             placeholder={t("techniques.notesPlaceholder")}
             rows={2}
-            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] resize-none"
+            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 resize-none"
           />
         </div>
 
@@ -167,7 +167,7 @@ export default function TechniqueLogForm({
           onChange={(e) => setBulkText(e.target.value)}
           placeholder={t("techniques.nameMultiplePlaceholder")}
           rows={6}
-          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] resize-none font-mono"
+          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 resize-none font-mono"
         />
         {bulkText && (
           <p className="text-xs text-gray-500 mt-1">
@@ -185,7 +185,7 @@ export default function TechniqueLogForm({
           <select
             value={bulkCategory}
             onChange={(e) => setBulkCategory(e.target.value)}
-            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
+            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
           >
             {CATEGORY_VALUES.map((catVal) => (
               <option key={catVal} value={catVal}>
@@ -201,7 +201,7 @@ export default function TechniqueLogForm({
           <select
             value={bulkMastery}
             onChange={(e) => setBulkMastery(Number(e.target.value))}
-            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed]"
+            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
           >
             {[1, 2, 3, 4, 5].map((level) => (
               <option key={level} value={level}>
