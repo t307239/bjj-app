@@ -51,7 +51,7 @@ function IABWarning() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-4 bg-zinc-950">
+    <main className="min-h-[100dvh] flex flex-col items-center justify-center px-4 bg-zinc-950">
       <div className="w-full max-w-sm text-center">
         <div className="text-5xl mb-4">🌐</div>
         <h1 className="text-xl font-bold text-white mb-2">
@@ -144,7 +144,7 @@ function LoginForm() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-4 bg-zinc-950">
+    <main className="min-h-[100dvh] flex flex-col items-center justify-center px-4 bg-zinc-950">
       <div className="w-full max-w-sm">
 
         {/* Header */}

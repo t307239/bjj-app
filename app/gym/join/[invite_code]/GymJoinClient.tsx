@@ -61,7 +61,7 @@ export default function GymJoinClient({
   // Transfer warning screen
   if (showTransferWarning) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4">
+      <div className="min-h-[100dvh] bg-zinc-950 flex items-center justify-center px-4">
         <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 max-w-sm w-full">
           <div className="text-3xl mb-3 text-center">⚠️</div>
           <h2 className="text-lg font-bold text-white text-center mb-2">{t("gymJoin.transferTitle")}</h2>
@@ -90,7 +90,7 @@ export default function GymJoinClient({
 
   // Main consent screen
   return (
-    <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4">
+    <div className="min-h-[100dvh] bg-zinc-950 flex items-center justify-center px-4">
       <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 max-w-sm w-full">
         {/* Gym info */}
         <div className="text-center mb-6">
