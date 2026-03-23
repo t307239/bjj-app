@@ -89,7 +89,7 @@ export default function GuestDashboard() {
   const typeInfo = (t: string) => TRAINING_TYPES.find((tt) => tt.value === t) ?? TRAINING_TYPES[0];
 
   return (
-    <div className="min-h-screen bg-[#0f172a] pb-20 sm:pb-0">
+    <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
       {/* ゲストバナー */}
       <div className="bg-gradient-to-r from-[#e94560]/80 to-[#7c3aed]/70 px-4 py-3 text-center">
         <div className="flex items-center justify-between max-w-4xl mx-auto">

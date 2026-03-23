@@ -122,7 +122,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
 
       {/* 危機警告 + フリーズ使用 */}
       {showWarning && (
-        <div className="bg-[#0f172a] border border-blue-500/40 rounded-xl p-4 mb-4">
+        <div className="bg-zinc-950 border border-blue-500/40 rounded-xl p-4 mb-4">
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-start gap-2">
               <span className="text-xl mt-0.5">❄️</span>

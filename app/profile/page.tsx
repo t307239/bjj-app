@@ -36,7 +36,7 @@ export default async function ProfilePage() {
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
   return (
-    <div className="min-h-screen bg-[#0f172a] pb-20 sm:pb-0">
+    <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

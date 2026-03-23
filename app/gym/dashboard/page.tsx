@@ -46,7 +46,7 @@ export default async function GymDashboardPage() {
     process.env.NEXT_PUBLIC_STRIPE_GYM_PAYMENT_LINK ?? "";
 
   return (
-    <div className="min-h-screen bg-[#0f172a] pb-20 sm:pb-0">
+    <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
       <NavBar displayName={displayName} avatarUrl={avatarUrl} />
       <main className="max-w-4xl mx-auto px-4 py-6">
         <GymDashboardPageHeader />

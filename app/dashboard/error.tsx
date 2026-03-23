@@ -16,7 +16,7 @@ export default function DashboardError({
   }, [error]);
 
   return (
-    <div className="min-h-screen bg-[#0f172a] flex flex-col items-center justify-center px-4 text-center">
+    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center px-4 text-center">
       <div className="text-4xl mb-4">⚠️</div>
       <h2 className="text-xl font-bold mb-2">{t("error.title")}</h2>
       <p className="text-gray-400 text-sm mb-6">

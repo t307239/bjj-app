@@ -263,7 +263,7 @@ export default async function Home() {
           {/* ダッシュボードモックアップ */}
           <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
             {/* スマホモックアップ */}
-            <div className="mx-auto lg:mx-0 w-full max-w-[320px] bg-[#0f172a] rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
+            <div className="mx-auto lg:mx-0 w-full max-w-[320px] bg-zinc-950 rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
               {/* Header */}
               <div className="bg-zinc-900 border-b border-white/10 px-4 py-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">

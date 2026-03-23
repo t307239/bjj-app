@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function TokushohoPage() {
   return (
-    <main className="min-h-screen bg-[#0f172a] text-white py-12 px-4">
+    <main className="min-h-screen bg-zinc-950 text-white py-12 px-4">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-2xl font-bold mb-8">
           Specified Commercial Transactions Act

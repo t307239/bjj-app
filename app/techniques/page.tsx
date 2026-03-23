@@ -68,7 +68,7 @@ export default async function TechniquesPage() {
     process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "";
 
   return (
-    <div className="min-h-screen bg-[#0f172a] pb-20 sm:pb-0">
+    <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -107,7 +107,7 @@ export default async function TechniquesPage() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs bg-[#0f172a] hover:bg-zinc-800 text-gray-400 hover:text-white px-3 py-1.5 rounded-full border border-white/10 hover:border-white/25 transition-all"
+                className="text-xs bg-zinc-950 hover:bg-zinc-800 text-gray-400 hover:text-white px-3 py-1.5 rounded-full border border-white/10 hover:border-white/25 transition-all"
               >
                 {link.label} →
               </a>
