@@ -301,11 +301,11 @@ export default function GoalTracker({ userId }: Props) {
                 100% { transform: translateY(68px) rotate(600deg); opacity: 0; }
               }
               .cf-p { position:absolute; width:6px; height:6px; border-radius:1px; animation: cf-fall linear infinite; top:0; }
-              .cf-p:nth-child(1){left:6%;  background:#e94560; animation-duration:1.3s; animation-delay:0s;}
+              .cf-p:nth-child(1){left:6%;  background:#f97316; animation-duration:1.3s; animation-delay:0s;}
               .cf-p:nth-child(2){left:17%; background:#4ade80; animation-duration:1.5s; animation-delay:.15s;}
               .cf-p:nth-child(3){left:29%; background:#facc15; animation-duration:1.2s; animation-delay:.05s;}
               .cf-p:nth-child(4){left:41%; background:#60a5fa; animation-duration:1.6s; animation-delay:.3s;}
-              .cf-p:nth-child(5){left:54%; background:#e94560; animation-duration:1.4s; animation-delay:.1s;}
+              .cf-p:nth-child(5){left:54%; background:#a78bfa; animation-duration:1.4s; animation-delay:.1s;}
               .cf-p:nth-child(6){left:66%; background:#a78bfa; animation-duration:1.3s; animation-delay:.25s;}
               .cf-p:nth-child(7){left:78%; background:#4ade80; animation-duration:1.5s; animation-delay:.4s;}
               .cf-p:nth-child(8){left:90%; background:#facc15; animation-duration:1.2s; animation-delay:.2s;}
