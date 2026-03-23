@@ -586,7 +586,9 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
 
       {/* Period filter */}
       {!initialLoading && entries.length > 0 && (
-        <div className="mb-2 bg-zinc-900 rounded-lg p-1 inline-flex gap-0.5 border border-white/10">
+        <div className="mb-2 flex items-center gap-2">
+          <span className="text-[10px] font-medium text-zinc-600 tracking-wide uppercase">Period</span>
+        <div className="bg-zinc-900 rounded-lg p-1 inline-flex gap-0.5 border border-white/10">
           {(["all", "month", "week"] as const).map((p) => {
             const label = p === "all" ? "All Time" : p === "month" ? "This Month" : "This Week";
             return (
@@ -603,6 +605,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               </button>
             );
           })}
+        </div>
         </div>
       )}
 
@@ -652,6 +655,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         const dropdownTypes = usedTypes.slice(2);
         return (
           <div className="flex items-center gap-1.5 mb-4 flex-wrap">
+            <span className="text-[10px] font-medium text-zinc-600 tracking-wide uppercase mr-1">Type</span>
             <button
               onClick={() => setFilterType("all")}
               className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
