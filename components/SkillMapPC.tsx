@@ -600,7 +600,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
                   <path
                     d={edgePath(src, tgt)}
                     stroke="#e94560"
-                    strokeWidth={1.5}
+                    strokeWidth={2}
                     fill="none"
                     markerEnd="url(#arrowhead)"
                     opacity={0.7}
