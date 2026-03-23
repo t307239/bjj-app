@@ -113,6 +113,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
   const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error"; duration?: number; onUndo?: () => void } | null>(null);
   const [pendingDelete, setPendingDelete] = useState<{ id: string; entry: TrainingEntry; timerId: ReturnType<typeof setTimeout> } | null>(null);
+  const [nudgeDismissed, setNudgeDismissed] = useState(false);
   const today = getLocalDateString();
   const [form, setForm] = useState({
     date: getLocalDateString(),
@@ -458,23 +459,29 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         />
       )}
 
-      {/* Today's training prompt — hide when form is already open (#6 duplicate CTA) */}
-      {!initialLoading && trainedToday === false && !showForm && (
-        <div
-          className="bg-[#e94560]/10 border border-[#e94560]/30 rounded-xl px-4 py-3 mb-4 flex items-center gap-3 cursor-pointer hover:bg-[#e94560]/15 transition-colors"
-          onClick={() => setShowForm(true)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === "Enter" && setShowForm(true)}
-        >
+      {/* Today's training prompt — hide when form is already open (#6 duplicate CTA) or dismissed (#97) */}
+      {!initialLoading && trainedToday === false && !showForm && !nudgeDismissed && (
+        <div className="bg-[#e94560]/10 border border-[#e94560]/30 rounded-xl px-4 py-3 mb-4 flex items-center gap-3">
           <span className="text-xl flex-shrink-0">🥋</span>
-          <div className="flex-1 min-w-0">
+          <div
+            className="flex-1 min-w-0 cursor-pointer"
+            onClick={() => setShowForm(true)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && setShowForm(true)}
+          >
             <p className="text-[#e94560] text-sm font-medium">Log today&apos;s session!</p>
             <p className="text-gray-400 text-xs mt-0.5">Tap to add training log</p>
           </div>
-          <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <button
+            onClick={(e) => { e.stopPropagation(); setNudgeDismissed(true); }}
+            className="text-gray-600 hover:text-gray-400 transition-colors flex-shrink-0 p-1 rounded"
+            aria-label="Dismiss for today"
+          >
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       )}
 
