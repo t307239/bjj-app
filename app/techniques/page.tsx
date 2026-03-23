@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import TechniqueLog from "@/components/TechniqueLog";
+import { Suspense } from "react";
 import SkillMap from "@/components/SkillMap";
 import AffiliateSection from "@/components/AffiliateSection";
 import TechniquesPageHeader, { SkillMapSectionHeader, TechniqueLogSectionHeader, WikiLinksHeader, WikiLinksFootnote } from "@/components/TechniquesPageHeader";
@@ -91,7 +92,9 @@ export default async function TechniquesPage() {
         {/* Section 2: Technique Log */}
         <section className="mb-8">
           <TechniqueLogSectionHeader />
-          <TechniqueLog userId={user.id} />
+          <Suspense>
+            <TechniqueLog userId={user.id} />
+          </Suspense>
         </section>
 
         {/* BJJ Wiki related learning links */}

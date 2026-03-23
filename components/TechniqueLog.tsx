@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import Toast from "./Toast";
@@ -122,6 +123,9 @@ function renderNotes(notes: string, expanded: boolean): React.ReactNode {
 
 export default function TechniqueLog({ userId }: Props) {
   const { t } = useLocale();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [techniques, setTechniques] = useState<Technique[]>([]);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -130,10 +134,14 @@ export default function TechniqueLog({ userId }: Props) {
   const [bulkText, setBulkText] = useState("");
   const [bulkCategory, setBulkCategory] = useState("guard");
   const [bulkMastery, setBulkMastery] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
+  // #161: persist search query and pagination in URL params
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") ?? "");
   const [filterCategory, setFilterCategory] = useState("all");
   const [sortBy, setSortBy] = useState<"newest" | "mastery_desc" | "mastery_asc" | "name">("newest");
-  const [showCount, setShowCount] = useState(3);
+  const [showCount, setShowCount] = useState(() => {
+    const s = parseInt(searchParams.get("show") ?? "3", 10);
+    return isNaN(s) || s < 3 ? 3 : s;
+  });
   const TECH_PAGE_SIZE = 10;
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -153,6 +161,27 @@ export default function TechniqueLog({ userId }: Props) {
     notes: "",
   });
   const supabase = createClient();
+
+  // #161: sync search query and showCount to URL params
+  const updateUrlParams = (q: string, show: number) => {
+    const params = new URLSearchParams();
+    if (q) params.set("q", q);
+    if (show > 3) params.set("show", String(show));
+    const qs = params.toString();
+    router.replace(`${pathname}${qs ? "?" + qs : ""}`, { scroll: false });
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setShowCount(3); // reset pagination on new search
+    updateUrlParams(value, 3);
+  };
+
+  const handleLoadMore = () => {
+    const next = showCount + TECH_PAGE_SIZE;
+    setShowCount(next);
+    updateUrlParams(searchQuery, next);
+  };
 
   useEffect(() => {
     const loadTechniques = async () => {
@@ -457,7 +486,7 @@ export default function TechniqueLog({ userId }: Props) {
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             placeholder={t("techniques.search")}
             className="w-full bg-zinc-900 text-white rounded-xl px-4 py-2.5 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] pl-9"
           />
@@ -465,7 +494,7 @@ export default function TechniqueLog({ userId }: Props) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           {searchQuery && (
-            <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white text-xs">
+            <button onClick={() => handleSearchChange("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white text-xs">
               ✕
             </button>
           )}
@@ -827,7 +856,7 @@ export default function TechniqueLog({ userId }: Props) {
           {/* Show More */}
           {filtered.length > showCount && (
             <button
-              onClick={() => setShowCount((prev) => prev + TECH_PAGE_SIZE)}
+              onClick={handleLoadMore}
               className="w-full py-2.5 text-sm text-gray-400 hover:text-white bg-zinc-900 border border-white/10 hover:border-white/20 rounded-xl transition-colors"
             >
               {t("training.loadMore")} ({filtered.length - showCount} more)
