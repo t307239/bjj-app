@@ -30,6 +30,7 @@ interface ProfileRow {
   id: string;
   gym_id: string;
   is_gym_owner: boolean;
+  locale: string;
 }
 
 Deno.serve(async (req: Request) => {
@@ -70,10 +71,10 @@ Deno.serve(async (req: Request) => {
 
   const gymIds = eligible.map((g) => g.id);
 
-  // 2. Fetch gym owner profiles for eligible gyms
+  // 2. Fetch gym owner profiles for eligible gyms (include locale for multilingual email)
   const { data: ownerProfiles, error: profilesErr } = await supabase
     .from("profiles")
-    .select("id, gym_id")
+    .select("id, gym_id, locale")
     .in("gym_id", gymIds)
     .eq("is_gym_owner", true);
 
@@ -113,8 +114,15 @@ Deno.serve(async (req: Request) => {
     const ownerEmail = ownerEmailMap[ownerProfile.id];
     if (!ownerEmail) continue;
 
-    // 4. Send email via Resend
-    const emailBody = buildEmailHtml(gym.name, gym.member_count);
+    // 4. Send email via Resend (locale-aware: Japanese for locale=ja, English otherwise)
+    const locale = ownerProfile.locale ?? "en";
+    const isJa = locale === "ja";
+    const subject = isJa
+      ? `あなたの道場に${gym.member_count}人が参加中です 🥋`
+      : `Your gym hit ${gym.member_count} members on BJJ App 🥋`;
+    const emailBody = isJa
+      ? buildEmailHtmlJa(gym.name, gym.member_count)
+      : buildEmailHtml(gym.name, gym.member_count);
     const resendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -124,7 +132,7 @@ Deno.serve(async (req: Request) => {
       body: JSON.stringify({
         from: `BJJ App <${FROM_EMAIL}>`,
         to: [ownerEmail],
-        subject: `Your gym hit ${gym.member_count} members on BJJ App 🥋`,
+        subject,
         html: emailBody,
       }),
     });
@@ -223,6 +231,75 @@ function buildEmailHtml(gymName: string, memberCount: number): string {
         BJJ App · <a href="${APP_URL}/gym/dashboard" style="color:#52525b;">Manage your gym</a>
         &nbsp;·&nbsp;
         To stop receiving these notifications, reply with "unsubscribe".
+      </p>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+}
+
+/**
+ * 日本語版メールテンプレート（profiles.locale = 'ja' のジムオーナー向け）
+ * 特商法に準拠: 配信停止方法を明記
+ */
+function buildEmailHtmlJa(gymName: string, memberCount: number): string {
+  return `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>あなたの道場でBJJ Appが広がっています</title>
+</head>
+<body style="font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Noto Sans JP',sans-serif;background:#09090b;color:#e4e4e7;margin:0;padding:0;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:40px auto;padding:0 16px;">
+    <tr><td>
+      <!-- Header -->
+      <div style="text-align:center;margin-bottom:32px;">
+        <span style="font-size:36px;">🥋</span>
+        <h1 style="font-size:20px;font-weight:700;color:#ffffff;margin:8px 0 0;">BJJ App</h1>
+      </div>
+
+      <!-- Main card -->
+      <div style="background:#18181b;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:32px;">
+        <h2 style="font-size:18px;font-weight:700;color:#ffffff;margin:0 0 12px;">
+          🎉 ${gymName}に${memberCount}人が参加しています！
+        </h2>
+        <p style="color:#a1a1aa;font-size:14px;line-height:1.6;margin:0 0 20px;">
+          あなたの道場の生徒たちがBJJ Appで練習を記録しています。
+          ストリーク継続・テクニックノート・週間目標を活用して上達を実感しています。
+        </p>
+        <p style="color:#a1a1aa;font-size:14px;line-height:1.6;margin:0 0 24px;">
+          <strong style="color:#ffffff;">ジムダッシュボード</strong>を開くと、
+          誰が継続して練習しているか・退会リスクが高い生徒は誰か・
+          カリキュラムを一斉配信する機能をお使いいただけます。
+        </p>
+
+        <!-- CTA -->
+        <div style="text-align:center;margin-bottom:24px;">
+          <a href="${APP_URL}/gym/dashboard"
+             style="display:inline-block;background:#10B981;color:#000000;font-weight:700;
+                    font-size:14px;padding:12px 28px;border-radius:10px;text-decoration:none;">
+            14日間無料で試す
+          </a>
+        </div>
+
+        <!-- Feature list -->
+        <ul style="list-style:none;padding:0;margin:0;color:#a1a1aa;font-size:13px;line-height:2;">
+          <li>✅ 会員の練習頻度・帯別分布を一覧表示</li>
+          <li>✅ 退会リスクアラート（🔴 2週間練習なし）</li>
+          <li>✅ カリキュラムリンクを全会員へ一斉配信</li>
+          <li>✅ 生徒のアプリ追加インストール不要</li>
+        </ul>
+      </div>
+
+      <!-- Footer (特商法準拠) -->
+      <p style="text-align:center;color:#52525b;font-size:11px;margin-top:24px;line-height:1.6;">
+        このメールは、<strong>${gymName}</strong>に所属する${memberCount}人以上の生徒が
+        BJJ Appに登録したため自動送信されました。<br/>
+        BJJ App ·
+        <a href="${APP_URL}/gym/dashboard" style="color:#52525b;">ジム管理画面</a>
+        &nbsp;·&nbsp;
+        配信停止: このメールに「配信停止」と返信してください。
       </p>
     </td></tr>
   </table>
