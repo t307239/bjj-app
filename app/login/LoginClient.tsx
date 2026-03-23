@@ -188,7 +188,7 @@ function LoginForm() {
               type="checkbox"
               checked={ageConfirmed}
               onChange={(e) => setAgeConfirmed(e.target.checked)}
-              className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#e94560] flex-shrink-0 cursor-pointer"
+              className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#10B981] flex-shrink-0 cursor-pointer"
               aria-label="Age confirmation: I am 13 years of age or older"
             />
             <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
@@ -203,7 +203,7 @@ function LoginForm() {
               type="checkbox"
               checked={disclaimerAccepted}
               onChange={(e) => setDisclaimerAccepted(e.target.checked)}
-              className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#e94560] flex-shrink-0 cursor-pointer"
+              className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#10B981] flex-shrink-0 cursor-pointer"
               aria-label="Training disclaimer: I understand BJJ involves physical risk"
             />
             <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
