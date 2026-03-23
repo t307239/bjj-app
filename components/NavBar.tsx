@@ -85,9 +85,9 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
   }, []);
 
   const NAV_ITEMS = [
-    { href: "/dashboard", label: "Home", icon: "🏠" },
-    { href: "/techniques", label: "Techniques", icon: "📚" },
-    { href: "/profile", label: "Profile", icon: "🏅" },
+    { href: "/dashboard", label: t("nav.home"), icon: "🏠" },
+    { href: "/techniques", label: t("nav.techniques"), icon: "📚" },
+    { href: "/profile", label: t("nav.profile"), icon: "🏅" },
   ];
 
   return (
