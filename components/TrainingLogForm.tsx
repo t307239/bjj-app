@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
+import { useLocale } from "@/lib/i18n";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type CompData, BELT_RANKS } from "@/lib/trainingLogHelpers";
 
@@ -82,6 +83,7 @@ export default function TrainingLogForm({
   setCompForm,
   techniqueSuggestions = [],
 }: Props) {
+  const { t } = useLocale();
   const techniqueInputRef = useRef<HTMLInputElement>(null);
 
   // Warn user if they try to leave with meaningful unsaved form data (notes only)
@@ -173,19 +175,19 @@ export default function TrainingLogForm({
           <p className="text-[11px] text-red-400 font-semibold mb-2">🏆 Competition Record</p>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-gray-400 text-xs mb-1">Result</label>
+              <label className="block text-gray-400 text-xs mb-1">{t("competition.result")}</label>
               <select
                 value={compForm.result}
                 onChange={(e) => setCompForm({ ...compForm, result: e.target.value })}
                 className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30"
               >
-                <option value="win">Win 🏆</option>
-                <option value="loss">Loss</option>
-                <option value="draw">Draw</option>
+                <option value="win">{t("csv.win")} 🏆</option>
+                <option value="loss">{t("csv.loss")}</option>
+                <option value="draw">{t("csv.draw")}</option>
               </select>
             </div>
             <div>
-              <label className="block text-gray-400 text-xs mb-1">Opponent (optional)</label>
+              <label className="block text-gray-400 text-xs mb-1">{t("competition.opponent")} (optional)</label>
               <input
                 type="text"
                 value={compForm.opponent}
@@ -197,7 +199,7 @@ export default function TrainingLogForm({
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-gray-400 text-xs mb-1">Finish (optional)</label>
+              <label className="block text-gray-400 text-xs mb-1">{t("competition.finish")} (optional)</label>
               <input
                 type="text"
                 value={compForm.finish}
@@ -207,7 +209,7 @@ export default function TrainingLogForm({
               />
             </div>
             <div>
-              <label className="block text-gray-400 text-xs mb-1">Event (optional)</label>
+              <label className="block text-gray-400 text-xs mb-1">{t("competition.event")} (optional)</label>
               <input
                 type="text"
                 value={compForm.event}
@@ -219,7 +221,7 @@ export default function TrainingLogForm({
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-gray-400 text-xs mb-1">Opponent Belt (optional)</label>
+              <label className="block text-gray-400 text-xs mb-1">{t("competition.opponent")} Belt (optional)</label>
               <select
                 value={compForm.opponent_rank}
                 onChange={(e) => setCompForm({ ...compForm, opponent_rank: e.target.value })}
