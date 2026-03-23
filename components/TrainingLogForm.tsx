@@ -154,20 +154,29 @@ export default function TrainingLogForm({
         />
       </div>
 
-      {/* Type */}
+      {/* Type — large tappable tiles (fat-finger friendly) */}
       <div className="mb-3">
-        <label className="block text-gray-400 text-xs mb-1">{t("training.typeShort")}</label>
-        <select
-          value={form.type}
-          onChange={(e) => setForm({ ...form, type: e.target.value })}
-          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
-        >
-          {TRAINING_TYPES.map((t) => (
-            <option key={t.value} value={t.value}>
-              {t.label}
-            </option>
-          ))}
-        </select>
+        <label className="block text-gray-400 text-xs mb-2">{t("training.typeShort")}</label>
+        <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-5">
+          {TRAINING_TYPES.map((tt) => {
+            const active = form.type === tt.value;
+            return (
+              <button
+                key={tt.value}
+                type="button"
+                onClick={() => setForm({ ...form, type: tt.value })}
+                className={`flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-xl border text-xs font-semibold transition-all active:scale-95 ${
+                  active
+                    ? "bg-[#10B981]/15 border-[#10B981]/60 text-[#10B981] shadow-sm shadow-[#10B981]/20"
+                    : "bg-zinc-800/60 border-white/10 text-gray-400 hover:border-white/20 hover:text-white"
+                }`}
+              >
+                <span className="text-xl leading-none">{tt.icon}</span>
+                <span className="leading-none text-[11px]">{tt.label}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Competition details */}
