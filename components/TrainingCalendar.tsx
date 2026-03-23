@@ -28,7 +28,7 @@ const TYPE_LABEL: Record<string, string> = {
   gi:          "Gi",
   nogi:        "NoGi",
   drilling:    "Drill",
-  competition: "試合",
+  competition: "Comp",
   open_mat:    "Open",
 };
 
