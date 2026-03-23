@@ -91,6 +91,7 @@
     "noMatchQuery": "No records match \"{query}\"",
     "loadMore": "Load More",
     "loading": "Loading...",
+    "printPDF": "Print / Save as PDF",
     "restoredDraft": "Your unsaved session was restored. Please save it.",
     "shareX": "Share on X",
     "edit": "Edit",
@@ -384,7 +385,11 @@
     "lastMonthCompareSame": "Same pace as last month ➡️",
     "thisMonthRecording": "Recording {n} this month ✨",
     "longestStreak": "Longest streak: {n} days",
-    "consistencyRate": "{emoji} Practice rate {rate}%"
+    "consistencyRate": "{emoji} Practice rate {rate}%",
+    "wikiConceptualLearning": "Read: BJJ Conceptual Learning",
+    "wikiFlowState": "Read: Flow State Training",
+    "wikiDrilling": "Read: Drilling Methodology",
+    "dismiss": "Dismiss"
   },
   "chart": {
     "monthlyGraph": "Monthly Training Graph",

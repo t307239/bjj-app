@@ -140,17 +140,17 @@ export default function InsightsBanner({ userId }: Props) {
   const wikiTip = consistencyMsg
     ? {
         href: "https://wiki.bjj-app.net/en/bjj-conceptual-learning-framework.html",
-        label: "Read: BJJ Conceptual Learning",
+        label: t("insights.wikiConceptualLearning"),
       }
     : streakInsight
     ? {
         href: "https://wiki.bjj-app.net/en/bjj-flow-state-training.html",
-        label: "Read: Flow State Training",
+        label: t("insights.wikiFlowState"),
       }
     : paceMsg?.includes("📈")
     ? {
         href: "https://wiki.bjj-app.net/en/bjj-drilling-methodology.html",
-        label: "Read: Drilling Methodology",
+        label: t("insights.wikiDrilling"),
       }
     : null;
 
@@ -165,8 +165,8 @@ export default function InsightsBanner({ userId }: Props) {
         <button
           onClick={() => setIsDismissed(true)}
           className="text-gray-600 hover:text-gray-400 transition-colors flex-shrink-0 -mr-1 -mt-1"
-          title="Dismiss"
-          aria-label="Dismiss insights banner"
+          title={t("insights.dismiss")}
+          aria-label={t("insights.dismiss")}
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

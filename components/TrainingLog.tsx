@@ -533,7 +533,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         <CsvExport userId={userId} isPro={isPro} />
         <button
           onClick={() => window.print()}
-          title="Print / Save as PDF"
+          title={t("training.printPDF")}
           className="flex items-center gap-1 text-[11px] text-gray-500 hover:text-zinc-100 bg-zinc-900 border border-white/10 hover:border-white/20 px-2 py-1.5 rounded-lg transition-colors"
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
