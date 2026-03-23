@@ -277,7 +277,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
 
       {/* Data export — CCPA/GDPR Right to Data Portability */}
       <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
-        <p className="text-gray-400 text-xs mb-2">Download all your training logs as a CSV file.</p>
+        <p className="text-gray-400 text-xs mb-2">{t("profile.exportDesc")}</p>
         <button
           type="button"
           onClick={handleExportCsv}
@@ -285,7 +285,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
           aria-label="Download training data as CSV"
           className="inline-flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 border border-blue-400/30 hover:border-blue-400/60 rounded-lg px-3 py-1.5 transition-colors disabled:opacity-50"
         >
-          {exporting ? "Exporting…" : "📥 Download my data (CSV)"}
+          {exporting ? t("profile.exporting") : t("profile.exportBtn")}
         </button>
       </div>
 
@@ -300,17 +300,17 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
         </button>
       ) : (
         <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 space-y-3">
-          <p className="text-red-400 text-sm font-semibold">Delete your account?</p>
+          <p className="text-red-400 text-sm font-semibold">{t("profile.deleteTitle")}</p>
           <p className="text-gray-400 text-xs leading-relaxed">
-            All your training logs, technique notes, and profile data will be permanently deleted and cannot be recovered.
+            {t("profile.deleteDesc")}
           </p>
           <div>
-            <label className="text-gray-500 text-xs mb-1 block">Type <span className="font-mono text-white">DELETE</span> to confirm</label>
+            <label className="text-gray-500 text-xs mb-1 block">{t("profile.deleteTypeLabel")} <span className="font-mono text-white">{t("profile.deleteTypePlaceholder")}</span> {t("profile.deleteTypeToConfirm")}</label>
             <input
               type="text"
               value={deleteInput}
               onChange={(e) => setDeleteInput(e.target.value)}
-              placeholder="DELETE"
+              placeholder={t("profile.deleteTypePlaceholder")}
               aria-label="Type DELETE to confirm account deletion"
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-red-500 font-mono"
             />
@@ -324,7 +324,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
               aria-label="Confirm account deletion"
               className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-40 text-white font-bold py-2 rounded-lg text-sm transition-colors"
             >
-              {deleting ? "Deleting…" : "Delete my account permanently"}
+              {deleting ? t("profile.deletingLabel") : t("profile.deleteAccountPermanently")}
             </button>
             <button
               type="button"
