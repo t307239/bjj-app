@@ -92,7 +92,7 @@ export function GoalEditor({
   onCancel: () => void;
 }) {
   return (
-    <div className="bg-white/5 rounded-xl p-4 border border-[#e94560]/30">
+    <div className="bg-white/5 rounded-xl p-4 border border-white/10">
       <div className="text-xs text-gray-400 mb-3">{header}</div>
       <div className="flex items-center gap-3 mb-4">
         <button
@@ -127,7 +127,7 @@ export function GoalEditor({
         <button
           onClick={onSave}
           disabled={value === 0}
-          className="flex-1 py-2 rounded-lg bg-[#e94560] text-white text-sm font-semibold hover:bg-[#c73652] disabled:opacity-40 transition-colors"
+          className="flex-1 py-2 rounded-lg bg-[#10B981] text-white text-sm font-semibold hover:bg-[#0d9668] disabled:opacity-40 transition-colors"
         >
           {setLabel}
         </button>
