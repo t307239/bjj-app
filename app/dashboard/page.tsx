@@ -31,6 +31,7 @@ import GymKickBanner from "@/components/GymKickBanner";
 import GymRanking from "@/components/GymRanking";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
 import BackToTop from "@/components/BackToTop";
+import WeeklyPaceBanner from "@/components/WeeklyPaceBanner";
 import { getLocalDateString, getYesterdayDateString, getWeekStartDate, getMonthStartDate, getLocalDateParts } from "@/lib/timezone";
 import { serverT as t } from "@/lib/i18n";
 
@@ -501,36 +502,11 @@ export default async function DashboardPage() {
           <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">{t("dashboard.weekTraining")}</p>
           <div className="space-y-3">
             {/* 週間ペース通知 */}
-            {((): React.ReactNode => {
-              const wGoal = weeklyGoal;
-              const wCount = weekCount ?? 0;
-              if (wGoal <= 0) return null;
-              const needed = Math.max(0, wGoal - wCount);
-              if (needed === 0) return (
-                <div className="bg-green-500/10 border border-green-500/30 rounded-2xl px-4 py-2.5 flex items-center gap-3">
-                  <span className="text-lg">🎯</span>
-                  <div>
-                    <p className="text-green-400 text-sm font-semibold">{t("dashboard.weeklyGoalReached")}</p>
-                    <p className="text-gray-400 text-xs">{t("dashboard.weeklyGoalDone", { done: wGoal, count: wCount })}</p>
-                  </div>
-                </div>
-              );
-              const onPace = daysLeftInWeek >= needed;
-              return (
-                <div className={`${onPace ? "bg-blue-500/10 border-blue-500/30" : "bg-yellow-500/10 border-yellow-500/30"} border rounded-2xl px-4 py-2.5 flex items-center gap-3`}>
-                  <span className="text-lg">{onPace ? "📅" : "⚡"}</span>
-                  <div className="flex-1">
-                    <p className={`${onPace ? "text-blue-300" : "text-yellow-300"} text-sm font-semibold`}>
-                      {needed !== 1 ? t("dashboard.weeklyMoreSessionsPlural", { n: needed }) : t("dashboard.weeklyMoreSessions", { n: needed })}
-                    </p>
-                    <p className="text-gray-400 text-xs">
-                      {t("dashboard.weeklyProgressLabel", { done: wCount, goal: wGoal, days: daysLeftInWeek })}
-                      {onPace ? t("dashboard.weeklyOnPace") : t("dashboard.weeklyPickUpPace")}
-                    </p>
-                  </div>
-                </div>
-              );
-            })()}
+            <WeeklyPaceBanner
+              weeklyGoal={weeklyGoal}
+              weekCount={weekCount ?? 0}
+              daysLeftInWeek={daysLeftInWeek}
+            />
             <WeeklyStrip userId={user.id} />
             <GoalTracker userId={user.id} />
           </div>
