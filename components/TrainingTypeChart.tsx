@@ -328,7 +328,7 @@ export default function TrainingTypeChart({ userId }: Props) {
               key={p}
               onClick={() => setPeriod(p)}
               className={`text-[11px] px-2 py-1 rounded-lg transition-all ${
-                period === p ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-gray-200"
+                period === p ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-white"
               }`}
             >
               {p === "all" ? t("chart.allTime") : p === "month" ? t("chart.thisMonth") : t("chart.thisWeek")}

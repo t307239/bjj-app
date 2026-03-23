@@ -148,7 +148,7 @@ export default function TrainingChart({ userId }: Props) {
             className={`text-[11px] px-3 py-1 rounded-lg transition-all ${
               viewMode === "heatmap"
                 ? "bg-zinc-600 text-white shadow-sm"
-                : "text-gray-400 hover:text-gray-200"
+                : "text-gray-400 hover:text-white"
             }`}
           >
             {t("chart.days84")}
@@ -158,7 +158,7 @@ export default function TrainingChart({ userId }: Props) {
             className={`text-[11px] px-3 py-1 rounded-lg transition-all ${
               viewMode === "monthly"
                 ? "bg-zinc-600 text-white shadow-sm"
-                : "text-gray-400 hover:text-gray-200"
+                : "text-gray-400 hover:text-white"
             }`}
           >
             {t("chart.monthly")}

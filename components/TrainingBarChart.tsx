@@ -223,13 +223,13 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           <div className="flex bg-zinc-800 rounded-lg p-0.5 mr-1">
             <button
               onClick={() => { setRange(6); setSelectedMonth(null); }}
-              className={`text-[11px] px-2 py-1 rounded-lg transition-all ${range === 6 ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-gray-200"}`}
+              className={`text-[11px] px-2 py-1 rounded-lg transition-all ${range === 6 ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-white"}`}
             >
               6{t("chart.months")}
             </button>
             <button
               onClick={() => { setRange(12); setSelectedMonth(null); }}
-              className={`text-[11px] px-2 py-1 rounded-lg transition-all ${range === 12 ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-gray-200"}`}
+              className={`text-[11px] px-2 py-1 rounded-lg transition-all ${range === 12 ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-white"}`}
             >
               12{t("chart.months")}
             </button>
@@ -240,7 +240,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
               className={`text-[11px] px-2.5 py-1 rounded-lg transition-all ${
                 view === "count"
                   ? "bg-zinc-600 text-white shadow-sm"
-                  : "text-gray-400 hover:text-gray-200"
+                  : "text-gray-400 hover:text-white"
               }`}
             >
               {t("chart.count")}
@@ -250,7 +250,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
               className={`text-[11px] px-2.5 py-1 rounded-lg transition-all ${
                 view === "minutes"
                   ? "bg-zinc-600 text-white shadow-sm"
-                  : "text-gray-400 hover:text-gray-200"
+                  : "text-gray-400 hover:text-white"
               }`}
             >
               {t("chart.duration")}
