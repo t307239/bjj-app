@@ -269,7 +269,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                   <div
                     key={d.month}
                     className={`flex-1 rounded-t-sm`}
-                    style={{ height: `${pct}%`, minHeight: val > 0 ? "4px" : "0px", background: isCurrentMonth ? "#e94560" : "#e945604d" }}
+                    style={{ height: `${pct}%`, minHeight: val > 0 ? "4px" : "0px", background: isCurrentMonth ? "#10B981" : "#10B98140" }}
                   />
                 );
               })}
@@ -328,7 +328,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                   <span
                     className={`leading-none transition-opacity ${range === 12 ? "text-[8px]" : "text-[9px]"} ${
                       val > 0 && (range === 6 || isCurrentMonth) ? "opacity-100" : "opacity-0"
-                    } ${isCurrentMonth ? "text-[#e94560]" : "text-gray-500"}`}
+                    } ${isCurrentMonth ? "text-[#10B981]" : "text-gray-500"}`}
                   >
                     {label}
                   </span>
@@ -354,9 +354,9 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                         isSelected
                           ? "bg-yellow-400"
                           : isCurrentMonth
-                          ? "bg-[#e94560]"
+                          ? "bg-[#10B981]"
                           : val > 0
-                          ? "bg-[#e94560]/50 group-hover:bg-[#e94560]/70"
+                          ? "bg-[#10B981]/40 group-hover:bg-[#10B981]/60"
                           : "bg-zinc-900/50"
                       }`}
                       style={{ height: `${pct}%`, minHeight: val > 0 ? "4px" : "0px" }}
