@@ -115,10 +115,10 @@ export default function TrainingChart({ userId }: Props) {
     weeks.push(data.slice(i * 7, i * 7 + 7));
   }
 
-  // Locale-aware day abbreviations (Sun=0 ... Sat=6)
+  // Fixed English day abbreviations (Sun=0 ... Sat=6) — never translate via locale
   const dayLabels = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(2024, 0, 7 + i); // 2024-01-07 is Sun
-    return new Intl.DateTimeFormat(undefined, { weekday: "narrow" }).format(d);
+    return new Intl.DateTimeFormat("en", { weekday: "narrow" }).format(d);
   });
   const totalDays = data.filter((d) => d.count > 0).length;
 
@@ -159,8 +159,8 @@ export default function TrainingChart({ userId }: Props) {
           <div className="flex gap-1">
             {/* 曜日ラベル */}
             <div className="flex flex-col gap-0.5 mr-1">
-              {dayLabels.map((d) => (
-                <div key={d} className="text-[9px] text-gray-600 h-3 flex items-center">
+              {dayLabels.map((d, i) => (
+                <div key={i} className="text-[9px] text-gray-600 h-3 flex items-center">
                   {d}
                 </div>
               ))}
