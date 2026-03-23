@@ -143,10 +143,12 @@ export default function StreakFreeze({ userId, streak }: Props) {
             </div>
             <button
               onClick={() => setDismissed(true)}
-              className="text-gray-600 hover:text-gray-400 text-lg leading-none"
+              className="text-gray-600 hover:text-gray-400 w-7 h-7 flex items-center justify-center rounded self-start mt-0.5 transition-colors"
               aria-label="Close"
             >
-              ✕
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
           </div>
           <div className="flex gap-2 mt-3">
