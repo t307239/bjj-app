@@ -227,7 +227,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             </button>
             <button
               onClick={() => { setRange(12); setSelectedMonth(null); }}
-              className={`text-[11px] px-2 py-1 rounded-md transition-all ${range === 12 ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-gray-200"}`}
+              className={`text-[11px] px-2 py-1 rounded-lg transition-all ${range === 12 ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-gray-200"}`}
             >
               12{t("chart.months")}
             </button>
