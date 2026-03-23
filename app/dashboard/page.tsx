@@ -31,7 +31,7 @@ import GymKickBanner from "@/components/GymKickBanner";
 import GymRanking from "@/components/GymRanking";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
 import BackToTop from "@/components/BackToTop";
-import { getLocalDateString, getYesterdayDateString } from "@/lib/timezone";
+import { getLocalDateString, getYesterdayDateString, getWeekStartDate, getMonthStartDate, getLocalDateParts } from "@/lib/timezone";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
@@ -146,27 +146,22 @@ export default async function DashboardPage() {
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
-  // サーバーサイドで統計データを取得（JST = UTC+9 補正）
-  const JST_OFFSET = 9 * 60 * 60 * 1000;
-  const now = new Date(Date.now() + JST_OFFSET); // JST時刻
-  const toJSTStr = (d: Date) =>
-    `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+  // サーバーサイドで統計データを取得（タイムゾーン対応関数を使用）
+  const firstDayOfMonth = getMonthStartDate();
+  const firstDayOfWeek = getWeekStartDate();
 
-  const firstDayOfMonth = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-01`;
-  // 今月の残り日数と予測
-  const daysInMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 0)).getUTCDate();
-  const currentDayOfMonth = now.getUTCDate();
+  // 今月の残り日数と予測用の日付データ取得
+  const now = new Date();
+  const { year, month, day: dayOfMonth, dayOfWeek } = getLocalDateParts();
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const currentDayOfMonth = dayOfMonth;
   const remainingDays = daysInMonth - currentDayOfMonth;
-  // 先月の開始日・終了日
-  const prevMonthDate = new Date(now);
-  prevMonthDate.setUTCMonth(prevMonthDate.getUTCMonth() - 1);
-  const firstDayOfPrevMonth = `${prevMonthDate.getUTCFullYear()}-${String(prevMonthDate.getUTCMonth() + 1).padStart(2, "0")}-01`;
-  // 今週の月曜日を計算
-  const dayOfWeek = now.getUTCDay(); // 0=Sun, 1=Mon...
-  const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-  const firstDayOfWeek = toJSTStr(new Date(now.getTime() - daysToMonday * 86400000));
-  // 今週の残り日数（日曜=0残り、月=6残り）
   const daysLeftInWeek = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+
+  // 先月の開始日・終了日
+  const prevMonth = month === 1 ? 12 : month - 1;
+  const prevYear = month === 1 ? year - 1 : year;
+  const firstDayOfPrevMonth = `${prevYear}-${String(prevMonth).padStart(2, "0")}-01`;
 
   const profileData = await getCachedProfile(user.id);
 
@@ -284,8 +279,8 @@ export default async function DashboardPage() {
     const dates = [
       ...new Set(recentLogs.map((l: { date: string }) => l.date)),
     ].sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-    const today = toJSTStr(now);
-    const yesterday = toJSTStr(new Date(now.getTime() - 86400000));
+    const today = getLocalDateString();
+    const yesterday = getYesterdayDateString();
 
     if (dates[0] === today || dates[0] === yesterday) {
       streak = 1;
