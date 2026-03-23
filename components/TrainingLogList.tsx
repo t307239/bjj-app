@@ -12,21 +12,21 @@ import {
 
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
 
-function formatRelativeDate(dateStr: string): string {
+function formatRelativeDate(dateStr: string, t: (key: string, vars?: Record<string, string | number>) => string): string {
   // dateStr is "YYYY-MM-DD" (local date)
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
   const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
-  if (dateStr === todayStr) return "Today";
-  if (dateStr === yesterdayStr) return "Yesterday";
+  if (dateStr === todayStr) return t("gym.today");
+  if (dateStr === yesterdayStr) return t("gym.yesterday");
   // diff in days
   const [y, m, d] = dateStr.split("-").map(Number);
   const logDate = new Date(y, m - 1, d);
   const diffMs = today.setHours(0, 0, 0, 0) - logDate.setHours(0, 0, 0, 0);
   const diffDays = Math.round(diffMs / 86400000);
-  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays < 7) return t("gym.daysAgo", { n: diffDays });
   return logDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: diffDays > 365 ? "numeric" : undefined });
 }
 
@@ -324,7 +324,7 @@ export default function TrainingLogList({
                         {TRAINING_TYPES.find((t) => t.value === entry.type)?.label || entry.type}
                       </span>
                     </span>
-                    <span className="text-gray-400 text-xs">{formatRelativeDate(entry.date)}</span>
+                    <span className="text-gray-400 text-xs">{formatRelativeDate(entry.date, t)}</span>
                   </div>
                   <div className="inline-flex items-center gap-1 text-zinc-400 text-xs font-medium mb-1">
                     <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -358,7 +358,7 @@ export default function TrainingLogList({
                                       : "bg-blue-500/20 text-blue-400"
                                   }`}
                                 >
-                                  {comp.gi_type === "nogi" ? "NoGi" : "Gi"}
+                                  {comp.gi_type === "nogi" ? t("training.calendarNogi") : t("training.calendarGi")}
                                 </span>
                               )}
                               {comp.opponent && (

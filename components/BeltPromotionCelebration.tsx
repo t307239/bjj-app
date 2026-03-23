@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useLocale } from "@/lib/i18n";
 
 const BELT_ORDER = ["white", "blue", "purple", "brown", "black"];
-const BELT_COLORS: Record<string, { bg: string; text: string; label: string; emoji: string }> = {
-  white:  { bg: "#f9fafb", text: "#111827", label: "White Belt",  emoji: "🤍" },
-  blue:   { bg: "#3b82f6", text: "#ffffff", label: "Blue Belt",   emoji: "💙" },
-  purple: { bg: "#9333ea", text: "#ffffff", label: "Purple Belt", emoji: "💜" },
-  brown:  { bg: "#92400e", text: "#ffffff", label: "Brown Belt",  emoji: "🤎" },
-  black:  { bg: "#18181b", text: "#ffffff", label: "Black Belt",  emoji: "🖤" },
+const BELT_COLORS: Record<string, { bg: string; text: string; emoji: string }> = {
+  white:  { bg: "#f9fafb", text: "#111827", emoji: "🤍" },
+  blue:   { bg: "#3b82f6", text: "#ffffff", emoji: "💙" },
+  purple: { bg: "#9333ea", text: "#ffffff", emoji: "💜" },
+  brown:  { bg: "#92400e", text: "#ffffff", emoji: "🤎" },
+  black:  { bg: "#18181b", text: "#ffffff", emoji: "🖤" },
 };
 
 /** Returns true if belt moved up in rank */
@@ -77,13 +78,24 @@ interface Props {
 
 export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { t } = useLocale();
   useConfetti(canvasRef, true);
 
   const info = BELT_COLORS[toBelt] ?? BELT_COLORS.white;
   const fromInfo = BELT_COLORS[fromBelt] ?? BELT_COLORS.white;
 
+  const BELT_LABELS: Record<string, string> = {
+    white:  t("dashboard.beltWhite"),
+    blue:   t("dashboard.beltBlue"),
+    purple: t("dashboard.beltPurple"),
+    brown:  t("dashboard.beltBrown"),
+    black:  t("dashboard.beltBlack"),
+  };
+  const toLabel   = BELT_LABELS[toBelt]   ?? toBelt;
+  const fromLabel = BELT_LABELS[fromBelt] ?? fromBelt;
+
   const shareText = encodeURIComponent(
-    `🥋 I just got promoted from ${fromInfo.label} to ${info.label} in BJJ! ${info.emoji}\nTracking my journey on BJJ App: https://bjj-app.net`
+    `🥋 I just got promoted from ${fromLabel} to ${toLabel} in BJJ! ${info.emoji}\nTracking my journey on BJJ App: https://bjj-app.net`
   );
   const shareUrl = `https://x.com/intent/tweet?text=${shareText}`;
 
@@ -118,16 +130,14 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
           className="inline-flex items-center gap-2 px-6 py-2 rounded-full font-bold text-lg mb-4"
           style={{ background: info.bg, color: info.text }}
         >
-          {info.emoji} {info.label}
+          {info.emoji} {toLabel}
         </div>
 
         <h2 className="text-2xl font-extrabold text-white mb-2">
-          Congratulations! 🎉
+          {t("beltPromo.congrats")}
         </h2>
         <p className="text-gray-400 text-sm mb-6">
-          You advanced from <span className="font-semibold text-white">{fromInfo.label}</span>{" "}
-          to <span className="font-bold" style={{ color: toBelt === "white" ? "#e5e7eb" : info.bg }}>{info.label}</span>.
-          Keep rolling!
+          {t("beltPromo.advanced", { from: fromLabel, to: toLabel })}
         </p>
 
         {/* Share button */}
@@ -141,14 +151,14 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
           <svg className="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.743l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
           </svg>
-          Share on X
+          {t("beltPromo.shareOnX")}
         </a>
 
         <button
           onClick={onClose}
           className="w-full text-gray-500 hover:text-gray-300 text-sm py-2 transition-colors"
         >
-          Close
+          {t("common.close")}
         </button>
       </div>
     </div>

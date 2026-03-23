@@ -528,6 +528,11 @@
     "bannerFeatures": "CSV Export · 12-month Charts · Streak Freeze Tickets",
     "bannerCta": "Upgrade"
   },
+  "beltPromo": {
+    "congrats": "Congratulations! 🎉",
+    "advanced": "You advanced from {from} to {to}. Keep rolling!",
+    "shareOnX": "Share on X"
+  },
   "common": {
     "close": "Close",
     "cancel": "Cancel",
