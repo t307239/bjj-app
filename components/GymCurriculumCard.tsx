@@ -42,13 +42,13 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
       href={curriculumUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="block bg-zinc-900 border border-[#e94560]/30 rounded-xl px-4 py-3 hover:border-[#e94560]/60 transition-colors group"
+      className="block bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 hover:border-white/25 transition-colors group"
       aria-label={`Open curriculum article: ${pageName ?? curriculumUrl}`}
     >
       <div className="flex items-start gap-3">
         <span className="text-xl flex-shrink-0 mt-0.5">📚</span>
         <div className="flex-1 min-w-0">
-          <p className="text-[11px] font-semibold text-[#e94560] uppercase tracking-widest mb-0.5">
+          <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-0.5">
             {gymName
               ? `From ${gymName}`
               : t("gym.curriculumCardTitle")}
@@ -60,7 +60,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
             {daysAgo === 0 ? "Sent today" : daysAgo === 1 ? "Sent yesterday" : `Sent ${daysAgo} days ago`}
           </p>
         </div>
-        <span className="text-xs text-[#e94560] font-semibold flex-shrink-0 mt-0.5 group-hover:underline">
+        <span className="text-xs text-[#3B82F6] font-semibold flex-shrink-0 mt-0.5 group-hover:underline">
           {t("gym.curriculumCardCta")}
         </span>
       </div>
