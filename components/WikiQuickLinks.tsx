@@ -176,8 +176,8 @@ const CATEGORY_EMOJI: Record<string, string> = {
 };
 
 export default function WikiQuickLinks() {
-  const { t } = useLocale();
-  const WIKI_BASE = "https://wiki.bjj-app.net/en";
+  const { t, locale } = useLocale();
+  const WIKI_BASE = `https://wiki.bjj-app.net/${locale}`;
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
