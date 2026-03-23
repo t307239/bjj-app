@@ -192,7 +192,7 @@ export default function CompetitionStats({ userId }: Props) {
         <div className="flex items-center gap-2">
           {!isOpen && (
             <span className="text-[10px] text-gray-500">
-              {record.win}勝{record.loss}敗{record.draw > 0 ? `${record.draw}分` : ""} · 計{record.total}{t("competition.matchesSuffix")}
+              {record.win}W {record.loss}L{record.draw > 0 ? ` ${record.draw}D` : ""} · {record.total}{t("competition.matchesSuffix")}
             </span>
           )}
           <svg
@@ -371,7 +371,7 @@ export default function CompetitionStats({ userId }: Props) {
                   )}
                 </div>
                 <span className="text-[10px] text-gray-400 w-16 flex-shrink-0">
-                  {m.win}勝{m.loss > 0 ? `${m.loss}敗` : ""}{m.draw > 0 ? `${m.draw}分` : ""}
+                  {m.win}W{m.loss > 0 ? ` ${m.loss}L` : ""}{m.draw > 0 ? ` ${m.draw}D` : ""}
                 </span>
               </div>
             ));
