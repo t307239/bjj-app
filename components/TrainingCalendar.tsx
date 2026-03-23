@@ -189,12 +189,12 @@ export default function TrainingCalendar({ userId }: Props) {
                 }}
                 title={!hasLogs && dateStr <= todayStr ? "Tap to log a session on this day" : undefined}
                 className={`aspect-square p-1 flex flex-col items-center justify-start transition-colors rounded-lg m-0.5
-                  ${isSelected ? "bg-white/10 ring-1 ring-[#e94560]" : hasLogs ? "hover:bg-white/5" : dateStr <= todayStr ? "hover:bg-white/[0.06] hover:border hover:border-white/10" : "hover:bg-white/[0.03]"}
+                  ${isSelected ? "bg-white/10 ring-1 ring-white/40" : hasLogs ? "hover:bg-white/5" : dateStr <= todayStr ? "hover:bg-white/[0.06] hover:border hover:border-white/10" : "hover:bg-white/[0.03]"}
                   ${!hasLogs && dateStr <= todayStr ? "cursor-pointer" : !hasLogs ? "cursor-default" : "cursor-pointer"}`}
               >
                 {/* you can add comments here */}
                 <div className={`text-[11px] font-medium w-5 h-5 flex items-center justify-center rounded-full
-                  ${isToday ? "bg-[#e94560] text-white" : "text-gray-300"}`}
+                  ${isToday ? "bg-white text-zinc-900 font-bold" : "text-gray-300"}`}
                 >
                   {day}
                 </div>
