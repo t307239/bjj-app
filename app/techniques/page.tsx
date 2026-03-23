@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import TechniqueLog from "@/components/TechniqueLog";
+import { serverT as t } from "@/lib/i18n";
 import { Suspense } from "react";
 import SkillMap from "@/components/SkillMap";
 import AffiliateSection from "@/components/AffiliateSection";
@@ -50,7 +51,7 @@ export default async function TechniquesPage() {
     user.user_metadata?.full_name ||
     user.user_metadata?.name ||
     user.email?.split("@")[0] ||
-    "Athlete";
+    t("dashboard.defaultAthleteName");
 
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;

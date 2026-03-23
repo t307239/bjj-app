@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
+import { serverT as t } from "@/lib/i18n";
 import GymDashboard from "@/components/GymDashboard";
 import GymRegistrationForm from "@/components/GymRegistrationForm";
 import GymDashboardPageHeader from "@/components/GymDashboardPageHeader";
@@ -23,7 +24,7 @@ export default async function GymDashboardPage() {
     user.user_metadata?.full_name ||
     user.user_metadata?.name ||
     user.email?.split("@")[0] ||
-    "Coach";
+    t("dashboard.defaultCoachName");
   const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
   // Get profile
