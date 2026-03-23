@@ -63,6 +63,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
   const { t } = useLocale();
   const [copied, setCopied] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
+  const [confirmRegen, setConfirmRegen] = useState(false);
   const [currentCode, setCurrentCode] = useState(gym.invite_code);
   const inviteUrl = `${typeof window !== "undefined" ? window.location.origin : "https://bjj-app.net"}/gym/join/${currentCode}`;
 
@@ -77,7 +78,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
   };
 
   const regenerate = async () => {
-    if (!confirm(t("gym.regenerateConfirm"))) return;
+    setConfirmRegen(false);
     setRegenerating(true);
     try {
       const res = await fetch("/api/gym/regenerate-invite", { method: "POST" });
@@ -112,15 +113,34 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
       <p className="text-[10px] text-gray-600 mt-2">
         {t("gym.inviteCode")} <span className="font-mono">{currentCode}</span>
       </p>
-      {/* Regenerate button — invalidates old QR codes */}
-      <button
-        onClick={regenerate}
-        disabled={regenerating}
-        className="mt-3 text-[10px] text-gray-500 hover:text-orange-400 transition-colors disabled:opacity-50"
-        aria-label={t("gym.ariaRegenerate")}
-      >
-        {regenerating ? t("gym.regenerating") : t("gym.regenerateBtn")}
-      </button>
+      {/* Regenerate — inline confirm to avoid window.confirm() */}
+      {confirmRegen ? (
+        <div className="mt-3 flex items-center gap-2">
+          <span className="text-[10px] text-orange-400">{t("gym.regenerateConfirm")}</span>
+          <button
+            onClick={regenerate}
+            disabled={regenerating}
+            className="text-[10px] font-semibold text-white bg-orange-600 hover:bg-orange-500 px-2 py-0.5 rounded transition-colors disabled:opacity-50"
+          >
+            {t("gym.confirmYes")}
+          </button>
+          <button
+            onClick={() => setConfirmRegen(false)}
+            className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
+          >
+            {t("training.cancel")}
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={() => setConfirmRegen(true)}
+          disabled={regenerating}
+          className="mt-3 text-[10px] text-gray-500 hover:text-orange-400 transition-colors disabled:opacity-50"
+          aria-label={t("gym.ariaRegenerate")}
+        >
+          {regenerating ? t("gym.regenerating") : t("gym.regenerateBtn")}
+        </button>
+      )}
     </div>
   );
 }
@@ -173,11 +193,11 @@ function CurriculumSection({
   const { t } = useLocale();
   const [url, setUrl] = useState(gym.curriculum_url ?? "");
   const [dispatching, setDispatching] = useState(false);
+  const [confirmDispatch, setConfirmDispatch] = useState(false);
   const [lastSentAt, setLastSentAt] = useState<string | null>(gym.curriculum_set_at ?? null);
 
   const dispatch = async () => {
-    if (!url.trim()) return;
-    if (!confirm(t("gym.curriculumConfirm"))) return;
+    setConfirmDispatch(false);
     setDispatching(true);
     try {
       const res = await fetch("/api/gym/curriculum", {
@@ -230,18 +250,37 @@ function CurriculumSection({
         <input
           type="url"
           value={url}
-          onChange={(e) => setUrl(e.target.value)}
+          onChange={(e) => { setUrl(e.target.value); setConfirmDispatch(false); }}
           placeholder="https://wiki.bjj-app.net/en/..."
           className="flex-1 bg-zinc-800 text-xs text-gray-200 placeholder-gray-500 px-3 py-2 rounded-lg border border-white/10 focus:outline-none focus:border-white/30"
         />
         <button
-          onClick={dispatch}
-          disabled={dispatching || !url.trim()}
+          onClick={() => { if (!url.trim()) return; setConfirmDispatch(true); }}
+          disabled={dispatching || !url.trim() || confirmDispatch}
           className="flex-shrink-0 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
         >
           {dispatching ? t("gym.curriculumSending") : t("gym.curriculumDispatch")}
         </button>
       </div>
+      {/* Inline dispatch confirmation — avoids window.confirm() */}
+      {confirmDispatch && (
+        <div className="mt-2 flex items-center gap-2">
+          <span className="text-[10px] text-[#10B981]">{t("gym.curriculumConfirm")}</span>
+          <button
+            onClick={dispatch}
+            disabled={dispatching}
+            className="text-[10px] font-semibold text-white bg-[#10B981] hover:bg-[#0d9668] px-2 py-0.5 rounded transition-colors disabled:opacity-50"
+          >
+            {t("gym.confirmYes")}
+          </button>
+          <button
+            onClick={() => setConfirmDispatch(false)}
+            className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
+          >
+            {t("training.cancel")}
+          </button>
+        </div>
+      )}
       {sentAgo && (
         <p className="text-[10px] text-gray-600 mt-2">
           {t("gym.curriculumLastSent", { text: sentAgo })}
