@@ -819,6 +819,8 @@
     "sentToday": "Sent today",
     "sentYesterday": "Sent yesterday",
     "sentDaysAgo": "Sent {n} days ago",
+    "curriculumPracticedBtn": "✅ Practiced",
+    "curriculumPracticedDone": "✅ Practiced!",
     "ariaCopyInvite": "Copy invite link",
     "ariaRegenerate": "Regenerate invite code (invalidates old QR codes)",
     "ariaUpgradePro": "Upgrade to Gym Pro",

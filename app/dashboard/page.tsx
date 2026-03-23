@@ -521,6 +521,7 @@ export default async function DashboardPage() {
                 curriculumUrl={gymCurriculum.curriculum_url}
                 curriculumSetAt={gymCurriculum.curriculum_set_at}
                 gymName={gymName}
+                userId={user.id}
               />
             )}
             <DailyRecommend userId={user.id} />
