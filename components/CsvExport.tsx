@@ -29,10 +29,12 @@ function decodeCompNotes(notes: string): { comp: CompData | null; userNotes: str
 // ExportBtn サブコンポーネント
 function ExportBtn({
   label,
+  loadingLabel,
   onClick,
   loading,
 }: {
   label: string;
+  loadingLabel: string;
   onClick: () => void;
   loading: boolean;
 }) {
@@ -49,7 +51,7 @@ function ExportBtn({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
         </svg>
       )}
-      {loading ? "出力中..." : label}
+      {loading ? loadingLabel : label}
     </button>
   );
 }
@@ -198,8 +200,8 @@ export default function CsvExport({ userId }: Props) {
 
   return (
     <div className="flex gap-2">
-      <ExportBtn label={t("csv.button.training")} onClick={handleExport} loading={loadingLogs} />
-      <ExportBtn label={t("csv.button.techniques")} onClick={handleExportTechniques} loading={loadingTech} />
+      <ExportBtn label={t("csv.button.training")} loadingLabel={t("common.loading")} onClick={handleExport} loading={loadingLogs} />
+      <ExportBtn label={t("csv.button.techniques")} loadingLabel={t("common.loading")} onClick={handleExportTechniques} loading={loadingTech} />
     </div>
   );
 }
