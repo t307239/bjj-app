@@ -50,10 +50,10 @@ export default async function ProfilePage() {
             <img
               src={avatarUrl}
               alt={displayName}
-              className="w-16 h-16 rounded-full border-2 border-[#e94560]"
+              className="w-16 h-16 rounded-full border-2 border-white/20"
             />
           ) : (
-            <div className="w-16 h-16 rounded-full bg-[#e94560] flex items-center justify-center text-white text-2xl font-bold">
+            <div className="w-16 h-16 rounded-full bg-zinc-700 flex items-center justify-center text-white text-2xl font-bold">
               {displayName[0].toUpperCase()}
             </div>
           )}
