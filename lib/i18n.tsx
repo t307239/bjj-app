@@ -30,6 +30,9 @@ function t(key: string, vars?: Record<string, string | number>): string {
   return str;
 }
 
+/** For use in server components (RSC) — same logic as useLocale().t */
+export { t as serverT };
+
 /** Drop-in replacement — always returns English locale */
 export function useLocale() {
   return {

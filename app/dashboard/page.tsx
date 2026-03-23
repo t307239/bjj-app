@@ -32,6 +32,7 @@ import GymRanking from "@/components/GymRanking";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
 import BackToTop from "@/components/BackToTop";
 import { getLocalDateString, getYesterdayDateString, getWeekStartDate, getMonthStartDate, getLocalDateParts } from "@/lib/timezone";
+import { serverT as t } from "@/lib/i18n";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
@@ -87,9 +88,9 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   const BELT_LABELS: Record<string, string> = {
-    white: "White Belt", blue: "Blue Belt", purple: "Purple Belt", brown: "Brown Belt", black: "Black Belt",
+    white: t("dashboard.beltWhite"), blue: t("dashboard.beltBlue"), purple: t("dashboard.beltPurple"), brown: t("dashboard.beltBrown"), black: t("dashboard.beltBlack"),
   };
-  const beltLabel = BELT_LABELS[belt] ?? "White Belt";
+  const beltLabel = BELT_LABELS[belt] ?? t("dashboard.beltWhite");
 
   // メタデータ用ストリーク計算（簡易版）
   let metaStreak = 0;
@@ -141,7 +142,7 @@ export default async function DashboardPage() {
     user.user_metadata?.full_name ||
     user.user_metadata?.name ||
     user.email?.split("@")[0] ||
-    "Athlete";
+    t("dashboard.defaultAthleteName");
 
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
@@ -230,12 +231,12 @@ export default async function DashboardPage() {
   const intensityBadge: { label: string; emoji: string; color: string } | null =
     monthSessionCount >= 2
       ? avgSessionMin >= 90
-        ? { label: "Hard intensity", emoji: "⚡", color: "text-red-400" }
+        ? { label: t("dashboard.intensityHard"), emoji: "⚡", color: "text-red-400" }
         : avgSessionMin >= 60
-        ? { label: "Moderate intensity", emoji: "💪", color: "text-orange-400" }
+        ? { label: t("dashboard.intensityModerate"), emoji: "💪", color: "text-orange-400" }
         : avgSessionMin >= 30
-        ? { label: "Light training", emoji: "📈", color: "text-yellow-400" }
-        : { label: "Getting started", emoji: "🌱", color: "text-green-400" }
+        ? { label: t("dashboard.intensityLight"), emoji: "📈", color: "text-yellow-400" }
+        : { label: t("dashboard.intensityGettingStarted"), emoji: "🌱", color: "text-green-400" }
       : null;
 
   const isPro = profileData?.is_pro ?? false;
@@ -351,8 +352,8 @@ export default async function DashboardPage() {
                 : streak >= 3
                 ? `🎯 ${streak}-day streak — great habit`
                 : streak >= 1
-                ? "Log today's session to keep the streak"
-                : "Start fresh — log your first session"}
+                ? t("dashboard.streakCardLogToday")
+                : t("dashboard.streakCardStartFresh")}
             </p>
           </div>
           </div>
@@ -371,19 +372,19 @@ export default async function DashboardPage() {
             <svg className="absolute top-3 right-3 w-4 h-4 text-zinc-700 group-hover:text-yellow-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-            <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">Streak</span>
+            <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">{t("dashboard.streak")}</span>
             <div className="flex items-end gap-1.5 mt-1">
               <span className="text-5xl font-black leading-none tabular-nums bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">{streak}</span>
-              <span className="text-zinc-600 text-xs mb-1">days</span>
+              <span className="text-zinc-600 text-xs mb-1">{t("dashboard.streakDaysUnit")}</span>
             </div>
             <span className="mt-2 block text-[11px] text-yellow-400">
-              {streak >= 30 ? "🔥 Unstoppable" : streak >= 14 ? "💪 Excellent" : streak >= 7 ? "⚡ On a roll" : streak >= 3 ? "🎯 Keep going" : streak >= 1 ? "⚡ Keep rolling" : "Start your streak"}
+              {streak >= 30 ? t("dashboard.streakCardUnstoppable") : streak >= 14 ? t("dashboard.streakCardExcellent") : streak >= 7 ? t("dashboard.streakCardOnARoll") : streak >= 3 ? t("dashboard.streakCardKeepGoing") : streak >= 1 ? t("dashboard.streakCardKeepRolling") : t("dashboard.streakCardStart")}
             </span>
           </Link>
 
           {/* This Week */}
           <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-blue-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out">
-            <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">This Week</span>
+            <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">{t("dashboard.weekTraining")}</span>
             <div className="flex items-end gap-1.5 mt-1">
               <span className="text-5xl font-black leading-none tabular-nums bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">{weekCount ?? 0}</span>
               <span className="text-zinc-600 text-xs mb-1">sessions</span>
@@ -399,7 +400,7 @@ export default async function DashboardPage() {
           <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:border-rose-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out group flex flex-col justify-between">
             {/* Top: label + comparison badge */}
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-semibold text-zinc-500 tracking-widest">This Month</span>
+              <span className="text-[11px] font-semibold text-zinc-500 tracking-widest">{t("dashboard.monthTraining")}</span>
               {prevMonthCount !== null && prevMonthCount !== undefined && (
                 <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full whitespace-nowrap ${
                   (monthCount ?? 0) >= prevMonthCount
@@ -453,7 +454,7 @@ export default async function DashboardPage() {
           <Link href="/techniques" className="col-span-2 md:col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-violet-500/40 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out active:scale-95 group">
             <div className="flex items-center gap-4 mb-2">
               <div className="flex-1">
-                <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">Techniques</span>
+                <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">{t("dashboard.techniques")}</span>
                 <div className="flex items-end gap-1.5">
                   <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-violet-400 to-purple-300 bg-clip-text text-transparent">{techniqueCount ?? 0}</span>
                   <span className="text-zinc-600 text-xs mb-0.5">logged</span>
@@ -497,7 +498,7 @@ export default async function DashboardPage() {
 
         {/* ── Section 2: This Week ── */}
         <section className="mb-8">
-          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">This Week</p>
+          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">{t("dashboard.weekTraining")}</p>
           <div className="space-y-3">
             {/* 週間ペース通知 */}
             {((): React.ReactNode => {
@@ -572,7 +573,7 @@ export default async function DashboardPage() {
         )}
 
         {/* ── Section 5: Analytics（デスクトップ: 展開済み / モバイル: 折りたたみ） ── */}
-        <CollapsibleSection label="Analytics" defaultOpen={false} contentHint="Calendar · Charts · Competition">
+        <CollapsibleSection label={t("dashboard.analyticsLabel")} defaultOpen={false} contentHint={t("dashboard.analyticsHint")}>
           <TrainingCalendar userId={user.id} />
           <TrainingBarChart userId={user.id} isPro={isPro} />
           <TrainingTypeChart userId={user.id} />
