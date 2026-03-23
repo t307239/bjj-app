@@ -584,7 +584,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
         >
           <defs>
             <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-              <polygon points="0 0, 10 3.5, 0 7" fill="#e94560" />
+              <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1" />
             </marker>
           </defs>
           <g transform={`translate(${panX},${panY}) scale(${zoom})`}>
@@ -599,7 +599,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
                 <g key={edge.id} className="group">
                   <path
                     d={edgePath(src, tgt)}
-                    stroke="#e94560"
+                    stroke="#6366f1"
                     strokeWidth={2}
                     fill="none"
                     markerEnd="url(#arrowhead)"
@@ -662,8 +662,8 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
                 onMouseDown={(e) => onNodeMouseDown(e, node)}
                 className={`rounded-lg border flex items-center px-2.5 transition-all ${
                   isConnectSrc
-                    ? "bg-[#e94560]/20 border-[#e94560]"
-                    : "bg-zinc-800 border-white/20 hover:border-[#e94560]/60"
+                    ? "bg-[#6366f1]/20 border-[#6366f1]"
+                    : "bg-zinc-800 border-white/20 hover:border-[#6366f1]/60"
                 } ${isPro ? "cursor-move" : "cursor-default"}`}
               >
                 {/* Node label */}
@@ -695,7 +695,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
                     zIndex: 2,
                   }}
                   className={`border-2 ${
-                    isConnectSrc ? "bg-[#e94560] border-[#e94560]" : "bg-zinc-700 border-[#e94560] hover:bg-[#e94560]"
+                    isConnectSrc ? "bg-[#6366f1] border-[#6366f1]" : "bg-zinc-700 border-[#6366f1] hover:bg-[#6366f1]"
                   } transition-colors`}
                   aria-label={t("skillmap.portHint")}
                 />
