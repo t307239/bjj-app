@@ -296,7 +296,15 @@
     "csvHeaderType": "Type",
     "csvHeaderDuration": "Duration(min)",
     "csvHeaderNotes": "Notes",
-    "csvHeaderCreatedAt": "Created At"
+    "csvHeaderCreatedAt": "Created At",
+    "pushNotifications": "Push Notifications",
+    "pushNotificationsDesc": "Get streak reminders and gym updates even when the app is closed.",
+    "pushEnable": "Enable notifications",
+    "pushDisable": "Disable notifications",
+    "pushEnabled": "✅ Notifications on",
+    "pushBlocked": "Notifications blocked by browser. Enable in your device settings.",
+    "pushNotSupported": "Push notifications are not supported on this browser/device.",
+    "ariaPushToggle": "Toggle push notifications"
   },
   "competition": {
     "title": "Match Record",
