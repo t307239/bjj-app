@@ -143,9 +143,7 @@ export default function TrainingCalendar({ userId }: Props) {
         {WEEKDAYS.map((d, i) => (
           <div
             key={d}
-            className={`text-center text-[11px] py-2 font-medium ${
-              i === 0 ? "text-red-400" : i === 6 ? "text-blue-400" : "text-gray-500"
-            }`}
+            className="text-center text-[11px] py-2 font-medium text-gray-400"
           >
             {d}
           </div>
@@ -186,7 +184,7 @@ export default function TrainingCalendar({ userId }: Props) {
               >
                 {/* you can add comments here */}
                 <div className={`text-[11px] font-medium w-5 h-5 flex items-center justify-center rounded-full
-                  ${isToday ? "bg-[#e94560] text-white" : weekday === 0 ? "text-red-400" : weekday === 6 ? "text-blue-400" : "text-gray-300"}`}
+                  ${isToday ? "bg-[#e94560] text-white" : "text-gray-300"}`}
                 >
                   {day}
                 </div>
