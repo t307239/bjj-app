@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "@/lib/i18n";
 
 /**
  * BeltProgressCard — 帯進捗ビジュアル（参考UI belt-progress.tsx ベース）
@@ -17,14 +18,6 @@ const BELT_COLORS: Record<string, string> = {
   black: "bg-zinc-900 border border-white/20",
 };
 
-const BELT_LABELS: Record<string, string> = {
-  white: "White Belt",
-  blue: "Blue Belt",
-  purple: "Purple Belt",
-  brown: "Brown Belt",
-  black: "Black Belt",
-};
-
 type Props = {
   belt: string;
   stripes: number;
@@ -38,9 +31,17 @@ export default function BeltProgressCard({
   monthsAtBelt,
   className = "",
 }: Props) {
+  const { t } = useLocale();
+  const BELT_LABELS: Record<string, string> = {
+    white: t("dashboard.beltWhite"),
+    blue: t("dashboard.beltBlue"),
+    purple: t("dashboard.beltPurple"),
+    brown: t("dashboard.beltBrown"),
+    black: t("dashboard.beltBlack"),
+  };
   const beltKey = belt?.toLowerCase() || "white";
   const bgClass = BELT_COLORS[beltKey] || BELT_COLORS.white;
-  const label = BELT_LABELS[beltKey] || "White Belt";
+  const label = BELT_LABELS[beltKey] || t("dashboard.beltWhite");
 
   return (
     <div
@@ -48,12 +49,12 @@ export default function BeltProgressCard({
     >
       <div className="flex items-center justify-between mb-4">
         <span className="text-[11px] font-semibold text-zinc-500 tracking-widest">
-          Belt Progress
+          {t("beltProgress.title")}
         </span>
         <Link
           href="/profile"
           className="rounded-lg bg-white/5 hover:bg-white/10 p-2 transition-colors"
-          title="Edit belt in Profile"
+          title={t("beltProgress.editTitle")}
         >
           <svg
             className="w-4 h-4 text-zinc-500"
@@ -91,7 +92,7 @@ export default function BeltProgressCard({
         <div>
           <p className="text-lg font-bold text-white">{label}</p>
           <p className="text-xs text-zinc-500">
-            {stripes} stripe{stripes !== 1 ? "s" : ""}
+            {stripes} {stripes !== 1 ? t("beltProgress.stripes") : t("beltProgress.stripe")}
           </p>
         </div>
       </div>
@@ -99,7 +100,7 @@ export default function BeltProgressCard({
       {/* Stripe progress bar (#70) */}
       <div className="mt-3">
         <div className="flex justify-between items-center mb-1">
-          <span className="text-[11px] text-zinc-500">{stripes} / 4 stripes</span>
+          <span className="text-[11px] text-zinc-500">{t("beltProgress.stripesOf4", { n: stripes })}</span>
           <span className="text-[11px] text-zinc-500">{Math.round((stripes / 4) * 100)}%</span>
         </div>
         <div className="w-full bg-white/10 rounded-full h-1.5">
@@ -114,7 +115,7 @@ export default function BeltProgressCard({
       {monthsAtBelt > 0 && (
         <div className="mt-3 pt-2 border-t border-white/5">
           <span className="text-xs text-zinc-500">
-            {monthsAtBelt} month{monthsAtBelt !== 1 ? "s" : ""} at {label.replace(" Belt", "")}
+            {monthsAtBelt} {monthsAtBelt !== 1 ? t("beltProgress.months") : t("beltProgress.month")} {t("beltProgress.monthsAt", { belt: label.replace(t("beltProgress.beltSuffix"), "") })}
           </span>
         </div>
       )}

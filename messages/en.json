@@ -41,6 +41,17 @@
     "beltBrown": "Brown Belt",
     "beltBlack": "Black Belt"
   },
+  "beltProgress": {
+    "title": "Belt Progress",
+    "editTitle": "Edit belt in Profile",
+    "stripe": "stripe",
+    "stripes": "stripes",
+    "stripesOf4": "{n} / 4 stripes",
+    "month": "month",
+    "months": "months",
+    "monthsAt": "at {belt}",
+    "beltSuffix": " Belt"
+  },
   "training": {
     "title": "Training Log",
     "add": "+ Add Session",
