@@ -34,8 +34,8 @@ export function GoalWeekDayGrid({
                   : isToday
                   ? "bg-blue-500/20 border border-blue-500/50 text-blue-300"
                   : isPast
-                  ? "bg-white/5 border border-white/20 text-gray-500"
-                  : "bg-white/5 text-gray-700"
+                  ? "bg-white/3 border border-dashed border-white/20 text-gray-600"
+                  : "bg-transparent text-gray-700"
               }`}
             >
               {trained ? "✓" : isToday ? "•" : ""}
@@ -111,7 +111,7 @@ export function GoalWeekHeatmap({
                     : "bg-blue-500/20 border border-blue-500/40 text-blue-300"
                   : w.achieved
                   ? "bg-green-500/25 text-green-400"
-                  : "bg-white/10 text-gray-600"
+                  : "bg-transparent border border-dashed border-white/20 text-gray-600"
               }`}
             >
               {w.achieved ? "✓" : w.count > 0 ? w.count : "-"}
@@ -158,7 +158,7 @@ export function GoalMonthHistoryBadges({
               className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors ${
                 m.achieved
                   ? "bg-green-500 text-white shadow-sm shadow-green-500/40"
-                  : "bg-white/10 text-gray-500"
+                  : "border border-dashed border-white/20 text-gray-600"
               }`}
             >
               {m.achieved ? "✓" : m.count}
