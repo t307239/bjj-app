@@ -133,7 +133,7 @@ export default function GuestDashboard() {
             <h3 className="font-semibold text-white">{t("training.title")}</h3>
             <button
               onClick={() => setShowForm(!showForm)}
-              className="bg-[#e94560] hover:bg-[#c73652] text-white text-sm font-bold px-4 py-1.5 rounded-lg"
+              className={`text-white text-sm font-bold px-4 py-1.5 rounded-lg transition-colors ${showForm ? "bg-zinc-700 hover:bg-zinc-600" : "bg-[#10B981] hover:bg-[#0d9668]"}`}
             >
               {showForm ? t("training.cancel") : t("training.add")}
             </button>
@@ -253,7 +253,7 @@ export default function GuestDashboard() {
           </p>
           <Link
             href="/login"
-            className="inline-block bg-[#e94560] hover:bg-[#c73652] text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-colors"
+            className="inline-block bg-[#10B981] hover:bg-[#0d9668] text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-colors"
           >
             {t("guest.ctaButton")}
           </Link>

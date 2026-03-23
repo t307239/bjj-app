@@ -50,7 +50,7 @@ export default function ProGate({
             href={paymentUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block bg-[#e94560] hover:bg-[#c73a53] text-white text-sm font-bold px-5 py-2 rounded-lg transition-colors"
+            className="inline-block bg-yellow-500 hover:bg-yellow-400 text-black text-sm font-bold px-5 py-2 rounded-lg transition-colors"
             onClick={() => {
               if (typeof gtag !== "undefined") {
                 gtag("event", "upgrade_click", { feature: featureText });

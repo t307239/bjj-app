@@ -28,7 +28,7 @@ export default function ProUpgradeBanner({ isPro }: Props) {
           href={PAYMENT_LINK}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-shrink-0 ml-3 bg-[#e94560] hover:bg-[#c73652] text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
+          className="flex-shrink-0 ml-3 bg-yellow-500 hover:bg-yellow-400 text-black text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
         >
           Upgrade
         </a>

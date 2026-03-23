@@ -149,7 +149,7 @@ function ProPaywallBanner({
         </div>
         <a
           href={stripeGymPaymentLink}
-          className="flex-shrink-0 bg-[#e94560] hover:bg-[#c73652] text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
+          className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
           aria-label="Upgrade to Gym Pro"
         >
           {t("gym.upgradeBtn")}
@@ -204,7 +204,7 @@ function CurriculumSection({
           </div>
           <a
             href={stripeGymPaymentLink}
-            className="flex-shrink-0 bg-[#e94560] hover:bg-[#c73652] text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
+            className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
           >
             {t("gym.upgradeBtn")}
           </a>
