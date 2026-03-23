@@ -75,6 +75,9 @@ function LoginForm() {
   const supabase = createClient();
   const searchParamsInner = useSearchParams();
   const nextPath = searchParamsInner.get("next") ?? "";
+  // Wiki referral attribution: ?ref=wiki&page=closed-guard
+  const refParam = searchParamsInner.get("ref") ?? "";
+  const pageParam = searchParamsInner.get("page") ?? "";
   const [email, setEmail] = useState("");
   const [emailLoading, setEmailLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
@@ -90,7 +93,12 @@ function LoginForm() {
 
   const callbackUrl = () => {
     const base = `${window.location.origin}/auth/callback`;
-    return nextPath ? `${base}?next=${encodeURIComponent(nextPath)}` : base;
+    const params = new URLSearchParams();
+    if (nextPath) params.set("next", nextPath);
+    if (refParam) params.set("ref", refParam);
+    if (pageParam) params.set("page", pageParam);
+    const qs = params.toString();
+    return qs ? `${base}?${qs}` : base;
   };
 
   const signInWithGoogle = async () => {
