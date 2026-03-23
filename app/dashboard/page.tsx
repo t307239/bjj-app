@@ -387,11 +387,11 @@ export default async function DashboardPage() {
             <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">{t("dashboard.weekTraining")}</span>
             <div className="flex items-end gap-1.5 mt-1">
               <span className="text-5xl font-black leading-none tabular-nums bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">{weekCount ?? 0}</span>
-              <span className="text-zinc-600 text-xs mb-1">sessions</span>
+              <span className="text-zinc-600 text-xs mb-1">{t("dashboard.sessionsUnit")}</span>
             </div>
             {weeklyGoal > 0 && (
               <span className="mt-2 block text-[11px] text-blue-400">
-                Goal: {weekCount ?? 0}/{weeklyGoal}
+                {t("dashboard.bentoGoalLabel", { done: weekCount ?? 0, goal: weeklyGoal })}
               </span>
             )}
           </div>
@@ -408,7 +408,7 @@ export default async function DashboardPage() {
                     : "text-red-400 bg-red-400/10"
                 }`}>
                   {(monthCount ?? 0) >= prevMonthCount ? "▲" : "▼"}
-                  {Math.abs((monthCount ?? 0) - prevMonthCount)} vs last month
+                  {Math.abs((monthCount ?? 0) - prevMonthCount)} {t("dashboard.bentoVsLastMonth")}
                 </span>
               )}
             </div>
@@ -417,7 +417,7 @@ export default async function DashboardPage() {
               <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-rose-400 to-orange-400 bg-clip-text text-transparent">
                 {monthCount ?? 0}
               </span>
-              <span className="text-zinc-600 text-sm mb-0.5">sessions</span>
+              <span className="text-zinc-600 text-sm mb-0.5">{t("dashboard.sessionsUnit")}</span>
             </div>
             {/* Bottom: hours + days left — anchored to bottom */}
             <div className="flex items-center gap-3 mt-3 flex-wrap">
@@ -431,10 +431,10 @@ export default async function DashboardPage() {
               )}
               {remainingDays > 0 && (
                 <span className="text-[11px] text-zinc-500">
-                  {remainingDays} days left
+                  {t("dashboard.bentoDaysLeft", { n: remainingDays })}
                   {(monthCount ?? 0) > 0 && currentDayOfMonth > 0 && (
                     <span className="text-blue-400 ml-1">
-                      · on pace for {Math.round((monthCount ?? 0) / currentDayOfMonth * daysInMonth)}
+                      {t("dashboard.bentoOnPaceFor", { n: Math.round((monthCount ?? 0) / currentDayOfMonth * daysInMonth) })}
                     </span>
                   )}
                 </span>
@@ -457,7 +457,7 @@ export default async function DashboardPage() {
                 <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">{t("dashboard.techniques")}</span>
                 <div className="flex items-end gap-1.5">
                   <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-violet-400 to-purple-300 bg-clip-text text-transparent">{techniqueCount ?? 0}</span>
-                  <span className="text-zinc-600 text-xs mb-0.5">logged</span>
+                  <span className="text-zinc-600 text-xs mb-0.5">{t("dashboard.loggedUnit")}</span>
                 </div>
               </div>
               <svg className="w-5 h-5 text-zinc-600 group-hover:text-violet-400 transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -478,12 +478,12 @@ export default async function DashboardPage() {
           {/* Avg Session (md only, fills the remaining col) */}
           {avgSessionMin > 0 && (
             <div className="col-span-2 md:col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-white/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out">
-              <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">Avg Session</span>
+              <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">{t("dashboard.bentoAvgSession")}</span>
               <div className="flex items-end gap-1.5">
                 <span className="text-3xl font-black leading-none tabular-nums text-zinc-300">
                   {avgSessionMin}
                 </span>
-                <span className="text-zinc-600 text-xs mb-0.5">min / session</span>
+                <span className="text-zinc-600 text-xs mb-0.5">{t("dashboard.bentoMinPerSession")}</span>
               </div>
             </div>
           )}
@@ -492,7 +492,7 @@ export default async function DashboardPage() {
 
         {/* ── Section 1: Training Log（プライマリアクション・最優先） ── */}
         <section className="mb-8">
-          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">Log</p>
+          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">{t("dashboard.sectionLog")}</p>
           <TrainingLog userId={user.id} isPro={isPro} />
         </section>
 
@@ -510,8 +510,8 @@ export default async function DashboardPage() {
                 <div className="bg-green-500/10 border border-green-500/30 rounded-2xl px-4 py-2.5 flex items-center gap-3">
                   <span className="text-lg">🎯</span>
                   <div>
-                    <p className="text-green-400 text-sm font-semibold">Weekly goal reached!</p>
-                    <p className="text-gray-400 text-xs">Goal: {wGoal} · Done: {wCount}</p>
+                    <p className="text-green-400 text-sm font-semibold">{t("dashboard.weeklyGoalReached")}</p>
+                    <p className="text-gray-400 text-xs">{t("dashboard.weeklyGoalDone", { done: wGoal, count: wCount })}</p>
                   </div>
                 </div>
               );
@@ -521,11 +521,11 @@ export default async function DashboardPage() {
                   <span className="text-lg">{onPace ? "📅" : "⚡"}</span>
                   <div className="flex-1">
                     <p className={`${onPace ? "text-blue-300" : "text-yellow-300"} text-sm font-semibold`}>
-                      {needed} more session{needed !== 1 ? "s" : ""} to hit your weekly goal
+                      {needed !== 1 ? t("dashboard.weeklyMoreSessionsPlural", { n: needed }) : t("dashboard.weeklyMoreSessions", { n: needed })}
                     </p>
                     <p className="text-gray-400 text-xs">
-                      {wCount}/{wGoal} done · {daysLeftInWeek}d left
-                      {onPace ? " ✓ on pace" : " ⚠ pick up the pace"}
+                      {t("dashboard.weeklyProgressLabel", { done: wCount, goal: wGoal, days: daysLeftInWeek })}
+                      {onPace ? t("dashboard.weeklyOnPace") : t("dashboard.weeklyPickUpPace")}
                     </p>
                   </div>
                 </div>
@@ -538,7 +538,7 @@ export default async function DashboardPage() {
 
         {/* ── Section 3: Today's Learning ── */}
         <section className="mb-8">
-          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">Today</p>
+          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">{t("dashboard.sectionToday")}</p>
           <div className="space-y-3">
             {gymCurriculum && (
               <GymCurriculumCard
@@ -556,7 +556,7 @@ export default async function DashboardPage() {
         {/* ── Section 3.5: Gym Leaderboard (opt-in members only) ── */}
         {gymId && shareDataWithGym && (
           <section className="mb-8">
-            <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">Your Gym</p>
+            <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">{t("dashboard.sectionYourGym")}</p>
             <GymRanking userId={user.id} gymId={gymId} />
           </section>
         )}
