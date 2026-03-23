@@ -84,8 +84,8 @@ export default function TrainingLogForm({
 }: Props) {
   const techniqueInputRef = useRef<HTMLInputElement>(null);
 
-  // Warn user if they try to leave with unsaved form data
-  const hasInput = form.notes.trim() !== "" || form.type !== "gi";
+  // Warn user if they try to leave with meaningful unsaved form data (notes only)
+  const hasInput = form.notes.trim() !== "";
   useEffect(() => {
     if (!showForm || !hasInput) return;
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
