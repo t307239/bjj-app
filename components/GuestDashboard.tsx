@@ -91,7 +91,7 @@ export default function GuestDashboard() {
   return (
     <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
       {/* ゲストバナー */}
-      <div className="bg-gradient-to-r from-[#7c3aed]/70 to-[#4f46e5]/60 px-4 py-3 text-center">
+      <div className="bg-gradient-to-r from-violet-600/70 to-indigo-600/60 px-4 py-3 text-center">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
           <p className="text-white text-sm font-medium flex-1 text-center">
             🥋 {t("guest.banner")} —
@@ -237,7 +237,7 @@ export default function GuestDashboard() {
         {/* 登録CTAカード（3回以上練習したら強調表示） */}
         <div className={`rounded-xl border p-5 text-center transition-all ${
           logs.length >= 3
-            ? "bg-gradient-to-br from-green-500/15 to-[#7c3aed]/20 border-green-500/30"
+            ? "bg-gradient-to-br from-green-500/15 to-violet-600/20 border-green-500/30"
             : "bg-zinc-900 border-white/10"
         }`}>
           {logs.length >= 3 && (

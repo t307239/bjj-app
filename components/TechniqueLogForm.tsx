@@ -145,10 +145,10 @@ export default function TechniqueLogForm({
   return (
     <form
       onSubmit={onBulkSubmit}
-      className="bg-zinc-900 rounded-xl p-4 border border-[#7c3aed]/40 mb-4"
+      className="bg-zinc-900 rounded-xl p-4 border border-violet-600/40 mb-4"
     >
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-sm font-semibold text-[#7c3aed]">
+        <span className="text-sm font-semibold text-violet-600">
           {t("techniques.bulkTitle")}
         </span>
         <span className="text-xs text-gray-500">{t("techniques.bulkDesc")}</span>
@@ -215,7 +215,7 @@ export default function TechniqueLogForm({
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 bg-[#7c3aed] hover:bg-[#6d28d9] disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-colors"
+          className="flex-1 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-colors"
         >
           {loading ? t("techniques.saving") : t("techniques.bulkSave")}
         </button>
