@@ -116,7 +116,7 @@ export default function GuestDashboard() {
         {/* ゲストステータス */}
         <div className="grid grid-cols-2 gap-3 mb-6">
           <div className="bg-zinc-900 rounded-xl p-4 text-center border border-white/10">
-            <div className="text-2xl font-bold text-[#e94560]">{logs.length}</div>
+            <div className="text-2xl font-bold text-white">{logs.length}</div>
             <div className="text-gray-400 text-xs mt-1">{t("guest.sessions")}</div>
           </div>
           <div className="bg-zinc-900 rounded-xl p-4 text-center border border-white/10">
@@ -162,7 +162,7 @@ export default function GuestDashboard() {
                       onClick={() => setDuration(d)}
                       className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
                         duration === d
-                          ? "bg-[#e94560] border-[#e94560] text-white"
+                          ? "bg-zinc-600 border-zinc-600 text-white"
                           : "bg-zinc-800 border-white/10 text-gray-400 hover:text-white"
                       }`}
                     >
@@ -195,7 +195,7 @@ export default function GuestDashboard() {
               />
               <button
                 onClick={handleAdd}
-                className="w-full bg-[#e94560] hover:bg-[#c73652] text-white font-bold py-2 rounded-lg text-sm"
+                className="w-full bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-2 rounded-lg text-sm"
               >
                 {t("training.save")}
               </button>
