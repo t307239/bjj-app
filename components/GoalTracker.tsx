@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
 import { useLocale } from "@/lib/i18n";
+import { getLocalDateParts, getWeekStartDate, getMonthStartDate } from "@/lib/timezone";
 
 type Props = {
   userId: string;
@@ -153,13 +154,9 @@ export default function GoalTracker({ userId }: Props) {
 
   useEffect(() => {
     const load = async () => {
-      const now = new Date(Date.now() + 9 * 3600000); // JST
-      const firstDayOfMonth = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-01`;
-      const dayOfWeek = now.getUTCDay();
-      const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-      const firstDayOfWeekMs = now.getTime() - daysToMonday * 86400000;
-      const firstDayOfWeekD = new Date(firstDayOfWeekMs);
-      const firstDayOfWeek = `${firstDayOfWeekD.getUTCFullYear()}-${String(firstDayOfWeekD.getUTCMonth() + 1).padStart(2, "0")}-${String(firstDayOfWeekD.getUTCDate()).padStart(2, "0")}`;
+      // Use user's local timezone via Intl API (replaces JST hardcode)
+      const firstDayOfMonth = getMonthStartDate();
+      const firstDayOfWeek = getWeekStartDate();
 
       const [{ count: mc }, { count: wc }, { count: tc }, profileRes] = await Promise.all([
         supabase
@@ -203,15 +200,11 @@ export default function GoalTracker({ userId }: Props) {
 
       const wGoal = profileRes.data?.weekly_goal ?? 0;
 
-      // 過去4週の週間達成履歴（JST基準）
+      // 過去4週の週間達成履歴
       if (wGoal > 0) {
-        const jstMs = Date.now() + 9 * 3600000;
-        const jstD = new Date(jstMs);
-        const dow = jstD.getUTCDay(); // 0=Sun
-        const daysToMon = dow === 0 ? 6 : dow - 1;
-        const thisWeekMonMs = jstMs - daysToMon * 86400000;
-        const tw = new Date(thisWeekMonMs);
-        const thisWeekStart = `${tw.getUTCFullYear()}-${String(tw.getUTCMonth() + 1).padStart(2, "0")}-${String(tw.getUTCDate()).padStart(2, "0")}`;
+        const thisWeekStart = getWeekStartDate();
+        const tw = new Date(thisWeekStart + "T00:00:00Z");
+        const thisWeekMonMs = tw.getTime();
         const fourWeeksAgoMs = thisWeekMonMs - 3 * 7 * 86400000;
         const fw = new Date(fourWeeksAgoMs);
         const fourWeeksAgoStr = `${fw.getUTCFullYear()}-${String(fw.getUTCMonth() + 1).padStart(2, "0")}-${String(fw.getUTCDate()).padStart(2, "0")}`;
@@ -256,9 +249,10 @@ export default function GoalTracker({ userId }: Props) {
 
       // 過去6ヶ月の達成履歴を計算
       if (mGoal > 0) {
+        const { year: nowYear, month: nowMonth } = getLocalDateParts();
         const history: MonthHistory[] = [];
         for (let i = 5; i >= 0; i--) {
-          const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - i, 1));
+          const d = new Date(Date.UTC(nowYear, nowMonth - 1 - i, 1));
           const ym = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
           const nextD = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1));
           const nextYm = `${nextD.getUTCFullYear()}-${String(nextD.getUTCMonth() + 1).padStart(2, "0")}-01`;
@@ -332,12 +326,8 @@ export default function GoalTracker({ userId }: Props) {
 
   const hasGoals = data.weeklyGoal > 0 || data.monthlyGoal > 0 || data.techniqueGoal > 0;
 
-  // 今月の残り日数・ペース計算（JST近似）
-  const jstNow = new Date(Date.now() + 9 * 3600000);
-  const curDayOfMonth = jstNow.getUTCDate();
-  const daysInCurMonth = new Date(
-    Date.UTC(jstNow.getUTCFullYear(), jstNow.getUTCMonth() + 1, 0)
-  ).getUTCDate();
+  // 今月の残り日数・ペース計算
+  const { day: curDayOfMonth, daysInMonth: daysInCurMonth } = getLocalDateParts();
   const remainingDaysInMonth = daysInCurMonth - curDayOfMonth;
   // 今月のペース予測（月末まで同じペースで続けた場合の回数）
   const monthlyProjected =
@@ -481,8 +471,7 @@ export default function GoalTracker({ userId }: Props) {
                     const DAY_LABELS = Array.from({ length: 7 }, (_, i) =>
                       new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(new Date(2024, 0, 1 + i))
                     );
-                    const jstNowGrid = new Date(Date.now() + 9 * 3600000);
-                    const dowNow = jstNowGrid.getUTCDay(); // 0=Sun
+                    const dowNow = getLocalDateParts().dayOfWeek; // 0=Sun
                     const todayIdx = dowNow === 0 ? 6 : dowNow - 1; // Mon=0...Sun=6
                     return (
                       <div className="mt-2 flex items-center gap-1">
@@ -518,8 +507,7 @@ export default function GoalTracker({ userId }: Props) {
                     );
                   })()}
                   {(() => {
-                    const now = new Date(Date.now() + 9 * 3600000);
-                    const dow = now.getUTCDay(); // 0=Sun
+                    const dow = getLocalDateParts().dayOfWeek; // 0=Sun
                     const daysLeftInWeek = dow === 0 ? 0 : 7 - dow; // 今日含まない残り日数
                     const needed = Math.max(0, data.weeklyGoal - data.weekCount);
                     if (needed === 0) return (

@@ -27,6 +27,7 @@ import ProUpgradeBanner from "@/components/ProUpgradeBanner";
 import BeltProgressCard from "@/components/BeltProgressCard";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
 import ProStatusBanner from "@/components/ProStatusBanner";
+import { getLocalDateString, getYesterdayDateString } from "@/lib/timezone";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
@@ -89,11 +90,9 @@ export async function generateMetadata(): Promise<Metadata> {
   // メタデータ用ストリーク計算（簡易版）
   let metaStreak = 0;
   if (recentLogsForStreak && recentLogsForStreak.length > 0) {
-    const jstNow = new Date(Date.now() + 9 * 3600000);
-    const toStr = (d: Date) => `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,"0")}-${String(d.getUTCDate()).padStart(2,"0")}`;
     const dates = [...new Set(recentLogsForStreak.map((l: { date: string }) => l.date))].sort((a,b)=>new Date(b).getTime()-new Date(a).getTime());
-    const today = toStr(jstNow);
-    const yesterday = toStr(new Date(jstNow.getTime() - 86400000));
+    const today = getLocalDateString();
+    const yesterday = getYesterdayDateString();
     if (dates[0] === today || dates[0] === yesterday) {
       metaStreak = 1;
       for (let i = 1; i < dates.length; i++) {

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
+import { getMonthStartDate } from "@/lib/timezone";
 
 type TypeBreakdown = Record<string, number>;
 
@@ -168,8 +169,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
   const totalCount = data.reduce((s, d) => s + d.count, 0);
   const totalMinutes = data.reduce((s, d) => s + d.minutes, 0);
 
-  const jstNow = new Date(Date.now() + 9 * 3600000);
-  const currentMonthKey = `${jstNow.getUTCFullYear()}-${String(jstNow.getUTCMonth() + 1).padStart(2, "0")}`;
+  const currentMonthKey = getMonthStartDate().slice(0, 7);
 
   const activeBars = data.filter((d) => (view === "count" ? d.count : d.minutes) > 0);
   const avgVal = activeBars.length > 0

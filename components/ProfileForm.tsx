@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { getLocalDateString } from "@/lib/timezone";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
 import Toast from "./Toast";
@@ -46,10 +47,7 @@ type Props = {
   hideAccount?: boolean;
 };
 
-function getJSTDateString(): string {
-  const d = new Date(Date.now() + 9 * 3600000);
-  return d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0") + "-" + String(d.getUTCDate()).padStart(2, "0");
-}
+// getLocalDateString() from lib/timezone replaces the old JST-hardcoded getJSTDateString()
 
 function calcBjjMonths(startDate: string): number {
   return Math.floor(
@@ -336,7 +334,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
-  const today = getJSTDateString();
+  const today = getLocalDateString();
   const supabase = createClient();
   const belts = BELTS({ t });
   const currentBelt = belts.find((b) => b.value === form.belt);
@@ -376,7 +374,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
         // Training disclaimer: set once, never cleared (legal defense evidence)
         ...(disclaimerAlreadyRecorded ? {} : {
           training_disclaimer_agreed: true,
-          training_disclaimer_agreed_at: new Date(Date.now() + 9 * 3600000).toISOString(),
+          training_disclaimer_agreed_at: new Date().toISOString(),
         }),
       },
       { onConflict: "id" }

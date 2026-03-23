@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
+import { getLocalDateParts } from "@/lib/timezone";
 
 type Props = { userId: string };
 
@@ -151,11 +152,11 @@ export default function PersonalBests({ userId }: Props) {
       });
 
       // 今月vs先月
-      const jstNow = new Date(Date.now() + 9 * 3600000);
-      const thisYM = `${jstNow.getUTCFullYear()}-${String(jstNow.getUTCMonth() + 1).padStart(2, "0")}`;
-      const lastDate = new Date(jstNow);
-      lastDate.setUTCMonth(lastDate.getUTCMonth() - 1);
-      const lastYM = `${lastDate.getUTCFullYear()}-${String(lastDate.getUTCMonth() + 1).padStart(2, "0")}`;
+      const { year: nowY, month: nowM } = getLocalDateParts();
+      const thisYM = `${nowY}-${String(nowM).padStart(2, "0")}`;
+      const lastM = nowM === 1 ? 12 : nowM - 1;
+      const lastY = nowM === 1 ? nowY - 1 : nowY;
+      const lastYM = `${lastY}-${String(lastM).padStart(2, "0")}`;
       const thisMonthCount = monthCounts[thisYM] ?? 0;
       const lastMonthCount = monthCounts[lastYM] ?? 0;
 

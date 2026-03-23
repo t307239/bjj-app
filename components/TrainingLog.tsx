@@ -16,6 +16,7 @@ import {
   encodeCompNotes,
   decodeCompNotes,
 } from "@/lib/trainingLogHelpers";
+import { getLocalDateParts } from "@/lib/timezone";
 
 type Props = {
   userId: string;
@@ -350,13 +351,12 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     ? `${Math.floor(monthTotalMins / 60)}h${monthTotalMins % 60 > 0 ? `${monthTotalMins % 60}m` : ""}`
     : `${monthTotalMins}m`;
 
-  const jstNowLog = new Date(Date.now() + 9 * 3600000);
-  const curDayLog = jstNowLog.getUTCDate();
-  const daysInMonthLog = new Date(jstNowLog.getUTCFullYear(), jstNowLog.getUTCMonth() + 1, 0).getUTCDate();
+  const { day: curDayLog, month: curMonthLog, year: curYearLog, daysInMonth: daysInMonthLog } = getLocalDateParts();
   const monthProjected = curDayLog > 0 ? Math.round(monthEntries.length / curDayLog * daysInMonthLog) : 0;
   const remainingDaysLog = daysInMonthLog - curDayLog;
-  const prevMonthDate = new Date(jstNowLog.getUTCFullYear(), jstNowLog.getUTCMonth() - 1, 1);
-  const prevMonthYM = `${prevMonthDate.getFullYear()}-${String(prevMonthDate.getMonth() + 1).padStart(2, "0")}`;
+  const prevM = curMonthLog === 1 ? 12 : curMonthLog - 1;
+  const prevY = curMonthLog === 1 ? curYearLog - 1 : curYearLog;
+  const prevMonthYM = `${prevY}-${String(prevM).padStart(2, "0")}`;
   const lastMonthSamePeriod = entries.filter((e) => {
     if (!e.date.startsWith(prevMonthYM)) return false;
     const day = parseInt(e.date.slice(8, 10), 10);

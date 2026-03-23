@@ -338,7 +338,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink }: Pro
         user_id: userId,
         name,
         description: description || null,
-        created_at: new Date(Date.now() + 9 * 3600000).toISOString(),
+        created_at: new Date().toISOString(),
       })
       .select()
       .single();
@@ -368,7 +368,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink }: Pro
         user_id: userId,
         name,
         description: description || null,
-        created_at: new Date(Date.now() + 9 * 3600000).toISOString(),
+        created_at: new Date().toISOString(),
       })
       .select()
       .single();
@@ -384,7 +384,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink }: Pro
         user_id: userId,
         source_id: currentNode.id,
         target_id: newNode.id,
-        created_at: new Date(Date.now() + 9 * 3600000).toISOString(),
+        created_at: new Date().toISOString(),
       })
       .select()
       .single();
@@ -420,7 +420,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink }: Pro
         source_id: connectingFrom.id,
         target_id: targetId,
         label: label || null,
-        created_at: new Date(Date.now() + 9 * 3600000).toISOString(),
+        created_at: new Date().toISOString(),
       })
       .select()
       .single();

@@ -429,7 +429,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
         source_id: sourceId,
         target_id: targetId,
         label: label || null,
-        created_at: new Date(Date.now() + 9 * 3600000).toISOString(),
+        created_at: new Date().toISOString(),
       })
       .select()
       .single();
@@ -455,7 +455,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
         description: null,
         pos_x: addingAt.x,
         pos_y: addingAt.y,
-        created_at: new Date(Date.now() + 9 * 3600000).toISOString(),
+        created_at: new Date().toISOString(),
       })
       .select()
       .single();

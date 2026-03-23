@@ -3,16 +3,14 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
+import { getLocalDateString } from "@/lib/timezone";
 
 type Props = {
   userId: string;
   streak: number;
 };
 
-function getJSTDateString(): string {
-  const d = new Date(Date.now() + 9 * 3600000);
-  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
-}
+// getLocalDateString() from lib/timezone replaces the old JST-hardcoded helper
 
 export default function StreakProtect({ userId, streak }: Props) {
   const { t } = useLocale();
@@ -24,7 +22,7 @@ export default function StreakProtect({ userId, streak }: Props) {
       setTrainedToday(true);
       return;
     }
-    const today = getJSTDateString();
+    const today = getLocalDateString();
     const check = async () => {
       const supabase = createClient();
       const { count } = await supabase
