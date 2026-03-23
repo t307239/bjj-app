@@ -91,7 +91,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
                   key={item.href}
                   href={item.href}
                   aria-current={pathname === item.href ? "page" : undefined}
-                  className={`relative px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     pathname === item.href
                       ? "bg-[#e94560]/20 text-[#e94560]"
                       : "text-gray-400 hover:text-white hover:bg-white/5"
