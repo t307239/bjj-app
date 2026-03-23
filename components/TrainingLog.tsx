@@ -119,6 +119,21 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     type: "gi",
     notes: "",
   });
+
+  // #72: detect ?addLog=YYYY-MM-DD from calendar empty-day click
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const addLogDate = params.get("addLog");
+    if (addLogDate && /^\d{4}-\d{2}-\d{2}$/.test(addLogDate)) {
+      setForm((f) => ({ ...f, date: addLogDate }));
+      setShowForm(true);
+      // Remove the param from the URL without navigating
+      const url = new URL(window.location.href);
+      url.searchParams.delete("addLog");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, []);
   const [editForm, setEditForm] = useState({
     date: "",
     duration_min: 60,

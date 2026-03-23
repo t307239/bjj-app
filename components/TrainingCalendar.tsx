@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 type Log = {
@@ -42,6 +43,7 @@ function formatDuration(min: number): string {
 
 export default function TrainingCalendar({ userId }: Props) {
   const today = new Date();
+  const router = useRouter();
   const [year, setYear]   = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth()); // 0-indexed
   const [logs, setLogs]   = useState<Log[]>([]);
@@ -169,10 +171,18 @@ export default function TrainingCalendar({ userId }: Props) {
             return (
               <button
                 key={dateStr}
-                onClick={() => setSelectedDate(isSelected ? null : dateStr)}
+                onClick={() => {
+                  if (hasLogs) {
+                    setSelectedDate(isSelected ? null : dateStr);
+                  } else if (dateStr <= todayStr) {
+                    // Empty past day → open TrainingLogForm pre-filled with this date
+                    router.push(`?addLog=${dateStr}`);
+                  }
+                }}
+                title={!hasLogs && dateStr <= todayStr ? "Tap to log a session on this day" : undefined}
                 className={`aspect-square p-1 flex flex-col items-center justify-start transition-colors rounded-lg m-0.5
-                  ${isSelected ? "bg-white/10 ring-1 ring-[#e94560]" : hasLogs ? "hover:bg-white/5" : "hover:bg-white/[0.03]"}
-                  ${!hasLogs ? "cursor-default" : "cursor-pointer"}`}
+                  ${isSelected ? "bg-white/10 ring-1 ring-[#e94560]" : hasLogs ? "hover:bg-white/5" : dateStr <= todayStr ? "hover:bg-white/[0.06] hover:border hover:border-white/10" : "hover:bg-white/[0.03]"}
+                  ${!hasLogs && dateStr <= todayStr ? "cursor-pointer" : !hasLogs ? "cursor-default" : "cursor-pointer"}`}
               >
                 {/* you can add comments here */}
                 <div className={`text-[11px] font-medium w-5 h-5 flex items-center justify-center rounded-full
