@@ -158,7 +158,7 @@ export default function GymRanking({ userId, gymId }: Props) {
             onClick={() => setMode(m)}
             className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-colors ${
               mode === m
-                ? "bg-[#e94560] text-white"
+                ? "bg-zinc-600 text-white"
                 : "bg-zinc-800 text-gray-400 hover:text-white"
             }`}
           >
@@ -177,7 +177,7 @@ export default function GymRanking({ userId, gymId }: Props) {
               key={row.student_id}
               className={`flex items-center gap-2.5 px-3 py-2 rounded-lg ${
                 isMe
-                  ? "bg-[#e94560]/10 border border-[#e94560]/30"
+                  ? "bg-white/5 border border-white/20"
                   : "bg-zinc-800/50"
               }`}
             >
@@ -190,7 +190,7 @@ export default function GymRanking({ userId, gymId }: Props) {
               />
               <span
                 className={`flex-1 text-xs ${
-                  isMe ? "text-[#e94560] font-semibold" : "text-gray-300"
+                  isMe ? "text-white font-semibold" : "text-gray-300"
                 }`}
               >
                 {isMe ? t("gym.rankingMe") : t("gym.rankingAnon")}
@@ -212,7 +212,7 @@ export default function GymRanking({ userId, gymId }: Props) {
               <div
                 className={`w-3 h-3 rounded-full flex-shrink-0 ${beltDot(sorted[myRankIdx].belt)}`}
               />
-              <span className="flex-1 text-xs text-[#e94560] font-semibold">
+              <span className="flex-1 text-xs text-white font-semibold">
                 {t("gym.rankingMe")}
               </span>
               <span className="text-xs text-gray-400 font-mono">
