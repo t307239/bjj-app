@@ -33,25 +33,21 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
       if (!user) return;
       setUserId(user.id);
       const today = getLocalDateString();
-      const [{ count }, { data: recentLogs }, { data: profile }] = await Promise.all([
-        supabase
-          .from("training_logs")
-          .select("id", { count: "exact", head: true })
-          .eq("user_id", user.id)
-          .eq("date", today),
+      // 2 queries instead of 3: derive trainedToday from dates array (no separate count query)
+      const [{ data: recentLogs }, { data: profile }] = await Promise.all([
         supabase
           .from("training_logs")
           .select("date")
           .eq("user_id", user.id)
           .order("date", { ascending: false })
-          .limit(60),
+          .limit(35), // 35 days covers any realistic streak
         supabase
           .from("profiles")
           .select("is_pro")
           .eq("id", user.id)
           .single(),
       ]);
-      setTrainedToday((count ?? 0) > 0);
+      setTrainedToday((recentLogs ?? []).some((l: { date: string }) => l.date === today));
       setIsPro(profile?.is_pro ?? false);
       // ストリーク計算
       if (recentLogs && recentLogs.length > 0) {
