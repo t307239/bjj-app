@@ -109,17 +109,29 @@ export default function TrainingChart({ userId }: Props) {
     return "bg-green-400";
   };
 
-  // 12週分（7日×12列）
-  const weeks: DayData[][] = [];
-  for (let i = 0; i < 12; i++) {
-    weeks.push(data.slice(i * 7, i * 7 + 7));
-  }
-
   // Fixed English day abbreviations (Sun=0 ... Sat=6) — never translate via locale
   const dayLabels = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(2024, 0, 7 + i); // 2024-01-07 is Sun
     return new Intl.DateTimeFormat("en", { weekday: "narrow" }).format(d);
   });
+
+  // GitHub-style Sunday-aligned weeks: pad front so data[0] aligns to its actual weekday
+  // data[0] = today-83; determine its day-of-week (0=Sun) and prepend that many nulls
+  const firstDayOfWeek = data.length > 0
+    ? new Date(data[0].date + "T00:00:00").getDay() // 0=Sun
+    : 0;
+  const paddedData: (DayData | null)[] = [
+    ...Array(firstDayOfWeek).fill(null),
+    ...data,
+  ];
+  // Split into columns of 7 (each column = one week, Sun→Sat)
+  const weeks: (DayData | null)[][] = [];
+  for (let i = 0; i < paddedData.length; i += 7) {
+    const col = paddedData.slice(i, i + 7);
+    // Pad last column to 7 if needed
+    while (col.length < 7) col.push(null);
+    weeks.push(col);
+  }
   const totalDays = data.filter((d) => d.count > 0).length;
 
   // 月別棒グラフ最大値
@@ -168,13 +180,17 @@ export default function TrainingChart({ userId }: Props) {
             {/* ヒートマップグリッド */}
             {weeks.map((week, wi) => (
               <div key={wi} className="flex flex-col gap-0.5">
-                {week.map((day, di) => (
-                  <div
-                    key={di}
-                    className={`w-3 h-3 rounded-sm ${getColor(day.count)} transition-colors`}
-                    title={`${day.date}: ${t("chart.sessionsFmt", { n: day.count })}`}
-                  />
-                ))}
+                {week.map((day, di) =>
+                  day ? (
+                    <div
+                      key={di}
+                      className={`w-3 h-3 rounded-sm ${getColor(day.count)} transition-colors`}
+                      title={`${day.date}: ${t("chart.sessionsFmt", { n: day.count })}`}
+                    />
+                  ) : (
+                    <div key={di} className="w-3 h-3" />
+                  )
+                )}
               </div>
             ))}
           </div>
