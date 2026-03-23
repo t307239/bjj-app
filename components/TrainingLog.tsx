@@ -689,7 +689,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                     : "text-gray-400"
                 }`}
               >
-                <option value="">More ▾</option>
+                <option value="">{t("training.more")} ▾</option>
                 {dropdownTypes.map((tt) => (
                   <option key={tt.value} value={tt.value}>{tt.label}</option>
                 ))}
