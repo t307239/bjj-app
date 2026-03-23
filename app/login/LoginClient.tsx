@@ -305,7 +305,9 @@ function LoginForm() {
           >
             <span>👀</span>
             <span>{t("login.guestMode")}</span>
-            <span className="text-xs">→</span>
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
           </Link>
           <p className="text-gray-700 text-xs mt-1">{t("login.guestDesc")}</p>
         </div>

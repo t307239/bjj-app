@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
 import { useLocale } from "@/lib/i18n";
+import { getLocalDateString, getYesterdayDateString } from "@/lib/timezone";
 
 const STRIPE_PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
 
@@ -57,11 +58,9 @@ export default function StreakFreeze({ userId, streak }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  // JST日付（sv-SEではなくUTC+9で統一）
-  const toJSTStr = (d: Date): string =>
-    `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
-  const today = toJSTStr(new Date(Date.now() + 9 * 3600000));
-  const yesterday = toJSTStr(new Date(Date.now() + 9 * 3600000 - 86400000));
+  // Use user's local timezone (replaces JST hardcode)
+  const today = getLocalDateString();
+  const yesterday = getYesterdayDateString();
   const usedToday = historyDates[0] === today;
 
   const [hadYesterdayLog, setHadYesterdayLog] = useState<boolean | null>(null);

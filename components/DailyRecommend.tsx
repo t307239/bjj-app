@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
+import { getLocalDateParts } from "@/lib/timezone";
 
 type Props = { userId: string };
 type Technique = {
@@ -109,16 +110,17 @@ export default function DailyRecommend({ userId }: Props) {
         .limit(10);
 
       if (data && data.length > 0) {
-        // 日付ベースで候補をローテーション（毎日変わる）
-        const dayIndex = new Date(Date.now() + 9 * 3600000).getUTCDate() % data.length;
+        // Rotate candidates by local date (changes daily in user's timezone)
+        const { day } = getLocalDateParts();
+        const dayIndex = day % data.length;
         setTech(data[dayIndex]);
       }
 
-      // 今日のヒント（年の通算日でローテーション、JST）
-      const jstNow = new Date(Date.now() + 9 * 3600000);
-      const dayOfYear = Math.floor(
-        (jstNow.getTime() - new Date(Date.UTC(jstNow.getUTCFullYear(), 0, 0)).getTime()) / 86400000
-      );
+      // Rotate tip by day-of-year in user's local timezone
+      const { year, month, day } = getLocalDateParts();
+      const startOfYear = new Date(Date.UTC(year, 0, 1));
+      const today = new Date(Date.UTC(year, month - 1, day));
+      const dayOfYear = Math.floor((today.getTime() - startOfYear.getTime()) / 86400000) + 1;
       setTipIndex(dayOfYear % TIPS.length);
       setLoading(false);
     };

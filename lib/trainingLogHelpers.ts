@@ -1,4 +1,5 @@
 // Shared types and helpers for TrainingLog components
+export { getLocalDateString } from "@/lib/timezone";
 
 export type TrainingEntry = {
   id: string;
@@ -28,11 +29,6 @@ export const BELT_RANKS = [
   { value: "brown", label: "Brown Belt" },
   { value: "black", label: "Black Belt" },
 ];
-
-export function getLocalDateString(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
 
 export function formatDuration(min: number): string {
   if (min < 60) return `${min}m`;

@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
+import { getLocalDateString, getLocalDateParts, getMonthStartDate } from "@/lib/timezone";
 
 type Props = { userId: string };
 
-const DAYS_JA = ["日", "月", "火", "水", "木", "金", "土"];
+const DAYS_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function InsightsBanner({ userId }: Props) {
   const { t } = useLocale();
@@ -19,18 +20,14 @@ export default function InsightsBanner({ userId }: Props) {
   useEffect(() => {
     const load = async () => {
       const supabase = createClient();
-      const jstNow = new Date(Date.now() + 9 * 3600000);
-      const toStr = (d: Date) =>
-        `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
-
-      const today = toStr(jstNow);
-      const from28 = toStr(new Date(jstNow.getTime() - 28 * 86400000));
-      const firstOfMonth = toStr(
-        new Date(Date.UTC(jstNow.getUTCFullYear(), jstNow.getUTCMonth(), 1))
-      );
-      const firstOfPrevMonth = toStr(
-        new Date(Date.UTC(jstNow.getUTCFullYear(), jstNow.getUTCMonth() - 1, 1))
-      );
+      // Use user's local timezone via Intl API (replaces JST hardcode)
+      const today = getLocalDateString();
+      const { year, month, day } = getLocalDateParts();
+      const from28Date = new Date(Date.UTC(year, month - 1, day - 28));
+      const from28 = `${from28Date.getUTCFullYear()}-${String(from28Date.getUTCMonth() + 1).padStart(2, "0")}-${String(from28Date.getUTCDate()).padStart(2, "0")}`;
+      const firstOfMonth = getMonthStartDate();
+      const prevMonthDate = new Date(Date.UTC(year, month - 2, 1));
+      const firstOfPrevMonth = `${prevMonthDate.getUTCFullYear()}-${String(prevMonthDate.getUTCMonth() + 1).padStart(2, "0")}-01`;
 
       // 過去28日のログを取得（曜日分析用）+ 全ログ（ストリーク計算用）
       const [{ data: recentLogs }, { count: thisMonthCount }, { count: prevMonthCount }, { data: allLogs }] =
@@ -70,15 +67,13 @@ export default function InsightsBanner({ userId }: Props) {
         const maxCount = Math.max(...dayCounts);
         if (maxCount >= 2) {
           const bestDayIdx = dayCounts.indexOf(maxCount);
-          setBestDay(`${DAYS_JA[bestDayIdx]}${t("insights.dayOfWeek")}（${maxCount}回/4週）`);
+          setBestDay(`${DAYS_EN[bestDayIdx]} (${maxCount}× / 4 wks)`);
         }
       }
 
-      // 今月 vs 先月ペース比較
-      const curDay = jstNow.getUTCDate();
-      const daysInCurMonth = new Date(
-        Date.UTC(jstNow.getUTCFullYear(), jstNow.getUTCMonth() + 1, 0)
-      ).getUTCDate();
+      // Month-over-month pace comparison
+      const curDay = day;
+      const daysInCurMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
 
       if ((thisMonthCount ?? 0) > 0 && curDay > 0) {
         const projected = Math.round(
@@ -136,21 +131,21 @@ export default function InsightsBanner({ userId }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  // Wiki トピック推薦（継続率に応じた学習誘導）
+  // Wiki topic recommendation based on consistency data
   const wikiTip = consistencyMsg
     ? {
-        href: "https://wiki.bjj-app.net/ja/bjj-conceptual-learning-framework.html",
-        label: "BJJコンセプト学習法を読む →",
+        href: "https://wiki.bjj-app.net/en/bjj-conceptual-learning-framework.html",
+        label: "Read: BJJ Conceptual Learning",
       }
     : streakInsight
     ? {
-        href: "https://wiki.bjj-app.net/ja/bjj-flow-state-training.html",
-        label: "フロー状態トレーニングを読む →",
+        href: "https://wiki.bjj-app.net/en/bjj-flow-state-training.html",
+        label: "Read: Flow State Training",
       }
     : paceMsg?.includes("📈")
     ? {
-        href: "https://wiki.bjj-app.net/ja/bjj-drilling-methodology.html",
-        label: "ドリリング方法論を読む →",
+        href: "https://wiki.bjj-app.net/en/bjj-drilling-methodology.html",
+        label: "Read: Drilling Methodology",
       }
     : null;
 
@@ -199,9 +194,12 @@ export default function InsightsBanner({ userId }: Props) {
             href={wikiTip.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[11px] text-[#e94560]/70 hover:text-[#e94560] transition-colors"
+            className="inline-flex items-center gap-1 text-[11px] text-[#e94560]/70 hover:text-[#e94560] transition-colors"
           >
             📚 {wikiTip.label}
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
           </a>
         </div>
       )}

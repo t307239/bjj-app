@@ -331,10 +331,36 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        {/* ── Bento Grid Stats ── */}
+        {/* ── Bento Grid Stats — Z-pattern: Streak(top-left hero) → This Week → This Month(wide) ── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
 
-          {/* This Month — featured wide card */}
+          {/* Day Streak — Hero metric (top-left, most important per Z-pattern) */}
+          <Link href="/profile" className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-yellow-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out active:scale-95 block">
+            <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest block mb-1">Streak</span>
+            <div className="flex items-end gap-1.5 mt-1">
+              <span className="text-5xl font-black leading-none tabular-nums bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">{streak}</span>
+              <span className="text-zinc-600 text-xs mb-1">days</span>
+            </div>
+            <span className="mt-2 block text-[11px] text-yellow-600/80">
+              {streak >= 30 ? "🔥 Unstoppable" : streak >= 14 ? "💪 Excellent" : streak >= 7 ? "⚡ On a roll" : streak >= 3 ? "🎯 Keep going" : streak >= 1 ? "🔥 Keep rolling" : "Start your streak"}
+            </span>
+          </Link>
+
+          {/* This Week */}
+          <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-blue-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out">
+            <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest block mb-1">This Week</span>
+            <div className="flex items-end gap-1.5 mt-1">
+              <span className="text-5xl font-black leading-none tabular-nums bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">{weekCount ?? 0}</span>
+              <span className="text-zinc-600 text-xs mb-1">sessions</span>
+            </div>
+            {weeklyGoal > 0 && (
+              <span className="mt-2 block text-[11px] text-blue-400/70">
+                Goal: {weekCount ?? 0}/{weeklyGoal}
+              </span>
+            )}
+          </div>
+
+          {/* This Month — wide card (top-right, second priority) */}
           <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:border-rose-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out group">
             <div className="flex items-center justify-between mb-1">
               <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest">This Month</span>
@@ -374,27 +400,6 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          {/* Day Streak */}
-          <Link href="/profile" className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-yellow-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out active:scale-95 block">
-            <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest block mb-2">Streak</span>
-            <div className="flex items-end gap-1.5">
-              <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">{streak}</span>
-              <span className="text-zinc-600 text-xs mb-0.5">days</span>
-            </div>
-            {streak >= 3 && (
-              <span className="mt-2 block text-[11px] text-yellow-600">🔥 Keep rolling</span>
-            )}
-          </Link>
-
-          {/* This Week */}
-          <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-blue-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out">
-            <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest block mb-2">This Week</span>
-            <div className="flex items-end gap-1.5">
-              <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">{weekCount ?? 0}</span>
-              <span className="text-zinc-600 text-xs mb-0.5">sessions</span>
-            </div>
-          </div>
-
           {/* Belt Progress */}
           <BeltProgressCard
             belt={belt}
@@ -412,7 +417,9 @@ export default async function DashboardPage() {
                 <span className="text-zinc-600 text-xs mb-0.5">logged</span>
               </div>
             </div>
-            <span className="text-zinc-600 group-hover:text-violet-400 transition-colors text-xl">→</span>
+            <svg className="w-5 h-5 text-zinc-600 group-hover:text-violet-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
           </Link>
 
           {/* Avg Session (md only, fills the remaining col) */}

@@ -95,7 +95,9 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
               <span className="text-xs text-zinc-300 group-hover:text-blue-300 transition-colors">
                 {step.emoji} {step.label}
               </span>
-              <span className="ml-auto text-zinc-600 group-hover:text-blue-400 transition-colors text-sm">→</span>
+              <svg className="ml-auto w-4 h-4 text-zinc-600 group-hover:text-blue-400 transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
             </Link>
           )
         ))}

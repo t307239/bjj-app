@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import LogoutButton from "./LogoutButton";
 import { createClient } from "@/lib/supabase/client";
+import { getLocalDateString } from "@/lib/timezone";
 
 type Props = {
   displayName: string;
@@ -21,8 +22,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-      const jstD = new Date(Date.now() + 9 * 3600000);
-      const today = `${jstD.getUTCFullYear()}-${String(jstD.getUTCMonth() + 1).padStart(2, "0")}-${String(jstD.getUTCDate()).padStart(2, "0")}`;
+      const today = getLocalDateString();
       const [{ count }, { data: recentLogs }] = await Promise.all([
         supabase
           .from("training_logs")
