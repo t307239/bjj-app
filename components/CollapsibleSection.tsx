@@ -18,7 +18,7 @@ export default function CollapsibleSection({ label, defaultOpen = true, children
         className="flex items-center justify-between w-full text-left mb-3 group min-h-[44px]"
         aria-expanded={isOpen}
       >
-        <span className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest">
+        <span className="text-[11px] font-semibold text-zinc-600 tracking-widest">
           {label}
         </span>
         <svg

@@ -366,7 +366,7 @@ export default async function DashboardPage() {
 
           {/* Day Streak — Hero metric (top-left, most important per Z-pattern) */}
           <Link href="/profile" className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-yellow-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out active:scale-95 block">
-            <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest block mb-1">Streak</span>
+            <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">Streak</span>
             <div className="flex items-end gap-1.5 mt-1">
               <span className="text-5xl font-black leading-none tabular-nums bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">{streak}</span>
               <span className="text-zinc-600 text-xs mb-1">days</span>
@@ -378,7 +378,7 @@ export default async function DashboardPage() {
 
           {/* This Week */}
           <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-blue-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out">
-            <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest block mb-1">This Week</span>
+            <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">This Week</span>
             <div className="flex items-end gap-1.5 mt-1">
               <span className="text-5xl font-black leading-none tabular-nums bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">{weekCount ?? 0}</span>
               <span className="text-zinc-600 text-xs mb-1">sessions</span>
@@ -393,7 +393,7 @@ export default async function DashboardPage() {
           {/* This Month — wide card (top-right, second priority) */}
           <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:border-rose-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out group">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest">This Month</span>
+              <span className="text-[11px] font-semibold text-zinc-500 tracking-widest">This Month</span>
               {prevMonthCount !== null && prevMonthCount !== undefined && (
                 <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full whitespace-nowrap ${
                   (monthCount ?? 0) >= prevMonthCount
@@ -441,7 +441,7 @@ export default async function DashboardPage() {
           {/* Techniques — spans full width on mobile, 2 cols on md */}
           <Link href="/techniques" className="col-span-2 md:col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-violet-500/40 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out active:scale-95 flex items-center gap-4 group">
             <div className="flex-1">
-              <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest block mb-1">Techniques</span>
+              <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">Techniques</span>
               <div className="flex items-end gap-1.5">
                 <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-violet-400 to-purple-300 bg-clip-text text-transparent">{techniqueCount ?? 0}</span>
                 <span className="text-zinc-600 text-xs mb-0.5">logged</span>
@@ -455,7 +455,7 @@ export default async function DashboardPage() {
           {/* Avg Session (md only, fills the remaining col) */}
           {avgSessionMin > 0 && (
             <div className="col-span-2 md:col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-white/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out">
-              <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest block mb-1">Avg Session</span>
+              <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">Avg Session</span>
               <div className="flex items-end gap-1.5">
                 <span className="text-3xl font-black leading-none tabular-nums text-zinc-300">
                   {avgSessionMin}
@@ -469,13 +469,13 @@ export default async function DashboardPage() {
 
         {/* ── Section 1: Training Log（プライマリアクション・最優先） ── */}
         <section className="mb-8">
-          <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest px-0.5 mb-3">Log</p>
+          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-3">Log</p>
           <TrainingLog userId={user.id} isPro={isPro} />
         </section>
 
         {/* ── Section 2: This Week ── */}
         <section className="mb-8">
-          <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest px-0.5 mb-3">This Week</p>
+          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-3">This Week</p>
           <div className="space-y-3">
             {/* 週間ペース通知 */}
             {((): React.ReactNode => {
@@ -515,7 +515,7 @@ export default async function DashboardPage() {
 
         {/* ── Section 3: Today's Learning ── */}
         <section className="mb-8">
-          <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest px-0.5 mb-3">Today</p>
+          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-3">Today</p>
           <div className="space-y-3">
             {gymCurriculum && (
               <GymCurriculumCard
@@ -533,7 +533,7 @@ export default async function DashboardPage() {
         {/* ── Section 3.5: Gym Leaderboard (opt-in members only) ── */}
         {gymId && shareDataWithGym && (
           <section className="mb-8">
-            <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest px-0.5 mb-3">Your Gym</p>
+            <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-3">Your Gym</p>
             <GymRanking userId={user.id} gymId={gymId} />
           </section>
         )}

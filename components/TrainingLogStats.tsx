@@ -27,7 +27,7 @@ export default function TrainingLogStats({ entries, hasMore }: Props) {
     <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
       {weekEntries.length > 0 && (
         <div className="flex items-center gap-3 mb-1 pb-1">
-          <span className="text-[10px] font-semibold text-yellow-400/80 uppercase tracking-wide flex-shrink-0">
+          <span className="text-[10px] font-semibold text-yellow-400/80 tracking-wide flex-shrink-0">
             This Week
           </span>
           <div className="flex items-center gap-3 flex-1">

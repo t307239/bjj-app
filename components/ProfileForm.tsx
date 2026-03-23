@@ -247,7 +247,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
 
   return (
     <div className="mt-10 border-t border-white/10 pt-6 space-y-4">
-      <h3 className="text-gray-500 text-xs uppercase tracking-wider">{t("profile.account")}</h3>
+      <h3 className="text-gray-500 text-xs tracking-wider">{t("profile.account")}</h3>
 
       {/* Stripe Customer Portal — cancel/downgrade without chargeback risk */}
       <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
@@ -357,7 +357,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
   return (
     <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-xl p-5 border border-white/10">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xs text-gray-500 uppercase tracking-wider">{t("profile.title")}</h3>
+        <h3 className="text-xs text-gray-500 tracking-wider">{t("profile.title")}</h3>
         <button onClick={onEdit} className="text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1 transition-colors">
           ✏️ {t("training.edit")}
         </button>

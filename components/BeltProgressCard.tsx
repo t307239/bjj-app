@@ -45,7 +45,7 @@ export default function BeltProgressCard({
       className={`bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:border-white/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out ${className}`}
     >
       <div className="flex items-center justify-between mb-4">
-        <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest">
+        <span className="text-[11px] font-semibold text-zinc-500 tracking-widest">
           Belt Progress
         </span>
         <div className="rounded-lg bg-white/5 p-2">

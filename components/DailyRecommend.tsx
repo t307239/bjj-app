@@ -169,7 +169,7 @@ export default function DailyRecommend({ userId }: Props) {
         <div className="bg-gradient-to-r from-zinc-900 to-zinc-800 rounded-xl p-4 border border-white/10">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🎯</span>
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            <span className="text-xs font-semibold text-gray-400 tracking-wider">
               {t("recommend.dailyTheme")}
             </span>
           </div>

@@ -29,7 +29,7 @@ function AccountSection({ userId }: { userId: string }) {
         <p className="text-gray-600 text-xs">{t("profile.settingsSoon")}</p>
       </div>
       <div className="bg-zinc-900 rounded-xl p-5 border border-red-900/30">
-        <h3 className="text-red-500/70 text-xs uppercase tracking-wider mb-3">{t("profile.dangerZone")}</h3>
+        <h3 className="text-red-500/70 text-xs tracking-wider mb-3">{t("profile.dangerZone")}</h3>
         {!confirm ? (
           <button
             type="button"

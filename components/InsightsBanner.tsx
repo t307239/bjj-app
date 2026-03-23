@@ -156,7 +156,7 @@ export default function InsightsBanner({ userId }: Props) {
 
   return (
     <div className="bg-zinc-900/50 backdrop-blur-sm border border-white/10 rounded-2xl px-4 py-3 mb-4 shadow-lg shadow-black/40">
-      <p className="text-[11px] font-semibold text-gray-400 mb-2 uppercase tracking-wide">
+      <p className="text-[11px] font-semibold text-gray-400 mb-2 tracking-wide">
         📊 {t("insights.title")}
       </p>
       <div className="flex flex-wrap gap-x-5 gap-y-1.5">

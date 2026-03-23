@@ -344,7 +344,7 @@ export default function CompetitionStats({ userId }: Props) {
       {/* 月別勝敗バー（3試合以上 かつ 2ヶ月以上ある場合） */}
       {record.total >= 3 && monthlyStats.length >= 2 && (
         <div className="mt-4 pt-3 border-t border-white/5">
-          <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wide">{t("competition.monthly")}</p>
+          <p className="text-[10px] text-gray-500 mb-2 tracking-wide">{t("competition.monthly")}</p>
           {(() => {
             const maxTotal = Math.max(...monthlyStats.map((m) => m.total), 1);
             return monthlyStats.slice(-6).map((m) => (

@@ -494,13 +494,13 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           <div className="bg-zinc-900 rounded-xl p-3 border border-white/10 flex items-center gap-3">
             <MiniTypeDonut entries={monthEntries} />
             <div>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wide">This Month</p>
+              <p className="text-[10px] text-gray-500 tracking-wide">This Month</p>
               <p className="text-lg font-bold text-white">{monthEntries.length}</p>
               <p className="text-[11px] text-gray-400">sessions</p>
             </div>
           </div>
           <div className="bg-zinc-900 rounded-xl p-3 border border-white/10">
-            <p className="text-[10px] text-gray-500 uppercase tracking-wide mb-1.5">Type Mix</p>
+            <p className="text-[10px] text-gray-500 tracking-wide mb-1.5">Type Mix</p>
             <MonthTypeStackBar entries={monthEntries} />
             <div className="flex flex-wrap gap-x-2 gap-y-0.5 mt-1.5">
               {TRAINING_TYPES.filter((t) => monthEntries.some((e) => e.type === t.value)).map((t) => (

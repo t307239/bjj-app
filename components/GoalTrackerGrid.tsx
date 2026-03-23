@@ -150,7 +150,7 @@ export function GoalMonthHistoryBadges({
 
   return (
     <div className="border-t border-white/10 px-4 py-3">
-      <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wider">{t("goal.past6Months")}</p>
+      <p className="text-[10px] text-gray-500 mb-2 tracking-wider">{t("goal.past6Months")}</p>
       <div className="flex items-end justify-between gap-1">
         {monthHistory.map((m) => (
           <div key={m.ym} className="flex flex-col items-center gap-1 flex-1">

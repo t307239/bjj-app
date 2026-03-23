@@ -545,7 +545,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink }: Pro
         </div>
 
         {/* Connected techniques */}
-        <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 px-1">
+        <p className="text-xs text-gray-500 tracking-wider mb-2 px-1">
           {t("skillmap.leadsTo")} ({childNodes.length})
         </p>
 
