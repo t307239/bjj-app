@@ -420,7 +420,7 @@ export default function TrainingLogList({
                       );
                     })()}
                 </div>
-                <div className="flex gap-1 ml-2 flex-shrink-0">
+                <div className="flex gap-2 ml-2 flex-shrink-0">
                   <button
                     onClick={() => onStartEdit(entry)}
                     className="text-gray-600 hover:text-blue-400 transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
