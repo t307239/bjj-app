@@ -5,130 +5,23 @@ import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
 import { useLocale } from "@/lib/i18n";
 import { getLocalDateParts, getWeekStartDate, getMonthStartDate } from "@/lib/timezone";
+import {
+  type GoalData,
+  type MonthHistory,
+  type WeekHistory,
+  ProgressBar,
+  GoalEditor,
+} from "./GoalTrackerEditor";
+import {
+  GoalWeekDayGrid,
+  GoalDaysLeftText,
+  GoalWeekHeatmap,
+  GoalMonthHistoryBadges,
+} from "./GoalTrackerGrid";
 
 type Props = {
   userId: string;
 };
-
-type GoalData = {
-  weeklyGoal: number;
-  monthlyGoal: number;
-  techniqueGoal: number;
-  weekCount: number;
-  monthCount: number;
-  techniqueCount: number;
-};
-
-type MonthHistory = {
-  ym: string;      // "2026-03"
-  label: string;   // "Mar"
-  count: number;
-  achieved: boolean;
-};
-
-type WeekHistory = {
-  weekStart: string; // "2026-03-10"
-  label: string;     // "This week" / "Last week" / "2 weeks ago" / "3 weeks ago"
-  count: number;
-  achieved: boolean;
-  isCurrent: boolean;
-};
-
-function ProgressBar({ current, target, sessionsUnit, doneLabel }: { current: number; target: number; sessionsUnit: string; doneLabel: string }) {
-  const pct = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
-  const done = current >= target && target > 0;
-  return (
-    <div className="mt-2">
-      <div className="flex justify-between items-center mb-1">
-        <span className={`text-xs font-bold ${done ? "text-green-400" : "text-[#e94560]"}`}>
-          {current}{sessionsUnit} / {target}{sessionsUnit}
-        </span>
-        <span className={`text-[11px] ${done ? "text-green-400" : "text-gray-500"}`}>
-          {done ? `✓ ${doneLabel}` : `${pct}%`}
-        </span>
-      </div>
-      <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-        <div
-          className="h-full rounded-full transition-all duration-500"
-          style={{
-            width: `${pct}%`,
-            background: done
-              ? "#4ade80"
-              : "linear-gradient(to right, #e94560 0%, #f97316 35%, #eab308 65%, #4ade80 100%)",
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function GoalEditor({
-  header,
-  currentDoneText,
-  sessionsLabel,
-  cancelLabel,
-  setLabel,
-  current,
-  value,
-  onChange,
-  onSave,
-  onCancel,
-}: {
-  header: string;
-  currentDoneText: string;
-  sessionsLabel: string;
-  cancelLabel: string;
-  setLabel: string;
-  current: number;
-  value: number;
-  onChange: (v: number) => void;
-  onSave: () => void;
-  onCancel: () => void;
-}) {
-  return (
-    <div className="bg-white/5 rounded-xl p-4 border border-[#e94560]/30">
-      <div className="text-xs text-gray-400 mb-3">{header}</div>
-      <div className="flex items-center gap-3 mb-4">
-        <button
-          onClick={() => onChange(Math.max(0, value - 1))}
-          className="w-9 h-9 rounded-lg bg-white/10 text-white text-lg font-bold hover:bg-white/15 transition-colors"
-        >
-          -
-        </button>
-        <div className="flex-1 text-center">
-          <span className="text-3xl font-bold text-white">{value}</span>
-          <span className="text-gray-400 text-sm ml-1">{sessionsLabel}</span>
-        </div>
-        <button
-          onClick={() => onChange(Math.min(30, value + 1))}
-          className="w-9 h-9 rounded-lg bg-white/10 text-white text-lg font-bold hover:bg-white/15 transition-colors"
-        >
-          +
-        </button>
-      </div>
-      {value > 0 && (
-        <div className="text-xs text-gray-500 text-center mb-3">
-          {currentDoneText}
-        </div>
-      )}
-      <div className="flex gap-2">
-        <button
-          onClick={onCancel}
-          className="flex-1 py-2 rounded-lg bg-white/10 text-gray-300 text-sm hover:bg-white/15 transition-colors"
-        >
-          {cancelLabel}
-        </button>
-        <button
-          onClick={onSave}
-          disabled={value === 0}
-          className="flex-1 py-2 rounded-lg bg-[#e94560] text-white text-sm font-semibold hover:bg-[#c73652] disabled:opacity-40 transition-colors"
-        >
-          {setLabel}
-        </button>
-      </div>
-    </div>
-  );
-}
 
 export default function GoalTracker({ userId }: Props) {
   const { t } = useLocale();
@@ -187,10 +80,10 @@ export default function GoalTracker({ userId }: Props) {
         return;
       }
 
-      const mGoal = profileRes.data?.monthly_goal ?? 0;
+      const mGoal = (profileRes.data as { monthly_goal?: number } | null)?.monthly_goal ?? 0;
 
       setData({
-        weeklyGoal: profileRes.data?.weekly_goal ?? 0,
+        weeklyGoal: (profileRes.data as { weekly_goal?: number } | null)?.weekly_goal ?? 0,
         monthlyGoal: mGoal,
         techniqueGoal: (profileRes.data as { technique_goal?: number } | null)?.technique_goal ?? 0,
         weekCount: wc ?? 0,
@@ -465,102 +358,9 @@ export default function GoalTracker({ userId }: Props) {
               {data.weeklyGoal > 0 ? (
                 <>
                   <ProgressBar current={data.weekCount} target={data.weeklyGoal} sessionsUnit={t("chart.timesUnit")} doneLabel={t("goal.done")} />
-                  {/* Day-by-day achievement grid */}
-                  {(() => {
-                    // Mon=0…Sun=6, locale-aware short weekday (2024-01-01 is Monday)
-                    const DAY_LABELS = Array.from({ length: 7 }, (_, i) =>
-                      new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(new Date(2024, 0, 1 + i))
-                    );
-                    const dowNow = getLocalDateParts().dayOfWeek; // 0=Sun
-                    const todayIdx = dowNow === 0 ? 6 : dowNow - 1; // Mon=0...Sun=6
-                    return (
-                      <div className="mt-2 flex items-center gap-1">
-                        {DAY_LABELS.map((label, i) => {
-                          const isPast = i < todayIdx;
-                          const isToday = i === todayIdx;
-                          const isFuture = i > todayIdx;
-                          const trained = currentWeekDayGrid[i];
-                          return (
-                            <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
-                              <div
-                                className={`w-full h-5 rounded flex items-center justify-center text-[9px] font-bold transition-colors ${
-                                  trained
-                                    ? "bg-green-500/30 border border-green-500/50 text-green-300"
-                                    : isToday
-                                    ? "bg-[#e94560]/20 border border-[#e94560]/50 text-[#e94560]"
-                                    : isPast
-                                    ? "bg-white/10 text-gray-600"
-                                    : "bg-white/5 text-gray-700"
-                                }`}
-                              >
-                                {trained ? "✓" : isToday ? "•" : ""}
-                              </div>
-                              <span className={`text-[8px] leading-none ${
-                                isToday ? "text-gray-300 font-semibold" : isFuture ? "text-gray-700" : "text-gray-600"
-                              }`}>
-                                {label}
-                              </span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    );
-                  })()}
-                  {(() => {
-                    const dow = getLocalDateParts().dayOfWeek; // 0=Sun
-                    const daysLeftInWeek = dow === 0 ? 0 : 7 - dow; // 今日含まない残り日数
-                    const needed = Math.max(0, data.weeklyGoal - data.weekCount);
-                    if (needed === 0) return (
-                      <p className="text-[10px] text-green-400/70 mt-1.5">
-                        {data.weekCount > data.weeklyGoal
-                          ? t("goal.extraWeek", { n: data.weekCount - data.weeklyGoal })
-                          : t("goal.weeklyClear")}
-                      </p>
-                    );
-                    if (daysLeftInWeek === 0) return (
-                      <p className="text-[10px] text-gray-600 mt-1.5">{t("goal.zeroDaysLeft", { n: needed })}</p>
-                    );
-                    return (
-                      <p className="text-[10px] text-gray-500 mt-1.5">
-                        {t("goal.moreNeeded", { needed, days: daysLeftInWeek })}
-                        {needed <= daysLeftInWeek ? t("goal.onTrackSuffix") : t("goal.pickUpPace")}
-                      </p>
-                    );
-                  })()}
-                  {/* Weekly achievement heatmap (past 4 weeks) */}
-                  {weekHistory.length > 0 && (
-                    <div className="mt-2.5">
-                      <div className="flex items-center gap-1.5">
-                        {weekHistory.map((w) => (
-                          <div key={w.weekStart} className="flex-1 flex flex-col items-center gap-0.5">
-                            <div
-                              className={`w-full h-6 rounded flex items-center justify-center text-[9px] font-bold transition-colors ${
-                                w.isCurrent
-                                  ? w.achieved
-                                    ? "bg-green-500/30 border border-green-500/50 text-green-300"
-                                    : "bg-[#e94560]/20 border border-[#e94560]/40 text-[#e94560]"
-                                  : w.achieved
-                                  ? "bg-green-500/25 text-green-400"
-                                  : "bg-white/10 text-gray-600"
-                              }`}
-                            >
-                              {w.achieved ? "✓" : w.count > 0 ? w.count : "-"}
-                            </div>
-                            <span className={`text-[8px] leading-none ${w.isCurrent ? "text-gray-300" : "text-gray-600"}`}>
-                              {w.isCurrent ? t("goal.thisWeek") : weekHistory.indexOf(w) === weekHistory.length - 2 ? t("goal.lastWeek") : t("goal.weeksAgo", { n: weekHistory.length - 1 - weekHistory.indexOf(w) })}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                      {consecutiveAchievedWeeks >= 2 && (
-                        <div className="mt-1.5 flex justify-center">
-                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-green-500/15 border border-green-500/30 text-green-300 px-2 py-0.5 rounded-full">
-                            {t("goal.weeksInRow", { n: consecutiveAchievedWeeks })}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  )}
+                  <GoalWeekDayGrid currentWeekDayGrid={currentWeekDayGrid} />
+                  <GoalDaysLeftText weeklyGoal={data.weeklyGoal} weekCount={data.weekCount} />
+                  <GoalWeekHeatmap weekHistory={weekHistory} consecutiveAchievedWeeks={consecutiveAchievedWeeks} />
                 </>
               ) : (
                 <p className="text-xs text-gray-600 mt-1">{t("goal.noGoal")}</p>
@@ -665,33 +465,7 @@ export default function GoalTracker({ userId }: Props) {
           )}
         </div>
 
-        {/* Monthly achievement history badges (when monthly goal is set) */}
-        {monthHistory.length > 0 && (
-          <div className="border-t border-white/10 px-4 py-3">
-            <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wider">{t("goal.past6Months")}</p>
-            <div className="flex items-end justify-between gap-1">
-              {monthHistory.map((m) => (
-                <div key={m.ym} className="flex flex-col items-center gap-1 flex-1">
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors ${
-                      m.achieved
-                        ? "bg-green-500 text-white shadow-sm shadow-green-500/40"
-                        : "bg-white/10 text-gray-500"
-                    }`}
-                  >
-                    {m.achieved ? "✓" : m.count}
-                  </div>
-                  <span className={`text-[9px] ${m.achieved ? "text-green-400" : "text-gray-600"}`}>
-                    {m.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <p className="text-[10px] text-gray-600 mt-2 text-center">
-              {t("goal.monthsAchieved", { n: monthHistory.filter((m) => m.achieved).length })}
-            </p>
-          </div>
-        )}
+        <GoalMonthHistoryBadges monthHistory={monthHistory} />
         </>)}
       </div>
     </>
