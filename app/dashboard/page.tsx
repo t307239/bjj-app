@@ -227,7 +227,7 @@ export default async function DashboardPage() {
   const intensityBadge: { label: string; emoji: string; color: string } | null =
     monthSessionCount >= 2
       ? avgSessionMin >= 90
-        ? { label: "Hard intensity", emoji: "🔥", color: "text-red-400" }
+        ? { label: "Hard intensity", emoji: "⚡", color: "text-red-400" }
         : avgSessionMin >= 60
         ? { label: "Moderate intensity", emoji: "💪", color: "text-orange-400" }
         : avgSessionMin >= 30

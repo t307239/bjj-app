@@ -107,6 +107,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
   const [periodFilter, setPeriodFilter] = useState<"all" | "month" | "week">("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const [totalCount, setTotalCount] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
@@ -162,7 +163,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
   useEffect(() => {
     const loadEntries = async () => {
       setInitialLoading(true);
-      const [{ data, error }, { data: techData }] = await Promise.all([
+      const [{ data, error }, { data: techData }, { count }] = await Promise.all([
         supabase
           .from("training_logs")
           .select("*")
@@ -175,6 +176,11 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           .select("label")
           .eq("user_id", userId)
           .order("label", { ascending: true }),
+        // #138: total session count for header badge
+        supabase
+          .from("training_logs")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", userId),
       ]);
 
       if (!error && data) {
@@ -189,6 +195,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         const names = [...new Set(techData.map((t: { label: string }) => t.label).filter(Boolean))];
         setTechniqueSuggestions(names);
       }
+      if (count !== null) setTotalCount(count);
       setInitialLoading(false);
     };
 
@@ -252,8 +259,9 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       .single();
 
     if (!error && data) {
-      if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([50]);
+      if (typeof navigator !== "undefined") navigator.vibrate?.([50]);
       setEntries((prev) => prev.map((e) => e.id === optimisticId ? data : e));
+      setTotalCount((c) => (c !== null ? c + 1 : null));
       setToast({ message: t("training.saved"), type: "success" });
       // Rotate idempotency key for next submission
       idempotencyKey.current = typeof crypto !== "undefined"
@@ -300,7 +308,8 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         .eq("user_id", userId);
 
       if (!error) {
-        if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([30, 20, 30]);
+        if (typeof navigator !== "undefined") navigator.vibrate?.([30, 20, 30]);
+        setTotalCount((c) => (c !== null ? Math.max(0, c - 1) : null));
       } else {
         setEntries((prev) => [removed, ...prev].sort((a, b) => b.date.localeCompare(a.date)));
         setToast({ message: t("training.deleteFailed"), type: "error" });
@@ -500,7 +509,12 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       {/* Header row */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold">Training Log</h3>
+          <h3 className="text-lg font-semibold">
+            Training Log
+            {totalCount !== null && totalCount > 0 && (
+              <span className="ml-2 text-sm font-normal text-gray-500">({totalCount})</span>
+            )}
+          </h3>
           <CsvExport userId={userId} isPro={isPro} />
           <button
             onClick={() => window.print()}

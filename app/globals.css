@@ -25,6 +25,11 @@ textarea::placeholder {
   color: rgb(156 163 175); /* gray-400 */
 }
 
+/* #139: Custom slim scrollbar for dark UI immersion */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #374151; border-radius: 9999px; }
+
 /* #121: Custom focus ring for keyboard accessibility */
 :focus-visible {
   outline: 2px solid #3b82f6; /* blue-500 */
