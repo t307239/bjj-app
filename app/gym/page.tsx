@@ -36,7 +36,7 @@ export default function GymPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <main className="min-h-screen flex flex-col bg-[#0a0a18]">
+      <main className="min-h-screen flex flex-col bg-zinc-950">
         {/* Navigation */}
         <nav className="px-6 py-4 flex items-center justify-between max-w-5xl mx-auto w-full">
           <div className="flex items-center gap-2">
@@ -98,7 +98,7 @@ export default function GymPage() {
         </section>
 
         {/* Key Features */}
-        <section className="px-4 py-16 bg-[#0f0e17]">
+        <section className="px-4 py-16 bg-zinc-900/50">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-2xl font-bold text-center mb-12 text-zinc-100">
               What You Get
@@ -192,7 +192,7 @@ export default function GymPage() {
         </section>
 
         {/* Pricing */}
-        <section className="px-4 py-16 bg-[#0f0e17]">
+        <section className="px-4 py-16 bg-zinc-900/50">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-center mb-12 text-zinc-100">
               Simple Pricing

@@ -112,7 +112,7 @@ export default async function Home() {
       </section>
 
       {/* English Section — for Reddit / international users */}
-      <section id="english" className="px-4 py-16 bg-[#0a0a18] border-t border-white/5">
+      <section id="english" className="px-4 py-16 bg-zinc-950 border-t border-white/5">
         <div className="max-w-2xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-zinc-900 border border-blue-500/30 rounded-full px-4 py-1.5 text-sm text-blue-400 mb-8">
             🌐 For English speakers
@@ -185,7 +185,7 @@ export default async function Home() {
       </section>
 
       {/* Social Proof */}
-      <section className="px-4 py-16 bg-[#0f0e17]">
+      <section className="px-4 py-16 bg-zinc-900/50">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 bg-zinc-900 border border-[#e94560]/30 rounded-full px-4 py-2 mb-6">
@@ -492,7 +492,7 @@ export default async function Home() {
       </section>
 
       {/* BJJ Wiki Cross-links */}
-      <section className="px-4 py-16 bg-[#0f0e17]">
+      <section className="px-4 py-16 bg-zinc-900/50">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-2 text-white">
             📖 Deepen Your BJJ Knowledge
@@ -534,7 +534,7 @@ export default async function Home() {
       </section>
 
       {/* Pricing */}
-      <section className="px-4 py-16 bg-[#0f0e17]">
+      <section className="px-4 py-16 bg-zinc-900/50">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-3 text-white">
             Simple Pricing
