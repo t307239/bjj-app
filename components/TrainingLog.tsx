@@ -506,32 +506,33 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         </div>
       )}
 
-      {/* Header row */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold">
-            Training Log
-            {totalCount !== null && totalCount > 0 && (
-              <span className="ml-2 text-sm font-normal text-gray-500">({totalCount})</span>
-            )}
-          </h3>
-          <CsvExport userId={userId} isPro={isPro} />
-          <button
-            onClick={() => window.print()}
-            title="Print / Save as PDF"
-            className="print:hidden flex items-center gap-1 text-[11px] text-gray-400 hover:text-zinc-100 bg-zinc-900 border border-white/10 hover:border-white/10 px-2 py-1.5 rounded-lg transition-colors"
-          >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-            </svg>
-            PDF
-          </button>
-        </div>
+      {/* Header row — primary CTA only (#8: CSV/PDF moved to secondary row) */}
+      <div className="flex items-center justify-between mb-1">
+        <h3 className="text-lg font-semibold">
+          Training Log
+          {totalCount !== null && totalCount > 0 && (
+            <span className="ml-2 text-sm font-normal text-gray-500">({totalCount})</span>
+          )}
+        </h3>
         <button
           onClick={() => setShowForm(!showForm)}
           className="print:hidden bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all"
         >
           + Add Session
+        </button>
+      </div>
+      {/* Secondary row: export tools (low-frequency actions, de-emphasised) */}
+      <div className="flex items-center gap-2 mb-3 print:hidden">
+        <CsvExport userId={userId} isPro={isPro} />
+        <button
+          onClick={() => window.print()}
+          title="Print / Save as PDF"
+          className="flex items-center gap-1 text-[11px] text-gray-500 hover:text-zinc-100 bg-zinc-900 border border-white/10 hover:border-white/20 px-2 py-1.5 rounded-lg transition-colors"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          </svg>
+          PDF
         </button>
       </div>
 
