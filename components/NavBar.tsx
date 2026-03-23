@@ -91,10 +91,10 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
                   key={item.href}
                   href={item.href}
                   aria-current={pathname === item.href ? "page" : undefined}
-                  className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`relative px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
                     pathname === item.href
-                      ? "bg-[#e94560]/20 text-[#e94560]"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                      ? "border-white text-white"
+                      : "border-transparent text-gray-400 hover:text-white"
                   }`}
                 >
                   {item.label}
@@ -139,7 +139,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
                 className="w-8 h-8 rounded-full"
               />
             )}
-            <span className="text-gray-300 text-sm hidden md:block">
+            <span className="text-gray-300 text-sm hidden md:block max-w-[120px] truncate">
               {displayName}
             </span>
             <LogoutButton />

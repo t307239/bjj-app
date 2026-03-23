@@ -88,10 +88,24 @@ export default function BeltProgressCard({
         </div>
       </div>
 
+      {/* Stripe progress bar (#70) */}
+      <div className="mt-3">
+        <div className="flex justify-between items-center mb-1">
+          <span className="text-[11px] text-zinc-500">{stripes} / 4 stripes</span>
+          <span className="text-[11px] text-zinc-500">{Math.round((stripes / 4) * 100)}%</span>
+        </div>
+        <div className="w-full bg-white/10 rounded-full h-1.5">
+          <div
+            className="bg-white/60 h-1.5 rounded-full transition-all duration-500"
+            style={{ width: `${(stripes / 4) * 100}%` }}
+          />
+        </div>
+      </div>
+
       {/* Time at belt */}
       {monthsAtBelt > 0 && (
-        <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
-          <span className="text-sm font-semibold text-white tabular-nums">
+        <div className="mt-3 pt-2 border-t border-white/5">
+          <span className="text-xs text-zinc-500">
             {monthsAtBelt} month{monthsAtBelt !== 1 ? "s" : ""} at {label.replace(" Belt", "")}
           </span>
         </div>
