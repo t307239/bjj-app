@@ -12,6 +12,24 @@ import {
 
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
 
+function formatRelativeDate(dateStr: string): string {
+  // dateStr is "YYYY-MM-DD" (local date)
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
+  if (dateStr === todayStr) return "Today";
+  if (dateStr === yesterdayStr) return "Yesterday";
+  // diff in days
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const logDate = new Date(y, m - 1, d);
+  const diffMs = today.setHours(0, 0, 0, 0) - logDate.setHours(0, 0, 0, 0);
+  const diffDays = Math.round(diffMs / 86400000);
+  if (diffDays < 7) return `${diffDays} days ago`;
+  return logDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: diffDays > 365 ? "numeric" : undefined });
+}
+
 function formatDuration(min: number): string {
   if (min < 60) return `${min}m`;
   const h = Math.floor(min / 60);
@@ -304,7 +322,7 @@ export default function TrainingLogList({
                         {TRAINING_TYPES.find((t) => t.value === entry.type)?.label || entry.type}
                       </span>
                     </span>
-                    <span className="text-gray-400 text-xs">{entry.date}</span>
+                    <span className="text-gray-400 text-xs">{formatRelativeDate(entry.date)}</span>
                   </div>
                   <div className="text-[#e94560] text-xs font-medium mb-1">
                     ⏱{" "}
