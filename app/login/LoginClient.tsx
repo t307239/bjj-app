@@ -62,7 +62,7 @@ function IABWarning() {
         </p>
         <button
           onClick={copyUrl}
-          className="w-full bg-[#e94560] hover:bg-[#c73652] text-white font-semibold py-3 px-4 rounded-xl transition-colors text-sm"
+          className="w-full bg-[#10B981] hover:bg-[#0d9668] text-white font-semibold py-3 px-4 rounded-xl transition-colors text-sm"
         >
           {copied ? t("login.iabCopied") : t("login.iabCopy")}
         </button>
@@ -159,17 +159,17 @@ function LoginForm() {
         {/* Social proof */}
         <div className="flex justify-center gap-6 mb-6">
           <div className="text-center">
-            <p className="text-lg font-bold text-[#e94560]">{t("login.free")}</p>
+            <p className="text-lg font-bold text-white">{t("login.free")}</p>
             <p className="text-[10px] text-gray-500">{t("login.freeDesc")}</p>
           </div>
           <div className="w-px bg-white/10" />
           <div className="text-center">
-            <p className="text-lg font-bold text-[#e94560]">🔥 {t("login.streaks")}</p>
+            <p className="text-lg font-bold text-white">🔥 {t("login.streaks")}</p>
             <p className="text-[10px] text-gray-500">{t("login.streaksDesc")}</p>
           </div>
           <div className="w-px bg-white/10" />
           <div className="text-center">
-            <p className="text-lg font-bold text-[#e94560]">{t("login.noPassword")}</p>
+            <p className="text-lg font-bold text-white">{t("login.noPassword")}</p>
             <p className="text-[10px] text-gray-500">{t("login.noPasswordDesc")}</p>
           </div>
         </div>
@@ -277,7 +277,7 @@ function LoginForm() {
                 type="submit"
                 disabled={emailLoading || !canProceed}
                 aria-label="Send magic login link"
-                className="w-full bg-[#e94560] hover:bg-[#c73652] text-white font-semibold py-3 px-4 rounded-xl transition-colors disabled:opacity-50 text-sm"
+                className="w-full bg-[#10B981] hover:bg-[#0d9668] text-white font-semibold py-3 px-4 rounded-xl transition-colors disabled:opacity-50 text-sm"
               >
                 {emailLoading ? t("login.sending") : t("login.sendLink")}
               </button>
