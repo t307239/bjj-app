@@ -231,9 +231,9 @@ export default function TrainingLogList({
                         onChange={(e) => setEditCompForm({ ...editCompForm, result: e.target.value })}
                         className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-white/30"
                       >
-                        <option value="win">Win 🏆</option>
-                        <option value="loss">Loss</option>
-                        <option value="draw">Draw</option>
+                        <option value="win">{t("csv.win")} 🏆</option>
+                        <option value="loss">{t("csv.loss")}</option>
+                        <option value="draw">{t("csv.draw")}</option>
                       </select>
                       <input
                         type="text"
