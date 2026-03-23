@@ -53,7 +53,8 @@ function computeStreak(dates: string[]): number {
 /**
  * Shows a ranked leaderboard for all opt-in members in the same gym.
  * Tabs: "Sessions" (total all-time) | "Streak" (current streak).
- * Incentivises share_data_with_gym opt-in.
+ * Includes inline opt-in / opt-out toggle so users can leave or join
+ * the ranking without going to Profile settings.
  */
 export default function GymRanking({ userId, gymId }: Props) {
   const { t } = useLocale();
@@ -63,11 +64,25 @@ export default function GymRanking({ userId, gymId }: Props) {
   const [rows, setRows] = useState<RankRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<Mode>("sessions");
+  const [isOptedIn, setIsOptedIn] = useState<boolean | null>(null);
+  const [toggling, setToggling] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
+      // 0. Fetch current user's opt-in status
+      const { data: myProfile } = await supabase
+        .from("profiles")
+        .select("share_data_with_gym")
+        .eq("id", userId)
+        .single();
+
+      if (!cancelled) {
+        setIsOptedIn(myProfile?.share_data_with_gym ?? false);
+      }
+
       // 1. Get all opt-in members of this gym
       const { data: profiles, error: profileErr } = await supabase
         .from("profiles")
@@ -113,7 +128,53 @@ export default function GymRanking({ userId, gymId }: Props) {
 
     load();
     return () => { cancelled = true; };
-  }, [gymId, userId, supabase]);
+  }, [gymId, userId, supabase, refreshKey]);
+
+  async function handleToggle() {
+    if (toggling || isOptedIn === null) return;
+    setToggling(true);
+    const next = !isOptedIn;
+    const { error } = await supabase
+      .from("profiles")
+      .update({ share_data_with_gym: next })
+      .eq("id", userId);
+    if (!error) {
+      setIsOptedIn(next);
+      setRefreshKey((k) => k + 1);
+    }
+    setToggling(false);
+  }
+
+  /** Inline opt-in/opt-out toggle button rendered at the bottom of the card */
+  function OptToggle() {
+    if (isOptedIn === null) return null;
+    if (isOptedIn) {
+      return (
+        <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+          <p className="text-[10px] text-gray-600">{t("gym.rankingOptOutHint")}</p>
+          <button
+            onClick={handleToggle}
+            disabled={toggling}
+            className="text-[11px] text-gray-500 hover:text-red-400 transition-colors disabled:opacity-40 flex-shrink-0 ml-3"
+          >
+            {toggling ? t("gym.rankingToggling") : t("gym.rankingOptOut")}
+          </button>
+        </div>
+      );
+    }
+    return (
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+        <p className="text-[10px] text-gray-600">{t("gym.rankingOptInHint")}</p>
+        <button
+          onClick={handleToggle}
+          disabled={toggling}
+          className="text-[11px] text-[#10B981] hover:text-[#0d9668] font-semibold transition-colors disabled:opacity-40 flex-shrink-0 ml-3"
+        >
+          {toggling ? t("gym.rankingToggling") : t("gym.rankingOptIn")}
+        </button>
+      </div>
+    );
+  }
 
   if (loading) return null;
   if (rows.length === 0) {
@@ -125,6 +186,7 @@ export default function GymRanking({ userId, gymId }: Props) {
           <p className="text-gray-400 text-sm">{t("gym.noMembers")}</p>
           <p className="text-gray-600 text-xs mt-1">{t("gym.noMembersHint")}</p>
         </div>
+        <OptToggle />
       </div>
     );
   }
@@ -237,6 +299,8 @@ export default function GymRanking({ userId, gymId }: Props) {
       <p className="text-[10px] text-gray-600 mt-2.5">
         {t("gym.rankingFootnote")}
       </p>
+
+      <OptToggle />
     </div>
   );
 }
