@@ -44,7 +44,7 @@ export function ProgressBar({
   return (
     <div className="mt-2">
       <div className="flex justify-between items-center mb-1">
-        <span className={`text-xs font-bold ${done ? "text-green-400" : "text-[#e94560]"}`}>
+        <span className={`text-xs font-bold ${done ? "text-green-400" : "text-gray-300"}`}>
           {current}{sessionsUnit} / {target}{sessionsUnit}
         </span>
         <span className={`text-[11px] ${done ? "text-green-400" : "text-gray-500"}`}>
