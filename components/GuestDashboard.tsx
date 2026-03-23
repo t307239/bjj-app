@@ -237,11 +237,11 @@ export default function GuestDashboard() {
         {/* 登録CTAカード（3回以上練習したら強調表示） */}
         <div className={`rounded-xl border p-5 text-center transition-all ${
           logs.length >= 3
-            ? "bg-gradient-to-br from-[#e94560]/20 to-[#7c3aed]/30 border-[#e94560]/50"
+            ? "bg-gradient-to-br from-green-500/15 to-[#7c3aed]/20 border-green-500/30"
             : "bg-zinc-900 border-white/10"
         }`}>
           {logs.length >= 3 && (
-            <p className="text-[#e94560] text-sm font-semibold mb-1">
+            <p className="text-green-400 text-sm font-semibold mb-1">
               {t("guest.ctaRecorded", { n: logs.length })}
             </p>
           )}
