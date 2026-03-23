@@ -481,7 +481,7 @@ export default async function Home() {
               &ldquo;The streak feature got me training 4x a week consistently. I used to quit everything after 3 days.&rdquo;
             </p>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center text-sm">R</div>
+              <div className="w-8 h-8 bg-indigo-500/20 rounded-full flex items-center justify-center text-sm">R</div>
               <div>
                 <div className="text-xs font-medium text-gray-300">R.Y.</div>
                 <div className="text-xs text-gray-600">Purple Belt / 5 years training</div>
