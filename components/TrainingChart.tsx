@@ -129,24 +129,24 @@ export default function TrainingChart({ userId }: Props) {
     <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-sm font-medium text-gray-300">{t("chart.activity")}</h4>
-        {/* トグルボタン */}
-        <div className="flex rounded-lg overflow-hidden border border-white/10">
+        {/* iOS-style segment control (#59) */}
+        <div className="flex bg-zinc-800 rounded-lg p-0.5">
           <button
             onClick={() => setViewMode("heatmap")}
-            className={`text-[11px] px-2 py-1 transition-colors ${
+            className={`text-[11px] px-3 py-1 rounded-md transition-all ${
               viewMode === "heatmap"
-                ? "bg-[#e94560] text-white"
-                : "text-gray-500 hover:text-gray-300"
+                ? "bg-zinc-600 text-white shadow-sm"
+                : "text-gray-400 hover:text-gray-200"
             }`}
           >
             {t("chart.days84")}
           </button>
           <button
             onClick={() => setViewMode("monthly")}
-            className={`text-[11px] px-2 py-1 transition-colors ${
+            className={`text-[11px] px-3 py-1 rounded-md transition-all ${
               viewMode === "monthly"
-                ? "bg-[#e94560] text-white"
-                : "text-gray-500 hover:text-gray-300"
+                ? "bg-zinc-600 text-white shadow-sm"
+                : "text-gray-400 hover:text-gray-200"
             }`}
           >
             {t("chart.monthly")}
@@ -202,7 +202,7 @@ export default function TrainingChart({ userId }: Props) {
                     {m.count > 0 ? m.count : ""}
                   </div>
                   <div
-                    className="w-full rounded-t-sm bg-[#e94560]/80 hover:bg-[#e94560] transition-colors"
+                    className="w-full rounded-t-sm bg-green-600/80 hover:bg-green-500 transition-colors"
                     style={{ height: `${Math.max(heightPct, m.count > 0 ? 4 : 0)}%` }}
                     title={`${m.ym}: ${t("chart.sessionsFmt", { n: m.count })} / ${
                       m.minutes >= 60
