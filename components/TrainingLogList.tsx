@@ -474,7 +474,7 @@ export default function TrainingLogList({
           <button
             onClick={onLoadMore}
             disabled={loadingMore}
-            className="text-gray-400 hover:text-white text-sm border border-white/10 hover:border-white/10 px-6 py-2 rounded-full transition-colors disabled:opacity-50"
+            className="text-blue-400 hover:text-blue-300 text-sm border border-blue-400/30 hover:border-blue-300/50 px-6 py-2 rounded-full transition-colors disabled:opacity-50"
           >
             {loadingMore ? "Loading..." : "Load More"}
           </button>

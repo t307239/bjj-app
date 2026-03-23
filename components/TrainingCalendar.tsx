@@ -35,10 +35,10 @@ const TYPE_LABEL: Record<string, string> = {
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 function formatDuration(min: number): string {
-  if (min < 60) return `${min}分`;
+  if (min < 60) return `${min}m`;
   const h = Math.floor(min / 60);
   const m = min % 60;
-  return m > 0 ? `${h}時間${m}分` : `${h}時間`;
+  return m > 0 ? `${h}h${m}m` : `${h}h`;
 }
 
 export default function TrainingCalendar({ userId }: Props) {
@@ -198,11 +198,6 @@ export default function TrainingCalendar({ userId }: Props) {
                         />
                       ))}
                     </div>
-                    {dayLogs.length > 1 && (
-                      <span className="text-[7px] text-gray-500 leading-none font-medium">
-                        ×{dayLogs.length}
-                      </span>
-                    )}
                   </div>
                 )}
               </button>

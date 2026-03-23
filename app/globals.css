@@ -25,6 +25,16 @@ textarea::placeholder {
   color: rgb(156 163 175); /* gray-400 */
 }
 
+/* #121: Custom focus ring for keyboard accessibility */
+:focus-visible {
+  outline: 2px solid #3b82f6; /* blue-500 */
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* #122: Japanese text line-height */
+:lang(ja) { line-height: 1.6; }
+
 /* 印刷 / PDF保存スタイル */
 @media print {
   body {
