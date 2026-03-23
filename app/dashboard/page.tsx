@@ -377,7 +377,7 @@ export default async function DashboardPage() {
               <span className="text-zinc-600 text-xs mb-1">days</span>
             </div>
             <span className="mt-2 block text-[11px] text-yellow-400">
-              {streak >= 30 ? "🔥 Unstoppable" : streak >= 14 ? "💪 Excellent" : streak >= 7 ? "⚡ On a roll" : streak >= 3 ? "🎯 Keep going" : streak >= 1 ? "🔥 Keep rolling" : "Start your streak"}
+              {streak >= 30 ? "🔥 Unstoppable" : streak >= 14 ? "💪 Excellent" : streak >= 7 ? "⚡ On a roll" : streak >= 3 ? "🎯 Keep going" : streak >= 1 ? "⚡ Keep rolling" : "Start your streak"}
             </span>
           </Link>
 
