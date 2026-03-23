@@ -7,7 +7,6 @@ import {
   BELT_RANKS,
   RESULT_LABELS,
   decodeCompNotes,
-  buildXShareUrl,
 } from "@/lib/trainingLogHelpers";
 
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
@@ -417,17 +416,6 @@ export default function TrainingLogList({
                     })()}
                 </div>
                 <div className="flex gap-1 ml-2 flex-shrink-0">
-                  <a
-                    href={buildXShareUrl(entry)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-sky-400 transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
-                    title="Share on X"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                    </svg>
-                  </a>
                   <button
                     onClick={() => onStartEdit(entry)}
                     className="text-gray-600 hover:text-blue-400 transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
