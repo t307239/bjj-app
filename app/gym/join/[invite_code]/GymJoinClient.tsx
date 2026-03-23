@@ -71,7 +71,7 @@ export default function GymJoinClient({
           <button
             onClick={() => performJoin(true)}
             disabled={loading}
-            className="w-full bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white font-semibold py-3 rounded-xl mb-3 transition-colors"
+            className="w-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white font-semibold py-3 rounded-xl mb-3 transition-colors"
             aria-label={`Transfer to ${gymName} and share data`}
           >
             {loading ? t("gymJoin.joining") : t("gymJoin.transferYes", { name: gymName })}
@@ -96,7 +96,7 @@ export default function GymJoinClient({
         <div className="text-center mb-6">
           <div className="text-4xl mb-3">🥋</div>
           <h1 className="text-xl font-bold text-white mb-1">
-            <span className="text-[#e94560]">{t("gymJoin.title", { name: gymName })}</span>
+            <span className="text-white">{t("gymJoin.title", { name: gymName })}</span>
           </h1>
           <p className="text-xs text-gray-500 mt-1">
             {t("gymJoin.managedBy", { owner: ownerName })}
@@ -123,7 +123,7 @@ export default function GymJoinClient({
             type="checkbox"
             checked={ageConfirmed}
             onChange={(e) => setAgeConfirmed(e.target.checked)}
-            className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#e94560] flex-shrink-0 cursor-pointer"
+            className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#10B981] flex-shrink-0 cursor-pointer"
             aria-label="Age confirmation: I am 13 years of age or older"
           />
           <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
