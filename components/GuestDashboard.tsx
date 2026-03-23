@@ -224,7 +224,7 @@ export default function GuestDashboard() {
                   <button
                     onClick={() => handleDelete(log.id)}
                     className="text-gray-600 hover:text-red-400 ml-2 flex-shrink-0 text-lg leading-none w-8 h-8 flex items-center justify-center rounded"
-                    aria-label="Delete"
+                    aria-label={t("training.delete")}
                   >
                     ×
                   </button>

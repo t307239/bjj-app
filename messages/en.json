@@ -547,7 +547,11 @@
     "loading": "Loading...",
     "backToTop": "Back to top",
     "userMenu": "User menu",
-    "dismissNotification": "Dismiss notification"
+    "dismissNotification": "Dismiss notification",
+    "delete": "Delete",
+    "dismiss": "Dismiss",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out"
   },
   "skillmap": {
     "tabRoots": "Entry Points",
@@ -754,7 +758,10 @@
     "removeMemberTitle": "Remove from gym",
     "sentToday": "Sent today",
     "sentYesterday": "Sent yesterday",
-    "sentDaysAgo": "Sent {n} days ago"
+    "sentDaysAgo": "Sent {n} days ago",
+    "ariaCopyInvite": "Copy invite link",
+    "ariaRegenerate": "Regenerate invite code (invalidates old QR codes)",
+    "ariaUpgradePro": "Upgrade to Gym Pro"
   },
   "gymJoin": {
     "title": "Join {name}",

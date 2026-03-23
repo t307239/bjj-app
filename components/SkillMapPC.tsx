@@ -545,13 +545,13 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
           <button
             onClick={() => setZoom((z) => Math.min(MAX_ZOOM, z + 0.1))}
             className="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-sm flex items-center justify-center"
-            aria-label="Zoom in"
+            aria-label={t("common.zoomIn")}
           >+</button>
           <span className="text-xs text-gray-500 w-12 text-center">{Math.round(zoom * 100)}%</span>
           <button
             onClick={() => setZoom((z) => Math.max(MIN_ZOOM, z - 0.1))}
             className="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-sm flex items-center justify-center"
-            aria-label="Zoom out"
+            aria-label={t("common.zoomOut")}
           >−</button>
           <button
             onClick={() => { setPanX(40); setPanY(40); setZoom(1); }}

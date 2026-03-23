@@ -57,7 +57,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
       <button
         onClick={() => setDismissed(true)}
         className="absolute top-3 right-3 text-zinc-600 hover:text-zinc-400 transition-colors text-xs p-1"
-        aria-label="Dismiss"
+        aria-label={t("common.dismiss")}
       >
         ✕
       </button>

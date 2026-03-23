@@ -104,7 +104,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
         <button
           onClick={copy}
           className="flex-shrink-0 bg-zinc-700 hover:bg-zinc-600 text-white text-xs px-3 py-2 rounded-lg transition-colors"
-          aria-label="Copy invite link"
+          aria-label={t("gym.ariaCopyInvite")}
         >
           {copied ? t("gym.inviteCopied") : t("gym.inviteCopy")}
         </button>
@@ -117,7 +117,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
         onClick={regenerate}
         disabled={regenerating}
         className="mt-3 text-[10px] text-gray-500 hover:text-orange-400 transition-colors disabled:opacity-50"
-        aria-label="Regenerate invite code (invalidates old QR codes)"
+        aria-label={t("gym.ariaRegenerate")}
       >
         {regenerating ? t("gym.regenerating") : t("gym.regenerateBtn")}
       </button>
@@ -150,7 +150,7 @@ function ProPaywallBanner({
         <a
           href={stripeGymPaymentLink}
           className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
-          aria-label="Upgrade to Gym Pro"
+          aria-label={t("gym.ariaUpgradePro")}
         >
           {t("gym.upgradeBtn")}
         </a>
