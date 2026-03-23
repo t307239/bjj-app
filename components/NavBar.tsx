@@ -106,11 +106,15 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
             </nav>
           </div>
           <div className="flex items-center gap-2">
-            {currentStreak >= 2 && (
+            {currentStreak >= 30 ? (
               <span className="hidden sm:flex items-center gap-1 text-[11px] text-orange-400 bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-full">
                 🔥 {currentStreak} days straight
               </span>
-            )}
+            ) : currentStreak >= 7 ? (
+              <span className="hidden sm:flex items-center gap-1 text-[11px] text-orange-400 bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-full">
+                ⚡ {currentStreak} days
+              </span>
+            ) : null}
             {/* Pro Plan 導線 */}
             {isPro ? (
               <a
@@ -151,11 +155,15 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
 
       {/* モバイル ボトムナビ */}
       <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-zinc-950/80 backdrop-blur-xl border-t border-white/[0.08] z-50">
-        {currentStreak >= 2 && (
+        {currentStreak >= 30 ? (
           <div className="flex justify-center py-1 border-b border-white/5 bg-orange-500/5">
             <span className="text-[10px] text-orange-400">🔥 {currentStreak} days straight</span>
           </div>
-        )}
+        ) : currentStreak >= 7 ? (
+          <div className="flex justify-center py-1 border-b border-white/5 bg-orange-500/5">
+            <span className="text-[10px] text-orange-400">⚡ {currentStreak} days</span>
+          </div>
+        ) : null}
         <div className="grid grid-cols-3 pb-safe">
           {NAV_ITEMS.map((item) => (
             <Link
