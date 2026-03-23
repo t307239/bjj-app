@@ -122,7 +122,7 @@ export default function WeeklyStrip({ userId }: Props) {
               trainedThisWeek > lastWeekCount
                 ? "text-green-400"
                 : trainedThisWeek < lastWeekCount
-                ? "text-red-400/70"
+                ? "text-red-400"
                 : "text-gray-500"
             }`}>
               {trainedThisWeek > lastWeekCount
@@ -137,7 +137,7 @@ export default function WeeklyStrip({ userId }: Props) {
               weekTotalMins > lastWeekMins
                 ? "text-green-400"
                 : weekTotalMins < lastWeekMins
-                ? "text-red-400/70"
+                ? "text-red-400"
                 : "text-gray-500"
             }`}>
               {weekTotalMins > lastWeekMins

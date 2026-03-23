@@ -402,7 +402,7 @@ export default function GoalTracker({ userId }: Props) {
                 <>
                   <ProgressBar current={data.monthCount} target={data.monthlyGoal} sessionsUnit={t("chart.timesUnit")} doneLabel={t("goal.done")} />
                   {data.monthCount >= data.monthlyGoal ? (
-                    <p className="text-[10px] text-green-400/70 mt-1.5">
+                    <p className="text-[10px] text-green-400 mt-1.5">
                       {data.monthCount > data.monthlyGoal
                         ? t("goal.extraMonth", { n: data.monthCount - data.monthlyGoal })
                         : consecutiveAchievedMonths >= 2
@@ -413,7 +413,7 @@ export default function GoalTracker({ userId }: Props) {
                     <p className="text-[10px] mt-1 text-gray-500">
                       {t("goal.moreNeeded", { needed: data.monthlyGoal - data.monthCount, days: remainingDaysInMonth })}
                       {monthlyProjected > 0 ? (
-                        <span className={monthOnTrack ? "text-green-400/80" : "text-orange-400/80"}>
+                        <span className={monthOnTrack ? "text-green-400" : "text-orange-400"}>
                           {monthOnTrack ? t("goal.onTrack") : t("goal.onPaceFor", { n: monthlyProjected })}
                         </span>
                       ) : null}

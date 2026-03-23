@@ -291,7 +291,7 @@ export default function PersonalBests({ userId }: Props) {
             </div>
             <div className="text-[10px] text-gray-500 mt-0.5">{item.label}</div>
             {item.sub && (
-              <div className="text-[9px] text-yellow-400/80 mt-0.5 leading-none">⭐ {item.sub}</div>
+              <div className="text-[9px] text-yellow-400 mt-0.5 leading-none">⭐ {item.sub}</div>
             )}
           </div>
         ))}

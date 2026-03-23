@@ -68,7 +68,7 @@ export function GoalDaysLeftText({
   const needed = Math.max(0, weeklyGoal - weekCount);
 
   if (needed === 0) return (
-    <p className="text-[10px] text-green-400/70 mt-1.5">
+    <p className="text-[10px] text-green-400 mt-1.5">
       {weekCount > weeklyGoal
         ? t("goal.extraWeek", { n: weekCount - weeklyGoal })
         : t("goal.weeklyClear")}

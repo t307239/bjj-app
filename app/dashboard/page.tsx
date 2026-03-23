@@ -371,7 +371,7 @@ export default async function DashboardPage() {
               <span className="text-5xl font-black leading-none tabular-nums bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">{streak}</span>
               <span className="text-zinc-600 text-xs mb-1">days</span>
             </div>
-            <span className="mt-2 block text-[11px] text-yellow-400/90">
+            <span className="mt-2 block text-[11px] text-yellow-400">
               {streak >= 30 ? "🔥 Unstoppable" : streak >= 14 ? "💪 Excellent" : streak >= 7 ? "⚡ On a roll" : streak >= 3 ? "🎯 Keep going" : streak >= 1 ? "🔥 Keep rolling" : "Start your streak"}
             </span>
           </Link>
@@ -384,7 +384,7 @@ export default async function DashboardPage() {
               <span className="text-zinc-600 text-xs mb-1">sessions</span>
             </div>
             {weeklyGoal > 0 && (
-              <span className="mt-2 block text-[11px] text-blue-400/70">
+              <span className="mt-2 block text-[11px] text-blue-400">
                 Goal: {weekCount ?? 0}/{weeklyGoal}
               </span>
             )}
@@ -413,7 +413,7 @@ export default async function DashboardPage() {
             </div>
             <div className="flex items-center gap-3 mt-3 flex-wrap">
               {monthHoursStr && (
-                <span className="inline-flex items-center gap-1 text-[11px] text-purple-400/80 font-medium">
+                <span className="inline-flex items-center gap-1 text-[11px] text-purple-400 font-medium">
                   ⏱ {monthHoursStr}
                 </span>
               )}
@@ -421,7 +421,7 @@ export default async function DashboardPage() {
                 <span className="text-[11px] text-zinc-600">
                   {remainingDays} days left
                   {(monthCount ?? 0) > 0 && currentDayOfMonth > 0 && (
-                    <span className="text-blue-400/70 ml-1">
+                    <span className="text-blue-400 ml-1">
                       · On track for {Math.round((monthCount ?? 0) / currentDayOfMonth * daysInMonth)}
                     </span>
                   )}
