@@ -44,8 +44,8 @@ export default function ProGate({
       <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-zinc-950/80 backdrop-blur-sm border border-white/10 z-10">
         <div className="text-center px-4">
           <div className="text-2xl mb-2">🔒</div>
-          <p className="text-sm text-[#6b7699] mb-1">{featureText}</p>
-          <p className="text-xs text-[#4a5270] mb-4">{t("pro.available")}</p>
+          <p className="text-sm text-gray-400 mb-1">{featureText}</p>
+          <p className="text-xs text-gray-600 mb-4">{t("pro.available")}</p>
           <a
             href={paymentUrl}
             target="_blank"
@@ -59,7 +59,7 @@ export default function ProGate({
           >
             {t("pro.upgradeButton")}
           </a>
-          <p className="text-[10px] text-[#4a5270] mt-2">
+          <p className="text-[10px] text-gray-600 mt-2">
             {t("pro.features")}
           </p>
         </div>
