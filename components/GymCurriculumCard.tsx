@@ -85,7 +85,13 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
   return (
     <div className={`bg-zinc-900 border rounded-xl px-4 py-3 transition-colors ${practiced ? "border-[#10B981]/40" : "border-white/10"}`}>
       <div className="flex items-start gap-3">
-        <span className="text-xl flex-shrink-0 mt-0.5">{practiced ? "✅" : "📚"}</span>
+        {practiced ? (
+          <svg className="w-5 h-5 text-[#10B981] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        ) : (
+          <span className="text-xl flex-shrink-0 mt-0.5">📚</span>
+        )}
         <div className="flex-1 min-w-0">
           <p className="text-[11px] font-semibold text-gray-500 tracking-widest mb-0.5">
             {gymName

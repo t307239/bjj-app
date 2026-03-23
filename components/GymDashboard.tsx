@@ -40,7 +40,7 @@ function beltColor(belt: string): string {
     case "brown": return "bg-amber-900/50 text-amber-200 border-amber-700";
     case "purple": return "bg-purple-900/50 text-purple-200 border-purple-500";
     case "blue": return "bg-blue-900/50 text-blue-200 border-blue-500";
-    default: return "bg-zinc-700/50 text-gray-200 border-zinc-500"; // white
+    default: return "bg-zinc-700/50 text-white border-zinc-500"; // white
   }
 }
 
@@ -252,7 +252,7 @@ function CurriculumSection({
           value={url}
           onChange={(e) => { setUrl(e.target.value); setConfirmDispatch(false); }}
           placeholder="https://wiki.bjj-app.net/en/..."
-          className="flex-1 bg-zinc-800 text-xs text-gray-200 placeholder-gray-500 px-3 py-2 rounded-lg border border-white/10 focus:outline-none focus:border-white/30"
+          className="flex-1 bg-zinc-800 text-xs text-gray-300 placeholder-gray-500 px-3 py-2 rounded-lg border border-white/10 focus:outline-none focus:border-white/30"
         />
         <button
           onClick={() => { if (!url.trim()) return; setConfirmDispatch(true); }}
