@@ -569,7 +569,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by date, type, notes..."
-            className="w-full bg-zinc-800 text-white rounded-xl pl-9 pr-9 py-2 text-sm border border-white/20 focus:outline-none focus:border-[#e94560]/60 placeholder-gray-500"
+            className="w-full bg-zinc-800 text-white rounded-xl pl-9 pr-9 py-2 text-sm border border-white/20 focus:outline-none focus:border-white/30 placeholder-gray-500"
           />
           {searchQuery && (
             <button
@@ -614,7 +614,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             value={dateFrom}
             max={dateTo || today}
             onChange={(e) => setDateFrom(e.target.value)}
-            className="flex-1 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1.5 border border-white/10 focus:outline-none focus:border-[#e94560]/60"
+            className="flex-1 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1.5 border border-white/10 focus:outline-none focus:border-white/30"
           />
           <span className="text-gray-600 text-xs">–</span>
           <input
@@ -623,7 +623,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             min={dateFrom}
             max={today}
             onChange={(e) => setDateTo(e.target.value)}
-            className="flex-1 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1.5 border border-white/10 focus:outline-none focus:border-[#e94560]/60"
+            className="flex-1 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1.5 border border-white/10 focus:outline-none focus:border-white/30"
           />
           {(dateFrom || dateTo) && (
             <button onClick={() => { setDateFrom(""); setDateTo(""); }} className="text-gray-500 hover:text-white text-xs px-2">

@@ -158,7 +158,7 @@ export default function TechniqueLogList({
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortBy)}
-              className="text-xs bg-zinc-900 text-gray-400 border border-white/10 rounded-lg px-2 py-1 focus:outline-none focus:border-[#e94560]/60 cursor-pointer"
+              className="text-xs bg-zinc-900 text-gray-400 border border-white/10 rounded-lg px-2 py-1 focus:outline-none focus:border-white/30 cursor-pointer"
             >
               <option value="newest">{t("techniques.sortNewest")}</option>
               <option value="mastery_desc">

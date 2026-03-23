@@ -66,7 +66,7 @@ export default function GymRegistrationForm({ userId }: Props) {
           value={gymName}
           onChange={(e) => setGymName(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && gymName.trim()) handleCreate(); }}
-          className="w-full bg-zinc-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 mb-4 focus:outline-none focus:border-[#e94560]/60"
+          className="w-full bg-zinc-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 mb-4 focus:outline-none focus:border-white/30"
           maxLength={80}
           aria-label="Gym name"
         />

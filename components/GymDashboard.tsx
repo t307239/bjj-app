@@ -232,7 +232,7 @@ function CurriculumSection({
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://wiki.bjj-app.net/en/..."
-          className="flex-1 bg-zinc-800 text-xs text-gray-200 placeholder-gray-500 px-3 py-2 rounded-lg border border-white/10 focus:outline-none focus:border-[#e94560]/50"
+          className="flex-1 bg-zinc-800 text-xs text-gray-200 placeholder-gray-500 px-3 py-2 rounded-lg border border-white/10 focus:outline-none focus:border-white/30"
         />
         <button
           onClick={dispatch}

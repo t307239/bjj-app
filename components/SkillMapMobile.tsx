@@ -134,7 +134,7 @@ function AddNodeModal({
           placeholder={t("skillmap.namePlaceholder")}
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 mb-3 focus:outline-none focus:border-[#e94560]/60"
+          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 mb-3 focus:outline-none focus:border-white/30"
           autoFocus
           maxLength={80}
           aria-label={t("skillmap.namePlaceholder")}
@@ -144,7 +144,7 @@ function AddNodeModal({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={2}
-          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 mb-4 resize-none focus:outline-none focus:border-[#e94560]/60"
+          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 mb-4 resize-none focus:outline-none focus:border-white/30"
           maxLength={200}
           aria-label={t("skillmap.descPlaceholder")}
         />
@@ -209,7 +209,7 @@ function ConnectEdgeModal({
         <select
           value={targetId}
           onChange={(e) => setTargetId(e.target.value)}
-          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white mb-3 focus:outline-none focus:border-[#e94560]/60"
+          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white mb-3 focus:outline-none focus:border-white/30"
           aria-label={t("skillmap.connectTarget")}
         >
           <option value="">{t("skillmap.selectTarget")}</option>
@@ -222,7 +222,7 @@ function ConnectEdgeModal({
           placeholder={t("skillmap.edgeLabelPlaceholder")}
           value={label}
           onChange={(e) => setLabel(e.target.value)}
-          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 mb-4 focus:outline-none focus:border-[#e94560]/60"
+          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 mb-4 focus:outline-none focus:border-white/30"
           maxLength={50}
           aria-label={t("skillmap.edgeLabelPlaceholder")}
         />
