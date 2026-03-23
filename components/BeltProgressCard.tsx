@@ -67,7 +67,7 @@ export default function BeltProgressCard({
 
       {/* Belt visual (#86: authentic BJJ belt with promo bar) */}
       <div className="flex items-center gap-4">
-        <div className="flex items-center rounded-sm overflow-hidden h-10 w-32 shadow-sm">
+        <div className="flex items-center rounded-lg overflow-hidden h-10 w-32 shadow-sm">
           {/* Main belt body */}
           <div className={`flex-1 h-full relative ${bgClass}`}>
             {/* Stripe markers */}

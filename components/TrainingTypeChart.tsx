@@ -328,7 +328,7 @@ export default function TrainingTypeChart({ userId }: Props) {
             <button
               key={p}
               onClick={() => setPeriod(p)}
-              className={`text-[11px] px-2 py-1 rounded-md transition-all ${
+              className={`text-[11px] px-2 py-1 rounded-lg transition-all ${
                 period === p ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-gray-200"
               }`}
             >
