@@ -116,7 +116,8 @@ export default function InsightsBanner({ userId }: Props) {
           }
         }
         if (maxStreak >= 3) {
-          setStreakInsight(t("insights.longestStreak", { n: maxStreak }));
+          const streakEmoji = maxStreak >= 30 ? "🔥" : "⚡";
+          setStreakInsight(`${streakEmoji} ${t("insights.longestStreak", { n: maxStreak })}`);
         }
       }
 
@@ -194,7 +195,7 @@ export default function InsightsBanner({ userId }: Props) {
         {streakInsight && (
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] text-gray-500">{t("insights.record")}</span>
-            <span className="text-xs text-yellow-400 font-medium">🔥 {streakInsight}</span>
+            <span className="text-xs text-yellow-400 font-medium">{streakInsight}</span>
           </div>
         )}
         {consistencyMsg && (
