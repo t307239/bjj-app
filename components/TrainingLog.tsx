@@ -219,7 +219,8 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error"; duration?: number; onUndo?: () => void } | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; entry: TrainingEntry; timerId: ReturnType<typeof setTimeout> } | null>(null);
   const today = getLocalDateString();
   const [form, setForm] = useState({
     date: getLocalDateString(),
@@ -327,32 +328,53 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     setLoading(false);
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm(t("training.confirmDelete"))) return;
-
-    // ── Optimistic UI: remove immediately ─────────────────────────────────
+  const handleDelete = (id: string) => {
     const removed = entries.find((e) => e.id === id);
-    setEntries((prev) => prev.filter((e) => e.id !== id));
-    // ──────────────────────────────────────────────────────────────────────
+    if (!removed) return;
 
-    setDeletingId(id);
-    const { error } = await supabase
-      .from("training_logs")
-      .delete()
-      .eq("id", id)
-      .eq("user_id", userId);
-
-    if (!error) {
-      if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([30, 20, 30]);
-      setToast({ message: t("training.deleted"), type: "success" });
-    } else {
-      // Revert optimistic delete on error
-      if (removed) {
-        setEntries((prev) => [removed, ...prev].sort((a, b) => b.date.localeCompare(a.date)));
-      }
-      setToast({ message: t("training.deleteFailed"), type: "error" });
+    // Cancel any existing pending delete
+    if (pendingDelete) {
+      clearTimeout(pendingDelete.timerId);
     }
-    setDeletingId(null);
+
+    // Optimistic UI: remove immediately
+    setEntries((prev) => prev.filter((e) => e.id !== id));
+
+    // Schedule physical delete after 5s
+    const timerId = setTimeout(async () => {
+      setPendingDelete(null);
+      setDeletingId(id);
+      const { error } = await supabase
+        .from("training_logs")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", userId);
+
+      if (!error) {
+        if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([30, 20, 30]);
+      } else {
+        // Revert on DB error
+        setEntries((prev) => [removed, ...prev].sort((a, b) => b.date.localeCompare(a.date)));
+        setToast({ message: t("training.deleteFailed"), type: "error" });
+      }
+      setDeletingId(null);
+    }, 5000);
+
+    setPendingDelete({ id, entry: removed, timerId });
+
+    // Show undo toast
+    setToast({
+      message: t("training.deletedUndo"),
+      type: "success",
+      duration: 5000,
+      onUndo: () => {
+        clearTimeout(timerId);
+        setPendingDelete(null);
+        // Restore entry
+        setEntries((prev) => [removed, ...prev].sort((a, b) => b.date.localeCompare(a.date)));
+        setToast(null);
+      },
+    });
   };
 
   const startEdit = (entry: TrainingEntry) => {
@@ -486,6 +508,8 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         <Toast
           message={toast.message}
           type={toast.type}
+          duration={toast.duration}
+          onUndo={toast.onUndo}
           onClose={() => setToast(null)}
         />
       )}

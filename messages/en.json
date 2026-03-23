@@ -56,6 +56,7 @@
     "saved": "Session logged!",
     "saveFailed": "Failed to save",
     "deleted": "Session deleted",
+    "deletedUndo": "Session deleted — tap Undo to restore",
     "deleteFailed": "Failed to delete",
     "updated": "Session updated",
     "updateFailed": "Failed to update",

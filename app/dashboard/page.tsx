@@ -25,6 +25,8 @@ import WikiQuickLinks from "@/components/WikiQuickLinks";
 import CollapsibleSection from "@/components/CollapsibleSection";
 import ProUpgradeBanner from "@/components/ProUpgradeBanner";
 import BeltProgressCard from "@/components/BeltProgressCard";
+import OnboardingChecklist from "@/components/OnboardingChecklist";
+import ProStatusBanner from "@/components/ProStatusBanner";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
@@ -34,10 +36,10 @@ const getCachedProfile = cache(async (userId: string) => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("profiles")
-    .select("belt, stripe, start_date, is_pro, gym_name")
+    .select("belt, stripe, start_date, is_pro, gym_name, weekly_goal, subscription_status")
     .eq("id", userId)
     .single();
-  return data as { belt: string; stripe: number; start_date: string | null; is_pro: boolean; gym_name: string | null } | null;
+  return data as { belt: string; stripe: number; start_date: string | null; is_pro: boolean; gym_name: string | null; weekly_goal?: number | null; subscription_status?: string | null } | null;
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -235,6 +237,13 @@ export default async function DashboardPage() {
   const gymName = profileData?.gym_name ?? null;
   const belt = profileData?.belt ?? "white";
   const stripeCount = profileData?.stripe ?? 0;
+  const weeklyGoal = profileData?.weekly_goal ?? 0;
+  const subscriptionStatus = profileData?.subscription_status ?? null;
+
+  // Onboarding checklist state
+  const hasFirstLog = (totalCount ?? 0) > 0;
+  const hasGoal = weeklyGoal > 0;
+  const hasTechnique = (techniqueCount ?? 0) > 0;
   // 帯在籍月数
   let monthsAtBelt = 0;
   if (profileData?.start_date) {
@@ -280,6 +289,16 @@ export default async function DashboardPage() {
 
       {/* メインコンテンツ */}
       <main className="max-w-4xl mx-auto px-4 py-6">
+        {/* ── Pro Status Banner (payment issue alert / PRO badge) ── */}
+        <ProStatusBanner isPro={isPro} subscriptionStatus={subscriptionStatus} />
+
+        {/* ── Onboarding Checklist (new users only, auto-hides when complete) ── */}
+        <OnboardingChecklist
+          hasFirstLog={hasFirstLog}
+          hasGoal={hasGoal}
+          hasTechnique={hasTechnique}
+        />
+
         {/* ── Welcome header ── */}
         <div className="mb-5 flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -428,7 +447,7 @@ export default async function DashboardPage() {
           <div className="space-y-3">
             {/* 週間ペース通知 */}
             {((): React.ReactNode => {
-              const wGoal = (profileData as { weekly_goal?: number } | null)?.weekly_goal ?? 0;
+              const wGoal = weeklyGoal;
               const wCount = weekCount ?? 0;
               if (wGoal <= 0) return null;
               const needed = Math.max(0, wGoal - wCount);

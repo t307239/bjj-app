@@ -74,7 +74,7 @@ export async function POST(req: Request) {
         if (customerId) {
           await supabase
             .from("profiles")
-            .update({ is_pro: false })
+            .update({ is_pro: false, subscription_status: "canceled" })
             .eq("stripe_customer_id", customerId);
           console.log(`⬇️ Customer ${customerId} downgraded from Pro`);
         }
@@ -82,8 +82,31 @@ export async function POST(req: Request) {
       }
 
       case "invoice.payment_failed": {
-        // Optional: handle failed payments (e.g., notify user)
-        console.log("Payment failed for invoice:", event.data.object);
+        // Mark subscription as past_due — shows ProStatusBanner warning in UI
+        const invoice = event.data.object as Stripe.Invoice;
+        const customerId =
+          typeof invoice.customer === "string" ? invoice.customer : null;
+        if (customerId) {
+          await supabase
+            .from("profiles")
+            .update({ subscription_status: "past_due" })
+            .eq("stripe_customer_id", customerId);
+          console.log(`⚠️ Payment failed for customer ${customerId} — marked past_due`);
+        }
+        break;
+      }
+
+      case "invoice.paid": {
+        // Clear past_due when payment recovers
+        const invoice = event.data.object as Stripe.Invoice;
+        const customerId =
+          typeof invoice.customer === "string" ? invoice.customer : null;
+        if (customerId) {
+          await supabase
+            .from("profiles")
+            .update({ subscription_status: "active" })
+            .eq("stripe_customer_id", customerId);
+        }
         break;
       }
 
