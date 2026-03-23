@@ -49,7 +49,7 @@ export default async function GymJoinPage({ params }: Props) {
           <p className="text-gray-400 text-sm">
             This gym invite link is no longer valid or has expired.
           </p>
-          <a href="/dashboard" className="mt-6 inline-block text-[#e94560] text-sm">
+          <a href="/dashboard" className="mt-6 inline-block text-gray-400 hover:text-white text-sm">
             Go to dashboard →
           </a>
         </div>
@@ -94,7 +94,7 @@ export default async function GymJoinPage({ params }: Props) {
           <p className="text-white font-bold text-lg mb-2">
             You're already a member of {gym.name}
           </p>
-          <a href="/dashboard" className="mt-6 inline-block text-[#e94560] text-sm">
+          <a href="/dashboard" className="mt-6 inline-block text-gray-400 hover:text-white text-sm">
             Go to dashboard →
           </a>
         </div>
