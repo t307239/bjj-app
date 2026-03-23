@@ -186,7 +186,7 @@ export default function PersonalBests({ userId }: Props) {
     ? (() => {
         const [y, m] = bests.bestMonthKey.split("-");
         const d = new Date(parseInt(y), parseInt(m) - 1, 1);
-        return new Intl.DateTimeFormat(undefined, { year: "numeric", month: "long" }).format(d);
+        return new Intl.DateTimeFormat("en", { year: "numeric", month: "long" }).format(d);
       })()
     : "";
 
@@ -303,12 +303,12 @@ export default function PersonalBests({ userId }: Props) {
       )}
       {/* 曜日別練習頻度ミニグラフ */}
       {bests.totalSessions >= 5 && (() => {
-        // Mon=0 … Sun=6, locale-aware narrow weekday labels (2024-01-01 is Monday)
+        // Mon=0 … Sun=6, English narrow weekday labels (2024-01-01 is Monday) — matches TrainingChart (#146)
         const DOW_LABELS = Array.from({ length: 7 }, (_, i) =>
-          new Intl.DateTimeFormat(undefined, { weekday: "narrow" }).format(new Date(2024, 0, 1 + i))
+          new Intl.DateTimeFormat("en", { weekday: "narrow" }).format(new Date(2024, 0, 1 + i))
         );
         const DOW_LONG = Array.from({ length: 7 }, (_, i) =>
-          new Intl.DateTimeFormat(undefined, { weekday: "long" }).format(new Date(2024, 0, 1 + i))
+          new Intl.DateTimeFormat("en", { weekday: "long" }).format(new Date(2024, 0, 1 + i))
         );
         const maxDow = Math.max(...bests.dowCounts, 1);
         const bestDowIdx = bests.dowCounts.indexOf(Math.max(...bests.dowCounts));
