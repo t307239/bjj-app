@@ -157,7 +157,7 @@ function AddNodeInput({
   return (
     <div
       style={{ position: "absolute", left: x, top: y, zIndex: 20 }}
-      className="bg-zinc-800 border border-[#e94560]/60 rounded-xl shadow-xl p-3 w-44"
+      className="bg-zinc-800 border border-white/20 rounded-xl shadow-xl p-3 w-44"
     >
       <input
         ref={ref}
@@ -208,7 +208,7 @@ function EdgeLabelInput({
   return (
     <div
       style={{ position: "absolute", left: x, top: y, zIndex: 20 }}
-      className="bg-zinc-800 border border-[#e94560]/60 rounded-xl shadow-xl p-3 w-40"
+      className="bg-zinc-800 border border-white/20 rounded-xl shadow-xl p-3 w-40"
     >
       <input
         ref={ref}
@@ -518,7 +518,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
             onClick={() =>
               setAddingAt({ x: 200, y: 200 })
             }
-            className="bg-[#e94560] hover:bg-[#c73652] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors"
+            className="bg-[#10B981] hover:bg-[#0d9668] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors"
           >
             + {t("skillmap.addFirstTechnique")}
           </button>
@@ -560,7 +560,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
           >{t("skillmap.resetView")}</button>
         </div>
         {connectingFrom && (
-          <span className="text-xs text-[#e94560] animate-pulse ml-2">
+          <span className="text-xs text-yellow-400 animate-pulse ml-2">
             {t("skillmap.connectingHint")}
           </span>
         )}
