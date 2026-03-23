@@ -260,7 +260,7 @@ export default function DailyWikiTip() {
           href={wikiUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-xs text-[#3B82F6] hover:text-blue-400 transition-colors font-medium"
+          className="inline-flex items-center gap-1.5 text-xs text-blue-500 hover:text-blue-400 transition-colors font-medium"
         >
           <span>{t("wiki.readMore")}</span>
           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

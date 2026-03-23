@@ -60,7 +60,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
             {daysAgo === 0 ? "Sent today" : daysAgo === 1 ? "Sent yesterday" : `Sent ${daysAgo} days ago`}
           </p>
         </div>
-        <span className="text-xs text-[#3B82F6] font-semibold flex-shrink-0 mt-0.5 group-hover:underline">
+        <span className="text-xs text-blue-500 font-semibold flex-shrink-0 mt-0.5 group-hover:underline">
           {t("gym.curriculumCardCta")}
         </span>
       </div>

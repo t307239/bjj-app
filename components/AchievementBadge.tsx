@@ -102,7 +102,7 @@ export default function AchievementBadge({
               </button>
               <button
                 onClick={() => setShowBadge(false)}
-                className="bg-[#5b21b6] text-white px-6 py-2 rounded-lg font-bold hover:bg-[#4c1d95] transition-colors border border-white border-opacity-30"
+                className="bg-purple-700 text-white px-6 py-2 rounded-lg font-bold hover:bg-purple-800 transition-colors border border-white border-opacity-30"
               >
                 ✕
               </button>
