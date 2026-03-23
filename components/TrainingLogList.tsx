@@ -143,7 +143,7 @@ export default function TrainingLogList({
     return (
       <div className="text-center py-8 text-gray-500">
         <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin mb-2" />
-        <p className="text-sm">Loading...</p>
+        <p className="text-sm">{t("training.loading")}</p>
       </div>
     );
   }
@@ -475,9 +475,9 @@ export default function TrainingLogList({
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
                 </svg>
-                Loading...
+                {t("training.loading")}
               </>
-            ) : "Load More"}
+            ) : t("training.loadMore")}
           </button>
         </div>
       )}
