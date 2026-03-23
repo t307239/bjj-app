@@ -396,8 +396,9 @@ export default async function DashboardPage() {
           </div>
 
           {/* This Month — wide card (top-right, second priority) */}
-          <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:border-rose-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out group">
-            <div className="flex items-center justify-between mb-1">
+          <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:border-rose-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out group flex flex-col justify-between">
+            {/* Top: label + comparison badge */}
+            <div className="flex items-center justify-between">
               <span className="text-[11px] font-semibold text-zinc-500 tracking-widest">This Month</span>
               {prevMonthCount !== null && prevMonthCount !== undefined && (
                 <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full whitespace-nowrap ${
@@ -410,12 +411,14 @@ export default async function DashboardPage() {
                 </span>
               )}
             </div>
+            {/* Middle: hero number */}
             <div className="flex items-end gap-2 mt-2">
               <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-rose-400 to-orange-400 bg-clip-text text-transparent">
                 {monthCount ?? 0}
               </span>
               <span className="text-zinc-600 text-sm mb-0.5">sessions</span>
             </div>
+            {/* Bottom: hours + days left — anchored to bottom */}
             <div className="flex items-center gap-3 mt-3 flex-wrap">
               {monthHoursStr && (
                 <span className="inline-flex items-center gap-1 text-[11px] text-purple-400 font-medium">
@@ -426,11 +429,11 @@ export default async function DashboardPage() {
                 </span>
               )}
               {remainingDays > 0 && (
-                <span className="text-[11px] text-zinc-600">
+                <span className="text-[11px] text-zinc-500">
                   {remainingDays} days left
                   {(monthCount ?? 0) > 0 && currentDayOfMonth > 0 && (
                     <span className="text-blue-400 ml-1">
-                      · On track for {Math.round((monthCount ?? 0) / currentDayOfMonth * daysInMonth)}
+                      · on pace for {Math.round((monthCount ?? 0) / currentDayOfMonth * daysInMonth)}
                     </span>
                   )}
                 </span>
