@@ -860,7 +860,10 @@
     "progress": "{done}/{total} complete",
     "step.firstLog": "Log your first training session",
     "step.setGoal": "Set your weekly training goal",
-    "step.addTechnique": "Add a technique to your library"
+    "step.addTechnique": "Add a technique to your library",
+    "firstRollTitle": "Welcome to the mat! 🥋",
+    "firstRollDesc": "Your first roll is logged. The journey has begun.",
+    "firstRollCta": "Let's roll 🤙"
   },
   "freeze": {
     "title": "Streak Freeze",

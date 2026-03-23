@@ -10,6 +10,7 @@ import CsvExport from "./CsvExport";
 import TrainingLogForm from "./TrainingLogForm";
 import TrainingLogList from "./TrainingLogList";
 import TrainingLogStats from "./TrainingLogStats";
+import FirstRollCelebration from "./FirstRollCelebration";
 import {
   type TrainingEntry,
   type CompData,
@@ -114,6 +115,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
   const [toast, setToast] = useState<{ message: string; type: "success" | "error"; duration?: number; onUndo?: () => void } | null>(null);
   const [pendingDelete, setPendingDelete] = useState<{ id: string; entry: TrainingEntry; timerId: ReturnType<typeof setTimeout> } | null>(null);
   const [nudgeDismissed, setNudgeDismissed] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
   const today = getLocalDateString();
   const [form, setForm] = useState({
     date: getLocalDateString(),
@@ -262,6 +264,8 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     if (!error && data) {
       if (typeof navigator !== "undefined") navigator.vibrate?.([50]);
       setEntries((prev) => prev.map((e) => e.id === optimisticId ? data : e));
+      // First roll celebration (#7) — trigger before incrementing so we can check 0
+      if (totalCount === 0) setShowCelebration(true);
       setTotalCount((c) => (c !== null ? c + 1 : null));
       setToast({ message: t("training.saved"), type: "success" });
       // Rotate idempotency key for next submission
@@ -449,6 +453,11 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
 
   return (
     <div>
+      {/* First roll celebration overlay (#7) */}
+      {showCelebration && (
+        <FirstRollCelebration onDismiss={() => setShowCelebration(false)} />
+      )}
+
       {toast && (
         <Toast
           message={toast.message}
