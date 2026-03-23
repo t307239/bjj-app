@@ -258,7 +258,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Manage subscription in Stripe Customer Portal"
-            className="inline-flex items-center gap-1.5 text-xs text-[#e94560] hover:text-red-400 border border-[#e94560]/30 hover:border-[#e94560] rounded-lg px-3 py-1.5 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
           >
             💳 {t("profile.manageSub")}
           </a>
@@ -267,7 +267,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
             <button
               type="submit"
               aria-label="Manage subscription in Stripe Customer Portal"
-              className="inline-flex items-center gap-1.5 text-xs text-[#e94560] hover:text-red-400 border border-[#e94560]/30 hover:border-[#e94560] rounded-lg px-3 py-1.5 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
             >
               💳 {t("profile.manageSub")}
             </button>
@@ -358,7 +358,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
     <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-xl p-5 border border-white/10">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xs text-gray-500 uppercase tracking-wider">{t("profile.title")}</h3>
-        <button onClick={onEdit} className="text-xs text-[#e94560] hover:text-red-400 border border-[#e94560]/40 hover:border-[#e94560] rounded-lg px-3 py-1 transition-colors">
+        <button onClick={onEdit} className="text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1 transition-colors">
           ✏️ {t("training.edit")}
         </button>
       </div>
