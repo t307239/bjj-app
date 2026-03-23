@@ -70,7 +70,7 @@ export default function AchievementBadge({
           animation: "slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
       >
-        <div className="bg-gradient-to-b from-[#e94560] to-[#c03550] rounded-2xl px-8 py-12 text-center max-w-sm mx-4 shadow-2xl pointer-events-auto relative overflow-hidden">
+        <div className="bg-gradient-to-b from-[#7c3aed] to-[#5b21b6] rounded-2xl px-8 py-12 text-center max-w-sm mx-4 shadow-2xl pointer-events-auto relative overflow-hidden">
           {/* Confetti-like background elements */}
           <div className="absolute top-2 left-4 text-4xl opacity-30 animate-bounce">
             ✨
@@ -96,13 +96,13 @@ export default function AchievementBadge({
             <div className="flex gap-3 justify-center">
               <button
                 onClick={handleShare}
-                className="bg-white text-[#e94560] px-6 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors"
+                className="bg-white text-[#7c3aed] px-6 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors"
               >
                 {t("achievement.shareButton")}
               </button>
               <button
                 onClick={() => setShowBadge(false)}
-                className="bg-[#c03550] text-white px-6 py-2 rounded-lg font-bold hover:bg-[#a02a3f] transition-colors border border-white border-opacity-30"
+                className="bg-[#5b21b6] text-white px-6 py-2 rounded-lg font-bold hover:bg-[#4c1d95] transition-colors border border-white border-opacity-30"
               >
                 ✕
               </button>
