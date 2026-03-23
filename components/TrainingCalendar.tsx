@@ -32,7 +32,7 @@ const TYPE_LABEL: Record<string, string> = {
   open_mat:    "Open",
 };
 
-const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function formatDuration(min: number): string {
   if (min < 60) return `${min}m`;
@@ -94,7 +94,9 @@ export default function TrainingCalendar({ userId }: Props) {
 
   // Calendar grid */}
   const firstOfMonth = new Date(year, month, 1);
-  const startWeekday = firstOfMonth.getDay(); // 0=Sun
+  // ISO 8601: week starts on Monday (0=Sun → shift so Mon=0)
+  const startWeekdaySun = firstOfMonth.getDay(); // 0=Sun
+  const startWeekday = (startWeekdaySun + 6) % 7; // Mon=0, Tue=1, ..., Sun=6
   const daysInMonth  = new Date(year, month + 1, 0).getDate();
 
   const cells: (number | null)[] = [
