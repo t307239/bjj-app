@@ -131,17 +131,19 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
                 ⚡ Upgrade to Pro
               </a>
             )}
-            {avatarUrl && (
+            {avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={avatarUrl}
                 alt={displayName}
                 className="w-8 h-8 rounded-full"
+                title={displayName}
               />
+            ) : (
+              <span className="text-gray-300 text-sm hidden md:block max-w-[120px] truncate">
+                {displayName}
+              </span>
             )}
-            <span className="text-gray-300 text-sm hidden md:block max-w-[120px] truncate">
-              {displayName}
-            </span>
             <LogoutButton />
           </div>
         </div>
