@@ -458,8 +458,8 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         />
       )}
 
-      {/* Today's training prompt */}
-      {!initialLoading && trainedToday === false && (
+      {/* Today's training prompt — hide when form is already open (#6 duplicate CTA) */}
+      {!initialLoading && trainedToday === false && !showForm && (
         <div
           className="bg-[#e94560]/10 border border-[#e94560]/30 rounded-xl px-4 py-3 mb-4 flex items-center gap-3 cursor-pointer hover:bg-[#e94560]/15 transition-colors"
           onClick={() => setShowForm(true)}
