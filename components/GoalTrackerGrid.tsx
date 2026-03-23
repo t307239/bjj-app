@@ -34,7 +34,7 @@ export function GoalWeekDayGrid({
                   : isToday
                   ? "bg-[#e94560]/20 border border-[#e94560]/50 text-[#e94560]"
                   : isPast
-                  ? "bg-white/10 text-gray-600"
+                  ? "bg-white/5 border border-white/20 text-gray-500"
                   : "bg-white/5 text-gray-700"
               }`}
             >

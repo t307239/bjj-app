@@ -197,7 +197,7 @@ export default function InsightsBanner({ userId }: Props) {
             href={wikiTip.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[11px] text-[#e94560]/70 hover:text-[#e94560] transition-colors"
+            className="inline-flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors"
           >
             📚 {wikiTip.label}
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
