@@ -173,6 +173,7 @@ export default async function DashboardPage() {
     { count: totalCount },
     { data: recentLogs },
     { data: monthMinData },
+    { data: recentTechniques },
   ] = await Promise.all([
     supabase
       .from("training_logs")
@@ -209,6 +210,12 @@ export default async function DashboardPage() {
       .select("duration_min")
       .eq("user_id", user.id)
       .gte("date", firstDayOfMonth),
+    supabase
+      .from("techniques")
+      .select("name")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(4),
   ]);
   // 今月の合計練習時間（分→時間表示）
   const monthTotalMins = (monthMinData ?? []).reduce(
@@ -437,17 +444,28 @@ export default async function DashboardPage() {
           />
 
           {/* Techniques — spans full width on mobile, 2 cols on md */}
-          <Link href="/techniques" className="col-span-2 md:col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-violet-500/40 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out active:scale-95 flex items-center gap-4 group">
-            <div className="flex-1">
-              <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">Techniques</span>
-              <div className="flex items-end gap-1.5">
-                <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-violet-400 to-purple-300 bg-clip-text text-transparent">{techniqueCount ?? 0}</span>
-                <span className="text-zinc-600 text-xs mb-0.5">logged</span>
+          <Link href="/techniques" className="col-span-2 md:col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-violet-500/40 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out active:scale-95 group">
+            <div className="flex items-center gap-4 mb-2">
+              <div className="flex-1">
+                <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">Techniques</span>
+                <div className="flex items-end gap-1.5">
+                  <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-violet-400 to-purple-300 bg-clip-text text-transparent">{techniqueCount ?? 0}</span>
+                  <span className="text-zinc-600 text-xs mb-0.5">logged</span>
+                </div>
               </div>
+              <svg className="w-5 h-5 text-zinc-600 group-hover:text-violet-400 transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
             </div>
-            <svg className="w-5 h-5 text-zinc-600 group-hover:text-violet-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
+            {recentTechniques && recentTechniques.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {(recentTechniques as { name: string }[]).map((tech) => (
+                  <span key={tech.name} className="text-[10px] bg-violet-500/10 border border-violet-500/20 text-violet-300 px-2 py-0.5 rounded-full truncate max-w-[120px]">
+                    {tech.name}
+                  </span>
+                ))}
+              </div>
+            )}
           </Link>
 
           {/* Avg Session (md only, fills the remaining col) */}
