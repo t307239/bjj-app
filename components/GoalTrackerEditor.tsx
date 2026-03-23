@@ -58,7 +58,7 @@ export function ProgressBar({
             width: `${pct}%`,
             background: done
               ? "#4ade80"
-              : "linear-gradient(to right, #e94560 0%, #f97316 35%, #eab308 65%, #4ade80 100%)",
+              : "linear-gradient(to right, #a78bfa 0%, #f97316 35%, #eab308 65%, #4ade80 100%)",
           }}
         />
       </div>
