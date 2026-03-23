@@ -56,10 +56,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden: not a gym owner" }, { status: 403 });
   }
 
-  // Verify gym is_active (Pro subscription required)
+  // Verify gym is_active (Pro subscription required) + 1-per-day rate limit
   const { data: gym } = await supabase
     .from("gyms")
-    .select("id, is_active")
+    .select("id, is_active, curriculum_set_at")
     .eq("id", ownerProfile.gym_id)
     .eq("owner_id", user.id)
     .single();
@@ -69,6 +69,19 @@ export async function POST(req: NextRequest) {
       { error: "Forbidden: Gym Pro subscription required to dispatch curriculum" },
       { status: 403 }
     );
+  }
+
+  // Rate limit: 1 dispatch per calendar day (UTC)
+  if (gym.curriculum_set_at) {
+    const lastDispatch = new Date(gym.curriculum_set_at);
+    const todayUTC = new Date().toISOString().split("T")[0];
+    const lastUTC = lastDispatch.toISOString().split("T")[0];
+    if (lastUTC === todayUTC) {
+      return NextResponse.json(
+        { error: "Curriculum already dispatched today. Please try again tomorrow." },
+        { status: 429 }
+      );
+    }
   }
 
   // Dispatch: update curriculum_url and curriculum_set_at

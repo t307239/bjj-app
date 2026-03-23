@@ -615,6 +615,8 @@
     "shareDataSub": "Frequency & belt only. Notes always private.",
     "dashboardTitle": "Gym Dashboard",
     "dashboardSubtitle": "Track your students and reduce churn",
+    "totalSessions30d": "Total sessions (30d)",
+    "avgSessions30d": "Avg sessions/member",
     "memberKicked": "Member removed from gym.",
     "kickFailed": "Failed to remove member. Please try again.",
     "kickedBannerTitle": "You were removed from your gym",

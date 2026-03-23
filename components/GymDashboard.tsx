@@ -385,6 +385,13 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
   const redMembers = members.filter((m) => churnRisk(m.last_training_date, m.sessions_last_30d) === "red");
   const atRiskCount = yellowMembers.length + redMembers.length;
 
+  // Gym-wide stats
+  const totalSessionsThisMonth = members.reduce((sum, m) => sum + m.sessions_last_30d, 0);
+  const avgSessions30d =
+    members.length > 0
+      ? Math.round((totalSessionsThisMonth / members.length) * 10) / 10
+      : 0;
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-48 text-gray-500 text-sm">
@@ -406,7 +413,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
       />
 
       {/* Stats summary */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-3 gap-3 mb-3">
         <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
           <div className="text-2xl font-bold text-white">{members.length}</div>
           <div className="text-xs text-gray-500 mt-0.5">{t("gym.activeMembers")}</div>
@@ -422,6 +429,19 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
           <div className="text-xs text-gray-500 mt-0.5">{t("gym.atRisk")}</div>
         </div>
       </div>
+      {/* Gym-wide stats row (second row) */}
+      {members.length > 0 && (
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
+            <div className="text-2xl font-bold text-blue-400">{totalSessionsThisMonth}</div>
+            <div className="text-xs text-gray-500 mt-0.5">{t("gym.totalSessions30d")}</div>
+          </div>
+          <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
+            <div className="text-2xl font-bold text-purple-400">{avgSessions30d}</div>
+            <div className="text-xs text-gray-500 mt-0.5">{t("gym.avgSessions30d")}</div>
+          </div>
+        </div>
+      )}
 
       {/* Belt distribution */}
       {members.length > 0 && <BeltDistribution members={members} />}
