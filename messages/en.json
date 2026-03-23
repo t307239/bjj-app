@@ -717,6 +717,13 @@
     "transferDesc": "You are currently in another gym. Joining {name} will remove you from your current gym, and your previous gym owner will no longer see your data.",
     "transferYes": "Yes, transfer to {name}"
   },
+  "onboarding": {
+    "title": "Getting Started",
+    "progress": "{done}/{total} complete",
+    "step.firstLog": "Log your first training session",
+    "step.setGoal": "Set your weekly training goal",
+    "step.addTechnique": "Add a technique to your library"
+  },
   "freeze": {
     "title": "Streak Freeze",
     "protects": "Protects your streak in emergencies",

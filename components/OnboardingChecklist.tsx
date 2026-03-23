@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useLocale } from "@/lib/i18n";
 
 type Props = {
   hasFirstLog: boolean;
@@ -18,26 +19,27 @@ type Step = {
 };
 
 export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique }: Props) {
+  const { t } = useLocale();
   const [dismissed, setDismissed] = useState(false);
 
   const steps: Step[] = [
     {
       id: "first_log",
-      label: "Log your first training session",
+      label: t("onboarding.step.firstLog"),
       href: "#training-log",
       done: hasFirstLog,
       emoji: "🥋",
     },
     {
       id: "set_goal",
-      label: "Set your weekly training goal",
+      label: t("onboarding.step.setGoal"),
       href: "/profile",
       done: hasGoal,
       emoji: "🎯",
     },
     {
       id: "add_technique",
-      label: "Add a technique to your library",
+      label: t("onboarding.step.addTechnique"),
       href: "/techniques",
       done: hasTechnique,
       emoji: "📖",
@@ -65,7 +67,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
         <span className="text-base">🚀</span>
         <div className="flex-1">
           <p className="text-sm font-bold text-blue-300">
-            Getting Started — {completedCount}/{steps.length} complete
+            {t("onboarding.title")} — {t("onboarding.progress", { done: completedCount, total: steps.length })}
           </p>
           {/* Progress bar */}
           <div className="mt-1.5 h-1 bg-zinc-800 rounded-full overflow-hidden">
