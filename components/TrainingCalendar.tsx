@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 
 type Log = {
@@ -42,6 +43,7 @@ function formatDuration(min: number): string {
 }
 
 export default function TrainingCalendar({ userId }: Props) {
+  const { t } = useLocale();
   const today = new Date();
   const router = useRouter();
   const [year, setYear]   = useState(today.getFullYear());
@@ -142,10 +144,10 @@ export default function TrainingCalendar({ userId }: Props) {
 
       {/* Legend — above calendar grid for visual context */}
       <div className="px-4 pt-2 pb-1 flex flex-wrap gap-3">
-        {Object.entries(TYPE_LABEL).map(([key, label]) => (
+        {Object.keys(TYPE_COLORS).map((key) => (
           <div key={key} className="flex items-center gap-1">
             <div className={`w-2 h-2 rounded-full ${TYPE_COLORS[key]}`} />
-            <span className="text-[10px] text-gray-500">{label}</span>
+            <span className="text-[10px] text-gray-500">{t(`training.${key}`)}</span>
           </div>
         ))}
       </div>
