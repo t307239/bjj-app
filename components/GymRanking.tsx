@@ -205,7 +205,7 @@ export default function GymRanking({ userId, gymId }: Props) {
         {needsExtraRow && myRankIdx >= 0 && (
           <>
             <div className="text-center text-gray-600 text-xs py-0.5">•••</div>
-            <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#e94560]/10 border border-[#e94560]/30">
+            <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-white/5 border border-white/20">
               <span className="w-5 text-center text-xs font-bold text-gray-400 flex-shrink-0">
                 {myRankIdx + 1}
               </span>

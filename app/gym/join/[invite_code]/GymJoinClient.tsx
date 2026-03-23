@@ -136,7 +136,7 @@ export default function GymJoinClient({
         <button
           onClick={() => handleJoin(true)}
           disabled={loading || !ageConfirmed}
-          className="w-full bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white font-semibold py-3 rounded-xl mb-3 transition-colors"
+          className="w-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white font-semibold py-3 rounded-xl mb-3 transition-colors"
           aria-label="Join gym and share training data"
         >
           {loading ? t("gymJoin.joining") : t("gymJoin.joinAndShare")}
