@@ -6,6 +6,7 @@ import { getLocalDateString } from "@/lib/timezone";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
 import Toast from "./Toast";
+import BeltPromotionCelebration, { isBeltPromotion } from "./BeltPromotionCelebration";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 type Profile = {
@@ -411,6 +412,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [promotionFrom, setPromotionFrom] = useState<string | null>(null);
   const today = getLocalDateString();
   const supabase = createClient();
   const belts = BELTS({ t });
@@ -457,6 +459,10 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
       { onConflict: "id" }
     );
     if (!error) {
+      // Detect belt promotion (viral celebration moment)
+      if (isBeltPromotion(profile.belt, form.belt)) {
+        setPromotionFrom(profile.belt);
+      }
       setToast({ message: t("profile.saved"), type: "success" });
       setTimeout(() => { setToast(null); onSave(form); }, 1200);
     } else {
@@ -468,6 +474,14 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
   return (
     <>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      {/* Belt promotion celebration overlay */}
+      {promotionFrom !== null && (
+        <BeltPromotionCelebration
+          fromBelt={promotionFrom}
+          toBelt={form.belt}
+          onClose={() => setPromotionFrom(null)}
+        />
+      )}
       <form onSubmit={handleSave} className="space-y-5">
         <div className="bg-zinc-900 rounded-xl p-5 border border-white/10 text-center">
           <div className="inline-flex items-center gap-3 mb-1">
