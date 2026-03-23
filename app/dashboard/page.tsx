@@ -368,7 +368,7 @@ export default async function DashboardPage() {
 
           {/* Day Streak — Hero metric (top-left, most important per Z-pattern) */}
           <Link href="/profile" className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-yellow-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out active:scale-95 block group relative">
-            <svg className="absolute top-3 right-3 w-4 h-4 text-zinc-700 group-hover:text-yellow-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="absolute top-3 right-3 w-4 h-4 text-zinc-700 group-hover:text-yellow-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
             <span className="text-[11px] font-semibold text-zinc-500 tracking-widest block mb-1">Streak</span>
@@ -422,7 +422,7 @@ export default async function DashboardPage() {
             <div className="flex items-center gap-3 mt-3 flex-wrap">
               {monthHoursStr && (
                 <span className="inline-flex items-center gap-1 text-[11px] text-purple-400 font-medium">
-                  <svg className="w-4 h-4 text-purple-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-4 h-4 text-purple-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <circle cx="12" cy="12" r="10" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
                   </svg>
                   {monthHoursStr}
