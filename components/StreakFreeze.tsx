@@ -146,7 +146,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
               className="text-gray-600 hover:text-gray-400 w-7 h-7 flex items-center justify-center rounded self-start mt-0.5 transition-colors"
               aria-label="Close"
             >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
