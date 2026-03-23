@@ -223,7 +223,7 @@ export default function WikiQuickLinks() {
             href={`${WIKI_BASE}/index.html`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] text-[#e94560]/70 hover:text-[#e94560] transition-colors"
+            className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
           >
             {t("wiki.peekAhead")} →
           </a>
@@ -235,7 +235,7 @@ export default function WikiQuickLinks() {
             onClick={() => setSelectedTag(null)}
             className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
               selectedTag === null
-                ? "bg-[#e94560] border-[#e94560] text-white"
+                ? "bg-zinc-600 border-zinc-600 text-white"
                 : "border-white/10 text-gray-400 hover:border-white/20 hover:text-zinc-100"
             }`}
           >
@@ -249,7 +249,7 @@ export default function WikiQuickLinks() {
                 onClick={() => setSelectedTag(selectedTag === catEn ? null : catEn)}
                 className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
                   selectedTag === catEn
-                    ? "bg-[#e94560] border-[#e94560] text-white"
+                    ? "bg-zinc-600 border-zinc-600 text-white"
                     : "border-white/10 text-gray-400 hover:border-white/20 hover:text-zinc-100"
                 }`}
               >
@@ -267,7 +267,7 @@ export default function WikiQuickLinks() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackWikiClick(link.slug, link.tagEn)}
-              className="flex flex-col items-center text-center p-2.5 rounded-lg bg-white/5 hover:bg-zinc-800 border border-white/10 hover:border-[#e94560]/30 transition-all group"
+              className="flex flex-col items-center text-center p-2.5 rounded-lg bg-white/5 hover:bg-zinc-800 border border-white/10 hover:border-white/25 transition-all group"
             >
               <span className="text-lg mb-1">{link.emoji}</span>
               <span className="text-[10px] text-gray-300 group-hover:text-white font-medium leading-tight line-clamp-2">
