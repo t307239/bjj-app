@@ -27,6 +27,7 @@ import ProUpgradeBanner from "@/components/ProUpgradeBanner";
 import BeltProgressCard from "@/components/BeltProgressCard";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
 import ProStatusBanner from "@/components/ProStatusBanner";
+import GymKickBanner from "@/components/GymKickBanner";
 import { getLocalDateString, getYesterdayDateString } from "@/lib/timezone";
 
 const BASE_URL =
@@ -37,10 +38,10 @@ const getCachedProfile = cache(async (userId: string) => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("profiles")
-    .select("belt, stripe, start_date, is_pro, gym_name, weekly_goal, subscription_status")
+    .select("belt, stripe, start_date, is_pro, gym_name, weekly_goal, subscription_status, gym_id, gym_kick_notified")
     .eq("id", userId)
     .single();
-  return data as { belt: string; stripe: number; start_date: string | null; is_pro: boolean; gym_name: string | null; weekly_goal?: number | null; subscription_status?: string | null } | null;
+  return data as { belt: string; stripe: number; start_date: string | null; is_pro: boolean; gym_name: string | null; weekly_goal?: number | null; subscription_status?: string | null; gym_id?: string | null; gym_kick_notified?: boolean | null } | null;
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -238,6 +239,8 @@ export default async function DashboardPage() {
   const stripeCount = profileData?.stripe ?? 0;
   const weeklyGoal = profileData?.weekly_goal ?? 0;
   const subscriptionStatus = profileData?.subscription_status ?? null;
+  // Show kick banner: gym_kick_notified === false (not null/true) AND gym_id is null
+  const showKickBanner = profileData?.gym_kick_notified === false && !profileData?.gym_id;
 
   // Onboarding checklist state
   const hasFirstLog = (totalCount ?? 0) > 0;
@@ -290,6 +293,9 @@ export default async function DashboardPage() {
       <main className="max-w-4xl mx-auto px-4 py-6">
         {/* ── Pro Status Banner (payment issue alert / PRO badge) ── */}
         <ProStatusBanner isPro={isPro} subscriptionStatus={subscriptionStatus} />
+
+        {/* ── Gym kick notification (persistent until dismissed) ── */}
+        {showKickBanner && <GymKickBanner userId={user.id} />}
 
         {/* ── Onboarding Checklist (new users only, auto-hides when complete) ── */}
         <OnboardingChecklist

@@ -614,7 +614,12 @@
     "shareData": "Share training data with gym",
     "shareDataSub": "Frequency & belt only. Notes always private.",
     "dashboardTitle": "Gym Dashboard",
-    "dashboardSubtitle": "Track your students and reduce churn"
+    "dashboardSubtitle": "Track your students and reduce churn",
+    "memberKicked": "Member removed from gym.",
+    "kickFailed": "Failed to remove member. Please try again.",
+    "kickedBannerTitle": "You were removed from your gym",
+    "kickedBannerDesc": "You are no longer a member of your previous gym. You can join a new gym with an invite link.",
+    "kickedBannerDismiss": "Got it"
   },
   "gymJoin": {
     "title": "Join {name}",

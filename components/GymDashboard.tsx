@@ -57,10 +57,12 @@ function churnRisk(lastDate: string | null, sessions30d: number): RiskLevel {
 // ─── QR Code display (using qr-code data URI via API) ────────────────────────
 // We use a simple text-based URL display since qrcode lib may not be available
 
-function InviteSection({ gym }: { gym: Gym }) {
+function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegenerated: (newCode: string) => void }) {
   const { t } = useLocale();
   const [copied, setCopied] = useState(false);
-  const inviteUrl = `${typeof window !== "undefined" ? window.location.origin : "https://bjj-app.net"}/gym/join/${gym.invite_code}`;
+  const [regenerating, setRegenerating] = useState(false);
+  const [currentCode, setCurrentCode] = useState(gym.invite_code);
+  const inviteUrl = `${typeof window !== "undefined" ? window.location.origin : "https://bjj-app.net"}/gym/join/${currentCode}`;
 
   const copy = async () => {
     try {
@@ -69,6 +71,21 @@ function InviteSection({ gym }: { gym: Gym }) {
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // fallback: select text
+    }
+  };
+
+  const regenerate = async () => {
+    if (!confirm("Regenerate invite code? All existing QR codes and links will become invalid. Current members are not affected.")) return;
+    setRegenerating(true);
+    try {
+      const res = await fetch("/api/gym/regenerate-invite", { method: "POST" });
+      if (res.ok) {
+        const data = await res.json();
+        setCurrentCode(data.invite_code);
+        onInviteRegenerated(data.invite_code);
+      }
+    } finally {
+      setRegenerating(false);
     }
   };
 
@@ -91,8 +108,17 @@ function InviteSection({ gym }: { gym: Gym }) {
         </button>
       </div>
       <p className="text-[10px] text-gray-600 mt-2">
-        {t("gym.inviteCode")} <span className="font-mono">{gym.invite_code}</span>
+        {t("gym.inviteCode")} <span className="font-mono">{currentCode}</span>
       </p>
+      {/* Regenerate button — invalidates old QR codes */}
+      <button
+        onClick={regenerate}
+        disabled={regenerating}
+        className="mt-3 text-[10px] text-gray-500 hover:text-orange-400 transition-colors disabled:opacity-50"
+        aria-label="Regenerate invite code (invalidates old QR codes)"
+      >
+        {regenerating ? "Regenerating..." : "🔄 Regenerate QR code (invalidates old links)"}
+      </button>
     </div>
   );
 }
@@ -183,11 +209,12 @@ function BeltDistribution({ members }: { members: MemberRow[] }) {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export default function GymDashboard({ userId, gym, isGymPro, stripeGymPaymentLink }: Props) {
+export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripeGymPaymentLink }: Props) {
   const { t } = useLocale();
   const supabaseRef = useRef(createClient());
   const supabase = supabaseRef.current;
 
+  const [gym, setGym] = useState<Gym>(initialGym);
   const [members, setMembers] = useState<MemberRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
@@ -235,6 +262,29 @@ export default function GymDashboard({ userId, gym, isGymPro, stripeGymPaymentLi
 
   useEffect(() => { loadMembers(); }, [loadMembers]);
 
+  const handleKickMember = useCallback(async (memberId: string) => {
+    try {
+      const res = await fetch("/api/gym/kick", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ member_id: memberId }),
+      });
+      if (res.ok) {
+        setMembers((prev) => prev.filter((m) => m.student_id !== memberId));
+        setToast({ message: t("gym.memberKicked"), type: "success" });
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setToast({ message: data.error ?? t("gym.kickFailed"), type: "error" });
+      }
+    } catch {
+      setToast({ message: t("gym.kickFailed"), type: "error" });
+    }
+  }, [t]);
+
+  const handleInviteRegenerated = useCallback((newCode: string) => {
+    setGym((prev) => ({ ...prev, invite_code: newCode }));
+  }, []);
+
   // Categorize members
   const greenMembers = members.filter((m) => churnRisk(m.last_training_date, m.sessions_last_30d) === "green");
   const yellowMembers = members.filter((m) => churnRisk(m.last_training_date, m.sessions_last_30d) === "yellow");
@@ -252,7 +302,7 @@ export default function GymDashboard({ userId, gym, isGymPro, stripeGymPaymentLi
   return (
     <div className="pb-6">
       {/* Invite section */}
-      <InviteSection gym={gym} />
+      <InviteSection gym={gym} onInviteRegenerated={handleInviteRegenerated} />
 
       {/* Stats summary */}
       <div className="grid grid-cols-3 gap-3 mb-6">
@@ -301,7 +351,7 @@ export default function GymDashboard({ userId, gym, isGymPro, stripeGymPaymentLi
           <div className="space-y-2">
             {/* Show green members freely */}
             {greenMembers.map((m) => (
-              <MemberCard key={m.student_id} member={m} risk="green" showDetail={true} />
+              <MemberCard key={m.student_id} member={m} risk="green" showDetail={true} onKick={handleKickMember} />
             ))}
 
             {/* Yellow members: free shows count + basic card, Pro shows last-seen */}
@@ -318,6 +368,7 @@ export default function GymDashboard({ userId, gym, isGymPro, stripeGymPaymentLi
                     showDetail={isGymPro}
                     proRequired={!isGymPro}
                     stripeGymPaymentLink={stripeGymPaymentLink}
+                    onKick={handleKickMember}
                   />
                 ))}
               </div>
@@ -337,6 +388,7 @@ export default function GymDashboard({ userId, gym, isGymPro, stripeGymPaymentLi
                     showDetail={isGymPro}
                     proRequired={!isGymPro}
                     stripeGymPaymentLink={stripeGymPaymentLink}
+                    onKick={handleKickMember}
                   />
                 ))}
               </div>
@@ -358,12 +410,14 @@ function MemberCard({
   showDetail,
   proRequired = false,
   stripeGymPaymentLink,
+  onKick,
 }: {
   member: MemberRow;
   risk: RiskLevel;
   showDetail: boolean;
   proRequired?: boolean;
   stripeGymPaymentLink?: string;
+  onKick?: (memberId: string) => void;
 }) {
   const { t } = useLocale();
   const lastSeenText = member.last_training_date
@@ -413,6 +467,24 @@ function MemberCard({
           </span>
         ) : null}
       </div>
+
+      {/* Kick button (gym owner only) */}
+      {onKick && (
+        <button
+          onClick={() => {
+            if (confirm(`Remove ${member.display_name || "this member"} from your gym? They will be notified.`)) {
+              onKick(member.student_id);
+            }
+          }}
+          className="flex-shrink-0 text-gray-600 hover:text-[#e94560] transition-colors p-1"
+          title="Remove from gym"
+          aria-label={`Remove ${member.display_name || "member"} from gym`}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 }
