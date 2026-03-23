@@ -2,6 +2,12 @@
 
 ---
 
+- Day4fo_89 (2026/03/24): **画面デバッグ — 2バグ修正**
+  - `app/page.tsx` + `app/gym/page.tsx` — keycap絵文字（1️⃣2️⃣3️⃣）をCSS数字サークルに変更（フォント環境依存の二重表示バグ）✅
+  - 全ページタイトルの `| BJJ App` 重複削除（layoutのtemplateと二重になっていた）: dashboard/login/profile/gym/techniques/terms/privacy/tokushoho/gym-dashboard/join-gym ✅
+  - コンソールエラースキャン: Immersive Translate拡張の偽陽性のみ（実コードバグなし）✅
+  - TypeScript 0エラー確認 ✅
+
 - Day4fo_88 (2026/03/24): **Consultant Review実装 — UX/マイクロコピー全実装**
   - #6: `app/page.tsx` — 全CTAを「Step on the Mat」に統一（micro copy sweep）✅
   - #4: `components/TrainingChart.tsx` — 空状態テザー実装（ぼかしダミーヒートマップ + CTA overlay）✅
