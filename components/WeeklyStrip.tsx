@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useLocale } from "@/lib/i18n";
 
 type Props = {
   userId: string;
@@ -22,6 +23,7 @@ function fmtMins(min: number): string {
 const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export default function WeeklyStrip({ userId }: Props) {
+  const { t } = useLocale();
   const [trainedDates, setTrainedDates] = useState<Set<string>>(new Set());
   const [weekTotalMins, setWeekTotalMins] = useState(0);
   const [lastWeekCount, setLastWeekCount] = useState<number | null>(null);
@@ -129,7 +131,7 @@ export default function WeeklyStrip({ userId }: Props) {
                 ? `▲${trainedThisWeek - lastWeekCount}`
                 : trainedThisWeek < lastWeekCount
                 ? `▼${lastWeekCount - trainedThisWeek}`
-                : "= same"} vs last week
+                : t("weeklyStrip.same")} {t("weeklyStrip.vsLastWeek")}
             </span>
           )}
           {lastWeekMins !== null && lastWeekMins > 0 && weekTotalMins > 0 && (
@@ -144,7 +146,7 @@ export default function WeeklyStrip({ userId }: Props) {
                 ? `▲${fmtMins(weekTotalMins - lastWeekMins)}`
                 : weekTotalMins < lastWeekMins
                 ? `▼${fmtMins(lastWeekMins - weekTotalMins)}`
-                : "= same"}
+                : t("weeklyStrip.same")}
             </span>
           )}
         </div>

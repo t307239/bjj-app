@@ -865,5 +865,9 @@
     "techniqueLog": "Technique Log",
     "learnWiki": "Learn on BJJ Wiki",
     "wikiDesc": "Free technique guides, drills, and video breakdowns on BJJ Wiki"
+  },
+  "weeklyStrip": {
+    "same": "= same",
+    "vsLastWeek": "vs last week"
   }
 }
