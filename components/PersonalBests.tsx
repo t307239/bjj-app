@@ -190,14 +190,15 @@ export default function PersonalBests({ userId }: Props) {
       })()
     : "";
 
+  // #61: num/unit split for bold number + muted unit hierarchy
   const items = [
-    { icon: "🏋️", label: t("stats.totalSessions"), value: `${bests.totalSessions}${timesUnit}`, sub: "" },
-    { icon: "⏱️", label: t("stats.totalMinutes"), value: fmtTime(bests.totalMinutes), sub: "" },
-    { icon: "🔥", label: t("stats.longestStreak"), value: `${bests.longestStreak}${daysUnit}`, sub: "" },
-    { icon: "📅", label: t("stats.bestMonth"), value: `${bests.bestMonthCount}${timesUnit}`, sub: bestMonthLabel },
-    { icon: "⌛", label: t("stats.avgPerSession"), value: fmtTime(bests.avgSessionMin), sub: "" },
-    { icon: "📈", label: t("stats.monthlyAvg"), value: `${bests.avgMonthly}${timesUnit}`, sub: "" },
-    { icon: "🗓️", label: t("stats.bestWeek"), value: `${bests.bestWeekCount}${timesUnit}`, sub: "" },
+    { icon: "🏋️", label: t("stats.totalSessions"), num: `${bests.totalSessions}`, unit: timesUnit, sub: "" },
+    { icon: "⏱️", label: t("stats.totalMinutes"), num: fmtTime(bests.totalMinutes), unit: "", sub: "" },
+    { icon: "🔥", label: t("stats.longestStreak"), num: `${bests.longestStreak}`, unit: daysUnit, sub: "" },
+    { icon: "📅", label: t("stats.bestMonth"), num: `${bests.bestMonthCount}`, unit: timesUnit, sub: bestMonthLabel },
+    { icon: "⌛", label: t("stats.avgPerSession"), num: fmtTime(bests.avgSessionMin), unit: "", sub: "" },
+    { icon: "📈", label: t("stats.monthlyAvg"), num: `${bests.avgMonthly}`, unit: timesUnit, sub: "" },
+    { icon: "🗓️", label: t("stats.bestWeek"), num: `${bests.bestWeekCount}`, unit: timesUnit, sub: "" },
   ];
 
   // Xシェア用テキスト生成
@@ -284,7 +285,10 @@ export default function PersonalBests({ userId }: Props) {
             }`}
           >
             <div className="text-lg mb-0.5">{item.icon}</div>
-            <div className="text-base font-bold text-white">{item.value}</div>
+            <div className="flex items-baseline justify-center gap-0.5">
+              <span className="text-xl font-black text-white tabular-nums">{item.num}</span>
+              {item.unit && <span className="text-[10px] font-normal text-gray-500">{item.unit}</span>}
+            </div>
             <div className="text-[10px] text-gray-500 mt-0.5">{item.label}</div>
             {item.sub && (
               <div className="text-[9px] text-yellow-400/80 mt-0.5 leading-none">⭐ {item.sub}</div>
