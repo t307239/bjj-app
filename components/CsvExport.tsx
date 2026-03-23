@@ -98,7 +98,7 @@ export default function CsvExport({ userId }: Props) {
       };
 
       const resultLabels: Record<string, string> = {
-        win: t("training.competition"),
+        win: t("csv.win"),
         loss: t("csv.loss"),
         draw: t("csv.draw"),
       };
