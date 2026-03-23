@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import ProfileTabs from "@/components/ProfileTabs";
+import { serverT as t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Profile | BJJ App",
@@ -31,7 +32,7 @@ export default async function ProfilePage() {
     user.user_metadata?.full_name ||
     user.user_metadata?.name ||
     user.email?.split("@")[0] ||
-    "Athlete";
+    t("dashboard.defaultAthleteName");
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
