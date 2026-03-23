@@ -470,8 +470,8 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             tabIndex={0}
             onKeyDown={(e) => e.key === "Enter" && setShowForm(true)}
           >
-            <p className="text-[#10B981] text-sm font-medium">Log today&apos;s session!</p>
-            <p className="text-gray-400 text-xs mt-0.5">Tap to add training log</p>
+            <p className="text-[#10B981] text-sm font-medium">{t("training.logNudgeTitle")}</p>
+            <p className="text-gray-400 text-xs mt-0.5">{t("training.logNudgeSubtitle")}</p>
           </div>
           <button
             onClick={(e) => { e.stopPropagation(); setNudgeDismissed(true); }}
@@ -494,13 +494,13 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           <div className="bg-zinc-900 rounded-xl p-3 border border-white/10 flex items-center gap-3">
             <MiniTypeDonut entries={monthEntries} />
             <div>
-              <p className="text-[10px] text-gray-500 tracking-wide">This Month</p>
+              <p className="text-[10px] text-gray-500 tracking-wide">{t("training.monthCount")}</p>
               <p className="text-lg font-bold text-white">{monthEntries.length}</p>
-              <p className="text-[11px] text-gray-400">sessions</p>
+              <p className="text-[11px] text-gray-400">{t("training.bentoSessions")}</p>
             </div>
           </div>
           <div className="bg-zinc-900 rounded-xl p-3 border border-white/10">
-            <p className="text-[10px] text-gray-500 tracking-wide mb-1.5">Type Mix</p>
+            <p className="text-[10px] text-gray-500 tracking-wide mb-1.5">{t("training.bentoTypeMix")}</p>
             <MonthTypeStackBar entries={monthEntries} />
             <div className="flex flex-wrap gap-x-2 gap-y-0.5 mt-1.5">
               {TRAINING_TYPES.filter((t) => monthEntries.some((e) => e.type === t.value)).map((t) => (
@@ -587,10 +587,10 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       {/* Period filter */}
       {!initialLoading && entries.length > 0 && (
         <div className="mb-2 flex items-center gap-2">
-          <span className="text-[10px] font-medium text-zinc-600 tracking-wide uppercase">Period</span>
+          <span className="text-[10px] font-medium text-zinc-600 tracking-wide uppercase">{t("training.periodLabel")}</span>
         <div className="bg-zinc-900 rounded-lg p-1 inline-flex gap-0.5 border border-white/10">
           {(["all", "month", "week"] as const).map((p) => {
-            const label = p === "all" ? "All Time" : p === "month" ? "This Month" : "This Week";
+            const label = p === "all" ? t("training.periodAll") : p === "month" ? t("training.periodMonth") : t("training.periodWeek");
             return (
               <button
                 key={p}
@@ -655,7 +655,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         const dropdownTypes = usedTypes.slice(2);
         return (
           <div className="flex items-center gap-1.5 mb-4 flex-wrap">
-            <span className="text-[10px] font-medium text-zinc-600 tracking-wide uppercase mr-1">Type</span>
+            <span className="text-[10px] font-medium text-zinc-600 tracking-wide uppercase mr-1">{t("training.typeShort")}</span>
             <button
               onClick={() => setFilterType("all")}
               className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${

@@ -134,7 +134,15 @@
     "durationRange": "Duration must be between 1 and 480 minutes",
     "emptyFree": "✓ Free to use",
     "emptyCloud": "✓ Cloud synced",
-    "emptyTrack": "✓ Track progress"
+    "emptyTrack": "✓ Track progress",
+    "logNudgeTitle": "Log today's session!",
+    "logNudgeSubtitle": "Tap to add training log",
+    "bentoTypeMix": "Type Mix",
+    "bentoSessions": "sessions",
+    "periodLabel": "Period",
+    "periodAll": "All Time",
+    "periodMonth": "This Month",
+    "periodWeek": "This Week"
   },
   "techniques": {
     "mastery1": "Know it",
@@ -574,7 +582,11 @@
     "features": "PDF · 12-month graph · Streak Freeze+",
     "bannerTitle": "⚡ Upgrade to Pro — $4.99/month",
     "bannerFeatures": "CSV Export · 12-month Charts · Streak Freeze Tickets",
-    "bannerCta": "Upgrade"
+    "bannerCta": "Upgrade",
+    "paymentIssueTitle": "Payment issue — Pro features paused",
+    "paymentIssueDesc": "Your last payment failed. Update your billing info to continue.",
+    "fixNow": "Fix now",
+    "allFeaturesUnlocked": "All Pro features unlocked"
   },
   "beltPromo": {
     "congrats": "Congratulations! 🎉",
@@ -794,7 +806,11 @@
     "sentDaysAgo": "Sent {n} days ago",
     "ariaCopyInvite": "Copy invite link",
     "ariaRegenerate": "Regenerate invite code (invalidates old QR codes)",
-    "ariaUpgradePro": "Upgrade to Gym Pro"
+    "ariaUpgradePro": "Upgrade to Gym Pro",
+    "invalidInviteTitle": "Invalid invite link",
+    "invalidInviteDesc": "This gym invite link is no longer valid or has expired.",
+    "goToDashboard": "Go to dashboard",
+    "defaultOwnerName": "Gym Owner"
   },
   "gymJoin": {
     "title": "Join {name}",

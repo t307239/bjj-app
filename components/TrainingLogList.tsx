@@ -44,10 +44,11 @@ function DurationPicker({
   value: number;
   onChange: (v: number) => void;
 }) {
+  const { t } = useLocale();
   const isPreset = DURATION_PRESETS.includes(value);
   return (
     <div>
-      <label className="block text-gray-400 text-xs mb-1">Duration</label>
+      <label className="block text-gray-400 text-xs mb-1">{t("training.duration")}</label>
       <div className="flex flex-wrap gap-1.5 mb-2">
         {DURATION_PRESETS.map((d) => (
           <button

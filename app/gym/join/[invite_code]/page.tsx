@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import GymJoinClient from "./GymJoinClient";
+import { serverT as t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Join Gym | BJJ App",
@@ -45,12 +46,12 @@ export default async function GymJoinPage({ params }: Props) {
       <div className="min-h-[100dvh] bg-zinc-950 flex items-center justify-center px-4">
         <div className="text-center">
           <div className="text-5xl mb-4">❌</div>
-          <p className="text-white font-bold text-lg mb-2">Invalid invite link</p>
+          <p className="text-white font-bold text-lg mb-2">{t("gym.invalidInviteTitle")}</p>
           <p className="text-gray-400 text-sm">
-            This gym invite link is no longer valid or has expired.
+            {t("gym.invalidInviteDesc")}
           </p>
           <a href="/dashboard" className="mt-6 inline-block text-gray-400 hover:text-white text-sm">
-            Go to dashboard →
+            {t("gym.goToDashboard")} →
           </a>
         </div>
       </div>
@@ -58,7 +59,7 @@ export default async function GymJoinPage({ params }: Props) {
   }
 
   // Get owner display info using admin client (requires service role key)
-  let ownerName = "Gym Owner";
+  let ownerName = t("gym.defaultOwnerName");
   let maskedEmail = "";
   try {
     const adminClient = createAdminClient();
@@ -68,7 +69,7 @@ export default async function GymJoinPage({ params }: Props) {
         ownerAuth.user.user_metadata?.full_name ||
         ownerAuth.user.user_metadata?.name ||
         ownerAuth.user.email?.split("@")[0] ||
-        "Gym Owner";
+        t("gym.defaultOwnerName");
       const email = ownerAuth.user.email ?? "";
       maskedEmail = email ? maskEmail(email) : "";
     }
