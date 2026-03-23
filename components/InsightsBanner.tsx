@@ -50,10 +50,13 @@ export default function InsightsBanner({ userId }: Props) {
             .eq("user_id", userId)
             .gte("date", firstOfPrevMonth)
             .lt("date", firstOfMonth),
+          // Cap at 365 days: longest streaks almost never span > 1 year
+          // and this keeps the payload small for veteran users
           supabase
             .from("training_logs")
             .select("date")
             .eq("user_id", userId)
+            .gte("date", new Date(Date.now() - 365 * 86400000).toISOString().split("T")[0])
             .order("date", { ascending: true }),
         ]);
 
