@@ -31,9 +31,13 @@
     "duration": "Duration",
     "durationUnit": "min",
     "type": "Training Type",
+    "typeShort": "Type",
     "memo": "Notes",
     "memoOptional": "Notes (optional)",
     "memoPlaceholder": "Key points, takeaways from today's session...",
+    "memoFormPlaceholder": "Key insights, tips, what you learned...",
+    "backToToday": "Back to Today",
+    "customMinutes": "Custom minutes",
     "all": "All",
     "gi": "Gi",
     "nogi": "No-Gi",
@@ -212,7 +216,13 @@
     "monthly": "Monthly",
     "matchesSuffix": " matches",
     "noCompetitions": "No competitions logged yet",
-    "noCompetitionsHint": "Log your first match to track your record"
+    "noCompetitionsHint": "Log your first match to track your record",
+    "giType": "Gi Type",
+    "opponentBelt": "Opponent Belt",
+    "formHeader": "🏆 Competition Record",
+    "quickTechniqueTag": "Quick technique tag",
+    "searchTechniquesPlaceholder": "Search your techniques…",
+    "techAppendNote": "Select a technique to append it to notes"
   },
   "guest": {
     "banner": "Guest Mode",

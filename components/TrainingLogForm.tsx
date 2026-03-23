@@ -22,9 +22,10 @@ function DurationPicker({
   value: number;
   onChange: (v: number) => void;
 }) {
+  const { t } = useLocale();
   return (
     <div>
-      <label className="block text-gray-400 text-xs mb-1">Duration</label>
+      <label className="block text-gray-400 text-xs mb-1">{t("training.duration")}</label>
       <div className="flex gap-1.5 flex-wrap mb-2">
         {DURATION_PRESETS.map((p) => (
           <button
@@ -48,7 +49,7 @@ function DurationPicker({
         max={480}
         onChange={(e) => onChange(parseInt(e.target.value) || 60)}
         className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
-        placeholder="Custom minutes"
+        placeholder={t("training.customMinutes")}
       />
     </div>
   );
@@ -124,14 +125,14 @@ export default function TrainingLogForm({
       {/* Date */}
       <div className="mb-3">
         <div className="flex items-center justify-between mb-1">
-          <label className="text-gray-400 text-xs">Date</label>
+          <label className="text-gray-400 text-xs">{t("training.date")}</label>
           {form.date !== today && (
             <button
               type="button"
               onClick={() => setForm({ ...form, date: today })}
               className="text-[10px] text-gray-500 hover:text-white font-medium"
             >
-              Back to Today
+              {t("training.backToToday")}
             </button>
           )}
         </div>
@@ -155,7 +156,7 @@ export default function TrainingLogForm({
 
       {/* Type */}
       <div className="mb-3">
-        <label className="block text-gray-400 text-xs mb-1">Type</label>
+        <label className="block text-gray-400 text-xs mb-1">{t("training.typeShort")}</label>
         <select
           value={form.type}
           onChange={(e) => setForm({ ...form, type: e.target.value })}
@@ -172,7 +173,7 @@ export default function TrainingLogForm({
       {/* Competition details */}
       {form.type === "competition" && (
         <div className="mb-3 bg-red-500/5 border border-red-500/20 rounded-xl p-3 space-y-2">
-          <p className="text-[11px] text-red-400 font-semibold mb-2">🏆 Competition Record</p>
+          <p className="text-[11px] text-red-400 font-semibold mb-2">{t("competition.formHeader")}</p>
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="block text-gray-400 text-xs mb-1">{t("competition.result")}</label>
@@ -221,7 +222,7 @@ export default function TrainingLogForm({
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-gray-400 text-xs mb-1">{t("competition.opponent")} Belt (optional)</label>
+              <label className="block text-gray-400 text-xs mb-1">{t("competition.opponentBelt")} (optional)</label>
               <select
                 value={compForm.opponent_rank}
                 onChange={(e) => setCompForm({ ...compForm, opponent_rank: e.target.value })}
@@ -233,14 +234,14 @@ export default function TrainingLogForm({
               </select>
             </div>
             <div>
-              <label className="block text-gray-400 text-xs mb-1">Gi Type</label>
+              <label className="block text-gray-400 text-xs mb-1">{t("competition.giType")}</label>
               <select
                 value={compForm.gi_type}
                 onChange={(e) => setCompForm({ ...compForm, gi_type: e.target.value })}
                 className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30"
               >
-                <option value="gi">Gi</option>
-                <option value="nogi">No-Gi</option>
+                <option value="gi">{t("training.gi")}</option>
+                <option value="nogi">{t("training.nogi")}</option>
               </select>
             </div>
           </div>
@@ -250,12 +251,12 @@ export default function TrainingLogForm({
       {/* Technique autocomplete (Phase 2.5 minimum: datalist from technique_nodes) */}
       {techniqueSuggestions.length > 0 && (
         <div className="mb-3">
-          <label className="block text-gray-400 text-xs mb-1">Quick technique tag</label>
+          <label className="block text-gray-400 text-xs mb-1">{t("competition.quickTechniqueTag")}</label>
           <input
             ref={techniqueInputRef}
             type="text"
             list="technique-autocomplete-list"
-            placeholder="Search your techniques…"
+            placeholder={t("competition.searchTechniquesPlaceholder")}
             onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleTechniqueSelect((e.target as HTMLInputElement).value); } }}
             onChange={(e) => {
               // Auto-select when exact match found in datalist
@@ -269,17 +270,17 @@ export default function TrainingLogForm({
               <option key={name} value={name} />
             ))}
           </datalist>
-          <p className="text-[10px] text-gray-600 mt-0.5">Select a technique to append it to notes</p>
+          <p className="text-[10px] text-gray-600 mt-0.5">{t("competition.techAppendNote")}</p>
         </div>
       )}
 
       {/* Notes */}
       <div className="mb-4">
-        <label className="block text-gray-400 text-xs mb-1">Notes</label>
+        <label className="block text-gray-400 text-xs mb-1">{t("training.memo")}</label>
         <textarea
           value={form.notes}
           onChange={(e) => setForm({ ...form, notes: e.target.value })}
-          placeholder="Key insights, tips, what you learned..."
+          placeholder={t("training.memoFormPlaceholder")}
           rows={2}
           className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 resize-none"
         />
@@ -292,14 +293,14 @@ export default function TrainingLogForm({
           disabled={loading}
           className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-all"
         >
-          {loading ? "Saving..." : "Save"}
+          {loading ? t("training.saving") : t("training.save")}
         </button>
         <button
           type="button"
           onClick={onClose}
           className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
         >
-          Cancel
+          {t("training.cancel")}
         </button>
       </div>
     </form>
