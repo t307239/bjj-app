@@ -30,7 +30,7 @@ type Props = {
 function getMonthLabel(ym: string): string {
   const [y, m] = ym.split("-");
   const d = new Date(parseInt(y), parseInt(m) - 1, 1);
-  return new Intl.DateTimeFormat(undefined, { month: "short" }).format(d);
+  return new Intl.DateTimeFormat("en", { month: "short" }).format(d);
 }
 
 const TYPE_COLORS: Record<string, string> = {
@@ -181,7 +181,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
     ? (() => {
         const [y, m] = selectedMonth.split("-");
         const d = new Date(parseInt(y), parseInt(m) - 1, 1);
-        return new Intl.DateTimeFormat(undefined, { year: "numeric", month: "long" }).format(d);
+        return new Intl.DateTimeFormat("en", { year: "numeric", month: "long" }).format(d);
       })()
     : null;
 

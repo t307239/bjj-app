@@ -87,7 +87,7 @@ export default function TrainingChart({ userId }: Props) {
           d.setDate(1);
           d.setMonth(d.getMonth() - i);
           const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-          const label = new Intl.DateTimeFormat(undefined, { month: "short" }).format(d);
+          const label = new Intl.DateTimeFormat("en", { month: "short" }).format(d);
           const info = mCounts[ym] || { count: 0, minutes: 0 };
           months.push({ ym, label, count: info.count, minutes: info.minutes });
         }

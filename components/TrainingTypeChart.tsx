@@ -202,7 +202,7 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color, trendSubtitle }: {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
     // locale-aware short month label via Intl
-    const label = new Intl.DateTimeFormat(undefined, { month: "short" }).format(d);
+    const label = new Intl.DateTimeFormat("en", { month: "short" }).format(d);
     months.push({ key, label, count: 0 });
   }
   logs.forEach((l) => {
