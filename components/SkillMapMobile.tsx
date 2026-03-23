@@ -483,7 +483,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink }: Pro
         <p className="text-gray-500 text-sm mb-6">{t("skillmap.emptyBody")}</p>
         <button
           onClick={() => setShowAddNode(true)}
-          className="bg-[#e94560] hover:bg-[#c73652] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors"
+          className="bg-[#10B981] hover:bg-[#0d9668] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors"
           aria-label={t("skillmap.addFirstTechnique")}
         >
           + {t("skillmap.addFirstTechnique")}
@@ -537,7 +537,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink }: Pro
           {/* Connect to existing technique */}
           <button
             onClick={() => setConnectingFrom(currentNode)}
-            className="mt-3 text-xs text-[#e94560] hover:text-[#c73652] transition-colors"
+            className="mt-3 text-xs text-[#3B82F6] hover:text-blue-400 transition-colors"
             aria-label={t("skillmap.connectExisting")}
           >
             + {t("skillmap.connectExisting")}
