@@ -90,7 +90,7 @@ export default async function Home() {
               href="/login"
               className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-4 px-8 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#10B981]/20"
             >
-              Get started free →
+              Step on the Mat →
             </Link>
             <a
               href="#preview"
@@ -171,7 +171,7 @@ export default async function Home() {
               href="/login"
               className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-4 px-8 rounded-full text-base transition-all hover:scale-105 shadow-lg shadow-[#10B981]/25"
             >
-              Start tracking for free →
+              Step on the Mat →
             </Link>
             <Link
               href="/dashboard"
@@ -559,7 +559,7 @@ export default async function Home() {
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Competition records</li>
               </ul>
               <Link href="/login" className="mt-8 block text-center bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-3 rounded-full transition-all">
-                Get started free
+                Step on the Mat
               </Link>
             </div>
             {/* Pro */}
@@ -610,7 +610,7 @@ export default async function Home() {
           href="/login"
           className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#10B981]/20"
         >
-          Get started free →
+          Step on the Mat →
         </Link>
       </section>
 
