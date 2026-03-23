@@ -150,7 +150,7 @@ export default function DailyRecommend({ userId }: Props) {
           <span className="text-base flex-shrink-0">🎯</span>
           <span className="text-sm font-medium text-gray-300 flex-shrink-0">{t("recommend.dailyTheme")}</span>
           {!isOpen && tech && (
-            <span className="text-xs text-[#e94560] font-semibold truncate ml-1">— {tech.name}</span>
+            <span className="text-xs text-gray-300 font-semibold truncate ml-1">— {tech.name}</span>
           )}
         </div>
         <svg
@@ -166,10 +166,10 @@ export default function DailyRecommend({ userId }: Props) {
       <div className="mt-2 space-y-3">
       {/* 今日のおすすめテクニック */}
       {tech && (
-        <div className="bg-gradient-to-r from-zinc-900 to-zinc-800 rounded-xl p-4 border border-[#e94560]/30">
+        <div className="bg-gradient-to-r from-zinc-900 to-zinc-800 rounded-xl p-4 border border-white/10">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🎯</span>
-            <span className="text-xs font-semibold text-[#e94560] uppercase tracking-wider">
+            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
               {t("recommend.dailyTheme")}
             </span>
           </div>
@@ -192,7 +192,7 @@ export default function DailyRecommend({ userId }: Props) {
                 </svg>
               </a>
               <div className="text-right">
-                <span className="bg-[#e94560]/20 text-[#e94560] text-xs px-2 py-1 rounded-full">
+                <span className="bg-white/10 text-gray-300 text-xs px-2 py-1 rounded-full">
                   {MASTERY_LABELS[tech.mastery_level]?.["en"] ?? "Know it"}
                 </span>
                 <p className="text-gray-500 text-[10px] mt-1">{t("recommend.masteryUp")}</p>
