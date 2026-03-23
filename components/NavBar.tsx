@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LogoutButton from "./LogoutButton";
 import { createClient } from "@/lib/supabase/client";
 import { getLocalDateString } from "@/lib/timezone";
@@ -21,6 +21,8 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
   const [currentStreak, setCurrentStreak] = useState<number>(0);
   const [isPro, setIsPro] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkToday = async () => {
@@ -68,6 +70,17 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
     };
     checkToday();
   }, [pathname]); // re-check after navigation (e.g. after logging a session)
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setShowUserMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const NAV_ITEMS = [
     { href: "/dashboard", label: "Home", icon: "🏠" },
@@ -135,20 +148,51 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
                 ⚡ Upgrade to Pro
               </a>
             )}
-            {avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={avatarUrl}
-                alt={displayName}
-                className="w-8 h-8 rounded-full"
-                title={displayName}
-              />
-            ) : (
-              <span className="text-gray-300 text-sm hidden md:block max-w-[120px] truncate">
-                {displayName}
-              </span>
-            )}
-            <LogoutButton />
+            {/* Avatar / display name with dropdown */}
+            <div ref={userMenuRef} className="relative">
+              <button
+                onClick={() => setShowUserMenu((v) => !v)}
+                className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
+                aria-label="User menu"
+              >
+                {avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={avatarUrl}
+                    alt={displayName}
+                    className="w-8 h-8 rounded-full"
+                  />
+                ) : (
+                  <span className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-semibold text-white">
+                    {displayName.charAt(0).toUpperCase()}
+                  </span>
+                )}
+                <svg className="w-3 h-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {showUserMenu && (
+                <div className="absolute right-0 top-10 w-44 bg-zinc-900 border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
+                  <div className="px-3 py-2 border-b border-white/5">
+                    <p className="text-xs text-gray-400 truncate">{displayName}</p>
+                  </div>
+                  <Link
+                    href="/profile"
+                    onClick={() => setShowUserMenu(false)}
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                    </svg>
+                    Profile
+                  </Link>
+                  <LogoutButton
+                    onDone={() => setShowUserMenu(false)}
+                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 transition-colors"
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header>
