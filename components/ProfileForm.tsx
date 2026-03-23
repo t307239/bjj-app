@@ -173,7 +173,7 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
         <button
           onClick={handleToggleSharing}
           disabled={toggleLoading}
-          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${sharing ? "bg-[#e94560]" : "bg-zinc-700"}`}
+          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${sharing ? "bg-[#10B981]" : "bg-zinc-700"}`}
           aria-label={sharing ? "Disable data sharing" : "Enable data sharing"}
           role="switch"
           aria-checked={sharing}
@@ -397,7 +397,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
       {stats && (
         <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-3 gap-2 text-center">
           <div>
-            <div className="text-lg font-bold text-[#e94560]">{stats.totalCount}</div>
+            <div className="text-lg font-bold text-white">{stats.totalCount}</div>
             <div className="text-[10px] text-gray-500">{t("stats.totalSessions")}</div>
           </div>
           <div>
@@ -509,7 +509,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
           <div className="grid grid-cols-5 gap-2">
             {belts.map((belt) => (
               <button key={belt.value} type="button" onClick={() => setForm({ ...form, belt: belt.value })}
-                className={"py-2 rounded-lg text-xs font-semibold transition-all " + belt.color + " " + (form.belt === belt.value ? "ring-2 ring-[#e94560] scale-105" : "opacity-60 hover:opacity-90")}>
+                className={"py-2 rounded-lg text-xs font-semibold transition-all " + belt.color + " " + (form.belt === belt.value ? "ring-2 ring-white/60 scale-105" : "opacity-60 hover:opacity-90")}>
                 {belt.label}
               </button>
             ))}
@@ -520,7 +520,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
           <div className="flex gap-2">
             {[0, 1, 2, 3, 4].map((s) => (
               <button key={s} type="button" onClick={() => setForm({ ...form, stripe: s })}
-                className={"flex-1 py-2 rounded-lg text-sm font-semibold transition-all " + (form.stripe === s ? "bg-[#e94560] text-white" : "bg-zinc-800 text-gray-400 hover:text-white")}>
+                className={"flex-1 py-2 rounded-lg text-sm font-semibold transition-all " + (form.stripe === s ? "bg-[#10B981] text-white" : "bg-zinc-800 text-gray-400 hover:text-white")}>
                 {s}
               </button>
             ))}
@@ -542,7 +542,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
         </div>
         {formError && <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">{formError}</div>}
         <div className="flex gap-3">
-          <button type="submit" disabled={loading} className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white font-bold py-3 rounded-xl text-sm transition-colors">
+          <button type="submit" disabled={loading} className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white font-bold py-3 rounded-xl text-sm transition-colors">
             {loading ? t("profile.saving") : t("profile.save")}
           </button>
           <button type="button" onClick={onCancel} className="flex-1 bg-zinc-900 hover:bg-white/5 text-gray-300 font-bold py-3 rounded-xl text-sm border border-white/10 transition-colors">
@@ -597,7 +597,7 @@ export default function ProfileForm({ userId, hideAccount }: Props) {
   if (initialLoading) {
     return (
       <div className="text-center py-8 text-gray-500">
-        <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-[#e94560] rounded-full animate-spin mb-2" />
+        <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin mb-2" />
         <p className="text-sm">{t("training.loading")}</p>
       </div>
     );
