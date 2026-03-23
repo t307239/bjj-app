@@ -613,7 +613,8 @@
     "pcContextHint": "Right-click or Tab key to add a technique",
     "portHint": "Connect from this technique",
     "connectingHint": "Click another technique to connect →",
-    "resetView": "Reset view"
+    "resetView": "Reset view",
+    "canvasShortcuts": "Canvas keyboard shortcuts"
   },
   "wiki": {
     "dailyTip": "Today's BJJ Knowledge",

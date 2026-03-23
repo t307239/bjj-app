@@ -758,7 +758,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
           }}
           readOnly
           tabIndex={0}
-          aria-label="Canvas keyboard shortcuts"
+          aria-label={t("skillmap.canvasShortcuts")}
         />
       </div>
 
