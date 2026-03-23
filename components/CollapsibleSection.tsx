@@ -15,17 +15,17 @@ export default function CollapsibleSection({ label, defaultOpen = true, children
     <section className="mb-8">
       <button
         onClick={() => setIsOpen((v) => !v)}
-        className="flex items-center gap-2 w-full text-left mb-3 group"
+        className="flex items-center justify-between w-full text-left mb-3 group min-h-[44px]"
         aria-expanded={isOpen}
       >
         <span className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest">
           {label}
         </span>
         <svg
-          className={`w-3 h-3 text-zinc-700 transition-transform duration-200 ${isOpen ? "" : "-rotate-90"}`}
-          viewBox="0 0 12 12" fill="none"
+          className={`w-5 h-5 text-zinc-500 group-hover:text-zinc-400 transition-transform duration-200 ${isOpen ? "" : "-rotate-90"}`}
+          viewBox="0 0 24 24" fill="none"
         >
-          <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
       {isOpen && <div className="space-y-3">{children}</div>}

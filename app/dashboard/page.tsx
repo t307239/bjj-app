@@ -30,6 +30,7 @@ import ProStatusBanner from "@/components/ProStatusBanner";
 import GymKickBanner from "@/components/GymKickBanner";
 import GymRanking from "@/components/GymRanking";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
+import BackToTop from "@/components/BackToTop";
 import { getLocalDateString, getYesterdayDateString } from "@/lib/timezone";
 
 const BASE_URL =
@@ -568,6 +569,8 @@ export default async function DashboardPage() {
           {streak > 0 && <ProUpgradeBanner isPro={isPro} />}
         </section>
       </main>
+      {/* #145: Back to top FAB */}
+      <BackToTop />
     </div>
   );
 }

@@ -8,7 +8,7 @@
  */
 
 const BELT_COLORS: Record<string, string> = {
-  white: "bg-white",
+  white: "bg-white/20 ring-1 ring-inset ring-gray-400/50", // #143: outline on dark bg instead of blinding white
   blue: "bg-blue-500",
   purple: "bg-purple-600",
   brown: "bg-amber-700",
