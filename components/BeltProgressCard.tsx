@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 /**
  * BeltProgressCard — 帯進捗ビジュアル（参考UI belt-progress.tsx ベース）
  *
@@ -48,7 +50,11 @@ export default function BeltProgressCard({
         <span className="text-[11px] font-semibold text-zinc-500 tracking-widest">
           Belt Progress
         </span>
-        <div className="rounded-lg bg-white/5 p-2">
+        <Link
+          href="/profile"
+          className="rounded-lg bg-white/5 hover:bg-white/10 p-2 transition-colors"
+          title="Edit belt in Profile"
+        >
           <svg
             className="w-4 h-4 text-zinc-500"
             fill="none"
@@ -59,10 +65,10 @@ export default function BeltProgressCard({
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
             />
           </svg>
-        </div>
+        </Link>
       </div>
 
       {/* Belt visual (#86: authentic BJJ belt with promo bar) */}
