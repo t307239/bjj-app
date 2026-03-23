@@ -131,6 +131,8 @@
     "duplicateBulk": "Duplicate found: '{name}'",
     "bulkError": "Each line must be a technique name (max 80 characters)",
     "nameTooLongBulk": "Name too long: '{name}'",
+    "bulkTooMany": "Too many techniques — please enter 100 or fewer per batch",
+    "allDuplicates": "All techniques already exist — nothing new to add",
     "addedSingle": "Technique added!",
     "addedBulk": "{n} techniques added!",
     "saveFailed": "Failed to save",
