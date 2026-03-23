@@ -155,8 +155,8 @@ export default function InsightsBanner({ userId }: Props) {
   if (!bestDay && !paceMsg && !streakInsight && !consistencyMsg) return null;
 
   return (
-    <div className="bg-zinc-900/50 backdrop-blur-sm border border-[#e94560]/20 rounded-2xl px-4 py-3 mb-4 shadow-lg shadow-black/40">
-      <p className="text-[11px] font-semibold text-[#e94560] mb-2 uppercase tracking-wide">
+    <div className="bg-zinc-900/50 backdrop-blur-sm border border-white/10 rounded-2xl px-4 py-3 mb-4 shadow-lg shadow-black/40">
+      <p className="text-[11px] font-semibold text-gray-400 mb-2 uppercase tracking-wide">
         📊 {t("insights.title")}
       </p>
       <div className="flex flex-wrap gap-x-5 gap-y-1.5">
@@ -192,7 +192,7 @@ export default function InsightsBanner({ userId }: Props) {
         )}
       </div>
       {wikiTip && (
-        <div className="mt-2 pt-2 border-t border-[#e94560]/10">
+        <div className="mt-2 pt-2 border-t border-white/5">
           <a
             href={wikiTip.href}
             target="_blank"
