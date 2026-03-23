@@ -174,7 +174,7 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
           onClick={handleToggleSharing}
           disabled={toggleLoading}
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${sharing ? "bg-[#10B981]" : "bg-zinc-700"}`}
-          aria-label={sharing ? "Disable data sharing" : "Enable data sharing"}
+          aria-label={sharing ? t("profile.ariaDisableSharing") : t("profile.ariaEnableSharing")}
           role="switch"
           aria-checked={sharing}
         >
@@ -204,7 +204,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
       .order("date", { ascending: false });
     if (data) {
       const csv = [
-        ["Date", "Type", "Duration(min)", "Notes", "Created At"].join(","),
+        [t("profile.csvHeaderDate"), t("profile.csvHeaderType"), t("profile.csvHeaderDuration"), t("profile.csvHeaderNotes"), t("profile.csvHeaderCreatedAt")].join(","),
         ...data.map((r: { date: string; type: string; duration_min: number; notes: string; created_at: string }) => [
           r.date ?? "",
           r.type ?? "",

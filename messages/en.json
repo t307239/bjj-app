@@ -263,7 +263,14 @@
       "stats": "Stats",
       "profile": "Profile",
       "settings": "Settings"
-    }
+    },
+    "ariaDisableSharing": "Disable data sharing",
+    "ariaEnableSharing": "Enable data sharing",
+    "csvHeaderDate": "Date",
+    "csvHeaderType": "Type",
+    "csvHeaderDuration": "Duration(min)",
+    "csvHeaderNotes": "Notes",
+    "csvHeaderCreatedAt": "Created At"
   },
   "competition": {
     "title": "Match Record",
@@ -697,7 +704,7 @@
     "activeSection": "🟢 Active Members ({n})",
     "slowingSection": "🟡 Slowing down ({n})",
     "highRiskSection": "🔴 High churn risk ({n})",
-    "noMembers": "No members yet",
+    "noMembers": "No members sharing data yet",
     "noMembersDesc": "Share your invite link with students. They'll appear here once they join and enable data sharing.",
     "lastSeen": "Last seen: {text}",
     "sessionsPerMonth": "{n} sessions/30d",
@@ -749,7 +756,6 @@
     "rankingFootnote": "Opt-in members only · Names hidden for privacy",
     "rankingSessions": "Sessions",
     "rankingStreak": "Streak",
-    "noMembers": "No members sharing data yet",
     "noMembersHint": "Members will appear here when they opt-in to share their training data",
     "curriculumTitle": "Curriculum Dispatch",
     "curriculumDesc": "Send a BJJ Wiki article to all opt-in members. They'll see it in their Today's Learning section.",
