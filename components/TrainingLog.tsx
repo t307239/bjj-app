@@ -586,17 +586,17 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
 
       {/* Period filter */}
       {!initialLoading && entries.length > 0 && (
-        <div className="flex gap-1.5 mb-2">
+        <div className="mb-2 bg-zinc-900 rounded-lg p-1 inline-flex gap-0.5 border border-white/10">
           {(["all", "month", "week"] as const).map((p) => {
             const label = p === "all" ? "All Time" : p === "month" ? "This Month" : "This Week";
             return (
               <button
                 key={p}
                 onClick={() => setPeriodFilter(p)}
-                className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
                   periodFilter === p
-                    ? "bg-zinc-600 text-white"
-                    : "bg-zinc-900 text-gray-400 border border-white/10"
+                    ? "bg-white/10 text-white"
+                    : "text-gray-400 hover:text-gray-300"
                 }`}
               >
                 {label}
