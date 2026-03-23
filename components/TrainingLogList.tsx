@@ -323,7 +323,7 @@ export default function TrainingLogList({
                     </span>
                     <span className="text-gray-400 text-xs">{formatRelativeDate(entry.date)}</span>
                   </div>
-                  <div className="text-[#e94560] text-xs font-medium mb-1">
+                  <div className="text-zinc-400 text-xs font-medium mb-1">
                     ⏱{" "}
                     {entry.duration_min >= 60
                       ? `${Math.floor(entry.duration_min / 60)}h${

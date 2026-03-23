@@ -163,7 +163,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
               href={item.href}
               className={`relative flex flex-col items-center gap-0.5 py-3 text-xs transition-colors ${
                 pathname === item.href
-                  ? "text-[#e94560]"
+                  ? "text-white"
                   : "text-gray-500 hover:text-gray-300"
               }`}
             >

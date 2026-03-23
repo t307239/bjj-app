@@ -75,7 +75,7 @@ export default function TechniqueLogList({
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
           <div className="flex items-center gap-4 text-sm mb-3">
             <div className="flex-1 text-center">
-              <div className="text-lg font-bold text-[#e94560]">
+              <div className="text-lg font-bold text-white">
                 {techniques.length}
               </div>
               <div className="text-gray-400 text-xs">
@@ -229,7 +229,7 @@ export default function TechniqueLogList({
             onClick={() => setFilterCategory("all")}
             className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
               filterCategory === "all"
-                ? "bg-[#e94560] text-white"
+                ? "bg-zinc-600 text-white"
                 : "bg-zinc-900 text-gray-400 border border-white/10"
             }`}
           >
@@ -243,7 +243,7 @@ export default function TechniqueLogList({
               onClick={() => setFilterCategory(catVal)}
               className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                 filterCategory === catVal
-                  ? "bg-[#e94560] text-white"
+                  ? "bg-zinc-600 text-white"
                   : "bg-zinc-900 text-gray-400 border border-white/10"
               }`}
             >
@@ -332,7 +332,7 @@ export default function TechniqueLogList({
                   <div className="flex gap-2">
                     <button
                       type="submit"
-                      className="flex-1 bg-[#e94560] text-white text-xs font-semibold py-1.5 rounded-lg"
+                      className="flex-1 bg-[#10B981] hover:bg-[#0d9668] text-white text-xs font-semibold py-1.5 rounded-lg transition-colors"
                     >
                       {t("techniques.update")}
                     </button>

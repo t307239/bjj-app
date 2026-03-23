@@ -588,7 +588,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
                 onClick={() => setPeriodFilter(p)}
                 className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                   periodFilter === p
-                    ? "bg-[#e94560] text-white"
+                    ? "bg-zinc-600 text-white"
                     : "bg-zinc-900 text-gray-400 border border-white/10"
                 }`}
               >
@@ -645,7 +645,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
             onClick={() => setFilterType("all")}
             className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
               filterType === "all"
-                ? "bg-[#e94560] text-white"
+                ? "bg-zinc-600 text-white"
                 : "bg-zinc-900 text-gray-400 border border-white/10"
             }`}
           >
@@ -659,7 +659,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
               onClick={() => setFilterType(t.value)}
               className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                 filterType === t.value
-                  ? "bg-[#e94560] text-white"
+                  ? "bg-zinc-600 text-white"
                   : "bg-zinc-900 text-gray-400 border border-white/10"
               }`}
             >
