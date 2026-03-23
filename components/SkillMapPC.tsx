@@ -713,9 +713,9 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
                 width: NODE_W,
                 height: NODE_H,
               }}
-              className="rounded-lg border border-[#e94560]/40 bg-[#e94560]/10 flex items-center justify-center opacity-60 pointer-events-none"
+              className="rounded-lg border border-yellow-500/40 bg-yellow-500/10 flex items-center justify-center opacity-60 pointer-events-none"
             >
-              <span className="text-xs text-[#e94560]">🔒 Pro</span>
+              <span className="text-xs text-yellow-400">🔒 Pro</span>
             </div>
           )}
 

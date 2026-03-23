@@ -581,7 +581,7 @@ function MemberCard({
           <span className="text-xs text-gray-600 italic">
             {t("gym.detailsHidden")}{" "}
             {stripeGymPaymentLink && (
-              <a href={stripeGymPaymentLink} className="text-[#e94560] hover:underline">
+              <a href={stripeGymPaymentLink} className="text-yellow-400 hover:underline">
                 {t("gym.upgradeToSeeLink")}
               </a>
             )}
