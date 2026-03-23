@@ -94,7 +94,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
                   className={`relative px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
                     pathname === item.href
                       ? "border-white text-white"
-                      : "border-transparent text-gray-400 hover:text-white"
+                      : "border-transparent text-gray-300 hover:text-white"
                   }`}
                 >
                   {item.label}
