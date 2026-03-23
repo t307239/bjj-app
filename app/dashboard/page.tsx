@@ -362,7 +362,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* ── Bento Grid Stats — Z-pattern: Streak(top-left hero) → This Week → This Month(wide) ── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
 
           {/* Day Streak — Hero metric (top-left, most important per Z-pattern) */}
           <Link href="/profile" className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-yellow-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out active:scale-95 block">
