@@ -312,6 +312,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
   const [members, setMembers] = useState<MemberRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [kickTarget, setKickTarget] = useState<MemberRow | null>(null);
 
   const loadMembers = useCallback(async () => {
     // Fetch all opted-in members of this gym
@@ -373,7 +374,12 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
     } catch {
       setToast({ message: t("gym.kickFailed"), type: "error" });
     }
+    setKickTarget(null);
   }, [t]);
+
+  const handleKickRequest = useCallback((member: MemberRow) => {
+    setKickTarget(member);
+  }, []);
 
   const handleInviteRegenerated = useCallback((newCode: string) => {
     setGym((prev) => ({ ...prev, invite_code: newCode }));
@@ -472,7 +478,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
           <div className="space-y-2">
             {/* Show green members freely */}
             {greenMembers.map((m) => (
-              <MemberCard key={m.student_id} member={m} risk="green" showDetail={true} onKick={handleKickMember} />
+              <MemberCard key={m.student_id} member={m} risk="green" showDetail={true} onKickRequest={handleKickRequest} />
             ))}
 
             {/* Yellow members: free shows count + basic card, Pro shows last-seen */}
@@ -489,7 +495,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
                     showDetail={isGymPro}
                     proRequired={!isGymPro}
                     stripeGymPaymentLink={stripeGymPaymentLink}
-                    onKick={handleKickMember}
+                    onKickRequest={handleKickRequest}
                   />
                 ))}
               </div>
@@ -509,7 +515,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
                     showDetail={isGymPro}
                     proRequired={!isGymPro}
                     stripeGymPaymentLink={stripeGymPaymentLink}
-                    onKick={handleKickMember}
+                    onKickRequest={handleKickRequest}
                   />
                 ))}
               </div>
@@ -519,6 +525,41 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
       </div>
 
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+
+      {/* Kick confirmation modal */}
+      {kickTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60">
+          <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+            <h3 className="text-white font-bold text-base mb-2">
+              {t("gym.removeMemberTitle")}
+            </h3>
+            <p className="text-gray-400 text-sm leading-relaxed mb-5">
+              {t("gym.removeMemberConfirm", {
+                name: kickTarget.display_name || t("gym.rankingAnon"),
+              })}
+            </p>
+            <p className="text-gray-600 text-xs mb-5">
+              {t("gym.removeMemberNote")}
+            </p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setKickTarget(null)}
+                className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 font-semibold py-2.5 rounded-xl text-sm transition-colors"
+              >
+                {t("training.cancel")}
+              </button>
+              <button
+                type="button"
+                onClick={() => handleKickMember(kickTarget.student_id)}
+                className="flex-1 bg-[#e94560] hover:bg-[#c73652] text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
+              >
+                {t("gym.removeMemberBtn")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -531,14 +572,14 @@ function MemberCard({
   showDetail,
   proRequired = false,
   stripeGymPaymentLink,
-  onKick,
+  onKickRequest,
 }: {
   member: MemberRow;
   risk: RiskLevel;
   showDetail: boolean;
   proRequired?: boolean;
   stripeGymPaymentLink?: string;
-  onKick?: (memberId: string) => void;
+  onKickRequest?: (member: MemberRow) => void;
 }) {
   const { t } = useLocale();
   const lastSeenText = member.last_training_date
@@ -590,13 +631,9 @@ function MemberCard({
       </div>
 
       {/* Kick button (gym owner only) */}
-      {onKick && (
+      {onKickRequest && (
         <button
-          onClick={() => {
-            if (confirm(t("gym.removeMemberConfirm", { name: member.display_name || t("gym.rankingAnon") }))) {
-              onKick(member.student_id);
-            }
-          }}
+          onClick={() => onKickRequest(member)}
           className="flex-shrink-0 text-gray-600 hover:text-[#e94560] transition-colors p-1"
           title={t("gym.removeMemberTitle")}
           aria-label={`Remove ${member.display_name || "member"} from gym`}
