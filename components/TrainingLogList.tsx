@@ -56,7 +56,7 @@ function DurationPicker({
             onClick={() => onChange(d)}
             className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
               value === d
-                ? "bg-[#e94560] text-white"
+                ? "bg-[#10B981] text-white"
                 : "bg-zinc-800 text-gray-400 hover:text-white"
             }`}
           >
@@ -165,7 +165,7 @@ export default function TrainingLogList({
             if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([50]);
             onShowForm();
           }}
-          className="bg-[#e94560] hover:bg-[#c73652] active:scale-95 text-white text-sm font-bold py-3 px-8 rounded-full transition-all shadow-lg shadow-[#e94560]/30 animate-pulse hover:animate-none"
+          className="bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-sm font-bold py-3 px-8 rounded-full transition-all shadow-lg shadow-[#10B981]/30 animate-pulse hover:animate-none"
         >
           + Log First Session
         </button>
@@ -291,7 +291,7 @@ export default function TrainingLogList({
                 <div className="flex gap-2">
                   <button
                     type="submit"
-                    className="flex-1 bg-[#e94560] text-white text-xs font-semibold py-1.5 rounded-lg"
+                    className="flex-1 bg-[#10B981] text-white text-xs font-semibold py-1.5 rounded-lg"
                   >
                     Update
                   </button>

@@ -32,7 +32,7 @@ function DurationPicker({
             onClick={() => onChange(p)}
             className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
               value === p
-                ? "bg-[#e94560] border-[#e94560] text-white"
+                ? "bg-[#10B981] border-[#10B981] text-white"
                 : "bg-zinc-800 border-white/10 text-gray-400 hover:border-white/20"
             }`}
           >
@@ -288,7 +288,7 @@ export default function TrainingLogForm({
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 bg-[#e94560] hover:bg-[#c73652] active:scale-95 disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-all"
+          className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-all"
         >
           {loading ? "Saving..." : "Save"}
         </button>
