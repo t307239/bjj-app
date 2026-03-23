@@ -75,7 +75,7 @@ export default async function Home() {
           <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
             Prove your BJJ growth
             <br />
-            <span className="bg-gradient-to-r from-[#e94560] to-pink-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#10B981] to-cyan-400 bg-clip-text text-transparent">
               with real data.
             </span>
           </h1>
