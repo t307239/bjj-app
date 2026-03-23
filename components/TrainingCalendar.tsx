@@ -117,7 +117,7 @@ export default function TrainingCalendar({ userId }: Props) {
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
         <button
           onClick={prevMonth}
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+          className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
         >
           ‹
         </button>
@@ -132,7 +132,7 @@ export default function TrainingCalendar({ userId }: Props) {
         <button
           onClick={nextMonth}
           disabled={year === today.getFullYear() && month === today.getMonth()}
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         >
           ›
         </button>
