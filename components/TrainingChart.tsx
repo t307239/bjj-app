@@ -18,6 +18,7 @@ type MonthData = {
 
 type Props = {
   userId: string;
+  onLogRoll?: () => void;
 };
 
 // ローカル日付文字列ヘルパー（UTC変換しない）
@@ -26,7 +27,7 @@ function toLocalStr(d: Date): string {
 }
 
 // 過去84日（12週）のヒートマップ + 月別棒グラフ
-export default function TrainingChart({ userId }: Props) {
+export default function TrainingChart({ userId, onLogRoll }: Props) {
   const { t } = useLocale();
   const [data, setData] = useState<DayData[]>([]);
   const [monthData, setMonthData] = useState<MonthData[]>([]);
@@ -100,7 +101,70 @@ export default function TrainingChart({ userId }: Props) {
   }, [userId]);
 
   if (loading) return null;
-  if (data.every((d) => d.count === 0)) return null;
+
+  // ── Empty state teaser (#4): blurred dummy chart + CTA overlay ──────────
+  const isEmpty = data.every((d) => d.count === 0);
+  if (isEmpty) {
+    // Generate deterministic dummy heatmap data for visual effect
+    const dummyWeeks = Array.from({ length: 12 }, (_, wi) =>
+      Array.from({ length: 7 }, (_, di) => {
+        const pseudo = (wi * 7 + di * 3 + wi + di) % 5;
+        return pseudo;
+      })
+    );
+    return (
+      <div className="relative bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4 overflow-hidden">
+        {/* Blurred dummy heatmap background */}
+        <div className="blur-sm opacity-40 pointer-events-none select-none">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-medium text-gray-300">{t("chart.activity")}</span>
+            <div className="flex bg-zinc-800 rounded-lg p-0.5 gap-0.5">
+              <span className="text-[11px] px-3 py-1 rounded-lg bg-zinc-600 text-white">84 days</span>
+              <span className="text-[11px] px-3 py-1 text-gray-400">Monthly</span>
+            </div>
+          </div>
+          <div className="flex gap-1">
+            <div className="flex flex-col gap-0.5 mr-1">
+              {["S","M","T","W","T","F","S"].map((d, i) => (
+                <div key={i} className="text-[9px] text-gray-600 h-3 flex items-center">{d}</div>
+              ))}
+            </div>
+            {dummyWeeks.map((week, wi) => (
+              <div key={wi} className="flex flex-col gap-0.5">
+                {week.map((val, di) => (
+                  <div
+                    key={di}
+                    className={`w-3 h-3 rounded-sm ${
+                      val === 0 ? "bg-zinc-900/50"
+                      : val === 1 ? "bg-green-700/60"
+                      : val === 2 ? "bg-green-500/80"
+                      : val === 3 ? "bg-green-400"
+                      : "bg-zinc-900/50"
+                    }`}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Overlay CTA */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-4">
+          <p className="text-white font-semibold text-sm text-center leading-snug">
+            {t("chart.emptyHeading")}
+          </p>
+          <p className="text-gray-400 text-xs text-center">{t("chart.emptySubtitle")}</p>
+          {onLogRoll && (
+            <button
+              onClick={onLogRoll}
+              className="bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-xs font-semibold px-5 py-2 rounded-full transition-all shadow-lg shadow-[#10B981]/25"
+            >
+              {t("chart.emptyButton")}
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   const getColor = (count: number) => {
     if (count === 0) return "bg-zinc-900/50";

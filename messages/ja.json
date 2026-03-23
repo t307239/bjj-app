@@ -344,7 +344,10 @@
     "clickForTrend": "クリックして月別推移を表示",
     "sessionsFmt": "{n}回",
     "totalLabel": "計",
-    "avgLabel": "平均 "
+    "avgLabel": "平均 ",
+    "emptyHeading": "最初のロールを記録してインサイトを解放しよう",
+    "emptySubtitle": "練習した日のヒートマップがここに表示されます",
+    "emptyButton": "練習を記録"
   },
   "install": {
     "ios": "ホーム画面に追加して、アプリとして使えます！",

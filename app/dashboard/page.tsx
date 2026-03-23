@@ -555,7 +555,7 @@ export default async function DashboardPage() {
           <TrainingBarChart userId={user.id} isPro={isPro} />
           <TrainingTypeChart userId={user.id} />
           <CompetitionStats userId={user.id} />
-          <TrainingChart userId={user.id} />
+          <TrainingChart userId={user.id} onLogRoll={() => window.scrollTo({ top: 0, behavior: "smooth" })} />
         </CollapsibleSection>
 
         {/* ── Section 6: Insights & More（最下部・低緊急度） ── */}
