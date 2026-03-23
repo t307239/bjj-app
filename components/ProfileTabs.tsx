@@ -74,9 +74,9 @@ export default function ProfileTabs({ userId }: { userId: string }) {
   const { t } = useLocale();
   const [activeTab, setActiveTab] = useState<TabId>("stats");
   const TABS: { id: TabId; label: string }[] = [
-    { id: "stats", label: `📊 ${t("profile.tabs.stats")}` },
-    { id: "profile", label: `✏️ ${t("profile.tabs.profile")}` },
-    { id: "account", label: `⚙️ ${t("profile.tabs.settings")}` },
+    { id: "stats", label: t("profile.tabs.stats") },
+    { id: "profile", label: t("profile.tabs.profile") },
+    { id: "account", label: t("profile.tabs.settings") },
   ];
 
   return (
