@@ -191,7 +191,7 @@ export default function TrainingLogForm({
                 value={compForm.opponent}
                 onChange={(e) => setCompForm({ ...compForm, opponent: e.target.value })}
                 placeholder="Opponent&apos;s name"
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-500"
               />
             </div>
           </div>
@@ -203,7 +203,7 @@ export default function TrainingLogForm({
                 value={compForm.finish}
                 onChange={(e) => setCompForm({ ...compForm, finish: e.target.value })}
                 placeholder="E.g.: Heel Hook"
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-500"
               />
             </div>
             <div>
@@ -213,7 +213,7 @@ export default function TrainingLogForm({
                 value={compForm.event}
                 onChange={(e) => setCompForm({ ...compForm, event: e.target.value })}
                 placeholder="E.g.: Tokyo Open"
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-600"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-red-400 placeholder-gray-500"
               />
             </div>
           </div>
@@ -260,7 +260,7 @@ export default function TrainingLogForm({
               const val = e.target.value;
               if (techniqueSuggestions.includes(val)) handleTechniqueSelect(val);
             }}
-            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] placeholder-gray-600"
+            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] placeholder-gray-500"
           />
           <datalist id="technique-autocomplete-list">
             {techniqueSuggestions.map((name) => (

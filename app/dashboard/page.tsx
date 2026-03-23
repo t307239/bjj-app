@@ -370,7 +370,7 @@ export default async function DashboardPage() {
               <span className="text-5xl font-black leading-none tabular-nums bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">{streak}</span>
               <span className="text-zinc-600 text-xs mb-1">days</span>
             </div>
-            <span className="mt-2 block text-[11px] text-yellow-600/80">
+            <span className="mt-2 block text-[11px] text-yellow-400/90">
               {streak >= 30 ? "🔥 Unstoppable" : streak >= 14 ? "💪 Excellent" : streak >= 7 ? "⚡ On a roll" : streak >= 3 ? "🎯 Keep going" : streak >= 1 ? "🔥 Keep rolling" : "Start your streak"}
             </span>
           </Link>
