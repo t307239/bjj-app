@@ -38,7 +38,9 @@ export default function StreakProtect({ userId, streak }: Props) {
 
   if (trainedToday === null || trainedToday || dismissed || streak < 1) return null;
 
-  const urgencyText = t("streak.protect", { n: streak });
+  const urgencyText = streak === 1
+    ? t("streak.protect1")
+    : t("streak.protect", { n: streak });
 
   return (
     <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl px-4 py-2.5 mb-4 flex items-center gap-3">

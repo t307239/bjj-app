@@ -496,8 +496,9 @@
     "close": "Close banner"
   },
   "streak": {
-    "protect": "{n,plural,one{⏰ 1 day streak — Don't forget today's session!}other{🔥 {n} day streak is in danger! Log today's training now!}}",
-    "maintainDesc": "Logging today will maintain your streak"
+    "protect": "🔥 {n} day streak is in danger! Log today's training now!",
+    "maintainDesc": "Logging today will maintain your streak",
+    "protect1": "⏰ 1 day streak — Don't forget today's session!"
   },
   "achievement": {
     "milestone.1.emoji": "🎯",
@@ -732,7 +733,7 @@
     "inviteCopied": "Copied!",
     "inviteCopy": "Copy",
     "inviteCode": "Invite code:",
-    "atChurnRisk": "{n,plural,one{1 student at churn risk}other{{n} students at churn risk}}",
+    "atChurnRisk": "{n} students at churn risk",
     "upgradeToSee": "Upgrade to Gym Pro to see who — and reach out before they quit.",
     "upgradeBtn": "Upgrade – $49/mo",
     "beltDistribution": "🥋 Belt Distribution",
@@ -828,7 +829,8 @@
     "invalidInviteTitle": "Invalid invite link",
     "invalidInviteDesc": "This gym invite link is no longer valid or has expired.",
     "goToDashboard": "Go to dashboard",
-    "defaultOwnerName": "Gym Owner"
+    "defaultOwnerName": "Gym Owner",
+    "atChurnRisk1": "1 student at churn risk"
   },
   "gymJoin": {
     "title": "Join {name}",

@@ -161,7 +161,7 @@ function ProPaywallBanner({
         <span className="text-2xl flex-shrink-0">🔴</span>
         <div className="flex-1">
           <p className="text-sm font-semibold text-white">
-            {t("gym.atChurnRisk", { n: riskCount })}
+            {riskCount === 1 ? t("gym.atChurnRisk1") : t("gym.atChurnRisk", { n: riskCount })}
           </p>
           <p className="text-xs text-gray-400 mt-0.5">
             {t("gym.upgradeToSee")}
