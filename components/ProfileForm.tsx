@@ -132,7 +132,7 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
           <button
             onClick={() => setConfirmLeave(false)}
             className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 py-2 rounded-lg text-sm"
-            aria-label="Cancel leaving gym"
+            aria-label={t("profile.ariaLeaveGymCancel")}
           >
             {t("training.cancel")}
           </button>
@@ -140,7 +140,7 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
             onClick={handleLeave}
             disabled={leaving}
             className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white py-2 rounded-lg text-sm font-semibold"
-            aria-label="Confirm leaving gym"
+            aria-label={t("profile.ariaLeaveGymConfirm")}
           >
             {leaving ? t("gym.leaving") : t("gym.leaveGym")}
           </button>
@@ -159,7 +159,7 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
         <button
           onClick={() => setConfirmLeave(true)}
           className="text-xs text-gray-500 hover:text-red-400 transition-colors"
-          aria-label="Leave gym"
+          aria-label={t("profile.ariaLeaveGym")}
         >
           {t("gym.leaveGym")}
         </button>
@@ -257,7 +257,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
             href={CUSTOMER_PORTAL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Manage subscription in Stripe Customer Portal"
+            aria-label={t("profile.ariaManageSub")}
             className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
           >
             💳 {t("profile.manageSub")}
@@ -266,7 +266,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
           <form method="POST" action="/api/stripe/portal">
             <button
               type="submit"
-              aria-label="Manage subscription in Stripe Customer Portal"
+              aria-label={t("profile.ariaManageSub")}
               className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
             >
               💳 {t("profile.manageSub")}
@@ -282,7 +282,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
           type="button"
           onClick={handleExportCsv}
           disabled={exporting}
-          aria-label="Download training data as CSV"
+          aria-label={t("profile.ariaDownloadCSV")}
           className="inline-flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 border border-blue-400/30 hover:border-blue-400/60 rounded-lg px-3 py-1.5 transition-colors disabled:opacity-50"
         >
           {exporting ? t("profile.exporting") : t("profile.exportBtn")}
@@ -311,7 +311,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
               value={deleteInput}
               onChange={(e) => setDeleteInput(e.target.value)}
               placeholder={t("profile.deleteTypePlaceholder")}
-              aria-label="Type DELETE to confirm account deletion"
+              aria-label={t("profile.ariaDeleteInput")}
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-red-500 font-mono"
             />
           </div>
@@ -321,7 +321,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
               type="button"
               onClick={handleDelete}
               disabled={deleting || deleteInput !== "DELETE"}
-              aria-label="Confirm account deletion"
+              aria-label={t("profile.ariaDeleteConfirm")}
               className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-40 text-white font-bold py-2 rounded-lg text-sm transition-colors"
             >
               {deleting ? t("profile.deletingLabel") : t("profile.deleteAccountPermanently")}
