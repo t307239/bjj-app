@@ -1,6 +1,7 @@
 "use client";
 
 import { type TrainingEntry, formatDuration } from "@/lib/trainingLogHelpers";
+import { getWeekStartDate } from "@/lib/timezone";
 
 type Props = {
   entries: TrainingEntry[];
@@ -10,13 +11,8 @@ type Props = {
 export default function TrainingLogStats({ entries, hasMore }: Props) {
   if (entries.length === 0) return null;
 
-  // This week summary (Monday start)
-  const nowForWeek = new Date();
-  const dowForWeek = nowForWeek.getDay(); // 0=Sun
-  const daysToMon = dowForWeek === 0 ? 6 : dowForWeek - 1;
-  const mondayDate = new Date(nowForWeek);
-  mondayDate.setDate(nowForWeek.getDate() - daysToMon);
-  const thisWeekStart = `${mondayDate.getFullYear()}-${String(mondayDate.getMonth() + 1).padStart(2, "0")}-${String(mondayDate.getDate()).padStart(2, "0")}`;
+  // This week summary (Monday start, timezone-aware)
+  const thisWeekStart = getWeekStartDate();
   const weekEntries = entries.filter((e) => e.date >= thisWeekStart);
   const weekTotalMins = weekEntries.reduce((sum, e) => sum + e.duration_min, 0);
   const weekHoursDisplay = weekTotalMins >= 60
