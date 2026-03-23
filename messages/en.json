@@ -84,6 +84,7 @@
     "noMatchQuery": "No records match \"{query}\"",
     "loadMore": "Load More",
     "loading": "Loading...",
+    "restoredDraft": "Your unsaved session was restored. Please save it.",
     "shareX": "Share on X",
     "edit": "Edit",
     "delete": "Delete",

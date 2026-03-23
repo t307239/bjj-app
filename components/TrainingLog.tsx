@@ -211,7 +211,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           setForm((prev) => ({ ...prev, ...saved }));
           setShowForm(true);
           localStorage.removeItem("pending_training_log");
-          setToast({ message: "Your unsaved session was restored. Please save it.", type: "success" });
+          setToast({ message: t("training.restoredDraft"), type: "success" });
         }
       }
     } catch { /* ignore */ }
