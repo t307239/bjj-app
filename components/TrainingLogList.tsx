@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import {
   type TrainingEntry,
@@ -135,6 +136,8 @@ export default function TrainingLogList({
   today,
   onShowForm,
 }: Props) {
+  const { t } = useLocale();
+
   // ── Loading ──────────────────────────────────────────────────────────────
   if (initialLoading) {
     return (
@@ -150,9 +153,9 @@ export default function TrainingLogList({
     return (
       <div className="text-center py-12 px-4">
         <div className="text-6xl mb-4 animate-bounce inline-block">🥋</div>
-        <p className="text-white font-bold text-lg mb-1">No training logs yet</p>
+        <p className="text-white font-bold text-lg mb-1">{t("training.empty")}</p>
         <p className="text-gray-400 text-sm mb-2">
-          Start your growth journey by logging your first session!
+          {t("training.emptyDesc")}
         </p>
         <div className="flex justify-center gap-4 text-xs text-gray-600 mb-6">
           <span>✓ Free to use</span>
@@ -166,7 +169,7 @@ export default function TrainingLogList({
           }}
           className="bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-sm font-bold py-3 px-8 rounded-full transition-all shadow-lg shadow-[#10B981]/30 animate-pulse hover:animate-none"
         >
-          + Log First Session
+          {t("training.firstRecord")}
         </button>
       </div>
     );
@@ -176,7 +179,7 @@ export default function TrainingLogList({
   if (filtered.length === 0) {
     return (
       <div className="text-center py-8 text-gray-500 text-sm">
-        {searchQuery ? `No records match "${searchQuery}"` : "No records match this filter"}
+        {searchQuery ? t("training.noMatchQuery", { query: searchQuery }) : t("training.noMatch")}
       </div>
     );
   }

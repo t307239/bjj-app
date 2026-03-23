@@ -44,6 +44,8 @@
     "emptyDesc": "Log your first session and start your journey!",
     "firstRecord": "+ Log First Session",
     "noType": "No sessions of this type",
+    "noMatch": "No records match this filter",
+    "noMatchQuery": "No records match \"{query}\"",
     "loadMore": "Load More",
     "loading": "Loading...",
     "shareX": "Share on X",
