@@ -418,10 +418,10 @@ export default async function DashboardPage() {
               )}
               {remainingDays > 0 && (
                 <span className="text-[11px] text-zinc-600">
-                  {remainingDays}d left
+                  {remainingDays} days left
                   {(monthCount ?? 0) > 0 && currentDayOfMonth > 0 && (
                     <span className="text-blue-400/70 ml-1">
-                      · proj.&nbsp;{Math.round((monthCount ?? 0) / currentDayOfMonth * daysInMonth)}
+                      · On track for {Math.round((monthCount ?? 0) / currentDayOfMonth * daysInMonth)}
                     </span>
                   )}
                 </span>

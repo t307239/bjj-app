@@ -104,9 +104,9 @@ export default function TrainingChart({ userId }: Props) {
 
   const getColor = (count: number) => {
     if (count === 0) return "bg-zinc-900/50";
-    if (count === 1) return "bg-[#e94560]/40";
-    if (count === 2) return "bg-[#e94560]/70";
-    return "bg-[#e94560]";
+    if (count === 1) return "bg-green-700/60";
+    if (count === 2) return "bg-green-500/80";
+    return "bg-green-400";
   };
 
   // 12週分（7日×12列）
@@ -182,9 +182,9 @@ export default function TrainingChart({ userId }: Props) {
             <div className="flex items-center gap-1 text-[10px] text-gray-600">
               <span>{t("chart.less")}</span>
               <div className="w-3 h-3 rounded-sm bg-zinc-900/50" />
-              <div className="w-3 h-3 rounded-sm bg-[#e94560]/40" />
-              <div className="w-3 h-3 rounded-sm bg-[#e94560]/70" />
-              <div className="w-3 h-3 rounded-sm bg-[#e94560]" />
+              <div className="w-3 h-3 rounded-sm bg-green-700/60" />
+              <div className="w-3 h-3 rounded-sm bg-green-500/80" />
+              <div className="w-3 h-3 rounded-sm bg-green-400" />
               <span>{t("chart.more")}</span>
             </div>
             <span className="text-[10px] text-gray-500">{t("chart.past84Days", { n: totalDays })}</span>
