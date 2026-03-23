@@ -278,8 +278,8 @@ export default function TrainingLogList({
                         onChange={(e) => setEditCompForm({ ...editCompForm, gi_type: e.target.value })}
                         className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-white/30"
                       >
-                        <option value="gi">Gi</option>
-                        <option value="nogi">No-Gi</option>
+                        <option value="gi">{t("training.gi")}</option>
+                        <option value="nogi">{t("training.nogi")}</option>
                       </select>
                     </div>
                   </div>
