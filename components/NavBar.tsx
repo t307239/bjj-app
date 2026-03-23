@@ -44,7 +44,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
         supabase
           .from("profiles")
           .select("is_pro")
-          .eq("user_id", user.id)
+          .eq("id", user.id)
           .single(),
       ]);
       setTrainedToday((count ?? 0) > 0);
