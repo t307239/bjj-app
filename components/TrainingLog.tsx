@@ -529,7 +529,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="print:hidden bg-[#e94560] hover:bg-[#c73652] active:scale-95 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all"
+          className="print:hidden bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all"
         >
           + Add Session
         </button>
@@ -700,7 +700,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           setShowForm(true);
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
-        className="md:hidden fixed bottom-20 right-4 z-50 w-14 h-14 bg-[#e94560] hover:bg-[#c73652] active:scale-95 text-white text-2xl font-bold rounded-full shadow-lg shadow-[#e94560]/40 transition-all flex items-center justify-center print:hidden"
+        className="md:hidden fixed bottom-20 right-4 z-50 w-14 h-14 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-2xl font-bold rounded-full shadow-lg shadow-[#10B981]/40 transition-all flex items-center justify-center print:hidden"
         aria-label="Log training session"
       >
         +

@@ -160,9 +160,9 @@ export default function WeeklyStrip({ userId }: Props) {
               <div
                 className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${
                   trained
-                    ? "bg-[#e94560] shadow-sm shadow-[#e94560]/30"
+                    ? "bg-[#10B981] shadow-sm shadow-[#10B981]/30"
                     : day.isToday
-                    ? "border-2 border-[#e94560]/50 bg-transparent"
+                    ? "border-2 border-[#10B981]/50 bg-transparent"
                     : isFuture
                     ? "bg-white/5"
                     : "bg-white/10"
@@ -178,7 +178,7 @@ export default function WeeklyStrip({ userId }: Props) {
               <span
                 className={`text-[10px] leading-none ${
                   day.isToday
-                    ? "text-[#e94560] font-semibold"
+                    ? "text-[#10B981] font-semibold"
                     : trained
                     ? "text-gray-300"
                     : "text-gray-600"

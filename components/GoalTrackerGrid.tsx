@@ -13,7 +13,7 @@ export function GoalWeekDayGrid({
   currentWeekDayGrid: boolean[];
 }) {
   const DAY_LABELS = Array.from({ length: 7 }, (_, i) =>
-    new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(new Date(2024, 0, 1 + i))
+    new Intl.DateTimeFormat("en", { weekday: "short" }).format(new Date(2024, 0, 1 + i))
   );
   const dowNow = getLocalDateParts().dayOfWeek; // 0=Sun
   const todayIdx = dowNow === 0 ? 6 : dowNow - 1; // Mon=0...Sun=6
@@ -32,7 +32,7 @@ export function GoalWeekDayGrid({
                 trained
                   ? "bg-green-500/30 border border-green-500/50 text-green-300"
                   : isToday
-                  ? "bg-[#e94560]/20 border border-[#e94560]/50 text-[#e94560]"
+                  ? "bg-blue-500/20 border border-blue-500/50 text-blue-300"
                   : isPast
                   ? "bg-white/5 border border-white/20 text-gray-500"
                   : "bg-white/5 text-gray-700"
@@ -108,7 +108,7 @@ export function GoalWeekHeatmap({
                 w.isCurrent
                   ? w.achieved
                     ? "bg-green-500/30 border border-green-500/50 text-green-300"
-                    : "bg-[#e94560]/20 border border-[#e94560]/40 text-[#e94560]"
+                    : "bg-blue-500/20 border border-blue-500/40 text-blue-300"
                   : w.achieved
                   ? "bg-green-500/25 text-green-400"
                   : "bg-white/10 text-gray-600"
