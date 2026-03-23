@@ -138,6 +138,16 @@ export default function TrainingCalendar({ userId }: Props) {
         </button>
       </div>
 
+      {/* Legend — above calendar grid for visual context */}
+      <div className="px-4 pt-2 pb-1 flex flex-wrap gap-3">
+        {Object.entries(TYPE_LABEL).map(([key, label]) => (
+          <div key={key} className="flex items-center gap-1">
+            <div className={`w-2 h-2 rounded-full ${TYPE_COLORS[key]}`} />
+            <span className="text-[10px] text-gray-500">{label}</span>
+          </div>
+        ))}
+      </div>
+
       {/* Weekday headers */}
       <div className="grid grid-cols-7 border-b border-white/5">
         {WEEKDAYS.map((d, i) => (
@@ -229,15 +239,6 @@ export default function TrainingCalendar({ userId }: Props) {
         </div>
       )}
 
-      {/* you can add comments here */}
-      <div className="border-t border-white/5 px-4 py-2 flex flex-wrap gap-3">
-        {Object.entries(TYPE_LABEL).map(([key, label]) => (
-          <div key={key} className="flex items-center gap-1">
-            <div className={`w-2 h-2 rounded-full ${TYPE_COLORS[key]}`} />
-            <span className="text-[10px] text-gray-500">{label}</span>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
