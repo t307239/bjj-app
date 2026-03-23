@@ -424,7 +424,7 @@ export default function TrainingLogList({
                   <button
                     onClick={() => onStartEdit(entry)}
                     className="text-gray-600 hover:text-blue-400 transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
-                    title="Edit"
+                    title={t("training.edit")}
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
@@ -439,7 +439,7 @@ export default function TrainingLogList({
                     onClick={() => onDelete(entry.id)}
                     disabled={deletingId === entry.id}
                     className="text-gray-600 hover:text-red-400 transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center disabled:opacity-50"
-                    title="Delete"
+                    title={t("training.delete")}
                   >
                     {deletingId === entry.id ? (
                       <span className="text-xs">...</span>
