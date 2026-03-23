@@ -77,7 +77,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
   };
 
   const regenerate = async () => {
-    if (!confirm("Regenerate invite code? All existing QR codes and links will become invalid. Current members are not affected.")) return;
+    if (!confirm(t("gym.regenerateConfirm"))) return;
     setRegenerating(true);
     try {
       const res = await fetch("/api/gym/regenerate-invite", { method: "POST" });
@@ -119,7 +119,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
         className="mt-3 text-[10px] text-gray-500 hover:text-orange-400 transition-colors disabled:opacity-50"
         aria-label="Regenerate invite code (invalidates old QR codes)"
       >
-        {regenerating ? "Regenerating..." : "🔄 Regenerate QR code (invalidates old links)"}
+        {regenerating ? t("gym.regenerating") : t("gym.regenerateBtn")}
       </button>
     </div>
   );
@@ -593,12 +593,12 @@ function MemberCard({
       {onKick && (
         <button
           onClick={() => {
-            if (confirm(`Remove ${member.display_name || "this member"} from your gym? They will be notified.`)) {
+            if (confirm(t("gym.removeMemberConfirm", { name: member.display_name || t("gym.rankingAnon") }))) {
               onKick(member.student_id);
             }
           }}
           className="flex-shrink-0 text-gray-600 hover:text-[#e94560] transition-colors p-1"
-          title="Remove from gym"
+          title={t("gym.removeMemberTitle")}
           aria-label={`Remove ${member.display_name || "member"} from gym`}
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
