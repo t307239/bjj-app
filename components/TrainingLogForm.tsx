@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type CompData, BELT_RANKS } from "@/lib/trainingLogHelpers";
 
@@ -64,6 +65,7 @@ type Props = {
   onClose: () => void;
   compForm: CompData;
   setCompForm: (f: CompData) => void;
+  techniqueSuggestions?: string[];
 };
 
 // ── Component ────────────────────────────────────────────────────────────────
@@ -78,7 +80,20 @@ export default function TrainingLogForm({
   onClose,
   compForm,
   setCompForm,
+  techniqueSuggestions = [],
 }: Props) {
+  const techniqueInputRef = useRef<HTMLInputElement>(null);
+
+  // Append selected technique tag to notes, then clear the input
+  const handleTechniqueSelect = (value: string) => {
+    if (!value.trim()) return;
+    const tag = value.trim();
+    const current = form.notes.trim();
+    setForm({ ...form, notes: current ? `${current} | ${tag}` : tag });
+    // Clear the technique input
+    if (techniqueInputRef.current) techniqueInputRef.current.value = "";
+  };
+
   if (!showForm) return null;
 
   return (
@@ -215,6 +230,32 @@ export default function TrainingLogForm({
               </select>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Technique autocomplete (Phase 2.5 minimum: datalist from technique_nodes) */}
+      {techniqueSuggestions.length > 0 && (
+        <div className="mb-3">
+          <label className="block text-gray-400 text-xs mb-1">Quick technique tag</label>
+          <input
+            ref={techniqueInputRef}
+            type="text"
+            list="technique-autocomplete-list"
+            placeholder="Search your techniques…"
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleTechniqueSelect((e.target as HTMLInputElement).value); } }}
+            onChange={(e) => {
+              // Auto-select when exact match found in datalist
+              const val = e.target.value;
+              if (techniqueSuggestions.includes(val)) handleTechniqueSelect(val);
+            }}
+            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-[#7c3aed] placeholder-gray-600"
+          />
+          <datalist id="technique-autocomplete-list">
+            {techniqueSuggestions.map((name) => (
+              <option key={name} value={name} />
+            ))}
+          </datalist>
+          <p className="text-[10px] text-gray-600 mt-0.5">Select a technique to append it to notes</p>
         </div>
       )}
 

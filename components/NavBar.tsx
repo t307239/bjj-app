@@ -7,6 +7,9 @@ import LogoutButton from "./LogoutButton";
 import { createClient } from "@/lib/supabase/client";
 import { getLocalDateString } from "@/lib/timezone";
 
+const STRIPE_PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
+const STRIPE_PORTAL_URL = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL ?? "#";
+
 type Props = {
   displayName: string;
   avatarUrl?: string | null;
@@ -16,14 +19,17 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
   const pathname = usePathname();
   const [trainedToday, setTrainedToday] = useState<boolean | null>(null);
   const [currentStreak, setCurrentStreak] = useState<number>(0);
+  const [isPro, setIsPro] = useState<boolean>(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     const checkToday = async () => {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
+      setUserId(user.id);
       const today = getLocalDateString();
-      const [{ count }, { data: recentLogs }] = await Promise.all([
+      const [{ count }, { data: recentLogs }, { data: profile }] = await Promise.all([
         supabase
           .from("training_logs")
           .select("id", { count: "exact", head: true })
@@ -35,8 +41,14 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
           .eq("user_id", user.id)
           .order("date", { ascending: false })
           .limit(60),
+        supabase
+          .from("profiles")
+          .select("is_pro")
+          .eq("user_id", user.id)
+          .single(),
       ]);
       setTrainedToday((count ?? 0) > 0);
+      setIsPro(profile?.is_pro ?? false);
       // ストリーク計算
       if (recentLogs && recentLogs.length > 0) {
         const uniqueDates = [...new Set(recentLogs.map((l: { date: string }) => l.date))].sort().reverse() as string[];
@@ -98,6 +110,26 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
               <span className="hidden sm:flex items-center gap-1 text-[11px] text-orange-400 bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-full">
                 🔥 {currentStreak} days straight
               </span>
+            )}
+            {/* Pro Plan 導線 */}
+            {isPro ? (
+              <a
+                href={STRIPE_PORTAL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:flex items-center gap-1 text-[11px] text-yellow-400 hover:text-yellow-300 transition-colors"
+              >
+                ✓ Pro · Manage
+              </a>
+            ) : (
+              <a
+                href={userId ? `${STRIPE_PAYMENT_LINK}?client_reference_id=${userId}` : STRIPE_PAYMENT_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-3 py-1 rounded-lg text-xs transition-colors"
+              >
+                ⚡ Upgrade to Pro
+              </a>
             )}
             {avatarUrl && (
               // eslint-disable-next-line @next/next/no-img-element

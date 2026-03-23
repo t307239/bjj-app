@@ -188,15 +188,60 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
   const { t } = useLocale();
   const router = useRouter();
   const [confirm, setConfirm] = useState(false);
+  const [deleteInput, setDeleteInput] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [exporting, setExporting] = useState(false);
 
+  // ── CSV export (CCPA/GDPR Right to Data Portability) ────────────────────────
+  const handleExportCsv = async () => {
+    setExporting(true);
+    const { data } = await supabase
+      .from("training_logs")
+      .select("date, type, duration_min, notes, created_at")
+      .eq("user_id", userId)
+      .order("date", { ascending: false });
+    if (data) {
+      const csv = [
+        ["Date", "Type", "Duration(min)", "Notes", "Created At"].join(","),
+        ...data.map((r: { date: string; type: string; duration_min: number; notes: string; created_at: string }) => [
+          r.date ?? "",
+          r.type ?? "",
+          r.duration_min ?? 0,
+          `"${(r.notes ?? "").replace(/"/g, '""')}"`,
+          r.created_at ?? "",
+        ].join(",")),
+      ].join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `bjjapp-logs-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    setExporting(false);
+  };
+
+  // ── Account deletion (GDPR/CCPA Right to Erasure) ────────────────────────────
   const handleDelete = async () => {
+    if (deleteInput !== "DELETE") return;
     setDeleting(true);
-    await supabase.from("training_logs").delete().eq("user_id", userId);
-    await supabase.from("techniques").delete().eq("user_id", userId);
-    await supabase.from("profiles").delete().eq("id", userId);
-    await supabase.auth.signOut();
-    router.push("/?deleted=1");
+    setDeleteError(null);
+    try {
+      const res = await fetch("/api/account/delete", { method: "POST" });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        setDeleteError(body.error ?? "Failed to delete account. Please try again.");
+        setDeleting(false);
+        return;
+      }
+      await supabase.auth.signOut();
+      router.push("/?deleted=1");
+    } catch {
+      setDeleteError("Network error. Please try again.");
+      setDeleting(false);
+    }
   };
 
   return (
@@ -219,28 +264,60 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
         </div>
       )}
 
-      {/* Delete account */}
+      {/* Data export — CCPA/GDPR Right to Data Portability */}
+      <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
+        <p className="text-gray-400 text-xs mb-2">Download all your training logs as a CSV file.</p>
+        <button
+          type="button"
+          onClick={handleExportCsv}
+          disabled={exporting}
+          aria-label="Download training data as CSV"
+          className="inline-flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 border border-blue-400/30 hover:border-blue-400/60 rounded-lg px-3 py-1.5 transition-colors disabled:opacity-50"
+        >
+          {exporting ? "Exporting…" : "📥 Download my data (CSV)"}
+        </button>
+      </div>
+
+      {/* Delete account — GDPR/CCPA Right to Erasure */}
       {!confirm ? (
-        <button type="button" onClick={() => setConfirm(true)} className="text-red-500 hover:text-red-400 text-sm underline">
+        <button
+          type="button"
+          onClick={() => { setConfirm(true); setDeleteInput(""); setDeleteError(null); }}
+          className="text-red-500 hover:text-red-400 text-sm underline"
+        >
           {t("profile.deleteAccount")}
         </button>
       ) : (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
-          <p className="text-red-400 text-sm font-semibold mb-1">{t("profile.deleteConfirm")}</p>
-          <p className="text-gray-400 text-xs mb-4">{t("profile.deleteWarning")}</p>
+        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 space-y-3">
+          <p className="text-red-400 text-sm font-semibold">Delete your account?</p>
+          <p className="text-gray-400 text-xs leading-relaxed">
+            All your training logs, technique notes, and profile data will be permanently deleted and cannot be recovered.
+          </p>
+          <div>
+            <label className="text-gray-500 text-xs mb-1 block">Type <span className="font-mono text-white">DELETE</span> to confirm</label>
+            <input
+              type="text"
+              value={deleteInput}
+              onChange={(e) => setDeleteInput(e.target.value)}
+              placeholder="DELETE"
+              aria-label="Type DELETE to confirm account deletion"
+              className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-red-500 font-mono"
+            />
+          </div>
+          {deleteError && <p className="text-red-400 text-xs">{deleteError}</p>}
           <div className="flex gap-3">
             <button
               type="button"
               onClick={handleDelete}
-              disabled={deleting}
+              disabled={deleting || deleteInput !== "DELETE"}
               aria-label="Confirm account deletion"
-              className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold py-2 rounded-lg text-sm"
+              className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-40 text-white font-bold py-2 rounded-lg text-sm transition-colors"
             >
-              {deleting ? t("profile.deleting") : t("profile.deleteConfirmYes")}
+              {deleting ? "Deleting…" : "Delete my account permanently"}
             </button>
             <button
               type="button"
-              onClick={() => setConfirm(false)}
+              onClick={() => { setConfirm(false); setDeleteInput(""); setDeleteError(null); }}
               className="flex-1 bg-white/10 hover:bg-white/15 text-gray-300 font-bold py-2 rounded-lg text-sm"
             >
               {t("training.cancel")}

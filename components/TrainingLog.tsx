@@ -98,6 +98,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
   const [initialLoading, setInitialLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(false);
+  const [techniqueSuggestions, setTechniqueSuggestions] = useState<string[]>([]);
   const INITIAL_SIZE = 3;
   const PAGE_SIZE = 10;
   const [showForm, setShowForm] = useState(false);
@@ -139,12 +140,20 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
   useEffect(() => {
     const loadEntries = async () => {
       setInitialLoading(true);
-      const { data, error } = await supabase
-        .from("training_logs")
-        .select("*")
-        .eq("user_id", userId)
-        .order("date", { ascending: false })
-        .limit(INITIAL_SIZE + 1);
+      const [{ data, error }, { data: techData }] = await Promise.all([
+        supabase
+          .from("training_logs")
+          .select("*")
+          .eq("user_id", userId)
+          .order("date", { ascending: false })
+          .limit(INITIAL_SIZE + 1),
+        // Phase 2.5: fetch technique names for autocomplete suggestions
+        supabase
+          .from("technique_nodes")
+          .select("label")
+          .eq("user_id", userId)
+          .order("label", { ascending: true }),
+      ]);
 
       if (!error && data) {
         setHasMore(data.length > INITIAL_SIZE);
@@ -153,6 +162,10 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         setTrainedToday(slice.some((e: TrainingEntry) => e.date === getLocalDateString()));
       } else {
         setTrainedToday(false);
+      }
+      if (techData) {
+        const names = [...new Set(techData.map((t: { label: string }) => t.label).filter(Boolean))];
+        setTechniqueSuggestions(names);
       }
       setInitialLoading(false);
     };
@@ -466,6 +479,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
         onClose={() => { setShowForm(false); setFormError(null); }}
         compForm={compForm}
         setCompForm={setCompForm}
+        techniqueSuggestions={techniqueSuggestions}
       />
 
       {/* Keyword search */}
