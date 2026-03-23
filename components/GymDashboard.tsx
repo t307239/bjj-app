@@ -103,7 +103,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
         </code>
         <button
           onClick={copy}
-          className="flex-shrink-0 bg-[#e94560] hover:bg-[#c73652] text-white text-xs px-3 py-2 rounded-lg transition-colors"
+          className="flex-shrink-0 bg-zinc-700 hover:bg-zinc-600 text-white text-xs px-3 py-2 rounded-lg transition-colors"
           aria-label="Copy invite link"
         >
           {copied ? t("gym.inviteCopied") : t("gym.inviteCopy")}
@@ -237,7 +237,7 @@ function CurriculumSection({
         <button
           onClick={dispatch}
           disabled={dispatching || !url.trim()}
-          className="flex-shrink-0 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-40 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
+          className="flex-shrink-0 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
         >
           {dispatching ? t("gym.curriculumSending") : t("gym.curriculumDispatch")}
         </button>
