@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useLocale } from "@/lib/i18n";
 import { getAffiliateInfo } from "@/lib/affiliateMap";
 import {
@@ -67,6 +67,7 @@ export default function TechniqueLogList({
   onShowForm,
 }: Props) {
   const { t } = useLocale();
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   return (
     <div>
@@ -455,30 +456,49 @@ export default function TechniqueLogList({
                         />
                       </svg>
                     </button>
-                    <button
-                      onClick={() => onDelete(technique.id)}
-                      disabled={deletingId === technique.id}
-                      className="text-gray-600 hover:text-red-400 transition-colors p-1 disabled:opacity-50"
-                      title={t("techniques.delete")}
-                    >
-                      {deletingId === technique.id ? (
-                        <span className="text-xs">...</span>
-                      ) : (
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
+                    {confirmDeleteId === technique.id && deletingId !== technique.id ? (
+                      /* Inline delete confirm — avoids window.confirm() */
+                      <div className="flex items-center gap-1 ml-1">
+                        <button
+                          onClick={() => { setConfirmDeleteId(null); onDelete(technique.id); }}
+                          className="text-[10px] font-semibold text-white bg-[#e94560] hover:bg-[#c73652] px-2 py-0.5 rounded transition-colors"
+                          title={t("techniques.confirmDelete")}
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1.5}
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
-                      )}
-                    </button>
+                          {t("common.delete")}
+                        </button>
+                        <button
+                          onClick={() => setConfirmDeleteId(null)}
+                          className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors px-1"
+                        >
+                          {t("training.cancel")}
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmDeleteId(technique.id)}
+                        disabled={deletingId === technique.id}
+                        className="text-gray-600 hover:text-red-400 transition-colors p-1 disabled:opacity-50"
+                        title={t("techniques.delete")}
+                      >
+                        {deletingId === technique.id ? (
+                          <span className="text-xs">...</span>
+                        ) : (
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={1.5}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        )}
+                      </button>
+                    )}
                   </div>
                 </div>
               )}

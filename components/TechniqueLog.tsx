@@ -159,7 +159,6 @@ export default function TechniqueLog({ userId }: Props) {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm(t("techniques.confirmDelete"))) return;
     setDeletingId(id);
     const { error } = await supabase
       .from("techniques")
