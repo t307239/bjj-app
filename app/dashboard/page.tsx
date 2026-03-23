@@ -538,14 +538,14 @@ export default async function DashboardPage() {
           </section>
         )}
 
-        {/* ── Section 4: Streak Nudges（最大2つ・条件付き表示） ── */}
+        {/* ── Section 4: Streak Nudges + Pro Upsell（毎日目に触れる位置） ── */}
         {(streak >= 1 || !isPro) && (
           <section className="space-y-3 mb-8">
             {/* StreakProtect/Freeze は自己管理（内部で表示条件を判断） */}
             <StreakProtect userId={user.id} streak={streak} />
             <StreakFreeze userId={user.id} streak={streak} />
-            {/* Pro upsell は streak がない時のみ（競合CTAを避ける） */}
-            {streak === 0 && <ProUpgradeBanner isPro={isPro} />}
+            {/* Pro upsell: This Week直下の位置 = 毎日目に触れる（#16） */}
+            <ProUpgradeBanner isPro={isPro} />
           </section>
         )}
 
@@ -561,7 +561,6 @@ export default async function DashboardPage() {
         {/* ── Section 6: Insights & More（最下部・低緊急度） ── */}
         <section className="space-y-3 mb-8">
           <InsightsBanner userId={user.id} />
-          {streak > 0 && <ProUpgradeBanner isPro={isPro} />}
         </section>
       </main>
       {/* #145: Back to top FAB */}
