@@ -16,6 +16,7 @@ export default function InsightsBanner({ userId }: Props) {
   const [totalStreak, setTotalStreak] = useState<number | null>(null);
   const [streakInsight, setStreakInsight] = useState<string | null>(null);
   const [consistencyMsg, setConsistencyMsg] = useState<string | null>(null);
+  const [isDismissed, setIsDismissed] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -152,14 +153,26 @@ export default function InsightsBanner({ userId }: Props) {
       }
     : null;
 
-  if (!bestDay && !paceMsg && !streakInsight && !consistencyMsg) return null;
+  if (isDismissed || (!bestDay && !paceMsg && !streakInsight && !consistencyMsg)) return null;
 
   return (
     <div className="bg-zinc-900/50 backdrop-blur-sm border border-white/10 rounded-2xl px-4 py-3 mb-4 shadow-lg shadow-black/40">
-      <p className="text-[11px] font-semibold text-gray-400 mb-2 tracking-wide">
-        📊 {t("insights.title")}
-      </p>
-      <div className="flex flex-wrap gap-x-5 gap-y-1.5">
+      <div className="flex items-start justify-between mb-2">
+        <p className="text-[11px] font-semibold text-gray-400 tracking-wide">
+          📊 {t("insights.title")}
+        </p>
+        <button
+          onClick={() => setIsDismissed(true)}
+          className="text-gray-600 hover:text-gray-400 transition-colors flex-shrink-0 -mr-1 -mt-1"
+          title="Dismiss"
+          aria-label="Dismiss insights banner"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div className="flex flex-wrap gap-x-5 gap-y-1.5 pt-1">
         {paceMsg && (
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] text-gray-500">{t("insights.pace")}</span>
