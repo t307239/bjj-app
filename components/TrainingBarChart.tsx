@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Skeleton from "@/components/ui/Skeleton";
 import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 import { getMonthStartDate } from "@/lib/timezone";
@@ -150,7 +151,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMonth, userId]);
 
-  if (loading) return <div className="min-h-[120px] mb-4" aria-hidden="true" />;
+  if (loading) return <Skeleton height={120} rounded="xl" className="mb-4" />;
 
   const data = range === 6 ? data6 : data12;
 

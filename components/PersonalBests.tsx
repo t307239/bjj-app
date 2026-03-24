@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Skeleton from "@/components/ui/Skeleton";
 import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 import { getLocalDateParts } from "@/lib/timezone";
@@ -180,7 +181,7 @@ export default function PersonalBests({ userId }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  if (!loaded) return <div className="min-h-[60px] mb-4" aria-hidden="true" />;
+  if (!loaded) return <Skeleton height={60} rounded="xl" className="mb-4" />;
 
   if (!bests) {
     return (
