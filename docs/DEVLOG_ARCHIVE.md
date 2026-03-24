@@ -2,6 +2,15 @@
 
 ---
 
+- Day 5_03 (2026/03/24): **UX polish — CLS skeleton, i18n hardcoded strings, contrast fixes**
+  - WeeklyStrip: `if (loading) return null` → pulse skeleton (height 88px) to prevent CLS (UX #23) ✅
+  - WeeklyStrip: `text-gray-600` → `text-gray-500` on session counter (UX #24) ✅
+  - TrainingLogList: hardcoded `"Collapse ▲"` / `"Show More ▼"` → `t("training.collapse")` / `t("training.showMore")` ✅
+  - TrainingLogList: `text-gray-600` → `text-gray-500` on expand/collapse buttons (UX #24) ✅
+  - InsightsBanner: dismiss button `text-gray-600` → `text-gray-400` (UX #24) ✅
+  - `messages/en.json`: added `training.collapse` + `training.showMore` keys ✅
+  - TypeScript: 0 エラー ✅
+
 - Day4fo_99 (2026/03/24): **BACKLOG B-05〜B-07/B-09〜B-10 実装完了（全優先度1・2タスク完了）**
   - B-05: 強制Aha!モーメント — auth callback `?welcome=1` + TrainingLog `initialOpen` prop ✅
   - B-06: SNSシェアボタン — Canvas API で 9:16 Story 画像生成 + Web Share API / PNG DL fallback ✅
