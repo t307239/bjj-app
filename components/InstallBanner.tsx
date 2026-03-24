@@ -19,6 +19,9 @@ export default function InstallBanner() {
   useEffect(() => {
     const isDismissed = localStorage.getItem("bjj_install_dismissed") === "1";
     if (isDismissed) { setDismissed(true); return; }
+    // B-03: Show install banner only after 3rd session log (dopamine moment)
+    const logCount = parseInt(localStorage.getItem("bjj_log_count") ?? "0", 10);
+    if (logCount < 3) { setDismissed(true); return; }
     const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) && !(window.navigator as Navigator & { standalone?: boolean }).standalone;
     if (isIOS) { setPlatform("ios"); setDismissed(false); return; }
     const handleBeforeInstallPrompt = (e: Event) => {
