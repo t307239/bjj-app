@@ -53,6 +53,8 @@ export default function GuestDashboard() {
   const [type, setType] = useState("gi");
   const [notes, setNotes] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; entry: GuestLog; timerId: ReturnType<typeof setTimeout> } | null>(null);
+  const [undoVisible, setUndoVisible] = useState(false);
 
   // Locale-aware training types (labels from i18n)
   const TRAINING_TYPES = TRAINING_TYPE_VALUES.map((tt) => ({
@@ -81,15 +83,49 @@ export default function GuestDashboard() {
   };
 
   const handleDelete = (id: string) => {
-    const updated = logs.filter((l) => l.id !== id);
-    setLogs(updated);
-    saveGuestLogs(updated);
+    const removed = logs.find((l) => l.id === id);
+    if (!removed) return;
+    // Cancel any previous pending delete first
+    if (pendingDelete) {
+      clearTimeout(pendingDelete.timerId);
+      saveGuestLogs(logs.filter((l) => l.id !== pendingDelete.id));
+    }
+    // Optimistic remove from UI
+    setLogs((prev) => prev.filter((l) => l.id !== id));
+    setUndoVisible(true);
+    const timerId = setTimeout(() => {
+      saveGuestLogs(logs.filter((l) => l.id !== id));
+      setPendingDelete(null);
+      setUndoVisible(false);
+    }, 4000);
+    setPendingDelete({ id, entry: removed, timerId });
+  };
+
+  const handleUndoDelete = () => {
+    if (!pendingDelete) return;
+    clearTimeout(pendingDelete.timerId);
+    setLogs((prev) => {
+      const restored = [pendingDelete.entry, ...prev];
+      restored.sort((a, b) => b.created_at.localeCompare(a.created_at));
+      return restored;
+    });
+    setPendingDelete(null);
+    setUndoVisible(false);
   };
 
   const typeInfo = (t: string) => TRAINING_TYPES.find((tt) => tt.value === t) ?? TRAINING_TYPES[0];
 
   return (
     <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
+      {/* Undo Toast */}
+      {undoVisible && (
+        <div className="fixed bottom-24 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-zinc-800 border border-white/10 px-4 py-2.5 rounded-xl text-sm text-white shadow-lg">
+          <span>{t("training.deleted")}</span>
+          <button onClick={handleUndoDelete} className="text-[#10B981] font-semibold hover:text-[#0d9668] transition-colors">
+            {t("training.undo")}
+          </button>
+        </div>
+      )}
       {/* ゲストバナー */}
       <div className="bg-gradient-to-r from-violet-600/70 to-indigo-600/60 px-4 py-3 text-center">
         <div className="flex items-center justify-between max-w-4xl mx-auto">

@@ -322,6 +322,8 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
 
   // Toast
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  // Node delete confirmation
+  const [confirmDeleteNodeId, setConfirmDeleteNodeId] = useState<string | null>(null);
 
   // ── Load data ───────────────────────────────────────────────────────────
   const loadData = useCallback(async () => {
@@ -717,10 +719,21 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
                 >
                   {node.name}
                 </span>
-                {/* Delete button */}
-                {isPro && (
+                {/* Delete button with inline confirm */}
+                {isPro && confirmDeleteNodeId === node.id ? (
+                  <span className="flex items-center gap-1 ml-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setConfirmDeleteNodeId(null); deleteNode(node.id); }}
+                      className="text-[10px] font-semibold text-white bg-red-600 hover:bg-red-500 px-1.5 py-0.5 rounded transition-colors"
+                    >{t("common.delete")}</button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setConfirmDeleteNodeId(null); }}
+                      className="text-[10px] text-gray-400 hover:text-gray-200 px-1 transition-colors"
+                    >{t("common.cancel")}</button>
+                  </span>
+                ) : isPro && (
                   <button
-                    onClick={(e) => { e.stopPropagation(); deleteNode(node.id); }}
+                    onClick={(e) => { e.stopPropagation(); setConfirmDeleteNodeId(node.id); }}
                     className="ml-1 text-zinc-600 hover:text-red-400 text-xs flex-shrink-0"
                     aria-label={t("skillmap.deleteNode")}
                   >✕</button>

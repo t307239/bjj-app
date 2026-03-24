@@ -263,6 +263,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink }: Pro
   const [viewMode, setViewMode] = useState<ViewMode>("roots");
   const [navStack, setNavStack] = useState<Screen[]>([]); // breadcrumb stack
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [confirmDeleteNodeId, setConfirmDeleteNodeId] = useState<string | null>(null);
 
   // Modals
   const [showAddNode, setShowAddNode] = useState(false);
@@ -524,9 +525,20 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink }: Pro
                 <p className="text-xs text-gray-400 mt-1">{currentNode.description}</p>
               )}
             </div>
-            {isPro && (
+            {isPro && confirmDeleteNodeId === currentNode.id ? (
+              <span className="flex items-center gap-1.5 flex-shrink-0 mt-0.5">
+                <button
+                  onClick={() => { setConfirmDeleteNodeId(null); handleDeleteNode(currentNode.id); }}
+                  className="text-xs font-semibold text-white bg-red-600 hover:bg-red-500 px-2 py-0.5 rounded transition-colors"
+                >{t("common.delete")}</button>
+                <button
+                  onClick={() => setConfirmDeleteNodeId(null)}
+                  className="text-xs text-gray-400 hover:text-gray-200 transition-colors"
+                >{t("common.cancel")}</button>
+              </span>
+            ) : isPro && (
               <button
-                onClick={() => handleDeleteNode(currentNode.id)}
+                onClick={() => setConfirmDeleteNodeId(currentNode.id)}
                 className="text-xs text-red-400 hover:text-red-300 flex-shrink-0 mt-0.5"
                 aria-label={t("skillmap.deleteNode")}
               >
