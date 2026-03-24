@@ -613,21 +613,22 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         </div>
       )}
 
-      {/* Compact filter row: Period + Type in one line */}
+      {/* Unified filter row: Period + Type + DateFilter — all flat siblings in one flex container */}
       {!initialLoading && entries.length > 0 && (() => {
         const usedTypes = TRAINING_TYPES.filter((tt) => entries.some((e) => e.type === tt.value));
         const pillTypes = usedTypes.slice(0, 2);
         const dropdownTypes = usedTypes.slice(2);
+        const hasDateFilter = !!(dateFrom || dateTo);
         return (
-          <div className="flex items-center gap-1 mb-3 flex-wrap">
-            {/* Period buttons */}
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            {/* Period pills */}
             {(["all", "month", "week"] as const).map((p) => {
               const label = p === "all" ? t("training.periodAll") : p === "month" ? t("training.periodMonth") : t("training.periodWeek");
               return (
                 <button
                   key={p}
                   onClick={() => setPeriodFilter(p)}
-                  className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                  className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors active:scale-95 ${
                     periodFilter === p
                       ? "bg-zinc-600 text-white"
                       : "bg-zinc-900 text-gray-400 border border-white/10 hover:text-gray-300"
@@ -637,12 +638,12 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
                 </button>
               );
             })}
-            {/* Vertical divider */}
-            <div className="w-px h-4 bg-white/10 mx-0.5 flex-shrink-0" />
+            {/* Divider */}
+            <div className="w-px h-4 bg-white/10 flex-shrink-0" />
             {/* Type: All */}
             <button
               onClick={() => setFilterType("all")}
-              className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+              className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors active:scale-95 ${
                 filterType === "all"
                   ? "bg-zinc-600 text-white"
                   : "bg-zinc-900 text-gray-400 border border-white/10 hover:text-gray-300"
@@ -655,7 +656,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
               <button
                 key={tt.value}
                 onClick={() => setFilterType(tt.value)}
-                className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors active:scale-95 ${
                   filterType === tt.value
                     ? "bg-zinc-600 text-white"
                     : "bg-zinc-900 text-gray-400 border border-white/10 hover:text-gray-300"
@@ -680,48 +681,45 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
                 ))}
               </select>
             )}
+            {/* Divider */}
+            <div className="w-px h-4 bg-white/10 flex-shrink-0" />
+            {/* Date filter: pill button when inactive, inline inputs when active */}
+            {!hasDateFilter ? (
+              <button
+                onClick={() => setDateFrom(today)}
+                className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors active:scale-95 text-gray-400 border border-white/10 hover:text-gray-300 hover:border-white/20"
+              >
+                📅 {t("training.filterByDate") ?? "Filter by Date"}
+              </button>
+            ) : (
+              <>
+                <input
+                  type="date"
+                  value={dateFrom}
+                  max={dateTo || today}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                  className="w-28 flex-shrink-0 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:border-white/30"
+                />
+                <span className="text-gray-500 text-xs flex-shrink-0">–</span>
+                <input
+                  type="date"
+                  value={dateTo}
+                  min={dateFrom}
+                  max={today}
+                  onChange={(e) => setDateTo(e.target.value)}
+                  className="w-28 flex-shrink-0 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:border-white/30"
+                />
+                <button
+                  onClick={() => { setDateFrom(""); setDateTo(""); }}
+                  className="flex-shrink-0 text-gray-500 hover:text-white text-xs px-1 transition-colors"
+                >
+                  ✕
+                </button>
+              </>
+            )}
           </div>
         );
       })()}
-
-      {/* Date range filter */}
-      {!initialLoading && entries.length > 0 && (dateFrom || dateTo) ? (
-        <div className="flex items-center gap-2 mb-2">
-          <input
-            type="date"
-            value={dateFrom}
-            max={dateTo || today}
-            onChange={(e) => setDateFrom(e.target.value)}
-            className="flex-1 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1.5 border border-white/10 focus:outline-none focus:border-white/30"
-          />
-          <span className="text-gray-500 text-xs">–</span>
-          <input
-            type="date"
-            value={dateTo}
-            min={dateFrom}
-            max={today}
-            onChange={(e) => setDateTo(e.target.value)}
-            className="flex-1 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1.5 border border-white/10 focus:outline-none focus:border-white/30"
-          />
-          {(dateFrom || dateTo) && (
-            <button onClick={() => { setDateFrom(""); setDateTo(""); }} className="text-gray-500 hover:text-white text-xs px-2">
-              ✕
-            </button>
-          )}
-        </div>
-      ) : null}
-
-      {/* Date range button (when not set) */}
-      {!initialLoading && entries.length > 0 && !dateFrom && !dateTo && (
-        <div className="flex gap-1.5 mb-2">
-          <button
-            onClick={() => { setDateFrom(""); setDateTo(""); }}
-            className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors text-gray-400 border border-white/10 hover:border-white/20 hover:text-gray-300"
-          >
-            📅 Filter by Date
-          </button>
-        </div>
-      )}
 
       {/* Entry list */}
       <TrainingLogList
