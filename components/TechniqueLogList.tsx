@@ -104,54 +104,6 @@ export default function TechniqueLogList({
               </div>
             </div>
           </div>
-          {/* 習熟度分布バー */}
-          {(() => {
-            const masteryColors = [
-              "",
-              "bg-zinc-500",
-              "bg-blue-500",
-              "bg-yellow-500",
-              "bg-orange-500",
-              "bg-green-500",
-            ];
-            const masteryLevelKeys = ["", "1", "2", "3", "4", "5"];
-            const counts = [1, 2, 3, 4, 5].map(
-              (lvl) => techniques.filter((t) => t.mastery_level === lvl).length,
-            );
-            const total = techniques.length;
-            return (
-              <div>
-                <div className="flex rounded-full overflow-hidden h-2 mb-1">
-                  {counts.map((cnt, i) => {
-                    const pct = total > 0 ? (cnt / total) * 100 : 0;
-                    return pct > 0 ? (
-                      <div
-                        key={i}
-                        className={`${masteryColors[i + 1]} transition-all`}
-                        style={{ width: `${pct}%` }}
-                        title={`${t("techniques.masteryLevels." + masteryLevelKeys[i + 1])}: ${cnt}`}
-                      />
-                    ) : null;
-                  })}
-                </div>
-                <div className="flex flex-wrap gap-x-3 gap-y-0.5">
-                  {counts.map((cnt, i) =>
-                    cnt > 0 ? (
-                      <span key={i} className="text-xs text-gray-500">
-                        <span
-                          className={`${masteryColors[i + 1].replace("bg-", "text-")}`}
-                        >
-                          ●
-                        </span>{" "}
-                        {t("techniques.masteryLevels." + masteryLevelKeys[i + 1])}{" "}
-                        {cnt}
-                      </span>
-                    ) : null,
-                  )}
-                </div>
-              </div>
-            );
-          })()}
         </div>
       )}
 
@@ -201,7 +153,7 @@ export default function TechniqueLogList({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={t("techniques.search")}
-            className="w-full bg-zinc-900 text-white rounded-xl px-4 py-2.5 text-sm border border-white/10 focus:outline-none focus:border-white/30 pl-9"
+            className="w-full bg-zinc-900/50 text-zinc-200 rounded-lg px-4 py-2.5 text-sm border border-zinc-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 pl-9 placeholder:text-zinc-600"
           />
           <svg
             className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"
@@ -517,7 +469,7 @@ export default function TechniqueLogList({
               <button
                 onClick={() => onPageChange(page - 1)}
                 disabled={page <= 1}
-                className="px-4 py-2 text-sm text-gray-400 hover:text-white bg-zinc-900 border border-white/10 hover:border-white/20 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="px-3 py-1 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 rounded-md transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 ← {t("training.prev")}
               </button>
@@ -527,7 +479,7 @@ export default function TechniqueLogList({
               <button
                 onClick={() => onPageChange(page + 1)}
                 disabled={page >= totalPages}
-                className="px-4 py-2 text-sm text-gray-400 hover:text-white bg-zinc-900 border border-white/10 hover:border-white/20 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="px-3 py-1 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 rounded-md transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 {t("training.next")} →
               </button>

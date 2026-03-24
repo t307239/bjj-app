@@ -136,7 +136,7 @@ export default function WeeklyStrip({ userId }: Props) {
             countDelta > 0
               ? "text-emerald-400"
               : countDelta < 0
-              ? "text-red-300"
+              ? "text-red-400"
               : "text-zinc-500"
           }`}>
             {countDelta > 0
@@ -179,7 +179,7 @@ export default function WeeklyStrip({ userId }: Props) {
                     ? "text-[#10B981] font-semibold"
                     : trained
                     ? "text-gray-300"
-                    : "text-gray-500"
+                    : "text-zinc-400"
                 }`}
               >
                 {day.label}

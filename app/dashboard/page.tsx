@@ -664,6 +664,7 @@ export default async function DashboardPage({
           label={t("dashboard.analyticsLabel")}
           defaultOpen={false}
           contentHint={t("dashboard.analyticsHint")}
+          cardTrigger
         >
           <TrainingBarChart userId={user.id} isPro={isPro} />
           <TrainingTypeChart userId={user.id} isPro={isPro} />

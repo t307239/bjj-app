@@ -226,7 +226,7 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color, trendSubtitle }: {
           const isCurrentMonth = m.key === months[5].key;
           return (
             <div key={m.key} className="flex-1 flex flex-col items-center justify-end gap-0.5">
-              <span className="text-[10px] text-gray-500 leading-none">
+              <span className="text-xs text-gray-500 leading-none">
                 {m.count > 0 ? m.count : ""}
               </span>
               <div
@@ -237,7 +237,7 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color, trendSubtitle }: {
                   backgroundColor: isCurrentMonth ? color : `${color}66`,
                 }}
               />
-              <span className={`text-[10px] leading-none ${isCurrentMonth ? "text-white font-semibold" : "text-gray-500"}`}>
+              <span className={`text-xs leading-none ${isCurrentMonth ? "text-white font-semibold" : "text-gray-500"}`}>
                 {m.label}
               </span>
             </div>

@@ -92,9 +92,6 @@ export default function BeltProgressCard({
         </div>
         <div>
           <p className="text-lg font-bold text-white">{label}</p>
-          <p className="text-xs text-zinc-500">
-            {stripes} {stripes !== 1 ? t("beltProgress.stripes") : t("beltProgress.stripe")}
-          </p>
         </div>
       </div>
 

@@ -6,20 +6,25 @@ type Props = {
   label: string;
   defaultOpen?: boolean;
   contentHint?: string;
+  cardTrigger?: boolean;
   children: React.ReactNode;
 };
 
-export default function CollapsibleSection({ label, defaultOpen = true, contentHint, children }: Props) {
+export default function CollapsibleSection({ label, defaultOpen = true, contentHint, cardTrigger = false, children }: Props) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
     <section className="mb-8">
       <button
         onClick={() => setIsOpen((v) => !v)}
-        className="flex items-center gap-2 w-full text-left mb-3 group min-h-[44px]"
+        className={`flex items-center gap-2 w-full text-left group min-h-[44px] ${
+          cardTrigger
+            ? `p-4 bg-zinc-900/40 border border-zinc-800/80 rounded-xl hover:bg-zinc-800/60 transition-colors ${isOpen ? "mb-3" : "mb-0"}`
+            : "mb-3"
+        }`}
         aria-expanded={isOpen}
       >
-        <span className="text-xs font-semibold text-zinc-400 tracking-widest">
+        <span className={`text-xs font-semibold tracking-widest ${cardTrigger ? "text-zinc-300" : "text-zinc-400"}`}>
           {label}
         </span>
         {!isOpen && contentHint && (
