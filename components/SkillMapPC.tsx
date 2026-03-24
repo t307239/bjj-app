@@ -625,7 +625,12 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
       <div
         ref={containerRef}
         className="relative w-full bg-[#0a1020] border border-white/10 rounded-xl overflow-hidden select-none"
-        style={{ height: Math.min(Math.max(nodes.length * 60 + 120, 280), 440), cursor: isPanning ? "grabbing" : connectingFrom ? "crosshair" : "grab" }}
+        style={{
+          height: Math.min(Math.max(nodes.length * 60 + 120, 280), 440),
+          cursor: isPanning ? "grabbing" : connectingFrom ? "crosshair" : "grab",
+          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }}
         onMouseDown={onBgMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
@@ -826,11 +831,12 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
           tabIndex={0}
           aria-label={t("skillmap.canvasShortcuts")}
         />
-      </div>
 
-      <p className="text-xs text-gray-500 mt-1 text-right">
-        {t("skillmap.pcContextHint")}
-      </p>
+        {/* Helper hint — absolute overlay at bottom-right of canvas */}
+        <p className="absolute bottom-2 right-3 text-[11px] text-zinc-500 pointer-events-none select-none">
+          {t("skillmap.pcContextHint")}
+        </p>
+      </div>
 
       {showProModal && (
         <ProModal

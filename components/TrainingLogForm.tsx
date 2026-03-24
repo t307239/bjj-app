@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useLocale } from "@/lib/i18n";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type CompData, BELT_RANKS } from "@/lib/trainingLogHelpers";
@@ -26,6 +26,10 @@ function DurationPicker({
   onChange: (v: number) => void;
 }) {
   const { t } = useLocale();
+  // Show custom input if value doesn't match any preset, or user clicked Custom pill
+  const isPreset = (DURATION_PRESETS as number[]).includes(value);
+  const [showCustom, setShowCustom] = useState(!isPreset);
+
   return (
     <div>
       <label className="block text-gray-400 text-xs mb-1">{t("training.duration")}</label>
@@ -34,9 +38,9 @@ function DurationPicker({
           <button
             key={p}
             type="button"
-            onClick={() => onChange(p)}
+            onClick={() => { onChange(p); setShowCustom(false); }}
             className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
-              value === p
+              value === p && !showCustom
                 ? "bg-[#10B981] border-[#10B981] text-white"
                 : "bg-zinc-800 border-white/10 text-gray-400 hover:border-white/20"
             }`}
@@ -44,16 +48,31 @@ function DurationPicker({
             {p >= 60 ? `${p / 60}h` : `${p}m`}
           </button>
         ))}
+        {/* Custom pill — shows input when selected */}
+        <button
+          type="button"
+          onClick={() => setShowCustom(true)}
+          className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
+            showCustom || !isPreset
+              ? "bg-[#10B981] border-[#10B981] text-white"
+              : "bg-zinc-800 border-white/10 text-gray-400 hover:border-white/20"
+          }`}
+        >
+          {!isPreset && !showCustom ? `${value}m` : "Custom"}
+        </button>
       </div>
-      <input
-        type="number"
-        value={value}
-        min={1}
-        max={480}
-        onChange={(e) => onChange(parseInt(e.target.value) || 60)}
-        className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
-        placeholder={t("training.customMinutes")}
-      />
+      {/* Custom number input — only shown when Custom is active */}
+      {(showCustom || !isPreset) && (
+        <input
+          type="number"
+          value={value}
+          min={1}
+          max={480}
+          onChange={(e) => onChange(parseInt(e.target.value) || 60)}
+          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30"
+          placeholder={t("training.customMinutes")}
+        />
+      )}
     </div>
   );
 }
@@ -144,7 +163,7 @@ export default function TrainingLogForm({
           value={form.date}
           max={today}
           onChange={(e) => setForm({ ...form, date: e.target.value })}
-          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
+          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30"
           required
         />
       </div>
@@ -163,8 +182,8 @@ export default function TrainingLogForm({
         {/* Primary: Gi / No-Gi — giant 2-tap selector */}
         <div className="grid grid-cols-2 gap-2 mb-2">
           {[
-            { value: "gi",   label: "🥋 Gi",    activeClass: "border-blue-500 bg-blue-500/15 text-blue-300 shadow-sm shadow-blue-500/20" },
-            { value: "nogi", label: "👕 No-Gi", activeClass: "border-orange-500 bg-orange-500/15 text-orange-300 shadow-sm shadow-orange-500/20" },
+            { value: "gi",   label: "Gi",    activeClass: "border-blue-500 bg-blue-500/25 text-blue-300 shadow-sm shadow-blue-500/20" },
+            { value: "nogi", label: "No-Gi", activeClass: "border-orange-500 bg-orange-500/25 text-orange-300 shadow-sm shadow-orange-500/20" },
           ].map((opt) => (
             <button
               key={opt.value}
@@ -191,11 +210,10 @@ export default function TrainingLogForm({
                 onClick={() => setForm({ ...form, type: tt.value })}
                 className={`flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-xl border text-xs font-semibold transition-all active:scale-95 ${
                   active
-                    ? "bg-[#10B981]/15 border-[#10B981]/60 text-[#10B981] shadow-sm shadow-[#10B981]/20"
+                    ? "bg-[#10B981]/25 border-[#10B981]/60 text-[#10B981] shadow-sm shadow-[#10B981]/20"
                     : "bg-zinc-800/60 border-white/10 text-gray-400 hover:border-white/20 hover:text-white"
                 }`}
               >
-                <span className="text-lg leading-none">{tt.icon}</span>
                 <span className="leading-none text-xs">{tt.label}</span>
               </button>
             );
@@ -213,7 +231,7 @@ export default function TrainingLogForm({
               <select
                 value={compForm.result}
                 onChange={(e) => setCompForm({ ...compForm, result: e.target.value })}
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-zinc-700 focus:outline-none focus:border-white/30"
               >
                 <option value="win">{t("csv.win")} 🏆</option>
                 <option value="loss">{t("csv.loss")}</option>
@@ -227,7 +245,7 @@ export default function TrainingLogForm({
                 value={compForm.opponent}
                 onChange={(e) => setCompForm({ ...compForm, opponent: e.target.value })}
                 placeholder={t("competition.opponentPlaceholder")}
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
               />
             </div>
           </div>
@@ -239,7 +257,7 @@ export default function TrainingLogForm({
                 value={compForm.finish}
                 onChange={(e) => setCompForm({ ...compForm, finish: e.target.value })}
                 placeholder={t("competition.finishPlaceholder")}
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
               />
             </div>
             <div>
@@ -249,7 +267,7 @@ export default function TrainingLogForm({
                 value={compForm.event}
                 onChange={(e) => setCompForm({ ...compForm, event: e.target.value })}
                 placeholder={t("competition.eventPlaceholder")}
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
               />
             </div>
           </div>
@@ -259,7 +277,7 @@ export default function TrainingLogForm({
               <select
                 value={compForm.opponent_rank}
                 onChange={(e) => setCompForm({ ...compForm, opponent_rank: e.target.value })}
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-zinc-700 focus:outline-none focus:border-white/30"
               >
                 {BELT_RANKS.map((b) => (
                   <option key={b.value} value={b.value}>{b.label}</option>
@@ -271,7 +289,7 @@ export default function TrainingLogForm({
               <select
                 value={compForm.gi_type}
                 onChange={(e) => setCompForm({ ...compForm, gi_type: e.target.value })}
-                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30"
+                className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-zinc-700 focus:outline-none focus:border-white/30"
               >
                 <option value="gi">{t("training.gi")}</option>
                 <option value="nogi">{t("training.nogi")}</option>
@@ -296,7 +314,7 @@ export default function TrainingLogForm({
               const val = e.target.value;
               if (techniqueSuggestions.includes(val)) handleTechniqueSelect(val);
             }}
-            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
+            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
           />
           <datalist id="technique-autocomplete-list">
             {techniqueSuggestions.map((name) => (
@@ -315,7 +333,7 @@ export default function TrainingLogForm({
           value={form.instructor_name ?? ""}
           onChange={(e) => setForm({ ...form, instructor_name: e.target.value })}
           placeholder={t("training.instructorPlaceholder")}
-          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
+          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
         />
       </div>
 
@@ -329,7 +347,7 @@ export default function TrainingLogForm({
             value={form.partner_username}
             onChange={(e) => setForm({ ...form, partner_username: e.target.value.replace(/^@/, "").replace(/\s/g, "") })}
             placeholder={t("training.partnerTagPlaceholder")}
-            className="w-full bg-zinc-800 text-white rounded-lg pl-7 pr-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
+            className="w-full bg-zinc-800 text-white rounded-lg pl-7 pr-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
           />
         </div>
       </div>
@@ -342,7 +360,7 @@ export default function TrainingLogForm({
           onChange={(e) => setForm({ ...form, notes: e.target.value })}
           placeholder={t("training.memoFormPlaceholder")}
           rows={2}
-          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 resize-none"
+          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 resize-none"
         />
       </div>
 
@@ -358,7 +376,7 @@ export default function TrainingLogForm({
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
+          className="px-4 py-2 text-zinc-400 hover:text-zinc-100 hover:bg-white/5 border border-white/10 rounded-lg text-sm transition-colors"
         >
           {t("training.cancel")}
         </button>

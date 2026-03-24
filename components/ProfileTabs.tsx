@@ -38,7 +38,7 @@ function AccountSection({ userId }: { userId: string }) {
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="text-sm font-medium text-white">{t("profile.deleteAccount")}</p>
-                <p className="text-xs text-zinc-500 mt-0.5">{t("profile.deleteWarning")}</p>
+                <p className="text-xs text-zinc-400 mt-0.5">{t("profile.deleteWarning")}</p>
               </div>
               <button
                 type="button"

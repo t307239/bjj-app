@@ -77,13 +77,13 @@ export default function TechniqueLogList({
     <div>
       {/* 統計バー */}
       {!initialLoading && techniques.length > 0 && (
-        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
-          <div className="flex items-center gap-4 text-sm mb-3">
+        <div className="bg-zinc-900 rounded-xl py-6 px-4 border border-white/10 mb-4">
+          <div className="flex items-center gap-4 text-sm">
             <div className="flex-1 text-center">
               <div className="text-4xl font-bold text-zinc-100">
                 {techniques.length}
               </div>
-              <div className="text-xs font-medium text-zinc-500 tracking-wider uppercase mt-1">
+              <div className="text-xs font-medium text-zinc-500 tracking-wider uppercase mt-1.5">
                 {t("techniques.totalTechniques")}
               </div>
             </div>
@@ -92,14 +92,14 @@ export default function TechniqueLogList({
               <div className="text-4xl font-bold text-green-400">
                 {techniques.filter((t) => t.mastery_level >= 4).length}
               </div>
-              <div className="text-xs font-medium text-zinc-500 tracking-wider uppercase mt-1">{t("techniques.favorites")}</div>
+              <div className="text-xs font-medium text-zinc-500 tracking-wider uppercase mt-1.5">{t("techniques.favorites")}</div>
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div className="flex-1 text-center">
               <div className="text-4xl font-bold text-[#10B981]">
                 {new Set(techniques.map((t) => t.category)).size}
               </div>
-              <div className="text-xs font-medium text-zinc-500 tracking-wider uppercase mt-1">
+              <div className="text-xs font-medium text-zinc-500 tracking-wider uppercase mt-1.5">
                 {t("techniques.categoryCount")}
               </div>
             </div>
@@ -107,10 +107,9 @@ export default function TechniqueLogList({
         </div>
       )}
 
-      {/* ヘッダー: タイトル + ソート + 追加ボタン */}
+      {/* ヘッダー: ソート + 追加ボタン */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold">{t("techniques.title")}</h3>
           {!initialLoading && techniques.length > 0 && (
             <select
               value={sortBy}
@@ -310,7 +309,7 @@ export default function TechniqueLogList({
                       <span className="font-semibold text-sm truncate">
                         {technique.name}
                       </span>
-                      <span className="text-xs bg-zinc-800/80 text-gray-300 px-2 py-0.5 rounded-full flex-shrink-0">
+                      <span className="text-xs bg-zinc-800/80 text-gray-300 border border-zinc-700/50 px-2 py-0.5 rounded-full flex-shrink-0">
                         {t("techniques.categories." + technique.category) ||
                           technique.category}
                       </span>
