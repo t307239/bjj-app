@@ -2,6 +2,12 @@
 
 ---
 
+- Day4fo_90 (2026/03/24): **Dashboard cleanup — ノイズコンポーネント6点削除**
+  - `app/dashboard/page.tsx` — `ProStatusBanner` / `WeeklyPaceBanner` / `DailyRecommend` / `DailyWikiTip` / `WikiQuickLinks` / `TrainingCalendar` 削除 ✅
+  - Section 3 を `gymCurriculum` 条件付きに変更（GymCurriculumCard のみ残存） ✅
+  - 未使用変数 `daysLeftInWeek` / `subscriptionStatus` + 未使用import 6点 クリーンアップ ✅
+  - TypeScript 0エラー確認 ✅
+
 - Day4fo_89 (2026/03/24): **画面デバッグ — 2バグ修正**
   - `app/page.tsx` + `app/gym/page.tsx` — keycap絵文字（1️⃣2️⃣3️⃣）をCSS数字サークルに変更（フォント環境依存の二重表示バグ）✅
   - 全ページタイトルの `| BJJ App` 重複削除（layoutのtemplateと二重になっていた）: dashboard/login/profile/gym/techniques/terms/privacy/tokushoho/gym-dashboard/join-gym ✅
