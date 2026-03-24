@@ -324,8 +324,17 @@ export default function PersonalBests({ userId }: Props) {
         ))}
       </div>
       {bests.maxSessionMin > 0 && (
-        <div className="mt-2 text-center text-xs text-zinc-400">
-          {t("stats.longestSession")}: {fmtTime(bests.maxSessionMin)} · {t("stats.monthlyAvg")}: {bests.avgMonthly}{timesUnit}
+        <div className="mt-3 pt-3 border-t border-zinc-800/50">
+          <div className="grid grid-cols-2 gap-2">
+            <div className="text-center">
+              <div className="text-sm font-semibold text-zinc-200">{fmtTime(bests.maxSessionMin)}</div>
+              <div className="text-[10px] text-zinc-500 uppercase tracking-wider mt-0.5">{t("stats.longestSession")}</div>
+            </div>
+            <div className="text-center">
+              <div className="text-sm font-semibold text-zinc-200">{bests.avgMonthly}{timesUnit}</div>
+              <div className="text-[10px] text-zinc-500 uppercase tracking-wider mt-0.5">{t("stats.monthlyAvg")}</div>
+            </div>
+          </div>
         </div>
       )}
       {/* 曜日別練習頻度ミニグラフ */}
@@ -346,15 +355,15 @@ export default function PersonalBests({ userId }: Props) {
                 const pct = count / maxDow;
                 const isBest = i === bestDowIdx && count > 0;
                 return (
-                  <div key={i} className="flex flex-col items-center gap-0.5 flex-1">
+                  <div key={i} className="flex flex-col items-center gap-1 flex-1">
                     <div
-                      className="w-full rounded-t transition-all"
+                      className="w-full rounded-sm transition-all"
                       style={{
                         height: `${Math.max(pct * 32, count > 0 ? 4 : 1)}px`,
                         background: isBest ? "#10B981" : count > 0 ? "#374151" : "#1f2937",
                       }}
                     />
-                    <span className={`text-xs leading-none ${isBest ? "text-[#10B981] font-bold" : "text-gray-500"}`}>
+                    <span className={`text-[10px] leading-none ${isBest ? "text-[#10B981] font-bold" : "text-gray-500"}`}>
                       {DOW_LABELS[i]}
                     </span>
                   </div>

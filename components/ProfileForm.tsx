@@ -462,7 +462,14 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
           <div className="flex items-center gap-2 text-sm text-gray-300">
             <span className="text-gray-500">🥋</span>
             <span>{t("profile.bjjHistory", { n: calcBjjMonths(profile.start_date) })}</span>
-            <span className="text-gray-500 text-xs">({profile.start_date} –)</span>
+            <span className="text-gray-500 text-xs">
+              {(() => {
+                const [y, m] = profile.start_date.split("-");
+                const d = new Date(parseInt(y), parseInt(m) - 1, 1);
+                const fmt = new Intl.DateTimeFormat("en", { month: "short", year: "numeric" }).format(d);
+                return `(${fmt} – Present)`;
+              })()}
+            </span>
           </div>
         )}
         {!profile.gym && !profile.start_date && (

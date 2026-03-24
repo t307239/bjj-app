@@ -95,7 +95,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
             <div className="flex items-center gap-2">
               <span className="text-xl">🥋</span>
               <span className="font-bold text-lg">BJJ App</span>
-              <span className="text-xs font-semibold text-[#10B981] bg-[#10B981]/10 border border-[#10B981]/30 px-1.5 py-0.5 rounded-full leading-none">β</span>
+              <span className="ml-2 px-1.5 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-wider text-emerald-400">BETA</span>
             </div>
             <nav className="hidden sm:flex items-center gap-1">
               {NAV_ITEMS.map((item) => (
@@ -103,10 +103,10 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
                   key={item.href}
                   href={item.href}
                   aria-current={pathname === item.href ? "page" : undefined}
-                  className={`relative px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
+                  className={`relative px-4 py-2 transition-colors ${
                     pathname === item.href
-                      ? "border-white text-white"
-                      : "border-transparent text-gray-300 hover:text-white"
+                      ? "text-sm font-semibold text-white after:absolute after:bottom-0 after:left-2 after:right-2 after:h-0.5 after:bg-white after:rounded-t-full"
+                      : "text-sm font-medium text-zinc-400 hover:text-zinc-100"
                   }`}
                 >
                   {item.label}
@@ -146,7 +146,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
                   href={userId ? `${STRIPE_PAYMENT_LINK}?client_reference_id=${userId}` : STRIPE_PAYMENT_LINK}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hidden sm:flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black font-bold px-3 py-1 rounded-lg text-xs transition-all"
+                  className="hidden sm:flex items-center gap-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 shadow-[0_0_15px_rgba(245,158,11,0.2)] active:scale-95 text-white font-bold px-3 py-1.5 rounded-full text-xs transition-all"
                 >
                   ⚡ Upgrade to Pro
                 </a>

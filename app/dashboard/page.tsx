@@ -438,7 +438,14 @@ export default async function DashboardPage({
                     ? t("dashboard.streakCardKeepGoing")
                     : streak >= 1
                       ? t("dashboard.streakCardKeepRolling")
-                      : t("dashboard.streakCardStart")}
+                      : (
+                        <span className="inline-flex items-center gap-0.5 font-semibold text-yellow-400">
+                          {t("dashboard.streakCardStart")}
+                          <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                          </svg>
+                        </span>
+                      )}
             </span>
           </Link>
 

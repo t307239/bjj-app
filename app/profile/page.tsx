@@ -154,7 +154,7 @@ export default async function ProfilePage() {
                   </span>
                 )}
               </div>
-              <p className="text-gray-500 text-xs mt-0.5 truncate">
+              <p className="text-sm text-zinc-400 mb-3 truncate">
                 {user.email}
               </p>
               {gymName && (

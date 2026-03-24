@@ -80,26 +80,26 @@ export default function TechniqueLogList({
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
           <div className="flex items-center gap-4 text-sm mb-3">
             <div className="flex-1 text-center">
-              <div className="text-lg font-bold text-white">
+              <div className="text-4xl font-bold text-zinc-100">
                 {techniques.length}
               </div>
-              <div className="text-gray-400 text-xs">
+              <div className="text-xs font-medium text-zinc-500 tracking-wider uppercase mt-1">
                 {t("techniques.totalTechniques")}
               </div>
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div className="flex-1 text-center">
-              <div className="text-lg font-bold text-green-400">
+              <div className="text-4xl font-bold text-green-400">
                 {techniques.filter((t) => t.mastery_level >= 4).length}
               </div>
-              <div className="text-gray-400 text-xs">{t("techniques.favorites")}</div>
+              <div className="text-xs font-medium text-zinc-500 tracking-wider uppercase mt-1">{t("techniques.favorites")}</div>
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div className="flex-1 text-center">
-              <div className="text-lg font-bold text-[#10B981]">
+              <div className="text-4xl font-bold text-[#10B981]">
                 {new Set(techniques.map((t) => t.category)).size}
               </div>
-              <div className="text-gray-400 text-xs">
+              <div className="text-xs font-medium text-zinc-500 tracking-wider uppercase mt-1">
                 {t("techniques.categoryCount")}
               </div>
             </div>
@@ -115,7 +115,7 @@ export default function TechniqueLogList({
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortBy)}
-              className="text-xs bg-zinc-900 text-gray-400 border border-white/10 rounded-lg px-2 py-1 focus:outline-none focus:border-white/30 cursor-pointer"
+              className="appearance-none text-xs bg-zinc-900 text-zinc-300 border border-zinc-700 hover:border-zinc-600 rounded-lg px-2 py-1 focus:outline-none focus:border-emerald-500 cursor-pointer transition-colors"
             >
               <option value="newest">{t("techniques.sortNewest")}</option>
               <option value="mastery_desc">
@@ -138,7 +138,7 @@ export default function TechniqueLogList({
           <button
             onClick={() => onShowForm(true)}
             title={t("techniques.bulkDesc")}
-            className="bg-zinc-800 hover:bg-zinc-700 text-gray-300 text-sm font-semibold py-2 px-3 rounded-lg border border-white/10 transition-colors"
+            className="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-sm font-semibold py-2 px-3 rounded-lg border border-zinc-700 transition-colors"
           >
             {t("techniques.bulkAdd")}
           </button>
@@ -471,7 +471,7 @@ export default function TechniqueLogList({
                 disabled={page <= 1}
                 className="px-3 py-1 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 rounded-md transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                ← {t("training.prev")}
+                <svg className="w-4 h-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg> {t("training.prev")}
               </button>
               <span className="text-xs text-gray-500">
                 {page} / {totalPages}
@@ -481,7 +481,7 @@ export default function TechniqueLogList({
                 disabled={page >= totalPages}
                 className="px-3 py-1 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 rounded-md transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                {t("training.next")} →
+                {t("training.next")} <svg className="w-4 h-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
               </button>
             </div>
           )}
