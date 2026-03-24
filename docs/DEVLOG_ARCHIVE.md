@@ -2,6 +2,17 @@
 
 ---
 
+- Day 5_06 (2026/03/24): **UX polish 最終仕上げ — Stripe CTA disabled化・CLS skeleton追加・コントラスト最終sweep**
+  - NavBar/TrainingChart/TrainingBarChart/TrainingTypeChart: `STRIPE_PAYMENT_LINK ?? "#"` → null比較 + 未設定時 disabled グレーspan（後で相談リスト: Pro upgrade ボタン問題 → 解消） ✅
+  - TrainingLog.tsx: 「Training Log」「+ Add Session」ハードコード → `t("training.title")` / `t("training.add")` i18n化 ✅
+  - UX #24 最終sweep: TechniqueLogList/GoalTracker/GoalTrackerGrid/StreakFreeze/TrainingLog/GuestDashboard/ShareButton/OnboardingChecklist/GymDashboard/TrainingLogList/dashboard page.tsx の残存 `text-gray-600` 11ファイル17箇所 → `text-gray-500` 一括修正 ✅
+  - UX #23 CLS: TrainingTypeChart/GoalTracker/GymRanking/CompetitionStats — `if(loading) return null` → Skeleton (4コンポーネント) ✅
+  - TrainingLogList: inline edit "Update"ボタン `active:scale-95 hover:bg-[#0d9668]` + i18n化 ✅
+  - ProfileForm: stripe ピッカーボタン `active:scale-95` ✅
+  - ProfileTabs: active bg-zinc-600 → bg-zinc-700 + `active:scale-95` + inactive `text-gray-500` ✅
+  - TypeScript: 0 エラー ✅
+  - バグスイープ: UX監査25項目 全項目クリア、post-login text-gray-600 ゼロ達成
+
 - Day 5_04 (2026/03/24): **UX #24 完全制覇 — 全ポストログイン画面コントラスト一括修正（31ファイル・82箇所）**
   - `text-gray-600`/`text-zinc-600`/`text-gray-700` → `text-gray-500`/`text-zinc-500` への全面置換 ✅
   - 対象: GoalTracker, GoalTrackerGrid, TrainingTypeChart, TrainingBarChart, TrainingChart, TrainingCalendar, TrainingLogForm, ProfileForm, TechniqueLogList, GymWaitlistForm, AffiliateSection, StreakFreeze, PersonalBests, TrainingLog（section labels）, DailyQuote, ProfileTabs, GymRegistrationForm, GymRanking, CompetitionStats, ProGate, SkillMapPC/Mobile, GymDashboard, GuestDashboard, TrainingLogStats, DailyWikiTip, app/dashboard/page, app/techniques/page
