@@ -34,6 +34,8 @@
     "type": "練習タイプ",
     "instructor": "インストラクター（任意）",
     "instructorPlaceholder": "例: 田中先生",
+    "partnerTag": "スパーリング相手（任意）",
+    "partnerTagPlaceholder": "ユーザー名",
     "memo": "メモ",
     "memoOptional": "メモ（任意）",
     "memoPlaceholder": "今日の練習のポイント、気づきなど...",

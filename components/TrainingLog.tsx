@@ -126,6 +126,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     type: "gi",
     notes: "",
     instructor_name: "",
+    partner_username: "",   // B-09: sparring partner tag
   });
 
   // #72: detect ?addLog=YYYY-MM-DD from calendar empty-day click
@@ -262,7 +263,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     setEntries((prev) => [optimisticEntry, ...prev]);
     setTrainedToday(true);
     setShowForm(false);
-    setForm({ date: getLocalDateString(), duration_min: 60, type: "gi", notes: "", instructor_name: "" });
+    setForm({ date: getLocalDateString(), duration_min: 60, type: "gi", notes: "", instructor_name: "", partner_username: "" });
     setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
 
     setLoading(true);

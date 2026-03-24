@@ -8,6 +8,10 @@ export type TrainingEntry = {
   type: string;
   notes: string;
   created_at: string;
+  /** B-04: Instructor name (optional) */
+  instructor_name?: string | null;
+  /** B-09: Sparring partner username (optional) */
+  partner_username?: string | null;
 };
 
 export type CompData = {

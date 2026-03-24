@@ -86,6 +86,8 @@
     "typeShort": "Type",
     "instructor": "Instructor (optional)",
     "instructorPlaceholder": "e.g. Professor John",
+    "partnerTag": "Sparring Partner (optional)",
+    "partnerTagPlaceholder": "username",
     "memo": "Notes",
     "memoOptional": "Notes (optional)",
     "memoPlaceholder": "Key points, takeaways from today's session...",

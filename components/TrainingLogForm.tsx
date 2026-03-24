@@ -13,6 +13,8 @@ type FormState = {
   type: string;
   notes: string;
   instructor_name: string;
+  /** B-09: Sparring partner username (stored in training_logs.partner_username) */
+  partner_username: string;
 };
 
 // ── DurationPicker (inline — extracted from TrainingLog) ─────────────────────
@@ -315,6 +317,21 @@ export default function TrainingLogForm({
           placeholder={t("training.instructorPlaceholder")}
           className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
         />
+      </div>
+
+      {/* Partner Tag (B-09: optional @username for sparring partner) */}
+      <div className="mb-3">
+        <label className="block text-gray-400 text-xs mb-1">{t("training.partnerTag")}</label>
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm select-none">@</span>
+          <input
+            type="text"
+            value={form.partner_username}
+            onChange={(e) => setForm({ ...form, partner_username: e.target.value.replace(/^@/, "").replace(/\s/g, "") })}
+            placeholder={t("training.partnerTagPlaceholder")}
+            className="w-full bg-zinc-800 text-white rounded-lg pl-7 pr-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
+          />
+        </div>
       </div>
 
       {/* Notes */}
