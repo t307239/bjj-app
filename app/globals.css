@@ -38,6 +38,15 @@ textarea::placeholder {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #374151; border-radius: 9999px; }
 
+/* #⑪: scrollbar-hide utility — hides scrollbar while preserving scroll behaviour */
+.scrollbar-hide {
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;       /* IE 10+ */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;                  /* Chrome / Safari / Edge */
+}
+
 /* #121: Custom focus ring for keyboard accessibility — emerald brand color */
 :focus-visible {
   outline: 2px solid #10B981; /* emerald-500 brand */

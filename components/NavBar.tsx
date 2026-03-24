@@ -7,6 +7,7 @@ import LogoutButton from "./LogoutButton";
 import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 import { getLocalDateString } from "@/lib/timezone";
+import { getLogicalTrainingDate } from "@/lib/logicalDate";
 
 const STRIPE_PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || null;
 const STRIPE_PORTAL_URL = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL || null;
@@ -32,7 +33,8 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       setUserId(user.id);
-      const today = getLocalDateString();
+      // ⑨ Use logical training date: before 4AM counts as previous day
+      const today = getLogicalTrainingDate();
       // 2 queries instead of 3: derive trainedToday from dates array (no separate count query)
       const [{ data: recentLogs }, { data: profile }] = await Promise.all([
         supabase

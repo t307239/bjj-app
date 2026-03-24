@@ -116,6 +116,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
   const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error"; duration?: number; onUndo?: () => void } | null>(null);
   const [pendingDelete, setPendingDelete] = useState<{ id: string; entry: TrainingEntry; timerId: ReturnType<typeof setTimeout> } | null>(null);
+  const [pdfLoading, setPdfLoading] = useState(false);
 
   const [showCelebration, setShowCelebration] = useState(false);
   const today = getLocalDateString();
@@ -308,6 +309,83 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     setLoading(false);
   };
 
+  // ⑫ PDF Export: generates a print-ready popup with full training log table
+  const handlePdfExport = async () => {
+    if (pdfLoading) return;
+    setPdfLoading(true);
+    try {
+      // Fetch all logs (not just current page)
+      const { data: allLogs } = await supabase
+        .from("training_logs")
+        .select("date, duration_min, type, notes, instructor_name")
+        .eq("user_id", userId)
+        .order("date", { ascending: false });
+
+      const logs = allLogs ?? [];
+      const typeLabel = (type: string) =>
+        TRAINING_TYPES.find((tt) => tt.value === type)?.label ?? type;
+      const fmtDuration = (min: number) => {
+        if (min < 60) return `${min}m`;
+        const h = Math.floor(min / 60);
+        const m = min % 60;
+        return m > 0 ? `${h}h${m}m` : `${h}h`;
+      };
+
+      const rows = logs
+        .map((l) => {
+          const rawNotes = l.notes ?? "";
+          const displayNotes = rawNotes.startsWith("__comp__")
+            ? decodeCompNotes(rawNotes).userNotes
+            : rawNotes;
+          return `<tr>
+            <td>${l.date}</td>
+            <td>${typeLabel(l.type)}</td>
+            <td style="text-align:center">${fmtDuration(l.duration_min ?? 0)}</td>
+            <td>${l.instructor_name ?? ""}</td>
+            <td>${displayNotes.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</td>
+          </tr>`;
+        })
+        .join("");
+
+      const totalMin = logs.reduce((s, l) => s + (l.duration_min ?? 0), 0);
+      const totalH = Math.floor(totalMin / 60);
+      const totalM = totalMin % 60;
+      const totalStr = totalM > 0 ? `${totalH}h${totalM}m` : `${totalH}h`;
+
+      const html = `<!DOCTYPE html><html><head><meta charset="utf-8">
+        <title>BJJ Training Log</title>
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 11px; color: #111; margin: 16px; }
+          h1 { font-size: 16px; margin-bottom: 4px; }
+          .meta { color: #555; font-size: 10px; margin-bottom: 12px; }
+          table { width: 100%; border-collapse: collapse; }
+          th { background: #1a1a2e; color: white; padding: 6px 8px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+          td { padding: 5px 8px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+          tr:nth-child(even) td { background: #f9fafb; }
+          .footer { margin-top: 12px; font-size: 10px; color: #555; text-align: right; }
+          @media print { body { margin: 0; } }
+        </style>
+      </head><body>
+        <h1>🥋 BJJ Training Log</h1>
+        <div class="meta">Exported ${new Date().toLocaleDateString()} · ${logs.length} sessions · ${totalStr} total</div>
+        <table>
+          <thead><tr><th>Date</th><th>Type</th><th>Duration</th><th>Instructor</th><th>Notes</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div class="footer">bjj-app.net</div>
+        <script>window.addEventListener("load", () => { window.print(); });<\/script>
+      </body></html>`;
+
+      const win = window.open("", "_blank", "width=900,height=700");
+      if (win) {
+        win.document.write(html);
+        win.document.close();
+      }
+    } finally {
+      setPdfLoading(false);
+    }
+  };
+
   const handleDelete = (id: string) => {
     const removed = entries.find((e) => e.id === id);
     if (!removed) return;
@@ -354,11 +432,15 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
 
   const startEdit = (entry: TrainingEntry) => {
     setEditingId(entry.id);
+    // ⑧ Fix: decode __comp__ prefix so competition notes display cleanly in the edit textarea
+    const displayNotes = entry.type === "competition"
+      ? decodeCompNotes(entry.notes).userNotes
+      : entry.notes;
     setEditForm({
       date: entry.date,
       duration_min: entry.duration_min,
       type: entry.type,
-      notes: entry.notes,
+      notes: displayNotes,
     });
     if (entry.type === "competition") {
       const { comp } = decodeCompNotes(entry.notes);
@@ -534,14 +616,22 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       <div className="flex items-center gap-2 mb-3 print:hidden">
         <CsvExport userId={userId} isPro={isPro} />
         <button
-          onClick={() => window.print()}
+          onClick={handlePdfExport}
+          disabled={pdfLoading}
           title={t("training.printPDF")}
           aria-label={t("training.printPDF")}
-          className="flex items-center gap-1 text-xs text-gray-500 hover:text-zinc-100 bg-zinc-900 border border-white/10 hover:border-white/20 px-2 py-1.5 rounded-lg transition-colors"
+          className="flex items-center gap-1 text-xs text-gray-500 hover:text-zinc-100 bg-zinc-900 border border-white/10 hover:border-white/20 px-2 py-1.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-          </svg>
+          {pdfLoading ? (
+            <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+          ) : (
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+          )}
           PDF
         </button>
       </div>
