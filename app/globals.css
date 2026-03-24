@@ -38,11 +38,17 @@ textarea::placeholder {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #374151; border-radius: 9999px; }
 
-/* #121: Custom focus ring for keyboard accessibility */
+/* #121: Custom focus ring for keyboard accessibility — emerald brand color */
 :focus-visible {
-  outline: 2px solid #3b82f6; /* blue-500 */
+  outline: 2px solid #10B981; /* emerald-500 brand */
   outline-offset: 2px;
   border-radius: 4px;
+}
+/* inputs use border highlight instead of outline — suppress outline for them */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
 }
 
 /* #122: Japanese text line-height */
