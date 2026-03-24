@@ -25,8 +25,10 @@ type Props = {
   setFilterCategory: (v: string) => void;
   sortBy: SortBy;
   setSortBy: (v: SortBy) => void;
-  showCount: number;
-  onLoadMore: () => void;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  onPageChange: (p: number) => void;
   editingId: string | null;
   editForm: TechniqueFormState;
   setEditForm: (f: TechniqueFormState) => void;
@@ -51,8 +53,10 @@ export default function TechniqueLogList({
   setFilterCategory,
   sortBy,
   setSortBy,
-  showCount,
-  onLoadMore,
+  page,
+  pageSize,
+  totalPages,
+  onPageChange,
   editingId,
   editForm,
   setEditForm,
@@ -274,7 +278,7 @@ export default function TechniqueLogList({
       {/* テクニック一覧 */}
       {!initialLoading && filtered.length > 0 && (
         <div className="space-y-3">
-          {filtered.slice(0, showCount).map((technique) => (
+          {filtered.slice((page - 1) * pageSize, page * pageSize).map((technique) => (
             <div
               key={technique.id}
               className="bg-zinc-900 rounded-xl p-4 border border-white/10"
@@ -507,14 +511,27 @@ export default function TechniqueLogList({
               )}
             </div>
           ))}
-          {/* Load More */}
-          {filtered.length > showCount && (
-            <button
-              onClick={onLoadMore}
-              className="w-full py-2.5 text-sm text-gray-400 hover:text-white bg-zinc-900 border border-white/10 hover:border-white/20 rounded-xl transition-colors"
-            >
-              {t("training.loadMore")} ({filtered.length - showCount} more)
-            </button>
+          {/* Prev / Next pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between pt-1">
+              <button
+                onClick={() => onPageChange(page - 1)}
+                disabled={page <= 1}
+                className="px-4 py-2 text-sm text-gray-400 hover:text-white bg-zinc-900 border border-white/10 hover:border-white/20 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                ← {t("training.prev")}
+              </button>
+              <span className="text-xs text-gray-500">
+                {page} / {totalPages}
+              </span>
+              <button
+                onClick={() => onPageChange(page + 1)}
+                disabled={page >= totalPages}
+                className="px-4 py-2 text-sm text-gray-400 hover:text-white bg-zinc-900 border border-white/10 hover:border-white/20 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                {t("training.next")} →
+              </button>
+            </div>
           )}
         </div>
       )}

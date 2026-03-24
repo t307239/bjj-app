@@ -16,7 +16,7 @@ type Props = {
   userId: string;
 };
 
-const TECH_PAGE_SIZE = 10;
+const PAGE_SIZE = 3;
 
 export default function TechniqueLog({ userId }: Props) {
   const { t } = useLocale();
@@ -33,13 +33,13 @@ export default function TechniqueLog({ userId }: Props) {
   const [bulkText, setBulkText] = useState("");
   const [bulkCategory, setBulkCategory] = useState("guard");
   const [bulkMastery, setBulkMastery] = useState(1);
-  // #161: persist search query and pagination in URL params
+  // persist search query and page in URL params
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") ?? "");
   const [filterCategory, setFilterCategory] = useState("all");
   const [sortBy, setSortBy] = useState<"newest" | "mastery_desc" | "mastery_asc" | "name">("newest");
-  const [showCount, setShowCount] = useState(() => {
-    const s = parseInt(searchParams.get("show") ?? "3", 10);
-    return isNaN(s) || s < 3 ? 3 : s;
+  const [page, setPage] = useState(() => {
+    const p = parseInt(searchParams.get("page") ?? "1", 10);
+    return isNaN(p) || p < 1 ? 1 : p;
   });
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -61,25 +61,24 @@ export default function TechniqueLog({ userId }: Props) {
 
   const supabase = createClient();
 
-  // ── URL param helpers (#161) ───────────────────────────────────────────────
-  const updateUrlParams = (q: string, show: number) => {
+  // ── URL param helpers ──────────────────────────────────────────────────────
+  const updateUrlParams = (q: string, p: number) => {
     const params = new URLSearchParams();
     if (q) params.set("q", q);
-    if (show > 3) params.set("show", String(show));
+    if (p > 1) params.set("page", String(p));
     const qs = params.toString();
     router.replace(`${pathname}${qs ? "?" + qs : ""}`, { scroll: false });
   };
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
-    setShowCount(3);
-    updateUrlParams(value, 3);
+    setPage(1);
+    updateUrlParams(value, 1);
   };
 
-  const handleLoadMore = () => {
-    const next = showCount + TECH_PAGE_SIZE;
-    setShowCount(next);
-    updateUrlParams(searchQuery, next);
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    updateUrlParams(searchQuery, newPage);
   };
 
   // ── Data loading ───────────────────────────────────────────────────────────
@@ -226,6 +225,10 @@ export default function TechniqueLog({ userId }: Props) {
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     });
 
+  // ── Pagination ─────────────────────────────────────────────────────────────
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(page, totalPages);
+
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div>
@@ -259,11 +262,13 @@ export default function TechniqueLog({ userId }: Props) {
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
         filterCategory={filterCategory}
-        setFilterCategory={setFilterCategory}
+        setFilterCategory={(v) => { setFilterCategory(v); setPage(1); updateUrlParams(searchQuery, 1); }}
         sortBy={sortBy}
-        setSortBy={setSortBy}
-        showCount={showCount}
-        onLoadMore={handleLoadMore}
+        setSortBy={(v) => { setSortBy(v); setPage(1); updateUrlParams(searchQuery, 1); }}
+        page={safePage}
+        pageSize={PAGE_SIZE}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
         editingId={editingId}
         editForm={editForm}
         setEditForm={setEditForm}
