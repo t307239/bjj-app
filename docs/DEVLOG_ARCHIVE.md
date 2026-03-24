@@ -2,6 +2,14 @@
 
 ---
 
+- Day4fo_91 (2026/03/24): **Dashboard UX 4点改善**
+  - `GoalTracker` 隔離 — `hasFirstLog` falseの新規ユーザーに非表示 ✅
+  - `StreakProtect`/`StreakFreeze` 条件強化 — `streak >= 1` → `streak >= 3` ✅
+  - Recovery トレーニングタイプ追加 — `lib/trainingTypes.ts` + `messages/en.json` ✅
+  - `TimeGreeting` 新規コンポーネント — 時間帯別グリーティング（morning/afternoon/evening/night） ✅
+  - ベルト昇格コンフェッティ確認 — `BeltPromotionCelebration.tsx` + `ProfileForm.tsx` 実装済み ✅
+  - バグスイープ: ✅ TOTAL ISSUES: 0 / TypeScript 0エラー ✅
+
 - Day4fo_90 (2026/03/24): **Dashboard cleanup — ノイズコンポーネント6点削除**
   - `app/dashboard/page.tsx` — `ProStatusBanner` / `WeeklyPaceBanner` / `DailyRecommend` / `DailyWikiTip` / `WikiQuickLinks` / `TrainingCalendar` 削除 ✅
   - Section 3 を `gymCurriculum` 条件付きに変更（GymCurriculumCard のみ残存） ✅
