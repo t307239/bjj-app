@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
@@ -35,29 +34,6 @@ import { serverT as t } from "@/lib/i18n";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
-const getCachedProfile = cache(async (userId: string) => {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("profiles")
-    .select(
-      "belt, stripe, start_date, is_pro, gym_name, weekly_goal, subscription_status, gym_id, gym_kick_notified, share_data_with_gym"
-    )
-    .eq("id", userId)
-    .single();
-  return data as {
-    belt: string;
-    stripe: number;
-    start_date: string | null;
-    is_pro: boolean;
-    gym_name: string | null;
-    weekly_goal?: number | null;
-    subscription_status?: string | null;
-    gym_id?: string | null;
-    gym_kick_notified?: boolean | null;
-    share_data_with_gym?: boolean | null;
-  } | null;
-});
-
 export async function generateMetadata(): Promise<Metadata> {
   const supabase = await createClient();
   const {
@@ -65,7 +41,12 @@ export async function generateMetadata(): Promise<Metadata> {
   } = await supabase.auth.getUser();
   if (!user) return { title: "Dashboard" };
 
-  const profile = await getCachedProfile(user.id);
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("belt, stripe, start_date")
+    .eq("id", user.id)
+    .single();
+
   const [{ count: totalCount }, { data: recentLogsForStreak }] =
     await Promise.all([
       supabase
@@ -181,7 +162,13 @@ export default async function DashboardPage({
   const prevYear = month === 1 ? year - 1 : year;
   const firstDayOfPrevMonth = `${prevYear}-${String(prevMonth).padStart(2, "0")}-01`;
 
-  const profileData = await getCachedProfile(user.id);
+  const { data: profileData } = await supabase
+    .from("profiles")
+    .select(
+      "belt, stripe, start_date, is_pro, gym_name, weekly_goal, subscription_status, gym_id, gym_kick_notified, share_data_with_gym"
+    )
+    .eq("id", user.id)
+    .single();
 
   const [
     { count: monthCount },
