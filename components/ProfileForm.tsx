@@ -450,7 +450,6 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
             <div key={s} className={"w-3 h-3 rounded-full border-2 " + (s <= profile.stripe ? "bg-white border-white" : "bg-transparent border-white/10")} />
           ))}
         </div>
-        <span className="text-gray-400 text-xs">{t("profile.stripeCount", { n: profile.stripe })}</span>
       </div>
       <div className="space-y-2">
         {profile.gym && (
@@ -581,7 +580,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
               ))}
             </div>
           </div>
-          <p className="text-gray-400 text-xs">{t("profile.stripeCount", { n: form.stripe })} · {currentBelt?.label}</p>
+          <p className="text-gray-400 text-xs">{currentBelt?.label}</p>
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-3">{t("profile.belt")}</label>

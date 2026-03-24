@@ -113,47 +113,40 @@ export default function WeeklyStrip({ userId }: Props) {
   const trainedThisWeek = weekDays.filter((d) => trainedDates.has(d.dateStr)).length;
   const totalPastDays = weekDays.filter((d) => d.isPast).length;
 
+  // Count delta vs last week (single comparison line — minutes delta removed for clarity)
+  const countDelta = lastWeekCount !== null && lastWeekCount > 0
+    ? trainedThisWeek - lastWeekCount
+    : null;
+
   return (
     <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl px-4 py-3 border border-white/10 mb-4 shadow-lg shadow-black/40">
-      <div className="flex items-center justify-end mb-2">
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500">
+      <div className="flex items-center justify-between mb-2">
+        {/* Left: day counter + time */}
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs font-medium text-zinc-300 tabular-nums">
             {trainedThisWeek}/{totalPastDays}d
           </span>
           {weekTotalMins > 0 && (
-            <span className="text-xs text-gray-500">· {fmtMins(weekTotalMins)}</span>
-          )}
-          {lastWeekCount !== null && lastWeekCount > 0 && (
-            <span className={`text-xs font-medium ${
-              trainedThisWeek > lastWeekCount
-                ? "text-green-400"
-                : trainedThisWeek < lastWeekCount
-                ? "text-red-400"
-                : "text-gray-500"
-            }`}>
-              {trainedThisWeek > lastWeekCount
-                ? `▲${trainedThisWeek - lastWeekCount}`
-                : trainedThisWeek < lastWeekCount
-                ? `▼${lastWeekCount - trainedThisWeek}`
-                : t("weeklyStrip.same")} {t("weeklyStrip.vsLastWeek")}
-            </span>
-          )}
-          {lastWeekMins !== null && lastWeekMins > 0 && weekTotalMins > 0 && (
-            <span className={`text-xs font-medium ${
-              weekTotalMins > lastWeekMins
-                ? "text-green-400"
-                : weekTotalMins < lastWeekMins
-                ? "text-red-400"
-                : "text-gray-500"
-            }`}>
-              {weekTotalMins > lastWeekMins
-                ? `▲${fmtMins(weekTotalMins - lastWeekMins)}`
-                : weekTotalMins < lastWeekMins
-                ? `▼${fmtMins(lastWeekMins - weekTotalMins)}`
-                : t("weeklyStrip.same")}
-            </span>
+            <span className="text-xs text-zinc-500">· {fmtMins(weekTotalMins)}</span>
           )}
         </div>
+        {/* Right: vs-last-week delta (count only, clear contrast) */}
+        {countDelta !== null && (
+          <span className={`text-xs font-semibold tabular-nums ${
+            countDelta > 0
+              ? "text-emerald-400"
+              : countDelta < 0
+              ? "text-red-300"
+              : "text-zinc-500"
+          }`}>
+            {countDelta > 0
+              ? `▲${countDelta}`
+              : countDelta < 0
+              ? `▼${Math.abs(countDelta)}`
+              : t("weeklyStrip.same")}{" "}
+            <span className="font-normal text-zinc-500">{t("weeklyStrip.vsLastWeek")}</span>
+          </span>
+        )}
       </div>
       <div className="flex gap-1.5">
         {weekDays.map((day) => {

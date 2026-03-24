@@ -135,8 +135,8 @@ export default async function ProfilePage() {
                 className="w-16 h-16 rounded-2xl border border-white/15 object-cover flex-shrink-0"
               />
             ) : (
-              <div className="w-16 h-16 rounded-2xl bg-zinc-800 border border-white/10 flex items-center justify-center flex-shrink-0">
-                <span className="text-2xl font-black text-white">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-500 to-emerald-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-violet-900/30">
+                <span className="text-2xl font-bold text-white select-none">
                   {displayName[0]?.toUpperCase() ?? "?"}
                 </span>
               </div>

@@ -582,13 +582,13 @@ export default async function DashboardPage({
             )}
           </Link>
 
-          {/* Avg session (only if data exists) */}
+          {/* Avg session — compact col-span-1 (no dead space) */}
           {avgSessionMin > 0 && (
-            <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-white/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200">
+            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-white/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200">
               <span className="text-xs font-semibold text-zinc-500 tracking-widest block mb-1">
                 {t("dashboard.bentoAvgSession")}
               </span>
-              <div className="flex items-end gap-1.5">
+              <div className="flex items-end gap-1 mt-1">
                 <span className="text-3xl font-black leading-none tabular-nums text-zinc-300">
                   {avgSessionMin}
                 </span>
