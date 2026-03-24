@@ -343,7 +343,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                     </div>
                   )}
                   <span
-                    className={`leading-none transition-opacity ${range === 12 ? "text-[8px]" : "text-xs"} ${
+                    className={`leading-none transition-opacity ${range === 12 ? "text-[10px]" : "text-xs"} ${
                       val > 0 && (range === 6 || isCurrentMonth) ? "opacity-100" : "opacity-0"
                     } ${isCurrentMonth ? "text-[#10B981]" : "text-gray-500"}`}
                   >
@@ -380,7 +380,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                     />
                   )}
                   <span
-                    className={`leading-none ${range === 12 ? "text-[8px]" : "text-xs"} ${
+                    className={`leading-none ${range === 12 ? "text-[10px]" : "text-xs"} ${
                       isSelected
                         ? "text-yellow-400 font-semibold"
                         : isCurrentMonth
