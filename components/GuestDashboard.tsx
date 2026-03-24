@@ -259,7 +259,7 @@ export default function GuestDashboard() {
                   </div>
                   <button
                     onClick={() => handleDelete(log.id)}
-                    className="text-gray-500 hover:text-red-400 ml-2 flex-shrink-0 text-lg leading-none w-8 h-8 flex items-center justify-center rounded"
+                    className="text-gray-500 hover:text-red-400 ml-2 flex-shrink-0 text-lg leading-none w-11 h-11 flex items-center justify-center rounded"
                     aria-label={t("training.delete")}
                   >
                     ×

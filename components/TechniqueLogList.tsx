@@ -395,7 +395,7 @@ export default function TechniqueLogList({
                     })()}
                     <button
                       onClick={() => onStartEdit(technique)}
-                      className="text-gray-500 hover:text-[#10B981] transition-colors p-2"
+                      className="text-gray-500 hover:text-[#10B981] transition-colors p-2 flex items-center justify-center min-w-[44px] min-h-[44px]"
                       title={t("techniques.edit")}
                       aria-label={t("techniques.edit")}
                     >
@@ -435,7 +435,7 @@ export default function TechniqueLogList({
                       <button
                         onClick={() => setConfirmDeleteId(technique.id)}
                         disabled={deletingId === technique.id}
-                        className="text-gray-500 hover:text-red-400 transition-colors p-2 disabled:opacity-50"
+                        className="text-gray-500 hover:text-red-400 transition-colors p-2 flex items-center justify-center min-w-[44px] min-h-[44px] disabled:opacity-50"
                         title={t("techniques.delete")}
                         aria-label={t("techniques.delete")}
                       >
