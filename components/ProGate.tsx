@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useLocale } from "@/lib/i18n";
 
-const STRIPE_PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
+const STRIPE_MONTHLY_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
+const STRIPE_ANNUAL_LINK = process.env.NEXT_PUBLIC_STRIPE_PRO_ANNUAL_LINK ?? "#";
 
 interface ProGateProps {
   isPro: boolean;
@@ -23,15 +25,21 @@ export default function ProGate({
   userId,
 }: ProGateProps) {
   const { t } = useLocale();
+  const [isAnnual, setIsAnnual] = useState(false);
   const featureText = feature || t("pro.defaultFeature");
+
   if (isPro) {
     return <>{children}</>;
   }
 
-  // Build payment link with userId metadata so webhook can identify the user
-  const paymentUrl = userId
-    ? `${STRIPE_PAYMENT_LINK}?client_reference_id=${userId}`
-    : STRIPE_PAYMENT_LINK;
+  // Build payment links with userId metadata so webhook can identify the user
+  const monthlyUrl = userId
+    ? `${STRIPE_MONTHLY_LINK}?client_reference_id=${userId}`
+    : STRIPE_MONTHLY_LINK;
+  const annualUrl = userId
+    ? `${STRIPE_ANNUAL_LINK}?client_reference_id=${userId}`
+    : STRIPE_ANNUAL_LINK;
+  const paymentUrl = isAnnual ? annualUrl : monthlyUrl;
 
   return (
     <div className="relative">
@@ -45,7 +53,41 @@ export default function ProGate({
         <div className="text-center px-4">
           <div className="text-2xl mb-2">🔒</div>
           <p className="text-sm text-gray-400 mb-1">{featureText}</p>
-          <p className="text-xs text-gray-500 mb-4">{t("pro.available")}</p>
+          <p className="text-xs text-gray-500 mb-3">{t("pro.available")}</p>
+
+          {/* Monthly / Annual toggle */}
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <span className={`text-xs ${!isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>Monthly</span>
+            <button
+              onClick={() => setIsAnnual((v) => !v)}
+              aria-label="Toggle billing period"
+              className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${
+                isAnnual ? "bg-emerald-600" : "bg-zinc-600"
+              }`}
+            >
+              <span
+                className={`inline-block h-3 w-3 transform rounded-full bg-white shadow transition-transform ${
+                  isAnnual ? "translate-x-5" : "translate-x-1"
+                }`}
+              />
+            </button>
+            <span className={`text-xs ${isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>Annual</span>
+            {isAnnual && (
+              <span className="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                Save 16%
+              </span>
+            )}
+          </div>
+
+          {/* Price display */}
+          <div className="mb-3">
+            {isAnnual ? (
+              <p className="text-white font-bold text-sm">$49.99 / year <span className="text-emerald-400 text-xs">≈ $4.17/mo</span></p>
+            ) : (
+              <p className="text-white font-bold text-sm">$4.99 / month</p>
+            )}
+          </div>
+
           <a
             href={paymentUrl}
             target="_blank"

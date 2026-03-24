@@ -20,7 +20,6 @@ type MonthData = {
 type Props = {
   userId: string;
   isPro?: boolean;
-  onLogRoll?: () => void;
 };
 
 // ローカル日付文字列ヘルパー（UTC変換しない）
@@ -29,7 +28,7 @@ function toLocalStr(d: Date): string {
 }
 
 // 過去84日（12週）のヒートマップ + 月別棒グラフ
-export default function TrainingChart({ userId, isPro = false, onLogRoll }: Props) {
+export default function TrainingChart({ userId, isPro = false }: Props) {
   const { t } = useLocale();
   const [data, setData] = useState<DayData[]>([]);
   const [monthData, setMonthData] = useState<MonthData[]>([]);
@@ -193,14 +192,12 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
             {t("chart.emptyHeading")}
           </p>
           <p className="text-gray-400 text-xs text-center">{t("chart.emptySubtitle")}</p>
-          {onLogRoll && (
-            <button
-              onClick={onLogRoll}
+          <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-xs font-semibold px-5 py-2 rounded-full transition-all shadow-lg shadow-[#10B981]/25"
             >
               {t("chart.emptyButton")}
             </button>
-          )}
         </div>
       </div>
     );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import PricingSection from "@/components/PricingSection";
 
 export const metadata: Metadata = {
   title: "BJJ App - Brazilian Jiu-Jitsu Training Tracker | 練習トラッカー",
@@ -596,58 +597,8 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Pricing — Fix 1: Coming soon → Upgrade to Pro | Fix 11: CSV in Free | Fix 16: anchoring | Fix 20: Skill Map */}
-      <section className="px-4 py-16 bg-zinc-900/50">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-3 text-white">Simple Pricing</h2>
-          <p className="text-gray-500 text-center text-sm mb-10">All core features are free forever.</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Free */}
-            <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10">
-              <div className="text-lg font-bold mb-1">Free</div>
-              <div className="text-3xl font-bold text-white mb-1">$0</div>
-              <div className="text-gray-500 text-xs mb-6">Free forever</div>
-              <ul className="space-y-3 text-sm text-gray-400">
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Training log (unlimited)</li>
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Technique journal</li>
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Goal tracker</li>
-                {/* Fix 16: Calendar & graphs → 30-day history & graphs */}
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> 30-day history &amp; graphs</li>
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Day streak tracking</li>
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Competition records</li>
-                {/* Fix 11: CSV export moved to Free */}
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> CSV export</li>
-                {/* Fix 20: Basic Skill Map in Free */}
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Basic Skill Map (up to 10 nodes)</li>
-              </ul>
-              <Link href="/login" className="mt-8 block text-center bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-3 rounded-full transition-all">
-                Get Started Free
-              </Link>
-            </div>
-            {/* Pro — Fix 1: remove Coming soon badge */}
-            <div className="bg-zinc-900 rounded-2xl p-8 border border-yellow-500/50 relative">
-              {/* Fix 1: "Most Popular" instead of "Coming soon" */}
-              <div className="absolute -top-3 right-6 bg-yellow-500 text-black text-xs px-3 py-1 rounded-full font-bold">Most Popular</div>
-              <div className="text-lg font-bold mb-1">Pro</div>
-              <div className="text-3xl font-bold text-white mb-1">$4.99<span className="text-sm font-normal text-gray-500">/mo (tax incl.)</span></div>
-              <div className="text-gray-500 text-xs mb-6">Billed monthly</div>
-              <ul className="space-y-3 text-sm text-gray-400">
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Everything in Free</li>
-                {/* Fix 20: Unlimited Skill Map at top of Pro */}
-                <li className="flex items-center gap-2"><span className="text-yellow-400">★</span> Unlimited Skill Map</li>
-                {/* Fix 11: CSV removed from Pro */}
-                <li className="flex items-center gap-2"><span className="text-yellow-400">★</span> 12-month graphs</li>
-                <li className="flex items-center gap-2"><span className="text-yellow-400">★</span> Streak freeze</li>
-                <li className="flex items-center gap-2"><span className="text-yellow-400">★</span> Priority support</li>
-              </ul>
-              {/* Fix 1: clickable Upgrade to Pro button */}
-              <Link href="/login" className="mt-8 block text-center bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 rounded-full transition-all">
-                Upgrade to Pro
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Pricing — Annual/Monthly toggle via PricingSection client component */}
+      <PricingSection userId={null} />
 
       {/* FAQ — Fix 17: brighter question text | Fix 19: remove "Offline support is also planned" */}
       <section className="px-4 py-16 max-w-3xl mx-auto w-full">

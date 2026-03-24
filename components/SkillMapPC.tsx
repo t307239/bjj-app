@@ -46,6 +46,7 @@ type Props = {
   userId: string;
   isPro: boolean;
   stripePaymentLink: string | null;
+  stripeAnnualLink: string | null;
 };
 
 type DragState = {
@@ -113,21 +114,60 @@ function edgePath(src: TechniqueNode, tgt: TechniqueNode): string {
 function ProModal({
   onClose,
   stripePaymentLink,
+  stripeAnnualLink,
   t,
 }: {
   onClose: () => void;
   stripePaymentLink: string | null;
+  stripeAnnualLink: string | null;
   t: (k: string) => string;
 }) {
+  const [isAnnual, setIsAnnual] = useState(false);
+  const paymentUrl = isAnnual ? stripeAnnualLink : stripePaymentLink;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
       <div className="bg-zinc-900 border border-white/10 rounded-2xl p-7 max-w-sm w-full text-center shadow-2xl">
         <div className="text-4xl mb-3">🥋</div>
         <h3 className="text-lg font-bold text-white mb-2">{t("skillmap.proModalTitlePC")}</h3>
-        <p className="text-sm text-gray-400 mb-6">{t("skillmap.proModalBodyPC")}</p>
-        {stripePaymentLink ? (
+        <p className="text-sm text-gray-400 mb-4">{t("skillmap.proModalBodyPC")}</p>
+
+        {/* Monthly / Annual toggle */}
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <span className={`text-xs ${!isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>Monthly</span>
+          <button
+            onClick={() => setIsAnnual((v) => !v)}
+            aria-label="Toggle billing period"
+            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${
+              isAnnual ? "bg-emerald-600" : "bg-zinc-600"
+            }`}
+          >
+            <span
+              className={`inline-block h-3 w-3 transform rounded-full bg-white shadow transition-transform ${
+                isAnnual ? "translate-x-5" : "translate-x-1"
+              }`}
+            />
+          </button>
+          <span className={`text-xs ${isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>Annual</span>
+          {isAnnual && (
+            <span className="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+              Save 16%
+            </span>
+          )}
+        </div>
+
+        {/* Price display */}
+        <div className="mb-4">
+          {isAnnual ? (
+            <p className="text-white font-bold text-sm">$49.99 / year <span className="text-emerald-400 text-xs">≈ $4.17/mo</span></p>
+          ) : (
+            <p className="text-white font-bold text-sm">$4.99 / month</p>
+          )}
+        </div>
+
+        {paymentUrl ? (
           <a
-            href={stripePaymentLink}
+            href={paymentUrl}
             className="block w-full bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black font-semibold py-3 rounded-xl mb-3 transition-all"
             aria-label={t("skillmap.upgradeAriaLabel")}
           >
@@ -295,7 +335,7 @@ function EdgeLabelInput({
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
-export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) {
+export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnnualLink }: Props) {
   const { t } = useLocale();
   // Stable supabase client ref
   const supabaseRef = useRef(createClient());
@@ -584,7 +624,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
           </button>
         )}
         {showProModal && (
-          <ProModal onClose={() => { setShowProModal(false); setGhostNode(null); }} stripePaymentLink={stripePaymentLink} t={t} />
+          <ProModal onClose={() => { setShowProModal(false); setGhostNode(null); }} stripePaymentLink={stripePaymentLink} stripeAnnualLink={stripeAnnualLink} t={t} />
         )}
       </div>
     );
@@ -842,6 +882,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
         <ProModal
           onClose={() => { setShowProModal(false); setGhostNode(null); }}
           stripePaymentLink={stripePaymentLink}
+          stripeAnnualLink={stripeAnnualLink}
           t={t}
         />
       )}

@@ -64,6 +64,7 @@
     "saved": "練習を記録しました！",
     "saveFailed": "保存に失敗しました",
     "deleted": "記録を削除しました",
+    "undo": "元に戻す",
     "deletedUndo": "削除しました — 元に戻すには「Undo」をタップ",
     "deleteFailed": "削除に失敗しました",
     "updated": "記録を更新しました",

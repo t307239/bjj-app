@@ -679,9 +679,6 @@ export default async function DashboardPage({
           <TrainingChart
             userId={user.id}
             isPro={isPro}
-            onLogRoll={() =>
-              window.scrollTo({ top: 0, behavior: "smooth" })
-            }
           />
         </CollapsibleSection>
 

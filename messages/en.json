@@ -135,6 +135,7 @@
     "saved": "Session logged!",
     "saveFailed": "Failed to save",
     "deleted": "Session deleted",
+    "undo": "Undo",
     "deletedUndo": "Session deleted — tap Undo to restore",
     "deleteFailed": "Failed to delete",
     "updated": "Session updated",

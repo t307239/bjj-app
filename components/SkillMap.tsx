@@ -14,9 +14,10 @@ type Props = {
   userId: string;
   isPro: boolean;
   stripePaymentLink: string | null;
+  stripeAnnualLink: string | null;
 };
 
-export default function SkillMap({ userId, isPro, stripePaymentLink }: Props) {
+export default function SkillMap({ userId, isPro, stripePaymentLink, stripeAnnualLink }: Props) {
   const [isTouchDevice, setIsTouchDevice] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function SkillMap({ userId, isPro, stripePaymentLink }: Props) {
         userId={userId}
         isPro={isPro}
         stripePaymentLink={stripePaymentLink}
+        stripeAnnualLink={stripeAnnualLink}
       />
     );
   }
@@ -45,6 +47,7 @@ export default function SkillMap({ userId, isPro, stripePaymentLink }: Props) {
       userId={userId}
       isPro={isPro}
       stripePaymentLink={stripePaymentLink}
+      stripeAnnualLink={stripeAnnualLink}
     />
   );
 }

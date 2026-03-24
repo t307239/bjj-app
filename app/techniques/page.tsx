@@ -83,6 +83,7 @@ export default async function TechniquesPage() {
 
   const isPro = profile?.is_pro ?? false;
   const stripePaymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || null;
+  const stripeAnnualLink = process.env.NEXT_PUBLIC_STRIPE_PRO_ANNUAL_LINK || null;
 
   // Compute mastery breakdown from server data
   const totalTechniques = (techniques ?? []).length;
@@ -196,6 +197,7 @@ export default async function TechniquesPage() {
             userId={user.id}
             isPro={isPro}
             stripePaymentLink={stripePaymentLink}
+            stripeAnnualLink={stripeAnnualLink}
           />
         </section>
 
