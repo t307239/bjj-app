@@ -103,7 +103,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
   let metaStreak = 0;
   const metaToday = getLocalDateString();
-  const trainedToday = recentLogsForStreak?.some((l: { date: string }) => l.date === metaToday) ?? false;
   if (recentLogsForStreak && recentLogsForStreak.length > 0) {
     const dates = [
       ...new Set(recentLogsForStreak.map((l: { date: string }) => l.date)),
@@ -346,12 +345,8 @@ export default async function DashboardPage({
         />
 
         {/* ═══════════════════════════════════════════
-            HERO STRIP — greeting + key stats in one row
+            HERO CARD — greeting + avatar (row1) + Log CTA (row2, 未記録時のみ)
             ═══════════════════════════════════════════ */}
-        {/* ═══════════════════════════════════════════
-            HERO CARD — greeting + Log CTA in one box
-            ═══════════════════════════════════════════ */}
-        {/* HERO CARD: greeting + avatar (row1) + Log CTA (row2, 未記録時のみ) */}
         <div className="bg-zinc-900/50 border border-white/10 rounded-2xl px-4 py-4 mb-5">
           {/* Row 1: identity + avatar/belt pill */}
           <div className="flex items-center justify-between gap-3">
