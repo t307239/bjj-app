@@ -23,6 +23,7 @@
   },
   "training": {
     "title": "練習記録",
+    "logSession": "ロールを記録",
     "add": "+ 記録を追加",
     "save": "保存",
     "saving": "保存中...",
