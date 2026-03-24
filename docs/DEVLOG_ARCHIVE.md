@@ -2,6 +2,22 @@
 
 ---
 
+- Day4fo_99 (2026/03/24): **BACKLOG B-05〜B-07/B-09〜B-10 実装完了（全優先度1・2タスク完了）**
+  - B-05: 強制Aha!モーメント — auth callback `?welcome=1` + TrainingLog `initialOpen` prop ✅
+  - B-06: SNSシェアボタン — Canvas API で 9:16 Story 画像生成 + Web Share API / PNG DL fallback ✅
+  - B-07: Skeleton Loaders — `components/ui/Skeleton.tsx` 新規 + TrainingChart/TrainingBarChart/PersonalBests 適用 ✅
+  - B-09: Tag a Partner — `partner_username` フィールド + TrainingLogList 表示 + i18n ✅
+  - B-10: Swipe Delete/Edit — `SwipeableCard.tsx` ネイティブタッチ実装（64px threshold）✅
+  - Fix: `TrainingEntry` 型に `instructor_name?` + `partner_username?` 追加
+  - TypeScript: 0 エラー ✅
+  - バグスイープ結果: ✅ TOTAL ISSUES: 0
+  - ⚠️ Supabase マイグレーション必要（B-09）:
+    `ALTER TABLE training_logs ADD COLUMN partner_username TEXT DEFAULT NULL;`
+  - 次の優先タスク:
+    1. B-11〜B-15: 優先度3（条件付き — MAU/契約数による）
+    2. B-20: Playwright E2E（ユーザーのMacで実行）
+    3. B-21/B-22: ローンチ施策
+
 - Day4fo_98 (2026/03/24): **BACKLOG B-01〜B-04/B-08/B-16〜B-19 実装完了**
   - docs/BACKLOG.md 新規作成（22項目 優先度付き実装案）✅
   - B-01: `TrainingLogForm.tsx` Gi/No-Gi 巨大トグル + 4型サブグリッド ✅
