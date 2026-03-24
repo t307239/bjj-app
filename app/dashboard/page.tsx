@@ -286,6 +286,8 @@ export default async function DashboardPage({
   const hasFirstLog = (totalCount ?? 0) > 0;
   const hasGoal = (weeklyGoal ?? 0) > 0;
   const hasTechnique = (techniqueCount ?? 0) > 0;
+  // Onboarding complete = all 3 steps done → show InsightsBanner, hide checklist
+  const isOnboardingComplete = hasFirstLog && hasGoal && hasTechnique;
 
   let monthsAtBelt = 0;
   if (profileData?.start_date) {
@@ -319,9 +321,6 @@ export default async function DashboardPage({
       }
     }
   }
-
-  // Determine the single highest-priority CTA to show (avoid CTA overload)
-  const showCTASection = showKickBanner || !isPro || streak >= 3;
 
   return (
     <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
@@ -644,10 +643,10 @@ export default async function DashboardPage({
         )}
 
         {/* ═══════════════════════════════════════════
-            SECTION 6 — SINGLE PRIORITY CTA
-            (KickBanner > StreakNudge > ProUpsell — never all 3)
+            SECTION 6 — STREAK NUDGE (streak ≥ 3 only)
+            ProUpgradeBanner removed — no upsell on home screen
             ═══════════════════════════════════════════ */}
-        {showCTASection && (streak >= 3) && (
+        {streak >= 3 && (
           <section className="space-y-3 mb-7">
             <StreakProtect userId={user.id} streak={streak} />
             <StreakFreeze userId={user.id} streak={streak} />
@@ -676,10 +675,14 @@ export default async function DashboardPage({
 
         {/* ═══════════════════════════════════════════
             SECTION 8 — INSIGHTS
+            Exclusive with OnboardingChecklist:
+            shown only after all 3 onboarding steps done
             ═══════════════════════════════════════════ */}
-        <section className="mt-7 mb-4">
-          <InsightsBanner userId={user.id} />
-        </section>
+        {isOnboardingComplete && (
+          <section className="mt-7 mb-4">
+            <InsightsBanner userId={user.id} />
+          </section>
+        )}
       </main>
     </div>
   );
