@@ -2,6 +2,13 @@
 
 ---
 
+- Day 5_04 (2026/03/24): **UX #24 完全制覇 — 全ポストログイン画面コントラスト一括修正（31ファイル・82箇所）**
+  - `text-gray-600`/`text-zinc-600`/`text-gray-700` → `text-gray-500`/`text-zinc-500` への全面置換 ✅
+  - 対象: GoalTracker, GoalTrackerGrid, TrainingTypeChart, TrainingBarChart, TrainingChart, TrainingCalendar, TrainingLogForm, ProfileForm, TechniqueLogList, GymWaitlistForm, AffiliateSection, StreakFreeze, PersonalBests, TrainingLog（section labels）, DailyQuote, ProfileTabs, GymRegistrationForm, GymRanking, CompetitionStats, ProGate, SkillMapPC/Mobile, GymDashboard, GuestDashboard, TrainingLogStats, DailyWikiTip, app/dashboard/page, app/techniques/page
+  - 意図的なde-emphasizedテキスト（未来日付・チャート軸ラベル）はvisual hierarchy保持のため一段階のみ引き上げ
+  - TypeScript: 0 エラー ✅
+  - バグスイープ結果: ✅ TOTAL ISSUES: 0
+
 - Day 5_03 (2026/03/24): **UX polish — CLS skeleton, i18n hardcoded strings, contrast fixes**
   - WeeklyStrip: `if (loading) return null` → pulse skeleton (height 88px) to prevent CLS (UX #23) ✅
   - WeeklyStrip: `text-gray-600` → `text-gray-500` on session counter (UX #24) ✅
