@@ -78,6 +78,7 @@ export default function PersonalBests({ userId }: Props) {
   const { t } = useLocale();
   const [bests, setBests] = useState<Bests | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -216,9 +217,12 @@ export default function PersonalBests({ userId }: Props) {
   };
 
   const handleShare = () => {
+    if (isCopied) return;
     const text = buildShareText();
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
     window.open(url, "_blank", "noopener,noreferrer");
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
   };
 
   return (
@@ -267,12 +271,23 @@ export default function PersonalBests({ userId }: Props) {
         </div>
         <button
           onClick={handleShare}
-          className="flex items-center gap-1 text-[11px] text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/10 px-2.5 py-1 rounded-lg transition-colors"
+          disabled={isCopied}
+          className={`flex items-center gap-1 text-[11px] bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg transition-colors ${
+            isCopied
+              ? "text-green-400 border-green-500/30 cursor-default"
+              : "text-gray-400 hover:text-white hover:bg-white/10"
+          }`}
         >
-          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-          </svg>
-          {t("stats.share")}
+          {isCopied ? (
+            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          ) : (
+            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+          )}
+          {isCopied ? t("stats.shared") : t("stats.share")}
         </button>
       </div>
       <div className="grid grid-cols-2 gap-2">

@@ -4,6 +4,7 @@
     "techniques": "テクニック",
     "profile": "プロフィール",
     "logout": "ログアウト",
+    "loggingOut": "ログアウト中…",
     "streakBadge": "🔥 {n}日連続練習中",
     "streakDays": "{n}日"
   },
@@ -285,6 +286,7 @@
     "bestWeek": "最高の週",
     "dayStreak": "日間連続",
     "share": "シェア",
+    "shared": "シェア済み!",
     "longestSession": "最長セッション",
     "bestDayLabel": "最も練習した曜日",
     "dayOfWeek": "曜日",

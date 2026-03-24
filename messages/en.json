@@ -4,6 +4,7 @@
     "techniques": "Techniques",
     "profile": "Profile",
     "logout": "Logout",
+    "loggingOut": "Logging out…",
     "streakBadge": "🔥 {n} days straight",
     "streakDays": "{n} days"
   },
@@ -421,6 +422,7 @@
     "bestWeek": "Best Week",
     "dayStreak": " days straight",
     "share": "Share",
+    "shared": "Shared!",
     "longestSession": "Longest Session",
     "bestDayLabel": "Most trained day",
     "dayOfWeek": " day",
