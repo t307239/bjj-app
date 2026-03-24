@@ -2,6 +2,12 @@
 
 ---
 
+- Day4fo_96 (2026/03/24): **Cloudflare DNS 更新完了 — bjj-app.net A レコード化**
+  - Vercel "Configure Automatically" → Cloudflare Domain Connect OAuth フロー実行
+  - 旧: `CNAME bjj-app.net → cname.vercel-dns.com` 削除
+  - 新: `A bjj-app.net → 216.198.79.1` + `TXT _vercel` 追加
+  - Vercel Domains: "DNS Change Recommended" → **"Valid Configuration"** ✅
+
 - Day4fo_95 (2026/03/24): **blue→emerald 横展開修正（6箇所）**
   - TrainingLogList: Load Moreボタン blue→emerald ✅ / editボタン hover blue→emerald ✅
   - InsightsBanner: consistencyMsg + wikiリンク blue→emerald ✅
