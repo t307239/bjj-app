@@ -2,6 +2,13 @@
 
 ---
 
+- Day4fo_95 (2026/03/24): **blue→emerald 横展開修正（6箇所）**
+  - TrainingLogList: Load Moreボタン blue→emerald ✅ / editボタン hover blue→emerald ✅
+  - InsightsBanner: consistencyMsg + wikiリンク blue→emerald ✅
+  - GymDashboard: totalSessions統計値 blue→emerald ✅
+  - PersonalBests: Sparklineグラフ stroke/fill blue→emerald (#10B981) ✅
+  - TypeScript 0エラー ✅
+
 - Day4fo_94 (2026/03/24): **UIバグ3件修正（ユーザー報告）**
   - NavBar Home タブの橙丸ドット (`trainedToday === false` 表示) を削除 — desktop + mobile両方 ✅
   - SkillMapPC 空ステート: `AddNodeInput`（`position:absolute zIndex:20`）がNavBar(z-50)の裏に隠れて入力不可になるバグを修正。専用インライン `EmptyStateAddForm` コンポーネントに置換 ✅
