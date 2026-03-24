@@ -25,7 +25,6 @@ import OnboardingChecklist from "@/components/OnboardingChecklist";
 import GymKickBanner from "@/components/GymKickBanner";
 import GymRanking from "@/components/GymRanking";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
-import BackToTop from "@/components/BackToTop";
 import TimeGreeting from "@/components/TimeGreeting";
 import { getLocalDateString, getYesterdayDateString, getWeekStartDate, getMonthStartDate, getLocalDateParts } from "@/lib/timezone";
 import { serverT as t } from "@/lib/i18n";
@@ -539,8 +538,6 @@ export default async function DashboardPage() {
           <InsightsBanner userId={user.id} />
         </section>
       </main>
-      {/* #145: Back to top FAB */}
-      <BackToTop />
     </div>
   );
 }
