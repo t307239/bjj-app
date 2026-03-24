@@ -351,7 +351,7 @@ export default function GoalTracker({ userId }: Props) {
                     <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors">
+                <button className="text-[11px] text-gray-500 hover:text-gray-300 transition-colors">
                   {data.weeklyGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>
@@ -394,7 +394,7 @@ export default function GoalTracker({ userId }: Props) {
                     <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors">
+                <button className="text-[11px] text-gray-500 hover:text-gray-300 transition-colors">
                   {data.monthlyGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>
@@ -452,7 +452,7 @@ export default function GoalTracker({ userId }: Props) {
                     <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors">
+                <button className="text-[11px] text-gray-500 hover:text-gray-300 transition-colors">
                   {data.techniqueGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>

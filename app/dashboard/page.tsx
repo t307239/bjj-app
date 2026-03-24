@@ -412,7 +412,7 @@ export default async function DashboardPage({
             href="/profile"
             className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-yellow-400/40 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200 active:scale-95 group relative"
           >
-            <svg className="absolute top-3 right-3 w-3.5 h-3.5 text-zinc-700 group-hover:text-yellow-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="absolute top-3 right-3 w-3.5 h-3.5 text-zinc-500 group-hover:text-yellow-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
             <span className="text-[10px] font-semibold text-zinc-500 tracking-widest block mb-1">

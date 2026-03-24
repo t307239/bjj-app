@@ -143,7 +143,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
             </div>
             <button
               onClick={() => setDismissed(true)}
-              className="text-gray-600 hover:text-gray-400 w-7 h-7 flex items-center justify-center rounded self-start mt-0.5 transition-colors"
+              className="text-gray-500 hover:text-gray-300 w-7 h-7 flex items-center justify-center rounded self-start mt-0.5 transition-colors"
               aria-label={t("common.close")}
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

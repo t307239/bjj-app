@@ -452,7 +452,7 @@ export default function TrainingLogList({
                   <ShareButton entry={entry} />
                   <button
                     onClick={() => onStartEdit(entry)}
-                    className="text-gray-600 hover:text-[#10B981] transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
+                    className="text-gray-500 hover:text-[#10B981] transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
                     title={t("training.edit")}
                     aria-label={t("training.edit")}
                   >
@@ -468,7 +468,7 @@ export default function TrainingLogList({
                   <button
                     onClick={() => onDelete(entry.id)}
                     disabled={deletingId === entry.id}
-                    className="text-gray-600 hover:text-red-400 transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center disabled:opacity-50"
+                    className="text-gray-500 hover:text-red-400 transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center disabled:opacity-50"
                     title={t("training.delete")}
                     aria-label={t("training.delete")}
                   >

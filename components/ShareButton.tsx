@@ -201,7 +201,7 @@ export default function ShareButton({ entry }: Props) {
     <button
       onClick={handleShare}
       disabled={sharing}
-      className="text-gray-600 hover:text-zinc-300 transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center disabled:opacity-40"
+      className="text-gray-500 hover:text-zinc-200 transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center disabled:opacity-40"
       title="Share training"
       aria-label="Share training"
     >

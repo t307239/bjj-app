@@ -369,7 +369,7 @@ export default function TechniqueLogList({
                           className={`text-sm transition-colors ${
                             star <= technique.mastery_level
                               ? MASTERY_COLORS[technique.mastery_level]
-                              : "text-gray-700 hover:text-gray-500"
+                              : "text-gray-500 hover:text-gray-300"
                           }`}
                           title={
                             t("techniques.mastery") +
@@ -439,7 +439,7 @@ export default function TechniqueLogList({
                     })()}
                     <button
                       onClick={() => onStartEdit(technique)}
-                      className="text-gray-600 hover:text-[#10B981] transition-colors p-2"
+                      className="text-gray-500 hover:text-[#10B981] transition-colors p-2"
                       title={t("techniques.edit")}
                       aria-label={t("techniques.edit")}
                     >
@@ -479,7 +479,7 @@ export default function TechniqueLogList({
                       <button
                         onClick={() => setConfirmDeleteId(technique.id)}
                         disabled={deletingId === technique.id}
-                        className="text-gray-600 hover:text-red-400 transition-colors p-2 disabled:opacity-50"
+                        className="text-gray-500 hover:text-red-400 transition-colors p-2 disabled:opacity-50"
                         title={t("techniques.delete")}
                         aria-label={t("techniques.delete")}
                       >

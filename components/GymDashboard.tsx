@@ -747,7 +747,7 @@ function MemberCard({
       {onKickRequest && (
         <button
           onClick={() => onKickRequest(member)}
-          className="flex-shrink-0 text-gray-600 hover:text-[#e94560] transition-colors p-1"
+          className="flex-shrink-0 text-gray-500 hover:text-[#e94560] transition-colors p-1"
           title={t("gym.removeMemberTitle")}
           aria-label={`Remove ${member.display_name || "member"} from gym`}
         >
