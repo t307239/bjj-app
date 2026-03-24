@@ -155,7 +155,7 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
       <div className="flex items-center justify-between mb-3">
         <div>
           <p className="text-sm font-semibold text-white">{t("gym.currentGym")}</p>
-          <p className="text-xs text-gray-400 mt-0.5">{gymName ?? t("gym.unknownGym")}</p>
+          <p className="text-xs text-gray-400 mt-0.5 truncate max-w-[180px]">{gymName ?? t("gym.unknownGym")}</p>
         </div>
         <button
           onClick={() => setConfirmLeave(true)}

@@ -93,7 +93,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
           <span className="text-xl flex-shrink-0 mt-0.5">📚</span>
         )}
         <div className="flex-1 min-w-0">
-          <p className="text-[11px] font-semibold text-gray-500 tracking-widest mb-0.5">
+          <p className="text-[11px] font-semibold text-gray-500 tracking-widest mb-0.5 truncate">
             {gymName
               ? `From ${gymName}`
               : t("gym.curriculumCardTitle")}
