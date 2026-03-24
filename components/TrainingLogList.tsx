@@ -105,9 +105,10 @@ type Props = {
   onUpdate: (e: React.FormEvent, id: string) => void;
   onDelete: (id: string) => void;
   deletingId: string | null;
-  hasMore: boolean;
-  loadingMore: boolean;
-  onLoadMore: () => void;
+  page: number;
+  totalPages: number;
+  pageLoading: boolean;
+  onPageChange: (page: number) => void;
   expandedNotes: Set<string>;
   setExpandedNotes: React.Dispatch<React.SetStateAction<Set<string>>>;
   editCompForm: CompData;
@@ -129,9 +130,10 @@ export default function TrainingLogList({
   onUpdate,
   onDelete,
   deletingId,
-  hasMore,
-  loadingMore,
-  onLoadMore,
+  page,
+  totalPages,
+  pageLoading,
+  onPageChange,
   expandedNotes,
   setExpandedNotes,
   editCompForm,
@@ -490,24 +492,45 @@ export default function TrainingLogList({
             )}
           </SwipeableCard>
         ))}
-        {/* Load more button — inside scroll container */}
-        {hasMore && (
-          <div className="border-t border-white/5 pt-4 pb-2 text-center mt-4">
-            <button
-              onClick={onLoadMore}
-              disabled={loadingMore}
-              className="inline-flex items-center gap-2 text-[#10B981] hover:text-[#0d9668] text-sm border border-[#10B981]/30 hover:border-[#0d9668]/50 px-6 py-2 rounded-full transition-colors disabled:opacity-50"
-            >
-              {loadingMore ? (
-                <>
-                  <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+        {/* Pagination — shown only when there are multiple pages */}
+        {totalPages > 1 && (
+          <div className="border-t border-white/5 pt-4 pb-2 mt-2">
+            <div className="flex items-center justify-between gap-2">
+              <button
+                onClick={() => onPageChange(page - 1)}
+                disabled={page <= 1 || pageLoading}
+                className="flex items-center gap-1 text-xs text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors active:scale-95"
+                aria-label="Previous page"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+                {t("training.prev")}
+              </button>
+
+              <span className="text-xs text-zinc-500 tabular-nums">
+                {pageLoading ? (
+                  <svg className="w-4 h-4 animate-spin mx-auto" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
                   </svg>
-                  {t("training.loading")}
-                </>
-              ) : t("training.loadMore")}
-            </button>
+                ) : (
+                  `${page} / ${totalPages}`
+                )}
+              </span>
+
+              <button
+                onClick={() => onPageChange(page + 1)}
+                disabled={page >= totalPages || pageLoading}
+                className="flex items-center gap-1 text-xs text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors active:scale-95"
+                aria-label="Next page"
+              >
+                {t("training.next")}
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
           </div>
         )}
       </div>

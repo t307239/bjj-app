@@ -115,6 +115,8 @@
     "noMatchQuery": "No records match \"{query}\"",
     "loadMore": "Load More",
     "loading": "Loading...",
+    "prev": "Prev",
+    "next": "Next",
     "collapse": "Collapse ▲",
     "showMore": "Show More ▼",
     "printPDF": "Print / Save as PDF",

@@ -5,10 +5,11 @@ import { getWeekStartDate } from "@/lib/timezone";
 
 type Props = {
   entries: TrainingEntry[];
-  hasMore: boolean;
+  totalPages: number;
+  page: number;
 };
 
-export default function TrainingLogStats({ entries, hasMore }: Props) {
+export default function TrainingLogStats({ entries, totalPages, page }: Props) {
   if (entries.length === 0) return null;
 
   // This week summary (Monday start, timezone-aware)
@@ -47,9 +48,9 @@ export default function TrainingLogStats({ entries, hasMore }: Props) {
           </div>
         </div>
       )}
-      {hasMore && (
+      {totalPages > 1 && page < totalPages && (
         <p className="text-gray-500 text-xs text-center mt-2">
-          ※ More data available. Click &ldquo;Load More&rdquo; to update
+          ※ Stats reflect current page only. Navigate pages to see all sessions.
         </p>
       )}
     </div>

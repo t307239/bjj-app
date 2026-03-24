@@ -100,10 +100,9 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
   const [entries, setEntries] = useState<TrainingEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
+  const [pageLoading, setPageLoading] = useState(false);
+  const [page, setPage] = useState(1);
   const [techniqueSuggestions, setTechniqueSuggestions] = useState<string[]>([]);
-  const INITIAL_SIZE = 3;
   const PAGE_SIZE = 10;
   // B-05: initialOpen=true when ?welcome=1 + no logs (new user Aha! moment)
   const [showForm, setShowForm] = useState(initialOpen);
@@ -184,7 +183,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
           .select("*")
           .eq("user_id", userId)
           .order("date", { ascending: false })
-          .limit(INITIAL_SIZE + 1),
+          .range(0, PAGE_SIZE - 1),
         // Phase 2.5: fetch technique names for autocomplete suggestions
         supabase
           .from("technique_nodes")
@@ -199,10 +198,9 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       ]);
 
       if (!error && data) {
-        setHasMore(data.length > INITIAL_SIZE);
-        const slice = data.slice(0, INITIAL_SIZE);
-        setEntries(slice);
-        setTrainedToday(slice.some((e: TrainingEntry) => e.date === getLocalDateString()));
+        setEntries(data);
+        setPage(1);
+        setTrainedToday(data.some((e: TrainingEntry) => e.date === getLocalDateString()));
       } else {
         setTrainedToday(false);
       }
@@ -392,21 +390,25 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     }
   };
 
-  const handleLoadMore = async () => {
-    setLoadingMore(true);
+  const handlePageChange = async (newPage: number) => {
+    setPageLoading(true);
+    const from = (newPage - 1) * PAGE_SIZE;
+    const to = newPage * PAGE_SIZE - 1;
     const { data, error } = await supabase
       .from("training_logs")
       .select("*")
       .eq("user_id", userId)
       .order("date", { ascending: false })
-      .range(entries.length, entries.length + PAGE_SIZE);
+      .range(from, to);
 
     if (!error && data) {
-      setHasMore(data.length > PAGE_SIZE);
-      setEntries([...entries, ...data.slice(0, PAGE_SIZE)]);
+      setEntries(data);
+      setPage(newPage);
     }
-    setLoadingMore(false);
+    setPageLoading(false);
   };
+
+  const totalPages = Math.ceil((totalCount ?? 0) / PAGE_SIZE);
 
   // Period filter calculation
   const getPeriodStart = (): string | null => {
@@ -512,7 +514,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       )}
 
       {/* Stats (weekly summary) */}
-      <TrainingLogStats entries={entries} hasMore={hasMore} />
+      <TrainingLogStats entries={entries} totalPages={totalPages} page={page} />
 
       {/* Monthly Bento Grid section */}
       {!initialLoading && monthEntries.length > 0 && (
@@ -740,9 +742,10 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         onUpdate={handleUpdate}
         onDelete={handleDelete}
         deletingId={deletingId}
-        hasMore={hasMore}
-        loadingMore={loadingMore}
-        onLoadMore={handleLoadMore}
+        page={page}
+        totalPages={totalPages}
+        pageLoading={pageLoading}
+        onPageChange={handlePageChange}
         expandedNotes={expandedNotes}
         setExpandedNotes={setExpandedNotes}
         editCompForm={editCompForm}
