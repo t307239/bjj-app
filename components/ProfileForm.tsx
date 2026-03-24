@@ -52,9 +52,9 @@ type Props = {
 // getLocalDateString() from lib/timezone replaces the old JST-hardcoded getJSTDateString()
 
 function calcBjjMonths(startDate: string): number {
-  return Math.floor(
-    (new Date().getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24 * 30)
-  );
+  const start = new Date(startDate);
+  const now = new Date();
+  return Math.max(0, (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()));
 }
 
 // Stripe Customer Portal URL — configure in .env.local (Stripe Dashboard > Customer Portal)
