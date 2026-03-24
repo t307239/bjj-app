@@ -424,7 +424,7 @@ export default function TrainingLogList({
                 <div className="flex gap-2 ml-2 flex-shrink-0">
                   <button
                     onClick={() => onStartEdit(entry)}
-                    className="text-gray-600 hover:text-blue-400 transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
+                    className="text-gray-600 hover:text-[#10B981] transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
                     title={t("training.edit")}
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -468,7 +468,7 @@ export default function TrainingLogList({
           <button
             onClick={onLoadMore}
             disabled={loadingMore}
-            className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm border border-blue-400/30 hover:border-blue-300/50 px-6 py-2 rounded-full transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 text-[#10B981] hover:text-[#0d9668] text-sm border border-[#10B981]/30 hover:border-[#0d9668]/50 px-6 py-2 rounded-full transition-colors disabled:opacity-50"
           >
             {loadingMore ? (
               <>

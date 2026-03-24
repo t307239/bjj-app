@@ -63,10 +63,10 @@ function IntensitySparkline({ data }: { data: { ym: string; avgSessionMin: numbe
         {/* Grid line at middle */}
         <line x1={padding} y1={padding + graphHeight / 2} x2={width - padding} y2={padding + graphHeight / 2} stroke="#4b5563" strokeWidth="0.5" opacity="0.3" />
         {/* Sparkline */}
-        <polyline points={points} fill="none" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <polyline points={points} fill="none" stroke="#10B981" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         {/* Current month dot */}
         {data.length > 0 && (
-          <circle cx={width - padding} cy={padding + graphHeight - ((currentMonth.avgSessionMin - minIntensity) / Math.max(1, maxIntensity - minIntensity)) * graphHeight} r="1.5" fill="#3b82f6" />
+          <circle cx={width - padding} cy={padding + graphHeight - ((currentMonth.avgSessionMin - minIntensity) / Math.max(1, maxIntensity - minIntensity)) * graphHeight} r="1.5" fill="#10B981" />
         )}
       </svg>
       <span className="text-[10px] text-gray-500 flex-shrink-0">{fmtTime(currentMonth.avgSessionMin)}</span>

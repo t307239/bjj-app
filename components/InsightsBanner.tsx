@@ -201,7 +201,7 @@ export default function InsightsBanner({ userId }: Props) {
         {consistencyMsg && (
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] text-gray-500">{t("insights.consistency")}</span>
-            <span className="text-xs text-blue-300 font-medium">{consistencyMsg}</span>
+            <span className="text-xs text-[#10B981] font-medium">{consistencyMsg}</span>
           </div>
         )}
       </div>
@@ -211,7 +211,7 @@ export default function InsightsBanner({ userId }: Props) {
             href={wikiTip.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors"
+            className="inline-flex items-center gap-1 text-xs text-[#10B981] hover:text-[#0d9668] underline underline-offset-2 transition-colors"
           >
             📚 {wikiTip.label}
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

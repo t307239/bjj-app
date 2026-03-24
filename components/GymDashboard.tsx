@@ -527,7 +527,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
       {members.length > 0 && (
         <div className="grid grid-cols-2 gap-3 mb-6">
           <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
-            <div className="text-2xl font-bold text-blue-400">{totalSessionsThisMonth}</div>
+            <div className="text-2xl font-bold text-[#10B981]">{totalSessionsThisMonth}</div>
             <div className="text-xs text-gray-500 mt-0.5">{t("gym.totalSessions30d")}</div>
           </div>
           <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
