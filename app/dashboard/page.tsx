@@ -9,29 +9,23 @@ import TrainingBarChart from "@/components/TrainingBarChart";
 import TrainingTypeChart from "@/components/TrainingTypeChart";
 import CompetitionStats from "@/components/CompetitionStats";
 // PersonalBests はプロフィールページのみに表示
-import TrainingCalendar from "@/components/TrainingCalendar";
 import GoalTracker from "@/components/GoalTracker";
 import WeeklyStrip from "@/components/WeeklyStrip";
 import GuestDashboard from "@/components/GuestDashboard";
 import GuestMigration from "@/components/GuestMigration";
 import StreakProtect from "@/components/StreakProtect";
-import DailyRecommend from "@/components/DailyRecommend";
 import StreakFreeze from "@/components/StreakFreeze";
 import AchievementBadge from "@/components/AchievementBadge";
 import InstallBanner from "@/components/InstallBanner";
 import InsightsBanner from "@/components/InsightsBanner";
-import DailyWikiTip from "@/components/DailyWikiTip";
-import WikiQuickLinks from "@/components/WikiQuickLinks";
 import CollapsibleSection from "@/components/CollapsibleSection";
 import ProUpgradeBanner from "@/components/ProUpgradeBanner";
 import BeltProgressCard from "@/components/BeltProgressCard";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
-import ProStatusBanner from "@/components/ProStatusBanner";
 import GymKickBanner from "@/components/GymKickBanner";
 import GymRanking from "@/components/GymRanking";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
 import BackToTop from "@/components/BackToTop";
-import WeeklyPaceBanner from "@/components/WeeklyPaceBanner";
 import { getLocalDateString, getYesterdayDateString, getWeekStartDate, getMonthStartDate, getLocalDateParts } from "@/lib/timezone";
 import { serverT as t } from "@/lib/i18n";
 
@@ -158,8 +152,6 @@ export default async function DashboardPage() {
   const daysInMonth = new Date(year, month, 0).getDate();
   const currentDayOfMonth = dayOfMonth;
   const remainingDays = daysInMonth - currentDayOfMonth;
-  const daysLeftInWeek = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
-
   // 先月の開始日・終了日
   const prevMonth = month === 1 ? 12 : month - 1;
   const prevYear = month === 1 ? year - 1 : year;
@@ -245,7 +237,6 @@ export default async function DashboardPage() {
   const belt = profileData?.belt ?? "white";
   const stripeCount = profileData?.stripe ?? 0;
   const weeklyGoal = profileData?.weekly_goal ?? 0;
-  const subscriptionStatus = profileData?.subscription_status ?? null;
   // Show kick banner: gym_kick_notified === false (not null/true) AND gym_id is null
   const showKickBanner = profileData?.gym_kick_notified === false && !profileData?.gym_id;
   // Show gym ranking when user is an opt-in gym member
@@ -320,9 +311,6 @@ export default async function DashboardPage() {
 
       {/* メインコンテンツ */}
       <main className="max-w-4xl mx-auto px-4 py-6">
-        {/* ── Pro Status Banner (payment issue alert / PRO badge) ── */}
-        <ProStatusBanner isPro={isPro} subscriptionStatus={subscriptionStatus} />
-
         {/* ── Gym kick notification (persistent until dismissed) ── */}
         {showKickBanner && <GymKickBanner userId={user.id} />}
 
@@ -501,34 +489,23 @@ export default async function DashboardPage() {
         <section className="mb-8">
           <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">{t("dashboard.weekTraining")}</p>
           <div className="space-y-3">
-            {/* 週間ペース通知 */}
-            <WeeklyPaceBanner
-              weeklyGoal={weeklyGoal}
-              weekCount={weekCount ?? 0}
-              daysLeftInWeek={daysLeftInWeek}
-            />
             <WeeklyStrip userId={user.id} />
             <GoalTracker userId={user.id} />
           </div>
         </section>
 
-        {/* ── Section 3: Today's Learning ── */}
-        <section className="mb-8">
-          <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">{t("dashboard.sectionToday")}</p>
-          <div className="space-y-3">
-            {gymCurriculum && (
-              <GymCurriculumCard
-                curriculumUrl={gymCurriculum.curriculum_url}
-                curriculumSetAt={gymCurriculum.curriculum_set_at}
-                gymName={gymName}
-                userId={user.id}
-              />
-            )}
-            <DailyRecommend userId={user.id} />
-            <DailyWikiTip />
-            <WikiQuickLinks />
-          </div>
-        </section>
+        {/* ── Section 3: Gym Curriculum (gym members only) ── */}
+        {gymCurriculum && (
+          <section className="mb-8">
+            <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">{t("dashboard.sectionToday")}</p>
+            <GymCurriculumCard
+              curriculumUrl={gymCurriculum.curriculum_url}
+              curriculumSetAt={gymCurriculum.curriculum_set_at}
+              gymName={gymName}
+              userId={user.id}
+            />
+          </section>
+        )}
 
         {/* ── Section 3.5: Gym Leaderboard (opt-in members only) ── */}
         {gymId && shareDataWithGym && (
@@ -551,7 +528,6 @@ export default async function DashboardPage() {
 
         {/* ── Section 5: Analytics（デスクトップ: 展開済み / モバイル: 折りたたみ） ── */}
         <CollapsibleSection label={t("dashboard.analyticsLabel")} defaultOpen={false} contentHint={t("dashboard.analyticsHint")}>
-          <TrainingCalendar userId={user.id} />
           <TrainingBarChart userId={user.id} isPro={isPro} />
           <TrainingTypeChart userId={user.id} />
           <CompetitionStats userId={user.id} />
