@@ -422,9 +422,9 @@ export default function TrainingLogList({
                                         return s;
                                       })
                                     }
-                                    className="text-[11px] text-gray-600 hover:text-gray-400 mt-0.5"
+                                    className="text-[11px] text-gray-500 hover:text-gray-300 mt-0.5"
                                   >
-                                    Collapse ▲
+                                    {t("training.collapse")}
                                   </button>
                                 )}
                               </div>
@@ -437,9 +437,9 @@ export default function TrainingLogList({
                                   onClick={() =>
                                     setExpandedNotes((prev) => new Set([...prev, entry.id]))
                                   }
-                                  className="text-[11px] text-gray-600 hover:text-gray-400 mt-0.5"
+                                  className="text-[11px] text-gray-500 hover:text-gray-300 mt-0.5"
                                 >
-                                  Show More ▼
+                                  {t("training.showMore")}
                                 </button>
                               </div>
                             ))}

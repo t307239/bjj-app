@@ -86,7 +86,11 @@ export default function WeeklyStrip({ userId }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl px-4 py-3 border border-white/10 mb-4 h-[88px] animate-pulse" />
+    );
+  }
 
   // 今週の月〜日の日付を生成
   const now = new Date();
@@ -113,7 +117,7 @@ export default function WeeklyStrip({ userId }: Props) {
     <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl px-4 py-3 border border-white/10 mb-4 shadow-lg shadow-black/40">
       <div className="flex items-center justify-end mb-2">
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-gray-600">
+          <span className="text-[10px] text-gray-500">
             {trainedThisWeek}/{totalPastDays}d
           </span>
           {weekTotalMins > 0 && (

@@ -164,7 +164,7 @@ export default function InsightsBanner({ userId }: Props) {
         </p>
         <button
           onClick={() => setIsDismissed(true)}
-          className="text-gray-600 hover:text-gray-400 transition-colors flex-shrink-0 -mr-1 -mt-1"
+          className="text-gray-400 hover:text-gray-200 transition-colors flex-shrink-0 -mr-1 -mt-1"
           title={t("insights.dismiss")}
           aria-label={t("insights.dismiss")}
         >
