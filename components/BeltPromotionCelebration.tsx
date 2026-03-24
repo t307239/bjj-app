@@ -122,7 +122,7 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
 
       {/* Modal card */}
       <div
-        className="relative z-10 bg-zinc-900 border border-white/10 rounded-2xl p-8 max-w-xs w-full mx-4 text-center shadow-2xl"
+        className="relative z-10 bg-zinc-900 border border-white/10 rounded-2xl p-8 max-w-xs w-full mx-4 text-center shadow-2xl max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Belt badge */}

@@ -617,7 +617,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
       {/* Kick confirmation modal */}
       {kickTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60">
-          <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+          <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl max-h-[90vh] overflow-y-auto">
             <h3 className="text-white font-bold text-base mb-2">
               {t("gym.removeMemberTitle")}
             </h3>
