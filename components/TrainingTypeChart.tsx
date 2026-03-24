@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
+import Skeleton from "@/components/ui/Skeleton";
 
 type TypeCount = {
   value: string;
@@ -278,7 +279,7 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  if (loading) return null;
+  if (loading) return <Skeleton height={48} rounded="xl" className="mb-4" />;
 
   const periodStart = getPeriodStart(period);
   const filteredLogs = periodStart

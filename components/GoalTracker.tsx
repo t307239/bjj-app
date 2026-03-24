@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
 import { useLocale } from "@/lib/i18n";
+import Skeleton from "@/components/ui/Skeleton";
 import { getLocalDateParts, getWeekStartDate, getMonthStartDate } from "@/lib/timezone";
 import {
   type GoalData,
@@ -203,7 +204,7 @@ export default function GoalTracker({ userId }: Props) {
     setEditing(null);
   };
 
-  if (loading) return null;
+  if (loading) return <Skeleton height={200} rounded="2xl" className="mb-4" />;
 
   if (!schemaReady) {
     return (

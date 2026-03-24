@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
+import Skeleton from "@/components/ui/Skeleton";
 
 type RankRow = {
   student_id: string;
@@ -176,7 +177,7 @@ export default function GymRanking({ userId, gymId }: Props) {
     );
   }
 
-  if (loading) return null;
+  if (loading) return <Skeleton height={120} rounded="xl" className="mb-4" />;
   if (rows.length === 0) {
     return (
       <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-4">

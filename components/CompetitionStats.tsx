@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
+import Skeleton from "@/components/ui/Skeleton";
 
 type Props = {
   userId: string;
@@ -171,7 +172,7 @@ export default function CompetitionStats({ userId }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  if (loading) return null;
+  if (loading) return <Skeleton height={100} rounded="xl" className="mb-4" />;
 
   if (!record || record.total === 0) {
     return (
