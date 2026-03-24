@@ -2,6 +2,7 @@
 
 import { useLocale } from "@/lib/i18n";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
+import ShareButton from "@/components/ShareButton";
 import {
   type TrainingEntry,
   type CompData,
@@ -422,6 +423,8 @@ export default function TrainingLogList({
                     })()}
                 </div>
                 <div className="flex gap-2 ml-2 flex-shrink-0">
+                  {/* B-06: Share training card */}
+                  <ShareButton entry={entry} />
                   <button
                     onClick={() => onStartEdit(entry)}
                     className="text-gray-600 hover:text-[#10B981] transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
