@@ -45,7 +45,7 @@ type TechniqueEdge = {
 type Props = {
   userId: string;
   isPro: boolean;
-  stripePaymentLink: string;
+  stripePaymentLink: string | null;
 };
 
 type DragState = {
@@ -116,7 +116,7 @@ function ProModal({
   t,
 }: {
   onClose: () => void;
-  stripePaymentLink: string;
+  stripePaymentLink: string | null;
   t: (k: string) => string;
 }) {
   return (
@@ -125,13 +125,22 @@ function ProModal({
         <div className="text-4xl mb-3">🥋</div>
         <h3 className="text-lg font-bold text-white mb-2">{t("skillmap.proModalTitlePC")}</h3>
         <p className="text-sm text-gray-400 mb-6">{t("skillmap.proModalBodyPC")}</p>
-        <a
-          href={stripePaymentLink}
-          className="block w-full bg-yellow-500 hover:bg-yellow-400 text-black font-semibold py-3 rounded-xl mb-3 transition-colors"
-          aria-label={t("skillmap.upgradeAriaLabel")}
-        >
-          {t("skillmap.upgradeBtn")}
-        </a>
+        {stripePaymentLink ? (
+          <a
+            href={stripePaymentLink}
+            className="block w-full bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black font-semibold py-3 rounded-xl mb-3 transition-all"
+            aria-label={t("skillmap.upgradeAriaLabel")}
+          >
+            {t("skillmap.upgradeBtn")}
+          </a>
+        ) : (
+          <span
+            className="block w-full bg-zinc-700 text-gray-500 font-semibold py-3 rounded-xl mb-3 cursor-not-allowed"
+            aria-disabled="true"
+          >
+            {t("skillmap.upgradeBtn")}
+          </span>
+        )}
         <button onClick={onClose} className="text-sm text-gray-500 hover:text-gray-300">
           {t("skillmap.maybeLater")}
         </button>

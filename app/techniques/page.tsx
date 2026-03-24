@@ -83,7 +83,7 @@ export default async function TechniquesPage() {
   ]);
 
   const isPro = profile?.is_pro ?? false;
-  const stripePaymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "";
+  const stripePaymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || null;
 
   // Compute mastery breakdown from server data
   const totalTechniques = (techniques ?? []).length;

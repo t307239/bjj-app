@@ -29,7 +29,7 @@ type Props = {
   userId: string;
   gym: Gym;
   isGymPro: boolean; // is_active = Stripe paid
-  stripeGymPaymentLink: string;
+  stripeGymPaymentLink: string | null;
 };
 
 // ─── Belt color helper ────────────────────────────────────────────────────────
@@ -152,7 +152,7 @@ function ProPaywallBanner({
   stripeGymPaymentLink,
 }: {
   riskCount: number;
-  stripeGymPaymentLink: string;
+  stripeGymPaymentLink: string | null;
 }) {
   const { t } = useLocale();
   return (
@@ -167,13 +167,22 @@ function ProPaywallBanner({
             {t("gym.upgradeToSee")}
           </p>
         </div>
-        <a
-          href={stripeGymPaymentLink}
-          className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
-          aria-label={t("gym.ariaUpgradePro")}
-        >
-          {t("gym.upgradeBtn")}
-        </a>
+        {stripeGymPaymentLink ? (
+          <a
+            href={stripeGymPaymentLink}
+            className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
+            aria-label={t("gym.ariaUpgradePro")}
+          >
+            {t("gym.upgradeBtn")}
+          </a>
+        ) : (
+          <span
+            className="flex-shrink-0 bg-zinc-700 text-gray-500 text-xs font-semibold px-3 py-2 rounded-lg cursor-not-allowed"
+            aria-disabled="true"
+          >
+            {t("gym.upgradeBtn")}
+          </span>
+        )}
       </div>
     </div>
   );
@@ -187,7 +196,7 @@ function CurriculumSection({
   isGymPro,
 }: {
   gym: Gym;
-  stripeGymPaymentLink: string;
+  stripeGymPaymentLink: string | null;
   isGymPro: boolean;
 }) {
   const { t } = useLocale();
@@ -222,12 +231,21 @@ function CurriculumSection({
             <p className="text-sm font-semibold text-white">{t("gym.curriculumTitle")}</p>
             <p className="text-xs text-gray-500 mt-0.5">{t("gym.curriculumProRequired")}</p>
           </div>
-          <a
-            href={stripeGymPaymentLink}
-            className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
-          >
-            {t("gym.upgradeBtn")}
-          </a>
+          {stripeGymPaymentLink ? (
+            <a
+              href={stripeGymPaymentLink}
+              className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
+            >
+              {t("gym.upgradeBtn")}
+            </a>
+          ) : (
+            <span
+              className="flex-shrink-0 bg-zinc-700 text-gray-500 text-xs font-semibold px-3 py-2 rounded-lg cursor-not-allowed"
+              aria-disabled="true"
+            >
+              {t("gym.upgradeBtn")}
+            </span>
+          )}
         </div>
       </div>
     );
@@ -666,7 +684,7 @@ function MemberCard({
   risk: RiskLevel;
   showDetail: boolean;
   proRequired?: boolean;
-  stripeGymPaymentLink?: string;
+  stripeGymPaymentLink?: string | null;
   onKickRequest?: (member: MemberRow) => void;
 }) {
   const { t } = useLocale();

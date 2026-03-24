@@ -46,7 +46,7 @@ export default async function GymDashboardPage() {
   }
 
   const stripeGymPaymentLink =
-    process.env.NEXT_PUBLIC_STRIPE_GYM_PAYMENT_LINK ?? "";
+    process.env.NEXT_PUBLIC_STRIPE_GYM_PAYMENT_LINK || null;
 
   return (
     <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">

@@ -13,7 +13,7 @@ import SkillMapPC from "./SkillMapPC";
 type Props = {
   userId: string;
   isPro: boolean;
-  stripePaymentLink: string;
+  stripePaymentLink: string | null;
 };
 
 export default function SkillMap({ userId, isPro, stripePaymentLink }: Props) {
