@@ -28,41 +28,49 @@ function AccountSection({ userId }: { userId: string }) {
         <h3 className="text-gray-400 text-sm font-semibold mb-3">{t("profile.appSettings")}</h3>
         <p className="text-gray-500 text-xs">{t("profile.settingsSoon")}</p>
       </div>
-      <div className="bg-zinc-900 rounded-xl p-5 border border-red-900/30">
-        <h3 className="text-red-400 text-xs tracking-wider mb-3">{t("profile.dangerZone")}</h3>
-        {!confirm ? (
-          <button
-            type="button"
-            onClick={() => setConfirm(true)}
-            className="text-red-500 hover:text-red-400 text-sm underline"
-          >
-            {t("profile.deleteAccount")}
-          </button>
-        ) : (
-          <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
-            <p className="text-red-400 text-sm font-semibold mb-1">{t("profile.deleteConfirm")}</p>
-            <p className="text-gray-400 text-xs mb-4">
-              {t("profile.deleteWarning")}
-            </p>
-            <div className="flex gap-3">
+      <div className="rounded-xl border border-red-900/50 overflow-hidden">
+        <div className="bg-red-950/30 px-5 py-3 border-b border-red-900/30">
+          <h3 className="text-red-500 text-sm font-semibold">{t("profile.dangerZone")}</h3>
+        </div>
+        <div className="bg-zinc-900 px-5 py-4">
+          {!confirm ? (
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium text-white">{t("profile.deleteAccount")}</p>
+                <p className="text-xs text-zinc-500 mt-0.5">{t("profile.deleteWarning")}</p>
+              </div>
               <button
                 type="button"
-                onClick={handleDelete}
-                disabled={deleting}
-                className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold py-2 rounded-lg text-sm"
+                onClick={() => setConfirm(true)}
+                className="flex-shrink-0 px-4 py-1.5 rounded-lg border border-red-700/60 text-red-400 hover:bg-red-900/30 hover:border-red-600 text-sm font-medium transition-colors active:scale-95"
               >
-                {deleting ? t("profile.deleting") : t("profile.deleteConfirmYes")}
-              </button>
-              <button
-                type="button"
-                onClick={() => setConfirm(false)}
-                className="flex-1 bg-white/10 hover:bg-white/15 text-gray-300 font-bold py-2 rounded-lg text-sm"
-              >
-                {t("training.cancel")}
+                {t("profile.deleteAccount")}
               </button>
             </div>
-          </div>
-        )}
+          ) : (
+            <div>
+              <p className="text-red-400 text-sm font-semibold mb-1">{t("profile.deleteConfirm")}</p>
+              <p className="text-zinc-400 text-xs mb-4">{t("profile.deleteWarning")}</p>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold py-2 rounded-lg text-sm transition-colors active:scale-95"
+                >
+                  {deleting ? t("profile.deleting") : t("profile.deleteConfirmYes")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirm(false)}
+                  className="flex-1 bg-white/10 hover:bg-white/15 text-zinc-300 font-bold py-2 rounded-lg text-sm transition-colors active:scale-95"
+                >
+                  {t("training.cancel")}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -81,15 +89,15 @@ export default function ProfileTabs({ userId }: { userId: string }) {
 
   return (
     <div>
-      <div className="flex gap-1 bg-zinc-900 rounded-xl p-1 mb-6 border border-white/10">
+      <div className="flex gap-1 bg-zinc-900/50 rounded-xl p-1 mb-6 border border-white/10">
         {TABS.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all active:scale-95 ${
               activeTab === tab.id
-                ? "bg-zinc-700 text-white shadow"
-                : "text-gray-500 hover:text-white"
+                ? "bg-zinc-800 text-zinc-100 shadow-sm font-medium"
+                : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50"
             }`}
           >
             {tab.label}

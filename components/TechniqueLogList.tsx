@@ -363,33 +363,33 @@ export default function TechniqueLogList({
                           technique.category}
                       </span>
                     </div>
-                    <div className="flex items-center gap-0.5 mt-0.5">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          onClick={() =>
-                            onQuickMastery(technique.id, star)
-                          }
-                          className={`text-sm transition-colors ${
-                            star <= technique.mastery_level
-                              ? MASTERY_COLORS[technique.mastery_level]
-                              : "text-gray-500 hover:text-gray-300"
-                          }`}
-                          title={
-                            t("techniques.mastery") +
-                            ` ${star}: ${t("techniques.masteryLevels." + star)}`
-                          }
-                        >
-                          ★
-                        </button>
-                      ))}
-                      <span
-                        className={`text-xs ml-1 ${MASTERY_COLORS[technique.mastery_level]}`}
-                      >
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <div className="flex items-center gap-0.5">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            onClick={() =>
+                              onQuickMastery(technique.id, star)
+                            }
+                            className={`text-sm leading-none transition-colors ${
+                              star <= technique.mastery_level
+                                ? MASTERY_COLORS[technique.mastery_level]
+                                : "text-zinc-700 hover:text-zinc-500"
+                            }`}
+                            title={
+                              t("techniques.mastery") +
+                              ` ${star}: ${t("techniques.masteryLevels." + star)}`
+                            }
+                          >
+                            ★
+                          </button>
+                        ))}
+                      </div>
+                      <span className="text-xs text-zinc-400 leading-none">
                         {t("techniques.masteryLevels." + technique.mastery_level)}
                       </span>
                       {technique.created_at && (
-                        <span className="text-xs text-gray-500 ml-auto">
+                        <span className="text-xs text-gray-500 ml-auto leading-none">
                           {relativeDate(technique.created_at, t)}
                         </span>
                       )}

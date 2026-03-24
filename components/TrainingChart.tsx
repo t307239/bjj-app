@@ -238,6 +238,20 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
   }
   const totalDays = data.filter((d) => d.count > 0).length;
 
+  // Month labels per week column: show abbrev only at the first column of each new month
+  const monthLabels: string[] = weeks.map((week, wi) => {
+    const firstDay = week.find((d) => d !== null);
+    if (!firstDay) return "";
+    const dt = new Date(firstDay.date + "T00:00:00");
+    const monthAbbrev = new Intl.DateTimeFormat("en", { month: "short" }).format(dt);
+    if (wi === 0) return monthAbbrev;
+    const prevWeek = weeks[wi - 1];
+    const prevFirst = prevWeek.find((d) => d !== null);
+    if (!prevFirst) return monthAbbrev;
+    const prevMonth = new Date(prevFirst.date + "T00:00:00").getMonth();
+    return dt.getMonth() !== prevMonth ? monthAbbrev : "";
+  });
+
   // 月別棒グラフ最大値
   const maxMonthCount = Math.max(...monthData.map((m) => m.count), 1);
 
@@ -272,31 +286,43 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
 
       {viewMode === "heatmap" ? (
         <>
-          <div className="flex gap-1">
-            {/* 曜日ラベル */}
-            <div className="flex flex-col gap-0.5 mr-1">
-              {dayLabels.map((d, i) => (
-                <div key={i} className="text-xs text-gray-500 h-3 flex items-center">
-                  {d}
+          <div className="flex flex-col gap-0.5">
+            {/* Month label row */}
+            <div className="flex gap-1 ml-5 mb-0.5">
+              {monthLabels.map((label, wi) => (
+                <div key={wi} className="w-3 overflow-visible flex-shrink-0">
+                  <span className="text-xs text-gray-500 whitespace-nowrap leading-none">{label}</span>
                 </div>
               ))}
             </div>
-            {/* ヒートマップグリッド */}
-            {weeks.map((week, wi) => (
-              <div key={wi} className="flex flex-col gap-0.5">
-                {week.map((day, di) =>
-                  day ? (
-                    <div
-                      key={di}
-                      className={`w-3 h-3 rounded-sm ${getColor(day.count)} transition-colors`}
-                      title={`${day.date}: ${t("chart.sessionsFmt", { n: day.count })}`}
-                    />
-                  ) : (
-                    <div key={di} className="w-3 h-3" />
-                  )
-                )}
+            {/* Weekday labels + grid */}
+            <div className="flex gap-1">
+              {/* 曜日ラベル */}
+              <div className="flex flex-col gap-0.5 mr-1">
+                {dayLabels.map((d, i) => (
+                  <div key={i} className="text-xs text-gray-500 h-3 flex items-center">
+                    {d}
+                  </div>
+                ))}
               </div>
-            ))}
+              {/* ヒートマップグリッド */}
+              {weeks.map((week, wi) => (
+                <div key={wi} className="flex flex-col gap-0.5">
+                  {week.map((day, di) =>
+                    day ? (
+                      <div key={di} className="relative group w-3 h-3">
+                        <div className={`w-3 h-3 rounded-sm ${getColor(day.count)} transition-colors cursor-default`} />
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-zinc-800 border border-white/10 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 shadow-lg">
+                          {new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(new Date(day.date + "T00:00:00"))}: {day.count} {day.count === 1 ? "session" : "sessions"}
+                        </div>
+                      </div>
+                    ) : (
+                      <div key={di} className="w-3 h-3" />
+                    )
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-1 text-xs text-gray-500">

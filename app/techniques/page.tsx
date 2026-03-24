@@ -6,7 +6,6 @@ import TechniqueLog from "@/components/TechniqueLog";
 import { serverT as t } from "@/lib/i18n";
 import { Suspense } from "react";
 import SkillMap from "@/components/SkillMap";
-import AffiliateSection from "@/components/AffiliateSection";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -242,10 +241,6 @@ export default async function TechniquesPage() {
           </div>
         </section>
 
-        {/* ═══════════════════════════════════════════
-            SECTION 4 — AFFILIATE
-            ═══════════════════════════════════════════ */}
-        <AffiliateSection />
       </main>
     </div>
   );

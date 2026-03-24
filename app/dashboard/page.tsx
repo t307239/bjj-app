@@ -18,7 +18,6 @@ import AchievementBadge from "@/components/AchievementBadge";
 import InstallBanner from "@/components/InstallBanner";
 import InsightsBanner from "@/components/InsightsBanner";
 import CollapsibleSection from "@/components/CollapsibleSection";
-import ProUpgradeBanner from "@/components/ProUpgradeBanner";
 import BeltProgressCard from "@/components/BeltProgressCard";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
 import GymKickBanner from "@/components/GymKickBanner";
@@ -571,13 +570,13 @@ export default async function DashboardPage({
               </svg>
             </div>
             {recentTechniques && recentTechniques.length > 0 && (
-              <div className="flex flex-wrap gap-1">
-                {(recentTechniques as { name: string }[]).map((tech) => (
+              <div className="flex flex-col gap-0.5 mt-1">
+                {(recentTechniques as { name: string }[]).slice(0, 2).map((tech) => (
                   <span
                     key={tech.name}
-                    className="text-xs bg-violet-500/10 border border-violet-500/20 text-violet-300 px-2 py-0.5 rounded-full truncate max-w-[120px]"
+                    className="text-xs text-zinc-400 truncate"
                   >
-                    {tech.name}
+                    · {tech.name}
                   </span>
                 ))}
               </div>
@@ -648,11 +647,10 @@ export default async function DashboardPage({
             SECTION 6 — SINGLE PRIORITY CTA
             (KickBanner > StreakNudge > ProUpsell — never all 3)
             ═══════════════════════════════════════════ */}
-        {showCTASection && (
+        {showCTASection && (streak >= 3) && (
           <section className="space-y-3 mb-7">
-            {streak >= 3 && <StreakProtect userId={user.id} streak={streak} />}
-            {streak >= 3 && <StreakFreeze userId={user.id} streak={streak} />}
-            <ProUpgradeBanner isPro={isPro} />
+            <StreakProtect userId={user.id} streak={streak} />
+            <StreakFreeze userId={user.id} streak={streak} />
           </section>
         )}
 
