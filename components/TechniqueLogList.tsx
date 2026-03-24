@@ -439,7 +439,7 @@ export default function TechniqueLogList({
                     })()}
                     <button
                       onClick={() => onStartEdit(technique)}
-                      className="text-gray-600 hover:text-[#10B981] transition-colors p-1"
+                      className="text-gray-600 hover:text-[#10B981] transition-colors p-2"
                       title={t("techniques.edit")}
                     >
                       <svg
@@ -477,7 +477,7 @@ export default function TechniqueLogList({
                       <button
                         onClick={() => setConfirmDeleteId(technique.id)}
                         disabled={deletingId === technique.id}
-                        className="text-gray-600 hover:text-red-400 transition-colors p-1 disabled:opacity-50"
+                        className="text-gray-600 hover:text-red-400 transition-colors p-2 disabled:opacity-50"
                         title={t("techniques.delete")}
                       >
                         {deletingId === technique.id ? (

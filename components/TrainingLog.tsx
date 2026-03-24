@@ -484,7 +484,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
           </div>
           <button
             onClick={(e) => { e.stopPropagation(); setNudgeDismissed(true); }}
-            className="text-gray-600 hover:text-gray-400 transition-colors flex-shrink-0 p-1 rounded"
+            className="text-gray-600 hover:text-gray-400 transition-colors flex-shrink-0 p-2 rounded"
             aria-label={t("training.dismissForToday")}
           >
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
