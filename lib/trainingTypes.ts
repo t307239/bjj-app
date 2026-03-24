@@ -4,6 +4,7 @@ export const TRAINING_TYPES = [
   { value: "drilling",    label: "Drilling",    color: "bg-purple-500/20 text-purple-300", icon: "🎯" },
   { value: "competition", label: "Competition", color: "bg-red-500/20 text-red-300",       icon: "🏆" },
   { value: "open_mat",    label: "Open Mat",    color: "bg-green-500/20 text-green-300",   icon: "🤝" },
+  { value: "recovery",    label: "Recovery",    color: "bg-teal-500/20 text-teal-300",     icon: "🧘" },
 ] as const;
 
 export type TrainingTypeValue = typeof TRAINING_TYPES[number]["value"];

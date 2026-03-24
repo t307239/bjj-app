@@ -26,6 +26,7 @@ import GymKickBanner from "@/components/GymKickBanner";
 import GymRanking from "@/components/GymRanking";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
 import BackToTop from "@/components/BackToTop";
+import TimeGreeting from "@/components/TimeGreeting";
 import { getLocalDateString, getYesterdayDateString, getWeekStartDate, getMonthStartDate, getLocalDateParts } from "@/lib/timezone";
 import { serverT as t } from "@/lib/i18n";
 
@@ -328,9 +329,7 @@ export default async function DashboardPage() {
               <span className="text-lg font-black text-zinc-900">柔</span>
             </div>
             <div>
-            <h2 className="text-xl font-bold tracking-tight">
-              Welcome back, {displayName}
-            </h2>
+            <TimeGreeting displayName={displayName} />
             <p className="text-gray-500 text-sm mt-0.5">
               {streak >= 30
                 ? `🔥 ${streak}-day streak — unstoppable!`
@@ -490,7 +489,8 @@ export default async function DashboardPage() {
           <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">{t("dashboard.weekTraining")}</p>
           <div className="space-y-3">
             <WeeklyStrip userId={user.id} />
-            <GoalTracker userId={user.id} />
+            {/* GoalTracker: 初回ログ後のみ表示（新規ユーザーノイズ削減） */}
+            {hasFirstLog && <GoalTracker userId={user.id} />}
           </div>
         </section>
 
@@ -516,11 +516,11 @@ export default async function DashboardPage() {
         )}
 
         {/* ── Section 4: Streak Nudges + Pro Upsell（毎日目に触れる位置） ── */}
-        {(streak >= 1 || !isPro) && (
+        {(streak >= 3 || !isPro) && (
           <section className="space-y-3 mb-8">
-            {/* StreakProtect/Freeze は自己管理（内部で表示条件を判断） */}
-            <StreakProtect userId={user.id} streak={streak} />
-            <StreakFreeze userId={user.id} streak={streak} />
+            {/* StreakProtect/Freeze: streak >= 3 から表示（初日ノイズ削減） */}
+            {streak >= 3 && <StreakProtect userId={user.id} streak={streak} />}
+            {streak >= 3 && <StreakFreeze userId={user.id} streak={streak} />}
             {/* Pro upsell: This Week直下の位置 = 毎日目に触れる（#16） */}
             <ProUpgradeBanner isPro={isPro} />
           </section>
