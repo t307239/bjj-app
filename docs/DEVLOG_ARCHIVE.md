@@ -2,6 +2,22 @@
 
 ---
 
+- Day4fo_97 (2026/03/24): **UX監査25項目 修正完了 — 全項目 ✅**
+  - #11: `PersonalBests.tsx` シェアボタンに `isCopied` 2秒フィードバック追加 ✅
+  - #11: `LogoutButton.tsx` ログアウト中 `isLoading` ステート追加（前セッション）✅
+  - #2: `GymDashboard.tsx` / `BeltPromotionCelebration.tsx` モーダルに `max-h-[90vh] overflow-y-auto` 追加 ✅
+  - #12: `PersonalBests.tsx` ログゼロ時の空ステートUI追加（null → 案内テキスト）✅
+  - #18: `GymCurriculumCard.tsx` / `ProfileForm.tsx` gymName に `truncate` 追加 ✅
+  - #23: `PersonalBests.tsx` / `TrainingChart.tsx` / `TrainingBarChart.tsx` ローディング中を `min-h` プレースホルダーに変更（CLS対策）✅
+  - #24: `CollapsibleSection.tsx` / `ProStatusBanner.tsx` / `SkillMapPC.tsx` / `SkillMapMobile.tsx` `text-zinc-600` → `text-zinc-400`（コントラスト改善）✅
+  - #3: `TrainingBarChart.tsx` `overflow-y-auto` コンテナに `scrollbar-hide` 追加 ✅
+  - #13: `InstallBanner.tsx` インストール失敗時のエラートースト追加 ✅
+  - #20: `TrainingLogList.tsx` / `TechniqueLogList.tsx` / `BeltProgressCard.tsx` / `TrainingLog.tsx` アイコンのみボタンに `aria-label` 追加 ✅
+  - #10 フォーカスリング: `globals.css` `:focus-visible` → emerald #10B981（前セッション）✅
+  - #14 削除ガード: `GuestDashboard.tsx` Undoトースト / `SkillMapPC.tsx` / `SkillMapMobile.tsx` インライン確認（前セッション）✅
+  - TypeScript: 0 エラー ✅
+  - バグスイープ結果: ✅ TOTAL ISSUES: 0
+
 - Day4fo_96 (2026/03/24): **Cloudflare DNS 更新完了 — bjj-app.net A レコード化**
   - Vercel "Configure Automatically" → Cloudflare Domain Connect OAuth フロー実行
   - 旧: `CNAME bjj-app.net → cname.vercel-dns.com` 削除
