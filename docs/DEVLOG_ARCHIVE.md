@@ -2,6 +2,25 @@
 
 ---
 
+- Day4fo_98 (2026/03/24): **BACKLOG B-01〜B-04/B-08/B-16〜B-19 実装完了**
+  - docs/BACKLOG.md 新規作成（22項目 優先度付き実装案）✅
+  - B-01: `TrainingLogForm.tsx` Gi/No-Gi 巨大トグル + 4型サブグリッド ✅
+  - B-02: `BackToTop.tsx` 削除 + `dashboard/page.tsx` から除去 ✅
+  - B-03: `InstallBanner.tsx` + `TrainingLog.tsx` PWA表示を3回目ログ保存後に遅延 ✅
+  - B-04: `TrainingLogForm.tsx` インストラクタータグ入力フィールド追加 ✅
+  - B-08: `ProUpgradeBanner.tsx` ダークUI + エメラルドCTA + PAYMENT_LINKガード ✅
+  - B-16: `docs/UI_DESIGN.md` B2B/B2C カラー分離 + ドメインカラー保護ルール追記 ✅
+  - B-17: `/terms` + `/privacy` TOC付き・max-w-3xl・emerald左ボーダーアクセント ✅
+  - B-18: `scripts/check-links.mjs` 静的リンク監査スクリプト + `npm run check-links` ✅
+  - B-19: `eslint.config.mjs` ESLint 9 flat config + jsx-a11y rules ✅
+  - Fix: `TrainingLogForm.tsx` `instructor_name?: string` → `instructor_name: string`（TS strict）✅
+  - TypeScript: 0 エラー ✅
+  - バグスイープ結果: ✅ TOTAL ISSUES: 0
+  - 次の優先タスク:
+    1. B-05: 強制Aha!モーメント（profiles.has_logged_first + auth callback）
+    2. B-06: Instagram Story Share（html2canvas）
+    3. B-07: Skeleton Loaders全面適用
+
 - Day4fo_97 (2026/03/24): **UX監査25項目 修正完了 — 全項目 ✅**
   - #11: `PersonalBests.tsx` シェアボタンに `isCopied` 2秒フィードバック追加 ✅
   - #11: `LogoutButton.tsx` ログアウト中 `isLoading` ステート追加（前セッション）✅
