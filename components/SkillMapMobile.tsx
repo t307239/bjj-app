@@ -584,7 +584,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink }: Pro
                 {isPro && (
                   <button
                     onClick={() => handleDeleteEdge(edge.id)}
-                    className="text-xs text-zinc-600 hover:text-red-400 transition-colors flex-shrink-0"
+                    className="text-xs text-zinc-400 hover:text-red-400 transition-colors flex-shrink-0"
                     aria-label={t("skillmap.deleteEdge")}
                   >
                     ✕

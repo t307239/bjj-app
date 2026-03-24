@@ -734,7 +734,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
                 ) : isPro && (
                   <button
                     onClick={(e) => { e.stopPropagation(); setConfirmDeleteNodeId(node.id); }}
-                    className="ml-1 text-zinc-600 hover:text-red-400 text-xs flex-shrink-0"
+                    className="ml-1 text-zinc-400 hover:text-red-400 text-xs flex-shrink-0"
                     aria-label={t("skillmap.deleteNode")}
                   >✕</button>
                 )}

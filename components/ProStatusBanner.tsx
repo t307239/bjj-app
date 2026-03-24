@@ -40,7 +40,7 @@ export default function ProStatusBanner({ isPro, subscriptionStatus }: Props) {
         <span className="inline-flex items-center gap-1.5 bg-yellow-400/10 border border-yellow-400/30 text-yellow-300 text-[11px] font-bold px-2.5 py-1 rounded-full">
           ⭐ PRO
         </span>
-        <span className="text-[11px] text-zinc-600">{t("pro.allFeaturesUnlocked")}</span>
+        <span className="text-[11px] text-zinc-400">{t("pro.allFeaturesUnlocked")}</span>
       </div>
     );
   }
