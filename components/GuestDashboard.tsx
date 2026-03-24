@@ -293,7 +293,7 @@ export default function GuestDashboard() {
           >
             {t("guest.ctaButton")}
           </Link>
-          <p className="text-gray-600 text-xs mt-2">
+          <p className="text-gray-500 text-xs mt-2">
             {t("guest.ctaNote")}
           </p>
         </div>

@@ -614,7 +614,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       {/* Period filter */}
       {!initialLoading && entries.length > 0 && (
         <div className="mb-2 flex items-center gap-2">
-          <span className="text-[10px] font-medium text-zinc-600 tracking-wide uppercase">{t("training.periodLabel")}</span>
+          <span className="text-[10px] font-medium text-zinc-500 tracking-wide uppercase">{t("training.periodLabel")}</span>
         <div className="bg-zinc-900 rounded-lg p-1 inline-flex gap-0.5 border border-white/10">
           {(["all", "month", "week"] as const).map((p) => {
             const label = p === "all" ? t("training.periodAll") : p === "month" ? t("training.periodMonth") : t("training.periodWeek");
@@ -646,7 +646,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
             onChange={(e) => setDateFrom(e.target.value)}
             className="flex-1 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1.5 border border-white/10 focus:outline-none focus:border-white/30"
           />
-          <span className="text-gray-600 text-xs">–</span>
+          <span className="text-gray-500 text-xs">–</span>
           <input
             type="date"
             value={dateTo}
@@ -668,7 +668,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         <div className="flex gap-1.5 mb-2">
           <button
             onClick={() => { setDateFrom(""); setDateTo(""); }}
-            className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors text-gray-600 border border-white/10 hover:border-white/10 hover:text-gray-400"
+            className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors text-gray-400 border border-white/10 hover:border-white/20 hover:text-gray-300"
           >
             📅 Filter by Date
           </button>
@@ -682,7 +682,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         const dropdownTypes = usedTypes.slice(2);
         return (
           <div className="flex items-center gap-1.5 mb-4 flex-wrap">
-            <span className="text-[10px] font-medium text-zinc-600 tracking-wide uppercase mr-1">{t("training.typeShort")}</span>
+            <span className="text-[10px] font-medium text-zinc-500 tracking-wide uppercase mr-1">{t("training.typeShort")}</span>
             <button
               onClick={() => setFilterType("all")}
               className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${

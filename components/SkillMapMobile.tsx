@@ -562,7 +562,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink }: Pro
         </p>
 
         {childNodes.length === 0 ? (
-          <p className="text-sm text-gray-600 italic px-1 mb-4">{t("skillmap.noChildren")}</p>
+          <p className="text-sm text-gray-500 italic px-1 mb-4">{t("skillmap.noChildren")}</p>
         ) : (
           <div className="space-y-2 mb-4">
             {childNodes.map(({ edge, node }) => (
@@ -674,7 +674,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink }: Pro
 
       {/* Node list */}
       {displayNodes.length === 0 ? (
-        <p className="text-sm text-gray-600 italic text-center py-6">{t("skillmap.noRoots")}</p>
+        <p className="text-sm text-gray-500 italic text-center py-6">{t("skillmap.noRoots")}</p>
       ) : (
         <div className="space-y-2 mb-4">
           {displayNodes.map((node) => {
@@ -696,7 +696,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink }: Pro
                   {childCount > 0 && (
                     <span className="text-xs text-gray-500">→ {childCount}</span>
                   )}
-                  <span className="text-gray-600 text-sm">›</span>
+                  <span className="text-gray-500 text-sm">›</span>
                 </div>
               </button>
             );

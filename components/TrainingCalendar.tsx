@@ -166,7 +166,7 @@ export default function TrainingCalendar({ userId }: Props) {
 
       {/* Calendar grid */}
       {loading ? (
-        <div className="py-10 text-center text-gray-600 text-sm">{t("training.loading")}</div>
+        <div className="py-10 text-center text-gray-500 text-sm">{t("training.loading")}</div>
       ) : (
         <div className="grid grid-cols-7">
           {cells.map((day, idx) => {

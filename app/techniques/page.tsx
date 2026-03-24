@@ -188,7 +188,7 @@ export default async function TechniquesPage() {
               {t("techniquesPage.skillMap")}
             </p>
             {!isPro && (
-              <span className="text-[10px] text-zinc-600">
+              <span className="text-[10px] text-zinc-500">
                 {t("techniquesPage.freeLimit")}
               </span>
             )}
@@ -236,7 +236,7 @@ export default async function TechniquesPage() {
                 </a>
               ))}
             </div>
-            <p className="text-[10px] text-zinc-600">
+            <p className="text-[10px] text-zinc-500">
               {t("techniquesPage.wikiDesc")}
             </p>
           </div>

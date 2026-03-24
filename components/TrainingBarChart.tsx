@@ -216,7 +216,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
       <div className="flex items-center justify-between mb-3">
         <div>
           <h4 className="text-sm font-medium text-zinc-300">{t("chart.monthlyGraph")}</h4>
-          <p className="text-[10px] text-gray-600 mt-0.5">
+          <p className="text-[10px] text-gray-500 mt-0.5">
             {t("chart.pastMonths", { n: range })}: {t("chart.totalLabel")}{totalCount}{timesUnit} · {formatMinutes(totalMinutes)}
           </p>
         </div>
@@ -262,11 +262,11 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
 
       {!hasData ? (
         <div className="flex flex-col items-center justify-center h-24 gap-2">
-          <svg className="w-8 h-8 text-zinc-600 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <svg className="w-8 h-8 text-zinc-500 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v18h18M9 17V9m4 8V5m4 12v-4" />
           </svg>
           <p className="text-sm text-gray-500">{t("chart.noSessionsYet")}</p>
-          <p className="text-xs text-gray-600">{t("chart.logToFillChart")}</p>
+          <p className="text-xs text-gray-500">{t("chart.logToFillChart")}</p>
         </div>
       ) : range === 12 && !isPro ? (
         <div className="relative" style={{ height: "120px" }}>
@@ -391,7 +391,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         </div>
       )}
       {avgPct > 0 && (
-        <div className="text-[10px] text-gray-600 text-right mt-1">
+        <div className="text-[10px] text-gray-500 text-right mt-1">
           {t("chart.average")} {view === "count" ? `${Math.round(avgVal)}${timesUnit}/${t("chart.month")}` : `${formatMinutes(Math.round(avgVal))}/${t("chart.month")}`}
         </div>
       )}
@@ -429,7 +429,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
               ))}
             </div>
           ) : selectedLogs.length === 0 ? (
-            <p className="text-[11px] text-gray-600 text-center py-2">{t("chart.noRecords")}</p>
+            <p className="text-[11px] text-gray-500 text-center py-2">{t("chart.noRecords")}</p>
           ) : (
             <div className="space-y-1 max-h-48 overflow-y-auto scrollbar-hide">
               {selectedLogs.map((log, idx) => {

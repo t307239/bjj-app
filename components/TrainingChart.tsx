@@ -160,7 +160,7 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
           <div className="flex gap-1">
             <div className="flex flex-col gap-0.5 mr-1">
               {["S","M","T","W","T","F","S"].map((d, i) => (
-                <div key={i} className="text-[9px] text-gray-600 h-3 flex items-center">{d}</div>
+                <div key={i} className="text-[9px] text-gray-500 h-3 flex items-center">{d}</div>
               ))}
             </div>
             {dummyWeeks.map((week, wi) => (
@@ -270,7 +270,7 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
             {/* 曜日ラベル */}
             <div className="flex flex-col gap-0.5 mr-1">
               {dayLabels.map((d, i) => (
-                <div key={i} className="text-[9px] text-gray-600 h-3 flex items-center">
+                <div key={i} className="text-[9px] text-gray-500 h-3 flex items-center">
                   {d}
                 </div>
               ))}
@@ -293,7 +293,7 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
             ))}
           </div>
           <div className="flex items-center justify-between mt-2">
-            <div className="flex items-center gap-1 text-[10px] text-gray-600">
+            <div className="flex items-center gap-1 text-[10px] text-gray-500">
               <span>{t("chart.less")}</span>
               <div className="w-3 h-3 rounded-sm bg-zinc-900/50" />
               <div className="w-3 h-3 rounded-sm bg-green-700/60" />

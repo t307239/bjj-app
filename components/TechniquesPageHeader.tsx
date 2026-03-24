@@ -51,7 +51,7 @@ export function WikiLinksHeader() {
 export function WikiLinksFootnote() {
   const { t } = useLocale();
   return (
-    <p className="text-[10px] text-gray-600 mt-2">
+    <p className="text-[10px] text-gray-500 mt-2">
       {t("techniquesPage.wikiDesc")}
     </p>
   );

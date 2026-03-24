@@ -169,7 +169,7 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
       <div className="flex items-center justify-between pt-3 border-t border-white/10">
         <div>
           <p className="text-xs text-gray-300">{t("gym.shareData")}</p>
-          <p className="text-[10px] text-gray-600 mt-0.5">{t("gym.shareDataSub")}</p>
+          <p className="text-[10px] text-gray-500 mt-0.5">{t("gym.shareDataSub")}</p>
         </div>
         <button
           onClick={handleToggleSharing}
@@ -463,11 +463,11 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
           <div className="flex items-center gap-2 text-sm text-gray-300">
             <span className="text-gray-500">🥋</span>
             <span>{t("profile.bjjHistory", { n: calcBjjMonths(profile.start_date) })}</span>
-            <span className="text-gray-600 text-xs">({profile.start_date} –)</span>
+            <span className="text-gray-500 text-xs">({profile.start_date} –)</span>
           </div>
         )}
         {!profile.gym && !profile.start_date && (
-          <p className="text-gray-600 text-xs">{t("profile.gymNotSet")}</p>
+          <p className="text-gray-500 text-xs">{t("profile.gymNotSet")}</p>
         )}
       </div>
       {profile.bio && (
@@ -607,7 +607,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-1">{t("profile.gym")}</label>
-          <p className="text-gray-600 text-[10px] mb-2">{t("profile.gymSubtext")}</p>
+          <p className="text-gray-500 text-[10px] mb-2">{t("profile.gymSubtext")}</p>
           <input type="text" value={form.gym} onChange={(e) => setForm({ ...form, gym: e.target.value })} placeholder="e.g. Gracie Academy Tokyo" className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30" />
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">

@@ -160,7 +160,7 @@ export default function TrainingLogList({
         <p className="text-gray-400 text-sm mb-2">
           {t("training.emptyDesc")}
         </p>
-        <div className="flex justify-center gap-4 text-xs text-gray-600 mb-6">
+        <div className="flex justify-center gap-4 text-xs text-gray-500 mb-6">
           <span>{t("training.emptyFree")}</span>
           <span>{t("training.emptyCloud")}</span>
           <span>{t("training.emptyTrack")}</span>

@@ -269,7 +269,7 @@ export default function DailyWikiTip() {
         </a>
         <button
           onClick={() => setShowNext((v) => !v)}
-          className="text-[10px] text-gray-600 hover:text-gray-400 transition-colors flex items-center gap-1"
+          className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors flex items-center gap-1"
         >
           {showNext ? t("wiki.close") : t("wiki.nextPreview", { categoryJa: nextCategory ?? "" })}
         </button>
@@ -282,7 +282,7 @@ export default function DailyWikiTip() {
       >
         <div className="mt-3 pt-3 border-t border-white/10">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-[10px] text-gray-600">{t("wiki.nextHint")}</span>
+            <span className="text-[10px] text-gray-500">{t("wiki.nextHint")}</span>
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${nextBadgeClass}`}>
               {nextCategory}
             </span>
@@ -293,7 +293,7 @@ export default function DailyWikiTip() {
             href={nextUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[11px] text-gray-600 hover:text-gray-300 transition-colors"
+            className="inline-flex items-center gap-1 text-[11px] text-gray-500 hover:text-gray-300 transition-colors"
           >
             <span>{t("wiki.peekAhead")}</span>
           </a>

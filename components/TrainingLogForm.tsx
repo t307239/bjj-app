@@ -303,7 +303,7 @@ export default function TrainingLogForm({
               <option key={name} value={name} />
             ))}
           </datalist>
-          <p className="text-[10px] text-gray-600 mt-0.5">{t("competition.techAppendNote")}</p>
+          <p className="text-[10px] text-gray-500 mt-0.5">{t("competition.techAppendNote")}</p>
         </div>
       )}
 

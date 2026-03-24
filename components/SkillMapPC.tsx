@@ -819,7 +819,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
         />
       </div>
 
-      <p className="text-[10px] text-gray-600 mt-1 text-right">
+      <p className="text-[10px] text-gray-500 mt-1 text-right">
         {t("skillmap.pcContextHint")}
       </p>
 

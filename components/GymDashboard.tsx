@@ -110,7 +110,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
           {copied ? t("gym.inviteCopied") : t("gym.inviteCopy")}
         </button>
       </div>
-      <p className="text-[10px] text-gray-600 mt-2">
+      <p className="text-[10px] text-gray-500 mt-2">
         {t("gym.inviteCode")} <span className="font-mono">{currentCode}</span>
       </p>
       {/* Regenerate — inline confirm to avoid window.confirm() */}
@@ -282,7 +282,7 @@ function CurriculumSection({
         </div>
       )}
       {sentAgo && (
-        <p className="text-[10px] text-gray-600 mt-2">
+        <p className="text-[10px] text-gray-500 mt-2">
           {t("gym.curriculumLastSent", { text: sentAgo })}
         </p>
       )}
@@ -626,7 +626,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
                 name: kickTarget.display_name || t("gym.rankingAnon"),
               })}
             </p>
-            <p className="text-gray-600 text-xs mb-5">
+            <p className="text-gray-500 text-xs mb-5">
               {t("gym.removeMemberNote")}
             </p>
             <div className="flex gap-3">
@@ -712,11 +712,11 @@ function MemberCard({
         {showDetail ? (
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-400">{t("gym.lastSeen", { text: lastSeenText })}</span>
-            <span className="text-xs text-gray-600">·</span>
+            <span className="text-xs text-gray-500">·</span>
             <span className="text-xs text-gray-400">{t("gym.sessionsPerMonth", { n: member.sessions_last_30d })}</span>
           </div>
         ) : proRequired ? (
-          <span className="text-xs text-gray-600 italic">
+          <span className="text-xs text-gray-500 italic">
             {t("gym.detailsHidden")}{" "}
             {stripeGymPaymentLink && (
               <a href={stripeGymPaymentLink} className="text-yellow-400 hover:underline">

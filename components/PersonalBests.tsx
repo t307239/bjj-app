@@ -324,7 +324,7 @@ export default function PersonalBests({ userId }: Props) {
         ))}
       </div>
       {bests.maxSessionMin > 0 && (
-        <div className="mt-2 text-center text-[10px] text-gray-600">
+        <div className="mt-2 text-center text-[10px] text-gray-500">
           {t("stats.longestSession")}: {fmtTime(bests.maxSessionMin)} · {t("stats.monthlyAvg")}: {bests.avgMonthly}{timesUnit}
         </div>
       )}
@@ -354,14 +354,14 @@ export default function PersonalBests({ userId }: Props) {
                         background: isBest ? "#10B981" : count > 0 ? "#374151" : "#1f2937",
                       }}
                     />
-                    <span className={`text-[9px] leading-none ${isBest ? "text-[#10B981] font-bold" : "text-gray-600"}`}>
+                    <span className={`text-[9px] leading-none ${isBest ? "text-[#10B981] font-bold" : "text-gray-500"}`}>
                       {DOW_LABELS[i]}
                     </span>
                   </div>
                 );
               })}
             </div>
-            <p className="text-[9px] text-gray-600 text-center mt-1">
+            <p className="text-[9px] text-gray-500 text-center mt-1">
               {t("stats.bestDayLabel")}: <span className="text-[#10B981] font-medium">{DOW_LONG[bestDowIdx]}</span> ({bests.dowCounts[bestDowIdx]}{timesUnit})
             </p>
           </div>

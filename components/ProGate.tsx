@@ -45,7 +45,7 @@ export default function ProGate({
         <div className="text-center px-4">
           <div className="text-2xl mb-2">🔒</div>
           <p className="text-sm text-gray-400 mb-1">{featureText}</p>
-          <p className="text-xs text-gray-600 mb-4">{t("pro.available")}</p>
+          <p className="text-xs text-gray-500 mb-4">{t("pro.available")}</p>
           <a
             href={paymentUrl}
             target="_blank"
@@ -59,7 +59,7 @@ export default function ProGate({
           >
             {t("pro.upgradeButton")}
           </a>
-          <p className="text-[10px] text-gray-600 mt-2">
+          <p className="text-[10px] text-gray-500 mt-2">
             {t("pro.features")}
           </p>
         </div>

@@ -136,7 +136,7 @@ export default function AffiliateSection() {
           </a>
         ))}
       </div>
-      <p className="text-[9px] text-gray-600 text-center mt-2">
+      <p className="text-[9px] text-gray-500 text-center mt-2">
         {t("affiliate.disclaimer")}
       </p>
     </section>

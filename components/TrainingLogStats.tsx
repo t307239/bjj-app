@@ -48,7 +48,7 @@ export default function TrainingLogStats({ entries, hasMore }: Props) {
         </div>
       )}
       {hasMore && (
-        <p className="text-gray-600 text-xs text-center mt-2">
+        <p className="text-gray-500 text-xs text-center mt-2">
           ※ More data available. Click &ldquo;Load More&rdquo; to update
         </p>
       )}

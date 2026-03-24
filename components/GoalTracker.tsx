@@ -280,7 +280,7 @@ export default function GoalTracker({ userId }: Props) {
               </span>
             )}
             {!isOpen && !hasGoals && (
-              <span className="text-[10px] text-gray-600">{t("goal.setAGoal")}</span>
+              <span className="text-[10px] text-gray-500">{t("goal.setAGoal")}</span>
             )}
             <svg
               className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
@@ -363,7 +363,7 @@ export default function GoalTracker({ userId }: Props) {
                   <GoalWeekHeatmap weekHistory={weekHistory} consecutiveAchievedWeeks={consecutiveAchievedWeeks} />
                 </>
               ) : (
-                <p className="text-xs text-gray-600 mt-1">{t("goal.noGoal")}</p>
+                <p className="text-xs text-gray-500 mt-1">{t("goal.noGoal")}</p>
               )}
             </div>
           )}
@@ -421,7 +421,7 @@ export default function GoalTracker({ userId }: Props) {
                   )}
                 </>
               ) : (
-                <p className="text-xs text-gray-600 mt-1">{t("goal.noGoal")}</p>
+                <p className="text-xs text-gray-500 mt-1">{t("goal.noGoal")}</p>
               )}
             </div>
           )}
@@ -459,7 +459,7 @@ export default function GoalTracker({ userId }: Props) {
               {data.techniqueGoal > 0 ? (
                 <ProgressBar current={data.techniqueCount} target={data.techniqueGoal} sessionsUnit={t("chart.timesUnit")} doneLabel={t("goal.done")} />
               ) : (
-                <p className="text-xs text-gray-600 mt-1">{t("goal.noGoalParen")}</p>
+                <p className="text-xs text-gray-500 mt-1">{t("goal.noGoalParen")}</p>
               )}
             </div>
           )}

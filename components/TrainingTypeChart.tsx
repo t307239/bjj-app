@@ -225,7 +225,7 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color, trendSubtitle }: {
           const isCurrentMonth = m.key === months[5].key;
           return (
             <div key={m.key} className="flex-1 flex flex-col items-center justify-end gap-0.5">
-              <span className="text-[8px] text-gray-600 leading-none">
+              <span className="text-[8px] text-gray-500 leading-none">
                 {m.count > 0 ? m.count : ""}
               </span>
               <div
@@ -236,7 +236,7 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color, trendSubtitle }: {
                   backgroundColor: isCurrentMonth ? color : `${color}66`,
                 }}
               />
-              <span className={`text-[8px] leading-none ${isCurrentMonth ? "text-white font-semibold" : "text-gray-600"}`}>
+              <span className={`text-[8px] leading-none ${isCurrentMonth ? "text-white font-semibold" : "text-gray-500"}`}>
                 {m.label}
               </span>
             </div>
@@ -348,14 +348,14 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
       {total === 0 ? (
         period === "all" ? (
           <div className="flex flex-col items-center justify-center h-24 gap-2">
-            <svg className="w-8 h-8 text-zinc-600 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <svg className="w-8 h-8 text-zinc-500 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m8.66-13l-.87.5M4.21 15.5l-.87.5M19.79 15.5l-.87-.5M4.21 8.5l-.87-.5M21 12h-1M4 12H3m15.36-6.36l-.7.7M6.34 17.66l-.7.7M17.66 17.66l.7.7M6.34 6.34l.7.7" />
             </svg>
             <p className="text-sm text-gray-500">{t("chart.noSessionsYet")}</p>
-            <p className="text-xs text-gray-600">{t("chart.logToFillChart")}</p>
+            <p className="text-xs text-gray-500">{t("chart.logToFillChart")}</p>
           </div>
         ) : (
-          <div className="text-center py-4 text-gray-600 text-xs">
+          <div className="text-center py-4 text-gray-500 text-xs">
             {period === "week" ? t("chart.noSessionsThisWeek") : t("chart.noSessionsThisMonth")}
           </div>
         )
@@ -381,9 +381,9 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${d.bg}`} />
                     <span className={`text-xs flex-1 truncate ${isSelected ? "text-white font-medium" : "text-gray-400"}`}>{d.label}</span>
                     <span className="text-xs font-medium text-white">{d.count}{t("chart.timesUnit")}</span>
-                    <span className="text-[10px] text-gray-600 w-7 text-right">{pct}%</span>
+                    <span className="text-[10px] text-gray-500 w-7 text-right">{pct}%</span>
                     {d.totalMins > 0 && (
-                      <span className="text-[10px] text-gray-600 w-8 text-right">{fmtMins(d.totalMins)}</span>
+                      <span className="text-[10px] text-gray-500 w-8 text-right">{fmtMins(d.totalMins)}</span>
                     )}
                     <MiniSparkline logs={allLogs} typeValue={d.value} color={d.color} />
                   </div>

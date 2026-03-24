@@ -385,7 +385,7 @@ export default function TechniqueLogList({
                         {t("techniques.masteryLevels." + technique.mastery_level)}
                       </span>
                       {technique.created_at && (
-                        <span className="text-[10px] text-gray-600 ml-auto">
+                        <span className="text-[10px] text-gray-500 ml-auto">
                           {relativeDate(technique.created_at, t)}
                         </span>
                       )}

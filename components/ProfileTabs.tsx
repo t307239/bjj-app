@@ -26,7 +26,7 @@ function AccountSection({ userId }: { userId: string }) {
     <div className="space-y-4">
       <div className="bg-zinc-900 rounded-xl p-5 border border-white/10">
         <h3 className="text-gray-400 text-sm font-semibold mb-3">{t("profile.appSettings")}</h3>
-        <p className="text-gray-600 text-xs">{t("profile.settingsSoon")}</p>
+        <p className="text-gray-500 text-xs">{t("profile.settingsSoon")}</p>
       </div>
       <div className="bg-zinc-900 rounded-xl p-5 border border-red-900/30">
         <h3 className="text-red-400 text-xs tracking-wider mb-3">{t("profile.dangerZone")}</h3>

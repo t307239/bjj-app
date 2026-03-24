@@ -34,14 +34,14 @@ export function GoalWeekDayGrid({
                   : isToday
                   ? "bg-blue-500/20 border border-blue-500/50 text-blue-300"
                   : isPast
-                  ? "bg-white/3 border border-dashed border-white/20 text-gray-600"
-                  : "bg-transparent text-gray-700"
+                  ? "bg-white/3 border border-dashed border-white/20 text-gray-500"
+                  : "bg-transparent text-gray-600"
               }`}
             >
               {trained ? "✓" : isToday ? "•" : ""}
             </div>
             <span className={`text-[8px] leading-none ${
-              isToday ? "text-gray-300 font-semibold" : isFuture ? "text-gray-700" : "text-gray-600"
+              isToday ? "text-gray-300 font-semibold" : isFuture ? "text-gray-600" : "text-gray-500"
             }`}>
               {label}
             </span>
@@ -75,7 +75,7 @@ export function GoalDaysLeftText({
     </p>
   );
   if (daysLeftInWeek === 0) return (
-    <p className="text-[10px] text-gray-600 mt-1.5">{t("goal.zeroDaysLeft", { n: needed })}</p>
+    <p className="text-[10px] text-gray-500 mt-1.5">{t("goal.zeroDaysLeft", { n: needed })}</p>
   );
   return (
     <p className="text-[10px] text-gray-500 mt-1.5">
@@ -111,12 +111,12 @@ export function GoalWeekHeatmap({
                     : "bg-blue-500/20 border border-blue-500/40 text-blue-300"
                   : w.achieved
                   ? "bg-green-500/25 text-green-400"
-                  : "bg-transparent border border-dashed border-white/20 text-gray-600"
+                  : "bg-transparent border border-dashed border-white/20 text-gray-500"
               }`}
             >
               {w.achieved ? "✓" : w.count > 0 ? w.count : "-"}
             </div>
-            <span className={`text-[8px] leading-none ${w.isCurrent ? "text-gray-300" : "text-gray-600"}`}>
+            <span className={`text-[8px] leading-none ${w.isCurrent ? "text-gray-300" : "text-gray-500"}`}>
               {w.isCurrent
                 ? t("goal.thisWeek")
                 : weekHistory.indexOf(w) === weekHistory.length - 2
@@ -158,18 +158,18 @@ export function GoalMonthHistoryBadges({
               className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors ${
                 m.achieved
                   ? "bg-green-500 text-white shadow-sm shadow-green-500/40"
-                  : "border border-dashed border-white/20 text-gray-600"
+                  : "border border-dashed border-white/20 text-gray-500"
               }`}
             >
               {m.achieved ? "✓" : m.count}
             </div>
-            <span className={`text-[9px] ${m.achieved ? "text-green-400" : "text-gray-600"}`}>
+            <span className={`text-[9px] ${m.achieved ? "text-green-400" : "text-gray-500"}`}>
               {m.label}
             </span>
           </div>
         ))}
       </div>
-      <p className="text-[10px] text-gray-600 mt-2 text-center">
+      <p className="text-[10px] text-gray-500 mt-2 text-center">
         {t("goal.monthsAchieved", { n: monthHistory.filter((m) => m.achieved).length })}
       </p>
     </div>

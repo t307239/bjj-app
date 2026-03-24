@@ -422,7 +422,7 @@ export default async function DashboardPage({
               <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">
                 {streak}
               </span>
-              <span className="text-zinc-600 text-[10px] mb-0.5">
+              <span className="text-zinc-500 text-[10px] mb-0.5">
                 {t("dashboard.streakDaysUnit")}
               </span>
             </div>
@@ -448,7 +448,7 @@ export default async function DashboardPage({
               <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
                 {weekCount ?? 0}
               </span>
-              <span className="text-zinc-600 text-[10px] mb-0.5">
+              <span className="text-zinc-500 text-[10px] mb-0.5">
                 {t("dashboard.sessionsUnit")}
               </span>
             </div>
@@ -486,7 +486,7 @@ export default async function DashboardPage({
               <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-rose-400 to-orange-400 bg-clip-text text-transparent">
                 {monthCount ?? 0}
               </span>
-              <span className="text-zinc-600 text-sm mb-0.5">
+              <span className="text-zinc-500 text-sm mb-0.5">
                 {t("dashboard.sessionsUnit")}
               </span>
             </div>
@@ -549,13 +549,13 @@ export default async function DashboardPage({
                   <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-violet-400 to-purple-300 bg-clip-text text-transparent">
                     {techniqueCount ?? 0}
                   </span>
-                  <span className="text-zinc-600 text-[10px] mb-0.5">
+                  <span className="text-zinc-500 text-[10px] mb-0.5">
                     {t("dashboard.loggedUnit")}
                   </span>
                 </div>
               </div>
               <svg
-                className="w-4 h-4 text-zinc-600 group-hover:text-violet-400 transition-colors flex-shrink-0"
+                className="w-4 h-4 text-zinc-500 group-hover:text-violet-400 transition-colors flex-shrink-0"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -592,7 +592,7 @@ export default async function DashboardPage({
                 <span className="text-3xl font-black leading-none tabular-nums text-zinc-300">
                   {avgSessionMin}
                 </span>
-                <span className="text-zinc-600 text-[10px] mb-0.5">
+                <span className="text-zinc-500 text-[10px] mb-0.5">
                   {t("dashboard.bentoMinPerSession")}
                 </span>
               </div>

@@ -82,7 +82,7 @@ export default function GymRegistrationForm({ userId }: Props) {
 
         {error && <p className="text-red-400 text-xs mt-3">{error}</p>}
 
-        <p className="text-[10px] text-gray-600 mt-4">
+        <p className="text-[10px] text-gray-500 mt-4">
           {t("gym.noCardRequired")}
         </p>
       </div>

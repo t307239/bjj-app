@@ -186,7 +186,7 @@ export default function WeeklyStrip({ userId }: Props) {
                     ? "text-[#10B981] font-semibold"
                     : trained
                     ? "text-gray-300"
-                    : "text-gray-600"
+                    : "text-gray-500"
                 }`}
               >
                 {day.label}

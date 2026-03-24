@@ -190,7 +190,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
                 {t("freeze.recentUsage")}{" "}
                 {historyDates.map((d, i) => (
                   <span key={i}>
-                    <span className={i === 0 ? "text-emerald-400" : "text-gray-600"}>
+                    <span className={i === 0 ? "text-emerald-400" : "text-gray-500"}>
                       {fmtDate(d)}
                     </span>
                     {i < historyDates.length - 1 && (
@@ -212,7 +212,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
               <span className="text-base opacity-40">❄️</span>
               <div>
                 <p className="text-xs font-medium text-gray-400">{t("freeze.zeroRemaining")}</p>
-                <p className="text-[11px] text-gray-600">{t("freeze.getUnlimited")}</p>
+                <p className="text-[11px] text-gray-500">{t("freeze.getUnlimited")}</p>
               </div>
             </div>
             <a
