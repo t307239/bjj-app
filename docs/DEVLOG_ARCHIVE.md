@@ -2,6 +2,12 @@
 
 ---
 
+- Day4fo_94 (2026/03/24): **UIバグ3件修正（ユーザー報告）**
+  - NavBar Home タブの橙丸ドット (`trainedToday === false` 表示) を削除 — desktop + mobile両方 ✅
+  - SkillMapPC 空ステート: `AddNodeInput`（`position:absolute zIndex:20`）がNavBar(z-50)の裏に隠れて入力不可になるバグを修正。専用インライン `EmptyStateAddForm` コンポーネントに置換 ✅
+  - PersonalBests: アコーディオン展開時に「📊 Personal Records」ヘッダーが二重表示される問題を修正（内側のh4を削除） ✅
+  - TypeScript 0エラー ✅
+
 - Day4fo_93 (2026/03/24): **全プライマリボタン active:scale-95 タップフィードバック + ProfileForm emerald統一**
   - TechniqueLogList (Add / Save) / ProfileForm (Save) / GoalTrackerEditor (Save) / GymRegistrationForm (Create) / TechniqueLogForm (Save x2) / StreakFreeze (Use freeze) / GuestDashboard (Log / CTA) — 全9ボタンに `active:scale-95 transition-all` 追加 ✅
   - ProfileForm: CSV export button + totalMinutes stat を blue → emerald (#10B981) 統一 ✅
