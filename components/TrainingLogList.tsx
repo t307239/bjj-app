@@ -3,6 +3,7 @@
 import { useLocale } from "@/lib/i18n";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import ShareButton from "@/components/ShareButton";
+import SwipeableCard from "@/components/SwipeableCard";
 import {
   type TrainingEntry,
   type CompData,
@@ -191,8 +192,11 @@ export default function TrainingLogList({
     <>
       <div className="max-h-[520px] overflow-y-auto scrollbar-hide space-y-3 pr-0.5">
         {filtered.map((entry) => (
-          <div
+          // B-10: SwipeableCard — left swipe = delete, right swipe = edit
+          <SwipeableCard
             key={entry.id}
+            onDelete={() => onDelete(entry.id)}
+            onEdit={() => onStartEdit(entry)}
             className={`bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:bg-white/[0.04] transition-colors duration-150${
               entry.type === "competition" ? " border-l-2 border-l-red-500" : ""
             }`}
@@ -463,7 +467,7 @@ export default function TrainingLogList({
                 </div>
               </div>
             )}
-          </div>
+          </SwipeableCard>
         ))}
         {/* Load more button — inside scroll container */}
         {hasMore && (
