@@ -599,7 +599,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
           <div className="flex gap-2">
             {[0, 1, 2, 3, 4].map((s) => (
               <button key={s} type="button" onClick={() => setForm({ ...form, stripe: s })}
-                className={"flex-1 py-2 rounded-lg text-sm font-semibold transition-all " + (form.stripe === s ? "bg-[#10B981] text-white" : "bg-zinc-800 text-gray-400 hover:text-white")}>
+                className={"flex-1 py-2 rounded-lg text-sm font-semibold transition-all active:scale-95 " + (form.stripe === s ? "bg-[#10B981] text-white" : "bg-zinc-800 text-gray-400 hover:text-white")}>
                 {s}
               </button>
             ))}

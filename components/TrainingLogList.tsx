@@ -299,16 +299,16 @@ export default function TrainingLogList({
                 <div className="flex gap-2">
                   <button
                     type="submit"
-                    className="flex-1 bg-[#10B981] text-white text-xs font-semibold py-1.5 rounded-lg"
+                    className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-xs font-semibold py-1.5 rounded-lg transition-all"
                   >
-                    Update
+                    {t("training.update")}
                   </button>
                   <button
                     type="button"
                     onClick={onCancelEdit}
-                    className="px-3 text-gray-400 text-xs"
+                    className="px-3 text-gray-400 hover:text-gray-200 text-xs transition-colors"
                   >
-                    Cancel
+                    {t("training.cancel")}
                   </button>
                 </div>
               </form>
