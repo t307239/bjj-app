@@ -152,7 +152,8 @@
     "periodLabel": "Period",
     "periodAll": "All Time",
     "periodMonth": "This Month",
-    "periodWeek": "This Week"
+    "periodWeek": "This Week",
+    "filterByDate": "Filter by Date"
   },
   "techniques": {
     "mastery1": "Know it",

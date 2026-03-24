@@ -689,7 +689,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
                 onClick={() => setDateFrom(today)}
                 className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors active:scale-95 text-gray-400 border border-white/10 hover:text-gray-300 hover:border-white/20"
               >
-                📅 {t("training.filterByDate") ?? "Filter by Date"}
+                📅 {t("training.filterByDate")}
               </button>
             ) : (
               <>
