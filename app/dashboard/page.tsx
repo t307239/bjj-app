@@ -165,7 +165,7 @@ export default async function DashboardPage({
   const { data: profileData } = await supabase
     .from("profiles")
     .select(
-      "belt, stripe, start_date, is_pro, gym_name, weekly_goal, subscription_status, gym_id, gym_kick_notified, share_data_with_gym"
+      "belt, stripe, start_date, is_pro, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym"
     )
     .eq("id", user.id)
     .single();
