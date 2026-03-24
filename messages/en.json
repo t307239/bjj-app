@@ -834,7 +834,11 @@
     "invalidInviteDesc": "This gym invite link is no longer valid or has expired.",
     "goToDashboard": "Go to dashboard",
     "defaultOwnerName": "Gym Owner",
-    "atChurnRisk1": "1 student at churn risk"
+    "atChurnRisk1": "1 student at churn risk",
+    "nudgeCopy": "Copy reminder",
+    "nudgeCopied": "Copied!",
+    "nudgeTemplate": "Hey! We miss you on the mat. Come train with us soon! 🥋",
+    "nudgeAriaLabel": "Copy reminder message for {name}"
   },
   "gymJoin": {
     "title": "Join {name}",

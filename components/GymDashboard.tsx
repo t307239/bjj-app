@@ -621,6 +621,15 @@ function MemberCard({
   onKickRequest?: (member: MemberRow) => void;
 }) {
   const { t } = useLocale();
+  const [nudgeCopied, setNudgeCopied] = useState(false);
+
+  const handleNudge = () => {
+    const msg = t("gym.nudgeTemplate");
+    navigator.clipboard.writeText(msg).then(() => {
+      setNudgeCopied(true);
+      setTimeout(() => setNudgeCopied(false), 2000);
+    });
+  };
   const lastSeenText = member.last_training_date
     ? (() => {
         const days = Math.floor((Date.now() - new Date(member.last_training_date).getTime()) / 86400000);
@@ -668,6 +677,22 @@ function MemberCard({
           </span>
         ) : null}
       </div>
+
+      {/* Nudge button: copy reminder msg for at-risk members (Pro only) */}
+      {showDetail && (risk === "yellow" || risk === "red") && (
+        <button
+          onClick={handleNudge}
+          className={`flex-shrink-0 text-xs px-2 py-1 rounded-lg transition-colors ${
+            nudgeCopied
+              ? "text-green-400 bg-green-400/10"
+              : "text-gray-500 hover:text-yellow-400 hover:bg-yellow-400/10"
+          }`}
+          title={t("gym.nudgeAriaLabel", { name: member.display_name ?? "member" })}
+          aria-label={t("gym.nudgeAriaLabel", { name: member.display_name ?? "member" })}
+        >
+          {nudgeCopied ? t("gym.nudgeCopied") : t("gym.nudgeCopy")}
+        </button>
+      )}
 
       {/* Kick button (gym owner only) */}
       {onKickRequest && (
