@@ -122,18 +122,18 @@ export default function StreakFreeze({ userId, streak }: Props) {
 
       {/* 危機警告 + フリーズ使用 */}
       {showWarning && (
-        <div className="bg-zinc-950 border border-blue-500/40 rounded-xl p-4 mb-4">
+        <div className="bg-zinc-950 border border-[#10B981]/40 rounded-xl p-4 mb-4">
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-start gap-2">
               <span className="text-xl mt-0.5">❄️</span>
               <div>
-                <p className="text-sm font-semibold text-blue-300">
+                <p className="text-sm font-semibold text-emerald-300">
                   {t("freeze.atRisk", { n: streak })}
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5">
                   {t("freeze.noYesterday")}
                 </p>
-                <p className="text-[11px] text-blue-400 mt-1">{t("freeze.remaining", { n: freezeCount })}</p>
+                <p className="text-[11px] text-emerald-400 mt-1">{t("freeze.remaining", { n: freezeCount })}</p>
                 {historyDates.length > 0 && (
                   <p className="text-[10px] text-gray-500 mt-0.5">
                     {t("freeze.recentUsage")} {historyDates.map(fmtDate).join(" / ")}
@@ -176,10 +176,10 @@ export default function StreakFreeze({ userId, streak }: Props) {
             </div>
             <div className="flex items-center gap-1">
               {Array.from({ length: Math.min(3, freezeCount) }).map((_, i) => (
-                <span key={i} className="text-blue-400 text-base">❄️</span>
+                <span key={i} className="text-emerald-400 text-base">❄️</span>
               ))}
               {freezeCount > 3 && (
-                <span className="text-[11px] text-blue-400">+{freezeCount - 3}</span>
+                <span className="text-[11px] text-emerald-400">+{freezeCount - 3}</span>
               )}
             </div>
           </div>
@@ -190,7 +190,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
                 {t("freeze.recentUsage")}{" "}
                 {historyDates.map((d, i) => (
                   <span key={i}>
-                    <span className={i === 0 ? "text-blue-400" : "text-gray-600"}>
+                    <span className={i === 0 ? "text-emerald-400" : "text-gray-600"}>
                       {fmtDate(d)}
                     </span>
                     {i < historyDates.length - 1 && (
@@ -206,7 +206,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
 
       {/* Freeze count 0 → Pro upgrade CTA */}
       {showStatus && freezeCount === 0 && !isPro && streak >= 3 && (
-        <div className="bg-zinc-900 rounded-xl px-4 py-3 mb-4 border border-blue-500/20">
+        <div className="bg-zinc-900 rounded-xl px-4 py-3 mb-4 border border-[#10B981]/20">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-base opacity-40">❄️</span>

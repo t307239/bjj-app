@@ -118,7 +118,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
             href={curriculumUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-blue-500 font-semibold hover:underline"
+            className="text-xs text-[#10B981] font-semibold hover:underline"
           >
             {t("gym.curriculumCardCta")}
           </a>

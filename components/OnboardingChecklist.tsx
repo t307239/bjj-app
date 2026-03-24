@@ -52,7 +52,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
   if (completedCount === steps.length || dismissed) return null;
 
   return (
-    <div className="mb-6 bg-blue-950/40 border border-blue-500/30 rounded-2xl p-4 relative">
+    <div className="mb-6 bg-emerald-950/40 border border-emerald-500/30 rounded-2xl p-4 relative">
       {/* Dismiss button */}
       <button
         onClick={() => setDismissed(true)}
@@ -66,13 +66,13 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
       <div className="flex items-center gap-2 mb-3 pr-4">
         <span className="text-base">🚀</span>
         <div className="flex-1">
-          <p className="text-sm font-bold text-blue-300">
+          <p className="text-sm font-bold text-emerald-300">
             {t("onboarding.title")} — {t("onboarding.progress", { done: completedCount, total: steps.length })}
           </p>
           {/* Progress bar */}
           <div className="mt-1.5 h-1 bg-zinc-800 rounded-full overflow-hidden">
             <div
-              className="h-full bg-blue-500 rounded-full transition-all duration-500"
+              className="h-full bg-[#10B981] rounded-full transition-all duration-500"
               style={{ width: `${(completedCount / steps.length) * 100}%` }}
             />
           </div>
@@ -84,20 +84,20 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
         {steps.map((step) => (
           step.done ? (
             <div key={step.id} className="flex items-center gap-2.5 px-1 py-1.5 opacity-40">
-              <span className="w-5 h-5 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-[10px] text-blue-400">✓</span>
+              <span className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-[10px] text-emerald-400">✓</span>
               <span className="text-xs text-zinc-500 line-through">{step.emoji} {step.label}</span>
             </div>
           ) : (
             <Link
               key={step.id}
               href={step.href}
-              className="flex items-center gap-2.5 px-1 py-1.5 rounded-lg hover:bg-blue-500/10 transition-colors group"
+              className="flex items-center gap-2.5 px-1 py-1.5 rounded-lg hover:bg-emerald-500/10 transition-colors group"
             >
-              <span className="w-5 h-5 rounded-full border border-blue-500/40 flex items-center justify-center shrink-0 group-hover:border-blue-400 transition-colors" />
-              <span className="text-xs text-zinc-300 group-hover:text-blue-300 transition-colors">
+              <span className="w-5 h-5 rounded-full border border-emerald-500/40 flex items-center justify-center shrink-0 group-hover:border-emerald-400 transition-colors" />
+              <span className="text-xs text-zinc-300 group-hover:text-emerald-300 transition-colors">
                 {step.emoji} {step.label}
               </span>
-              <svg className="ml-auto w-4 h-4 text-zinc-600 group-hover:text-blue-400 transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <svg className="ml-auto w-4 h-4 text-zinc-600 group-hover:text-emerald-400 transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </Link>
