@@ -23,7 +23,7 @@ export default function CollapsibleSection({ label, defaultOpen = true, contentH
           {label}
         </span>
         {!isOpen && contentHint && (
-          <span className="flex-1 text-[10px] text-zinc-700 truncate text-center px-2">
+          <span className="flex-1 text-[10px] text-zinc-500 truncate text-center px-2">
             {contentHint}
           </span>
         )}

@@ -25,7 +25,7 @@ export default function ProUpgradeBanner({ isPro }: Props) {
             {t("pro.bannerFeatures")}
           </p>
           {/* Social proof */}
-          <p className="text-[10px] text-zinc-600 mt-1">{t("pro.socialProof")}</p>
+          <p className="text-[10px] text-zinc-500 mt-1">{t("pro.socialProof")}</p>
         </div>
         {PAYMENT_LINK ? (
           <a
