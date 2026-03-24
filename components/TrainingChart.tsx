@@ -18,6 +18,7 @@ type MonthData = {
 
 type Props = {
   userId: string;
+  isPro?: boolean;
   onLogRoll?: () => void;
 };
 
@@ -27,7 +28,7 @@ function toLocalStr(d: Date): string {
 }
 
 // 過去84日（12週）のヒートマップ + 月別棒グラフ
-export default function TrainingChart({ userId, onLogRoll }: Props) {
+export default function TrainingChart({ userId, isPro = false, onLogRoll }: Props) {
   const { t } = useLocale();
   const [data, setData] = useState<DayData[]>([]);
   const [monthData, setMonthData] = useState<MonthData[]>([]);
@@ -101,6 +102,38 @@ export default function TrainingChart({ userId, onLogRoll }: Props) {
   }, [userId]);
 
   if (loading) return null;
+
+  // ── Pro paywall: データがある非Proはblur + upgrade CTA ──────────────────
+  if (!isPro && data.some((d) => d.count > 0)) {
+    return (
+      <div className="relative bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4 overflow-hidden">
+        <h4 className="text-sm font-medium text-gray-300 mb-3">{t("chart.activity")}</h4>
+        <div className="blur-sm opacity-40 pointer-events-none select-none">
+          <div className="flex gap-1">
+            {Array.from({ length: 12 }, (_, wi) => (
+              <div key={wi} className="flex flex-col gap-1">
+                {Array.from({ length: 7 }, (_, di) => {
+                  const v = (wi * 7 + di * 3 + wi + di) % 4;
+                  const cls = v === 0 ? "bg-zinc-900/50" : v === 1 ? "bg-green-700/60" : v === 2 ? "bg-green-500/80" : "bg-green-400";
+                  return <div key={di} className={`w-3 h-3 rounded-sm ${cls}`} />;
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900/80">
+          <span className="text-2xl mb-2">🔒</span>
+          <p className="text-sm font-semibold text-zinc-100">{t("chart.proOnly")}</p>
+          <a
+            href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#"}
+            className="mt-3 bg-yellow-500 hover:bg-yellow-400 text-black text-xs font-semibold px-4 py-2 rounded-lg transition-colors"
+          >
+            {t("chart.upgradeToProBtn")}
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   // ── Empty state teaser (#4): blurred dummy chart + CTA overlay ──────────
   const isEmpty = data.every((d) => d.count === 0);

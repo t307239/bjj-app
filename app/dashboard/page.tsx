@@ -529,9 +529,9 @@ export default async function DashboardPage() {
         {/* ── Section 5: Analytics（デスクトップ: 展開済み / モバイル: 折りたたみ） ── */}
         <CollapsibleSection label={t("dashboard.analyticsLabel")} defaultOpen={false} contentHint={t("dashboard.analyticsHint")}>
           <TrainingBarChart userId={user.id} isPro={isPro} />
-          <TrainingTypeChart userId={user.id} />
+          <TrainingTypeChart userId={user.id} isPro={isPro} />
           <CompetitionStats userId={user.id} />
-          <TrainingChart userId={user.id} onLogRoll={() => window.scrollTo({ top: 0, behavior: "smooth" })} />
+          <TrainingChart userId={user.id} isPro={isPro} onLogRoll={() => window.scrollTo({ top: 0, behavior: "smooth" })} />
         </CollapsibleSection>
 
         {/* ── Section 6: Insights & More（最下部・低緊急度） ── */}

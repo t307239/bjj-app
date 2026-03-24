@@ -23,7 +23,7 @@ const TYPE_DEFS_BASE = [
 
 type Period = "all" | "month" | "week";
 
-type Props = { userId: string };
+type Props = { userId: string; isPro?: boolean };
 
 function toLocalDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -247,7 +247,7 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color, trendSubtitle }: {
   );
 }
 
-export default function TrainingTypeChart({ userId }: Props) {
+export default function TrainingTypeChart({ userId, isPro = false }: Props) {
   const { t } = useLocale();
   const [allLogs, setAllLogs] = useState<{ date: string; type: string; duration_min: number | null }[]>([]);
   const [loading, setLoading] = useState(true);
@@ -319,7 +319,15 @@ export default function TrainingTypeChart({ userId }: Props) {
           </svg>
         </div>
       </button>
-      {isOpen && (<div className="p-4 border-t border-white/10">
+      {isOpen && (<div className={`p-4 border-t border-white/10 ${!isPro ? "relative" : ""}`}>{!isPro && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-zinc-900/80 rounded-b-xl">
+          <span className="text-2xl mb-2">🔒</span>
+          <p className="text-sm font-semibold text-zinc-100">{t("chart.proOnly")}</p>
+          <a href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#"} className="mt-3 bg-yellow-500 hover:bg-yellow-400 text-black text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
+            {t("chart.upgradeToProBtn")}
+          </a>
+        </div>
+      )}
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-sm font-medium text-gray-300">{t("chart.typeDistribution")}</h4>
         <div className="flex bg-zinc-800 rounded-lg p-0.5">
