@@ -194,7 +194,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
                       {fmtDate(d)}
                     </span>
                     {i < historyDates.length - 1 && (
-                      <span className="text-gray-700"> · </span>
+                      <span className="text-gray-500"> · </span>
                     )}
                   </span>
                 ))}

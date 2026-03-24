@@ -129,7 +129,7 @@ export default function AffiliateSection() {
               <span className="text-[10px] bg-white/10 text-gray-400 px-1.5 py-0.5 rounded">
                 {t(`affiliate.level.${p.levelKey}`)}
               </span>
-              <div className="text-orange-400 text-[10px] mt-1 opacity-60 group-hover:opacity-100 transition-opacity">
+              <div className="text-orange-400 text-[10px] mt-1">
                 {t("affiliate.view")}
               </div>
             </div>

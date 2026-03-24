@@ -4,18 +4,32 @@ import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import ProfileTabs from "@/components/ProfileTabs";
 import { serverT as t } from "@/lib/i18n";
+import {
+  getLocalDateString,
+  getYesterdayDateString,
+} from "@/lib/timezone";
 
 export const metadata: Metadata = {
   title: "Profile",
-  description: "Manage your BJJ profile — belt rank, gym, goals, and lifetime training stats.",
+  description:
+    "Manage your BJJ profile — belt rank, gym, goals, and lifetime training stats.",
 };
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ProfilePage",
-  "name": "BJJ App Profile",
-  "description": "Manage your Brazilian Jiu-Jitsu training profile, belt rank, and goals",
-  "url": "https://bjj-app.net/profile",
+  name: "BJJ App Profile",
+  description:
+    "Manage your Brazilian Jiu-Jitsu training profile, belt rank, and goals",
+  url: "https://bjj-app.net/profile",
+};
+
+const BELT_COLORS: Record<string, { bg: string; text: string; border: string }> = {
+  white:  { bg: "bg-zinc-100",   text: "text-zinc-900",  border: "border-zinc-300" },
+  blue:   { bg: "bg-blue-600",   text: "text-white",      border: "border-blue-400" },
+  purple: { bg: "bg-purple-600", text: "text-white",      border: "border-purple-400" },
+  brown:  { bg: "bg-amber-800",  text: "text-white",      border: "border-amber-600" },
+  black:  { bg: "bg-zinc-900",   text: "text-white",      border: "border-zinc-600" },
 };
 
 export default async function ProfilePage() {
@@ -24,9 +38,7 @@ export default async function ProfilePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect("/login?next=/profile");
-  }
+  if (!user) redirect("/login?next=/profile");
 
   const displayName =
     user.user_metadata?.full_name ||
@@ -36,6 +48,69 @@ export default async function ProfilePage() {
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
+  // Fetch profile + stats for hero section
+  const [
+    { data: profile },
+    { count: totalCount },
+    { data: recentLogs },
+  ] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("belt, stripe, start_date, is_pro, gym_name")
+      .eq("id", user.id)
+      .single(),
+    supabase
+      .from("training_logs")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id),
+    supabase
+      .from("training_logs")
+      .select("date")
+      .eq("user_id", user.id)
+      .order("date", { ascending: false })
+      .limit(60),
+  ]);
+
+  const belt = profile?.belt ?? "white";
+  const stripeCount = profile?.stripe ?? 0;
+  const isPro = profile?.is_pro ?? false;
+  const gymName = profile?.gym_name ?? null;
+  const beltStyle = BELT_COLORS[belt] ?? BELT_COLORS.white;
+
+  // Calculate streak
+  let streak = 0;
+  if (recentLogs && recentLogs.length > 0) {
+    const dates = [
+      ...new Set(recentLogs.map((l: { date: string }) => l.date)),
+    ].sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+    const today = getLocalDateString();
+    const yesterday = getYesterdayDateString();
+    if (dates[0] === today || dates[0] === yesterday) {
+      streak = 1;
+      for (let i = 1; i < dates.length; i++) {
+        const diff = Math.round(
+          (new Date(dates[i - 1] as string).getTime() -
+            new Date(dates[i] as string).getTime()) /
+            86400000
+        );
+        if (diff === 1) streak++;
+        else break;
+      }
+    }
+  }
+
+  // BJJ months
+  let monthsBJJ = 0;
+  if (profile?.start_date) {
+    monthsBJJ = Math.max(
+      0,
+      Math.floor(
+        (Date.now() - new Date(profile.start_date).getTime()) /
+          (1000 * 60 * 60 * 24 * 30)
+      )
+    );
+  }
+
   return (
     <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
       <script
@@ -43,27 +118,104 @@ export default async function ProfilePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <NavBar displayName={displayName} avatarUrl={avatarUrl} />
-      <main className="max-w-4xl mx-auto px-4 py-6">
-        {/* ユーザー情報 */}
-        <div className="flex items-center gap-4 mb-6">
-          {avatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={avatarUrl}
-              alt={displayName}
-              className="w-16 h-16 rounded-full border-2 border-white/20"
-            />
-          ) : (
-            <div className="w-16 h-16 rounded-full bg-zinc-700 flex items-center justify-center text-white text-2xl font-bold">
-              {displayName[0].toUpperCase()}
+
+      <main className="max-w-4xl mx-auto px-4 py-5">
+
+        {/* ═══════════════════════════════════════════
+            PROFILE HERO
+            ═══════════════════════════════════════════ */}
+        <div className="bg-zinc-900/40 border border-white/8 rounded-2xl p-5 mb-6">
+          <div className="flex items-start gap-4">
+            {/* Avatar */}
+            {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={avatarUrl}
+                alt={displayName}
+                className="w-16 h-16 rounded-2xl border border-white/15 object-cover flex-shrink-0"
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-2xl bg-zinc-800 border border-white/10 flex items-center justify-center flex-shrink-0">
+                <span className="text-2xl font-black text-white">
+                  {displayName[0]?.toUpperCase() ?? "?"}
+                </span>
+              </div>
+            )}
+
+            {/* Identity */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-lg font-bold text-white truncate">
+                  {displayName}
+                </h1>
+                {isPro && (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded-full">
+                    ✦ PRO
+                  </span>
+                )}
+              </div>
+              <p className="text-gray-500 text-xs mt-0.5 truncate">
+                {user.email}
+              </p>
+              {gymName && (
+                <p className="text-gray-400 text-xs mt-0.5 truncate">
+                  🥋 {gymName}
+                </p>
+              )}
+
+              {/* Belt badge */}
+              <div className="flex items-center gap-2 mt-3">
+                <div
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold ${beltStyle.bg} ${beltStyle.text} ${beltStyle.border}`}
+                >
+                  <span className="capitalize">{belt}</span>
+                  {stripeCount > 0 && (
+                    <div className="flex gap-0.5">
+                      {Array.from({ length: stripeCount }).map((_, i) => (
+                        <div
+                          key={i}
+                          className="w-1 h-3 bg-current opacity-70 rounded-full"
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-          )}
-          <div>
-            <h2 className="text-2xl font-bold">{displayName}</h2>
-            <p className="text-gray-400 text-sm">{user.email}</p>
+          </div>
+
+          {/* Stats row */}
+          <div className="grid grid-cols-3 gap-3 mt-5 pt-4 border-t border-white/8">
+            <div className="text-center">
+              <p className="text-2xl font-black text-white tabular-nums">
+                {totalCount ?? 0}
+              </p>
+              <p className="text-[10px] text-zinc-500 mt-0.5 tracking-widest uppercase">
+                {t("dashboard.sessionsUnit")}
+              </p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-black tabular-nums bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">
+                {streak}
+              </p>
+              <p className="text-[10px] text-zinc-500 mt-0.5 tracking-widest uppercase">
+                {t("dashboard.streak")}
+              </p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-black text-white tabular-nums">
+                {monthsBJJ}
+              </p>
+              <p className="text-[10px] text-zinc-500 mt-0.5 tracking-widest uppercase">
+                mo. BJJ
+              </p>
+            </div>
           </div>
         </div>
-        {/* タブナビ */}
+
+        {/* ═══════════════════════════════════════════
+            PROFILE TABS (stats / settings / account)
+            ═══════════════════════════════════════════ */}
         <ProfileTabs userId={user.id} />
       </main>
     </div>
