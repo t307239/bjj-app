@@ -12,6 +12,7 @@ type FormState = {
   duration_min: number;
   type: string;
   notes: string;
+  instructor_name: string;
 };
 
 // ── DurationPicker (inline — extracted from TrainingLog) ─────────────────────
@@ -154,25 +155,46 @@ export default function TrainingLogForm({
         />
       </div>
 
-      {/* Type — large tappable tiles (fat-finger friendly) */}
+      {/* Type — Giant Gi/No-Gi toggle + sub-types */}
       <div className="mb-3">
         <label className="block text-gray-400 text-xs mb-2">{t("training.typeShort")}</label>
-        <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-5">
-          {TRAINING_TYPES.map((tt) => {
+        {/* Primary: Gi / No-Gi — giant 2-tap selector */}
+        <div className="grid grid-cols-2 gap-2 mb-2">
+          {[
+            { value: "gi",   label: "🥋 Gi",    activeClass: "border-blue-500 bg-blue-500/15 text-blue-300 shadow-sm shadow-blue-500/20" },
+            { value: "nogi", label: "👕 No-Gi", activeClass: "border-orange-500 bg-orange-500/15 text-orange-300 shadow-sm shadow-orange-500/20" },
+          ].map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => setForm({ ...form, type: opt.value })}
+              className={`py-3 rounded-xl border-2 text-sm font-bold transition-all active:scale-95 ${
+                form.type === opt.value
+                  ? opt.activeClass
+                  : "border-white/10 bg-zinc-800/60 text-gray-500 hover:border-white/20 hover:text-gray-300"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        {/* Secondary: Other types — compact sub-grid */}
+        <div className="grid grid-cols-4 gap-1.5">
+          {TRAINING_TYPES.filter((tt) => tt.value !== "gi" && tt.value !== "nogi").map((tt) => {
             const active = form.type === tt.value;
             return (
               <button
                 key={tt.value}
                 type="button"
                 onClick={() => setForm({ ...form, type: tt.value })}
-                className={`flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-xl border text-xs font-semibold transition-all active:scale-95 ${
+                className={`flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-xl border text-xs font-semibold transition-all active:scale-95 ${
                   active
                     ? "bg-[#10B981]/15 border-[#10B981]/60 text-[#10B981] shadow-sm shadow-[#10B981]/20"
                     : "bg-zinc-800/60 border-white/10 text-gray-400 hover:border-white/20 hover:text-white"
                 }`}
               >
-                <span className="text-xl leading-none">{tt.icon}</span>
-                <span className="leading-none text-[11px]">{tt.label}</span>
+                <span className="text-lg leading-none">{tt.icon}</span>
+                <span className="leading-none text-[10px]">{tt.label}</span>
               </button>
             );
           })}
@@ -282,6 +304,18 @@ export default function TrainingLogForm({
           <p className="text-[10px] text-gray-600 mt-0.5">{t("competition.techAppendNote")}</p>
         </div>
       )}
+
+      {/* Instructor (B-04: optional, for BJJ Wrapped year-end stats) */}
+      <div className="mb-3">
+        <label className="block text-gray-400 text-xs mb-1">{t("training.instructor")}</label>
+        <input
+          type="text"
+          value={form.instructor_name ?? ""}
+          onChange={(e) => setForm({ ...form, instructor_name: e.target.value })}
+          placeholder={t("training.instructorPlaceholder")}
+          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
+        />
+      </div>
 
       {/* Notes */}
       <div className="mb-4">

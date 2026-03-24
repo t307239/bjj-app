@@ -122,6 +122,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     duration_min: 60,
     type: "gi",
     notes: "",
+    instructor_name: "",
   });
 
   // #72: detect ?addLog=YYYY-MM-DD from calendar empty-day click
@@ -251,7 +252,7 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
     setEntries((prev) => [optimisticEntry, ...prev]);
     setTrainedToday(true);
     setShowForm(false);
-    setForm({ date: getLocalDateString(), duration_min: 60, type: "gi", notes: "" });
+    setForm({ date: getLocalDateString(), duration_min: 60, type: "gi", notes: "", instructor_name: "" });
     setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
 
     setLoading(true);
@@ -267,6 +268,11 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
       // First roll celebration (#7) — trigger before incrementing so we can check 0
       if (totalCount === 0) setShowCelebration(true);
       setTotalCount((c) => (c !== null ? c + 1 : null));
+      // B-03: Track log count for PWA install prompt timing (show after 3rd log)
+      if (typeof localStorage !== "undefined") {
+        const prev = parseInt(localStorage.getItem("bjj_log_count") ?? "0", 10);
+        localStorage.setItem("bjj_log_count", String(prev + 1));
+      }
       setToast({ message: t("training.saved"), type: "success" });
       // Rotate idempotency key for next submission
       idempotencyKey.current = typeof crypto !== "undefined"
