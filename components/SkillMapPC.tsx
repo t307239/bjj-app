@@ -377,8 +377,8 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnn
   // ── Load data ───────────────────────────────────────────────────────────
   const loadData = useCallback(async () => {
     const [nr, er] = await Promise.all([
-      supabase.from("technique_nodes").select("*").eq("user_id", userId).order("created_at"),
-      supabase.from("technique_edges").select("*").eq("user_id", userId),
+      supabase.from("technique_nodes").select("id, user_id, name, description, pos_x, pos_y, created_at").eq("user_id", userId).order("created_at"),
+      supabase.from("technique_edges").select("id, source_id, target_id, label").eq("user_id", userId),
     ]);
     if (!nr.error) setNodes(nr.data ?? []);
     if (!er.error) setEdges(er.data ?? []);

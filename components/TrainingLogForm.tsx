@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, memo } from "react";
 import { useLocale } from "@/lib/i18n";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type CompData, BELT_RANKS } from "@/lib/trainingLogHelpers";
@@ -93,7 +93,8 @@ type Props = {
 };
 
 // ── Component ────────────────────────────────────────────────────────────────
-export default function TrainingLogForm({
+// memo: prevents re-render when sibling state changes (e.g. filter/delete) in parent
+const TrainingLogForm = memo(function TrainingLogForm({
   showForm,
   form,
   setForm,
@@ -383,4 +384,6 @@ export default function TrainingLogForm({
       </div>
     </form>
   );
-}
+});
+
+export default TrainingLogForm;

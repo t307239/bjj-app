@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { useLocale } from "@/lib/i18n";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import ShareButton from "@/components/ShareButton";
@@ -117,7 +118,8 @@ type Props = {
   onShowForm: () => void;
 };
 
-export default function TrainingLogList({
+// memo: prevents re-render when unrelated state (showForm, filterType, etc.) changes in parent
+const TrainingLogList = memo(function TrainingLogList({
   initialLoading,
   entries,
   filtered,
@@ -548,4 +550,6 @@ export default function TrainingLogList({
       </div>
     </>
   );
-}
+});
+
+export default TrainingLogList;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
@@ -59,7 +59,9 @@ export default function TechniqueLog({ userId }: Props) {
     notes: "",
   });
 
-  const supabase = createClient();
+  // Stable supabase client ref — prevents useEffect dep churn
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   // ── URL param helpers ──────────────────────────────────────────────────────
   const updateUrlParams = (q: string, p: number) => {
@@ -87,7 +89,7 @@ export default function TechniqueLog({ userId }: Props) {
       setInitialLoading(true);
       const { data, error } = await supabase
         .from("techniques")
-        .select("*")
+        .select("id, name, category, mastery_level, notes, created_at")
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
       if (!error && data) setTechniques(data);

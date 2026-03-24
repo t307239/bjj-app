@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { type TrainingEntry, formatDuration } from "@/lib/trainingLogHelpers";
 import { getWeekStartDate } from "@/lib/timezone";
 
@@ -9,7 +10,8 @@ type Props = {
   page: number;
 };
 
-export default function TrainingLogStats({ entries, totalPages, page }: Props) {
+// memo: pure display component — only re-renders when entries/pagination changes
+const TrainingLogStats = memo(function TrainingLogStats({ entries, totalPages, page }: Props) {
   if (entries.length === 0) return null;
 
   // This week summary (Monday start, timezone-aware)
@@ -59,4 +61,6 @@ export default function TrainingLogStats({ entries, totalPages, page }: Props) {
       )}
     </div>
   );
-}
+});
+
+export default TrainingLogStats;

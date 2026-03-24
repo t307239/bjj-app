@@ -325,12 +325,12 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink, strip
     const [nodesRes, edgesRes] = await Promise.all([
       supabase
         .from("technique_nodes")
-        .select("*")
+        .select("id, user_id, name, description, pos_x, pos_y, created_at")
         .eq("user_id", userId)
         .order("created_at", { ascending: true }),
       supabase
         .from("technique_edges")
-        .select("*")
+        .select("id, source_id, target_id, label")
         .eq("user_id", userId),
     ]);
     if (!nodesRes.error) setNodes(nodesRes.data ?? []);

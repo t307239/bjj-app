@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
@@ -165,7 +165,8 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
   const [editCompForm, setEditCompForm] = useState<CompData>({
     result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi",
   });
-  const supabase = createClient();
+  // useMemo ensures the same client instance across renders (prevents useCallback dep churn)
+  const supabase = useMemo(() => createClient(), []);
   const router = useRouter();
   const { t } = useLocale();
   // Idempotency key: client-generated UUID sent as row id to prevent duplicate INSERTs
@@ -181,7 +182,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       const [{ data, error }, { data: techData }, { count }] = await Promise.all([
         supabase
           .from("training_logs")
-          .select("*")
+          .select("id, date, duration_min, type, notes, created_at, instructor_name, partner_username")
           .eq("user_id", userId)
           .order("date", { ascending: false })
           .range(0, PAGE_SIZE - 1),
@@ -386,7 +387,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = useCallback((id: string) => {
     const removed = entries.find((e) => e.id === id);
     if (!removed) return;
 
@@ -428,9 +429,11 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         setToast(null);
       },
     });
-  };
+  }, [entries, pendingDelete, userId, supabase, t]);
 
-  const startEdit = (entry: TrainingEntry) => {
+  const cancelEdit = useCallback(() => setEditingId(null), []);
+
+  const startEdit = useCallback((entry: TrainingEntry) => {
     setEditingId(entry.id);
     // ⑧ Fix: decode __comp__ prefix so competition notes display cleanly in the edit textarea
     const displayNotes = entry.type === "competition"
@@ -447,38 +450,46 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       if (comp) setEditCompForm(comp);
       else setEditCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
     }
-  };
+  }, []);
 
-  const handleUpdate = async (e: React.FormEvent, id: string) => {
+  const handleUpdate = useCallback(async (e: React.FormEvent, id: string) => {
     e.preventDefault();
     const finalEditNotes = editForm.type === "competition"
       ? encodeCompNotes(editCompForm, editForm.notes)
       : editForm.notes;
+
+    // Optimistic update: apply immediately, rollback on error
+    const prevEntry = entries.find((en) => en.id === id);
+    setEntries((prev) => prev.map((en) => en.id === id ? { ...en, ...editForm, notes: finalEditNotes } : en));
+    setEditingId(null);
+    setToast({ message: t("training.updated"), type: "success" });
 
     const { data, error } = await supabase
       .from("training_logs")
       .update({ ...editForm, notes: finalEditNotes })
       .eq("id", id)
       .eq("user_id", userId)
-      .select()
+      .select("id, date, duration_min, type, notes, created_at, instructor_name, partner_username")
       .single();
 
     if (!error && data) {
-      setEntries((prev) => prev.map((e) => (e.id === id ? data : e)));
-      setEditingId(null);
-      setToast({ message: t("training.updated"), type: "success" });
+      // Reconcile with server response (ensures created_at etc. are accurate)
+      setEntries((prev) => prev.map((en) => en.id === id ? data : en));
     } else {
+      // Rollback optimistic change and re-open edit form
+      if (prevEntry) setEntries((prev) => prev.map((en) => en.id === id ? prevEntry : en));
+      setEditingId(id);
       setToast({ message: t("training.updateFailed"), type: "error" });
     }
-  };
+  }, [editForm, editCompForm, entries, userId, supabase, t]);
 
-  const handlePageChange = async (newPage: number) => {
+  const handlePageChange = useCallback(async (newPage: number) => {
     setPageLoading(true);
     const from = (newPage - 1) * PAGE_SIZE;
     const to = newPage * PAGE_SIZE - 1;
     const { data, error } = await supabase
       .from("training_logs")
-      .select("*")
+      .select("id, date, duration_min, type, notes, created_at, instructor_name, partner_username")
       .eq("user_id", userId)
       .order("date", { ascending: false })
       .range(from, to);
@@ -488,12 +499,12 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       setPage(newPage);
     }
     setPageLoading(false);
-  };
+  }, [userId, supabase]);
 
-  const totalPages = Math.ceil((totalCount ?? 0) / PAGE_SIZE);
+  const totalPages = useMemo(() => Math.ceil((totalCount ?? 0) / PAGE_SIZE), [totalCount]);
 
-  // Period filter calculation
-  const getPeriodStart = (): string | null => {
+  // Period filter start date — memoized so it's not recomputed on every render
+  const periodStart = useMemo((): string | null => {
     if (periodFilter === "all") return null;
     const now = new Date();
     if (periodFilter === "month") {
@@ -504,11 +515,10 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     const monday = new Date(now);
     monday.setDate(now.getDate() - daysToMonday);
     return `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, "0")}-${String(monday.getDate()).padStart(2, "0")}`;
-  };
-  const periodStart = getPeriodStart();
+  }, [periodFilter]);
 
-  // Type filter + period filter + keyword search
-  const filtered = entries
+  // Type filter + period filter + keyword search — only recomputed when filter criteria or entries change
+  const filtered = useMemo(() => entries
     .filter((e) => filterType === "all" || e.type === filterType)
     .filter((e) => !periodStart || e.date >= periodStart)
     .filter((e) => !dateFrom || e.date >= dateFrom)
@@ -523,28 +533,34 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         typeLabel.toLowerCase().includes(q) ||
         userNotes.toLowerCase().includes(q)
       );
-    });
+    }), [entries, filterType, periodStart, dateFrom, dateTo, searchQuery]);
 
-  // This month stats (used for Bento section below)
-  const thisMonth = getLocalDateString().slice(0, 7);
-  const monthEntries = entries.filter((e) => e.date.startsWith(thisMonth));
-  const monthTotalMins = monthEntries.reduce((sum, e) => sum + e.duration_min, 0);
-  const monthHoursDisplay = monthTotalMins >= 60
-    ? `${Math.floor(monthTotalMins / 60)}h${monthTotalMins % 60 > 0 ? `${monthTotalMins % 60}m` : ""}`
-    : `${monthTotalMins}m`;
-
-  const { day: curDayLog, month: curMonthLog, year: curYearLog, daysInMonth: daysInMonthLog } = getLocalDateParts();
-  const monthProjected = curDayLog > 0 ? Math.round(monthEntries.length / curDayLog * daysInMonthLog) : 0;
-  const remainingDaysLog = daysInMonthLog - curDayLog;
-  const prevM = curMonthLog === 1 ? 12 : curMonthLog - 1;
-  const prevY = curMonthLog === 1 ? curYearLog - 1 : curYearLog;
-  const prevMonthYM = `${prevY}-${String(prevM).padStart(2, "0")}`;
-  const lastMonthSamePeriod = entries.filter((e) => {
-    if (!e.date.startsWith(prevMonthYM)) return false;
-    const day = parseInt(e.date.slice(8, 10), 10);
-    return day <= curDayLog;
-  }).length;
-  const monthDelta = monthEntries.length - lastMonthSamePeriod;
+  // This month stats — memoized, only recomputed when entries change
+  const { monthEntries, monthHoursDisplay, monthProjected, remainingDaysLog, monthDelta } = useMemo(() => {
+    const thisMonth = getLocalDateString().slice(0, 7);
+    const me = entries.filter((e) => e.date.startsWith(thisMonth));
+    const totalMins = me.reduce((sum, e) => sum + e.duration_min, 0);
+    const hoursDisplay = totalMins >= 60
+      ? `${Math.floor(totalMins / 60)}h${totalMins % 60 > 0 ? `${totalMins % 60}m` : ""}`
+      : `${totalMins}m`;
+    const { day: curDay, month: curMonth, year: curYear, daysInMonth } = getLocalDateParts();
+    const projected = curDay > 0 ? Math.round(me.length / curDay * daysInMonth) : 0;
+    const remaining = daysInMonth - curDay;
+    const prevM = curMonth === 1 ? 12 : curMonth - 1;
+    const prevY = curMonth === 1 ? curYear - 1 : curYear;
+    const prevYM = `${prevY}-${String(prevM).padStart(2, "0")}`;
+    const lastMonthCount = entries.filter((e) => {
+      if (!e.date.startsWith(prevYM)) return false;
+      return parseInt(e.date.slice(8, 10), 10) <= curDay;
+    }).length;
+    return {
+      monthEntries: me,
+      monthHoursDisplay: hoursDisplay,
+      monthProjected: projected,
+      remainingDaysLog: remaining,
+      monthDelta: me.length - lastMonthCount,
+    };
+  }, [entries]);
 
   // Suppress unused-var TS warnings for stats used in Bento/Analytics (kept for future use)
   void monthHoursDisplay;
@@ -798,7 +814,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         editForm={editForm}
         setEditForm={setEditForm}
         onStartEdit={startEdit}
-        onCancelEdit={() => setEditingId(null)}
+        onCancelEdit={cancelEdit}
         onUpdate={handleUpdate}
         onDelete={handleDelete}
         deletingId={deletingId}
