@@ -188,7 +188,7 @@ export default function TrainingLogList({
   // ── Entry list ───────────────────────────────────────────────────────────
   return (
     <>
-      <div className="space-y-3">
+      <div className="max-h-[520px] overflow-y-auto scrollbar-hide space-y-3 pr-0.5">
         {filtered.map((entry) => (
           <div
             key={entry.id}
@@ -462,28 +462,27 @@ export default function TrainingLogList({
             )}
           </div>
         ))}
+        {/* Load more button — inside scroll container */}
+        {hasMore && (
+          <div className="border-t border-white/5 pt-4 pb-2 text-center mt-4">
+            <button
+              onClick={onLoadMore}
+              disabled={loadingMore}
+              className="inline-flex items-center gap-2 text-[#10B981] hover:text-[#0d9668] text-sm border border-[#10B981]/30 hover:border-[#0d9668]/50 px-6 py-2 rounded-full transition-colors disabled:opacity-50"
+            >
+              {loadingMore ? (
+                <>
+                  <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                  </svg>
+                  {t("training.loading")}
+                </>
+              ) : t("training.loadMore")}
+            </button>
+          </div>
+        )}
       </div>
-
-      {/* Load more button */}
-      {hasMore && (
-        <div className="border-t border-white/5 pt-4 text-center mt-4">
-          <button
-            onClick={onLoadMore}
-            disabled={loadingMore}
-            className="inline-flex items-center gap-2 text-[#10B981] hover:text-[#0d9668] text-sm border border-[#10B981]/30 hover:border-[#0d9668]/50 px-6 py-2 rounded-full transition-colors disabled:opacity-50"
-          >
-            {loadingMore ? (
-              <>
-                <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                </svg>
-                {t("training.loading")}
-              </>
-            ) : t("training.loadMore")}
-          </button>
-        </div>
-      )}
     </>
   );
 }
