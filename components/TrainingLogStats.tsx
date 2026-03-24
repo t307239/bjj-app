@@ -20,6 +20,10 @@ export default function TrainingLogStats({ entries, totalPages, page }: Props) {
     ? `${Math.floor(weekTotalMins / 60)}h${weekTotalMins % 60 > 0 ? `${weekTotalMins % 60}m` : ""}`
     : `${weekTotalMins}m`;
 
+  const hasWeekData = weekEntries.length > 0;
+  const hasPaginationNote = totalPages > 1 && page < totalPages;
+  if (!hasWeekData && !hasPaginationNote) return null;
+
   return (
     <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
       {weekEntries.length > 0 && (

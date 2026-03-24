@@ -361,7 +361,9 @@ export default async function DashboardPage({
                     ? `🎯 ${streak}-day streak`
                     : streak >= 1
                       ? t("dashboard.streakCardLogToday")
-                      : t("dashboard.streakCardStartFresh")}
+                      : hasFirstLog
+                        ? t("dashboard.streakCardKeepRolling")
+                        : t("dashboard.streakCardStartFresh")}
               </p>
             </div>
           </div>
