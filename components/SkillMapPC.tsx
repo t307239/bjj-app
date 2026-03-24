@@ -140,6 +140,55 @@ function ProModal({
   );
 }
 
+// ─── Empty State Inline Add Form ─────────────────────────────────────────────
+
+function EmptyStateAddForm({
+  onAdd,
+  onCancel,
+  t,
+}: {
+  onAdd: (name: string) => void;
+  onCancel: () => void;
+  t: (k: string) => string;
+}) {
+  const [name, setName] = useState("");
+  const ref = useRef<HTMLInputElement>(null);
+  useLayoutEffect(() => { ref.current?.focus(); }, []);
+
+  return (
+    <div className="mt-4 flex flex-col items-center gap-2 w-full max-w-xs">
+      <input
+        ref={ref}
+        type="text"
+        placeholder={t("skillmap.namePlaceholder")}
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && name.trim()) onAdd(name.trim());
+          if (e.key === "Escape") onCancel();
+        }}
+        className="w-full bg-zinc-800 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/30"
+        maxLength={80}
+      />
+      <div className="flex gap-2 w-full">
+        <button
+          onClick={onCancel}
+          className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 text-sm py-2 rounded-xl transition-colors"
+        >
+          {t("common.cancel")}
+        </button>
+        <button
+          onClick={() => { if (name.trim()) onAdd(name.trim()); }}
+          disabled={!name.trim()}
+          className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-white text-sm font-semibold py-2 rounded-xl transition-colors"
+        >
+          {t("skillmap.addBtn")}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ─── Add Node Input (inline, placed near click position) ─────────────────────
 
 function AddNodeInput({
@@ -513,20 +562,15 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
           >
             🔒 {t("skillmap.proLockBtn")}
           </button>
+        ) : addingAt ? (
+          <EmptyStateAddForm onAdd={addNode} onCancel={() => setAddingAt(null)} t={t} />
         ) : (
           <button
-            onClick={() =>
-              setAddingAt({ x: 200, y: 200 })
-            }
+            onClick={() => setAddingAt({ x: 200, y: 200 })}
             className="bg-[#10B981] hover:bg-[#0d9668] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors"
           >
             + {t("skillmap.addFirstTechnique")}
           </button>
-        )}
-        {addingAt && (
-          <div className="mt-4">
-            <AddNodeInput x={0} y={0} onAdd={addNode} onCancel={() => setAddingAt(null)} t={t} />
-          </div>
         )}
         {showProModal && (
           <ProModal onClose={() => { setShowProModal(false); setGhostNode(null); }} stripePaymentLink={stripePaymentLink} t={t} />
