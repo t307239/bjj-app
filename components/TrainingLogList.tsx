@@ -143,12 +143,20 @@ export default function TrainingLogList({
 }: Props) {
   const { t } = useLocale();
 
-  // ── Loading ──────────────────────────────────────────────────────────────
+  // ── Loading skeleton (CLS防止: 実カードと同形状のダミーブロック) ──────────
   if (initialLoading) {
     return (
-      <div className="text-center py-8 text-gray-500">
-        <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin mb-2" />
-        <p className="text-sm">{t("training.loading")}</p>
+      <div className="space-y-3">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="bg-zinc-900/60 rounded-xl border border-white/5 p-4 animate-pulse">
+            <div className="flex items-start justify-between gap-3 mb-3">
+              <div className="h-4 w-24 bg-white/10 rounded" />
+              <div className="h-4 w-16 bg-white/5 rounded" />
+            </div>
+            <div className="h-3 w-full bg-white/5 rounded mb-1.5" />
+            <div className="h-3 w-3/4 bg-white/5 rounded" />
+          </div>
+        ))}
       </div>
     );
   }

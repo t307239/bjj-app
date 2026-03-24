@@ -116,7 +116,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
   const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error"; duration?: number; onUndo?: () => void } | null>(null);
   const [pendingDelete, setPendingDelete] = useState<{ id: string; entry: TrainingEntry; timerId: ReturnType<typeof setTimeout> } | null>(null);
-  const [nudgeDismissed, setNudgeDismissed] = useState(false);
+
   const [showCelebration, setShowCelebration] = useState(false);
   const today = getLocalDateString();
   const [form, setForm] = useState({
@@ -485,32 +485,6 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
           onUndo={toast.onUndo}
           onClose={() => setToast(null)}
         />
-      )}
-
-      {/* Today's training prompt — hide when form is already open (#6 duplicate CTA) or dismissed (#97) */}
-      {!initialLoading && trainedToday === false && !showForm && !nudgeDismissed && (
-        <div className="bg-[#10B981]/10 border border-[#10B981]/30 rounded-xl px-4 py-3 mb-4 flex items-center gap-3">
-          <span className="text-xl flex-shrink-0">🥋</span>
-          <div
-            className="flex-1 min-w-0 cursor-pointer"
-            onClick={() => setShowForm(true)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && setShowForm(true)}
-          >
-            <p className="text-[#10B981] text-sm font-medium">{t("training.logNudgeTitle")}</p>
-            <p className="text-gray-400 text-xs mt-0.5">{t("training.logNudgeSubtitle")}</p>
-          </div>
-          <button
-            onClick={(e) => { e.stopPropagation(); setNudgeDismissed(true); }}
-            className="text-gray-500 hover:text-gray-300 transition-colors flex-shrink-0 p-2 rounded"
-            aria-label={t("training.dismissForToday")}
-          >
-            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
       )}
 
       {/* Stats (weekly summary) */}

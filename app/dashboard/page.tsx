@@ -102,6 +102,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const beltLabel = BELT_LABELS[belt] ?? t("dashboard.beltWhite");
 
   let metaStreak = 0;
+  const metaToday = getLocalDateString();
+  const trainedToday = recentLogsForStreak?.some((l: { date: string }) => l.date === metaToday) ?? false;
   if (recentLogsForStreak && recentLogsForStreak.length > 0) {
     const dates = [
       ...new Set(recentLogsForStreak.map((l: { date: string }) => l.date)),
@@ -300,7 +302,9 @@ export default async function DashboardPage({
     );
   }
 
-  // Calculate streak
+  // Calculate streak + trainedToday
+  const todayStr = getLocalDateString();
+  const trainedToday = recentLogs?.some((l: { date: string }) => l.date === todayStr) ?? false;
   let streak = 0;
   if (recentLogs && recentLogs.length > 0) {
     const dates = [
@@ -344,7 +348,10 @@ export default async function DashboardPage({
         {/* ═══════════════════════════════════════════
             HERO STRIP — greeting + key stats in one row
             ═══════════════════════════════════════════ */}
-        <div className="flex items-center justify-between gap-3 mb-6">
+        {/* ═══════════════════════════════════════════
+            HERO CARD — greeting + Log CTA in one box
+            ═══════════════════════════════════════════ */}
+        <div className="bg-zinc-900/50 border border-white/10 rounded-2xl px-4 py-4 mb-5 flex items-center justify-between gap-3">
           {/* Left: identity */}
           <div className="flex items-center gap-3 min-w-0">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white shrink-0">
@@ -366,8 +373,18 @@ export default async function DashboardPage({
             </div>
           </div>
 
-          {/* Right: avatar or belt pill */}
-          {avatarUrl ? (
+          {/* Right: Log CTA (未記録時) or avatar/belt pill */}
+          {!trainedToday ? (
+            <Link
+              href={`?addLog=${todayStr}`}
+              className="flex-shrink-0 flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-xs font-bold px-3 py-2 rounded-xl transition-all shadow-lg shadow-emerald-900/30"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              {t("dashboard.logSession")}
+            </Link>
+          ) : avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={avatarUrl}
@@ -569,13 +586,13 @@ export default async function DashboardPage({
               </svg>
             </div>
             {recentTechniques && recentTechniques.length > 0 && (
-              <div className="flex flex-col gap-0.5 mt-1">
+              <div className="flex flex-wrap gap-1.5 mt-3">
                 {(recentTechniques as { name: string }[]).slice(0, 2).map((tech) => (
                   <span
                     key={tech.name}
-                    className="text-xs text-zinc-400 truncate"
+                    className="inline-flex items-center rounded-md bg-zinc-800 px-2 py-1 text-xs font-medium text-zinc-300 ring-1 ring-inset ring-zinc-700 truncate max-w-[120px]"
                   >
-                    · {tech.name}
+                    {tech.name}
                   </span>
                 ))}
               </div>
