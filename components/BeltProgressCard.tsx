@@ -55,6 +55,7 @@ export default function BeltProgressCard({
           href="/profile"
           className="rounded-lg bg-white/5 hover:bg-white/10 p-2 transition-colors"
           title={t("beltProgress.editTitle")}
+          aria-label={t("beltProgress.editTitle")}
         >
           <svg
             className="w-4 h-4 text-zinc-500"

@@ -441,6 +441,7 @@ export default function TechniqueLogList({
                       onClick={() => onStartEdit(technique)}
                       className="text-gray-600 hover:text-[#10B981] transition-colors p-2"
                       title={t("techniques.edit")}
+                      aria-label={t("techniques.edit")}
                     >
                       <svg
                         className="w-4 h-4"
@@ -463,6 +464,7 @@ export default function TechniqueLogList({
                           onClick={() => { setConfirmDeleteId(null); onDelete(technique.id); }}
                           className="text-[10px] font-semibold text-white bg-[#e94560] hover:bg-[#c73652] px-2 py-0.5 rounded transition-colors"
                           title={t("techniques.confirmDelete")}
+                          aria-label={t("techniques.confirmDelete")}
                         >
                           {t("common.delete")}
                         </button>
@@ -479,6 +481,7 @@ export default function TechniqueLogList({
                         disabled={deletingId === technique.id}
                         className="text-gray-600 hover:text-red-400 transition-colors p-2 disabled:opacity-50"
                         title={t("techniques.delete")}
+                        aria-label={t("techniques.delete")}
                       >
                         {deletingId === technique.id ? (
                           <span className="text-xs">...</span>
