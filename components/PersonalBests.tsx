@@ -77,6 +77,7 @@ function IntensitySparkline({ data }: { data: { ym: string; avgSessionMin: numbe
 export default function PersonalBests({ userId }: Props) {
   const { t } = useLocale();
   const [bests, setBests] = useState<Bests | null>(null);
+  const [loaded, setLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const supabase = createClient();
@@ -89,6 +90,7 @@ export default function PersonalBests({ userId }: Props) {
         .eq("user_id", userId)
         .order("date", { ascending: true });
 
+      setLoaded(true);
       if (!logs || logs.length === 0) return;
 
       const totalSessions = logs.length;
@@ -178,7 +180,17 @@ export default function PersonalBests({ userId }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  if (!bests) return null;
+  if (!loaded) return null;
+
+  if (!bests) {
+    return (
+      <div className="mb-4 bg-zinc-900 rounded-xl px-4 py-6 border border-white/10 text-center">
+        <p className="text-2xl mb-2">📊</p>
+        <p className="text-sm font-medium text-gray-300 mb-1">{t("stats.personalBests")}</p>
+        <p className="text-xs text-gray-500">{t("stats.emptyBests")}</p>
+      </div>
+    );
+  }
 
   const timesUnit = t("chart.timesUnit");
   const daysUnit = t("stats.daysUnit");

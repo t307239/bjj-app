@@ -413,6 +413,7 @@
   },
   "stats": {
     "personalBests": "Personal Records",
+    "emptyBests": "Log your first session to see your stats here.",
     "totalSessions": "Total Sessions",
     "totalMinutes": "Total Time",
     "longestStreak": "Longest Streak",

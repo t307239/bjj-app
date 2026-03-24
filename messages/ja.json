@@ -277,6 +277,7 @@
   },
   "stats": {
     "personalBests": "個人記録",
+    "emptyBests": "最初のセッションを記録するとここに統計が表示されます。",
     "totalSessions": "総練習回数",
     "totalMinutes": "総練習時間",
     "longestStreak": "最長連続日数",
