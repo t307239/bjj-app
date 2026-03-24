@@ -9,13 +9,15 @@ const STRIPE_ANNUAL_LINK = process.env.NEXT_PUBLIC_STRIPE_PRO_ANNUAL_LINK || nul
 export default function PricingSection({ userId }: { userId?: string | null }) {
   const [isAnnual, setIsAnnual] = useState(false);
 
+  // userId がない（未ログイン）場合は /login に誘導する。
+  // Stripe に直接飛ばすと client_reference_id が渡らず is_pro が立たない。
   const monthlyUrl = userId && STRIPE_MONTHLY_LINK
     ? `${STRIPE_MONTHLY_LINK}?client_reference_id=${userId}`
-    : (STRIPE_MONTHLY_LINK ?? "/login");
+    : "/login";
 
   const annualUrl = userId && STRIPE_ANNUAL_LINK
     ? `${STRIPE_ANNUAL_LINK}?client_reference_id=${userId}`
-    : (STRIPE_ANNUAL_LINK ?? "/login");
+    : "/login";
 
   const upgradeUrl = isAnnual ? annualUrl : monthlyUrl;
 
