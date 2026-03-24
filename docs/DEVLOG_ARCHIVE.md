@@ -2,6 +2,12 @@
 
 ---
 
+- Day4fo_92 (2026/03/24): **優先度高バックログ 3点実装**
+  - Blurred paywall — `TrainingTypeChart` + `TrainingChart` に `isPro` prop 追加、非Proはblur + upgrade CTA ✅
+  - B2B Nudge button — `MemberCard`（yellow/red リスクメンバー）に「Copy reminder」ボタン追加 ✅
+  - Printable Leaderboard — GymDashboard Proオーナー向けに月次ランキング印刷機能追加 ✅
+  - バグスイープ: ✅ TOTAL ISSUES: 0 / TypeScript 0エラー ✅
+
 - Day4fo_91 (2026/03/24): **Dashboard UX 4点改善**
   - `GoalTracker` 隔離 — `hasFirstLog` falseの新規ユーザーに非表示 ✅
   - `StreakProtect`/`StreakFreeze` 条件強化 — `streak >= 1` → `streak >= 3` ✅
