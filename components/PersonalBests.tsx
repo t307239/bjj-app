@@ -180,7 +180,7 @@ export default function PersonalBests({ userId }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  if (!loaded) return null;
+  if (!loaded) return <div className="min-h-[60px] mb-4" aria-hidden="true" />;
 
   if (!bests) {
     return (

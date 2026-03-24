@@ -101,7 +101,7 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  if (loading) return null;
+  if (loading) return <div className="min-h-[120px] mb-4" aria-hidden="true" />;
 
   // ── Pro paywall: データがある非Proはblur + upgrade CTA ──────────────────
   if (!isPro && data.some((d) => d.count > 0)) {

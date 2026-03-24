@@ -150,7 +150,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMonth, userId]);
 
-  if (loading) return null;
+  if (loading) return <div className="min-h-[120px] mb-4" aria-hidden="true" />;
 
   const data = range === 6 ? data6 : data12;
 
