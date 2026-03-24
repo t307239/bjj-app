@@ -32,6 +32,8 @@
     "duration": "時間",
     "durationUnit": "分",
     "type": "練習タイプ",
+    "instructor": "インストラクター（任意）",
+    "instructorPlaceholder": "例: 田中先生",
     "memo": "メモ",
     "memoOptional": "メモ（任意）",
     "memoPlaceholder": "今日の練習のポイント、気づきなど...",
@@ -452,7 +454,15 @@
     "defaultFeature": "この機能",
     "available": "Pro プランで利用可能",
     "upgradeButton": "Pro にアップグレード — $4.99/月",
-    "features": "PDF・12ヶ月グラフ・StreakFreeze拡張"
+    "features": "PDF・12ヶ月グラフ・StreakFreeze拡張",
+    "bannerTitle": "⚡ Proにアップグレード — $4.99/月",
+    "bannerFeatures": "CSVエクスポート・12ヶ月グラフ・StreakFreezeチケット",
+    "bannerCta": "Proを解放",
+    "socialProof": "500人以上のBJJ選手が使っています",
+    "paymentIssueTitle": "お支払いに問題があります — Pro機能が一時停止中",
+    "paymentIssueDesc": "最後のお支払いが失敗しました。請求情報を更新してください。",
+    "fixNow": "今すぐ修正",
+    "allFeaturesUnlocked": "すべてのPro機能が有効です"
   },
   "common": {
     "close": "閉じる",
