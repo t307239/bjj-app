@@ -74,7 +74,7 @@ export default function GymRegistrationForm({ userId }: Props) {
         <button
           onClick={handleCreate}
           disabled={loading || !gymName.trim()}
-          className="w-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-colors"
+          className="w-full bg-[#10B981] hover:bg-[#0d9668] active:scale-95 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-all"
           aria-label={t("gym.createBtn")}
         >
           {loading ? t("gym.creating") : t("gym.createBtn")}

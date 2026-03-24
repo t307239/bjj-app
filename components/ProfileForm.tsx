@@ -362,7 +362,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
           onClick={handleExportCsv}
           disabled={exporting}
           aria-label={t("profile.ariaDownloadCSV")}
-          className="inline-flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 border border-blue-400/30 hover:border-blue-400/60 rounded-lg px-3 py-1.5 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 text-xs text-[#10B981] hover:text-[#0d9668] border border-[#10B981]/30 hover:border-[#10B981]/60 rounded-lg px-3 py-1.5 transition-colors disabled:opacity-50"
         >
           {exporting ? t("profile.exporting") : t("profile.exportBtn")}
         </button>
@@ -480,7 +480,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
             <div className="text-[10px] text-gray-500">{t("stats.totalSessions")}</div>
           </div>
           <div>
-            <div className="text-lg font-bold text-blue-400">
+            <div className="text-lg font-bold text-[#10B981]">
               {stats.totalMinutes >= 60 ? Math.floor(stats.totalMinutes / 60) + "h" : stats.totalMinutes + "m"}
             </div>
             <div className="text-[10px] text-gray-500">{t("stats.totalMinutes")}</div>
@@ -621,7 +621,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
         </div>
         {formError && <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">{formError}</div>}
         <div className="flex gap-3">
-          <button type="submit" disabled={loading} className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white font-bold py-3 rounded-xl text-sm transition-colors">
+          <button type="submit" disabled={loading} className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 disabled:opacity-50 text-white font-bold py-3 rounded-xl text-sm transition-all">
             {loading ? t("profile.saving") : t("profile.save")}
           </button>
           <button type="button" onClick={onCancel} className="flex-1 bg-zinc-900 hover:bg-white/5 text-gray-300 font-bold py-3 rounded-xl text-sm border border-white/10 transition-colors">

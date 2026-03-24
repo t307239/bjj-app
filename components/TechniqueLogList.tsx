@@ -175,7 +175,7 @@ export default function TechniqueLogList({
         <div className="flex gap-2">
           <button
             onClick={() => onShowForm(false)}
-            className="bg-[#10B981] hover:bg-[#0d9668] text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors"
+            className="bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all"
           >
             {t("techniques.add")}
           </button>
@@ -333,7 +333,7 @@ export default function TechniqueLogList({
                   <div className="flex gap-2">
                     <button
                       type="submit"
-                      className="flex-1 bg-[#10B981] hover:bg-[#0d9668] text-white text-xs font-semibold py-1.5 rounded-lg transition-colors"
+                      className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-xs font-semibold py-1.5 rounded-lg transition-all"
                     >
                       {t("techniques.update")}
                     </button>

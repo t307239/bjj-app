@@ -127,7 +127,7 @@ export function GoalEditor({
         <button
           onClick={onSave}
           disabled={value === 0}
-          className="flex-1 py-2 rounded-lg bg-[#10B981] text-white text-sm font-semibold hover:bg-[#0d9668] disabled:opacity-40 transition-colors"
+          className="flex-1 py-2 rounded-lg bg-[#10B981] text-white text-sm font-semibold hover:bg-[#0d9668] active:scale-95 disabled:opacity-40 transition-all"
         >
           {setLabel}
         </button>

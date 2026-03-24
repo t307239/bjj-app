@@ -195,7 +195,7 @@ export default function GuestDashboard() {
               />
               <button
                 onClick={handleAdd}
-                className="w-full bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-2 rounded-lg text-sm"
+                className="w-full bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-bold py-2 rounded-lg text-sm transition-all"
               >
                 {t("training.save")}
               </button>
@@ -253,7 +253,7 @@ export default function GuestDashboard() {
           </p>
           <Link
             href="/login"
-            className="inline-block bg-[#10B981] hover:bg-[#0d9668] text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-colors"
+            className="inline-block bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-all"
           >
             {t("guest.ctaButton")}
           </Link>
