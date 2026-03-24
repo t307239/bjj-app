@@ -14,6 +14,7 @@ export default function InstallBanner() {
   const [platform, setPlatform] = useState<"ios" | "android" | null>(null);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalling, setIsInstalling] = useState(false);
+  const [installError, setInstallError] = useState(false);
 
   useEffect(() => {
     const isDismissed = localStorage.getItem("bjj_install_dismissed") === "1";
@@ -39,7 +40,11 @@ export default function InstallBanner() {
       await deferredPrompt.prompt();
       const choiceResult = await deferredPrompt.userChoice;
       if (choiceResult.outcome === "accepted") { localStorage.setItem("bjj_install_dismissed", "1"); setDismissed(true); }
-    } catch (err) { console.error("Install prompt error:", err); }
+    } catch (err) {
+      console.error("Install prompt error:", err);
+      setInstallError(true);
+      setTimeout(() => setInstallError(false), 3000);
+    }
     finally { setIsInstalling(false); setDeferredPrompt(null); }
   };
 
@@ -61,10 +66,15 @@ export default function InstallBanner() {
         </div>
         <div className="flex gap-2 flex-shrink-0">
           {platform === "android" && (
-            <button onClick={handleInstallAndroid} disabled={isInstalling}
-              className="px-4 py-2 bg-white text-[#0d9668] font-semibold rounded-lg hover:bg-emerald-50 transition-colors disabled:opacity-50 text-sm">
-              {isInstalling ? t("install.installing") : t("install.button")}
-            </button>
+            <div className="flex flex-col items-end gap-1">
+              <button onClick={handleInstallAndroid} disabled={isInstalling}
+                className="px-4 py-2 bg-white text-[#0d9668] font-semibold rounded-lg hover:bg-emerald-50 transition-colors disabled:opacity-50 text-sm">
+                {isInstalling ? t("install.installing") : t("install.button")}
+              </button>
+              {installError && (
+                <span className="text-xs text-red-200">{t("install.error")}</span>
+              )}
+            </div>
           )}
           <button onClick={handleDismiss} className="px-3 py-2 hover:bg-[#0d9668] rounded-lg transition-colors text-sm font-medium" aria-label={t("install.close")}>✕</button>
         </div>

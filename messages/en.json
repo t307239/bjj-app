@@ -500,7 +500,8 @@
     "android": "Install as app to use offline!",
     "button": "Install",
     "installing": "Installing...",
-    "close": "Close banner"
+    "close": "Close banner",
+    "error": "Installation failed. Please try again."
   },
   "streak": {
     "protect": "🔥 {n} day streak is in danger! Log today's training now!",
