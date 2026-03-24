@@ -207,7 +207,7 @@ export default function TrainingLogList({
             key={entry.id}
             onDelete={() => onDelete(entry.id)}
             onEdit={() => onStartEdit(entry)}
-            className={`bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:bg-white/[0.04] transition-colors duration-150${
+            className={`bg-zinc-900/50 backdrop-blur-sm rounded-2xl py-3 px-4 border border-white/10 hover:bg-white/[0.04] transition-colors duration-150${
               entry.type === "competition" ? " border-l-2 border-l-red-500" : ""
             }`}
           >
@@ -323,12 +323,14 @@ export default function TrainingLogList({
                 </div>
               </form>
             ) : (
-              /* Normal display */
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
+              /* Normal display — compressed 1-row layout (㉕) */
+              <div>
+                {/* Primary row: left = type badge + date, right = duration + actions */}
+                <div className="flex items-center justify-between w-full">
+                  {/* Left: type badge + relative date */}
+                  <div className="flex items-center gap-2 min-w-0">
                     <span
-                      className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${
+                      className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${
                         TRAINING_TYPES.find((t) => t.value === entry.type)?.color ||
                         "bg-white/10 text-gray-300"
                       }`}
@@ -340,162 +342,164 @@ export default function TrainingLogList({
                         {TRAINING_TYPES.find((t) => t.value === entry.type)?.label || entry.type}
                       </span>
                     </span>
-                    <span className="text-gray-400 text-xs">{formatRelativeDate(entry.date, t)}</span>
+                    <span className="text-gray-400 text-xs truncate">{formatRelativeDate(entry.date, t)}</span>
                   </div>
-                  <div className="inline-flex items-center gap-1 text-zinc-400 text-xs font-medium mb-1">
-                    <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <circle cx="12" cy="12" r="10" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
-                    </svg>
-                    {entry.duration_min >= 60
-                      ? `${Math.floor(entry.duration_min / 60)}h${
-                          entry.duration_min % 60 > 0 ? `${entry.duration_min % 60}m` : ""
-                        }`
-                      : `${entry.duration_min}m`}
-                  </div>
-                  {/* B-04/B-09: Instructor + Partner tags */}
-                  {(entry.instructor_name || entry.partner_username) && (
-                    <div className="flex flex-wrap gap-2 mb-1">
-                      {entry.instructor_name && (
-                        <span className="inline-flex items-center gap-1 text-xs text-zinc-500">
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                          </svg>
-                          {entry.instructor_name}
-                        </span>
-                      )}
-                      {entry.partner_username && (
-                        <span className="inline-flex items-center gap-1 text-xs text-zinc-500">
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                          </svg>
-                          @{entry.partner_username}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  {entry.notes &&
-                    (() => {
-                      const { comp, userNotes } = decodeCompNotes(entry.notes);
-                      return (
-                        <>
-                          {comp && (
-                            <div className="mt-1.5 flex flex-wrap gap-1.5">
-                              <span
-                                className={`text-xs font-semibold ${
-                                  RESULT_LABELS[comp.result]?.color ?? "text-gray-400"
-                                }`}
-                              >
-                                {RESULT_LABELS[comp.result]?.label ?? comp.result}
-                              </span>
-                              {comp.gi_type && (
-                                <span
-                                  className={`text-xs px-1.5 py-0.5 rounded ${
-                                    comp.gi_type === "nogi"
-                                      ? "bg-orange-500/20 text-orange-400"
-                                      : "bg-blue-500/20 text-blue-400"
-                                  }`}
-                                >
-                                  {comp.gi_type === "nogi" ? t("training.calendarNogi") : t("training.calendarGi")}
-                                </span>
-                              )}
-                              {comp.opponent && (
-                                <span className="text-xs text-gray-400">
-                                  vs {comp.opponent}
-                                  {comp.opponent_rank && (
-                                    <span className="ml-1 text-gray-500">
-                                      (
-                                      {BELT_RANKS.find((b) => b.value === comp.opponent_rank)
-                                        ?.label ?? comp.opponent_rank}
-                                      )
-                                    </span>
-                                  )}
-                                </span>
-                              )}
-                              {comp.finish && (
-                                <span className="text-xs text-gray-500">by {comp.finish}</span>
-                              )}
-                              {comp.event && (
-                                <span className="text-xs text-gray-500">🏟 {comp.event}</span>
-                              )}
-                            </div>
-                          )}
-                          {userNotes &&
-                            (expandedNotes.has(entry.id) || userNotes.length <= 80 ? (
-                              <div>
-                                <p className="text-gray-300 text-sm mt-1">{userNotes}</p>
-                                {userNotes.length > 80 && (
-                                  <button
-                                    onClick={() =>
-                                      setExpandedNotes((prev) => {
-                                        const s = new Set(prev);
-                                        s.delete(entry.id);
-                                        return s;
-                                      })
-                                    }
-                                    className="text-xs text-gray-500 hover:text-gray-300 mt-0.5"
-                                  >
-                                    {t("training.collapse")}
-                                  </button>
-                                )}
-                              </div>
-                            ) : (
-                              <div>
-                                <p className="text-gray-300 text-sm mt-1">
-                                  {userNotes.slice(0, 80)}…
-                                </p>
-                                <button
-                                  onClick={() =>
-                                    setExpandedNotes((prev) => new Set([...prev, entry.id]))
-                                  }
-                                  className="text-xs text-gray-500 hover:text-gray-300 mt-0.5"
-                                >
-                                  {t("training.showMore")}
-                                </button>
-                              </div>
-                            ))}
-                        </>
-                      );
-                    })()}
-                </div>
-                <div className="flex gap-2 ml-2 flex-shrink-0">
-                  {/* B-06: Share training card */}
-                  <ShareButton entry={entry} />
-                  <button
-                    onClick={() => onStartEdit(entry)}
-                    className="text-gray-500 hover:text-[#10B981] transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
-                    title={t("training.edit")}
-                    aria-label={t("training.edit")}
-                  >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={() => onDelete(entry.id)}
-                    disabled={deletingId === entry.id}
-                    className="text-gray-500 hover:text-red-400 transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center disabled:opacity-50"
-                    title={t("training.delete")}
-                    aria-label={t("training.delete")}
-                  >
-                    {deletingId === entry.id ? (
-                      <span className="text-xs">...</span>
-                    ) : (
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  {/* Right: duration + action buttons */}
+                  <div className="flex items-center gap-0.5 ml-3 flex-shrink-0">
+                    <span className="inline-flex items-center gap-1 text-zinc-400 text-xs font-medium mr-1">
+                      <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <circle cx="12" cy="12" r="10" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
+                      </svg>
+                      {entry.duration_min >= 60
+                        ? `${Math.floor(entry.duration_min / 60)}h${
+                            entry.duration_min % 60 > 0 ? `${entry.duration_min % 60}m` : ""
+                          }`
+                        : `${entry.duration_min}m`}
+                    </span>
+                    {/* B-06: Share training card */}
+                    <ShareButton entry={entry} />
+                    <button
+                      onClick={() => onStartEdit(entry)}
+                      className="text-gray-500 hover:text-[#10B981] transition-colors p-1.5 rounded-lg flex items-center justify-center"
+                      title={t("training.edit")}
+                      aria-label={t("training.edit")}
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={1.5}
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                         />
                       </svg>
-                    )}
-                  </button>
+                    </button>
+                    <button
+                      onClick={() => onDelete(entry.id)}
+                      disabled={deletingId === entry.id}
+                      className="text-gray-500 hover:text-red-400 transition-colors p-1.5 rounded-lg flex items-center justify-center disabled:opacity-50"
+                      title={t("training.delete")}
+                      aria-label={t("training.delete")}
+                    >
+                      {deletingId === entry.id ? (
+                        <span className="text-xs">...</span>
+                      ) : (
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
                 </div>
+                {/* Secondary row: instructor/partner tags (B-04/B-09) */}
+                {(entry.instructor_name || entry.partner_username) && (
+                  <div className="flex flex-wrap gap-2 mt-1.5">
+                    {entry.instructor_name && (
+                      <span className="inline-flex items-center gap-1 text-xs text-zinc-500">
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        {entry.instructor_name}
+                      </span>
+                    )}
+                    {entry.partner_username && (
+                      <span className="inline-flex items-center gap-1 text-xs text-zinc-500">
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        @{entry.partner_username}
+                      </span>
+                    )}
+                  </div>
+                )}
+                {/* Tertiary row: notes / competition details */}
+                {entry.notes &&
+                  (() => {
+                    const { comp, userNotes } = decodeCompNotes(entry.notes);
+                    return (
+                      <>
+                        {comp && (
+                          <div className="mt-1.5 flex flex-wrap gap-1.5">
+                            <span
+                              className={`text-xs font-semibold ${
+                                RESULT_LABELS[comp.result]?.color ?? "text-gray-400"
+                              }`}
+                            >
+                              {RESULT_LABELS[comp.result]?.label ?? comp.result}
+                            </span>
+                            {comp.gi_type && (
+                              <span
+                                className={`text-xs px-1.5 py-0.5 rounded ${
+                                  comp.gi_type === "nogi"
+                                    ? "bg-orange-500/20 text-orange-400"
+                                    : "bg-blue-500/20 text-blue-400"
+                                }`}
+                              >
+                                {comp.gi_type === "nogi" ? t("training.calendarNogi") : t("training.calendarGi")}
+                              </span>
+                            )}
+                            {comp.opponent && (
+                              <span className="text-xs text-gray-400">
+                                vs {comp.opponent}
+                                {comp.opponent_rank && (
+                                  <span className="ml-1 text-gray-500">
+                                    (
+                                    {BELT_RANKS.find((b) => b.value === comp.opponent_rank)
+                                      ?.label ?? comp.opponent_rank}
+                                    )
+                                  </span>
+                                )}
+                              </span>
+                            )}
+                            {comp.finish && (
+                              <span className="text-xs text-gray-500">by {comp.finish}</span>
+                            )}
+                            {comp.event && (
+                              <span className="text-xs text-gray-500">🏟 {comp.event}</span>
+                            )}
+                          </div>
+                        )}
+                        {userNotes &&
+                          (expandedNotes.has(entry.id) || userNotes.length <= 80 ? (
+                            <div>
+                              <p className="text-gray-300 text-sm mt-1">{userNotes}</p>
+                              {userNotes.length > 80 && (
+                                <button
+                                  onClick={() =>
+                                    setExpandedNotes((prev) => {
+                                      const s = new Set(prev);
+                                      s.delete(entry.id);
+                                      return s;
+                                    })
+                                  }
+                                  className="text-xs text-gray-500 hover:text-gray-300 mt-0.5"
+                                >
+                                  {t("training.collapse")}
+                                </button>
+                              )}
+                            </div>
+                          ) : (
+                            <div>
+                              <p className="text-gray-300 text-sm mt-1">
+                                {userNotes.slice(0, 80)}…
+                              </p>
+                              <button
+                                onClick={() =>
+                                  setExpandedNotes((prev) => new Set([...prev, entry.id]))
+                                }
+                                className="text-xs text-gray-500 hover:text-gray-300 mt-0.5"
+                              >
+                                {t("training.showMore")}
+                              </button>
+                            </div>
+                          ))}
+                      </>
+                    );
+                  })()}
               </div>
             )}
           </SwipeableCard>

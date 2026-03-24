@@ -181,7 +181,7 @@ export default function TechniqueLogList({
 
       {/* カテゴリフィルター */}
       {!initialLoading && techniques.length > 0 && (
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide">
+        <div className="flex gap-2 overflow-x-auto pb-2 mb-4 mt-4 scrollbar-hide">
           <button
             onClick={() => setFilterCategory("all")}
             className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${

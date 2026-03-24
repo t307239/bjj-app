@@ -24,9 +24,10 @@ function AccountSection({ userId }: { userId: string }) {
 
   return (
     <div className="space-y-4">
-      <div className="bg-zinc-900 rounded-xl p-5 border border-white/10">
-        <h3 className="text-gray-400 text-sm font-semibold mb-3">{t("profile.appSettings")}</h3>
-        <p className="text-gray-500 text-xs">{t("profile.settingsSoon")}</p>
+      {/* ㉘ App Settings — intentional empty state with dashed border */}
+      <div className="border-2 border-dashed border-zinc-800 rounded-xl p-8 flex flex-col items-center justify-center text-center mt-4">
+        <h3 className="text-zinc-500 text-sm font-semibold mb-2">{t("profile.appSettings")}</h3>
+        <p className="text-zinc-500 text-xs">{t("profile.settingsSoon")}</p>
       </div>
       <div className="rounded-xl border border-red-900/50 overflow-hidden">
         <div className="bg-red-950/30 px-5 py-3 border-b border-red-900/30">
