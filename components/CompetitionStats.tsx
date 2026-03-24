@@ -207,7 +207,7 @@ export default function CompetitionStats({ userId }: Props) {
         <h4 className="text-sm font-medium text-gray-300">🏆 {t("competition.title")}</h4>
         <div className="flex items-center gap-2">
           {!isOpen && (
-            <span className="text-[10px] text-gray-500">
+            <span className="text-xs text-gray-500">
               {record.win}W {record.loss}L{record.draw > 0 ? ` ${record.draw}D` : ""} · {record.total}{t("competition.matchesSuffix")}
             </span>
           )}
@@ -273,15 +273,15 @@ export default function CompetitionStats({ userId }: Props) {
         <div className="flex-1 grid grid-cols-3 gap-1.5">
           <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-2 text-center">
             <div className="text-xl font-bold text-green-400">{record.win}</div>
-            <div className="text-[10px] text-gray-500">{t("competition.wins")}</div>
+            <div className="text-xs text-gray-500">{t("competition.wins")}</div>
           </div>
           <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-2 text-center">
             <div className="text-xl font-bold text-red-400">{record.loss}</div>
-            <div className="text-[10px] text-gray-500">{t("competition.losses")}</div>
+            <div className="text-xs text-gray-500">{t("competition.losses")}</div>
           </div>
           <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-2 text-center">
             <div className="text-xl font-bold text-yellow-400">{record.draw}</div>
-            <div className="text-[10px] text-gray-500">{t("competition.draws")}</div>
+            <div className="text-xs text-gray-500">{t("competition.draws")}</div>
           </div>
         </div>
       </div>
@@ -290,17 +290,17 @@ export default function CompetitionStats({ userId }: Props) {
       {showBreakdown && (
         <div className="flex gap-2 mb-3">
           {record.winBySub > 0 && (
-            <span className="text-[10px] bg-green-500/10 border border-green-500/20 text-green-400 px-2 py-1 rounded-full">
+            <span className="text-xs bg-green-500/10 border border-green-500/20 text-green-400 px-2 py-1 rounded-full">
               {t("competition.bySubmission")} {record.winBySub}
             </span>
           )}
           {winByDecision > 0 && (
-            <span className="text-[10px] bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
+            <span className="text-xs bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
               {t("competition.byDecision")} {winByDecision}
             </span>
           )}
           {lossToSub > 0 && (
-            <span className="text-[10px] bg-red-500/10 border border-red-500/20 text-red-400 px-2 py-1 rounded-full">
+            <span className="text-xs bg-red-500/10 border border-red-500/20 text-red-400 px-2 py-1 rounded-full">
               一本負 {lossToSub}
             </span>
           )}
@@ -311,12 +311,12 @@ export default function CompetitionStats({ userId }: Props) {
       {(record.gi_count > 0 || record.nogi_count > 0) && (
         <div className="flex gap-2 mb-3">
           {record.gi_count > 0 && (
-            <span className="text-[10px] bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
+            <span className="text-xs bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
               {t("training.gi")} {record.gi_count}{t("competition.matchesSuffix")}
             </span>
           )}
           {record.nogi_count > 0 && (
-            <span className="text-[10px] bg-orange-500/10 border border-orange-500/20 text-orange-400 px-2 py-1 rounded-full">
+            <span className="text-xs bg-orange-500/10 border border-orange-500/20 text-orange-400 px-2 py-1 rounded-full">
               {t("training.nogi")} {record.nogi_count}{t("competition.matchesSuffix")}
             </span>
           )}
@@ -360,12 +360,12 @@ export default function CompetitionStats({ userId }: Props) {
       {/* 月別勝敗バー（3試合以上 かつ 2ヶ月以上ある場合） */}
       {record.total >= 3 && monthlyStats.length >= 2 && (
         <div className="mt-4 pt-3 border-t border-white/5">
-          <p className="text-[10px] text-gray-500 mb-2 tracking-wide">{t("competition.monthly")}</p>
+          <p className="text-xs text-gray-500 mb-2 tracking-wide">{t("competition.monthly")}</p>
           {(() => {
             const maxTotal = Math.max(...monthlyStats.map((m) => m.total), 1);
             return monthlyStats.slice(-6).map((m) => (
               <div key={m.ym} className="flex items-center gap-2 mb-1.5">
-                <span className="text-[10px] text-gray-500 w-8 flex-shrink-0 text-right">{m.label}</span>
+                <span className="text-xs text-gray-500 w-8 flex-shrink-0 text-right">{m.label}</span>
                 <div className="flex-1 h-4 bg-zinc-900/50 rounded-lg overflow-hidden flex">
                   {m.win > 0 && (
                     <div
@@ -386,7 +386,7 @@ export default function CompetitionStats({ userId }: Props) {
                     />
                   )}
                 </div>
-                <span className="text-[10px] text-gray-400 w-16 flex-shrink-0">
+                <span className="text-xs text-gray-400 w-16 flex-shrink-0">
                   {m.win}W{m.loss > 0 ? ` ${m.loss}L` : ""}{m.draw > 0 ? ` ${m.draw}D` : ""}
                 </span>
               </div>

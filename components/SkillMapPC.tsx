@@ -625,7 +625,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
       <div
         ref={containerRef}
         className="relative w-full bg-[#0a1020] border border-white/10 rounded-xl overflow-hidden select-none"
-        style={{ height: 520, cursor: isPanning ? "grabbing" : connectingFrom ? "crosshair" : "grab" }}
+        style={{ height: Math.min(Math.max(nodes.length * 60 + 120, 280), 440), cursor: isPanning ? "grabbing" : connectingFrom ? "crosshair" : "grab" }}
         onMouseDown={onBgMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
@@ -733,11 +733,11 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
                   <span className="flex items-center gap-1 ml-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                     <button
                       onClick={(e) => { e.stopPropagation(); setConfirmDeleteNodeId(null); deleteNode(node.id); }}
-                      className="text-[10px] font-semibold text-white bg-red-600 hover:bg-red-500 px-1.5 py-0.5 rounded transition-colors"
+                      className="text-xs font-semibold text-white bg-red-600 hover:bg-red-500 px-1.5 py-0.5 rounded transition-colors"
                     >{t("common.delete")}</button>
                     <button
                       onClick={(e) => { e.stopPropagation(); setConfirmDeleteNodeId(null); }}
-                      className="text-[10px] text-gray-400 hover:text-gray-200 px-1 transition-colors"
+                      className="text-xs text-gray-400 hover:text-gray-200 px-1 transition-colors"
                     >{t("common.cancel")}</button>
                   </span>
                 ) : isPro && (
@@ -828,7 +828,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink }: Props) 
         />
       </div>
 
-      <p className="text-[10px] text-gray-500 mt-1 text-right">
+      <p className="text-xs text-gray-500 mt-1 text-right">
         {t("skillmap.pcContextHint")}
       </p>
 

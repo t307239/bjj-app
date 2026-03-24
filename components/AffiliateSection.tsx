@@ -80,13 +80,13 @@ export default function AffiliateSection() {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <h2 className="text-base font-bold text-white">📼 {t("affiliate.title")}</h2>
-          <span className="text-[10px] bg-white/10 text-gray-400 px-2 py-0.5 rounded-full">PR</span>
+          <span className="text-xs bg-white/10 text-gray-400 px-2 py-0.5 rounded-full">PR</span>
         </div>
         <a
           href={`https://bjjfanatics.com?aff=${AFF_CODE}`}
           target="_blank"
           rel="sponsored noopener noreferrer"
-          className="text-[11px] text-gray-500 hover:text-gray-300 transition-colors"
+          className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
         >
           {t("affiliate.viewAll")}
         </a>
@@ -98,7 +98,7 @@ export default function AffiliateSection() {
           <button
             key={val}
             onClick={() => setFilterCat(val)}
-            className={`flex-shrink-0 px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${
+            className={`flex-shrink-0 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
               filterCat === val
                 ? "bg-orange-500/80 text-white"
                 : "bg-zinc-900 text-gray-400 border border-white/10 hover:border-orange-500/40"
@@ -123,20 +123,20 @@ export default function AffiliateSection() {
               <div className="text-xs font-semibold text-white group-hover:text-orange-300 transition-colors truncate leading-tight">
                 {p.title}
               </div>
-              <div className="text-[10px] text-gray-400 mt-0.5">{p.instructor}</div>
+              <div className="text-xs text-gray-400 mt-0.5">{p.instructor}</div>
             </div>
             <div className="flex-shrink-0 text-right">
-              <span className="text-[10px] bg-white/10 text-gray-400 px-1.5 py-0.5 rounded">
+              <span className="text-xs bg-white/10 text-gray-400 px-1.5 py-0.5 rounded">
                 {t(`affiliate.level.${p.levelKey}`)}
               </span>
-              <div className="text-orange-400 text-[10px] mt-1">
+              <div className="text-orange-400 text-xs mt-1">
                 {t("affiliate.view")}
               </div>
             </div>
           </a>
         ))}
       </div>
-      <p className="text-[9px] text-gray-500 text-center mt-2">
+      <p className="text-xs text-gray-500 text-center mt-2">
         {t("affiliate.disclaimer")}
       </p>
     </section>

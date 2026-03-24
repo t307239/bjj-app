@@ -133,7 +133,7 @@ export default function TrainingLogForm({
             <button
               type="button"
               onClick={() => setForm({ ...form, date: today })}
-              className="text-[10px] text-gray-500 hover:text-white font-medium"
+              className="text-xs text-gray-500 hover:text-white font-medium"
             >
               {t("training.backToToday")}
             </button>
@@ -196,7 +196,7 @@ export default function TrainingLogForm({
                 }`}
               >
                 <span className="text-lg leading-none">{tt.icon}</span>
-                <span className="leading-none text-[10px]">{tt.label}</span>
+                <span className="leading-none text-xs">{tt.label}</span>
               </button>
             );
           })}
@@ -206,7 +206,7 @@ export default function TrainingLogForm({
       {/* Competition details */}
       {form.type === "competition" && (
         <div className="mb-3 bg-red-500/5 border border-red-500/20 rounded-xl p-3 space-y-2">
-          <p className="text-[11px] text-red-400 font-semibold mb-2">{t("competition.formHeader")}</p>
+          <p className="text-xs text-red-400 font-semibold mb-2">{t("competition.formHeader")}</p>
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="block text-gray-400 text-xs mb-1">{t("competition.result")}</label>
@@ -303,7 +303,7 @@ export default function TrainingLogForm({
               <option key={name} value={name} />
             ))}
           </datalist>
-          <p className="text-[10px] text-gray-500 mt-0.5">{t("competition.techAppendNote")}</p>
+          <p className="text-xs text-gray-500 mt-0.5">{t("competition.techAppendNote")}</p>
         </div>
       )}
 

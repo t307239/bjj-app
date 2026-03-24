@@ -206,7 +206,7 @@ export default function WikiQuickLinks() {
           <span className="text-base">🔗</span>
           <span className="text-xs text-gray-400 font-medium">{t("wiki.dailyTip")}</span>
           {!isOpen && selectedTag && (
-            <span className="text-[10px] text-gray-500">{CATEGORY_EMOJI[selectedTag]} {selectedTag}</span>
+            <span className="text-xs text-gray-500">{CATEGORY_EMOJI[selectedTag]} {selectedTag}</span>
           )}
         </div>
         <svg
@@ -218,12 +218,12 @@ export default function WikiQuickLinks() {
       </button>
       {isOpen && (<div className="px-4 pb-4 border-t border-white/10">
         <div className="flex items-center justify-between pt-3 mb-3">
-          <span className="text-[10px] text-gray-500">{t("wiki.nextHint")}</span>
+          <span className="text-xs text-gray-500">{t("wiki.nextHint")}</span>
           <a
             href={`${WIKI_BASE}/index.html`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-0.5 text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
+            className="inline-flex items-center gap-0.5 text-xs text-gray-500 hover:text-gray-300 transition-colors"
           >
             {t("wiki.peekAhead")}
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -236,7 +236,7 @@ export default function WikiQuickLinks() {
         <div className="flex gap-1 flex-wrap mb-3">
           <button
             onClick={() => setSelectedTag(null)}
-            className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
+            className={`text-xs px-2 py-0.5 rounded-full border transition-colors ${
               selectedTag === null
                 ? "bg-zinc-600 border-zinc-600 text-white"
                 : "border-white/10 text-gray-400 hover:border-white/20 hover:text-zinc-100"
@@ -250,7 +250,7 @@ export default function WikiQuickLinks() {
               <button
                 key={catEn}
                 onClick={() => setSelectedTag(selectedTag === catEn ? null : catEn)}
-                className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
+                className={`text-xs px-2 py-0.5 rounded-full border transition-colors ${
                   selectedTag === catEn
                     ? "bg-zinc-600 border-zinc-600 text-white"
                     : "border-white/10 text-gray-400 hover:border-white/20 hover:text-zinc-100"
@@ -273,10 +273,10 @@ export default function WikiQuickLinks() {
               className="flex flex-col items-center text-center p-2.5 rounded-lg bg-white/5 hover:bg-zinc-800 border border-white/10 hover:border-white/25 transition-all group"
             >
               <span className="text-lg mb-1">{link.emoji}</span>
-              <span className="text-[10px] text-gray-300 group-hover:text-white font-medium leading-tight line-clamp-2">
+              <span className="text-xs text-gray-300 group-hover:text-white font-medium leading-tight line-clamp-2">
                 {link.titleEn}
               </span>
-              <span className="text-[9px] text-gray-500 mt-1">{link.tagEn}</span>
+              <span className="text-xs text-gray-500 mt-1">{link.tagEn}</span>
             </a>
           ))}
         </div>

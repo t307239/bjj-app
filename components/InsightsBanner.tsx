@@ -159,7 +159,7 @@ export default function InsightsBanner({ userId }: Props) {
   return (
     <div className="bg-zinc-900/50 backdrop-blur-sm border border-white/10 rounded-2xl px-4 py-3 mb-4 shadow-lg shadow-black/40">
       <div className="flex items-start justify-between mb-2">
-        <p className="text-[11px] font-semibold text-gray-400 tracking-wide">
+        <p className="text-xs font-semibold text-gray-400 tracking-wide">
           📊 {t("insights.title")}
         </p>
         <button
@@ -176,31 +176,31 @@ export default function InsightsBanner({ userId }: Props) {
       <div className="flex flex-wrap gap-x-5 gap-y-1.5 pt-1">
         {paceMsg && (
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-gray-500">{t("insights.pace")}</span>
+            <span className="text-xs text-gray-500">{t("insights.pace")}</span>
             <span className="text-xs text-zinc-100 font-medium">{paceMsg}</span>
           </div>
         )}
         {bestDay && (
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-gray-500">{t("insights.bestDayOfWeek")}</span>
+            <span className="text-xs text-gray-500">{t("insights.bestDayOfWeek")}</span>
             <span className="text-xs text-zinc-100 font-medium">{bestDay}</span>
           </div>
         )}
         {totalStreak !== null && totalStreak >= 10 && (
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-gray-500">{t("insights.thisMonth")}</span>
+            <span className="text-xs text-gray-500">{t("insights.thisMonth")}</span>
             <span className="text-xs text-green-400 font-medium">{totalStreak}× {t("insights.achieved")} 🎯</span>
           </div>
         )}
         {streakInsight && (
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-gray-500">{t("insights.record")}</span>
+            <span className="text-xs text-gray-500">{t("insights.record")}</span>
             <span className="text-xs text-yellow-400 font-medium">{streakInsight}</span>
           </div>
         )}
         {consistencyMsg && (
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-gray-500">{t("insights.consistency")}</span>
+            <span className="text-xs text-gray-500">{t("insights.consistency")}</span>
             <span className="text-xs text-[#10B981] font-medium">{consistencyMsg}</span>
           </div>
         )}

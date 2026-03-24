@@ -110,23 +110,23 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
           {copied ? t("gym.inviteCopied") : t("gym.inviteCopy")}
         </button>
       </div>
-      <p className="text-[10px] text-gray-500 mt-2">
+      <p className="text-xs text-gray-500 mt-2">
         {t("gym.inviteCode")} <span className="font-mono">{currentCode}</span>
       </p>
       {/* Regenerate — inline confirm to avoid window.confirm() */}
       {confirmRegen ? (
         <div className="mt-3 flex items-center gap-2">
-          <span className="text-[10px] text-orange-400">{t("gym.regenerateConfirm")}</span>
+          <span className="text-xs text-orange-400">{t("gym.regenerateConfirm")}</span>
           <button
             onClick={regenerate}
             disabled={regenerating}
-            className="text-[10px] font-semibold text-white bg-orange-600 hover:bg-orange-500 px-2 py-0.5 rounded transition-colors disabled:opacity-50"
+            className="text-xs font-semibold text-white bg-orange-600 hover:bg-orange-500 px-2 py-0.5 rounded transition-colors disabled:opacity-50"
           >
             {t("gym.confirmYes")}
           </button>
           <button
             onClick={() => setConfirmRegen(false)}
-            className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
+            className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
           >
             {t("training.cancel")}
           </button>
@@ -135,7 +135,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
         <button
           onClick={() => setConfirmRegen(true)}
           disabled={regenerating}
-          className="mt-3 text-[10px] text-gray-500 hover:text-orange-400 transition-colors disabled:opacity-50"
+          className="mt-3 text-xs text-gray-500 hover:text-orange-400 transition-colors disabled:opacity-50"
           aria-label={t("gym.ariaRegenerate")}
         >
           {regenerating ? t("gym.regenerating") : t("gym.regenerateBtn")}
@@ -283,24 +283,24 @@ function CurriculumSection({
       {/* Inline dispatch confirmation — avoids window.confirm() */}
       {confirmDispatch && (
         <div className="mt-2 flex items-center gap-2">
-          <span className="text-[10px] text-[#10B981]">{t("gym.curriculumConfirm")}</span>
+          <span className="text-xs text-[#10B981]">{t("gym.curriculumConfirm")}</span>
           <button
             onClick={dispatch}
             disabled={dispatching}
-            className="text-[10px] font-semibold text-white bg-[#10B981] hover:bg-[#0d9668] px-2 py-0.5 rounded transition-colors disabled:opacity-50"
+            className="text-xs font-semibold text-white bg-[#10B981] hover:bg-[#0d9668] px-2 py-0.5 rounded transition-colors disabled:opacity-50"
           >
             {t("gym.confirmYes")}
           </button>
           <button
             onClick={() => setConfirmDispatch(false)}
-            className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
+            className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
           >
             {t("training.cancel")}
           </button>
         </div>
       )}
       {sentAgo && (
-        <p className="text-[10px] text-gray-500 mt-2">
+        <p className="text-xs text-gray-500 mt-2">
           {t("gym.curriculumLastSent", { text: sentAgo })}
         </p>
       )}

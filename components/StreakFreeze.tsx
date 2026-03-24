@@ -133,9 +133,9 @@ export default function StreakFreeze({ userId, streak }: Props) {
                 <p className="text-xs text-gray-400 mt-0.5">
                   {t("freeze.noYesterday")}
                 </p>
-                <p className="text-[11px] text-emerald-400 mt-1">{t("freeze.remaining", { n: freezeCount })}</p>
+                <p className="text-xs text-emerald-400 mt-1">{t("freeze.remaining", { n: freezeCount })}</p>
                 {historyDates.length > 0 && (
-                  <p className="text-[10px] text-gray-500 mt-0.5">
+                  <p className="text-xs text-gray-500 mt-0.5">
                     {t("freeze.recentUsage")} {historyDates.map(fmtDate).join(" / ")}
                   </p>
                 )}
@@ -171,7 +171,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
               <span className="text-base">❄️</span>
               <div>
                 <p className="text-xs font-medium text-gray-300">{t("freeze.title")}</p>
-                <p className="text-[11px] text-gray-500">{t("freeze.protects")}</p>
+                <p className="text-xs text-gray-500">{t("freeze.protects")}</p>
               </div>
             </div>
             <div className="flex items-center gap-1">
@@ -179,14 +179,14 @@ export default function StreakFreeze({ userId, streak }: Props) {
                 <span key={i} className="text-emerald-400 text-base">❄️</span>
               ))}
               {freezeCount > 3 && (
-                <span className="text-[11px] text-emerald-400">+{freezeCount - 3}</span>
+                <span className="text-xs text-emerald-400">+{freezeCount - 3}</span>
               )}
             </div>
           </div>
           {/* Recent usage history */}
           {historyDates.length > 0 && (
             <div className="mt-2 pt-2 border-t border-white/5">
-              <p className="text-[10px] text-gray-500">
+              <p className="text-xs text-gray-500">
                 {t("freeze.recentUsage")}{" "}
                 {historyDates.map((d, i) => (
                   <span key={i}>
@@ -212,7 +212,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
               <span className="text-base opacity-40">❄️</span>
               <div>
                 <p className="text-xs font-medium text-gray-400">{t("freeze.zeroRemaining")}</p>
-                <p className="text-[11px] text-gray-500">{t("freeze.getUnlimited")}</p>
+                <p className="text-xs text-gray-500">{t("freeze.getUnlimited")}</p>
               </div>
             </div>
             <a

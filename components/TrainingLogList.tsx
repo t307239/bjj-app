@@ -232,7 +232,7 @@ export default function TrainingLogList({
                 </select>
                 {editForm.type === "competition" && (
                   <div className="mb-2 bg-red-500/5 border border-red-500/20 rounded-xl p-2 space-y-1.5">
-                    <p className="text-[10px] text-red-400 font-semibold">🏆 Competition Details</p>
+                    <p className="text-xs text-red-400 font-semibold">🏆 Competition Details</p>
                     <div className="grid grid-cols-2 gap-1.5">
                       <select
                         value={editCompForm.result}
@@ -348,7 +348,7 @@ export default function TrainingLogList({
                   {(entry.instructor_name || entry.partner_username) && (
                     <div className="flex flex-wrap gap-2 mb-1">
                       {entry.instructor_name && (
-                        <span className="inline-flex items-center gap-1 text-[11px] text-zinc-500">
+                        <span className="inline-flex items-center gap-1 text-xs text-zinc-500">
                           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                           </svg>
@@ -356,7 +356,7 @@ export default function TrainingLogList({
                         </span>
                       )}
                       {entry.partner_username && (
-                        <span className="inline-flex items-center gap-1 text-[11px] text-zinc-500">
+                        <span className="inline-flex items-center gap-1 text-xs text-zinc-500">
                           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                           </svg>
@@ -424,7 +424,7 @@ export default function TrainingLogList({
                                         return s;
                                       })
                                     }
-                                    className="text-[11px] text-gray-500 hover:text-gray-300 mt-0.5"
+                                    className="text-xs text-gray-500 hover:text-gray-300 mt-0.5"
                                   >
                                     {t("training.collapse")}
                                   </button>
@@ -439,7 +439,7 @@ export default function TrainingLogList({
                                   onClick={() =>
                                     setExpandedNotes((prev) => new Set([...prev, entry.id]))
                                   }
-                                  className="text-[11px] text-gray-500 hover:text-gray-300 mt-0.5"
+                                  className="text-xs text-gray-500 hover:text-gray-300 mt-0.5"
                                 >
                                   {t("training.showMore")}
                                 </button>

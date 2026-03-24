@@ -19,11 +19,11 @@ export default function CollapsibleSection({ label, defaultOpen = true, contentH
         className="flex items-center gap-2 w-full text-left mb-3 group min-h-[44px]"
         aria-expanded={isOpen}
       >
-        <span className="text-[11px] font-semibold text-zinc-400 tracking-widest">
+        <span className="text-xs font-semibold text-zinc-400 tracking-widest">
           {label}
         </span>
         {!isOpen && contentHint && (
-          <span className="flex-1 text-[10px] text-zinc-500 truncate text-center px-2">
+          <span className="flex-1 text-xs text-zinc-500 truncate text-center px-2">
             {contentHint}
           </span>
         )}

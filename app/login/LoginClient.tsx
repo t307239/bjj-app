@@ -171,17 +171,17 @@ function LoginForm() {
         <div className="flex justify-center gap-6 mb-6">
           <div className="text-center">
             <p className="text-lg font-bold text-white">{t("login.free")}</p>
-            <p className="text-[10px] text-gray-500">{t("login.freeDesc")}</p>
+            <p className="text-xs text-gray-500">{t("login.freeDesc")}</p>
           </div>
           <div className="w-px bg-white/10" />
           <div className="text-center">
             <p className="text-lg font-bold text-white">🔥 {t("login.streaks")}</p>
-            <p className="text-[10px] text-gray-500">{t("login.streaksDesc")}</p>
+            <p className="text-xs text-gray-500">{t("login.streaksDesc")}</p>
           </div>
           <div className="w-px bg-white/10" />
           <div className="text-center">
             <p className="text-lg font-bold text-white">{t("login.noPassword")}</p>
-            <p className="text-[10px] text-gray-500">{t("login.noPasswordDesc")}</p>
+            <p className="text-xs text-gray-500">{t("login.noPasswordDesc")}</p>
           </div>
         </div>
 
@@ -297,7 +297,7 @@ function LoginForm() {
               >
                 {emailLoading ? t("login.sending") : t("login.sendLink")}
               </button>
-              <p className="text-[11px] text-gray-600 text-center pt-0.5">
+              <p className="text-xs text-gray-600 text-center pt-0.5">
                 {t("login.noPasswordNote")}
               </p>
             </form>

@@ -28,7 +28,7 @@ export function GoalWeekDayGrid({
         return (
           <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
             <div
-              className={`w-full h-5 rounded flex items-center justify-center text-[9px] font-bold transition-colors ${
+              className={`w-full h-5 rounded flex items-center justify-center text-xs font-bold transition-colors ${
                 trained
                   ? "bg-green-500/30 border border-green-500/50 text-green-300"
                   : isToday
@@ -68,17 +68,17 @@ export function GoalDaysLeftText({
   const needed = Math.max(0, weeklyGoal - weekCount);
 
   if (needed === 0) return (
-    <p className="text-[10px] text-green-400 mt-1.5">
+    <p className="text-xs text-green-400 mt-1.5">
       {weekCount > weeklyGoal
         ? t("goal.extraWeek", { n: weekCount - weeklyGoal })
         : t("goal.weeklyClear")}
     </p>
   );
   if (daysLeftInWeek === 0) return (
-    <p className="text-[10px] text-gray-500 mt-1.5">{t("goal.zeroDaysLeft", { n: needed })}</p>
+    <p className="text-xs text-gray-500 mt-1.5">{t("goal.zeroDaysLeft", { n: needed })}</p>
   );
   return (
-    <p className="text-[10px] text-gray-500 mt-1.5">
+    <p className="text-xs text-gray-500 mt-1.5">
       {t("goal.moreNeeded", { needed, days: daysLeftInWeek })}
       {needed <= daysLeftInWeek ? t("goal.onTrackSuffix") : t("goal.pickUpPace")}
     </p>
@@ -104,7 +104,7 @@ export function GoalWeekHeatmap({
         {weekHistory.map((w) => (
           <div key={w.weekStart} className="flex-1 flex flex-col items-center gap-0.5">
             <div
-              className={`w-full h-6 rounded flex items-center justify-center text-[9px] font-bold transition-colors ${
+              className={`w-full h-6 rounded flex items-center justify-center text-xs font-bold transition-colors ${
                 w.isCurrent
                   ? w.achieved
                     ? "bg-green-500/30 border border-green-500/50 text-green-300"
@@ -128,7 +128,7 @@ export function GoalWeekHeatmap({
       </div>
       {consecutiveAchievedWeeks >= 2 && (
         <div className="mt-1.5 flex justify-center">
-          <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-green-500/15 border border-green-500/30 text-green-300 px-2 py-0.5 rounded-full">
+          <span className="inline-flex items-center gap-1 text-xs font-semibold bg-green-500/15 border border-green-500/30 text-green-300 px-2 py-0.5 rounded-full">
             {t("goal.weeksInRow", { n: consecutiveAchievedWeeks })}
           </span>
         </div>
@@ -150,12 +150,12 @@ export function GoalMonthHistoryBadges({
 
   return (
     <div className="border-t border-white/10 px-4 py-3">
-      <p className="text-[10px] text-gray-500 mb-2 tracking-wider">{t("goal.past6Months")}</p>
+      <p className="text-xs text-gray-500 mb-2 tracking-wider">{t("goal.past6Months")}</p>
       <div className="flex items-end justify-between gap-1">
         {monthHistory.map((m) => (
           <div key={m.ym} className="flex flex-col items-center gap-1 flex-1">
             <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors ${
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
                 m.achieved
                   ? "bg-green-500 text-white shadow-sm shadow-green-500/40"
                   : "border border-dashed border-white/20 text-gray-500"
@@ -163,13 +163,13 @@ export function GoalMonthHistoryBadges({
             >
               {m.achieved ? "✓" : m.count}
             </div>
-            <span className={`text-[9px] ${m.achieved ? "text-green-400" : "text-gray-500"}`}>
+            <span className={`text-xs ${m.achieved ? "text-green-400" : "text-gray-500"}`}>
               {m.label}
             </span>
           </div>
         ))}
       </div>
-      <p className="text-[10px] text-gray-500 mt-2 text-center">
+      <p className="text-xs text-gray-500 mt-2 text-center">
         {t("goal.monthsAchieved", { n: monthHistory.filter((m) => m.achieved).length })}
       </p>
     </div>

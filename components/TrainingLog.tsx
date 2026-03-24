@@ -522,17 +522,17 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
           <div className="bg-zinc-900 rounded-xl p-3 border border-white/10 flex items-center gap-3">
             <MiniTypeDonut entries={monthEntries} />
             <div>
-              <p className="text-[10px] text-gray-500 tracking-wide">{t("training.monthCount")}</p>
+              <p className="text-xs text-gray-500 tracking-wide">{t("training.monthCount")}</p>
               <p className="text-lg font-bold text-white">{monthEntries.length}</p>
-              <p className="text-[11px] text-gray-400">{t("training.bentoSessions")}</p>
+              <p className="text-xs text-gray-400">{t("training.bentoSessions")}</p>
             </div>
           </div>
           <div className="bg-zinc-900 rounded-xl p-3 border border-white/10">
-            <p className="text-[10px] text-gray-500 tracking-wide mb-1.5">{t("training.bentoTypeMix")}</p>
+            <p className="text-xs text-gray-500 tracking-wide mb-1.5">{t("training.bentoTypeMix")}</p>
             <MonthTypeStackBar entries={monthEntries} />
             <div className="flex flex-wrap gap-x-2 gap-y-0.5 mt-1.5">
               {TRAINING_TYPES.filter((t) => monthEntries.some((e) => e.type === t.value)).map((t) => (
-                <span key={t.value} className="text-[9px] text-gray-500">
+                <span key={t.value} className="text-xs text-gray-500">
                   {t.icon} {t.label}: {monthEntries.filter((e) => e.type === t.value).length}
                 </span>
               ))}
@@ -563,7 +563,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
           onClick={() => window.print()}
           title={t("training.printPDF")}
           aria-label={t("training.printPDF")}
-          className="flex items-center gap-1 text-[11px] text-gray-500 hover:text-zinc-100 bg-zinc-900 border border-white/10 hover:border-white/20 px-2 py-1.5 rounded-lg transition-colors"
+          className="flex items-center gap-1 text-xs text-gray-500 hover:text-zinc-100 bg-zinc-900 border border-white/10 hover:border-white/20 px-2 py-1.5 rounded-lg transition-colors"
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -616,7 +616,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       {/* Period filter */}
       {!initialLoading && entries.length > 0 && (
         <div className="mb-2 flex items-center gap-2">
-          <span className="text-[10px] font-medium text-zinc-500 tracking-wide uppercase">{t("training.periodLabel")}</span>
+          <span className="text-xs font-medium text-zinc-500 tracking-wide uppercase">{t("training.periodLabel")}</span>
         <div className="bg-zinc-900 rounded-lg p-1 inline-flex gap-0.5 border border-white/10">
           {(["all", "month", "week"] as const).map((p) => {
             const label = p === "all" ? t("training.periodAll") : p === "month" ? t("training.periodMonth") : t("training.periodWeek");
@@ -684,7 +684,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         const dropdownTypes = usedTypes.slice(2);
         return (
           <div className="flex items-center gap-1.5 mb-4 flex-wrap">
-            <span className="text-[10px] font-medium text-zinc-500 tracking-wide uppercase mr-1">{t("training.typeShort")}</span>
+            <span className="text-xs font-medium text-zinc-500 tracking-wide uppercase mr-1">{t("training.typeShort")}</span>
             <button
               onClick={() => setFilterType("all")}
               className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${

@@ -59,7 +59,7 @@ export default function ProGate({
           >
             {t("pro.upgradeButton")}
           </a>
-          <p className="text-[10px] text-gray-500 mt-2">
+          <p className="text-xs text-gray-500 mt-2">
             {t("pro.features")}
           </p>
         </div>

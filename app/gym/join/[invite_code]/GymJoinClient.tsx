@@ -165,7 +165,7 @@ export default function GymJoinClient({
         </button>
 
         {/* Privacy note */}
-        <p className="text-[10px] text-gray-600 text-center">
+        <p className="text-xs text-gray-600 text-center">
           {t("gymJoin.privacyNote")}
         </p>
 

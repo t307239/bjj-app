@@ -117,14 +117,14 @@ export default function WeeklyStrip({ userId }: Props) {
     <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl px-4 py-3 border border-white/10 mb-4 shadow-lg shadow-black/40">
       <div className="flex items-center justify-end mb-2">
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-gray-500">
+          <span className="text-xs text-gray-500">
             {trainedThisWeek}/{totalPastDays}d
           </span>
           {weekTotalMins > 0 && (
-            <span className="text-[10px] text-gray-500">· {fmtMins(weekTotalMins)}</span>
+            <span className="text-xs text-gray-500">· {fmtMins(weekTotalMins)}</span>
           )}
           {lastWeekCount !== null && lastWeekCount > 0 && (
-            <span className={`text-[10px] font-medium ${
+            <span className={`text-xs font-medium ${
               trainedThisWeek > lastWeekCount
                 ? "text-green-400"
                 : trainedThisWeek < lastWeekCount
@@ -139,7 +139,7 @@ export default function WeeklyStrip({ userId }: Props) {
             </span>
           )}
           {lastWeekMins !== null && lastWeekMins > 0 && weekTotalMins > 0 && (
-            <span className={`text-[10px] font-medium ${
+            <span className={`text-xs font-medium ${
               weekTotalMins > lastWeekMins
                 ? "text-green-400"
                 : weekTotalMins < lastWeekMins
@@ -181,7 +181,7 @@ export default function WeeklyStrip({ userId }: Props) {
               </div>
               {/* 曜日ラベル */}
               <span
-                className={`text-[10px] leading-none ${
+                className={`text-xs leading-none ${
                   day.isToday
                     ? "text-[#10B981] font-semibold"
                     : trained

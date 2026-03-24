@@ -152,11 +152,11 @@ export default function GymRanking({ userId, gymId }: Props) {
     if (isOptedIn) {
       return (
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
-          <p className="text-[10px] text-gray-500">{t("gym.rankingOptOutHint")}</p>
+          <p className="text-xs text-gray-500">{t("gym.rankingOptOutHint")}</p>
           <button
             onClick={handleToggle}
             disabled={toggling}
-            className="text-[11px] text-gray-500 hover:text-red-400 transition-colors disabled:opacity-40 flex-shrink-0 ml-3"
+            className="text-xs text-gray-500 hover:text-red-400 transition-colors disabled:opacity-40 flex-shrink-0 ml-3"
           >
             {toggling ? t("gym.rankingToggling") : t("gym.rankingOptOut")}
           </button>
@@ -165,11 +165,11 @@ export default function GymRanking({ userId, gymId }: Props) {
     }
     return (
       <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
-        <p className="text-[10px] text-gray-500">{t("gym.rankingOptInHint")}</p>
+        <p className="text-xs text-gray-500">{t("gym.rankingOptInHint")}</p>
         <button
           onClick={handleToggle}
           disabled={toggling}
-          className="text-[11px] text-[#10B981] hover:text-[#0d9668] font-semibold transition-colors disabled:opacity-40 flex-shrink-0 ml-3"
+          className="text-xs text-[#10B981] hover:text-[#0d9668] font-semibold transition-colors disabled:opacity-40 flex-shrink-0 ml-3"
         >
           {toggling ? t("gym.rankingToggling") : t("gym.rankingOptIn")}
         </button>
@@ -230,7 +230,7 @@ export default function GymRanking({ userId, gymId }: Props) {
           <button
             key={m}
             onClick={() => setMode(m)}
-            className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-colors ${
+            className={`text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors ${
               mode === m
                 ? "bg-zinc-600 text-white"
                 : "bg-zinc-800 text-gray-400 hover:text-white"
@@ -297,7 +297,7 @@ export default function GymRanking({ userId, gymId }: Props) {
         )}
       </div>
 
-      <p className="text-[10px] text-gray-500 mt-2.5">
+      <p className="text-xs text-gray-500 mt-2.5">
         {t("gym.rankingFootnote")}
       </p>
 

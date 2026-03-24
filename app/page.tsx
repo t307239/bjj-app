@@ -160,7 +160,7 @@ export default async function Home() {
                 <p className="text-gray-400 text-xs leading-relaxed mb-3">&ldquo;{quote}&rdquo;</p>
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 bg-blue-500/20 rounded-full flex items-center justify-center text-xs font-bold text-blue-300">{initial}</div>
-                  <span className="text-[10px] text-gray-600">{belt}</span>
+                  <span className="text-xs text-gray-600">{belt}</span>
                 </div>
               </div>
             ))}
@@ -271,9 +271,9 @@ export default async function Home() {
                   <span className="text-sm font-semibold">BJJ App</span>
                 </div>
                 <div className="flex gap-4">
-                  <span className="text-[11px] text-gray-500">Log</span>
-                  <span className="text-[11px] text-gray-500">Tech</span>
-                  <span className="text-[11px] text-gray-500">Profile</span>
+                  <span className="text-xs text-gray-500">Log</span>
+                  <span className="text-xs text-gray-500">Tech</span>
+                  <span className="text-xs text-gray-500">Profile</span>
                 </div>
               </div>
 
@@ -281,26 +281,26 @@ export default async function Home() {
                 {/* Greeting */}
                 <div className="mb-4">
                   <h3 className="text-base font-bold">Welcome back, grappler 🥋</h3>
-                  <p className="text-[11px] text-gray-500">Tuesday, March 17, 2026</p>
+                  <p className="text-xs text-gray-500">Tuesday, March 17, 2026</p>
                 </div>
 
                 {/* Stats grid */}
                 <div className="grid grid-cols-2 gap-2 mb-3">
                   <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     <div className="text-2xl font-bold text-rose-400">12</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">This month</div>
+                    <div className="text-xs text-gray-500 mt-0.5">This month</div>
                   </div>
                   <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     <div className="text-2xl font-bold text-blue-400">3</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">This week</div>
+                    <div className="text-xs text-gray-500 mt-0.5">This week</div>
                   </div>
                   <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     <div className="text-2xl font-bold text-purple-400">47</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">Techniques</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Techniques</div>
                   </div>
                   <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     <div className="text-xl font-bold text-orange-400">🔥 5</div>
-                    <div className="text-[10px] text-gray-500 mt-0.5">Day streak</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Day streak</div>
                   </div>
                 </div>
 
@@ -312,37 +312,37 @@ export default async function Home() {
                   <div className="p-3 space-y-3">
                     <div>
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-[11px] text-gray-400">Weekly goal</span>
-                        <span className="text-[10px] text-yellow-400">75%</span>
+                        <span className="text-xs text-gray-400">Weekly goal</span>
+                        <span className="text-xs text-yellow-400">75%</span>
                       </div>
                       <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-yellow-400 rounded-full" style={{ width: "75%" }} />
                       </div>
-                      <div className="text-[10px] text-gray-600 mt-1">3 / 4 sessions</div>
+                      <div className="text-xs text-gray-600 mt-1">3 / 4 sessions</div>
                     </div>
                     <div>
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-[11px] text-gray-400">Monthly goal</span>
-                        <span className="text-[10px] text-green-400">✓ Done!</span>
+                        <span className="text-xs text-gray-400">Monthly goal</span>
+                        <span className="text-xs text-green-400">✓ Done!</span>
                       </div>
                       <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-green-400 rounded-full" style={{ width: "100%" }} />
                       </div>
-                      <div className="text-[10px] text-gray-600 mt-1">12 / 12 sessions</div>
+                      <div className="text-xs text-gray-600 mt-1">12 / 12 sessions</div>
                     </div>
                   </div>
                 </div>
 
                 {/* Recent sessions */}
                 <div className="space-y-2">
-                  <div className="text-[11px] text-gray-500 font-medium mb-1">Recent sessions</div>
+                  <div className="text-xs text-gray-500 font-medium mb-1">Recent sessions</div>
                   <div className="bg-zinc-900 rounded-xl p-3 border border-white/10">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-xs font-medium">2026/03/17</div>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[10px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded">Gi</span>
-                          <span className="text-[10px] text-gray-500">1h 30m</span>
+                          <span className="text-xs bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded">Gi</span>
+                          <span className="text-xs text-gray-500">1h 30m</span>
                         </div>
                       </div>
                     </div>
@@ -352,8 +352,8 @@ export default async function Home() {
                       <div>
                         <div className="text-xs font-medium">2026/03/15</div>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[10px] bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded">NoGi</span>
-                          <span className="text-[10px] text-gray-500">1h</span>
+                          <span className="text-xs bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded">NoGi</span>
+                          <span className="text-xs text-gray-500">1h</span>
                         </div>
                       </div>
                     </div>
@@ -516,7 +516,7 @@ export default async function Home() {
               >
                 <div className="text-2xl mb-2">{item.emoji}</div>
                 <div className="text-sm font-semibold text-white mb-1">{item.title}</div>
-                <div className="text-[11px] text-gray-500">{item.desc}</div>
+                <div className="text-xs text-gray-500">{item.desc}</div>
               </a>
             ))}
           </div>

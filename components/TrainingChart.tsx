@@ -159,14 +159,14 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-gray-300">{t("chart.activity")}</span>
             <div className="flex bg-zinc-800 rounded-lg p-0.5 gap-0.5">
-              <span className="text-[11px] px-3 py-1 rounded-lg bg-zinc-600 text-white">84 days</span>
-              <span className="text-[11px] px-3 py-1 text-gray-400">Monthly</span>
+              <span className="text-xs px-3 py-1 rounded-lg bg-zinc-600 text-white">84 days</span>
+              <span className="text-xs px-3 py-1 text-gray-400">Monthly</span>
             </div>
           </div>
           <div className="flex gap-1">
             <div className="flex flex-col gap-0.5 mr-1">
               {["S","M","T","W","T","F","S"].map((d, i) => (
-                <div key={i} className="text-[9px] text-gray-500 h-3 flex items-center">{d}</div>
+                <div key={i} className="text-xs text-gray-500 h-3 flex items-center">{d}</div>
               ))}
             </div>
             {dummyWeeks.map((week, wi) => (
@@ -249,7 +249,7 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
         <div className="flex bg-zinc-800 rounded-lg p-0.5">
           <button
             onClick={() => setViewMode("heatmap")}
-            className={`text-[11px] px-3 py-1 rounded-lg transition-all ${
+            className={`text-xs px-3 py-1 rounded-lg transition-all ${
               viewMode === "heatmap"
                 ? "bg-zinc-600 text-white shadow-sm"
                 : "text-gray-400 hover:text-white"
@@ -259,7 +259,7 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
           </button>
           <button
             onClick={() => setViewMode("monthly")}
-            className={`text-[11px] px-3 py-1 rounded-lg transition-all ${
+            className={`text-xs px-3 py-1 rounded-lg transition-all ${
               viewMode === "monthly"
                 ? "bg-zinc-600 text-white shadow-sm"
                 : "text-gray-400 hover:text-white"
@@ -276,7 +276,7 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
             {/* 曜日ラベル */}
             <div className="flex flex-col gap-0.5 mr-1">
               {dayLabels.map((d, i) => (
-                <div key={i} className="text-[9px] text-gray-500 h-3 flex items-center">
+                <div key={i} className="text-xs text-gray-500 h-3 flex items-center">
                   {d}
                 </div>
               ))}
@@ -299,7 +299,7 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
             ))}
           </div>
           <div className="flex items-center justify-between mt-2">
-            <div className="flex items-center gap-1 text-[10px] text-gray-500">
+            <div className="flex items-center gap-1 text-xs text-gray-500">
               <span>{t("chart.less")}</span>
               <div className="w-3 h-3 rounded-sm bg-zinc-900/50" />
               <div className="w-3 h-3 rounded-sm bg-green-700/60" />
@@ -307,7 +307,7 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
               <div className="w-3 h-3 rounded-sm bg-green-400" />
               <span>{t("chart.more")}</span>
             </div>
-            <span className="text-[10px] text-gray-500">{t("chart.past84Days", { n: totalDays })}</span>
+            <span className="text-xs text-gray-500">{t("chart.past84Days", { n: totalDays })}</span>
           </div>
         </>
       ) : (
@@ -318,7 +318,7 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
               const heightPct = maxMonthCount > 0 ? (m.count / maxMonthCount) * 100 : 0;
               return (
                 <div key={m.ym} className="flex-1 flex flex-col items-center gap-0.5">
-                  <div className="text-[9px] text-gray-500 mb-0.5">
+                  <div className="text-xs text-gray-500 mb-0.5">
                     {m.count > 0 ? m.count : ""}
                   </div>
                   <div
@@ -336,12 +336,12 @@ export default function TrainingChart({ userId, isPro = false, onLogRoll }: Prop
           </div>
           <div className="flex gap-1.5">
             {monthData.map((m) => (
-              <div key={m.ym} className="flex-1 text-center text-[9px] text-gray-500">
+              <div key={m.ym} className="flex-1 text-center text-xs text-gray-500">
                 {m.label}
               </div>
             ))}
           </div>
-          <div className="text-[10px] text-gray-500 text-right mt-1">
+          <div className="text-xs text-gray-500 text-right mt-1">
             {t("chart.past6Months")}: {t("chart.sessionsFmt", { n: monthData.reduce((s, m) => s + m.count, 0) })}
           </div>
         </>

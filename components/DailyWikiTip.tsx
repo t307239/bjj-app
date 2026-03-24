@@ -235,7 +235,7 @@ export default function DailyWikiTip() {
           <span className="text-base flex-shrink-0">📚</span>
           <span className="text-xs text-gray-400 font-medium flex-shrink-0">{t("wiki.dailyTip")}</span>
           {!isOpen && (
-            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium truncate ${badgeClass}`}>
+            <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium truncate ${badgeClass}`}>
               {tipCategory}
             </span>
           )}
@@ -249,7 +249,7 @@ export default function DailyWikiTip() {
       </button>
       {isOpen && (<div className="px-4 pb-4 pt-1 border-t border-white/10">
       <div className="flex items-center gap-2 mb-3">
-        <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${badgeClass}`}>
+        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${badgeClass}`}>
           {tipCategory}
         </span>
       </div>
@@ -269,7 +269,7 @@ export default function DailyWikiTip() {
         </a>
         <button
           onClick={() => setShowNext((v) => !v)}
-          className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors flex items-center gap-1"
+          className="text-xs text-gray-500 hover:text-gray-300 transition-colors flex items-center gap-1"
         >
           {showNext ? t("wiki.close") : t("wiki.nextPreview", { categoryJa: nextCategory ?? "" })}
         </button>
@@ -282,18 +282,18 @@ export default function DailyWikiTip() {
       >
         <div className="mt-3 pt-3 border-t border-white/10">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-[10px] text-gray-500">{t("wiki.nextHint")}</span>
-            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${nextBadgeClass}`}>
+            <span className="text-xs text-gray-500">{t("wiki.nextHint")}</span>
+            <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${nextBadgeClass}`}>
               {nextCategory}
             </span>
           </div>
           <h4 className="text-xs font-semibold text-gray-300 mb-1 leading-snug">{nextTitle}</h4>
-          <p className="text-[11px] text-gray-500 mb-2 leading-relaxed">{nextDesc}</p>
+          <p className="text-xs text-gray-500 mb-2 leading-relaxed">{nextDesc}</p>
           <a
             href={nextUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[11px] text-gray-500 hover:text-gray-300 transition-colors"
+            className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-300 transition-colors"
           >
             <span>{t("wiki.peekAhead")}</span>
           </a>

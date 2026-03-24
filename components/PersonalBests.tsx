@@ -70,7 +70,7 @@ function IntensitySparkline({ data }: { data: { ym: string; avgSessionMin: numbe
           <circle cx={width - padding} cy={padding + graphHeight - ((currentMonth.avgSessionMin - minIntensity) / Math.max(1, maxIntensity - minIntensity)) * graphHeight} r="1.5" fill="#10B981" />
         )}
       </svg>
-      <span className="text-[10px] text-gray-500 flex-shrink-0">{fmtTime(currentMonth.avgSessionMin)}</span>
+      <span className="text-xs text-gray-500 flex-shrink-0">{fmtTime(currentMonth.avgSessionMin)}</span>
     </div>
   );
 }
@@ -270,22 +270,22 @@ export default function PersonalBests({ userId }: Props) {
             const diff = bests.thisMonthCount - bests.lastMonthCount;
             const pct = Math.round(Math.abs(diff) / bests.lastMonthCount * 100);
             if (diff > 0) return (
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-green-300 bg-green-500/15 border border-green-500/30 px-2 py-0.5 rounded-full mt-0.5">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-300 bg-green-500/15 border border-green-500/30 px-2 py-0.5 rounded-full mt-0.5">
                 ▲ +{diff}{timesUnit} · +{pct}% {t("stats.lastMonthCompare")}
               </span>
             );
             if (diff < 0) return (
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-red-300 bg-red-500/15 border border-red-500/30 px-2 py-0.5 rounded-full mt-0.5">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-300 bg-red-500/15 border border-red-500/30 px-2 py-0.5 rounded-full mt-0.5">
                 ▼ {diff}{timesUnit} · -{pct}% {t("stats.lastMonthCompare")}
               </span>
             );
-            return <span className="text-[10px] text-gray-500 mt-0.5">= {t("stats.samePaceLast")}</span>;
+            return <span className="text-xs text-gray-500 mt-0.5">= {t("stats.samePaceLast")}</span>;
           })()}
         </div>
         <button
           onClick={handleShare}
           disabled={isCopied}
-          className={`flex items-center gap-1 text-[11px] bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg transition-colors ${
+          className={`flex items-center gap-1 text-xs bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg transition-colors ${
             isCopied
               ? "text-green-400 border-green-500/30 cursor-default"
               : "text-gray-400 hover:text-white hover:bg-white/10"
@@ -308,23 +308,23 @@ export default function PersonalBests({ userId }: Props) {
           <div
             key={item.label}
             className={`rounded-xl p-3 text-center ${
-              item.sub ? "bg-yellow-500/10 border border-yellow-500/25" : "bg-white/5"
+              item.sub ? "bg-emerald-950/30 border border-emerald-900/50" : "bg-white/5"
             }`}
           >
             <div className="text-lg mb-0.5">{item.icon}</div>
             <div className="flex items-baseline justify-center gap-0.5">
-              <span className="text-xl font-black text-white tabular-nums">{item.num}</span>
-              {item.unit && <span className="text-[10px] font-normal text-gray-500">{item.unit}</span>}
+              <span className="text-2xl font-bold text-zinc-100 tabular-nums">{item.num}</span>
+              {item.unit && <span className="text-xs font-normal text-zinc-400">{item.unit}</span>}
             </div>
-            <div className="text-[10px] text-gray-500 mt-0.5">{item.label}</div>
+            <div className="text-xs text-zinc-400 mt-0.5">{item.label}</div>
             {item.sub && (
-              <div className="text-[9px] text-yellow-400 mt-0.5 leading-none">⭐ {item.sub}</div>
+              <div className="text-xs text-emerald-400 mt-0.5 leading-none">{item.sub}</div>
             )}
           </div>
         ))}
       </div>
       {bests.maxSessionMin > 0 && (
-        <div className="mt-2 text-center text-[10px] text-gray-500">
+        <div className="mt-2 text-center text-xs text-zinc-400">
           {t("stats.longestSession")}: {fmtTime(bests.maxSessionMin)} · {t("stats.monthlyAvg")}: {bests.avgMonthly}{timesUnit}
         </div>
       )}
@@ -354,14 +354,14 @@ export default function PersonalBests({ userId }: Props) {
                         background: isBest ? "#10B981" : count > 0 ? "#374151" : "#1f2937",
                       }}
                     />
-                    <span className={`text-[9px] leading-none ${isBest ? "text-[#10B981] font-bold" : "text-gray-500"}`}>
+                    <span className={`text-xs leading-none ${isBest ? "text-[#10B981] font-bold" : "text-gray-500"}`}>
                       {DOW_LABELS[i]}
                     </span>
                   </div>
                 );
               })}
             </div>
-            <p className="text-[9px] text-gray-500 text-center mt-1">
+            <p className="text-xs text-gray-500 text-center mt-1">
               {t("stats.bestDayLabel")}: <span className="text-[#10B981] font-medium">{DOW_LONG[bestDowIdx]}</span> ({bests.dowCounts[bestDowIdx]}{timesUnit})
             </p>
           </div>
@@ -370,7 +370,7 @@ export default function PersonalBests({ userId }: Props) {
       {/* 6ヶ月の月別強度推移 */}
       {bests.monthlyIntensity.length > 0 && (
         <div className="mt-3 pt-3 border-t border-white/5">
-          <p className="text-[10px] text-gray-400 mb-2">📈 {t("stats.last6MonthsAvg")}</p>
+          <p className="text-xs text-gray-400 mb-2">📈 {t("stats.last6MonthsAvg")}</p>
           <IntensitySparkline data={bests.monthlyIntensity} />
         </div>
       )}

@@ -63,15 +63,15 @@ export default async function GymDashboardPage() {
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
-                    <span className="text-[10px] font-semibold text-blue-400 tracking-widest uppercase">
+                    <span className="text-xs font-semibold text-blue-400 tracking-widest uppercase">
                       {t("gym.dashboardTitle")}
                     </span>
                     {gym.is_active ? (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-300 bg-blue-500/15 border border-blue-400/25 px-2 py-0.5 rounded-full">
+                      <span className="inline-flex items-center gap-1 text-xs font-bold text-blue-300 bg-blue-500/15 border border-blue-400/25 px-2 py-0.5 rounded-full">
                         ✦ PRO
                       </span>
                     ) : (
-                      <span className="inline-flex items-center text-[10px] font-semibold text-zinc-500 bg-zinc-800/60 border border-zinc-700/40 px-2 py-0.5 rounded-full">
+                      <span className="inline-flex items-center text-xs font-semibold text-zinc-500 bg-zinc-800/60 border border-zinc-700/40 px-2 py-0.5 rounded-full">
                         FREE
                       </span>
                     )}
@@ -88,7 +88,7 @@ export default async function GymDashboardPage() {
                   <p className="text-2xl font-black text-white tabular-nums">
                     {memberCount}
                   </p>
-                  <p className="text-[10px] text-zinc-500 uppercase tracking-widest">
+                  <p className="text-xs text-zinc-500 uppercase tracking-widest">
                     members
                   </p>
                 </div>

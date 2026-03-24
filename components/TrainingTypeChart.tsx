@@ -217,7 +217,7 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color, trendSubtitle }: {
 
   return (
     <div className="mt-3 pt-3 border-t border-white/5">
-      <p className="text-[10px] text-gray-500 mb-2">
+      <p className="text-xs text-gray-500 mb-2">
         <span style={{ color }} className="font-semibold">{typeLabel}</span>{trendSubtitle}
       </p>
       <div className="flex items-end gap-1.5 h-12">
@@ -310,7 +310,7 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
         <h4 className="text-sm font-medium text-gray-300">🥋 {t("chart.typeDistribution")}</h4>
         <div className="flex items-center gap-2">
           {!isOpen && total > 0 && (
-            <span className="text-[10px] text-gray-500">{total}{t("chart.timesUnit")}</span>
+            <span className="text-xs text-gray-500">{total}{t("chart.timesUnit")}</span>
           )}
           <svg
             className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
@@ -342,7 +342,7 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
             <button
               key={p}
               onClick={() => setPeriod(p)}
-              className={`text-[11px] px-2 py-1 rounded-lg transition-all ${
+              className={`text-xs px-2 py-1 rounded-lg transition-all ${
                 period === p ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-white"
               }`}
             >
@@ -388,9 +388,9 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${d.bg}`} />
                     <span className={`text-xs flex-1 truncate ${isSelected ? "text-white font-medium" : "text-gray-400"}`}>{d.label}</span>
                     <span className="text-xs font-medium text-white">{d.count}{t("chart.timesUnit")}</span>
-                    <span className="text-[10px] text-gray-500 w-7 text-right">{pct}%</span>
+                    <span className="text-xs text-gray-500 w-7 text-right">{pct}%</span>
                     {d.totalMins > 0 && (
-                      <span className="text-[10px] text-gray-500 w-8 text-right">{fmtMins(d.totalMins)}</span>
+                      <span className="text-xs text-gray-500 w-8 text-right">{fmtMins(d.totalMins)}</span>
                     )}
                     <MiniSparkline logs={allLogs} typeValue={d.value} color={d.color} />
                   </div>

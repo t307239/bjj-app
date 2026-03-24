@@ -125,7 +125,7 @@ export default async function TechniquesPage() {
               </p>
             </div>
             {isPro && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-1 rounded-full shrink-0 mt-1">
+              <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-1 rounded-full shrink-0 mt-1">
                 ✦ PRO
               </span>
             )}
@@ -139,7 +139,7 @@ export default async function TechniquesPage() {
                 <p className="text-2xl font-black text-white tabular-nums">
                   {totalTechniques}
                 </p>
-                <p className="text-[10px] text-zinc-500 mt-0.5 uppercase tracking-widest">
+                <p className="text-xs text-zinc-500 mt-0.5 uppercase tracking-widest">
                   logged
                 </p>
               </div>
@@ -148,7 +148,7 @@ export default async function TechniquesPage() {
                 <p className="text-2xl font-black text-yellow-400 tabular-nums">
                   {learned + mastered}
                 </p>
-                <p className="text-[10px] text-zinc-500 mt-0.5 uppercase tracking-widest">
+                <p className="text-xs text-zinc-500 mt-0.5 uppercase tracking-widest">
                   solid+
                 </p>
               </div>
@@ -157,7 +157,7 @@ export default async function TechniquesPage() {
                 <p className="text-2xl font-black text-green-400 tabular-nums">
                   {mastered}
                 </p>
-                <p className="text-[10px] text-zinc-500 mt-0.5 uppercase tracking-widest">
+                <p className="text-xs text-zinc-500 mt-0.5 uppercase tracking-widest">
                   mastered
                 </p>
               </div>
@@ -170,7 +170,7 @@ export default async function TechniquesPage() {
               {topCategories.map(([cat, count]) => (
                 <span
                   key={cat}
-                  className="text-[10px] font-medium bg-zinc-800/60 border border-white/8 text-zinc-400 px-2.5 py-1 rounded-full capitalize"
+                  className="text-xs font-medium bg-zinc-800/60 border border-white/8 text-zinc-400 px-2.5 py-1 rounded-full capitalize"
                 >
                   {cat} · {count}
                 </span>
@@ -184,11 +184,11 @@ export default async function TechniquesPage() {
             ═══════════════════════════════════════════ */}
         <section className="mb-7">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-[10px] font-semibold text-zinc-500 tracking-widest uppercase">
+            <p className="text-xs font-semibold text-zinc-500 tracking-widest uppercase">
               {t("techniquesPage.skillMap")}
             </p>
             {!isPro && (
-              <span className="text-[10px] text-zinc-500">
+              <span className="text-xs text-zinc-500">
                 {t("techniquesPage.freeLimit")}
               </span>
             )}
@@ -204,7 +204,7 @@ export default async function TechniquesPage() {
             SECTION 2 — TECHNIQUE LOG
             ═══════════════════════════════════════════ */}
         <section className="mb-7">
-          <p className="text-[10px] font-semibold text-zinc-500 tracking-widest uppercase mb-3">
+          <p className="text-xs font-semibold text-zinc-500 tracking-widest uppercase mb-3">
             {t("techniquesPage.techniqueLog")}
           </p>
           <Suspense>
@@ -216,7 +216,7 @@ export default async function TechniquesPage() {
             SECTION 3 — LEARN: WIKI LINKS
             ═══════════════════════════════════════════ */}
         <section className="mb-7">
-          <p className="text-[10px] font-semibold text-zinc-500 tracking-widest uppercase mb-3">
+          <p className="text-xs font-semibold text-zinc-500 tracking-widest uppercase mb-3">
             {t("techniquesPage.learnWiki")}
           </p>
           <div className="bg-zinc-900/40 border border-white/8 rounded-2xl p-4">
@@ -236,7 +236,7 @@ export default async function TechniquesPage() {
                 </a>
               ))}
             </div>
-            <p className="text-[10px] text-zinc-500">
+            <p className="text-xs text-zinc-500">
               {t("techniquesPage.wikiDesc")}
             </p>
           </div>

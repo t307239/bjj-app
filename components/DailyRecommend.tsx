@@ -195,7 +195,7 @@ export default function DailyRecommend({ userId }: Props) {
                 <span className="bg-white/10 text-gray-300 text-xs px-2 py-1 rounded-full">
                   {MASTERY_LABELS[tech.mastery_level]?.["en"] ?? MASTERY_LABELS[1]?.["en"] ?? ""}
                 </span>
-                <p className="text-gray-500 text-[10px] mt-1">{t("recommend.masteryUp")}</p>
+                <p className="text-gray-500 text-xs mt-1">{t("recommend.masteryUp")}</p>
               </div>
             </div>
           </div>

@@ -37,10 +37,10 @@ export default function ProStatusBanner({ isPro, subscriptionStatus }: Props) {
   if (isPro) {
     return (
       <div className="flex items-center gap-2 mb-3">
-        <span className="inline-flex items-center gap-1.5 bg-yellow-400/10 border border-yellow-400/30 text-yellow-300 text-[11px] font-bold px-2.5 py-1 rounded-full">
+        <span className="inline-flex items-center gap-1.5 bg-yellow-400/10 border border-yellow-400/30 text-yellow-300 text-xs font-bold px-2.5 py-1 rounded-full">
           ⭐ PRO
         </span>
-        <span className="text-[11px] text-zinc-400">{t("pro.allFeaturesUnlocked")}</span>
+        <span className="text-xs text-zinc-400">{t("pro.allFeaturesUnlocked")}</span>
       </div>
     );
   }

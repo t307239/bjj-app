@@ -84,7 +84,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
         {steps.map((step) => (
           step.done ? (
             <div key={step.id} className="flex items-center gap-2.5 px-1 py-1.5 opacity-40">
-              <span className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-[10px] text-emerald-400">✓</span>
+              <span className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-xs text-emerald-400">✓</span>
               <span className="text-xs text-zinc-500 line-through">{step.emoji} {step.label}</span>
             </div>
           ) : (

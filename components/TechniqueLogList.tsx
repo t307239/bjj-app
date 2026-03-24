@@ -137,7 +137,7 @@ export default function TechniqueLogList({
                 <div className="flex flex-wrap gap-x-3 gap-y-0.5">
                   {counts.map((cnt, i) =>
                     cnt > 0 ? (
-                      <span key={i} className="text-[10px] text-gray-500">
+                      <span key={i} className="text-xs text-gray-500">
                         <span
                           className={`${masteryColors[i + 1].replace("bg-", "text-")}`}
                         >
@@ -389,7 +389,7 @@ export default function TechniqueLogList({
                         {t("techniques.masteryLevels." + technique.mastery_level)}
                       </span>
                       {technique.created_at && (
-                        <span className="text-[10px] text-gray-500 ml-auto">
+                        <span className="text-xs text-gray-500 ml-auto">
                           {relativeDate(technique.created_at, t)}
                         </span>
                       )}
@@ -413,7 +413,7 @@ export default function TechniqueLogList({
                                 return next;
                               })
                             }
-                            className="text-[10px] text-[#10B981] hover:text-[#0d9668] mt-0.5"
+                            className="text-xs text-[#10B981] hover:text-[#0d9668] mt-0.5"
                           >
                             {expandedIds.has(technique.id)
                               ? t("techniques.collapse")
@@ -431,7 +431,7 @@ export default function TechniqueLogList({
                           href={dvdInfo.url}
                           target="_blank"
                           rel="noopener noreferrer sponsored"
-                          className="flex items-center gap-1 text-[10px] font-medium text-orange-400/80 hover:text-orange-300 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/20 hover:border-orange-500/40 px-2 py-1 rounded-lg transition-all whitespace-nowrap"
+                          className="flex items-center gap-1 text-xs font-medium text-orange-400/80 hover:text-orange-300 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/20 hover:border-orange-500/40 px-2 py-1 rounded-lg transition-all whitespace-nowrap"
                           title={`${dvdInfo.title} by ${dvdInfo.instructor}`}
                         >
                           <span>📼</span>
@@ -466,7 +466,7 @@ export default function TechniqueLogList({
                       <div className="flex items-center gap-1 ml-1">
                         <button
                           onClick={() => { setConfirmDeleteId(null); onDelete(technique.id); }}
-                          className="text-[10px] font-semibold text-white bg-[#e94560] hover:bg-[#c73652] px-2 py-0.5 rounded transition-colors"
+                          className="text-xs font-semibold text-white bg-[#e94560] hover:bg-[#c73652] px-2 py-0.5 rounded transition-colors"
                           title={t("techniques.confirmDelete")}
                           aria-label={t("techniques.confirmDelete")}
                         >
@@ -474,7 +474,7 @@ export default function TechniqueLogList({
                         </button>
                         <button
                           onClick={() => setConfirmDeleteId(null)}
-                          className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors px-1"
+                          className="text-xs text-gray-500 hover:text-gray-300 transition-colors px-1"
                         >
                           {t("training.cancel")}
                         </button>

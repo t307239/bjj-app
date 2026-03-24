@@ -48,7 +48,7 @@ export default function BeltProgressCard({
       className={`bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:border-white/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-300 ease-out ${className}`}
     >
       <div className="flex items-center justify-between mb-4">
-        <span className="text-[11px] font-semibold text-zinc-500 tracking-widest">
+        <span className="text-xs font-semibold text-zinc-500 tracking-widest">
           {t("beltProgress.title")}
         </span>
         <Link
@@ -101,8 +101,8 @@ export default function BeltProgressCard({
       {/* Stripe progress bar (#70) */}
       <div className="mt-3">
         <div className="flex justify-between items-center mb-1">
-          <span className="text-[11px] text-zinc-500">{t("beltProgress.stripesOf4", { n: stripes })}</span>
-          <span className="text-[11px] text-zinc-500">{Math.round((stripes / 4) * 100)}%</span>
+          <span className="text-xs text-zinc-500">{t("beltProgress.stripesOf4", { n: stripes })}</span>
+          <span className="text-xs text-zinc-500">{Math.round((stripes / 4) * 100)}%</span>
         </div>
         <div className="w-full bg-white/10 rounded-full h-1.5">
           <div

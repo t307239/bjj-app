@@ -273,7 +273,7 @@ export default function GoalTracker({ userId }: Props) {
           <h4 className="text-sm font-medium text-gray-300">{t("goal.title")}</h4>
           <div className="flex items-center gap-2">
             {!isOpen && hasGoals && (
-              <span className="text-[10px] text-gray-500">
+              <span className="text-xs text-gray-500">
                 {[
                   data.weeklyGoal > 0 ? t("goal.compactWeekly", { a: data.weekCount, b: data.weeklyGoal }) : "",
                   data.monthlyGoal > 0 ? t("goal.compactMonthly", { a: data.monthCount, b: data.monthlyGoal }) : "",
@@ -281,7 +281,7 @@ export default function GoalTracker({ userId }: Props) {
               </span>
             )}
             {!isOpen && !hasGoals && (
-              <span className="text-[10px] text-gray-500">{t("goal.setAGoal")}</span>
+              <span className="text-xs text-gray-500">{t("goal.setAGoal")}</span>
             )}
             <svg
               className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
@@ -315,7 +315,7 @@ export default function GoalTracker({ userId }: Props) {
             <div className="cf-p"/><div className="cf-p"/><div className="cf-p"/><div className="cf-p"/>
             <div className="text-2xl mb-1 animate-bounce">🎉</div>
             <div className="text-sm font-bold text-green-400">{t("goal.allAchieved")}</div>
-            <div className="text-[11px] text-gray-400 mt-1">
+            <div className="text-xs text-gray-400 mt-1">
               {consecutiveAchievedMonths >= 3
                 ? t("goal.monthsInRow", { n: consecutiveAchievedMonths })
                 : consecutiveAchievedMonths >= 2
@@ -349,10 +349,10 @@ export default function GoalTracker({ userId }: Props) {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-zinc-100">{t("goal.weekly")}</span>
                   {data.weekCount >= data.weeklyGoal && data.weeklyGoal > 0 && (
-                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
+                    <span className="text-xs bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-[11px] text-gray-500 hover:text-gray-300 transition-colors">
+                <button className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
                   {data.weeklyGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>
@@ -392,10 +392,10 @@ export default function GoalTracker({ userId }: Props) {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-zinc-100">{t("goal.monthly")}</span>
                   {data.monthCount >= data.monthlyGoal && data.monthlyGoal > 0 && (
-                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
+                    <span className="text-xs bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-[11px] text-gray-500 hover:text-gray-300 transition-colors">
+                <button className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
                   {data.monthlyGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>
@@ -403,7 +403,7 @@ export default function GoalTracker({ userId }: Props) {
                 <>
                   <ProgressBar current={data.monthCount} target={data.monthlyGoal} sessionsUnit={t("chart.timesUnit")} doneLabel={t("goal.done")} />
                   {data.monthCount >= data.monthlyGoal ? (
-                    <p className="text-[10px] text-green-400 mt-1.5">
+                    <p className="text-xs text-green-400 mt-1.5">
                       {data.monthCount > data.monthlyGoal
                         ? t("goal.extraMonth", { n: data.monthCount - data.monthlyGoal })
                         : consecutiveAchievedMonths >= 2
@@ -411,7 +411,7 @@ export default function GoalTracker({ userId }: Props) {
                         : t("goal.monthlyAchieved")}
                     </p>
                   ) : data.monthCount < data.monthlyGoal && remainingDaysInMonth > 0 && (
-                    <p className="text-[10px] mt-1 text-gray-500">
+                    <p className="text-xs mt-1 text-gray-500">
                       {t("goal.moreNeeded", { needed: data.monthlyGoal - data.monthCount, days: remainingDaysInMonth })}
                       {monthlyProjected > 0 ? (
                         <span className={monthOnTrack ? "text-green-400" : "text-orange-400"}>
@@ -450,10 +450,10 @@ export default function GoalTracker({ userId }: Props) {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-zinc-100">{t("goal.technique")}</span>
                   {data.techniqueCount >= data.techniqueGoal && data.techniqueGoal > 0 && (
-                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
+                    <span className="text-xs bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-[11px] text-gray-500 hover:text-gray-300 transition-colors">
+                <button className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
                   {data.techniqueGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>

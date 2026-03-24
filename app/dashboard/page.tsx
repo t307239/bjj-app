@@ -378,7 +378,7 @@ export default async function DashboardPage({
             />
           ) : (
             <div className="flex-shrink-0 flex items-center gap-1.5 bg-zinc-900/60 border border-white/10 rounded-full px-3 py-1.5">
-              <span className="text-[10px] font-bold text-zinc-400 tracking-widest uppercase">
+              <span className="text-xs font-bold text-zinc-400 tracking-widest uppercase">
                 {belt}
               </span>
               {stripeCount > 0 && (
@@ -417,18 +417,18 @@ export default async function DashboardPage({
             <svg className="absolute top-3 right-3 w-3.5 h-3.5 text-zinc-500 group-hover:text-yellow-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-            <span className="text-[10px] font-semibold text-zinc-500 tracking-widest block mb-1">
+            <span className="text-xs font-semibold text-zinc-500 tracking-widest block mb-1">
               {t("dashboard.streak")}
             </span>
             <div className="flex items-end gap-1 mt-1">
               <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">
                 {streak}
               </span>
-              <span className="text-zinc-500 text-[10px] mb-0.5">
+              <span className="text-zinc-500 text-xs mb-0.5">
                 {t("dashboard.streakDaysUnit")}
               </span>
             </div>
-            <span className="mt-1.5 block text-[10px] text-yellow-400/80">
+            <span className="mt-1.5 block text-xs text-yellow-400/80">
               {streak >= 14
                 ? t("dashboard.streakCardExcellent")
                 : streak >= 7
@@ -443,19 +443,19 @@ export default async function DashboardPage({
 
           {/* This week */}
           <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-blue-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200">
-            <span className="text-[10px] font-semibold text-zinc-500 tracking-widest block mb-1">
+            <span className="text-xs font-semibold text-zinc-500 tracking-widest block mb-1">
               {t("dashboard.weekTraining")}
             </span>
             <div className="flex items-end gap-1 mt-1">
               <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
                 {weekCount ?? 0}
               </span>
-              <span className="text-zinc-500 text-[10px] mb-0.5">
+              <span className="text-zinc-500 text-xs mb-0.5">
                 {t("dashboard.sessionsUnit")}
               </span>
             </div>
             {weeklyGoal > 0 && (
-              <span className="mt-1.5 block text-[10px] text-blue-400/80">
+              <span className="mt-1.5 block text-xs text-blue-400/80">
                 {t("dashboard.bentoGoalLabel", {
                   done: weekCount ?? 0,
                   goal: weeklyGoal,
@@ -467,12 +467,12 @@ export default async function DashboardPage({
           {/* This month — wide */}
           <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-rose-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200 flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-semibold text-zinc-500 tracking-widest">
+              <span className="text-xs font-semibold text-zinc-500 tracking-widest">
                 {t("dashboard.monthTraining")}
               </span>
               {prevMonthCount !== null && prevMonthCount !== undefined && (
                 <span
-                  className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                  className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                     (monthCount ?? 0) >= prevMonthCount
                       ? "text-green-400 bg-green-400/10"
                       : "text-red-400 bg-red-400/10"
@@ -494,7 +494,7 @@ export default async function DashboardPage({
             </div>
             <div className="flex items-center gap-3 mt-2 flex-wrap">
               {monthHoursStr && (
-                <span className="inline-flex items-center gap-1 text-[10px] text-purple-400 font-medium">
+                <span className="inline-flex items-center gap-1 text-xs text-purple-400 font-medium">
                   <svg
                     className="w-3.5 h-3.5 flex-shrink-0"
                     fill="none"
@@ -513,7 +513,7 @@ export default async function DashboardPage({
                 </span>
               )}
               {remainingDays > 0 && (
-                <span className="text-[10px] text-zinc-500">
+                <span className="text-xs text-zinc-500">
                   {t("dashboard.bentoDaysLeft", { n: remainingDays })}
                   {(monthCount ?? 0) > 0 && dayOfMonth > 0 && (
                     <span className="text-blue-400 ml-1">
@@ -544,14 +544,14 @@ export default async function DashboardPage({
           >
             <div className="flex items-center justify-between mb-2">
               <div>
-                <span className="text-[10px] font-semibold text-zinc-500 tracking-widest block mb-1">
+                <span className="text-xs font-semibold text-zinc-500 tracking-widest block mb-1">
                   {t("dashboard.techniques")}
                 </span>
                 <div className="flex items-end gap-1.5">
                   <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-violet-400 to-purple-300 bg-clip-text text-transparent">
                     {techniqueCount ?? 0}
                   </span>
-                  <span className="text-zinc-500 text-[10px] mb-0.5">
+                  <span className="text-zinc-500 text-xs mb-0.5">
                     {t("dashboard.loggedUnit")}
                   </span>
                 </div>
@@ -575,7 +575,7 @@ export default async function DashboardPage({
                 {(recentTechniques as { name: string }[]).map((tech) => (
                   <span
                     key={tech.name}
-                    className="text-[10px] bg-violet-500/10 border border-violet-500/20 text-violet-300 px-2 py-0.5 rounded-full truncate max-w-[120px]"
+                    className="text-xs bg-violet-500/10 border border-violet-500/20 text-violet-300 px-2 py-0.5 rounded-full truncate max-w-[120px]"
                   >
                     {tech.name}
                   </span>
@@ -587,14 +587,14 @@ export default async function DashboardPage({
           {/* Avg session (only if data exists) */}
           {avgSessionMin > 0 && (
             <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-white/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200">
-              <span className="text-[10px] font-semibold text-zinc-500 tracking-widest block mb-1">
+              <span className="text-xs font-semibold text-zinc-500 tracking-widest block mb-1">
                 {t("dashboard.bentoAvgSession")}
               </span>
               <div className="flex items-end gap-1.5">
                 <span className="text-3xl font-black leading-none tabular-nums text-zinc-300">
                   {avgSessionMin}
                 </span>
-                <span className="text-zinc-500 text-[10px] mb-0.5">
+                <span className="text-zinc-500 text-xs mb-0.5">
                   {t("dashboard.bentoMinPerSession")}
                 </span>
               </div>
@@ -606,7 +606,7 @@ export default async function DashboardPage({
             SECTION 3 — THIS WEEK
             ═══════════════════════════════════════════ */}
         <section className="mb-7">
-          <p className="text-[10px] font-semibold text-zinc-500 tracking-widest px-0.5 mb-3 uppercase">
+          <p className="text-xs font-semibold text-zinc-500 tracking-widest px-0.5 mb-3 uppercase">
             {t("dashboard.weekTraining")}
           </p>
           <div className="space-y-3">
@@ -620,7 +620,7 @@ export default async function DashboardPage({
             ═══════════════════════════════════════════ */}
         {gymCurriculum && (
           <section className="mb-7">
-            <p className="text-[10px] font-semibold text-zinc-500 tracking-widest px-0.5 mb-3 uppercase">
+            <p className="text-xs font-semibold text-zinc-500 tracking-widest px-0.5 mb-3 uppercase">
               {t("dashboard.sectionToday")}
             </p>
             <GymCurriculumCard
@@ -637,7 +637,7 @@ export default async function DashboardPage({
             ═══════════════════════════════════════════ */}
         {gymId && shareDataWithGym && (
           <section className="mb-7">
-            <p className="text-[10px] font-semibold text-zinc-500 tracking-widest px-0.5 mb-3 uppercase">
+            <p className="text-xs font-semibold text-zinc-500 tracking-widest px-0.5 mb-3 uppercase">
               {t("dashboard.sectionYourGym")}
             </p>
             <GymRanking userId={user.id} gymId={gymId} />

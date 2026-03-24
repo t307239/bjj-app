@@ -21,11 +21,11 @@ export default function ProUpgradeBanner({ isPro }: Props) {
       <div className="relative flex items-center justify-between gap-3">
         <div className="flex-1 min-w-0">
           <p className="text-xs font-bold text-emerald-400 mb-0.5">{t("pro.bannerTitle")}</p>
-          <p className="text-[11px] text-zinc-400 leading-relaxed">
+          <p className="text-xs text-zinc-400 leading-relaxed">
             {t("pro.bannerFeatures")}
           </p>
           {/* Social proof */}
-          <p className="text-[10px] text-zinc-500 mt-1">{t("pro.socialProof")}</p>
+          <p className="text-xs text-zinc-500 mt-1">{t("pro.socialProof")}</p>
         </div>
         {PAYMENT_LINK ? (
           <a

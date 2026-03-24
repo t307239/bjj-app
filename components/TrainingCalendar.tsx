@@ -147,7 +147,7 @@ export default function TrainingCalendar({ userId }: Props) {
         {Object.keys(TYPE_COLORS).map((key) => (
           <div key={key} className="flex items-center gap-1">
             <div className={`w-2 h-2 rounded-full ${TYPE_COLORS[key]}`} />
-            <span className="text-[10px] text-gray-500">{t(`training.${key}`)}</span>
+            <span className="text-xs text-gray-500">{t(`training.${key}`)}</span>
           </div>
         ))}
       </div>
@@ -157,7 +157,7 @@ export default function TrainingCalendar({ userId }: Props) {
         {WEEKDAYS.map((d, i) => (
           <div
             key={d}
-            className="text-center text-[11px] py-2 font-medium text-gray-400"
+            className="text-center text-xs py-2 font-medium text-gray-400"
           >
             {d}
           </div>
@@ -197,7 +197,7 @@ export default function TrainingCalendar({ userId }: Props) {
                   ${!hasLogs && dateStr <= todayStr ? "cursor-pointer" : !hasLogs ? "cursor-default" : "cursor-pointer"}`}
               >
                 {/* you can add comments here */}
-                <div className={`text-[11px] font-medium w-5 h-5 flex items-center justify-center rounded-full
+                <div className={`text-xs font-medium w-5 h-5 flex items-center justify-center rounded-full
                   ${isToday ? "bg-white text-zinc-900 font-bold" : "text-gray-300"}`}
                 >
                   {day}
