@@ -172,6 +172,26 @@ export default function GoalTracker({ userId }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
+  // Onboarding: when navigated to via #goal-tracker hash, auto-expand + open weekly goal editor
+  useEffect(() => {
+    const handleGoalHash = () => {
+      if (window.location.hash === "#goal-tracker") {
+        setIsOpen(true);
+        setEditValue(0);
+        setEditing("weekly");
+        // Smooth scroll to self (hash handles it, but ensure visibility)
+        setTimeout(() => {
+          document.getElementById("goal-tracker")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 50);
+        // Clear hash so repeat clicks work
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
+    };
+    handleGoalHash(); // check on mount (page load with hash)
+    window.addEventListener("hashchange", handleGoalHash);
+    return () => window.removeEventListener("hashchange", handleGoalHash);
+  }, []);
+
   const startEdit = (type: "weekly" | "monthly" | "technique") => {
     setEditValue(
       type === "weekly" ? data.weeklyGoal
@@ -265,7 +285,7 @@ export default function GoalTracker({ userId }: Props) {
       {toast && (
         <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
       )}
-      <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl border border-white/10 mb-4 overflow-hidden shadow-lg shadow-black/40">
+      <div id="goal-tracker" className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl border border-white/10 mb-4 overflow-hidden shadow-lg shadow-black/40">
         <button
           onClick={() => setIsOpen((v) => !v)}
           className="w-full flex items-center justify-between px-4 py-3 border-b border-white/10 hover:bg-white/5 transition-colors text-left"

@@ -33,7 +33,9 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
     {
       id: "set_goal",
       label: t("onboarding.step.setGoal"),
-      href: "/profile",
+      // hasFirstLog → GoalTracker is rendered → scroll + auto-open editor.
+      // Otherwise fall back to Profile where goals can also be configured.
+      href: hasFirstLog ? "#goal-tracker" : "/profile",
       done: hasGoal,
       emoji: "🎯",
     },
