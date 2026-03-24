@@ -2,6 +2,11 @@
 
 ---
 
+- Day4fo_93 (2026/03/24): **全プライマリボタン active:scale-95 タップフィードバック + ProfileForm emerald統一**
+  - TechniqueLogList (Add / Save) / ProfileForm (Save) / GoalTrackerEditor (Save) / GymRegistrationForm (Create) / TechniqueLogForm (Save x2) / StreakFreeze (Use freeze) / GuestDashboard (Log / CTA) — 全9ボタンに `active:scale-95 transition-all` 追加 ✅
+  - ProfileForm: CSV export button + totalMinutes stat を blue → emerald (#10B981) 統一 ✅
+  - TypeScript 0エラー ✅
+
 - Day4fo_92 (2026/03/24): **優先度高バックログ 3点実装**
   - Blurred paywall — `TrainingTypeChart` + `TrainingChart` に `isPro` prop 追加、非Proはblur + upgrade CTA ✅
   - B2B Nudge button — `MemberCard`（yellow/red リスクメンバー）に「Copy reminder」ボタン追加 ✅
