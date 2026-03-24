@@ -537,7 +537,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink }: Pro
           {/* Connect to existing technique */}
           <button
             onClick={() => setConnectingFrom(currentNode)}
-            className="mt-3 text-xs text-blue-500 hover:text-blue-400 transition-colors"
+            className="mt-3 text-xs text-[#10B981] hover:text-[#0d9668] transition-colors"
             aria-label={t("skillmap.connectExisting")}
           >
             + {t("skillmap.connectExisting")}

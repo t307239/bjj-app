@@ -92,7 +92,7 @@ export default function TechniqueLogList({
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div className="flex-1 text-center">
-              <div className="text-lg font-bold text-blue-400">
+              <div className="text-lg font-bold text-[#10B981]">
                 {new Set(techniques.map((t) => t.category)).size}
               </div>
               <div className="text-gray-400 text-xs">
@@ -409,7 +409,7 @@ export default function TechniqueLogList({
                                 return next;
                               })
                             }
-                            className="text-[10px] text-blue-500 hover:text-blue-400 mt-0.5"
+                            className="text-[10px] text-[#10B981] hover:text-[#0d9668] mt-0.5"
                           >
                             {expandedIds.has(technique.id)
                               ? t("techniques.collapse")
@@ -439,7 +439,7 @@ export default function TechniqueLogList({
                     })()}
                     <button
                       onClick={() => onStartEdit(technique)}
-                      className="text-gray-600 hover:text-blue-400 transition-colors p-1"
+                      className="text-gray-600 hover:text-[#10B981] transition-colors p-1"
                       title={t("techniques.edit")}
                     >
                       <svg

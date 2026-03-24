@@ -114,7 +114,7 @@ export default async function Home() {
       {/* English Section — for Reddit / international users */}
       <section id="english" className="px-4 py-16 bg-zinc-950 border-t border-white/5">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-zinc-900 border border-blue-500/30 rounded-full px-4 py-1.5 text-sm text-blue-400 mb-8">
+          <div className="inline-flex items-center gap-2 bg-zinc-900 border border-[#10B981]/30 rounded-full px-4 py-1.5 text-sm text-[#10B981] mb-8">
             🌐 For English speakers
           </div>
 
@@ -232,7 +232,7 @@ export default async function Home() {
             </p>
           </div>
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-xl font-bold text-blue-400 mb-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-[#10B981]/20 rounded-full text-xl font-bold text-[#10B981] mb-4">
               2
             </div>
             <h3 className="font-bold text-lg text-white mb-3">Track</h3>
@@ -372,7 +372,7 @@ export default async function Home() {
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center text-xl flex-shrink-0">🎯</div>
+                <div className="w-10 h-10 bg-[#10B981]/20 rounded-xl flex items-center justify-center text-xl flex-shrink-0">🎯</div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">Set weekly &amp; monthly goals</h3>
                   <p className="text-gray-500 text-sm">Track your target with a progress bar. Turns green when you hit it.</p>
@@ -468,7 +468,7 @@ export default async function Home() {
               &ldquo;The technique journal is awesome. I can clearly see my weak spots and focus on them next session.&rdquo;
             </p>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center text-sm">S</div>
+              <div className="w-8 h-8 bg-[#10B981]/20 rounded-full flex items-center justify-center text-sm">S</div>
               <div>
                 <div className="text-xs font-medium text-gray-300">S.M.</div>
                 <div className="text-xs text-gray-600">White Belt / 6 months training</div>
