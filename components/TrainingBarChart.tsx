@@ -430,7 +430,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           ) : selectedLogs.length === 0 ? (
             <p className="text-[11px] text-gray-600 text-center py-2">{t("chart.noRecords")}</p>
           ) : (
-            <div className="space-y-1 max-h-48 overflow-y-auto">
+            <div className="space-y-1 max-h-48 overflow-y-auto scrollbar-hide">
               {selectedLogs.map((log, idx) => {
                 const typeLabel = TYPE_LABELS[log.type] ?? log.type;
                 const typeColor = TYPE_COLORS[log.type] ?? "bg-zinc-500/70";
