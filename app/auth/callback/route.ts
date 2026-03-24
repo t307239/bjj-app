@@ -4,7 +4,9 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/dashboard";
+  // B-05: New users (no ?next override) get redirected to /dashboard?welcome=1
+  // The dashboard checks totalCount===0 to decide whether to auto-open the log form.
+  const next = searchParams.get("next") ?? "/dashboard?welcome=1";
   // Wiki流入アトリビューション: ?ref=wiki&page=closed-guard → "wiki:closed-guard"
   const refParam = searchParams.get("ref");
   const pageParam = searchParams.get("page");

@@ -23,6 +23,8 @@ import { getLocalDateParts } from "@/lib/timezone";
 type Props = {
   userId: string;
   isPro?: boolean;
+  /** B-05: Auto-open log form for new users (set by dashboard when ?welcome=1 and no logs exist) */
+  initialOpen?: boolean;
 };
 
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
@@ -94,7 +96,7 @@ function MonthTypeStackBar({ entries }: { entries: { type: string }[] }) {
   );
 }
 
-export default function TrainingLog({ userId, isPro = false }: Props) {
+export default function TrainingLog({ userId, isPro = false, initialOpen = false }: Props) {
   const [entries, setEntries] = useState<TrainingEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -103,7 +105,8 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
   const [techniqueSuggestions, setTechniqueSuggestions] = useState<string[]>([]);
   const INITIAL_SIZE = 3;
   const PAGE_SIZE = 10;
-  const [showForm, setShowForm] = useState(false);
+  // B-05: initialOpen=true when ?welcome=1 + no logs (new user Aha! moment)
+  const [showForm, setShowForm] = useState(initialOpen);
   const [filterType, setFilterType] = useState("all");
   const [periodFilter, setPeriodFilter] = useState<"all" | "month" | "week">("all");
   const [dateFrom, setDateFrom] = useState("");
@@ -126,16 +129,23 @@ export default function TrainingLog({ userId, isPro = false }: Props) {
   });
 
   // #72: detect ?addLog=YYYY-MM-DD from calendar empty-day click
+  // B-05: also clean up ?welcome=1 from URL after mount
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
     const addLogDate = params.get("addLog");
+    const hasWelcome = params.has("welcome");
+
     if (addLogDate && /^\d{4}-\d{2}-\d{2}$/.test(addLogDate)) {
       setForm((f) => ({ ...f, date: addLogDate }));
       setShowForm(true);
-      // Remove the param from the URL without navigating
+    }
+
+    // Clean up transient URL params without triggering navigation
+    if (addLogDate || hasWelcome) {
       const url = new URL(window.location.href);
       url.searchParams.delete("addLog");
+      url.searchParams.delete("welcome");
       window.history.replaceState({}, "", url.toString());
     }
   }, []);

@@ -122,7 +122,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ welcome?: string }>;
+}) {
+  const resolvedParams = searchParams ? await searchParams : {};
+  const isWelcomeRedirect = resolvedParams?.welcome === "1";
   const supabase = await createClient();
   const {
     data: { user },
@@ -480,7 +486,8 @@ export default async function DashboardPage() {
         {/* ── Section 1: Training Log（プライマリアクション・最優先） ── */}
         <section className="mb-8">
           <p className="text-[11px] font-semibold text-zinc-600 tracking-widest px-0.5 mb-4">{t("dashboard.sectionLog")}</p>
-          <TrainingLog userId={user.id} isPro={isPro} />
+          {/* B-05: Auto-open log form for new users (welcome=1 + no logs yet) */}
+          <TrainingLog userId={user.id} isPro={isPro} initialOpen={isWelcomeRedirect && (totalCount ?? 0) === 0} />
         </section>
 
         {/* ── Section 2: This Week ── */}
