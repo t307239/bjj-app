@@ -289,9 +289,15 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900/80 rounded-xl">
             <span className="text-2xl mb-2">🔒</span>
             <p className="text-sm font-semibold text-zinc-100">{t("chart.proOnly")}</p>
-            <a href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#"} className="mt-3 bg-yellow-500 hover:bg-yellow-400 text-black text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
-              {t("chart.upgradeToProBtn")}
-            </a>
+            {process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ? (
+              <a href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK} className="mt-3 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black text-xs font-semibold px-4 py-2 rounded-lg transition-all">
+                {t("chart.upgradeToProBtn")}
+              </a>
+            ) : (
+              <span className="mt-3 inline-block bg-zinc-700 text-gray-500 text-xs font-semibold px-4 py-2 rounded-lg cursor-not-allowed">
+                {t("chart.upgradeToProBtn")}
+              </span>
+            )}
           </div>
         </div>
       ) : (

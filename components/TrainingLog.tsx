@@ -542,7 +542,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       {/* Header row — primary CTA only (#8: CSV/PDF moved to secondary row) */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-lg font-semibold">
-          Training Log
+          {t("training.title")}
           {totalCount !== null && totalCount > 0 && (
             <span className="ml-2 text-sm font-normal text-gray-500">({totalCount})</span>
           )}
@@ -551,7 +551,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
           onClick={() => setShowForm(!showForm)}
           className="print:hidden bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all"
         >
-          + Add Session
+          {t("training.add")}
         </button>
       </div>
       {/* Secondary row: export tools (low-frequency actions, de-emphasised) */}

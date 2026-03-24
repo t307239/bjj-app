@@ -8,8 +8,8 @@ import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 import { getLocalDateString } from "@/lib/timezone";
 
-const STRIPE_PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
-const STRIPE_PORTAL_URL = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL ?? "#";
+const STRIPE_PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || null;
+const STRIPE_PORTAL_URL = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL || null;
 
 type Props = {
   displayName: string;
@@ -126,23 +126,35 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
             ) : null}
             {/* Pro Plan 導線 */}
             {isPro ? (
-              <a
-                href={STRIPE_PORTAL_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden sm:flex items-center gap-1 text-[11px] text-yellow-400 hover:text-yellow-300 transition-colors"
-              >
-                ✓ Pro · Manage
-              </a>
+              STRIPE_PORTAL_URL ? (
+                <a
+                  href={STRIPE_PORTAL_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden sm:flex items-center gap-1 text-[11px] text-yellow-400 hover:text-yellow-300 transition-colors"
+                >
+                  ✓ Pro · Manage
+                </a>
+              ) : (
+                <span className="hidden sm:flex items-center gap-1 text-[11px] text-yellow-400">
+                  ✓ Pro
+                </span>
+              )
             ) : (
-              <a
-                href={userId ? `${STRIPE_PAYMENT_LINK}?client_reference_id=${userId}` : STRIPE_PAYMENT_LINK}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden sm:flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-3 py-1 rounded-lg text-xs transition-colors"
-              >
-                ⚡ Upgrade to Pro
-              </a>
+              STRIPE_PAYMENT_LINK ? (
+                <a
+                  href={userId ? `${STRIPE_PAYMENT_LINK}?client_reference_id=${userId}` : STRIPE_PAYMENT_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden sm:flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black font-bold px-3 py-1 rounded-lg text-xs transition-all"
+                >
+                  ⚡ Upgrade to Pro
+                </a>
+              ) : (
+                <span className="hidden sm:flex items-center gap-1 bg-zinc-700 text-gray-500 font-bold px-3 py-1 rounded-lg text-xs cursor-not-allowed" aria-disabled="true">
+                  ⚡ Upgrade to Pro
+                </span>
+              )
             )}
             {/* Avatar / display name with dropdown */}
             <div ref={userMenuRef} className="relative">
