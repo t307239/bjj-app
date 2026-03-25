@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/lib/i18n";
 
 const BELT_ORDER = ["white", "blue", "purple", "brown", "black"];
-const BELT_COLORS: Record<string, { bg: string; text: string; emoji: string }> = {
-  white:  { bg: "#f9fafb", text: "#111827", emoji: "🤍" },
-  blue:   { bg: "#3b82f6", text: "#ffffff", emoji: "💙" },
-  purple: { bg: "#9333ea", text: "#ffffff", emoji: "💜" },
-  brown:  { bg: "#92400e", text: "#ffffff", emoji: "🤎" },
-  black:  { bg: "#18181b", text: "#ffffff", emoji: "🖤" },
+const BELT_COLORS: Record<string, { bg: string; text: string; emoji: string; glow: string }> = {
+  white:  { bg: "#f9fafb", text: "#111827", emoji: "🤍", glow: "rgba(249,250,251,0.4)" },
+  blue:   { bg: "#3b82f6", text: "#ffffff", emoji: "💙", glow: "rgba(59,130,246,0.5)"  },
+  purple: { bg: "#9333ea", text: "#ffffff", emoji: "💜", glow: "rgba(147,51,234,0.5)"  },
+  brown:  { bg: "#92400e", text: "#ffffff", emoji: "🤎", glow: "rgba(146,64,14,0.5)"   },
+  black:  { bg: "#18181b", text: "#ffffff", emoji: "🖤", glow: "rgba(24,24,27,0.6)"    },
 };
 
 /** Returns true if belt moved up in rank */
@@ -28,19 +28,38 @@ function useConfetti(canvasRef: React.RefObject<HTMLCanvasElement | null>, activ
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const COLORS = ["#f97316", "#3b82f6", "#9333ea", "#f59e0b", "#10b981", "#fff"];
-    type Particle = { x: number; y: number; vx: number; vy: number; color: string; w: number; h: number; angle: number; spin: number };
-    const particles: Particle[] = Array.from({ length: 160 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height * 0.4 - canvas.height * 0.2,
-      vx: (Math.random() - 0.5) * 6,
-      vy: Math.random() * 3 + 2,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      w: Math.random() * 10 + 6,
-      h: Math.random() * 6 + 4,
-      angle: Math.random() * Math.PI * 2,
-      spin: (Math.random() - 0.5) * 0.2,
-    }));
+    const COLORS = [
+      "#f97316", "#3b82f6", "#9333ea", "#f59e0b",
+      "#10b981", "#ffffff", "#ec4899", "#facc15",
+      "#38bdf8", "#a78bfa",
+    ];
+    type Particle = {
+      x: number; y: number; vx: number; vy: number;
+      color: string; w: number; h: number; angle: number; spin: number;
+      opacity: number;
+    };
+
+    // Launch 3 waves of confetti
+    const makeParticles = (count: number): Particle[] =>
+      Array.from({ length: count }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height * 0.3 - canvas.height * 0.15,
+        vx: (Math.random() - 0.5) * 8,
+        vy: Math.random() * 4 + 1,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        w: Math.random() * 12 + 6,
+        h: Math.random() * 7 + 4,
+        angle: Math.random() * Math.PI * 2,
+        spin: (Math.random() - 0.5) * 0.25,
+        opacity: 1,
+      }));
+
+    let particles = makeParticles(280);
+
+    // Second burst after 600ms
+    const t1 = setTimeout(() => { particles = [...particles, ...makeParticles(180)]; }, 600);
+    // Third burst after 1200ms
+    const t2 = setTimeout(() => { particles = [...particles, ...makeParticles(120)]; }, 1200);
 
     let raf: number;
     const draw = () => {
@@ -49,15 +68,17 @@ function useConfetti(canvasRef: React.RefObject<HTMLCanvasElement | null>, activ
       for (const p of particles) {
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.07; // gravity
+        p.vy += 0.08; // gravity
         p.angle += p.spin;
-        if (p.y < canvas.height + 20) {
+        p.vx *= 0.99; // air drag
+        if (p.y < canvas.height + 30) {
           alive++;
+          const fade = Math.max(0, 1 - p.y / (canvas.height * 1.1));
           ctx.save();
+          ctx.globalAlpha = fade * p.opacity;
           ctx.translate(p.x, p.y);
           ctx.rotate(p.angle);
           ctx.fillStyle = p.color;
-          ctx.globalAlpha = Math.max(0, 1 - p.y / canvas.height);
           ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
           ctx.restore();
         }
@@ -65,8 +86,22 @@ function useConfetti(canvasRef: React.RefObject<HTMLCanvasElement | null>, activ
       if (alive > 0) raf = requestAnimationFrame(draw);
     };
     draw();
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, [active, canvasRef]);
+}
+
+// ─── Pulse animation for belt badge ─────────────────────────────────────────────
+function usePulse(): boolean {
+  const [pulsed, setPulsed] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setPulsed(true), 50);
+    return () => clearTimeout(t);
+  }, []);
+  return pulsed;
 }
 
 // ─── Main component ─────────────────────────────────────────────────────────────
@@ -79,6 +114,7 @@ interface Props {
 export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { t } = useLocale();
+  const pulsed = usePulse();
   useConfetti(canvasRef, true);
 
   const info = BELT_COLORS[toBelt] ?? BELT_COLORS.white;
@@ -99,19 +135,15 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
   );
   const shareUrl = `https://x.com/intent/tweet?text=${shareText}`;
 
-  // Auto-close after 8s
-  useEffect(() => {
-    const t = setTimeout(onClose, 8000);
-    return () => clearTimeout(t);
-  }, [onClose]);
+  // NO auto-close — user must click "OSS 🥋" to dismiss
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
-      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
       aria-modal="true"
       role="dialog"
       aria-label={t("beltPromo.ariaDialog")}
+      // Intentionally no onClick on backdrop — prevent accidental dismissal
     >
       {/* Canvas confetti layer (non-interactive) */}
       <canvas
@@ -122,22 +154,57 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
 
       {/* Modal card */}
       <div
-        className="relative z-10 bg-zinc-900 border border-white/10 rounded-2xl p-8 max-w-xs w-full mx-4 text-center shadow-2xl max-h-[90vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
+        className="relative z-10 rounded-2xl p-8 max-w-sm w-full mx-4 text-center shadow-2xl max-h-[90vh] overflow-y-auto"
+        style={{
+          background: "linear-gradient(160deg, #18181b 0%, #09090b 100%)",
+          border: `1px solid ${info.glow}`,
+          boxShadow: `0 0 40px ${info.glow}, 0 25px 60px rgba(0,0,0,0.8)`,
+        }}
       >
-        {/* Belt badge */}
-        <div
-          className="inline-flex items-center gap-2 px-6 py-2 rounded-full font-bold text-lg mb-4"
-          style={{ background: info.bg, color: info.text }}
-        >
-          {info.emoji} {toLabel}
+        {/* Stars decoration */}
+        <div className="text-2xl mb-2 tracking-widest select-none" aria-hidden="true">
+          ✨ 🥋 ✨
         </div>
 
-        <h2 className="text-2xl font-extrabold text-white mb-2">
+        {/* Belt transition display */}
+        <div className="flex items-center justify-center gap-3 mb-5">
+          {/* From belt chip */}
+          <span
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-semibold opacity-60"
+            style={{ background: fromInfo.bg, color: fromInfo.text }}
+          >
+            {fromInfo.emoji} {fromLabel}
+          </span>
+
+          {/* Arrow */}
+          <span className="text-white/50 text-xl select-none" aria-hidden="true">→</span>
+
+          {/* To belt chip — prominent with glow + pulse */}
+          <span
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-bold text-base transition-transform duration-500"
+            style={{
+              background: info.bg,
+              color: info.text,
+              boxShadow: `0 0 20px ${info.glow}`,
+              transform: pulsed ? "scale(1.08)" : "scale(0.85)",
+            }}
+          >
+            {info.emoji} {toLabel}
+          </span>
+        </div>
+
+        {/* Headline */}
+        <h2
+          className="text-3xl font-extrabold text-white mb-2 leading-tight"
+          style={{ textShadow: `0 0 20px ${info.glow}` }}
+        >
           {t("beltPromo.congrats")}
         </h2>
-        <p className="text-gray-400 text-sm mb-6">
+        <p className="text-gray-400 text-sm mb-2">
           {t("beltPromo.advanced", { from: fromLabel, to: toLabel })}
+        </p>
+        <p className="text-gray-500 text-xs mb-7 italic">
+          {t("beltPromo.keepRolling")}
         </p>
 
         {/* Share button */}
@@ -145,7 +212,7 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
           href={shareUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-3 rounded-xl mb-3 transition-colors text-sm"
+          className="flex items-center justify-center gap-2 w-full bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-3 rounded-xl mb-3 transition-colors text-sm border border-white/10"
           aria-label={t("beltPromo.ariaShareX")}
         >
           <svg className="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24">
@@ -154,12 +221,23 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
           {t("beltPromo.shareOnX")}
         </a>
 
+        {/* Primary OSS button — required to dismiss */}
         <button
           onClick={onClose}
-          className="w-full text-gray-500 hover:text-gray-300 text-sm py-2 transition-colors"
+          className="w-full font-bold py-3.5 rounded-xl text-base transition-all duration-200 hover:scale-[1.02] active:scale-95"
+          style={{
+            background: `linear-gradient(135deg, ${info.bg}, ${info.glow.replace("0.5)", "0.8)").replace("0.4)", "0.7)")})`,
+            color: info.text,
+            boxShadow: `0 4px 20px ${info.glow}`,
+          }}
         >
-          {t("common.close")}
+          {t("beltPromo.oss")}
         </button>
+
+        {/* Hint that modal won't close on its own */}
+        <p className="text-gray-600 text-xs mt-3 select-none">
+          {t("beltPromo.screenshotHint")}
+        </p>
       </div>
     </div>
   );

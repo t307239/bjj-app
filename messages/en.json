@@ -628,7 +628,10 @@
     "advanced": "You advanced from {from} to {to}. Keep rolling!",
     "shareOnX": "Share on X",
     "ariaDialog": "Belt promotion celebration",
-    "ariaShareX": "Share belt promotion on X (Twitter)"
+    "ariaShareX": "Share belt promotion on X (Twitter)",
+    "oss": "OSS! 🥋 Continue",
+    "keepRolling": "Take a screenshot — this modal won't close on its own.",
+    "screenshotHint": "Tap OSS when you're ready to continue."
   },
   "common": {
     "close": "Close",
