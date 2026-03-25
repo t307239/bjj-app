@@ -718,6 +718,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   // ── Add first node (empty state button) ──────────────────────────────────
   const [emptyAddName, setEmptyAddName] = useState("");
   const emptyRef = useRef<HTMLInputElement>(null);
+  const mobileAddRef = useRef<HTMLInputElement>(null);
 
   // ── Loading ───────────────────────────────────────────────────────────────
   if (loading) {
@@ -877,20 +878,41 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         </ReactFlow>
       </div>
 
-      {/* PC: Add node popup */}
+      {/* Add node popup: fixed position on PC, inline full-width on Mobile */}
       {addPopup && (
         addPopup.screenX === 0 ? (
-          // Mobile add (no screen position) — show full-width below toolbar
-          <div className="mt-2">
-            <AddNodePopup
-              screenX={0}
-              screenY={0}
-              onAdd={(name) => handleAddNode(name, addPopup.flowX, addPopup.flowY)}
-              onCancel={() => setAddPopup(null)}
-              t={t}
+          // Mobile: show inline below toolbar (not fixed-positioned)
+          <div className="mt-2 bg-zinc-800 border border-white/20 rounded-xl shadow-2xl p-3 w-full">
+            <input
+              ref={mobileAddRef}
+              type="text"
+              autoFocus
+              placeholder={t("skillmap.namePlaceholder")}
+              onKeyDown={(e) => {
+                const val = (e.target as HTMLInputElement).value.trim();
+                if (e.key === "Enter" && val) handleAddNode(val, addPopup.flowX, addPopup.flowY);
+                if (e.key === "Escape") setAddPopup(null);
+              }}
+              className="w-full bg-zinc-700 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none mb-2"
+              maxLength={80}
             />
+            <div className="flex gap-2">
+              <button onClick={() => setAddPopup(null)} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-xs text-gray-300 py-1 rounded-lg transition-colors">
+                {t("common.cancel")}
+              </button>
+              <button
+                onClick={() => {
+                  const val = mobileAddRef.current?.value.trim() ?? "";
+                  if (val) handleAddNode(val, addPopup.flowX, addPopup.flowY);
+                }}
+                className="flex-1 bg-[#10B981] hover:bg-[#0d9668] text-xs text-white py-1 rounded-lg transition-colors"
+              >
+                {t("skillmap.addBtn")}
+              </button>
+            </div>
           </div>
         ) : (
+          // PC: fixed position at right-click location
           <AddNodePopup
             screenX={addPopup.screenX}
             screenY={addPopup.screenY}
