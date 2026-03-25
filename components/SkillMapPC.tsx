@@ -289,50 +289,6 @@ function AddNodeInput({
   );
 }
 
-// ─── Edge Label Input (inline) ─────────────────────────────────────────────
-
-function EdgeLabelInput({
-  x, y, onConfirm, onCancel, t,
-}: {
-  x: number; y: number;
-  onConfirm: (label: string) => void;
-  onCancel: () => void;
-  t: (k: string) => string;
-}) {
-  const [label, setLabel] = useState("");
-  const ref = useRef<HTMLInputElement>(null);
-  useLayoutEffect(() => { ref.current?.focus(); }, []);
-
-  return (
-    <div
-      style={{ position: "absolute", left: x, top: y, zIndex: 20 }}
-      className="bg-zinc-800 border border-white/20 rounded-xl shadow-xl p-3 w-40"
-    >
-      <input
-        ref={ref}
-        type="text"
-        placeholder={t("skillmap.edgeLabelPlaceholder")}
-        value={label}
-        onChange={(e) => setLabel(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") onConfirm(label.trim());
-          if (e.key === "Escape") onCancel();
-        }}
-        className="w-full bg-zinc-700 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none mb-2"
-        maxLength={50}
-      />
-      <div className="flex gap-2">
-        <button onClick={onCancel} className="flex-1 bg-zinc-700 text-xs text-gray-300 py-1 rounded-lg">
-          {t("common.cancel")}
-        </button>
-        <button onClick={() => onConfirm(label.trim())} className="flex-1 bg-[#10B981] hover:bg-[#0d9668] text-xs text-white py-1 rounded-lg">
-          {t("skillmap.connectBtn")}
-        </button>
-      </div>
-    </div>
-  );
-}
-
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnnualLink }: Props) {
@@ -358,9 +314,6 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnn
 
   // Connecting edge
   const [connectingFrom, setConnectingFrom] = useState<string | null>(null);
-  const [pendingEdge, setPendingEdge] = useState<{
-    sourceId: string; targetId: string; x: number; y: number;
-  } | null>(null);
 
   // Adding node
   const [addingAt, setAddingAt] = useState<{ x: number; y: number } | null>(null);
@@ -479,11 +432,11 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnn
     }
   }, [isPanning, dragging, nodes]); // supabase is stable via useRef
 
-  // ── Node mouse down → drag ─────────────────────────────────────────────
+  // ── Node mouse down → drag (Pro only; non-Pro silently ignores) ────────
   const onNodeMouseDown = (e: React.MouseEvent, node: TechniqueNode) => {
-    if (connectingFrom) return; // in connecting mode — ignore drag
-    e.stopPropagation();
-    if (!isPro) { setShowProModal(true); return; }
+    e.stopPropagation(); // always prevent background handler
+    if (connectingFrom) return; // in connecting mode — handled by onClick
+    if (!isPro) return; // non-Pro can't drag; port-click connection still works
     setDragging({
       nodeId: node.id,
       startMouseX: e.clientX,
@@ -492,6 +445,35 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnn
       startPosY: node.pos_y,
     });
   };
+
+  // ── Direct edge creation (no intermediate input) ──────────────────────
+  const handleConnectTo = useCallback(async (targetId: string) => {
+    const sourceId = connectingFrom;
+    if (!sourceId || sourceId === targetId) return;
+    setConnectingFrom(null);
+    if (wouldCreateCycle(edges, sourceId, targetId)) {
+      showToast(t("skillmap.cycleError"), "error");
+      return;
+    }
+    if (edges.some((e) => e.source_id === sourceId && e.target_id === targetId)) {
+      showToast(t("skillmap.addEdgeError"), "error");
+      return;
+    }
+    const { data, error } = await supabase
+      .from("technique_edges")
+      .insert({
+        user_id: userId,
+        source_id: sourceId,
+        target_id: targetId,
+        label: null,
+        created_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
+    if (error) { showToast(t("skillmap.addEdgeError"), "error"); return; }
+    setEdges((prev) => [...prev, data]);
+    showToast(t("skillmap.connectSuccess"), "success");
+  }, [connectingFrom, edges, userId, t]); // supabase stable via useRef
 
   // ── Port click → start/finish connecting ──────────────────────────────
   const onPortClick = (e: React.MouseEvent, nodeId: string) => {
@@ -502,40 +484,8 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnn
     } else if (connectingFrom === nodeId) {
       setConnectingFrom(null); // cancel
     } else {
-      // Finish connecting: show label input near the target node
-      const targetNode = nodes.find((n) => n.id === nodeId);
-      if (!targetNode) return;
-      const lx = targetNode.pos_x * zoom + panX + NODE_W / 2;
-      const ly = targetNode.pos_y * zoom + panY - 70;
-      setPendingEdge({ sourceId: connectingFrom, targetId: nodeId, x: lx, y: ly });
-      setConnectingFrom(null);
+      handleConnectTo(nodeId);
     }
-  };
-
-  // ── Confirm edge with optional label ─────────────────────────────────
-  const confirmEdge = async (label: string) => {
-    if (!pendingEdge) return;
-    const { sourceId, targetId } = pendingEdge;
-    setPendingEdge(null);
-
-    if (wouldCreateCycle(edges, sourceId, targetId)) {
-      showToast(t("skillmap.cycleError"), "error");
-      return;
-    }
-    const { data, error } = await supabase
-      .from("technique_edges")
-      .insert({
-        user_id: userId,
-        source_id: sourceId,
-        target_id: targetId,
-        label: label || null,
-        created_at: new Date().toISOString(),
-      })
-      .select()
-      .single();
-    if (error) { showToast(t("skillmap.addEdgeError"), "error"); return; }
-    setEdges((prev) => [...prev, data]);
-    showToast(t("skillmap.connectSuccess"), "success");
   };
 
   // ── Add node ─────────────────────────────────────────────────────────
@@ -756,19 +706,27 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnn
                   left: node.pos_x,
                   top: node.pos_y,
                   width: NODE_W,
-                  height: NODE_H,
+                  minHeight: NODE_H,
                   zIndex: dragging?.nodeId === node.id ? 10 : 1,
                 }}
                 onMouseDown={(e) => onNodeMouseDown(e, node)}
-                className={`rounded-lg border flex items-center px-2.5 transition-all ${
+                onClick={(e) => {
+                  if (connectingFrom && connectingFrom !== node.id) {
+                    e.stopPropagation();
+                    handleConnectTo(node.id);
+                  }
+                }}
+                className={`rounded-lg border flex items-center px-2.5 py-2 transition-all ${
                   isConnectSrc
                     ? "bg-[#6366f1]/20 border-[#6366f1]"
-                    : "bg-zinc-800 border-white/20 hover:border-[#6366f1]/60"
-                } ${isPro ? "cursor-move" : "cursor-default"}`}
+                    : connectingFrom
+                      ? "bg-zinc-800 border-white/20 hover:border-emerald-400/80 hover:bg-emerald-500/10 cursor-crosshair"
+                      : "bg-zinc-800 border-white/20 hover:border-[#6366f1]/60"
+                } ${!connectingFrom && isPro ? "cursor-move" : ""}`}
               >
                 {/* Node label */}
                 <span
-                  className="text-xs text-white font-medium truncate flex-1"
+                  className="text-xs text-white font-medium break-words whitespace-normal flex-1 min-w-0"
                   title={node.name}
                 >
                   {node.name}
@@ -794,6 +752,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnn
                 )}
                 {/* Connect port (right side) */}
                 <button
+                  onMouseDown={(e) => e.stopPropagation()}
                   onClick={(e) => onPortClick(e, node.id)}
                   style={{
                     position: "absolute",
@@ -841,16 +800,6 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnn
             />
           )}
 
-          {/* Inline edge label input */}
-          {pendingEdge && (
-            <EdgeLabelInput
-              x={pendingEdge.x / zoom - panX / zoom}
-              y={pendingEdge.y / zoom - panY / zoom}
-              onConfirm={confirmEdge}
-              onCancel={() => setPendingEdge(null)}
-              t={t}
-            />
-          )}
         </div>
 
         {/* Tab key shortcut listener */}
