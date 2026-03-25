@@ -709,5 +709,15 @@
     "techniqueLog": "テクニックログ",
     "learnWiki": "BJJ Wikiで学ぶ",
     "wikiDesc": "BJJ Wikiの無料テクニックガイド、ドリル、動画解説"
+  },
+  "beltPromo": {
+    "congrats": "おめでとうございます！🎉",
+    "advanced": "{from}帯から{to}帯に昇格しました！",
+    "shareOnX": "X（Twitter）でシェア",
+    "ariaDialog": "帯の昇格祝い",
+    "ariaShareX": "帯の昇格をXでシェア",
+    "oss": "OSS！🥋 続ける",
+    "keepRolling": "スクリーンショットを撮っておきましょう — このモーダルは自動で閉じません。",
+    "screenshotHint": "続ける準備ができたらOSSをタップしてください。"
   }
 }
