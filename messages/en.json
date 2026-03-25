@@ -691,7 +691,11 @@
     "drawerRemove": "Remove Node",
     "connectMobileHint": "Tap a technique to connect →",
     "deleteConfirmMsg": "Remove this technique and its connections?",
-    "addNodeMobile": "Add Technique"
+    "addNodeMobile": "Add Technique",
+    "fullScreen": "Full Screen",
+    "exitFullScreen": "Exit Full Screen",
+    "overLimitBanner": "You've exceeded the free limit. Upgrade to Pro to resume editing your {count} techniques.",
+    "overLimitUpgrade": "Upgrade to Pro"
   },
   "wiki": {
     "dailyTip": "Today's BJJ Knowledge",

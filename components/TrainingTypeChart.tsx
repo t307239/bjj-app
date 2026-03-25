@@ -51,9 +51,15 @@ function fmtMins(mins: number): string {
   return m > 0 ? `${h}h${m}m` : `${h}h`;
 }
 
-function DonutChart({ data, timesUnit, sessionsLabel }: { data: TypeCount[]; timesUnit: string; sessionsLabel: string }) {
+function DonutChart({ data, mode, timesUnit, sessionsLabel }: {
+  data: TypeCount[];
+  mode: "time" | "count";
+  timesUnit: string;
+  sessionsLabel: string;
+}) {
   const [hovered, setHovered] = useState<string | null>(null);
-  const total = data.reduce((s, d) => s + d.count, 0);
+  const getValue = (d: TypeCount) => mode === "time" ? d.totalMins : d.count;
+  const total = data.reduce((s, d) => s + getValue(d), 0);
   if (total === 0) return null;
 
   const cx = 60;
@@ -63,9 +69,10 @@ function DonutChart({ data, timesUnit, sessionsLabel }: { data: TypeCount[]; tim
   let cumAngle = -Math.PI / 2;
 
   const slices = data
-    .filter((d) => d.count > 0)
+    .filter((d) => getValue(d) > 0)
     .map((d) => {
-      const angle = (d.count / total) * 2 * Math.PI;
+      const val = getValue(d);
+      const angle = (val / total) * 2 * Math.PI;
       const start = cumAngle;
       const end = cumAngle + angle;
       cumAngle = end;
@@ -88,7 +95,7 @@ function DonutChart({ data, timesUnit, sessionsLabel }: { data: TypeCount[]; tim
         "Z",
       ].join(" ");
 
-      return { ...d, path, pct: Math.round((d.count / total) * 100) };
+      return { ...d, path, pct: Math.round((val / total) * 100) };
     });
 
   const hoveredSlice = hovered ? slices.find((s) => s.value === hovered) : null;
@@ -112,20 +119,16 @@ function DonutChart({ data, timesUnit, sessionsLabel }: { data: TypeCount[]; tim
 
       {hoveredSlice ? (
         <>
-          {/* Label */}
           <text x={cx} y={cy - 12} textAnchor="middle" fill="white" fontSize="7" fontWeight="600">
             {hoveredSlice.label}
           </text>
-          {/* Count */}
           <text x={cx} y={cy + 1} textAnchor="middle" fill="white" fontSize="13" fontWeight="bold">
-            {hoveredSlice.count}{timesUnit}
+            {mode === "time" ? fmtMins(hoveredSlice.totalMins) : `${hoveredSlice.count}${timesUnit}`}
           </text>
-          {/* Percentage */}
           <text x={cx} y={cy + 13} textAnchor="middle" fill={hoveredSlice.color} fontSize="8" fontWeight="600">
             {hoveredSlice.pct}%
           </text>
-          {/* Total time (if available) */}
-          {hoveredSlice.totalMins > 0 && (
+          {mode !== "time" && hoveredSlice.totalMins > 0 && (
             <text x={cx} y={cy + 23} textAnchor="middle" fill="#9ca3af" fontSize="7">
               {fmtMins(hoveredSlice.totalMins)}
             </text>
@@ -134,10 +137,10 @@ function DonutChart({ data, timesUnit, sessionsLabel }: { data: TypeCount[]; tim
       ) : (
         <>
           <text x={cx} y={cy - 4} textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">
-            {total}
+            {mode === "time" ? fmtMins(total) : String(total)}
           </text>
           <text x={cx} y={cy + 10} textAnchor="middle" fill="#9ca3af" fontSize="7">
-            {sessionsLabel}
+            {mode === "time" ? "total time" : sessionsLabel}
           </text>
         </>
       )}
@@ -300,6 +303,8 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
   }));
 
   const total = data.reduce((s, d) => s + d.count, 0);
+  const totalTime = data.reduce((s, d) => s + d.totalMins, 0);
+  const chartMode: "time" | "count" = totalTime > 0 ? "time" : "count";
 
   return (
     <div className="bg-zinc-900 rounded-xl border border-white/10 mb-4 overflow-hidden">
@@ -310,7 +315,9 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
         <h4 className="text-sm font-medium text-gray-300">🥋 {t("chart.typeDistribution")}</h4>
         <div className="flex items-center gap-2">
           {!isOpen && total > 0 && (
-            <span className="text-xs text-gray-500">{total}{t("chart.timesUnit")}</span>
+            <span className="text-xs text-gray-500">
+              {totalTime > 0 ? fmtMins(totalTime) : `${total}${t("chart.timesUnit")}`}
+            </span>
           )}
           <svg
             className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
@@ -368,13 +375,15 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
         )
       ) : (
         <div className="flex items-center gap-4">
-          <DonutChart data={data} timesUnit={t("chart.timesUnit")} sessionsLabel={t("chart.sessions")} />
+          <DonutChart data={data} mode={chartMode} timesUnit={t("chart.timesUnit")} sessionsLabel={t("chart.sessions")} />
           <div className="flex-1 space-y-1.5">
             {data
-              .filter((d) => d.count > 0)
-              .sort((a, b) => b.count - a.count)
+              .filter((d) => chartMode === "time" ? d.totalMins > 0 : d.count > 0)
+              .sort((a, b) => chartMode === "time" ? b.totalMins - a.totalMins : b.count - a.count)
               .map((d) => {
-                const pct = Math.round((d.count / total) * 100);
+                const legendTotal = chartMode === "time" ? totalTime : total;
+                const legendVal = chartMode === "time" ? d.totalMins : d.count;
+                const pct = legendTotal > 0 ? Math.round((legendVal / legendTotal) * 100) : 0;
                 const isSelected = selectedType === d.value;
                 return (
                   <div
@@ -387,9 +396,11 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
                   >
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${d.bg}`} />
                     <span className={`text-xs flex-1 truncate ${isSelected ? "text-white font-medium" : "text-gray-400"}`}>{d.label}</span>
-                    <span className="text-xs font-medium text-white">{d.count}{t("chart.timesUnit")}</span>
+                    <span className="text-xs font-medium text-white">
+                      {chartMode === "time" ? fmtMins(d.totalMins) : `${d.count}${t("chart.timesUnit")}`}
+                    </span>
                     <span className="text-xs text-gray-500 w-7 text-right">{pct}%</span>
-                    {d.totalMins > 0 && (
+                    {chartMode !== "time" && d.totalMins > 0 && (
                       <span className="text-xs text-gray-500 w-8 text-right">{fmtMins(d.totalMins)}</span>
                     )}
                     <MiniSparkline logs={allLogs} typeValue={d.value} color={d.color} />

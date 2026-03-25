@@ -237,7 +237,33 @@ function ProModal({
   t: (k: string) => string;
 }) {
   const [isAnnual, setIsAnnual] = useState(false);
-  const url = isAnnual ? stripeAnnualLink : stripePaymentLink;
+  const [isLoading, setIsLoading] = useState(false);
+  const fallbackUrl = isAnnual ? stripeAnnualLink : stripePaymentLink;
+
+  const handleCheckout = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: isAnnual ? "annual" : "monthly" }),
+      });
+      if (res.ok) {
+        const json = await res.json() as { url?: string; fallback?: boolean };
+        if (json.url && !json.fallback) {
+          window.location.href = json.url;
+          return;
+        }
+      }
+    } catch {
+      // network error — fall through to static link
+    }
+    // Fallback: redirect to static Stripe Payment Link (no trial)
+    if (fallbackUrl) window.location.href = fallbackUrl;
+    setIsLoading(false);
+  };
+
+  const hasLink = !!fallbackUrl;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
@@ -256,15 +282,20 @@ function ProModal({
           <span className={`text-xs ${isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>Annual</span>
           {isAnnual && <span className="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">Save 16%</span>}
         </div>
-        <div className="mb-4">
+        <div className="mb-1">
           {isAnnual
             ? <p className="text-white font-bold text-sm">$49.99 / year <span className="text-emerald-400 text-xs">≈ $4.17/mo</span></p>
             : <p className="text-white font-bold text-sm">$4.99 / month</p>}
         </div>
-        {url ? (
-          <a href={url} className="block w-full bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black font-semibold py-3 rounded-xl mb-3 transition-all">
-            {t("skillmap.upgradeBtn")}
-          </a>
+        <p className="text-xs text-emerald-400 mb-4">✓ 14-day free trial</p>
+        {hasLink ? (
+          <button
+            onClick={handleCheckout}
+            disabled={isLoading}
+            className="block w-full bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-60 text-black font-semibold py-3 rounded-xl mb-3 transition-all"
+          >
+            {isLoading ? "…" : t("skillmap.upgradeBtn")}
+          </button>
         ) : (
           <span className="block w-full bg-zinc-700 text-gray-500 font-semibold py-3 rounded-xl mb-3 cursor-not-allowed">
             {t("skillmap.upgradeBtn")}
@@ -493,12 +524,22 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   // Toast
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
+  // Fullscreen
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
   // Mobile detection
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
+  }, []);
+
+  // Fullscreen change listener
+  useEffect(() => {
+    const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", onFsChange);
+    return () => document.removeEventListener("fullscreenchange", onFsChange);
   }, []);
 
   const showToast = useCallback((message: string, type: "success" | "error") => {
@@ -719,6 +760,9 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   const emptyRef = useRef<HTMLInputElement>(null);
   const mobileAddRef = useRef<HTMLInputElement>(null);
 
+  // ── Paywall: lock canvas read-only when free user exceeds node limit ────
+  const isLockedReadOnly = !isPro && rfNodes.length > 10;
+
   // ── Loading ───────────────────────────────────────────────────────────────
   if (loading) {
     return (
@@ -775,6 +819,30 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   // ── Canvas ────────────────────────────────────────────────────────────────
   return (
     <div className="relative">
+      {/* Paywall banner: shown when free user already has > 10 nodes */}
+      {isLockedReadOnly && (
+        <div className="mb-2 px-3 py-2.5 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-center justify-between gap-3">
+          <p className="text-xs text-amber-300 leading-snug">
+            {t("skillmap.overLimitBanner", { count: String(rfNodes.length) })}
+          </p>
+          {stripePaymentLink ? (
+            <a
+              href={stripePaymentLink}
+              className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black text-xs font-semibold px-3 py-1.5 rounded-lg transition-all"
+            >
+              {t("skillmap.overLimitUpgrade")}
+            </a>
+          ) : (
+            <button
+              onClick={() => setShowProModal(true)}
+              className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black text-xs font-semibold px-3 py-1.5 rounded-lg transition-all"
+            >
+              {t("skillmap.overLimitUpgrade")}
+            </button>
+          )}
+        </div>
+      )}
+
       {/* Toolbar */}
       <div className="flex items-center gap-2 mb-2 px-1 flex-wrap">
         {/* Mobile: View/Edit toggle */}
@@ -810,6 +878,30 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           aria-label={t("skillmap.magicOrganize")}
         >
           {isOrganizing ? "⏳" : "✨"} {t("skillmap.magicOrganize")}
+        </button>
+
+        {/* Full Screen toggle */}
+        <button
+          onClick={() => {
+            if (!document.fullscreenElement) {
+              document.documentElement.requestFullscreen();
+            } else {
+              document.exitFullscreen();
+            }
+          }}
+          className="flex items-center gap-1 text-xs bg-zinc-800 hover:bg-zinc-700 text-white px-2.5 py-1.5 rounded-lg transition-all active:scale-95"
+          aria-label={isFullscreen ? t("skillmap.exitFullScreen") : t("skillmap.fullScreen")}
+          title={isFullscreen ? t("skillmap.exitFullScreen") : t("skillmap.fullScreen")}
+        >
+          {isFullscreen ? (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+            </svg>
+          ) : (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+            </svg>
+          )}
         </button>
 
         {/* PC hint */}
@@ -854,10 +946,10 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           nodeTypes={nodeTypes}
           fitView
           fitViewOptions={{ padding: 0.15 }}
-          nodesDraggable={editMode && isPro}
-          nodesConnectable={editMode}
-          elementsSelectable={editMode}
-          deleteKeyCode={isPro ? "Backspace" : null}
+          nodesDraggable={!isLockedReadOnly && editMode && isPro}
+          nodesConnectable={!isLockedReadOnly && editMode}
+          elementsSelectable={!isLockedReadOnly && editMode}
+          deleteKeyCode={!isLockedReadOnly && isPro ? "Backspace" : null}
           panOnDrag={!connectingFrom}
           minZoom={0.2}
           maxZoom={2.5}
