@@ -141,7 +141,7 @@ function ProModal({
         )}
         <button
           onClick={onClose}
-          className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
+          className="text-sm text-gray-500 hover:text-gray-300 transition-colors min-h-[44px] px-6 py-2"
           aria-label={t("skillmap.maybeLater")}
         >
           {t("skillmap.maybeLater")}

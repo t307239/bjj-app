@@ -302,7 +302,7 @@ function ProModal({
             {t("skillmap.upgradeBtn")}
           </span>
         )}
-        <button onClick={onClose} className="text-sm text-gray-500 hover:text-gray-300">{t("skillmap.maybeLater")}</button>
+        <button onClick={onClose} className="text-sm text-gray-500 hover:text-gray-300 min-h-[44px] px-6 py-2">{t("skillmap.maybeLater")}</button>
       </div>
     </div>
   );

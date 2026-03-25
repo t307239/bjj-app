@@ -417,7 +417,7 @@ export default function TechniqueLogList({
                       <div className="flex items-center gap-1 ml-1">
                         <button
                           onClick={() => { setConfirmDeleteId(null); onDelete(technique.id); }}
-                          className="text-xs font-semibold text-white bg-[#e94560] hover:bg-[#c73652] px-2 py-0.5 rounded transition-colors"
+                          className="text-xs font-semibold text-white bg-[#e94560] hover:bg-[#c73652] min-h-[44px] px-3 py-2 rounded-lg transition-colors"
                           title={t("techniques.confirmDelete")}
                           aria-label={t("techniques.confirmDelete")}
                         >
@@ -425,7 +425,7 @@ export default function TechniqueLogList({
                         </button>
                         <button
                           onClick={() => setConfirmDeleteId(null)}
-                          className="text-xs text-gray-500 hover:text-gray-300 transition-colors px-1"
+                          className="text-xs text-gray-500 hover:text-gray-300 transition-colors min-h-[44px] px-3 py-2"
                         >
                           {t("training.cancel")}
                         </button>
