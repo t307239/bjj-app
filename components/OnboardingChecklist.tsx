@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
 
@@ -21,6 +21,9 @@ type Step = {
 export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique }: Props) {
   const { t } = useLocale();
   const [dismissed, setDismissed] = useState(false);
+  // Item 30: celebration state — "idle" | "celebrating" | "fading" | "done"
+  const [celebState, setCelebState] = useState<"idle" | "celebrating" | "fading" | "done">("idle");
+  const prevCompletedRef = useRef(0);
 
   const steps: Step[] = [
     {
@@ -33,8 +36,6 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
     {
       id: "set_goal",
       label: t("onboarding.step.setGoal"),
-      // hasFirstLog → GoalTracker is rendered → scroll + auto-open editor.
-      // Otherwise fall back to Profile where goals can also be configured.
       href: hasFirstLog ? "#goal-tracker" : "/profile",
       done: hasGoal,
       emoji: "🎯",
@@ -49,9 +50,73 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
   ];
 
   const completedCount = steps.filter((s) => s.done).length;
-  const remaining = steps.filter((s) => !s.done);
+  const allDone = completedCount === steps.length;
 
-  if (completedCount === steps.length || dismissed) return null;
+  // Item 30: Trigger celebration when all steps just completed
+  useEffect(() => {
+    if (allDone && prevCompletedRef.current < steps.length && celebState === "idle") {
+      setCelebState("celebrating");
+      const fadeTimer = setTimeout(() => setCelebState("fading"), 2800);
+      const doneTimer = setTimeout(() => setCelebState("done"), 3800);
+      prevCompletedRef.current = completedCount;
+      return () => { clearTimeout(fadeTimer); clearTimeout(doneTimer); };
+    }
+    prevCompletedRef.current = completedCount;
+  }, [allDone, completedCount, steps.length, celebState]);
+
+  // Hide if dismissed or celebration finished
+  if (dismissed) return null;
+  if (allDone && celebState === "idle") return null;
+  if (celebState === "done") return null;
+
+  // Item 30: Celebration card
+  if (celebState === "celebrating" || celebState === "fading") {
+    return (
+      <div
+        className="mb-6 rounded-2xl p-5 relative overflow-hidden text-center transition-all duration-1000"
+        style={{
+          background: "linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%)",
+          border: "1px solid rgba(16,185,129,0.5)",
+          boxShadow: "0 0 32px rgba(16,185,129,0.25), 0 0 64px rgba(16,185,129,0.1)",
+          opacity: celebState === "fading" ? 0 : 1,
+        }}
+      >
+        {/* Sparkle ring */}
+        <div className="absolute inset-0 pointer-events-none">
+          {["top-2 left-4", "top-3 right-6", "bottom-3 left-8", "bottom-2 right-4", "top-1/2 left-2", "top-1/2 right-2"].map((pos, i) => (
+            <span
+              key={i}
+              className={`absolute text-yellow-300 animate-ping text-xs`}
+              style={{ animationDelay: `${i * 150}ms`, animationDuration: "1.2s" }}
+            >
+              ✦
+            </span>
+          ))}
+        </div>
+
+        <div className="relative z-10">
+          <div className="text-4xl mb-2 animate-bounce">🎉</div>
+          <p className="text-lg font-bold text-white mb-1">{t("onboarding.celebTitle")}</p>
+          <p className="text-sm text-emerald-200">{t("onboarding.celebSubtitle")}</p>
+          <div className="mt-3 flex justify-center gap-1">
+            {["🥋", "🎯", "📖"].map((e, i) => (
+              <span
+                key={i}
+                className="text-xl"
+                style={{ animation: `bounce 0.6s ease ${i * 100}ms infinite alternate` }}
+              >
+                {e}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Normal checklist
+  const remaining = steps.filter((s) => !s.done);
+  void remaining;
 
   return (
     <div className="mb-6 bg-emerald-950/40 border border-emerald-500/30 rounded-2xl p-4 relative">

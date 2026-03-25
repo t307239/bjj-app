@@ -50,6 +50,9 @@
     "bentoOnPaceFor": "· on pace for {n}",
     "bentoAvgSession": "Avg Session",
     "bentoMinPerSession": "min / session",
+    "upsellWinRateLabel": "🔥 Sparring Win Rate",
+    "upsellInjuryLabel": "💡 Injury Predictor",
+    "upsellUpgradeCta": "Upgrade to Pro",
     "sectionLog": "Log",
     "sectionToday": "Today",
     "sectionYourGym": "Your Gym",
@@ -151,6 +154,7 @@
     "bentoTypeMix": "Type Mix",
     "bentoSessions": "sessions",
     "periodLabel": "Period",
+    "export": "Export",
     "periodAll": "All Time",
     "periodMonth": "This Month",
     "periodWeek": "This Week",
@@ -907,7 +911,9 @@
     "step.addTechnique": "Add a technique to your library",
     "firstRollTitle": "Welcome to the mat! 🥋",
     "firstRollDesc": "Your first roll is logged. The journey has begun.",
-    "firstRollCta": "Let's roll 🤙"
+    "firstRollCta": "Let's roll 🤙",
+    "celebTitle": "Welcome to the Mat! 🎉",
+    "celebSubtitle": "Setup complete — now go roll!"
   },
   "freeze": {
     "title": "Streak Freeze",
@@ -983,7 +989,8 @@
       "ok": "OK",
       "sore": "Sore",
       "injured": "Injured",
-      "untouched": "Not set"
+      "untouched": "Not set",
+      "tapToMark": "Tap to mark sore/injured"
     },
     "parts": {
       "neck": "Neck",
