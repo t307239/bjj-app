@@ -16,6 +16,8 @@ type FormState = {
   instructor_name: string;
   /** B-09: Sparring partner username (stored in training_logs.partner_username) */
   partner_username: string;
+  /** Body Management: post-training weight in kg (stored in training_logs.weight) */
+  weight: string;
 };
 
 // ── DurationPicker (inline — extracted from TrainingLog) ─────────────────────
@@ -352,6 +354,26 @@ const TrainingLogForm = memo(function TrainingLogForm({
             placeholder={t("training.partnerTagPlaceholder")}
             className="w-full bg-zinc-800 text-white rounded-lg pl-7 pr-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
           />
+        </div>
+      </div>
+
+      {/* Post-training weight (optional) */}
+      <div className="mb-3">
+        <label className="block text-gray-400 text-xs mb-1">{t("training.weight")}</label>
+        <div className="relative">
+          <input
+            type="number"
+            step="0.1"
+            min="20"
+            max="500"
+            value={form.weight ?? ""}
+            onChange={(e) => setForm({ ...form, weight: e.target.value })}
+            placeholder={t("training.weightPlaceholder")}
+            className="w-full bg-zinc-800 text-white rounded-lg pr-10 px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-600"
+          />
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none">
+            kg
+          </span>
         </div>
       </div>
 

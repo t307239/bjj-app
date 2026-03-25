@@ -127,6 +127,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     notes: "",
     instructor_name: "",
     partner_username: "",   // B-09: sparring partner tag
+    weight: "",             // Body Management: post-training weight (kg)
   });
 
   // #72: detect ?addLog=YYYY-MM-DD from calendar empty-day click
@@ -263,13 +264,17 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     setEntries((prev) => [optimisticEntry, ...prev]);
     setTrainedToday(true);
     setShowForm(false);
-    setForm({ date: getLocalDateString(), duration_min: 60, type: "gi", notes: "", instructor_name: "", partner_username: "" });
+    setForm({ date: getLocalDateString(), duration_min: 60, type: "gi", notes: "", instructor_name: "", partner_username: "", weight: "" });
     setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
+
+    // Parse weight: convert non-empty string to number, otherwise null
+    const weightNum = form.weight !== "" ? parseFloat(form.weight) : null;
+    const weightValue = weightNum !== null && !isNaN(weightNum) && weightNum > 0 ? weightNum : null;
 
     setLoading(true);
     const { data, error } = await supabase
       .from("training_logs")
-      .insert([{ id: idempotencyKey.current, ...form, notes: finalNotes, user_id: userId }])
+      .insert([{ id: idempotencyKey.current, ...form, notes: finalNotes, user_id: userId, weight: weightValue }])
       .select()
       .single();
 

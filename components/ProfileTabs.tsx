@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
 import PersonalBests from "./PersonalBests";
 import ProfileForm from "./ProfileForm";
+import BodyManagementSection from "./BodyManagementSection";
 
 function AccountSection({ userId }: { userId: string }) {
   const { t } = useLocale();
@@ -77,14 +78,15 @@ function AccountSection({ userId }: { userId: string }) {
   );
 }
 
-type TabId = "stats" | "profile" | "account";
+type TabId = "stats" | "profile" | "body" | "account";
 
 export default function ProfileTabs({ userId }: { userId: string }) {
   const { t } = useLocale();
   const [activeTab, setActiveTab] = useState<TabId>("stats");
   const TABS: { id: TabId; label: string }[] = [
-    { id: "stats", label: t("profile.tabs.stats") },
+    { id: "stats",   label: t("profile.tabs.stats") },
     { id: "profile", label: t("profile.tabs.profile") },
+    { id: "body",    label: t("profile.tabs.body") },
     { id: "account", label: t("profile.tabs.settings") },
   ];
 
@@ -105,8 +107,9 @@ export default function ProfileTabs({ userId }: { userId: string }) {
           </button>
         ))}
       </div>
-      {activeTab === "stats" && <PersonalBests userId={userId} />}
+      {activeTab === "stats"   && <PersonalBests userId={userId} />}
       {activeTab === "profile" && <ProfileForm userId={userId} hideAccount />}
+      {activeTab === "body"    && <BodyManagementSection userId={userId} />}
       {activeTab === "account" && <AccountSection userId={userId} />}
     </div>
   );

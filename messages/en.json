@@ -154,7 +154,9 @@
     "periodAll": "All Time",
     "periodMonth": "This Month",
     "periodWeek": "This Week",
-    "filterByDate": "Filter by Date"
+    "filterByDate": "Filter by Date",
+    "weight": "Post-training weight (optional)",
+    "weightPlaceholder": "e.g. 75.5"
   },
   "techniques": {
     "mastery1": "Know it",
@@ -304,6 +306,7 @@
     "tabs": {
       "stats": "Stats",
       "profile": "Profile",
+      "body": "Body",
       "settings": "Settings"
     },
     "ariaDisableSharing": "Disable data sharing",
@@ -952,5 +955,48 @@
   },
   "offline": {
     "banner": "You are offline. Some features are disabled until you reconnect."
+  },
+  "body": {
+    "title": "Body Management",
+    "quickLog": "Quick Weight Log",
+    "weightKg": "Weight (kg)",
+    "logWeight": "Log Weight",
+    "saving": "Saving...",
+    "saved": "Logged ✓",
+    "saveError": "Save failed. Try again.",
+    "offlineError": "You're offline — changes will not be saved.",
+    "note": "Note (optional)",
+    "notePlaceholder": "Fasted, post-training, post-workout...",
+    "weightChart": "Weight Trend",
+    "standalone": "Morning / Standalone",
+    "postTraining": "Post-Training",
+    "noData": "No weight data yet. Log your first weight above.",
+    "bodyMap": "Body Map",
+    "tapHint": "Tap a body part to cycle: OK → Sore → Injured",
+    "paywallTitle": "Track your weight & body condition with Pro 🔒",
+    "paywallDesc": "Weight trend chart and body injury map are Pro features.",
+    "paywallCta": "Upgrade to Pro",
+    "status": {
+      "ok": "OK",
+      "sore": "Sore",
+      "injured": "Injured",
+      "untouched": "Not set"
+    },
+    "parts": {
+      "neck": "Neck",
+      "leftShoulder": "L. Shoulder",
+      "rightShoulder": "R. Shoulder",
+      "leftElbow": "L. Elbow",
+      "rightElbow": "R. Elbow",
+      "leftWrist": "L. Wrist",
+      "rightWrist": "R. Wrist",
+      "lowerBack": "Lower Back",
+      "leftHip": "L. Hip",
+      "rightHip": "R. Hip",
+      "leftKnee": "L. Knee",
+      "rightKnee": "R. Knee",
+      "leftAnkle": "L. Ankle",
+      "rightAnkle": "R. Ankle"
+    }
   }
 }
