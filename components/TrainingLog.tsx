@@ -287,13 +287,29 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
   useEffect(() => {
     const loadEntries = async () => {
       setInitialLoading(true);
+
+      // Free plan: restrict visible history to the last 30 days (JST)
+      const oneMonthAgoDate = (() => {
+        const d = new Date(Date.now() + 9 * 60 * 60 * 1000);
+        d.setMonth(d.getMonth() - 1);
+        return d.toISOString().slice(0, 10);
+      })();
+
+      let logsQuery = supabase
+        .from("training_logs")
+        .select("id, date, duration_min, type, notes, created_at, instructor_name, partner_username")
+        .eq("user_id", userId)
+        .order("date", { ascending: false });
+      if (!isPro) logsQuery = logsQuery.gte("date", oneMonthAgoDate);
+
+      let countQuery = supabase
+        .from("training_logs")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", userId);
+      if (!isPro) countQuery = countQuery.gte("date", oneMonthAgoDate);
+
       const [{ data, error }, { data: techData }, { count }] = await Promise.all([
-        supabase
-          .from("training_logs")
-          .select("id, date, duration_min, type, notes, created_at, instructor_name, partner_username")
-          .eq("user_id", userId)
-          .order("date", { ascending: false })
-          .range(0, PAGE_SIZE - 1),
+        logsQuery.range(0, PAGE_SIZE - 1),
         // Phase 2.5: fetch technique names for autocomplete suggestions
         supabase
           .from("technique_nodes")
@@ -301,10 +317,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
           .eq("user_id", userId)
           .order("label", { ascending: true }),
         // #138: total session count for header badge
-        supabase
-          .from("training_logs")
-          .select("id", { count: "exact", head: true })
-          .eq("user_id", userId),
+        countQuery,
       ]);
 
       if (!error && data) {
@@ -427,12 +440,18 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     if (pdfLoading) return;
     setPdfLoading(true);
     try {
-      // Fetch all logs (not just current page)
-      const { data: allLogs } = await supabase
+      // Fetch all visible logs (30-day limit for free plan)
+      let allLogsQuery = supabase
         .from("training_logs")
         .select("date, duration_min, type, notes, instructor_name")
         .eq("user_id", userId)
         .order("date", { ascending: false });
+      if (!isPro) {
+        const d = new Date(Date.now() + 9 * 60 * 60 * 1000);
+        d.setMonth(d.getMonth() - 1);
+        allLogsQuery = allLogsQuery.gte("date", d.toISOString().slice(0, 10));
+      }
+      const { data: allLogs } = await allLogsQuery;
 
       const logs = allLogs ?? [];
       const typeLabel = (type: string) =>
@@ -599,19 +618,24 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     setPageLoading(true);
     const from = (newPage - 1) * PAGE_SIZE;
     const to = newPage * PAGE_SIZE - 1;
-    const { data, error } = await supabase
+    let query = supabase
       .from("training_logs")
       .select("id, date, duration_min, type, notes, created_at, instructor_name, partner_username")
       .eq("user_id", userId)
-      .order("date", { ascending: false })
-      .range(from, to);
+      .order("date", { ascending: false });
+    if (!isPro) {
+      const d = new Date(Date.now() + 9 * 60 * 60 * 1000);
+      d.setMonth(d.getMonth() - 1);
+      query = query.gte("date", d.toISOString().slice(0, 10));
+    }
+    const { data, error } = await query.range(from, to);
 
     if (!error && data) {
       setEntries(data);
       setPage(newPage);
     }
     setPageLoading(false);
-  }, [userId, supabase]);
+  }, [userId, supabase, isPro]);
 
   const totalPages = useMemo(() => Math.ceil((totalCount ?? 0) / PAGE_SIZE), [totalCount]);
 
@@ -722,6 +746,16 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Free plan: 30-day history limit notice */}
+      {!isPro && !initialLoading && (
+        <div className="mb-3 px-4 py-2.5 rounded-xl border border-amber-500/20 bg-amber-500/8 flex items-center justify-between gap-3">
+          <span className="text-xs text-amber-300/80">
+            🗓 Free plan: showing last 30 days
+          </span>
+          <span className="text-xs font-medium text-blue-400 whitespace-nowrap">Upgrade for full history →</span>
         </div>
       )}
 

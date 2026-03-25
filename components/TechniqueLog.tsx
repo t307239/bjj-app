@@ -14,11 +14,13 @@ import {
 
 type Props = {
   userId: string;
+  isPro?: boolean;
 };
 
 const PAGE_SIZE = 3;
+const TECHNIQUE_FREE_LIMIT = 20;
 
-export default function TechniqueLog({ userId }: Props) {
+export default function TechniqueLog({ userId, isPro = false }: Props) {
   const { t } = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -108,6 +110,10 @@ export default function TechniqueLog({ userId }: Props) {
     const nameNorm = form.name.trim().toLowerCase();
     const duplicate = techniques.find((t) => t.name.trim().toLowerCase() === nameNorm);
     if (duplicate) { setFormError(t("techniques.duplicate", { name: duplicate.name })); return; }
+    if (!isPro && techniques.length >= TECHNIQUE_FREE_LIMIT) {
+      setFormError(`Free plan limit: ${TECHNIQUE_FREE_LIMIT} techniques. Upgrade to Pro for unlimited.`);
+      return;
+    }
     setLoading(true);
     const { data, error } = await supabase
       .from("techniques")
@@ -134,8 +140,14 @@ export default function TechniqueLog({ userId }: Props) {
     const existing = new Set(techniques.map((t) => t.name.trim().toLowerCase()));
     const newNames = names.filter((n) => !existing.has(n.toLowerCase()));
     if (newNames.length === 0) { setFormError(t("techniques.allDuplicates")); return; }
+    const remaining = isPro ? Infinity : Math.max(0, TECHNIQUE_FREE_LIMIT - techniques.length);
+    if (!isPro && remaining === 0) {
+      setFormError(`Free plan limit: ${TECHNIQUE_FREE_LIMIT} techniques. Upgrade to Pro for unlimited.`);
+      return;
+    }
+    const allowedNames = remaining === Infinity ? newNames : newNames.slice(0, remaining);
     setLoading(true);
-    const rows = newNames.map((name) => ({
+    const rows = allowedNames.map((name) => ({
       name,
       category: bulkCategory,
       mastery_level: bulkMastery,
@@ -236,6 +248,24 @@ export default function TechniqueLog({ userId }: Props) {
     <div>
       {toast && (
         <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
+      )}
+
+      {/* Free plan usage meter */}
+      {!isPro && !initialLoading && (
+        <div className={`mb-3 px-4 py-2.5 rounded-xl border flex items-center justify-between gap-3 ${
+          techniques.length >= TECHNIQUE_FREE_LIMIT
+            ? "bg-red-500/10 border-red-500/30"
+            : "bg-zinc-800/60 border-white/8"
+        }`}>
+          <span className={`text-xs ${techniques.length >= TECHNIQUE_FREE_LIMIT ? "text-red-300" : "text-zinc-400"}`}>
+            {techniques.length >= TECHNIQUE_FREE_LIMIT
+              ? `🔒 Free limit reached — ${TECHNIQUE_FREE_LIMIT}/${TECHNIQUE_FREE_LIMIT} techniques`
+              : `📝 ${techniques.length}/${TECHNIQUE_FREE_LIMIT} techniques (free plan)`}
+          </span>
+          {techniques.length >= Math.floor(TECHNIQUE_FREE_LIMIT * 0.75) && (
+            <span className="text-xs font-medium text-blue-400 whitespace-nowrap">Upgrade for unlimited →</span>
+          )}
+        </div>
       )}
 
       <TechniqueLogForm
