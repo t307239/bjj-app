@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { getLocalDateString } from "@/lib/timezone";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
+import { useOnlineStatus } from "@/lib/useOnlineStatus";
 import { subscribePush, unsubscribePush } from "@/lib/webpush";
 import Toast from "./Toast";
 import BeltPromotionCelebration, { isBeltPromotion } from "./BeltPromotionCelebration";
@@ -51,10 +52,32 @@ type Props = {
 
 // getLocalDateString() from lib/timezone replaces the old JST-hardcoded getJSTDateString()
 
-function calcBjjMonths(startDate: string): number {
-  const start = new Date(startDate);
+/**
+ * formatBjjDuration
+ * Returns human-readable BJJ experience from "YYYY-MM" or "YYYY-MM-DD".
+ *   0y 0m  → "Just started"
+ *   0y Nm  → "N months"
+ *   Ny 0m  → "N years"
+ *   Ny Nm  → "N years N months"
+ */
+function formatBjjDuration(
+  startDate: string,
+  t: (k: string, v?: Record<string, string | number>) => string
+): string {
+  const parts = startDate.split("-").map(Number);
+  const start = new Date(parts[0], (parts[1] ?? 1) - 1, 1);
   const now = new Date();
-  return Math.max(0, (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()));
+  const totalMonths = Math.max(
+    0,
+    (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth())
+  );
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+
+  if (years === 0 && months === 0) return t("profile.bjjHistoryJustStarted");
+  if (years === 0) return t("profile.bjjHistoryMonths", { n: months });
+  if (months === 0) return t("profile.bjjHistoryYears", { n: years });
+  return t("profile.bjjHistoryYearsMonths", { y: years, m: months });
 }
 
 // Stripe Customer Portal URL — configure in .env.local (Stripe Dashboard > Customer Portal)
@@ -466,7 +489,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
         {profile.start_date && (
           <div className="flex items-center gap-2 text-sm text-gray-300">
             <span className="text-gray-500">🥋</span>
-            <span>{t("profile.bjjHistory", { n: calcBjjMonths(profile.start_date) })}</span>
+            <span>{formatBjjDuration(profile.start_date, t)}</span>
             <span className="text-gray-500 text-xs">
               {(() => {
                 const [y, m] = profile.start_date.split("-");
@@ -508,6 +531,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
 
 function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSave: (updated: Profile) => void; onCancel: () => void }) {
   const { t } = useLocale();
+  const isOnline = useOnlineStatus();
   const [form, setForm] = useState<Profile>(profile);
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -624,7 +648,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.startDate")}</label>
           <input type="date" value={form.start_date} max={today} onChange={(e) => setForm({ ...form, start_date: e.target.value })} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30" />
-          {form.start_date && <p className="text-gray-500 text-xs mt-1">{t("profile.bjjHistory", { n: calcBjjMonths(form.start_date) })}</p>}
+          {form.start_date && <p className="text-gray-500 text-xs mt-1">{formatBjjDuration(form.start_date, t)}</p>}
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.bio")}</label>
@@ -632,7 +656,7 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
         </div>
         {formError && <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">{formError}</div>}
         <div className="flex gap-3">
-          <button type="submit" disabled={loading} className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 disabled:opacity-50 text-white font-bold py-3 rounded-xl text-sm transition-all">
+          <button type="submit" disabled={loading || !isOnline} className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 disabled:opacity-50 text-white font-bold py-3 rounded-xl text-sm transition-all">
             {loading ? t("profile.saving") : t("profile.save")}
           </button>
           <button type="button" onClick={onCancel} className="flex-1 bg-zinc-900 hover:bg-white/5 text-gray-300 font-bold py-3 rounded-xl text-sm border border-white/10 transition-colors">

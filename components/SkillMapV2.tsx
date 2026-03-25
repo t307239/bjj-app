@@ -44,6 +44,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
+import { useOnlineStatus } from "@/lib/useOnlineStatus";
 import Toast from "./Toast";
 
 // ─── dagre (no @types/dagre — use require to avoid TS errors) ─────────────────
@@ -524,6 +525,9 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   // Toast
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
+  // Online status (Supabase calls fail when offline → block write actions)
+  const isOnline = useOnlineStatus();
+
   // Fullscreen
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -873,7 +877,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         {/* Magic Organize */}
         <button
           onClick={handleMagicOrganize}
-          disabled={isOrganizing || rfNodes.length === 0}
+          disabled={isOrganizing || rfNodes.length === 0 || !isOnline}
           className="ml-auto flex items-center gap-1.5 text-xs bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition-all active:scale-95"
           aria-label={t("skillmap.magicOrganize")}
         >
@@ -912,6 +916,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         {/* Mobile: Add technique button */}
         {isMobile && editMode && (
           <button
+            disabled={!isOnline}
             onClick={() => {
               if (!isPro && rfNodes.length >= 10) { setShowProModal(true); return; }
               const lastNode = rfNodes[rfNodes.length - 1];
@@ -919,7 +924,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
               const y = lastNode ? lastNode.position.y : 100;
               setAddPopup({ screenX: 0, screenY: 0, flowX: x, flowY: y });
             }}
-            className="text-xs bg-[#10B981] hover:bg-[#0d9668] text-white px-3 py-1.5 rounded-lg transition-all active:scale-95"
+            className="text-xs bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition-all active:scale-95"
           >
             + {t("skillmap.addNodeMobile")}
           </button>

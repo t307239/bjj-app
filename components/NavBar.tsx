@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import LogoutButton from "./LogoutButton";
+import OfflineBanner from "./OfflineBanner";
 import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 import { getLocalDateString } from "@/lib/timezone";
@@ -90,6 +91,7 @@ export default function NavBar({ displayName, avatarUrl }: Props) {
 
   return (
     <>
+      <OfflineBanner />
       {/* デスクトップ/タブレット ヘッダー */}
       <header className="bg-zinc-950/80 backdrop-blur-xl border-b border-white/[0.08] px-4 sm:px-6 py-3 sticky top-0 z-50">
         <div className="max-w-4xl mx-auto flex items-center justify-between">

@@ -257,6 +257,10 @@
     "futureDateError": "Cannot set a future date for BJJ start date",
     "authError": "Could not retrieve login info. Please try again.",
     "bjjHistory": "BJJ for {n} months",
+    "bjjHistoryJustStarted": "Just started",
+    "bjjHistoryMonths": "{n} months",
+    "bjjHistoryYears": "{n} years",
+    "bjjHistoryYearsMonths": "{y} years {m} months",
     "stripeCount": "{n} stripe(s)",
     "gymNotSet": "Gym / start date not set",
     "account": "Account",
@@ -945,5 +949,8 @@
   "weeklyStrip": {
     "same": "= same",
     "vsLastWeek": "vs last week"
+  },
+  "offline": {
+    "banner": "You are offline. Some features are disabled until you reconnect."
   }
 }

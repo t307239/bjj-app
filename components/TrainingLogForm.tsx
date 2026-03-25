@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState, memo } from "react";
 import { useLocale } from "@/lib/i18n";
+import { useOnlineStatus } from "@/lib/useOnlineStatus";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type CompData, BELT_RANKS } from "@/lib/trainingLogHelpers";
 
@@ -108,6 +109,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
   techniqueSuggestions = [],
 }: Props) {
   const { t } = useLocale();
+  const isOnline = useOnlineStatus();
   const techniqueInputRef = useRef<HTMLInputElement>(null);
 
   // Warn user if they try to leave with meaningful unsaved form data (notes only)
@@ -369,7 +371,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
       <div className="flex gap-2">
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || !isOnline}
           className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-all"
         >
           {loading ? t("training.saving") : t("training.save")}
