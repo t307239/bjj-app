@@ -96,6 +96,113 @@ function MonthTypeStackBar({ entries }: { entries: { type: string }[] }) {
   );
 }
 
+// ── Item 2: Export dropdown — replaces the secondary row of 3 loose buttons ──
+function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
+  userId: string; isPro: boolean; onPdf: () => void; pdfLoading: boolean;
+}) {
+  const { t } = useLocale();
+  const [open, setOpen] = useState(false);
+  const [loadingLogs, setLoadingLogs] = useState(false);
+  const [loadingTech, setLoadingTech] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const supabase = createClient();
+
+  const COMP_PREFIX = "__comp__";
+  type CompData = { result: string; opponent: string; finish: string; event: string };
+  function decodeNotes(notes: string): { comp: CompData | null; userNotes: string } {
+    if (!notes || !notes.startsWith(COMP_PREFIX)) return { comp: null, userNotes: notes };
+    const nl = notes.indexOf("\n");
+    const jsonStr = nl === -1 ? notes.slice(COMP_PREFIX.length) : notes.slice(COMP_PREFIX.length, nl);
+    try { return { comp: JSON.parse(jsonStr) as CompData, userNotes: nl === -1 ? "" : notes.slice(nl + 1) }; }
+    catch { return { comp: null, userNotes: notes }; }
+  }
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    if (open) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  const downloadCsv = (content: string, filename: string) => {
+    const blob = new Blob(["\uFEFF" + content], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  };
+
+  const exportTraining = async () => {
+    setLoadingLogs(true); setOpen(false);
+    try {
+      const { data: logs } = await supabase
+        .from("training_logs").select("date,type,duration_min,notes").eq("user_id", userId).order("date", { ascending: false });
+      if (!logs) return;
+      const headers = ["Date","Type","Duration(min)","Result","Opponent","Finish","Event","Notes"];
+      const rows = (logs as { date: string; type: string; duration_min: number; notes: string }[]).map((l) => {
+        const { comp, userNotes } = decodeNotes(l.notes ?? "");
+        return [l.date, l.type, l.duration_min ?? "", comp?.result ?? "", comp?.opponent ?? "", comp?.finish ?? "", comp?.event ?? "", (userNotes ?? "").replace(/"/g, '""')];
+      });
+      downloadCsv([headers, ...rows].map((r) => r.map((c) => `"${c}"`).join(",")).join("\r\n"),
+        `bjj_training_${new Date().toISOString().slice(0,10)}.csv`);
+    } finally { setLoadingLogs(false); }
+  };
+
+  const exportTechniques = async () => {
+    setLoadingTech(true); setOpen(false);
+    try {
+      const { data: techs } = await supabase
+        .from("techniques").select("name,category,mastery_level,notes").eq("user_id", userId).order("name");
+      if (!techs) return;
+      const headers = ["Technique","Category","Mastery","Notes"];
+      const rows = (techs as { name: string; category: string; mastery_level: number; notes: string }[]).map((t) =>
+        [t.name ?? "", t.category ?? "", t.mastery_level ?? "", (t.notes ?? "").replace(/"/g, '""')]);
+      downloadCsv([headers, ...rows].map((r) => r.map((c) => `"${c}"`).join(",")).join("\r\n"),
+        `bjj_techniques_${new Date().toISOString().slice(0,10)}.csv`);
+    } finally { setLoadingTech(false); }
+  };
+
+  const isAnyLoading = loadingLogs || loadingTech || pdfLoading;
+  void isPro; // kept for API compatibility
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        disabled={isAnyLoading}
+        className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white bg-zinc-900 border border-white/10 hover:border-white/20 px-3 py-2 rounded-lg transition-colors disabled:opacity-50"
+        aria-label="Export options"
+      >
+        {isAnyLoading ? (
+          <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+        ) : (
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        )}
+        {t("training.export")}
+        <svg className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-1 z-50 bg-zinc-800 border border-white/10 rounded-xl shadow-xl min-w-[160px] overflow-hidden">
+          <button onClick={exportTraining} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-gray-300 hover:bg-zinc-700 hover:text-white transition-colors text-left">
+            <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            {t("csv.button.training")}
+          </button>
+          <button onClick={exportTechniques} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-gray-300 hover:bg-zinc-700 hover:text-white transition-colors text-left">
+            <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            {t("csv.button.techniques")}
+          </button>
+          <div className="border-t border-white/10" />
+          <button onClick={() => { setOpen(false); onPdf(); }} disabled={pdfLoading} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-gray-300 hover:bg-zinc-700 hover:text-white transition-colors text-left disabled:opacity-50">
+            <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            {t("training.printPDF")}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function TrainingLog({ userId, isPro = false, initialOpen = false }: Props) {
   const [entries, setEntries] = useState<TrainingEntry[]>([]);
   const [loading, setLoading] = useState(false);
@@ -618,43 +725,23 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         </div>
       )}
 
-      {/* Header row — primary CTA only (#8: CSV/PDF moved to secondary row) */}
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-semibold">
+      {/* Header row — title + Export ▼ dropdown + Add CTA (item 2: de-cluttered) */}
+      <div className="flex items-center justify-between mb-3 gap-2">
+        <h3 className="text-lg font-semibold flex-1 min-w-0">
           {t("training.title")}
           {totalCount !== null && totalCount > 0 && (
             <span className="ml-2 text-sm font-normal text-gray-500">({totalCount})</span>
           )}
         </h3>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="print:hidden bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all"
-        >
-          {t("training.add")}
-        </button>
-      </div>
-      {/* Secondary row: export tools (low-frequency actions, de-emphasised) */}
-      <div className="flex items-center gap-2 mb-3 print:hidden">
-        <CsvExport userId={userId} isPro={isPro} />
-        <button
-          onClick={handlePdfExport}
-          disabled={pdfLoading}
-          title={t("training.printPDF")}
-          aria-label={t("training.printPDF")}
-          className="flex items-center gap-1 text-xs text-gray-500 hover:text-zinc-100 bg-zinc-900 border border-white/10 hover:border-white/20 px-2 py-1.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {pdfLoading ? (
-            <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-          ) : (
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-            </svg>
-          )}
-          PDF
-        </button>
+        <div className="flex items-center gap-2 flex-shrink-0 print:hidden">
+          <ExportDropdown userId={userId} isPro={isPro} onPdf={handlePdfExport} pdfLoading={pdfLoading} />
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all"
+          >
+            {t("training.add")}
+          </button>
+        </div>
       </div>
 
       {/* Add session form */}
@@ -706,23 +793,17 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         const hasDateFilter = !!(dateFrom || dateTo);
         return (
           <div className="flex flex-wrap items-center gap-2 mb-4">
-            {/* Period pills */}
-            {(["all", "month", "week"] as const).map((p) => {
-              const label = p === "all" ? t("training.periodAll") : p === "month" ? t("training.periodMonth") : t("training.periodWeek");
-              return (
-                <button
-                  key={p}
-                  onClick={() => setPeriodFilter(p)}
-                  className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors active:scale-95 ${
-                    periodFilter === p
-                      ? "bg-zinc-600 text-white"
-                      : "bg-zinc-900 text-gray-400 border border-white/10 hover:text-gray-300"
-                  }`}
-                >
-                  {label}
-                </button>
-              );
-            })}
+            {/* Period — item 3: select dropdown (logically separate from type pills) */}
+            <select
+              value={periodFilter}
+              onChange={(e) => setPeriodFilter(e.target.value as "all" | "month" | "week")}
+              className="flex-shrink-0 bg-zinc-900 text-xs text-gray-300 border border-white/10 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-white/30 cursor-pointer hover:border-white/20 transition-colors"
+              aria-label="Filter by period"
+            >
+              <option value="all">{t("training.periodAll")}</option>
+              <option value="month">{t("training.periodMonth")}</option>
+              <option value="week">{t("training.periodWeek")}</option>
+            </select>
             {/* Divider */}
             <div className="w-px h-4 bg-white/10 flex-shrink-0" />
             {/* Type: All */}

@@ -30,7 +30,8 @@ const STATUS_COLOR: Record<PartStatus, string> = {
   injured: "#EF4444", // red
 };
 
-const DEFAULT_COLOR = "#374151"; // zinc-700 (untouched)
+// Item 18: Default state is "Healthy (Green)" — no ambiguous gray "untouched"
+const DEFAULT_COLOR = "#10B981"; // green (ok) — all parts start as healthy
 
 // ─── SVG body part definitions (cx, cy in a 120×260 viewBox) ─────────────────
 // Front silhouette: head top ≈ y=5, ankles ≈ y=250
@@ -112,10 +113,28 @@ export default function BodyHeatmap({ userId, initialStatus }: Props) {
   const handlePartClick = useCallback(async (part: PartKey) => {
     if (!isOnline) { showToast(t("body.offlineError")); return; }
 
-    // Optimistic cycle: undefined → "ok" → "sore" → "injured" → "ok"
+    // Item 18: All parts default to Healthy (green). Cycle: unset/ok → sore → injured → (reset to healthy)
     const current = status[part];
-    const currentIdx = current ? STATUS_CYCLE.indexOf(current) : -1;
-    const next: PartStatus = STATUS_CYCLE[(currentIdx + 1) % STATUS_CYCLE.length];
+    // If unset or "ok", first tap → sore. sore → injured. injured → remove (back to healthy green).
+    let next: PartStatus;
+    if (!current || current === "ok") {
+      next = "sore";
+    } else if (current === "sore") {
+      next = "injured";
+    } else {
+      // injured → delete part (back to healthy default)
+      const newStatusClean: BodyStatus = { ...status };
+      delete newStatusClean[part];
+      setStatus(newStatusClean);
+      setSavingPart(part);
+      const { error } = await supabase
+        .from("profiles")
+        .update({ body_status: newStatusClean })
+        .eq("id", userId);
+      setSavingPart(null);
+      if (error) { setStatus(status); showToast(t("body.saveError")); }
+      return;
+    }
 
     const newStatus: BodyStatus = { ...status, [part]: next };
     setStatus(newStatus);
@@ -149,15 +168,12 @@ export default function BodyHeatmap({ userId, initialStatus }: Props) {
         )}
       </div>
 
-      {/* Legend */}
+      {/* Legend — item 18: no "Untouched" chip; all parts start green (Healthy) */}
       <div className="flex gap-3 mb-3 flex-wrap">
         <LegendChip status="ok"      label={t("body.status.ok")}      />
         <LegendChip status="sore"    label={t("body.status.sore")}    />
         <LegendChip status="injured" label={t("body.status.injured")} />
-        <span className="flex items-center gap-1 text-xs text-gray-600">
-          <span className="inline-block w-2.5 h-2.5 rounded-full bg-zinc-700 flex-shrink-0" />
-          {t("body.status.untouched")}
-        </span>
+        <span className="text-xs text-gray-600 italic">{t("body.status.tapToMark")}</span>
       </div>
 
       {/* SVG body map */}
