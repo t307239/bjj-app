@@ -147,6 +147,7 @@ function LoginForm() {
       options: { emailRedirectTo: callbackUrl() },
     });
     if (error) {
+      console.error("[login] signInWithOtp error:", error.message, error.status);
       setEmailError("Failed to send email. Please try again.");
     } else {
       setEmailSent(true);
