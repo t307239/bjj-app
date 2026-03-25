@@ -19,7 +19,7 @@ import React, {
   useRef,
   useLayoutEffect,
 } from "react";
-import ReactFlow, {
+import ReactFlowBase, {
   ReactFlowProvider,
   Background,
   BackgroundVariant,
@@ -41,6 +41,8 @@ import ReactFlow, {
   type OnNodesDelete,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ReactFlow = ReactFlowBase as unknown as React.ComponentType<any>;
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import Toast from "./Toast";
