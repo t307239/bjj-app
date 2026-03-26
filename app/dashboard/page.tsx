@@ -450,12 +450,12 @@ export default async function DashboardPage({
           </Link>
 
           {/* This week */}
-          <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-blue-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200">
+          <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-emerald-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200">
             <span className="text-xs font-semibold text-zinc-500 tracking-widest block mb-1">
               {t("dashboard.weekTraining")}
             </span>
             <div className="flex items-end gap-1 mt-1">
-              <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+              <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
                 {weekCount ?? 0}
               </span>
               <span className="text-zinc-500 text-xs mb-0.5">
@@ -463,7 +463,7 @@ export default async function DashboardPage({
               </span>
             </div>
             {weeklyGoal > 0 && (
-              <span className="mt-1.5 block text-xs text-blue-400/80">
+              <span className="mt-1.5 block text-xs text-emerald-400/80">
                 {t("dashboard.bentoGoalLabel", {
                   done: weekCount ?? 0,
                   goal: weeklyGoal,
@@ -524,7 +524,7 @@ export default async function DashboardPage({
                 <span className="text-xs text-zinc-500">
                   {t("dashboard.bentoDaysLeft", { n: remainingDays })}
                   {(monthCount ?? 0) > 0 && dayOfMonth > 0 && (
-                    <span className="text-blue-400 ml-1">
+                    <span className="text-emerald-400 ml-1">
                       {t("dashboard.bentoOnPaceFor", {
                         n: Math.round(
                           ((monthCount ?? 0) / dayOfMonth) * daysInMonth
