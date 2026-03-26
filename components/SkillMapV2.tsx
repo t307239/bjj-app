@@ -570,22 +570,33 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
 
   // ── Load data ────────────────────────────────────────────────────────────
   const loadData = useCallback(async () => {
-    const [nr, er] = await Promise.all([
-      supabase.from("technique_nodes").select("id, user_id, name, description, pos_x, pos_y, created_at").eq("user_id", userId).order("created_at"),
-      supabase.from("technique_edges").select("id, source_id, target_id, label").eq("user_id", userId),
-    ]);
-    if (!nr.error) {
-      setRfNodes(
-        (nr.data ?? []).map((n: DbNode) => ({
-          ...dbNodeToRF(n),
-          data: { label: n.name, isPro, t },
-        }))
-      );
+    try {
+      // 8秒タイムアウト — auth session がハングしても確実に loading を解除する
+      const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 8000));
+      const query = Promise.all([
+        supabase.from("technique_nodes").select("id, user_id, name, description, pos_x, pos_y, created_at").eq("user_id", userId).order("created_at"),
+        supabase.from("technique_edges").select("id, source_id, target_id, label").eq("user_id", userId),
+      ]);
+      const result = await Promise.race([query, timeout]);
+      if (result) {
+        const [nr, er] = result;
+        if (!nr.error) {
+          setRfNodes(
+            (nr.data ?? []).map((n: DbNode) => ({
+              ...dbNodeToRF(n),
+              data: { label: n.name, isPro, t },
+            }))
+          );
+        }
+        if (!er.error) {
+          setRfEdges((er.data ?? []).map((e: DbEdge) => dbEdgeToRF(e)));
+        }
+      }
+    } catch (e) {
+      console.error("[SkillMap] loadData error:", e);
+    } finally {
+      setLoading(false);
     }
-    if (!er.error) {
-      setRfEdges((er.data ?? []).map((e: DbEdge) => dbEdgeToRF(e)));
-    }
-    setLoading(false);
   }, [userId, isPro, t, supabase, setRfNodes, setRfEdges]);
 
   useEffect(() => { loadData(); }, [loadData]);
