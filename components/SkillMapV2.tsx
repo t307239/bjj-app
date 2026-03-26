@@ -24,7 +24,7 @@ import {
   ReactFlowProvider,
   Background,
   BackgroundVariant,
-  Controls,
+  Panel,
   MiniMap,
   useNodesState,
   useEdgesState,
@@ -60,6 +60,7 @@ type DbNode = {
   description: string | null;
   pos_x: number;
   pos_y: number;
+  mastery_level?: number; // 0=Locked, 1=Learning, 2=Mastered
   created_at: string;
 };
 
@@ -127,6 +128,75 @@ function getLayoutedNodes(nodes: Node[], edges: Edge[]): Node[] {
   });
 }
 
+// ─── Mastery level → glass morphism node classes ─────────────────────────────
+
+function masteryNodeClass(level: number | undefined): string {
+  if (level === 2) return "bg-emerald-900/20 border-emerald-500/50 text-emerald-300";
+  if (level === 1) return "bg-blue-900/20 border-blue-500/50 text-blue-300";
+  return "bg-zinc-800/50 border-zinc-700 text-zinc-400"; // 0 or undefined = Locked
+}
+
+function masterySelectedRing(level: number | undefined): string {
+  if (level === 2) return "ring-2 ring-emerald-400/40";
+  if (level === 1) return "ring-2 ring-blue-400/40";
+  return "ring-2 ring-[#6366f1]/40";
+}
+
+// ─── Canvas Legend ─────────────────────────────────────────────────────────────
+
+function SkillMapLegend() {
+  return (
+    <Panel position="bottom-right">
+      <div className="flex items-center gap-2.5 bg-zinc-900/80 border border-white/10 backdrop-blur-sm rounded-lg px-3 py-1.5 pointer-events-none select-none">
+        {[
+          { label: "Locked",   cls: "border-zinc-600 bg-zinc-700/60" },
+          { label: "Learning", cls: "border-blue-500/70 bg-blue-900/40" },
+          { label: "Mastered", cls: "border-emerald-500/70 bg-emerald-900/40" },
+        ].map(({ label, cls }) => (
+          <span key={label} className="flex items-center gap-1.5">
+            <span className={`w-2.5 h-2.5 rounded-sm border ${cls} inline-block`} />
+            <span className="text-[10px] text-zinc-400">{label}</span>
+          </span>
+        ))}
+      </div>
+    </Panel>
+  );
+}
+
+// ─── Custom Zoom Controls ──────────────────────────────────────────────────────
+
+function CustomZoomControls() {
+  const { zoomIn, zoomOut, fitView } = useReactFlow();
+  return (
+    <Panel position="bottom-left">
+      <div className="flex flex-col gap-1 bg-zinc-900/80 border border-white/10 backdrop-blur-sm rounded-lg p-1">
+        <button
+          onClick={() => zoomIn({ duration: 200 })}
+          className="w-7 h-7 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/60 rounded-md transition-all text-base leading-none"
+          aria-label="Zoom in"
+          title="Zoom in"
+        >+</button>
+        <button
+          onClick={() => zoomOut({ duration: 200 })}
+          className="w-7 h-7 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/60 rounded-md transition-all text-base leading-none"
+          aria-label="Zoom out"
+          title="Zoom out"
+        >−</button>
+        <button
+          onClick={() => fitView({ padding: 0.15, duration: 400 })}
+          className="w-7 h-7 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-700/60 rounded-md transition-all"
+          aria-label="Fit view"
+          title="Fit view"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+          </svg>
+        </button>
+      </div>
+    </Panel>
+  );
+}
+
 // ─── DB → React Flow converters ───────────────────────────────────────────────
 
 function dbNodeToRF(n: DbNode): Node {
@@ -134,7 +204,7 @@ function dbNodeToRF(n: DbNode): Node {
     id: n.id,
     type: "technique",
     position: { x: n.pos_x, y: n.pos_y },
-    data: { label: n.name },
+    data: { label: n.name, mastery_level: n.mastery_level ?? 0 },
   };
 }
 
@@ -159,17 +229,18 @@ function TechniqueNodeComp({
   selected,
 }: {
   id: string;
-  data: { label: string; isPro?: boolean; t?: (k: string) => string };
+  data: { label: string; isPro?: boolean; t?: (k: string) => string; mastery_level?: number };
   selected: boolean;
 }) {
   const [confirmDel, setConfirmDel] = useState(false);
+  const mastery = data.mastery_level ?? 0;
 
   return (
     <div
-      className={`relative bg-zinc-800 border rounded-xl px-3 py-2.5 shadow-lg transition-all select-none ${
+      className={`relative border rounded-xl px-3 py-2.5 shadow-lg transition-all select-none backdrop-blur-sm ${masteryNodeClass(mastery)} ${
         selected
-          ? "border-[#6366f1] ring-2 ring-[#6366f1]/30"
-          : "border-white/20 hover:border-[#6366f1]/50"
+          ? masterySelectedRing(mastery)
+          : "hover:brightness-110"
       }`}
       style={{ width: NODE_W, minHeight: NODE_H }}
     >
@@ -181,7 +252,7 @@ function TechniqueNodeComp({
       />
 
       {/* Label */}
-      <span className="block text-xs text-white font-medium break-words whitespace-pre-wrap leading-snug pr-4">
+      <span className="block text-xs font-medium break-words whitespace-pre-wrap leading-snug pr-4">
         {data.label}
       </span>
 
@@ -561,7 +632,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   // Keep module-level ref up-to-date
   useEffect(() => { _deleteNodeRef.current = handleDeleteNode; }, [handleDeleteNode]);
 
-  // Sync isPro + t into node data when they change
+  // Sync isPro + t into node data when they change (preserve mastery_level)
   useEffect(() => {
     setRfNodes((prev: Node[]) =>
       prev.map((n: Node) => ({ ...n, data: { ...n.data, isPro, t } }))
@@ -574,7 +645,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
       // 8秒タイムアウト — auth session がハングしても確実に loading を解除する
       const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 8000));
       const query = Promise.all([
-        supabase.from("technique_nodes").select("id, user_id, name, description, pos_x, pos_y, created_at").eq("user_id", userId).order("created_at"),
+        supabase.from("technique_nodes").select("id, user_id, name, description, pos_x, pos_y, mastery_level, created_at").eq("user_id", userId).order("created_at"),
         supabase.from("technique_edges").select("id, source_id, target_id, label").eq("user_id", userId),
       ]);
       const result = await Promise.race([query, timeout]);
@@ -584,7 +655,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           setRfNodes(
             (nr.data ?? []).map((n: DbNode) => ({
               ...dbNodeToRF(n),
-              data: { label: n.name, isPro, t },
+              data: { label: n.name, isPro, t, mastery_level: n.mastery_level ?? 0 },
             }))
           );
         }
@@ -662,7 +733,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
       .select()
       .single();
     if (error) { showToast(t("skillmap.addNodeError"), "error"); return; }
-    setRfNodes((prev: Node[]) => [...prev, { ...dbNodeToRF(data), data: { label: data.name, isPro, t } }]);
+    setRfNodes((prev: Node[]) => [...prev, { ...dbNodeToRF(data), data: { label: data.name, isPro, t, mastery_level: 0 } }]);
     showToast(t("skillmap.addNodeSuccess"), "success");
   };
 
@@ -689,7 +760,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         await supabase.from("technique_nodes").delete().eq("id", nodeData.id);
         showToast(t("skillmap.addEdgeError"), "error"); return;
       }
-      setRfNodes((prev: Node[]) => [...prev, { ...dbNodeToRF(nodeData), data: { label: nodeData.name, isPro, t } }]);
+      setRfNodes((prev: Node[]) => [...prev, { ...dbNodeToRF(nodeData), data: { label: nodeData.name, isPro, t, mastery_level: 0 } }]);
       setRfEdges((prev: Edge[]) => [...prev, dbEdgeToRF(edgeData)]);
       showToast(t("skillmap.addNodeSuccess"), "success");
     },
@@ -972,16 +1043,19 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           style={{ background: "#080f1e" }}
           proOptions={{ hideAttribution: true }}
         >
-          <Background variant={BackgroundVariant.Dots} gap={24} size={1} color="rgba(255,255,255,0.05)" />
-          <Controls
-            showInteractive={false}
-            style={{ background: "#18181b", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8 }}
-          />
+          <Background variant={BackgroundVariant.Dots} gap={24} size={1} color="rgba(255,255,255,0.04)" />
           <MiniMap
-            nodeColor={() => "#6366f1"}
-            maskColor="rgba(0,0,0,0.6)"
-            style={{ background: "#18181b", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8 }}
+            nodeColor={(n) => {
+              const lvl = (n.data as { mastery_level?: number }).mastery_level ?? 0;
+              if (lvl === 2) return "#10b981";
+              if (lvl === 1) return "#3b82f6";
+              return "#52525b";
+            }}
+            maskColor="rgba(0,0,0,0.65)"
+            style={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8 }}
           />
+          <CustomZoomControls />
+          <SkillMapLegend />
         </ReactFlow>
       </div>
 
