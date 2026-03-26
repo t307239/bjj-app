@@ -6,6 +6,7 @@ import { useLocale } from "@/lib/i18n";
 import QuickWeightLog from "@/components/QuickWeightLog";
 import WeightChart from "@/components/WeightChart";
 import BodyHeatmap from "@/components/BodyHeatmap";
+import InjuryCareAlert from "@/components/InjuryCareAlert";
 
 interface Props {
   userId: string;
@@ -81,6 +82,11 @@ export default function BodyManagementSection({ userId }: Props) {
         <div className={!isPro ? "pointer-events-none select-none blur-sm opacity-40" : ""}>
           <WeightChart userId={userId} refreshKey={chartRefreshKey} />
         </div>
+
+        {/* Injury care alert with 7-day snooze (shown when sore/injured parts exist) */}
+        {isPro && (
+          <InjuryCareAlert bodyStatus={bodyStatus} />
+        )}
 
         {/* Body heatmap — blurred behind paywall */}
         <div className={!isPro ? "pointer-events-none select-none blur-sm opacity-40" : ""}>
