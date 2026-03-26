@@ -36,10 +36,10 @@ textarea::placeholder {
   color: rgb(156 163 175); /* gray-400 */
 }
 
-/* #139: Custom slim scrollbar for dark UI immersion */
-::-webkit-scrollbar { width: 4px; }
+/* #139 / #15: Custom slim scrollbar for dark UI immersion */
+::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #374151; border-radius: 9999px; }
+::-webkit-scrollbar-thumb { background: rgb(71 85 105); border-radius: 9999px; } /* slate-600 */
 
 /* #⑪: scrollbar-hide utility — hides scrollbar while preserving scroll behaviour */
 .scrollbar-hide {
@@ -217,6 +217,34 @@ select:focus-visible {
 .wiki-content .related-links a:hover {
   background: rgb(51 65 85 / 0.8) !important; /* slate-700/80 */
   border-color: rgb(244 114 182 / 0.35);
+}
+
+/* ── blockquote: not-italic + 強いアクセント (#14) ── */
+.wiki-content blockquote {
+  font-style: normal !important;
+  border-left-color: rgb(244 114 182) !important; /* pink-400 */
+  border-left-width: 4px !important;
+}
+.wiki-content blockquote p {
+  font-style: normal !important;
+}
+
+/* ── iframe: アスペクト比維持・レスポンシブ (#25) ── */
+.wiki-content iframe {
+  width: 100% !important;
+  aspect-ratio: 16 / 9;
+  height: auto !important;
+  max-width: 100%;
+  border: none;
+  border-radius: 0.75rem;
+}
+
+/* ── table: 横スクロール (#26) ── */
+.wiki-content table {
+  display: block;
+  overflow-x: auto;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* 印刷 / PDF保存スタイル */

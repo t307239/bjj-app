@@ -2,6 +2,9 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import ScrollProgressBar from "./ScrollProgressBar";
+import BackToTopButton from "./BackToTopButton";
+import MobileCtaBar from "./MobileCtaBar";
 
 export const revalidate = 3600;
 
@@ -78,13 +81,20 @@ const BADGE_CONFIG: Record<
 };
 
 // ─────────────────────────────────────────
-// TOC ヘルパー（サーバーサイド regex 処理）
+// ヘルパー
 // ─────────────────────────────────────────
+
+/** #24: 読了時間を計算（200 wpm 基準） */
+function calcReadingTime(html: string): number {
+  const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  const words = text.split(" ").filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+}
 
 function slugifyHeading(text: string): string {
   return text
     .toLowerCase()
-    .replace(/<[^>]+>/g, "") // strip inner HTML tags
+    .replace(/<[^>]+>/g, "")
     .replace(/[^\w\s-]/g, "")
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
@@ -94,13 +104,13 @@ function slugifyHeading(text: string): string {
 
 /**
  * content_html 内の h2/h3 に id 属性を注入し、TOC 配列を返す。
- * 最初の <h1> は Next.js 側でタイトルを render しているため除去。
+ * 最初の <h1> を除去（Next.js 側でタイトルを render するため）。
  * id がすでに存在する場合はスキップ。
  */
 function processHeadings(html: string): { html: string; toc: TocItem[] } {
   if (!html) return { html, toc: [] };
 
-  // 最初の <h1> を除去（ページタイトルとの重複を防ぐ）
+  // 最初の <h1> を除去
   const withoutH1 = html.replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/i, "");
 
   const toc: TocItem[] = [];
@@ -109,7 +119,6 @@ function processHeadings(html: string): { html: string; toc: TocItem[] } {
   const processed = withoutH1.replace(
     /<h([23])([^>]*)>([\s\S]*?)<\/h[23]>/gi,
     (match, levelStr, attrs, content) => {
-      // 既存 id があればそのまま返す
       if (/\bid\s*=/.test(attrs)) return match;
 
       const rawText = content.replace(/<[^>]+>/g, "").trim();
@@ -118,7 +127,6 @@ function processHeadings(html: string): { html: string; toc: TocItem[] } {
       let id = slugifyHeading(rawText);
       if (!id) return match;
 
-      // 重複 id を回避
       if (usedIds.has(id)) {
         let n = 2;
         while (usedIds.has(`${id}-${n}`)) n++;
@@ -153,7 +161,7 @@ async function getWikiPage(lang: string, slug: string) {
 
   const { data, error } = await supabase
     .from("wiki_translations")
-    .select("title, description, content_html, content_type")
+    .select("title, description, content_html, content_type, updated_at")
     .eq("page_id", pageData.id)
     .eq("language_code", lang)
     .single();
@@ -226,7 +234,7 @@ export async function generateMetadata({
       siteName: "BJJ Wiki",
       locale: lang === "ja" ? "ja_JP" : lang === "pt" ? "pt_BR" : "en_US",
     },
-    twitter: { card: "summary", title, description },
+    twitter: { card: "summary_large_image", title, description },
     alternates: {
       canonical: canonicalUrl,
       languages: {
@@ -257,7 +265,7 @@ function ContentTypeBadge({ contentType }: { contentType: string | null }) {
 }
 
 // ─────────────────────────────────────────
-// OnThisPage — sticky TOC サイドバー
+// OnThisPage — sticky TOC サイドバー (#6)
 // ─────────────────────────────────────────
 
 function OnThisPage({ items, lang }: { items: TocItem[]; lang: string }) {
@@ -272,15 +280,15 @@ function OnThisPage({ items, lang }: { items: TocItem[]; lang: string }) {
 
   return (
     <nav aria-label={label}>
-      <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-slate-600">
+      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
         {label}
       </p>
-      <ul className="space-y-1.5 border-l border-slate-800 pl-3">
+      <ul className="space-y-1 border-l border-slate-800 pl-3">
         {items.map((item) => (
           <li key={item.id} className={item.level === 3 ? "pl-3" : ""}>
             <a
               href={`#${item.id}`}
-              className="block text-xs text-slate-500 hover:text-slate-200 transition-colors line-clamp-2 leading-snug"
+              className="block text-[12px] leading-snug text-slate-500 hover:text-slate-200 transition-colors line-clamp-2 py-0.5"
             >
               {item.text}
             </a>
@@ -292,7 +300,53 @@ function OnThisPage({ items, lang }: { items: TocItem[]; lang: string }) {
 }
 
 // ─────────────────────────────────────────
-// CTA バナー
+// Mobile TOC Accordion (#13)
+// ─────────────────────────────────────────
+
+function MobileTocAccordion({ items, lang }: { items: TocItem[]; lang: string }) {
+  if (items.length === 0) return null;
+
+  const label =
+    lang === "ja"
+      ? "目次"
+      : lang === "pt"
+      ? "Índice"
+      : "Contents";
+
+  return (
+    <details className="lg:hidden mb-6 rounded-xl border border-slate-700/50 bg-slate-800/30 group">
+      <summary className="px-4 py-3 text-sm font-medium text-slate-300 cursor-pointer list-none flex items-center justify-between select-none">
+        <span className="flex items-center gap-2">
+          <span className="text-slate-500 text-base">☰</span>
+          {label}
+        </span>
+        <svg
+          className="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180"
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </summary>
+      <div className="px-4 pb-4 pt-1">
+        <ul className="space-y-1 border-l border-slate-700 pl-3">
+          {items.map((item) => (
+            <li key={item.id} className={item.level === 3 ? "pl-3" : ""}>
+              <a
+                href={`#${item.id}`}
+                className="block text-xs text-slate-400 hover:text-white transition-colors py-0.5 leading-snug"
+              >
+                {item.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </details>
+  );
+}
+
+// ─────────────────────────────────────────
+// CTA バナー（glassmorphism）
 // ─────────────────────────────────────────
 
 function WikiCtaBanner({ lang }: { lang: string }) {
@@ -383,7 +437,7 @@ function WikiCtaBanner({ lang }: { lang: string }) {
 }
 
 // ─────────────────────────────────────────
-// 関連記事
+// 関連記事 カードグリッド (#8)
 // ─────────────────────────────────────────
 
 function RelatedArticles({
@@ -400,8 +454,8 @@ function RelatedArticles({
   const cfg = contentType ? BADGE_CONFIG[contentType as ContentType] : null;
 
   return (
-    <div className="mt-10 pt-8 border-t border-zinc-800">
-      <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-500">
+    <div className="mt-10 pt-8 border-t border-slate-800/60">
+      <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
         {cfg ? `${cfg.emoji} More ${cfg.label}` : "Related Articles"}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -409,36 +463,15 @@ function RelatedArticles({
           <Link
             key={a.slug}
             href={`/wiki/${lang}/${a.slug}`}
-            className="group rounded-xl border border-slate-700/60 bg-slate-800/40 px-4 py-3 hover:border-slate-600 hover:bg-slate-800/70 transition-colors"
+            className="group rounded-xl border border-slate-700/60 bg-slate-800/40 px-4 py-3.5 hover:border-slate-600 hover:bg-slate-800/70 hover:-translate-y-0.5 transition-all duration-150"
           >
-            <p className="text-sm text-slate-300 group-hover:text-white line-clamp-2 transition-colors">
+            <p className="text-sm text-slate-300 group-hover:text-white line-clamp-2 transition-colors leading-snug">
               {a.title}
             </p>
           </Link>
         ))}
       </div>
     </div>
-  );
-}
-
-// ─────────────────────────────────────────
-// BackToTopLink
-// ─────────────────────────────────────────
-
-function BackToTopLink({ lang }: { lang: string }) {
-  const label =
-    lang === "ja"
-      ? "↑ 上に戻る"
-      : lang === "pt"
-      ? "↑ Voltar ao topo"
-      : "↑ Back to top";
-  return (
-    <a
-      href="#"
-      className="inline-block text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
-    >
-      {label}
-    </a>
   );
 }
 
@@ -463,11 +496,84 @@ export default async function WikiPage({
     Promise.resolve(processHeadings(page.content_html ?? "")),
   ]);
 
+  // #24: 読了時間
+  const readingTime = calcReadingTime(processedHtml);
+
+  // #24: 更新日フォーマット
+  const updatedAt = page.updated_at
+    ? new Date(page.updated_at).toLocaleDateString(
+        lang === "ja" ? "ja-JP" : lang === "pt" ? "pt-BR" : "en-US",
+        { year: "numeric", month: "short", day: "numeric" }
+      )
+    : null;
+
+  // CTA コンテンツ（MobileCtaBar 用）
+  const ctaLabels: Record<Lang, string> = {
+    en: "Start Free — No Credit Card",
+    ja: "無料で始める（クレカ不要）",
+    pt: "Começar Grátis — Sem Cartão",
+  };
+  const ctaLabel = ctaLabels[lang as Lang] ?? ctaLabels.en;
+
+  // #19: Breadcrumb JSON-LD
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "BJJ Wiki",
+        item: `https://bjj-app.net/wiki/${lang}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: BADGE_CONFIG[page.content_type as ContentType]?.label ?? page.content_type ?? "Article",
+        item: `https://bjj-app.net/wiki/${lang}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: page.title,
+        item: `https://bjj-app.net/wiki/${lang}/${slug}`,
+      },
+    ],
+  };
+
+  // #19: Article JSON-LD
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: page.title,
+    description: page.description ?? "",
+    url: `https://bjj-app.net/wiki/${lang}/${slug}`,
+    inLanguage: lang,
+    publisher: {
+      "@type": "Organization",
+      name: "BJJ Wiki",
+      url: "https://bjj-app.net",
+    },
+  };
+
   return (
     <div className="min-h-screen bg-[#0B1120] text-white">
-      {/* パンくずリスト: BJJ Wiki / ジャンル名 */}
-      <header className="border-b border-slate-800/60 bg-[#0B1120]/95 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-4 py-4 flex items-center gap-2 text-sm">
+      {/* #19: JSON-LD 構造化データ */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+
+      {/* #16: スクロール進捗バー（クライアント）*/}
+      <ScrollProgressBar />
+
+      {/* パンくずリスト */}
+      <header className="border-b border-slate-800/60 bg-[#0B1120]/95 backdrop-blur-sm sticky top-0 z-30">
+        <div className="mx-auto max-w-7xl px-4 py-3 flex items-center gap-2 text-sm">
           <a
             href={`/wiki/${lang}`}
             className="text-slate-400 hover:text-white transition-colors"
@@ -475,36 +581,49 @@ export default async function WikiPage({
             BJJ Wiki
           </a>
           <span className="text-slate-700">/</span>
-          <span className="text-slate-300">
+          <span className="text-slate-300 truncate max-w-[200px] sm:max-w-none">
             {BADGE_CONFIG[page.content_type as ContentType]?.label ??
               page.content_type}
           </span>
         </div>
       </header>
 
-      {/* 2カラムレイアウト: メイン + sticky TOC */}
-      <div className="mx-auto max-w-7xl px-4 py-10 lg:flex lg:gap-12">
+      {/* 2カラムレイアウト */}
+      <div className="mx-auto max-w-7xl px-4 py-10 lg:flex lg:gap-14">
         {/* ── メインコンテンツ ── */}
         <main className="flex-1 min-w-0">
           <article>
+            {/* バッジ */}
             <div className="mb-4">
               <ContentTypeBadge contentType={page.content_type} />
             </div>
 
-            <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">
+            {/* タイトル */}
+            <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl leading-tight tracking-tight">
               {page.title}
             </h1>
 
-            {/* 言語スイッチャー（タイトル直下・ファーストビュー）*/}
-            <div className="flex items-center gap-1 mb-6">
+            {/* #24: 読了時間 + 更新日 */}
+            <div className="flex items-center gap-3 mb-4 text-xs text-slate-500">
+              <span>⏱️ {readingTime} min read</span>
+              {updatedAt && (
+                <>
+                  <span className="text-slate-700">·</span>
+                  <span>🔄 {updatedAt}</span>
+                </>
+              )}
+            </div>
+
+            {/* #11: 言語スイッチャー（セグメントカプセル）*/}
+            <div className="inline-flex items-center bg-slate-800/80 rounded-full p-1 gap-0.5 mb-6 border border-slate-700/50">
               {VALID_LANGS.map((l) => (
                 <a
                   key={l}
                   href={`/wiki/${l}/${slug}`}
-                  className={`px-2.5 py-0.5 rounded text-xs font-medium transition-colors ${
+                  className={`px-3.5 py-1 rounded-full text-xs font-semibold transition-all duration-150 ${
                     l === lang
-                      ? "bg-slate-700 text-white"
-                      : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/60"
+                      ? "bg-slate-600 text-white shadow-sm"
+                      : "text-slate-400 hover:text-slate-200"
                   }`}
                 >
                   {l.toUpperCase()}
@@ -512,28 +631,32 @@ export default async function WikiPage({
               ))}
             </div>
 
+            {/* #13: モバイル TOC アコーディオン */}
+            <MobileTocAccordion items={toc} lang={lang} />
+
+            {/* description */}
             {page.description && (
-              <p className="mb-8 text-base text-slate-400 leading-relaxed border-l-4 border-pink-500/70 pl-4 italic">
+              <p className="mb-8 text-base text-slate-400 leading-relaxed border-l-4 border-pink-500/60 pl-4 not-italic bg-slate-800/20 rounded-r-lg py-3 pr-3">
                 {page.description}
               </p>
             )}
 
-            {/* Wiki コンテンツ（wiki-content クラスで globals.css のカスタム CSS を適用）*/}
+            {/* Wiki コンテンツ */}
             <div
               className="
                 wiki-content
                 prose prose-invert prose-slate max-w-none
                 prose-headings:text-white prose-headings:font-bold prose-headings:tracking-tight
-                prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4
-                prose-h3:text-lg prose-h3:mt-7 prose-h3:mb-3 prose-h3:text-slate-200
-                prose-p:text-slate-300 prose-p:leading-[1.8] prose-p:mb-4
+                prose-h2:text-xl prose-h2:mt-12 prose-h2:mb-6
+                prose-h3:text-lg prose-h3:mt-8 prose-h3:mb-4 prose-h3:text-slate-200
+                prose-p:text-slate-300 prose-p:leading-[1.85] prose-p:mb-5
                 prose-a:text-pink-400 prose-a:no-underline hover:prose-a:text-pink-300 hover:prose-a:underline
                 prose-strong:text-white prose-strong:font-semibold
                 prose-ul:text-slate-300 prose-ol:text-slate-300
                 prose-li:my-1.5 prose-li:text-slate-300
-                prose-img:rounded-xl prose-img:my-6 prose-img:shadow-xl
+                prose-img:rounded-xl prose-img:my-6 prose-img:shadow-xl prose-img:border prose-img:border-slate-700/50
                 prose-hr:border-slate-700/50
-                prose-blockquote:border-pink-500/40 prose-blockquote:text-slate-400 prose-blockquote:bg-slate-800/30 prose-blockquote:rounded-r-lg
+                prose-blockquote:border-pink-400 prose-blockquote:border-l-4 prose-blockquote:not-italic prose-blockquote:text-slate-400 prose-blockquote:bg-slate-800/30 prose-blockquote:rounded-r-lg prose-blockquote:py-3
                 prose-code:text-pink-300 prose-code:bg-slate-800/80 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-sm
                 prose-pre:bg-slate-800/80 prose-pre:border prose-pre:border-slate-700/50 prose-pre:rounded-xl
                 prose-table:text-slate-300
@@ -554,23 +677,21 @@ export default async function WikiPage({
             contentType={page.content_type}
           />
 
-          {/* Back to Top */}
-          <div className="mt-10 pt-8 border-t border-slate-800/60 flex justify-end">
-            <BackToTopLink lang={lang} />
-          </div>
+          {/* #10: フッター上部スペーサー（Back to top 削除 — #21 floating btn に移譲）*/}
+          <div className="mt-12" />
         </main>
 
-        {/* ── sticky TOC サイドバー（lg以上で表示）── */}
+        {/* ── sticky TOC サイドバー（lg以上）── */}
         {toc.length > 0 && (
           <aside className="hidden lg:block w-56 shrink-0">
-            <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto">
+            <div className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
               <OnThisPage items={toc} lang={lang} />
             </div>
           </aside>
         )}
       </div>
 
-      {/* フッター */}
+      {/* #10: フッター（クリーンアップ）*/}
       <footer className="border-t border-slate-800/60 py-8 mt-4">
         <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
           <p>© {new Date().getFullYear()} BJJ Wiki — All rights reserved.</p>
@@ -582,6 +703,12 @@ export default async function WikiPage({
           </a>
         </div>
       </footer>
+
+      {/* #21: スクロール対応 Back to Top ボタン（クライアント）*/}
+      <BackToTopButton lang={lang} />
+
+      {/* #23: モバイル スティッキー CTA バー（クライアント）*/}
+      <MobileCtaBar href="https://bjj-app.net/login" cta={ctaLabel} />
     </div>
   );
 }
