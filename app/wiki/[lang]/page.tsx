@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 
+export const revalidate = 3600;
+
 // ─────────────────────────────────────────
 // 定数・型定義
 // ─────────────────────────────────────────
@@ -51,7 +53,7 @@ const CATEGORY_CONFIG: Record<ContentType, CategoryConfig> = {
     dotClass: "bg-blue-500",
   },
   Concept_Strategy: {
-    label: "Concepts & Strategy",
+    label: "Concept & Strategy",
     emoji: "🧠",
     description: "Game plans, philosophy, and strategic frameworks",
     headerClass: "text-violet-400",
@@ -75,7 +77,7 @@ const CATEGORY_CONFIG: Record<ContentType, CategoryConfig> = {
     dotClass: "bg-amber-500",
   },
   Athlete_Bio: {
-    label: "Athlete Bios",
+    label: "Athlete Profiles",
     emoji: "🏆",
     description: "Profiles of legendary BJJ athletes and competitors",
     headerClass: "text-rose-400",

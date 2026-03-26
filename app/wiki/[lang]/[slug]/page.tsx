@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 
+export const revalidate = 3600;
+
 // ─────────────────────────────────────────
 // 型定義
 // ─────────────────────────────────────────
@@ -153,6 +155,11 @@ export async function generateMetadata({
     },
     alternates: {
       canonical: canonicalUrl,
+      languages: {
+        en: `https://bjj-app.net/wiki/en/${slug}`,
+        ja: `https://bjj-app.net/wiki/ja/${slug}`,
+        pt: `https://bjj-app.net/wiki/pt/${slug}`,
+      },
     },
   };
 }
