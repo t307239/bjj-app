@@ -158,10 +158,9 @@ function processHeadings(html: string): { html: string; toc: TocItem[] } {
 async function getWikiPage(lang: string, slug: string) {
   const supabase = await createClient();
 
-  // video_url は wiki_pages（言語共有）から取得
   const { data: pageData, error: pageError } = await supabase
     .from("wiki_pages")
-    .select("id, video_url")
+    .select("id")
     .eq("slug", slug)
     .single();
 
@@ -175,7 +174,19 @@ async function getWikiPage(lang: string, slug: string) {
     .single();
 
   if (error || !data) return null;
-  return { ...data, video_url: pageData.video_url as string | null };
+
+  // video_url は別クエリで取得。
+  // Supabase migration 未実行時はカラムが存在せずエラーになるが、
+  // supabase-js は {data: null, error} を返すだけなので安全にフォールバック可能。
+  // migration 実行済み後は正常に取得できる。
+  const { data: videoData } = await supabase
+    .from("wiki_pages")
+    .select("video_url")
+    .eq("id", pageData.id)
+    .single();
+  const videoUrl = (videoData as { video_url?: string | null } | null)?.video_url ?? null;
+
+  return { ...data, video_url: videoUrl };
 }
 
 // 同ジャンル関連記事を最大4件取得
