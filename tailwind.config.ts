@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 const config: Config = {
   content: [
@@ -16,7 +17,19 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [
+    require("@tailwindcss/typography"),
+    // タスク6: ADA対応 — キーボード操作時のフォーカスリンクをグローバル適用
+    // ブランドカラー紫 (#7c3aed) で統一。UI_DESIGN.md準拠。
+    plugin(({ addBase }) => {
+      addBase({
+        "*:focus-visible": {
+          outline: "none",
+          "box-shadow": "0 0 0 2px rgba(124, 58, 237, 0.6), 0 0 0 4px rgba(9, 9, 11, 0.8)",
+        },
+      });
+    }),
+  ],
 };
 
 export default config;
