@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
 
 export const revalidate = 3600;
 
@@ -112,6 +113,38 @@ async function getWikiPage(lang: string, slug: string) {
   return data;
 }
 
+// 同ジャンル関連記事を最大4件取得
+async function getRelatedPages(
+  lang: string,
+  contentType: string | null,
+  currentSlug: string
+) {
+  if (!contentType) return [];
+  const supabase = await createClient();
+
+  // 5件取得し、JS側で現在ページを除外して最大4件返す
+  const { data, error } = await supabase
+    .from("wiki_translations")
+    .select("title, wiki_pages!inner(slug)")
+    .eq("language_code", lang)
+    .eq("content_type", contentType)
+    .limit(5);
+
+  if (error || !data) return [];
+
+  return data
+    .map((row) => {
+      const wp = row.wiki_pages as { slug: string } | { slug: string }[] | null;
+      const slug = Array.isArray(wp) ? wp[0]?.slug : wp?.slug;
+      return slug ? { title: row.title, slug } : null;
+    })
+    .filter(
+      (item): item is { title: string; slug: string } =>
+        item !== null && item.slug !== currentSlug
+    )
+    .slice(0, 4);
+}
+
 // ─────────────────────────────────────────
 // generateMetadata
 // ─────────────────────────────────────────
@@ -168,6 +201,113 @@ export async function generateMetadata({
 // Page Component
 // ─────────────────────────────────────────
 
+// ─────────────────────────────────────────
+// CTA バナーコンポーネント
+// ─────────────────────────────────────────
+
+function WikiCtaBanner({ lang }: { lang: string }) {
+  const messages: Record<Lang, { heading: string; sub: string; cta: string }> =
+    {
+      en: {
+        heading: "Track Your BJJ Progress",
+        sub: "Log sessions, monitor streaks & map your techniques — for free.",
+        cta: "Start for Free →",
+      },
+      ja: {
+        heading: "BJJの進捗をトラッキングしよう",
+        sub: "練習ログ・連続記録・テクニックマップを無料で管理。",
+        cta: "無料で始める →",
+      },
+      pt: {
+        heading: "Acompanhe seu Progresso no BJJ",
+        sub: "Registre sessões, monitore sequências e mapeie técnicas — de graça.",
+        cta: "Começar Grátis →",
+      },
+    };
+
+  const m = messages[lang as Lang] ?? messages.en;
+
+  return (
+    <div className="my-10 rounded-2xl bg-gradient-to-br from-blue-900/60 to-indigo-900/60 border border-blue-700/40 p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-5 sm:gap-8">
+      {/* アイコン */}
+      <div className="shrink-0 text-5xl">🥋</div>
+
+      {/* テキスト */}
+      <div className="flex-1 text-center sm:text-left">
+        <p className="text-lg font-bold text-white mb-1">{m.heading}</p>
+        <p className="text-sm text-zinc-300">{m.sub}</p>
+      </div>
+
+      {/* CTA ボタン */}
+      <Link
+        href="https://bjj-app.net/login"
+        className="shrink-0 rounded-xl bg-blue-500 hover:bg-blue-400 transition-colors px-6 py-3 text-sm font-semibold text-white shadow-lg"
+      >
+        {m.cta}
+      </Link>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────
+// 関連記事ナビゲーションコンポーネント
+// ─────────────────────────────────────────
+
+function RelatedArticles({
+  lang,
+  articles,
+  contentType,
+}: {
+  lang: string;
+  articles: { title: string; slug: string }[];
+  contentType: string | null;
+}) {
+  if (articles.length === 0) return null;
+
+  const cfg = contentType ? BADGE_CONFIG[contentType as ContentType] : null;
+
+  return (
+    <div className="mt-10 pt-8 border-t border-zinc-800">
+      <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-500">
+        {cfg ? `${cfg.emoji} More ${cfg.label}` : "Related Articles"}
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {articles.map((a) => (
+          <Link
+            key={a.slug}
+            href={`/wiki/${lang}/${a.slug}`}
+            className="group rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 hover:border-zinc-600 hover:bg-zinc-800 transition-colors"
+          >
+            <p className="text-sm text-zinc-200 group-hover:text-white line-clamp-2 transition-colors">
+              {a.title}
+            </p>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────
+// ページ最上部へ戻るリンク
+// ─────────────────────────────────────────
+
+function BackToTopLink({ lang }: { lang: string }) {
+  const label = lang === "ja" ? "↑ 上に戻る" : lang === "pt" ? "↑ Voltar ao topo" : "↑ Back to top";
+  return (
+    <a
+      href="#"
+      className="inline-block text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+    >
+      {label}
+    </a>
+  );
+}
+
+// ─────────────────────────────────────────
+// Page Component
+// ─────────────────────────────────────────
+
 export default async function WikiPage({
   params,
 }: {
@@ -185,6 +325,8 @@ export default async function WikiPage({
   if (!page) {
     notFound();
   }
+
+  const related = await getRelatedPages(lang, page.content_type, slug);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
@@ -245,22 +387,35 @@ export default async function WikiPage({
           />
         </article>
 
-        {/* 言語スイッチャー */}
-        <div className="mt-12 pt-8 border-t border-zinc-800 flex items-center gap-2 text-sm text-zinc-500">
-          <span>Read in:</span>
-          {VALID_LANGS.map((l) => (
-            <a
-              key={l}
-              href={`/wiki/${l}/${slug}`}
-              className={`px-2 py-1 rounded transition-colors ${
-                l === lang
-                  ? "bg-zinc-700 text-white font-medium"
-                  : "hover:text-zinc-300"
-              }`}
-            >
-              {l.toUpperCase()}
-            </a>
-          ))}
+        {/* ── CTA バナー ── */}
+        <WikiCtaBanner lang={lang} />
+
+        {/* ── 関連記事ナビゲーション ── */}
+        <RelatedArticles
+          lang={lang}
+          articles={related}
+          contentType={page.content_type}
+        />
+
+        {/* 言語スイッチャー + Back to Top */}
+        <div className="mt-10 pt-8 border-t border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm text-zinc-500">
+            <span>Read in:</span>
+            {VALID_LANGS.map((l) => (
+              <a
+                key={l}
+                href={`/wiki/${l}/${slug}`}
+                className={`px-2 py-1 rounded transition-colors ${
+                  l === lang
+                    ? "bg-zinc-700 text-white font-medium"
+                    : "hover:text-zinc-300"
+                }`}
+              >
+                {l.toUpperCase()}
+              </a>
+            ))}
+          </div>
+          <BackToTopLink lang={lang} />
         </div>
       </main>
 
