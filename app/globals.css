@@ -247,6 +247,67 @@ select:focus-visible {
   -webkit-overflow-scrolling: touch;
 }
 
+/* ── #35: テキスト選択カラー（ブランドカラー）── */
+::selection {
+  background-color: rgba(236, 72, 153, 0.25);
+  color: rgb(251, 207, 232);
+}
+
+/* ── #36: スムーススクロール ── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── #37: フォーカスリング美化（キーボードナビ）── */
+:focus-visible {
+  outline: 2px solid rgb(236, 72, 153);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── #38: abbr ツールチップ ── */
+.wiki-content abbr {
+  text-decoration: underline dotted rgb(148, 163, 184);
+  cursor: help;
+  position: relative;
+}
+.wiki-content abbr::after {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgb(2, 6, 23);
+  color: rgb(226, 232, 240);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  border: 1px solid rgb(51, 65, 85);
+  z-index: 100;
+  font-style: normal;
+}
+.wiki-content abbr:hover::after {
+  opacity: 1;
+}
+
+/* ── #28: TOC Scroll Spy アクティブリンク ── */
+.toc-nav a.toc-active {
+  color: rgb(244, 114, 182) !important; /* pink-400 */
+  border-left-color: rgb(236, 72, 153);
+}
+
+/* ── #44: CLS 防止 — wiki 画像はアスペクト比を事前確保 ── */
+.wiki-content img {
+  aspect-ratio: attr(width) / attr(height);
+  min-height: 120px;
+  object-fit: cover;
+  background: rgb(30, 41, 59);
+}
+
 /* 印刷 / PDF保存スタイル */
 @media print {
   body {
@@ -279,5 +340,40 @@ select:focus-visible {
   /* ページブレーク制御 */
   .training-entry {
     break-inside: avoid;
+  }
+
+  /* ── #33: Wiki 記事 印刷最適化 ── */
+  aside,
+  [class*="ScrollProgress"],
+  [class*="BackToTop"],
+  [class*="MobileCta"],
+  [class*="FeedbackWidget"],
+  [class*="ShareButton"],
+  [class*="ConfettiEffect"],
+  [class*="EasterEgg"],
+  [class*="ReadPersistence"] {
+    display: none !important;
+  }
+  .wiki-content {
+    max-width: 100% !important;
+    color: black !important;
+  }
+  .wiki-content h2,
+  .wiki-content h3 {
+    color: black !important;
+    border-left-color: #c00 !important;
+  }
+  .wiki-content p,
+  .wiki-content li {
+    color: #333 !important;
+  }
+  .wiki-content a {
+    color: #c00 !important;
+    text-decoration: underline !important;
+  }
+  .wiki-content blockquote {
+    border-left-color: #c00 !important;
+    background: #f5f5f5 !important;
+    color: #444 !important;
   }
 }

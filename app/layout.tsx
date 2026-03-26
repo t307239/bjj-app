@@ -1,5 +1,13 @@
 import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
+
+// #41: Next/Font — Google Fonts をビルド時にセルフホスティング化（FOUT/FOIT 防止）
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -29,7 +37,7 @@ export const metadata: Metadata = {
     title: "BJJ App",
   },
   robots: {
-    index: true,  // LPはGoogle検索対象（ダッシュボードは認証保護）
+    index: true, // LPはGoogle検索対象（ダッシュボードは認証保護）
     follow: true,
   },
 };
@@ -47,14 +55,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    // #48: dark クラスを固定 — Tailwind の dark: modifier を常に有効化
+    <html lang="en" className={`dark ${inter.variable}`}>
       <head>
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
         <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
       </head>
-      <body className="min-h-screen bg-zinc-950 text-white antialiased">
+      {/* #41: font-sans → Inter variable font */}
+      <body className={`${inter.className} min-h-screen bg-zinc-950 text-white antialiased`}>
         {children}
         <script
           dangerouslySetInnerHTML={{

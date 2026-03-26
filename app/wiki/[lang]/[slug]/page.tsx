@@ -5,6 +5,13 @@ import Link from "next/link";
 import ScrollProgressBar from "./ScrollProgressBar";
 import BackToTopButton from "./BackToTopButton";
 import MobileCtaBar from "./MobileCtaBar";
+import WikiContentEnhancer from "./WikiContentEnhancer";
+import TocScrollSpy from "./TocScrollSpy";
+import FeedbackWidget from "./FeedbackWidget";
+import ShareButton from "./ShareButton";
+import ConfettiEffect from "./ConfettiEffect";
+import ReadPersistence from "./ReadPersistence";
+import EasterEgg from "./EasterEgg";
 
 export const revalidate = 3600;
 
@@ -279,7 +286,7 @@ function OnThisPage({ items, lang }: { items: TocItem[]; lang: string }) {
       : "On this page";
 
   return (
-    <nav aria-label={label}>
+    <nav aria-label={label} className="toc-nav">
       <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
         {label}
       </p>
@@ -603,8 +610,16 @@ export default async function WikiPage({
               {page.title}
             </h1>
 
-            {/* #24: 読了時間 + 更新日 */}
-            <div className="flex items-center gap-3 mb-4 text-xs text-slate-500">
+            {/* #24: 読了時間 + 更新日 + #47: Author */}
+            <div className="flex flex-wrap items-center gap-2 mb-4 text-xs text-slate-500">
+              {/* #47: Author badge */}
+              <span className="inline-flex items-center gap-1.5 text-slate-500">
+                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-purple-600 text-[9px] font-bold text-white select-none">
+                  BJJ
+                </span>
+                <span>BJJ App Team</span>
+              </span>
+              <span className="text-slate-700">·</span>
               <span>⏱️ {readingTime} min read</span>
               {updatedAt && (
                 <>
@@ -612,6 +627,14 @@ export default async function WikiPage({
                   <span>🔄 {updatedAt}</span>
                 </>
               )}
+              {/* #32: Share button */}
+              <span className="ml-auto">
+                <ShareButton
+                  title={page.title}
+                  url={`https://bjj-app.net/wiki/${lang}/${slug}`}
+                  lang={lang}
+                />
+              </span>
             </div>
 
             {/* #11: 言語スイッチャー（セグメントカプセル）*/}
@@ -667,8 +690,13 @@ export default async function WikiPage({
             />
           </article>
 
-          {/* CTA バナー */}
-          <WikiCtaBanner lang={lang} />
+          {/* #31: フィードバックウィジェット */}
+          <FeedbackWidget lang={lang} />
+
+          {/* CTA バナー（#34 confetti trigger マーカー付き）*/}
+          <div data-confetti-trigger>
+            <WikiCtaBanner lang={lang} />
+          </div>
 
           {/* 関連記事 */}
           <RelatedArticles
@@ -709,6 +737,18 @@ export default async function WikiPage({
 
       {/* #23: モバイル スティッキー CTA バー（クライアント）*/}
       <MobileCtaBar href="https://bjj-app.net/login" cta={ctaLabel} />
+
+      {/* ── クライアントサイド拡張コンポーネント群 ── */}
+      {/* #27/#29/#30: 内部リンク・見出しアンカー・ライトボックス */}
+      <WikiContentEnhancer />
+      {/* #28: TOC スクロールスパイ */}
+      <TocScrollSpy items={toc} />
+      {/* #34: 読了時の紙吹雪エフェクト */}
+      <ConfettiEffect />
+      {/* #45: 読書位置の永続化 */}
+      <ReadPersistence slug={slug} />
+      {/* #50: コナミコード イースターエッグ */}
+      <EasterEgg />
     </div>
   );
 }
