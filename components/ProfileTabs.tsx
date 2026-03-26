@@ -6,6 +6,7 @@ import { useLocale } from "@/lib/i18n";
 import PersonalBests from "./PersonalBests";
 import ProfileForm from "./ProfileForm";
 import BodyManagementSection from "./BodyManagementSection";
+import TrainingChart from "./TrainingChart";
 
 function AccountSection({ userId }: { userId: string }) {
   const { t } = useLocale();
@@ -107,7 +108,15 @@ export default function ProfileTabs({ userId }: { userId: string }) {
           </button>
         ))}
       </div>
-      {activeTab === "stats"   && <PersonalBests userId={userId} />}
+      {activeTab === "stats"   && (
+        <>
+          <PersonalBests userId={userId} />
+          {/* Training calendar heatmap (moved from Dashboard ③-4) */}
+          <div className="mt-6">
+            <TrainingChart userId={userId} />
+          </div>
+        </>
+      )}
       {activeTab === "profile" && <ProfileForm userId={userId} hideAccount />}
       {activeTab === "body"    && <BodyManagementSection userId={userId} />}
       {activeTab === "account" && <AccountSection userId={userId} />}

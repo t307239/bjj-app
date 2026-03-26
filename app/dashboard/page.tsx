@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import TrainingLog from "@/components/TrainingLog";
-import TrainingChart from "@/components/TrainingChart";
+// TrainingChart moved to Profile/Analytics tab (③-4)
 import TrainingBarChart from "@/components/TrainingBarChart";
 import TrainingTypeChart from "@/components/TrainingTypeChart";
 import CompetitionStats from "@/components/CompetitionStats";
@@ -33,6 +33,29 @@ import {
 import { serverT as t } from "@/lib/i18n";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
+
+// ── Dynamic motivational message based on last training date ─────────────────
+function DashboardMotivation({ daysSince }: { daysSince: number | null }) {
+  if (daysSince === null) return null;
+
+  const config: { emoji: string; msg: string; color: string } =
+    daysSince === 0
+      ? { emoji: "🏆", msg: "今日も練習しました！最高のコンディションを維持して🔥", color: "text-emerald-300" }
+      : daysSince === 1
+      ? { emoji: "💪", msg: "昨日はお疲れ様でした！今日も道場に来ませんか？", color: "text-emerald-400" }
+      : daysSince <= 3
+      ? { emoji: "🎯", msg: `${daysSince}日空きました。今週あと1回！継続が力です。`, color: "text-yellow-300" }
+      : daysSince <= 7
+      ? { emoji: "🥋", msg: "道場があなたを待っています。また一緒に汗を流しましょう！", color: "text-orange-300" }
+      : { emoji: "👊", msg: "久しぶりですね。また道場に戻りましょう！", color: "text-red-300" };
+
+  return (
+    <div className="rounded-2xl border border-white/8 bg-zinc-900/40 px-5 py-4 flex items-center gap-4 mb-5">
+      <span className="text-2xl flex-shrink-0">{config.emoji}</span>
+      <p className={`text-sm font-medium leading-relaxed ${config.color}`}>{config.msg}</p>
+    </div>
+  );
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const supabase = await createClient();
@@ -288,8 +311,14 @@ export default async function DashboardPage({
     );
   }
 
-  // Calculate streak + trainedToday
+  // Days since last training log (for dynamic motivational message)
   const todayStr = getLocalDateString();
+  const lastLogDate = recentLogs?.[0]?.date ?? null;
+  const daysSinceLastLog: number | null = lastLogDate
+    ? Math.round((new Date(todayStr).getTime() - new Date(lastLogDate).getTime()) / 86400000)
+    : null;
+
+  // Calculate streak + trainedToday
   const trainedToday = recentLogs?.some((l: { date: string }) => l.date === todayStr) ?? false;
   let streak = 0;
   if (recentLogs && recentLogs.length > 0) {
@@ -718,20 +747,21 @@ export default async function DashboardPage({
             Hidden for new users with no logs yet
             ═══════════════════════════════════════════ */}
         {hasFirstLog ? (
-          <CollapsibleSection
-            label={t("dashboard.analyticsLabel")}
-            defaultOpen={false}
-            contentHint={t("dashboard.analyticsHint")}
-            cardTrigger
-          >
-            <TrainingBarChart userId={user.id} isPro={isPro} />
-            <TrainingTypeChart userId={user.id} isPro={isPro} />
-            <CompetitionStats userId={user.id} />
-            <TrainingChart
-              userId={user.id}
-              isPro={isPro}
-            />
-          </CollapsibleSection>
+          <>
+            {/* Dynamic motivational message */}
+            <DashboardMotivation daysSince={daysSinceLastLog} />
+            <CollapsibleSection
+              label={t("dashboard.analyticsLabel")}
+              defaultOpen={false}
+              contentHint={t("dashboard.analyticsHint")}
+              cardTrigger
+            >
+              <TrainingBarChart userId={user.id} isPro={isPro} />
+              <TrainingTypeChart userId={user.id} isPro={isPro} />
+              <CompetitionStats userId={user.id} />
+              {/* TrainingChart (heatmap) moved to Profile → Analytics tab */}
+            </CollapsibleSection>
+          </>
         ) : (
           /* Empty state: Day 1 ユーザー向けCTA */
           <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-8 text-center mb-7">
