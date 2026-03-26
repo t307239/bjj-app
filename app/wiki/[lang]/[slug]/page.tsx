@@ -158,9 +158,10 @@ function processHeadings(html: string): { html: string; toc: TocItem[] } {
 async function getWikiPage(lang: string, slug: string) {
   const supabase = await createClient();
 
+  // video_url は wiki_pages（言語共有）から取得
   const { data: pageData, error: pageError } = await supabase
     .from("wiki_pages")
-    .select("id")
+    .select("id, video_url")
     .eq("slug", slug)
     .single();
 
@@ -174,7 +175,7 @@ async function getWikiPage(lang: string, slug: string) {
     .single();
 
   if (error || !data) return null;
-  return data;
+  return { ...data, video_url: pageData.video_url as string | null };
 }
 
 // 同ジャンル関連記事を最大4件取得
@@ -349,6 +350,105 @@ function MobileTocAccordion({ items, lang }: { items: TocItem[]; lang: string })
         </ul>
       </div>
     </details>
+  );
+}
+
+// ─────────────────────────────────────────
+// Related Video セクション (#UGC)
+// Technique / Drill ページ専用。
+// - video_url あり: YouTube 埋め込み
+// - video_url なし: UGC "Submit Link" CTA
+// ─────────────────────────────────────────
+
+const VIDEO_CONTENT_TYPES = new Set(["Technique", "Drill"]);
+
+/** content_html に YouTube iframe が既に含まれているか */
+function hasVideoInContent(html: string): boolean {
+  return /youtube\.com\/embed|youtu\.be/i.test(html);
+}
+
+function RelatedVideoSection({
+  videoUrl,
+  contentType,
+  contentHtml,
+  slug,
+  lang,
+}: {
+  videoUrl: string | null;
+  contentType: string | null;
+  contentHtml: string;
+  slug: string;
+  lang: string;
+}) {
+  // Technique / Drill 以外は表示しない
+  if (!contentType || !VIDEO_CONTENT_TYPES.has(contentType)) return null;
+  // 本文に既にYouTube iframeがあれば重複を避ける
+  if (hasVideoInContent(contentHtml)) return null;
+
+  const headingLabel =
+    lang === "ja"
+      ? "関連動画"
+      : lang === "pt"
+      ? "Vídeo Relacionado"
+      : "Related Video";
+
+  const ugcLabel =
+    lang === "ja"
+      ? "このテクニックに合う動画を知っていますか？"
+      : lang === "pt"
+      ? "Conhece um bom vídeo para esta técnica?"
+      : "Know a good video for this technique?";
+
+  const ugcCta =
+    lang === "ja"
+      ? "動画リンクを送る →"
+      : lang === "pt"
+      ? "Enviar link de vídeo →"
+      : "Submit a video link →";
+
+  return (
+    <div className="mt-12 pt-8 border-t border-white/10">
+      <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+        🎬 {headingLabel}
+      </p>
+
+      {videoUrl ? (
+        /* ── YouTube 埋め込み ── */
+        <div className="relative w-full rounded-xl overflow-hidden border border-white/10 shadow-xl bg-black/30">
+          <div style={{ paddingBottom: "56.25%", position: "relative" }}>
+            <iframe
+              src={videoUrl}
+              title={headingLabel}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              loading="lazy"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                border: 0,
+              }}
+            />
+          </div>
+        </div>
+      ) : (
+        /* ── UGC フォールバック CTA ── */
+        <div className="flex items-start gap-4 rounded-xl border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-sm">
+          <span className="text-2xl shrink-0 mt-0.5">🎬</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm text-slate-300 mb-3">{ugcLabel}</p>
+            <Link
+              href={`https://bjj-app.net/wiki/submit-video?slug=${slug}&lang=${lang}`}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-pink-600/20 hover:bg-pink-600/30 border border-pink-500/30 px-4 py-2 text-sm font-medium text-pink-400 hover:text-pink-300 transition-colors"
+            >
+              {ugcCta}
+            </Link>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -689,6 +789,15 @@ export default async function WikiPage({
               dangerouslySetInnerHTML={{ __html: processedHtml }}
             />
           </article>
+
+          {/* #UGC: Related Video セクション（Technique/Drill のみ）*/}
+          <RelatedVideoSection
+            videoUrl={page.video_url ?? null}
+            contentType={page.content_type}
+            contentHtml={processedHtml}
+            slug={slug}
+            lang={lang}
+          />
 
           {/* #31: フィードバックウィジェット */}
           <FeedbackWidget lang={lang} />
