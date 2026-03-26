@@ -715,21 +715,57 @@ export default async function DashboardPage({
 
         {/* ═══════════════════════════════════════════
             SECTION 7 — ANALYTICS (collapsed by default)
+            Hidden for new users with no logs yet
             ═══════════════════════════════════════════ */}
-        <CollapsibleSection
-          label={t("dashboard.analyticsLabel")}
-          defaultOpen={false}
-          contentHint={t("dashboard.analyticsHint")}
-          cardTrigger
-        >
-          <TrainingBarChart userId={user.id} isPro={isPro} />
-          <TrainingTypeChart userId={user.id} isPro={isPro} />
-          <CompetitionStats userId={user.id} />
-          <TrainingChart
-            userId={user.id}
-            isPro={isPro}
-          />
-        </CollapsibleSection>
+        {hasFirstLog ? (
+          <CollapsibleSection
+            label={t("dashboard.analyticsLabel")}
+            defaultOpen={false}
+            contentHint={t("dashboard.analyticsHint")}
+            cardTrigger
+          >
+            <TrainingBarChart userId={user.id} isPro={isPro} />
+            <TrainingTypeChart userId={user.id} isPro={isPro} />
+            <CompetitionStats userId={user.id} />
+            <TrainingChart
+              userId={user.id}
+              isPro={isPro}
+            />
+          </CollapsibleSection>
+        ) : (
+          /* Empty state: Day 1 ユーザー向けCTA */
+          <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-8 text-center mb-7">
+            <div className="text-5xl mb-4">🔥</div>
+            <h2 className="text-white font-bold text-lg mb-2">
+              Log your first roll and start your streak!
+            </h2>
+            <p className="text-gray-400 text-sm mb-6 max-w-xs mx-auto">
+              Record today&apos;s training to unlock your analytics dashboard and keep the momentum going.
+            </p>
+            <button
+              onClick={() => {
+                const form = document.getElementById("training-log-form");
+                if (form) form.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="inline-flex items-center gap-2 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-semibold px-6 py-3 rounded-xl transition-all shadow-lg shadow-[#10B981]/20"
+            >
+              <span>+</span> Log Your First Roll
+            </button>
+            {/* Wiki 初心者リンク */}
+            <div className="mt-6 pt-5 border-t border-white/5">
+              <p className="text-zinc-500 text-xs mb-3">New to BJJ?</p>
+              <a
+                href="https://wiki.bjj-app.net/wiki/en/bjj-basics"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 border border-white/10 hover:border-white/20 text-gray-300 text-sm px-4 py-2.5 rounded-xl transition-all"
+              >
+                <span>📚</span>
+                <span>Start here: White Belt Fundamentals →</span>
+              </a>
+            </div>
+          </div>
+        )}
 
         {/* ═══════════════════════════════════════════
             SECTION 8 — INSIGHTS
