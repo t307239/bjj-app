@@ -81,7 +81,7 @@ function AccountSection({ userId }: { userId: string }) {
 
 type TabId = "stats" | "profile" | "body" | "account";
 
-export default function ProfileTabs({ userId }: { userId: string }) {
+export default function ProfileTabs({ userId, isPro = false }: { userId: string; isPro?: boolean }) {
   const { t } = useLocale();
   const [activeTab, setActiveTab] = useState<TabId>("stats");
   const TABS: { id: TabId; label: string }[] = [
@@ -113,7 +113,7 @@ export default function ProfileTabs({ userId }: { userId: string }) {
           <PersonalBests userId={userId} />
           {/* Training calendar heatmap (moved from Dashboard ③-4) */}
           <div className="mt-6">
-            <TrainingChart userId={userId} />
+            <TrainingChart userId={userId} isPro={isPro} />
           </div>
         </>
       )}

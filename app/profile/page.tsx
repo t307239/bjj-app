@@ -216,7 +216,7 @@ export default async function ProfilePage() {
         {/* ═══════════════════════════════════════════
             PROFILE TABS (stats / settings / account)
             ═══════════════════════════════════════════ */}
-        <ProfileTabs userId={user.id} />
+        <ProfileTabs userId={user.id} isPro={isPro} />
       </main>
     </div>
   );
