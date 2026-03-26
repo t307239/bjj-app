@@ -296,40 +296,88 @@ function OnThisPage({ items, lang }: { items: TocItem[]; lang: string }) {
 // ─────────────────────────────────────────
 
 function WikiCtaBanner({ lang }: { lang: string }) {
-  const messages: Record<Lang, { heading: string; sub: string; cta: string }> =
-    {
-      en: {
-        heading: "Track Your BJJ Progress",
-        sub: "Log sessions, monitor streaks & map your techniques — for free.",
-        cta: "Start for Free →",
-      },
-      ja: {
-        heading: "BJJの進捗をトラッキングしよう",
-        sub: "練習ログ・連続記録・テクニックマップを無料で管理。",
-        cta: "無料で始める →",
-      },
-      pt: {
-        heading: "Acompanhe seu Progresso no BJJ",
-        sub: "Registre sessões, monitore sequências e mapeie técnicas — de graça.",
-        cta: "Começar Grátis →",
-      },
-    };
+  const content: Record<
+    Lang,
+    { heading: string; sub: string; features: string[]; cta: string; sub2: string }
+  > = {
+    en: {
+      heading: "Take Your BJJ to the Next Level",
+      sub: "The free app built for serious grapplers.",
+      features: [
+        "📋 Log every training session",
+        "🔥 Build & protect your streak",
+        "🗺️ Map your technique progress",
+        "🏋️ Track weight & conditioning",
+      ],
+      cta: "Start Free — No Credit Card",
+      sub2: "Join 1,000+ grapplers already tracking",
+    },
+    ja: {
+      heading: "BJJを次のレベルへ",
+      sub: "本気の練習者のための無料アプリ。",
+      features: [
+        "📋 練習セッションを記録",
+        "🔥 連続記録を積み上げる",
+        "🗺️ テクニックの習得状況を可視化",
+        "🏋️ 体重・コンディションを管理",
+      ],
+      cta: "無料で始める（クレカ不要）",
+      sub2: "すでに1,000人以上が利用中",
+    },
+    pt: {
+      heading: "Leve seu BJJ ao Próximo Nível",
+      sub: "O app gratuito feito para grapplers sérios.",
+      features: [
+        "📋 Registre cada sessão de treino",
+        "🔥 Construa e proteja sua sequência",
+        "🗺️ Mapeie seu progresso técnico",
+        "🏋️ Acompanhe peso e condicionamento",
+      ],
+      cta: "Começar Grátis — Sem Cartão",
+      sub2: "Mais de 1.000 atletas já treinando",
+    },
+  };
 
-  const m = messages[lang as Lang] ?? messages.en;
+  const c = content[lang as Lang] ?? content.en;
 
   return (
-    <div className="my-10 rounded-2xl bg-gradient-to-br from-blue-900/60 to-indigo-900/60 border border-blue-700/40 p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-5 sm:gap-8">
-      <div className="shrink-0 text-5xl">🥋</div>
-      <div className="flex-1 text-center sm:text-left">
-        <p className="text-lg font-bold text-white mb-1">{m.heading}</p>
-        <p className="text-sm text-zinc-300">{m.sub}</p>
+    <div className="my-12 rounded-2xl bg-slate-900 border border-slate-700 overflow-hidden shadow-2xl">
+      {/* ヘッダーバー */}
+      <div className="bg-gradient-to-r from-pink-600/20 to-purple-600/20 border-b border-slate-700 px-6 py-3 flex items-center gap-2">
+        <span className="text-xl">🥋</span>
+        <span className="text-xs font-semibold text-pink-400 uppercase tracking-widest">
+          BJJ App
+        </span>
       </div>
-      <Link
-        href="https://bjj-app.net/login"
-        className="shrink-0 rounded-xl bg-blue-500 hover:bg-blue-400 transition-colors px-6 py-3 text-sm font-semibold text-white shadow-lg"
-      >
-        {m.cta}
-      </Link>
+
+      <div className="px-6 py-7 sm:px-8 sm:py-8">
+        <div className="sm:flex sm:items-start sm:gap-8">
+          {/* テキスト */}
+          <div className="flex-1 mb-6 sm:mb-0">
+            <h3 className="text-xl font-bold text-white mb-1">{c.heading}</h3>
+            <p className="text-sm text-slate-400 mb-5">{c.sub}</p>
+            <ul className="space-y-2">
+              {c.features.map((f) => (
+                <li key={f} className="flex items-center gap-2 text-sm text-slate-300">
+                  <span className="shrink-0">{f.slice(0, 2)}</span>
+                  <span>{f.slice(2).trim()}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* CTAボタン */}
+          <div className="flex flex-col items-center sm:items-end gap-3 shrink-0">
+            <Link
+              href="https://bjj-app.net/login"
+              className="inline-flex items-center justify-center rounded-xl bg-pink-600 hover:bg-pink-500 active:bg-pink-700 transition-colors px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-pink-900/30 whitespace-nowrap"
+            >
+              {c.cta}
+            </Link>
+            <p className="text-xs text-slate-500 text-center">{c.sub2}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -470,9 +518,10 @@ export default async function WikiPage({
               </p>
             )}
 
-            {/* Wiki コンテンツ */}
+            {/* Wiki コンテンツ（wiki-content クラスで globals.css のカスタム CSS を適用）*/}
             <div
               className="
+                wiki-content
                 prose prose-invert prose-zinc max-w-none
                 prose-headings:text-white prose-headings:font-bold
                 prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4
