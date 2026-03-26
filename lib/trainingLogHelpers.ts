@@ -84,3 +84,57 @@ export function buildXShareUrl(entry: { date: string; duration_min: number; type
   ].filter(Boolean).join("\n");
   return `https://x.com/intent/tweet?text=${encodeURIComponent(lines)}`;
 }
+
+// ── Roll Details encode/decode ────────────────────────────────────────────────
+
+export const ROLL_PREFIX = "__roll__";
+
+export type RollMeta = {
+  focus: string;
+  partner_belt: string;
+  size_diff: string;
+};
+
+/** Encodes roll details as a structured prefix to the notes field */
+export function encodeRollNotes(focus: string, partner_belt: string, size_diff: string, userNotes: string): string {
+  const hasMeta = focus || partner_belt || size_diff;
+  if (!hasMeta) return userNotes;
+  const meta: RollMeta = { focus, partner_belt, size_diff };
+  const jsonStr = JSON.stringify(meta);
+  return userNotes.trim()
+    ? `${ROLL_PREFIX}${jsonStr}\n${userNotes}`
+    : `${ROLL_PREFIX}${jsonStr}`;
+}
+
+/** Decodes roll details from a notes string */
+export function decodeRollNotes(notes: string): { roll: RollMeta | null; userNotes: string } {
+  if (!notes || !notes.startsWith(ROLL_PREFIX)) return { roll: null, userNotes: notes };
+  const nl = notes.indexOf("\n");
+  const jsonStr = nl === -1 ? notes.slice(ROLL_PREFIX.length) : notes.slice(ROLL_PREFIX.length, nl);
+  const userNotes = nl === -1 ? "" : notes.slice(nl + 1);
+  try {
+    const roll = JSON.parse(jsonStr) as RollMeta;
+    return { roll, userNotes };
+  } catch {
+    return { roll: null, userNotes: notes };
+  }
+}
+
+/** Formats roll meta as a human-readable badge string */
+export function formatRollBadge(roll: RollMeta): string {
+  const FOCUS_EMOJI: Record<string, string> = {
+    flow: "Flow 🌊", positional: "Positional 🎯", hard: "Hard Roll 🔥", survival: "Survival 🛡️",
+  };
+  const BELT_LABEL: Record<string, string> = {
+    white: "White Belt", blue: "Blue Belt", purple: "Purple Belt", brown: "Brown Belt", black: "Black Belt",
+  };
+  const SIZE_LABEL: Record<string, string> = {
+    heavier: "Heavier ↑", similar: "Similar —", lighter: "Lighter ↓",
+  };
+  const parts = [
+    roll.focus ? FOCUS_EMOJI[roll.focus] : null,
+    roll.partner_belt ? BELT_LABEL[roll.partner_belt] : null,
+    roll.size_diff ? SIZE_LABEL[roll.size_diff] : null,
+  ].filter(Boolean);
+  return parts.length > 0 ? `[Roll: ${parts.join(" · ")}]` : "";
+}

@@ -17,6 +17,7 @@ import {
   getLocalDateString,
   encodeCompNotes,
   decodeCompNotes,
+  encodeRollNotes,
 } from "@/lib/trainingLogHelpers";
 import { getLocalDateParts } from "@/lib/timezone";
 
@@ -235,6 +236,9 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     instructor_name: "",
     partner_username: "",   // B-09: sparring partner tag
     weight: "",             // Body Management: post-training weight (kg)
+    roll_focus: "",         // Roll Details: Focus theme (gi/nogi only)
+    partner_belt: "",       // Roll Details: Partner belt color
+    size_diff: "",          // Roll Details: Partner size diff
   });
 
   // #72: detect ?addLog=YYYY-MM-DD from calendar empty-day click
@@ -369,7 +373,9 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
 
     const finalNotes = form.type === "competition"
       ? encodeCompNotes(compForm, form.notes)
-      : form.notes;
+      : (form.type === "gi" || form.type === "nogi")
+        ? encodeRollNotes(form.roll_focus, form.partner_belt, form.size_diff, form.notes)
+        : form.notes;
 
     // Optimistic UI
     const optimisticId = `optimistic-${Date.now()}`;
@@ -384,7 +390,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     setEntries((prev) => [optimisticEntry, ...prev]);
     setTrainedToday(true);
     setShowForm(false);
-    setForm({ date: getLocalDateString(), duration_min: 60, type: "gi", notes: "", instructor_name: "", partner_username: "", weight: "" });
+    setForm({ date: getLocalDateString(), duration_min: 60, type: "gi", notes: "", instructor_name: "", partner_username: "", weight: "", roll_focus: "", partner_belt: "", size_diff: "" });
     setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
 
     // Parse weight: convert non-empty string to number, otherwise null

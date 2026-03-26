@@ -8,6 +8,30 @@ import { type CompData, BELT_RANKS } from "@/lib/trainingLogHelpers";
 
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
 
+// ── Roll Focus themes ────────────────────────────────────────────────────────
+const ROLL_FOCUS_OPTIONS = [
+  { value: "flow",       label: "Flow",       emoji: "🌊" },
+  { value: "positional", label: "Positional", emoji: "🎯" },
+  { value: "hard",       label: "Hard Roll",  emoji: "🔥" },
+  { value: "survival",   label: "Survival",   emoji: "🛡️" },
+] as const;
+
+// ── Partner belt colors (visual circles) ─────────────────────────────────────
+const PARTNER_BELT_OPTIONS = [
+  { value: "white",  label: "White",  bg: "bg-zinc-100",       ring: "ring-zinc-400",   text: "text-zinc-900" },
+  { value: "blue",   label: "Blue",   bg: "bg-blue-600",       ring: "ring-blue-400",   text: "text-white" },
+  { value: "purple", label: "Purple", bg: "bg-purple-600",     ring: "ring-purple-400", text: "text-white" },
+  { value: "brown",  label: "Brown",  bg: "bg-amber-800",      ring: "ring-amber-600",  text: "text-white" },
+  { value: "black",  label: "Black",  bg: "bg-zinc-950 border border-zinc-600", ring: "ring-zinc-500", text: "text-white" },
+] as const;
+
+// ── Size diff options ─────────────────────────────────────────────────────────
+const SIZE_DIFF_OPTIONS = [
+  { value: "heavier", label: "Heavier", icon: "↑" },
+  { value: "similar", label: "Similar", icon: "—" },
+  { value: "lighter", label: "Lighter", icon: "↓" },
+] as const;
+
 type FormState = {
   date: string;
   duration_min: number;
@@ -18,6 +42,10 @@ type FormState = {
   partner_username: string;
   /** Body Management: post-training weight in kg (stored in training_logs.weight) */
   weight: string;
+  /** Roll details (encoded into notes on submit for gi/nogi sessions) */
+  roll_focus: string;
+  partner_belt: string;
+  size_diff: string;
 };
 
 // ── DurationPicker (inline — extracted from TrainingLog) ─────────────────────
@@ -356,6 +384,80 @@ const TrainingLogForm = memo(function TrainingLogForm({
           />
         </div>
       </div>
+
+      {/* ── Roll Details: shown only for Gi / No-Gi sparring sessions ─────── */}
+      {(form.type === "gi" || form.type === "nogi") && (
+        <div className="mb-3 bg-zinc-800/40 border border-white/8 rounded-xl p-3 space-y-3">
+          <p className="text-xs font-semibold text-zinc-400 tracking-wide">🤼 Roll Details <span className="font-normal text-zinc-600">(optional)</span></p>
+
+          {/* Focus theme */}
+          <div>
+            <p className="text-[11px] text-zinc-500 mb-1.5">Focus</p>
+            <div className="grid grid-cols-4 gap-1.5">
+              {ROLL_FOCUS_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setForm({ ...form, roll_focus: form.roll_focus === opt.value ? "" : opt.value })}
+                  className={`flex flex-col items-center gap-0.5 min-h-[52px] rounded-xl border text-xs font-semibold transition-all active:scale-95 ${
+                    form.roll_focus === opt.value
+                      ? "bg-emerald-900/30 border-emerald-500/50 text-emerald-300"
+                      : "bg-zinc-800/60 border-white/10 text-zinc-500 hover:border-white/20 hover:text-zinc-300"
+                  }`}
+                >
+                  <span className="text-lg leading-none mt-2">{opt.emoji}</span>
+                  <span className="text-[10px] leading-tight">{opt.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Partner belt color */}
+          <div>
+            <p className="text-[11px] text-zinc-500 mb-1.5">Partner Belt</p>
+            <div className="flex gap-2">
+              {PARTNER_BELT_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setForm({ ...form, partner_belt: form.partner_belt === opt.value ? "" : opt.value })}
+                  className={`relative flex-1 flex flex-col items-center gap-1 min-h-[52px] rounded-xl border transition-all active:scale-95 ${
+                    form.partner_belt === opt.value
+                      ? `border-white/40 ring-2 ${opt.ring} bg-zinc-800`
+                      : "border-white/10 bg-zinc-800/60 hover:border-white/20"
+                  }`}
+                  title={opt.label}
+                >
+                  <span className={`w-6 h-6 rounded-full ${opt.bg} inline-block mt-2.5`} />
+                  <span className="text-[9px] text-zinc-500 leading-none mb-1">{opt.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Size diff */}
+          <div>
+            <p className="text-[11px] text-zinc-500 mb-1.5">Partner Size</p>
+            <div className="grid grid-cols-3 gap-1.5">
+              {SIZE_DIFF_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setForm({ ...form, size_diff: form.size_diff === opt.value ? "" : opt.value })}
+                  className={`flex flex-col items-center gap-0.5 min-h-[48px] rounded-xl border text-xs font-semibold transition-all active:scale-95 ${
+                    form.size_diff === opt.value
+                      ? "bg-zinc-700/60 border-zinc-400/50 text-zinc-200"
+                      : "bg-zinc-800/60 border-white/10 text-zinc-500 hover:border-white/20 hover:text-zinc-300"
+                  }`}
+                >
+                  <span className="text-lg leading-none mt-2 font-bold">{opt.icon}</span>
+                  <span className="text-[10px]">{opt.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Post-training weight (optional) */}
       <div className="mb-3">
