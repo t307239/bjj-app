@@ -427,10 +427,21 @@ function RelatedVideoSection({
 
       {videoUrl ? (
         /* ── YouTube Lite Embed（LCP保護 - サムネイル → クリックで iframe）── */
-        <YouTubeLiteEmbed
-          videoId={videoUrl.replace(/.*embed\//, "").split("?")[0]}
-          title={headingLabel}
-        />
+        (() => {
+          // Shorts URL: https://www.youtube.com/shorts/xxxxx
+          const shortsMatch = videoUrl.match(/\/shorts\/([A-Za-z0-9_-]+)/);
+          // Embed URL: https://www.youtube.com/embed/xxxxx
+          const embedMatch = videoUrl.match(/embed\/([A-Za-z0-9_-]+)/);
+          const videoId = shortsMatch?.[1] ?? embedMatch?.[1] ?? videoUrl.replace(/.*embed\//, "").split("?")[0];
+          const isShorts = !!shortsMatch;
+          return (
+            <YouTubeLiteEmbed
+              videoId={videoId}
+              title={headingLabel}
+              isShorts={isShorts}
+            />
+          );
+        })()
       ) : (
         /* ── UGC フォールバック CTA（インラインフォーム）── */
         <UgcVideoSubmit
