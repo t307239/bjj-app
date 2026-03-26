@@ -105,9 +105,9 @@ export default async function TagArchivePage({
   const l = labels[lang as Lang] ?? labels.en;
 
   return (
-    <div className="min-h-screen bg-[#0B1120] text-white">
+    <div className="min-h-screen bg-[#0f172a] text-white">
       {/* Sticky header / breadcrumb */}
-      <header className="border-b border-slate-800/60 bg-[#0B1120]/95 backdrop-blur-sm sticky top-0 z-30">
+      <header className="border-b border-white/10 bg-[#0f172a]/95 backdrop-blur-sm sticky top-0 z-30">
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center gap-2 text-sm">
           <Link
             href={`/wiki/${lang}`}
@@ -130,7 +130,7 @@ export default async function TagArchivePage({
         </p>
 
         {/* Lang switcher */}
-        <div className="inline-flex items-center bg-slate-800/80 rounded-full p-1 gap-0.5 mb-8 border border-slate-700/50">
+        <div className="inline-flex items-center bg-white/5 rounded-full p-1 gap-0.5 mb-8 border border-white/10">
           {VALID_LANGS.map((l) => (
             <Link
               key={l}
@@ -164,7 +164,7 @@ export default async function TagArchivePage({
               <Link
                 key={a.slug}
                 href={`/wiki/${lang}/${a.slug}`}
-                className="group rounded-xl border border-slate-700/60 bg-slate-800/40 px-5 py-4 hover:border-slate-600 hover:bg-slate-800/70 hover:-translate-y-0.5 transition-all duration-150"
+                className="group rounded-xl border border-white/10 bg-white/5 px-5 py-4 hover:border-white/20 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all duration-150"
               >
                 <h2 className="text-sm font-semibold text-slate-200 group-hover:text-white line-clamp-2 transition-colors leading-snug mb-2">
                   {a.title}
@@ -181,7 +181,7 @@ export default async function TagArchivePage({
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/60 py-8 mt-8">
+      <footer className="border-t border-white/10 py-8 mt-8">
         <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
           <p>© {new Date().getFullYear()} BJJ Wiki — All rights reserved.</p>
           <a href="https://bjj-app.net" className="hover:text-slate-400 transition-colors">

@@ -290,7 +290,7 @@ function OnThisPage({ items, lang }: { items: TocItem[]; lang: string }) {
       <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
         {label}
       </p>
-      <ul className="space-y-1 border-l border-slate-800 pl-3">
+      <ul className="space-y-1 border-l border-white/10 pl-3">
         {items.map((item) => (
           <li key={item.id} className={item.level === 3 ? "pl-3" : ""}>
             <a
@@ -461,7 +461,7 @@ function RelatedArticles({
   const cfg = contentType ? BADGE_CONFIG[contentType as ContentType] : null;
 
   return (
-    <div className="mt-10 pt-8 border-t border-slate-800/60">
+    <div className="mt-10 pt-8 border-t border-white/10">
       <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
         {cfg ? `${cfg.emoji} More ${cfg.label}` : "Related Articles"}
       </p>
@@ -564,7 +564,7 @@ export default async function WikiPage({
   };
 
   return (
-    <div className="min-h-screen bg-[#0B1120] text-white">
+    <div className="min-h-screen bg-[#0f172a] text-white">
       {/* #19: JSON-LD 構造化データ */}
       <script
         type="application/ld+json"
@@ -579,7 +579,7 @@ export default async function WikiPage({
       <ScrollProgressBar />
 
       {/* パンくずリスト */}
-      <header className="border-b border-slate-800/60 bg-[#0B1120]/95 backdrop-blur-sm sticky top-0 z-30">
+      <header className="border-b border-white/10 bg-[#0f172a]/95 backdrop-blur-sm sticky top-0 z-30">
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center gap-2 text-sm">
           <a
             href={`/wiki/${lang}`}
@@ -720,7 +720,7 @@ export default async function WikiPage({
       </div>
 
       {/* #10: フッター（クリーンアップ）*/}
-      <footer className="border-t border-slate-800/60 py-8 mt-4">
+      <footer className="border-t border-white/10 py-8 mt-4">
         <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
           <p>© {new Date().getFullYear()} BJJ Wiki — All rights reserved.</p>
           <a

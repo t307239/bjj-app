@@ -5,9 +5,9 @@
  */
 export default function WikiPageLoading() {
   return (
-    <div className="min-h-screen bg-[#0B1120] text-white">
+    <div className="min-h-screen bg-[#0f172a] text-white">
       {/* Fake sticky header */}
-      <div className="border-b border-slate-800/60 bg-[#0B1120]/95 py-3 px-4">
+      <div className="border-b border-white/10 bg-[#0f172a]/95 py-3 px-4">
         <div className="mx-auto max-w-7xl flex items-center gap-2">
           <div className="h-4 w-16 rounded bg-slate-800 animate-pulse" />
           <span className="text-slate-800">/</span>
@@ -77,7 +77,7 @@ export default function WikiPageLoading() {
           <div className="mt-12 h-44 w-full rounded-2xl bg-slate-800/40 animate-pulse" />
 
           {/* Related articles skeleton */}
-          <div className="mt-10 pt-8 border-t border-slate-800/60">
+          <div className="mt-10 pt-8 border-t border-white/10">
             <div className="h-3 w-32 rounded bg-slate-800 animate-pulse mb-4" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[...Array(4)].map((_, i) => (
