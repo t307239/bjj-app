@@ -12,6 +12,8 @@ import ShareButton from "./ShareButton";
 import ConfettiEffect from "./ConfettiEffect";
 import ReadPersistence from "./ReadPersistence";
 import EasterEgg from "./EasterEgg";
+import YouTubeLiteEmbed from "./YouTubeLiteEmbed";
+import UgcVideoSubmit from "./UgcVideoSubmit";
 
 export const revalidate = 3600;
 
@@ -424,40 +426,19 @@ function RelatedVideoSection({
       </p>
 
       {videoUrl ? (
-        /* ── YouTube 埋め込み ── */
-        <div className="relative w-full rounded-xl overflow-hidden border border-white/10 shadow-xl bg-black/30">
-          <div style={{ paddingBottom: "56.25%", position: "relative" }}>
-            <iframe
-              src={videoUrl}
-              title={headingLabel}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              loading="lazy"
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                border: 0,
-              }}
-            />
-          </div>
-        </div>
+        /* ── YouTube Lite Embed（LCP保護 - サムネイル → クリックで iframe）── */
+        <YouTubeLiteEmbed
+          videoId={videoUrl.replace(/.*embed\//, "").split("?")[0]}
+          title={headingLabel}
+        />
       ) : (
-        /* ── UGC フォールバック CTA ── */
-        <div className="flex items-start gap-4 rounded-xl border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-sm">
-          <span className="text-2xl shrink-0 mt-0.5">🎬</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm text-slate-300 mb-3">{ugcLabel}</p>
-            <Link
-              href={`https://bjj-app.net/wiki/submit-video?slug=${slug}&lang=${lang}`}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-pink-600/20 hover:bg-pink-600/30 border border-pink-500/30 px-4 py-2 text-sm font-medium text-pink-400 hover:text-pink-300 transition-colors"
-            >
-              {ugcCta}
-            </Link>
-          </div>
-        </div>
+        /* ── UGC フォールバック CTA（インラインフォーム）── */
+        <UgcVideoSubmit
+          slug={slug}
+          lang={lang}
+          ugcLabel={ugcLabel}
+          ugcCta={ugcCta}
+        />
       )}
     </div>
   );
