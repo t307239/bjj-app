@@ -12,6 +12,7 @@ type TechniqueNode = {
   user_id: string;
   name: string;
   description: string | null;
+  mastery_level?: number; // 0=Locked, 1=Learning, 2=Mastered (added via migration)
   created_at: string;
 };
 
@@ -297,6 +298,30 @@ function ConnectEdgeModal({
   );
 }
 
+// ─── Mastery level helpers ────────────────────────────────────────────────────
+
+function masteryDotClass(level: number | undefined): string {
+  if (level === 2) return "bg-emerald-400";
+  if (level === 1) return "bg-blue-400";
+  return "bg-zinc-500"; // 0 or undefined = Locked
+}
+
+function MasteryLegend() {
+  return (
+    <div className="flex items-center gap-3 mb-3 px-1">
+      <span className="flex items-center gap-1.5 text-[10px] text-zinc-500">
+        <span className="w-2 h-2 rounded-full bg-zinc-500 inline-block" /> Locked
+      </span>
+      <span className="flex items-center gap-1.5 text-[10px] text-zinc-500">
+        <span className="w-2 h-2 rounded-full bg-blue-400 inline-block" /> Learning
+      </span>
+      <span className="flex items-center gap-1.5 text-[10px] text-zinc-500">
+        <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" /> Mastered
+      </span>
+    </div>
+  );
+}
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function SkillMapMobile({ userId, isPro, stripePaymentLink, stripeAnnualLink }: Props) {
@@ -325,7 +350,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink, strip
     const [nodesRes, edgesRes] = await Promise.all([
       supabase
         .from("technique_nodes")
-        .select("id, user_id, name, description, pos_x, pos_y, created_at")
+        .select("id, user_id, name, description, pos_x, pos_y, mastery_level, created_at")
         .eq("user_id", userId)
         .order("created_at", { ascending: true }),
       supabase
@@ -568,11 +593,17 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink, strip
         {/* Current node card */}
         <div className="bg-zinc-800 border border-white/10 rounded-xl p-4 mb-4">
           <div className="flex items-start justify-between gap-2">
-            <div>
-              <h3 className="text-base font-bold text-white">{currentNode.name}</h3>
-              {currentNode.description && (
-                <p className="text-xs text-gray-400 mt-1">{currentNode.description}</p>
-              )}
+            <div className="flex items-start gap-2.5">
+              <span
+                className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${masteryDotClass(currentNode.mastery_level)}`}
+                aria-hidden="true"
+              />
+              <div>
+                <h3 className="text-base font-bold text-white">{currentNode.name}</h3>
+                {currentNode.description && (
+                  <p className="text-xs text-gray-400 mt-1">{currentNode.description}</p>
+                )}
+              </div>
             </div>
             {isPro && confirmDeleteNodeId === currentNode.id ? (
               <span className="flex items-center gap-1.5 flex-shrink-0 mt-0.5">
@@ -695,6 +726,9 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink, strip
 
   return (
     <div className="pb-4">
+      {/* Mastery legend */}
+      <MasteryLegend />
+
       {/* Tab switcher: Roots | All */}
       <div className="flex bg-zinc-800 rounded-xl p-1 mb-4">
         <button
@@ -735,6 +769,11 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink, strip
                 className="w-full flex items-center gap-3 bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xl px-4 py-3 text-left transition-colors"
                 aria-label={`${t("skillmap.openNode")}: ${node.name}`}
               >
+                {/* Mastery dot */}
+                <span
+                  className={`w-2 h-2 rounded-full flex-shrink-0 ${masteryDotClass(node.mastery_level)}`}
+                  aria-hidden="true"
+                />
                 <div className="flex-1 min-w-0">
                   <span className="text-sm font-medium text-white block truncate">{node.name}</span>
                   {node.description && (

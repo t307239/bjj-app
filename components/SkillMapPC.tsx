@@ -32,6 +32,7 @@ type TechniqueNode = {
   description: string | null;
   pos_x: number;
   pos_y: number;
+  mastery_level?: number; // 0=Locked, 1=Learning, 2=Mastered (added via migration)
   created_at: string;
 };
 
@@ -289,6 +290,35 @@ function AddNodeInput({
   );
 }
 
+// ─── Mastery level → node border/bg class ─────────────────────────────────────
+
+function masteryNodeClass(level: number | undefined): string {
+  if (level === 2) return "bg-emerald-500/10 border-emerald-500/40";
+  if (level === 1) return "bg-blue-500/10 border-blue-500/40";
+  return "bg-zinc-800 border-white/20"; // 0 or undefined = Locked
+}
+
+// ─── Canvas Legend ─────────────────────────────────────────────────────────────
+
+function SkillMapLegend() {
+  return (
+    <div className="absolute bottom-2 left-3 flex items-center gap-3 bg-zinc-900/80 border border-white/10 backdrop-blur-sm rounded-lg px-3 py-1.5 pointer-events-none select-none">
+      <span className="flex items-center gap-1.5 text-[10px] text-zinc-400">
+        <span className="w-2.5 h-2.5 rounded-sm border border-zinc-500/60 bg-zinc-800 inline-block flex-shrink-0" />
+        Locked
+      </span>
+      <span className="flex items-center gap-1.5 text-[10px] text-zinc-400">
+        <span className="w-2.5 h-2.5 rounded-sm border border-blue-500/40 bg-blue-500/10 inline-block flex-shrink-0" />
+        Learning
+      </span>
+      <span className="flex items-center gap-1.5 text-[10px] text-zinc-400">
+        <span className="w-2.5 h-2.5 rounded-sm border border-emerald-500/40 bg-emerald-500/10 inline-block flex-shrink-0" />
+        Mastered
+      </span>
+    </div>
+  );
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnnualLink }: Props) {
@@ -330,7 +360,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnn
   // ── Load data ───────────────────────────────────────────────────────────
   const loadData = useCallback(async () => {
     const [nr, er] = await Promise.all([
-      supabase.from("technique_nodes").select("id, user_id, name, description, pos_x, pos_y, created_at").eq("user_id", userId).order("created_at"),
+      supabase.from("technique_nodes").select("id, user_id, name, description, pos_x, pos_y, mastery_level, created_at").eq("user_id", userId).order("created_at"),
       supabase.from("technique_edges").select("id, source_id, target_id, label").eq("user_id", userId),
     ]);
     if (!nr.error) setNodes(nr.data ?? []);
@@ -586,21 +616,25 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnn
       {/* Toolbar */}
       <div className="flex items-center gap-3 mb-3 px-1">
         <span className="text-xs text-gray-500">{t("skillmap.pcHint")}</span>
-        <div className="ml-auto flex items-center gap-1">
-          <button
-            onClick={() => setZoom((z) => Math.min(MAX_ZOOM, z + 0.1))}
-            className="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-sm flex items-center justify-center"
-            aria-label={t("common.zoomIn")}
-          >+</button>
-          <span className="text-xs text-gray-500 w-12 text-center">{Math.round(zoom * 100)}%</span>
-          <button
-            onClick={() => setZoom((z) => Math.max(MIN_ZOOM, z - 0.1))}
-            className="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-sm flex items-center justify-center"
-            aria-label={t("common.zoomOut")}
-          >−</button>
+        <div className="ml-auto flex items-center gap-2">
+          {/* Zoom controls — glass container */}
+          <div className="flex items-center gap-1 bg-zinc-900/80 border border-white/10 backdrop-blur-sm rounded-xl px-2 py-1">
+            <button
+              onClick={() => setZoom((z) => Math.min(MAX_ZOOM, z + 0.1))}
+              className="w-6 h-6 hover:bg-zinc-700 text-white rounded-md text-sm flex items-center justify-center transition-colors"
+              aria-label={t("common.zoomIn")}
+            >+</button>
+            <span className="text-xs text-gray-400 w-12 text-center tabular-nums">{Math.round(zoom * 100)}%</span>
+            <button
+              onClick={() => setZoom((z) => Math.max(MIN_ZOOM, z - 0.1))}
+              className="w-6 h-6 hover:bg-zinc-700 text-white rounded-md text-sm flex items-center justify-center transition-colors"
+              aria-label={t("common.zoomOut")}
+            >−</button>
+          </div>
+          {/* Reset View — glass button */}
           <button
             onClick={() => { setPanX(40); setPanY(40); setZoom(1); }}
-            className="ml-2 text-xs text-gray-500 hover:text-gray-300"
+            className="text-xs text-gray-400 hover:text-white bg-zinc-800/80 border border-white/10 backdrop-blur-sm rounded-lg px-2 py-1 transition-all"
             aria-label={t("skillmap.resetView")}
           >{t("skillmap.resetView")}</button>
         </div>
@@ -618,7 +652,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnn
         style={{
           height: Math.min(Math.max(nodes.length * 60 + 120, 280), 440),
           cursor: isPanning ? "grabbing" : connectingFrom ? "crosshair" : "grab",
-          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
+          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
         }}
         onMouseDown={onBgMouseDown}
@@ -720,8 +754,8 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnn
                   isConnectSrc
                     ? "bg-[#6366f1]/20 border-[#6366f1]"
                     : connectingFrom
-                      ? "bg-zinc-800 border-white/20 hover:border-emerald-400/80 hover:bg-emerald-500/10 cursor-crosshair"
-                      : "bg-zinc-800 border-white/20 hover:border-[#6366f1]/60"
+                      ? `${masteryNodeClass(node.mastery_level)} hover:border-emerald-400/80 hover:bg-emerald-500/10 cursor-crosshair`
+                      : `${masteryNodeClass(node.mastery_level)} hover:border-[#6366f1]/60`
                 } ${!connectingFrom && isPro ? "cursor-move" : ""}`}
               >
                 {/* Node label */}
@@ -820,6 +854,9 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnn
           tabIndex={0}
           aria-label={t("skillmap.canvasShortcuts")}
         />
+
+        {/* Legend — bottom-left */}
+        <SkillMapLegend />
 
         {/* Helper hint — absolute overlay at bottom-right of canvas */}
         <p className="absolute bottom-2 right-3 text-[11px] text-zinc-500 pointer-events-none select-none">
