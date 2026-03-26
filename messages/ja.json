@@ -232,6 +232,9 @@
     "appSettings": "アプリ設定",
     "settingsSoon": "設定は近日追加予定です。",
     "dangerZone": "危険ゾーン",
+    "gymLeadTitle": "道場を経営していますか？",
+    "gymLeadDesc": "道場ページを作成してQR招待コードを発行し、生徒の練習進捗を管理できます。",
+    "gymLeadCta": "道場を登録する →",
     "tabs": {
       "stats": "統計",
       "profile": "プロフィール",
@@ -732,7 +735,15 @@
     "useBtn": "❄️ フリーズを使う（残{n}回）",
     "zeroRemaining": "ストリークフリーズ：残0回",
     "getUnlimited": "ProでフリーズUse無制限に",
-    "goPro": "Proへ ↗"
+    "goPro": "Proへ ↗",
+    "paywallTitle": "{n}日連続記録を守る",
+    "paywallSubtitle": "ストリークフリーズはPro機能です。アップグレードで無制限に利用できます。",
+    "paywallPoint1": "ストリークフリーズ無制限",
+    "paywallPoint2": "練習ヒートマップ＆分析",
+    "paywallPoint3": "ボディ＆ケガトラッカー",
+    "paywallPoint4": "ロール分析（近日公開）",
+    "paywallCta": "Proにアップグレード — $4.99/月",
+    "paywallDismiss": "またあとで"
   },
   "affiliate": {
     "title": "おすすめインストラクショナル",

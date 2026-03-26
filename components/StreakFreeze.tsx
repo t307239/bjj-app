@@ -10,6 +10,101 @@ const STRIPE_PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
 
 type Props = { userId: string; streak: number };
 
+// Paywall modal displayed when non-Pro user with 0 freezes clicks upgrade
+function FreezePaywallModal({
+  streak,
+  userId,
+  onClose,
+}: {
+  streak: number;
+  userId: string;
+  onClose: () => void;
+}) {
+  const { t } = useLocale();
+  const href = userId
+    ? `${STRIPE_PAYMENT_LINK}?client_reference_id=${userId}`
+    : STRIPE_PAYMENT_LINK;
+
+  const points = [
+    t("freeze.paywallPoint1"),
+    t("freeze.paywallPoint2"),
+    t("freeze.paywallPoint3"),
+    t("freeze.paywallPoint4"),
+  ];
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-sm mx-4 mb-4 sm:mb-0 bg-zinc-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="relative bg-gradient-to-br from-zinc-900 via-emerald-950/40 to-zinc-900 px-5 pt-6 pb-5 text-center">
+          <button
+            onClick={onClose}
+            className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center text-gray-500 hover:text-gray-300 rounded-full hover:bg-white/10 transition-colors"
+            aria-label={t("common.close")}
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          {/* Animated streak + freeze icons */}
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <span className="text-4xl animate-pulse">🔥</span>
+            <span className="text-3xl font-black text-white tabular-nums">{streak}</span>
+            <span className="text-4xl opacity-40">❄️</span>
+          </div>
+          <h2 className="text-base font-bold text-white mb-1">
+            {t("freeze.paywallTitle", { n: streak })}
+          </h2>
+          <p className="text-xs text-gray-400 leading-relaxed">
+            {t("freeze.paywallSubtitle")}
+          </p>
+        </div>
+
+        {/* Pro benefits */}
+        <div className="px-5 py-4 border-t border-white/5">
+          <ul className="space-y-2">
+            {points.map((point, i) => (
+              <li key={i} className="flex items-center gap-2.5 text-sm">
+                <span className="text-emerald-400 text-base leading-none">✓</span>
+                <span className={i === 3 ? "text-gray-500" : "text-gray-200"}>{point}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* CTA */}
+        <div className="px-5 pb-5 pt-2 space-y-2">
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => {
+              if (typeof gtag !== "undefined") {
+                gtag("event", "upgrade_click", { feature: "streak_freeze_paywall" });
+              }
+            }}
+            className="block w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm text-center transition-colors active:scale-95"
+          >
+            {t("freeze.paywallCta")}
+          </a>
+          <button
+            onClick={onClose}
+            className="block w-full py-2 text-xs text-gray-500 hover:text-gray-300 transition-colors"
+          >
+            {t("freeze.paywallDismiss")}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // streak_freeze_last_used カラムを JSON 配列文字列として再利用
 // 例: '["2026-03-17","2026-03-15","2026-03-10"]'
 // 旧形式（"2026-03-17" 単独文字列）は後方互換で処理
@@ -39,6 +134,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [dismissed, setDismissed] = useState(false);
   const [isPro, setIsPro] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
 
   const supabase = createClient();
 
@@ -116,6 +212,14 @@ export default function StreakFreeze({ userId, streak }: Props) {
 
   return (
     <>
+      {showPaywall && (
+        <FreezePaywallModal
+          streak={streak}
+          userId={userId}
+          onClose={() => setShowPaywall(false)}
+        />
+      )}
+
       {toast && (
         <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
       )}
@@ -204,7 +308,7 @@ export default function StreakFreeze({ userId, streak }: Props) {
         </div>
       )}
 
-      {/* Freeze count 0 → Pro upgrade CTA */}
+      {/* Freeze count 0 → Pro upgrade CTA (opens PaywallModal) */}
       {showStatus && freezeCount === 0 && !isPro && streak >= 3 && (
         <div className="bg-zinc-900 rounded-xl px-4 py-3 mb-4 border border-[#10B981]/20">
           <div className="flex items-center justify-between">
@@ -215,19 +319,12 @@ export default function StreakFreeze({ userId, streak }: Props) {
                 <p className="text-xs text-gray-500">{t("freeze.getUnlimited")}</p>
               </div>
             </div>
-            <a
-              href={userId ? `${STRIPE_PAYMENT_LINK}?client_reference_id=${userId}` : STRIPE_PAYMENT_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs bg-yellow-500 hover:bg-yellow-400 text-black px-4 py-2.5 rounded-lg transition-colors font-semibold whitespace-nowrap min-h-[44px] flex items-center"
-              onClick={() => {
-                if (typeof gtag !== "undefined") {
-                  gtag("event", "upgrade_click", { feature: "streak_freeze_refill" });
-                }
-              }}
+            <button
+              onClick={() => setShowPaywall(true)}
+              className="text-xs bg-yellow-500 hover:bg-yellow-400 text-black px-4 py-2.5 rounded-lg transition-colors font-semibold whitespace-nowrap min-h-[44px] flex items-center active:scale-95"
             >
               {t("freeze.goPro")}
-            </a>
+            </button>
           </div>
         </div>
       )}

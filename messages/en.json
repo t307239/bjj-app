@@ -327,7 +327,10 @@
     "pushEnabled": "✅ Notifications on",
     "pushBlocked": "Notifications blocked by browser. Enable in your device settings.",
     "pushNotSupported": "Push notifications are not supported on this browser/device.",
-    "ariaPushToggle": "Toggle push notifications"
+    "ariaPushToggle": "Toggle push notifications",
+    "gymLeadTitle": "Running a gym?",
+    "gymLeadDesc": "Create your academy page, get a QR invite code, and track your students' progress.",
+    "gymLeadCta": "Set up your gym →"
   },
   "competition": {
     "title": "Match Record",
@@ -928,7 +931,15 @@
     "useBtn": "❄️ Use Freeze ({n} left)",
     "zeroRemaining": "Streak Freeze: 0 remaining",
     "getUnlimited": "Get unlimited freezes with Pro",
-    "goPro": "Go Pro ↗"
+    "goPro": "Go Pro ↗",
+    "paywallTitle": "Protect your {n}-day streak",
+    "paywallSubtitle": "Streak Freezes are a Pro feature. Upgrade to get unlimited protection.",
+    "paywallPoint1": "Unlimited Streak Freezes",
+    "paywallPoint2": "Training heatmap & analytics",
+    "paywallPoint3": "Body & injury tracker",
+    "paywallPoint4": "Roll analytics (coming soon)",
+    "paywallCta": "Upgrade to Pro — $4.99/mo",
+    "paywallDismiss": "Maybe later"
   },
   "affiliate": {
     "title": "Recommended Instructionals",

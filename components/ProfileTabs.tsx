@@ -8,7 +8,7 @@ import ProfileForm from "./ProfileForm";
 import BodyManagementSection from "./BodyManagementSection";
 import TrainingChart from "./TrainingChart";
 
-function AccountSection({ userId }: { userId: string }) {
+function AccountSection({ userId, isPro }: { userId: string; isPro: boolean }) {
   const { t } = useLocale();
   const supabase = createClient();
   const router = useRouter();
@@ -26,8 +26,27 @@ function AccountSection({ userId }: { userId: string }) {
 
   return (
     <div className="space-y-4">
+      {/* B2B lead card — always show to non-gym-owners; drive them to /gym */}
+      {!isPro && (
+        <div className="bg-zinc-900 border border-blue-500/20 rounded-xl px-4 py-4 mt-4">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl mt-0.5">🥋</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-white">{t("profile.gymLeadTitle")}</p>
+              <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">{t("profile.gymLeadDesc")}</p>
+            </div>
+          </div>
+          <a
+            href="/gym"
+            className="mt-3 block w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm text-center transition-colors active:scale-95"
+          >
+            {t("profile.gymLeadCta")}
+          </a>
+        </div>
+      )}
+
       {/* ㉘ App Settings — intentional empty state with dashed border */}
-      <div className="border-2 border-dashed border-zinc-800 rounded-xl p-8 flex flex-col items-center justify-center text-center mt-4">
+      <div className="border-2 border-dashed border-zinc-800 rounded-xl p-8 flex flex-col items-center justify-center text-center">
         <h3 className="text-zinc-500 text-sm font-semibold mb-2">{t("profile.appSettings")}</h3>
         <p className="text-zinc-500 text-xs">{t("profile.settingsSoon")}</p>
       </div>
@@ -119,7 +138,7 @@ export default function ProfileTabs({ userId, isPro = false }: { userId: string;
       )}
       {activeTab === "profile" && <ProfileForm userId={userId} hideAccount />}
       {activeTab === "body"    && <BodyManagementSection userId={userId} />}
-      {activeTab === "account" && <AccountSection userId={userId} />}
+      {activeTab === "account" && <AccountSection userId={userId} isPro={isPro} />}
     </div>
   );
 }
