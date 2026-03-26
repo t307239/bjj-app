@@ -272,15 +272,15 @@ function OnThisPage({ items, lang }: { items: TocItem[]; lang: string }) {
 
   return (
     <nav aria-label={label}>
-      <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-500">
+      <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-slate-600">
         {label}
       </p>
-      <ul className="space-y-1.5 border-l border-zinc-800 pl-3">
+      <ul className="space-y-1.5 border-l border-slate-800 pl-3">
         {items.map((item) => (
           <li key={item.id} className={item.level === 3 ? "pl-3" : ""}>
             <a
               href={`#${item.id}`}
-              className="block text-sm text-zinc-400 hover:text-white transition-colors line-clamp-2 leading-snug"
+              className="block text-xs text-slate-500 hover:text-slate-200 transition-colors line-clamp-2 leading-snug"
             >
               {item.text}
             </a>
@@ -341,9 +341,9 @@ function WikiCtaBanner({ lang }: { lang: string }) {
   const c = content[lang as Lang] ?? content.en;
 
   return (
-    <div className="my-12 rounded-2xl bg-slate-900 border border-slate-700 overflow-hidden shadow-2xl">
+    <div className="my-12 rounded-2xl bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 overflow-hidden shadow-2xl shadow-black/40">
       {/* ヘッダーバー */}
-      <div className="bg-gradient-to-r from-pink-600/20 to-purple-600/20 border-b border-slate-700 px-6 py-3 flex items-center gap-2">
+      <div className="bg-gradient-to-r from-pink-600/20 to-purple-700/20 border-b border-slate-700/50 px-6 py-3 flex items-center gap-2">
         <span className="text-xl">🥋</span>
         <span className="text-xs font-semibold text-pink-400 uppercase tracking-widest">
           BJJ App
@@ -354,23 +354,23 @@ function WikiCtaBanner({ lang }: { lang: string }) {
         <div className="sm:flex sm:items-start sm:gap-8">
           {/* テキスト */}
           <div className="flex-1 mb-6 sm:mb-0">
-            <h3 className="text-xl font-bold text-white mb-1">{c.heading}</h3>
+            <h3 className="text-xl font-bold text-white mb-1 tracking-tight">{c.heading}</h3>
             <p className="text-sm text-slate-400 mb-5">{c.sub}</p>
             <ul className="space-y-2">
               {c.features.map((f) => (
-                <li key={f} className="flex items-center gap-2 text-sm text-slate-300">
-                  <span className="shrink-0">{f.slice(0, 2)}</span>
+                <li key={f} className="flex items-center gap-2.5 text-sm text-slate-300">
+                  <span className="shrink-0 text-base">{f.slice(0, 2)}</span>
                   <span>{f.slice(2).trim()}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* CTAボタン */}
+          {/* CTAボタン（グロウエフェクト付き）*/}
           <div className="flex flex-col items-center sm:items-end gap-3 shrink-0">
             <Link
               href="https://bjj-app.net/login"
-              className="inline-flex items-center justify-center rounded-xl bg-pink-600 hover:bg-pink-500 active:bg-pink-700 transition-colors px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-pink-900/30 whitespace-nowrap"
+              className="inline-flex items-center justify-center rounded-xl bg-pink-600 hover:bg-pink-500 active:bg-pink-700 transition-all px-7 py-3.5 text-sm font-bold text-white shadow-lg hover:shadow-[0_0_24px_rgba(236,72,153,0.45)] whitespace-nowrap"
             >
               {c.cta}
             </Link>
@@ -409,9 +409,9 @@ function RelatedArticles({
           <Link
             key={a.slug}
             href={`/wiki/${lang}/${a.slug}`}
-            className="group rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 hover:border-zinc-600 hover:bg-zinc-800 transition-colors"
+            className="group rounded-xl border border-slate-700/60 bg-slate-800/40 px-4 py-3 hover:border-slate-600 hover:bg-slate-800/70 transition-colors"
           >
-            <p className="text-sm text-zinc-200 group-hover:text-white line-clamp-2 transition-colors">
+            <p className="text-sm text-slate-300 group-hover:text-white line-clamp-2 transition-colors">
               {a.title}
             </p>
           </Link>
@@ -464,18 +464,18 @@ export default async function WikiPage({
   ]);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-[#0B1120] text-white">
       {/* パンくずリスト: BJJ Wiki / ジャンル名 */}
-      <header className="border-b border-zinc-800 bg-zinc-900">
+      <header className="border-b border-slate-800/60 bg-[#0B1120]/95 backdrop-blur-sm">
         <div className="mx-auto max-w-7xl px-4 py-4 flex items-center gap-2 text-sm">
           <a
             href={`/wiki/${lang}`}
-            className="text-zinc-400 hover:text-white transition-colors"
+            className="text-slate-400 hover:text-white transition-colors"
           >
             BJJ Wiki
           </a>
-          <span className="text-zinc-600">/</span>
-          <span className="text-zinc-300">
+          <span className="text-slate-700">/</span>
+          <span className="text-slate-300">
             {BADGE_CONFIG[page.content_type as ContentType]?.label ??
               page.content_type}
           </span>
@@ -503,8 +503,8 @@ export default async function WikiPage({
                   href={`/wiki/${l}/${slug}`}
                   className={`px-2.5 py-0.5 rounded text-xs font-medium transition-colors ${
                     l === lang
-                      ? "bg-zinc-700 text-white"
-                      : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800"
+                      ? "bg-slate-700 text-white"
+                      : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/60"
                   }`}
                 >
                   {l.toUpperCase()}
@@ -513,7 +513,7 @@ export default async function WikiPage({
             </div>
 
             {page.description && (
-              <p className="mb-8 text-lg text-zinc-400 leading-relaxed border-l-4 border-pink-500 pl-4">
+              <p className="mb-8 text-base text-slate-400 leading-relaxed border-l-4 border-pink-500/70 pl-4 italic">
                 {page.description}
               </p>
             )}
@@ -522,23 +522,23 @@ export default async function WikiPage({
             <div
               className="
                 wiki-content
-                prose prose-invert prose-zinc max-w-none
-                prose-headings:text-white prose-headings:font-bold
-                prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4
-                prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3
-                prose-p:text-zinc-300 prose-p:leading-relaxed prose-p:mb-4
+                prose prose-invert prose-slate max-w-none
+                prose-headings:text-white prose-headings:font-bold prose-headings:tracking-tight
+                prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4
+                prose-h3:text-lg prose-h3:mt-7 prose-h3:mb-3 prose-h3:text-slate-200
+                prose-p:text-slate-300 prose-p:leading-[1.8] prose-p:mb-4
                 prose-a:text-pink-400 prose-a:no-underline hover:prose-a:text-pink-300 hover:prose-a:underline
                 prose-strong:text-white prose-strong:font-semibold
-                prose-ul:text-zinc-300 prose-ol:text-zinc-300
-                prose-li:my-1
-                prose-img:rounded-lg prose-img:my-6
-                prose-hr:border-zinc-700
-                prose-blockquote:border-zinc-600 prose-blockquote:text-zinc-400
-                prose-code:text-pink-300 prose-code:bg-zinc-800 prose-code:px-1 prose-code:rounded
-                prose-pre:bg-zinc-800 prose-pre:border prose-pre:border-zinc-700
-                prose-table:text-zinc-300
-                prose-th:text-zinc-200 prose-th:border-zinc-700
-                prose-td:border-zinc-700
+                prose-ul:text-slate-300 prose-ol:text-slate-300
+                prose-li:my-1.5 prose-li:text-slate-300
+                prose-img:rounded-xl prose-img:my-6 prose-img:shadow-xl
+                prose-hr:border-slate-700/50
+                prose-blockquote:border-pink-500/40 prose-blockquote:text-slate-400 prose-blockquote:bg-slate-800/30 prose-blockquote:rounded-r-lg
+                prose-code:text-pink-300 prose-code:bg-slate-800/80 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-sm
+                prose-pre:bg-slate-800/80 prose-pre:border prose-pre:border-slate-700/50 prose-pre:rounded-xl
+                prose-table:text-slate-300
+                prose-th:text-slate-200 prose-th:border-slate-700/50
+                prose-td:border-slate-700/50
               "
               dangerouslySetInnerHTML={{ __html: processedHtml }}
             />
@@ -555,7 +555,7 @@ export default async function WikiPage({
           />
 
           {/* Back to Top */}
-          <div className="mt-10 pt-8 border-t border-zinc-800 flex justify-end">
+          <div className="mt-10 pt-8 border-t border-slate-800/60 flex justify-end">
             <BackToTopLink lang={lang} />
           </div>
         </main>
@@ -571,12 +571,12 @@ export default async function WikiPage({
       </div>
 
       {/* フッター */}
-      <footer className="border-t border-zinc-800 py-8">
-        <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-zinc-500">
+      <footer className="border-t border-slate-800/60 py-8 mt-4">
+        <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
           <p>© {new Date().getFullYear()} BJJ Wiki — All rights reserved.</p>
           <a
             href="https://bjj-app.net"
-            className="hover:text-zinc-300 transition-colors"
+            className="hover:text-slate-400 transition-colors"
           >
             BJJ App →
           </a>

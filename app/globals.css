@@ -92,7 +92,7 @@ select:focus-visible {
   margin-bottom: 1.25rem;
 }
 
-/* ── badge / badge-cat: カテゴリ・帯色 Pill バッジ ── */
+/* ── badge / badge-cat: カテゴリ・帯色 Pill バッジ（グラス風）── */
 .wiki-content .badge,
 .wiki-content .badge-cat,
 .wiki-content [class*="belt-"]:not(.difficulty-bar),
@@ -100,16 +100,28 @@ select:focus-visible {
 .wiki-content .diff-label {
   display: inline-flex !important;
   align-items: center;
-  padding: 0.2rem 0.7rem;
+  padding: 0.2rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   line-height: 1.4;
-  background: rgb(30 41 59 / 0.9);    /* slate-800 */
+  background: rgb(30 41 59 / 0.8);    /* slate-800/80 */
   color: rgb(203 213 225);             /* slate-300 */
-  border: 1px solid rgb(51 65 85);     /* slate-700 */
+  border: 1px solid rgb(51 65 85 / 0.7); /* slate-700/70 */
   white-space: nowrap;
+  backdrop-filter: blur(4px);
+}
+
+/* ── h2: SaaS ドキュメント風 左アクセントボーダー ── */
+.wiki-content h2 {
+  border-left: 3px solid rgb(236 72 153 / 0.6); /* pink-500/60 */
+  padding-left: 0.875rem !important;
+}
+
+/* ── h3: サブ見出し（控えめなアクセント）── */
+.wiki-content h3 {
+  color: rgb(226 232 240); /* slate-200 */
 }
 
 /* ── difficulty-bar: 難易度バー（flex行として表示）── */
@@ -119,10 +131,10 @@ select:focus-visible {
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-bottom: 1.25rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 0.875rem;
   border-radius: 0.5rem;
-  background: rgb(24 24 27 / 0.6);    /* zinc-900/60 */
-  border: 1px solid rgb(39 39 42);    /* zinc-800 */
+  background: rgb(15 23 42 / 0.6);    /* slate-900/60 */
+  border: 1px solid rgb(30 41 59 / 0.8); /* slate-800/80 */
 }
 
 .wiki-content .stars {
@@ -135,27 +147,28 @@ select:focus-visible {
 .wiki-content .step {
   display: flex !important;
   align-items: flex-start;
-  gap: 0.875rem;
-  margin-bottom: 1.125rem;
-  padding: 0.75rem 1rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.875rem 1rem;
   border-radius: 0.75rem;
-  background: rgb(24 24 27 / 0.5);
-  border: 1px solid rgb(39 39 42);
+  background: rgb(15 23 42 / 0.5);    /* slate-900/50 */
+  border: 1px solid rgb(30 41 59 / 0.8); /* slate-800/80 */
 }
 
 .wiki-content .step-num {
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;    /* w-6 */
+  height: 1.5rem;   /* h-6 */
   border-radius: 9999px;
-  background: rgb(236 72 153 / 0.15); /* pink-500/15 */
+  background: rgb(15 23 42);          /* slate-900 */
   color: rgb(244 114 182);            /* pink-400 */
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 0.75rem; /* text-xs */
   flex-shrink: 0;
-  border: 1px solid rgb(236 72 153 / 0.3);
+  margin-top: 0.125rem; /* mt-0.5 — テキストとの高さ調整 */
+  border: 1px solid rgb(51 65 85);    /* slate-700 */
 }
 
 /* ── tips-box: ヒント枠 ── */
@@ -182,8 +195,8 @@ select:focus-visible {
   margin: 1.5rem 0;
   padding: 1rem;
   border-radius: 0.75rem;
-  background: rgb(24 24 27 / 0.4);
-  border: 1px solid rgb(39 39 42);
+  background: rgb(15 23 42 / 0.4);    /* slate-900/40 */
+  border: 1px solid rgb(30 41 59 / 0.7); /* slate-800/70 */
 }
 
 .wiki-content .related-links a {
@@ -191,19 +204,19 @@ select:focus-visible {
   align-items: center;
   padding: 0.3rem 0.875rem;
   border-radius: 0.5rem;
-  background: rgb(39 39 42);          /* zinc-800 */
+  background: rgb(30 41 59 / 0.8);    /* slate-800/80 */
   color: rgb(244 114 182) !important; /* pink-400 */
   font-size: 0.8125rem;
   font-weight: 500;
   text-decoration: none !important;
-  border: 1px solid rgb(63 63 70);    /* zinc-700 */
+  border: 1px solid rgb(51 65 85 / 0.6); /* slate-700/60 */
   transition: background 0.15s, border-color 0.15s;
   white-space: nowrap;
 }
 
 .wiki-content .related-links a:hover {
-  background: rgb(63 63 70) !important; /* zinc-700 */
-  border-color: rgb(244 114 182 / 0.4);
+  background: rgb(51 65 85 / 0.8) !important; /* slate-700/80 */
+  border-color: rgb(244 114 182 / 0.35);
 }
 
 /* 印刷 / PDF保存スタイル */
