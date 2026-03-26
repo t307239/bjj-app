@@ -94,15 +94,19 @@ function slugifyHeading(text: string): string {
 
 /**
  * content_html 内の h2/h3 に id 属性を注入し、TOC 配列を返す。
+ * 最初の <h1> は Next.js 側でタイトルを render しているため除去。
  * id がすでに存在する場合はスキップ。
  */
 function processHeadings(html: string): { html: string; toc: TocItem[] } {
   if (!html) return { html, toc: [] };
 
+  // 最初の <h1> を除去（ページタイトルとの重複を防ぐ）
+  const withoutH1 = html.replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/i, "");
+
   const toc: TocItem[] = [];
   const usedIds = new Set<string>();
 
-  const processed = html.replace(
+  const processed = withoutH1.replace(
     /<h([23])([^>]*)>([\s\S]*?)<\/h[23]>/gi,
     (match, levelStr, attrs, content) => {
       // 既存 id があればそのまま返す
@@ -413,17 +417,20 @@ export default async function WikiPage({
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      {/* ナビゲーションヘッダー */}
+      {/* パンくずリスト: BJJ Wiki / ジャンル名 */}
       <header className="border-b border-zinc-800 bg-zinc-900">
-        <div className="mx-auto max-w-7xl px-4 py-4 flex items-center gap-2 overflow-hidden">
+        <div className="mx-auto max-w-7xl px-4 py-4 flex items-center gap-2 text-sm">
           <a
             href={`/wiki/${lang}`}
-            className="text-sm text-zinc-400 hover:text-white transition-colors whitespace-nowrap"
+            className="text-zinc-400 hover:text-white transition-colors"
           >
-            ← BJJ Wiki
+            BJJ Wiki
           </a>
           <span className="text-zinc-600">/</span>
-          <span className="text-sm text-zinc-300 truncate">{page.title}</span>
+          <span className="text-zinc-300">
+            {BADGE_CONFIG[page.content_type as ContentType]?.label ??
+              page.content_type}
+          </span>
         </div>
       </header>
 
@@ -436,9 +443,26 @@ export default async function WikiPage({
               <ContentTypeBadge contentType={page.content_type} />
             </div>
 
-            <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
+            <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">
               {page.title}
             </h1>
+
+            {/* 言語スイッチャー（タイトル直下・ファーストビュー）*/}
+            <div className="flex items-center gap-1 mb-6">
+              {VALID_LANGS.map((l) => (
+                <a
+                  key={l}
+                  href={`/wiki/${l}/${slug}`}
+                  className={`px-2.5 py-0.5 rounded text-xs font-medium transition-colors ${
+                    l === lang
+                      ? "bg-zinc-700 text-white"
+                      : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800"
+                  }`}
+                >
+                  {l.toUpperCase()}
+                </a>
+              ))}
+            </div>
 
             {page.description && (
               <p className="mb-8 text-lg text-zinc-400 leading-relaxed border-l-4 border-pink-500 pl-4">
@@ -481,24 +505,8 @@ export default async function WikiPage({
             contentType={page.content_type}
           />
 
-          {/* 言語スイッチャー + Back to Top */}
-          <div className="mt-10 pt-8 border-t border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-sm text-zinc-500">
-              <span>Read in:</span>
-              {VALID_LANGS.map((l) => (
-                <a
-                  key={l}
-                  href={`/wiki/${l}/${slug}`}
-                  className={`px-2 py-1 rounded transition-colors ${
-                    l === lang
-                      ? "bg-zinc-700 text-white font-medium"
-                      : "hover:text-zinc-300"
-                  }`}
-                >
-                  {l.toUpperCase()}
-                </a>
-              ))}
-            </div>
+          {/* Back to Top */}
+          <div className="mt-10 pt-8 border-t border-zinc-800 flex justify-end">
             <BackToTopLink lang={lang} />
           </div>
         </main>

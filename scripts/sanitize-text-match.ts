@@ -15,6 +15,7 @@
  *   8. "Mark this technique as learned"
  *   9. "Open Skill Tree"
  *   10. Injury Prevention 等 (Training Safety & Performance 配下リンク群)
+ *   11. Mermaid ダイアグラム（div.mermaid / pre.mermaid / graph LR 等を含む pre/code）
  *
  * 実装戦略:
  *   - `$('p, a, h2, h3, h4, li').filter(...)` でテキスト一致要素を特定
@@ -70,17 +71,49 @@ function loadEnv(): Record<string, string> {
   return env;
 }
 
+// Mermaid キーワード（pre/code 内でこれらが見つかれば削除）
+const MERMAID_KEYWORDS = [
+  "graph LR", "graph TD", "graph TB", "graph RL",
+  "flowchart", "sequenceDiagram", "classDiagram",
+  "stateDiagram", "gantt", "pie title", "gitGraph",
+];
+
 // ─── HTML サニタイズ ─────────────────────────────────────────────
 function sanitizeTextMatch(html: string): string | null {
   if (!html || html.length < 20) return null;
 
-  // クイック判定: ターゲット文字列が含まれなければスキップ
+  // クイック判定: テキストターゲット または Mermaid が含まれなければスキップ
+  const hasMermaid =
+    html.includes("mermaid") ||
+    MERMAID_KEYWORDS.some((k) => html.includes(k));
   const hasTarget = TEXT_TARGETS.some((t) => html.includes(t));
-  if (!hasTarget) return null;
+  if (!hasTarget && !hasMermaid) return null;
 
   const $ = cheerio.load(html, { xmlMode: false });
 
   let changed = false;
+
+  // ── Mermaid 削除 ─────────────────────────────────────────────
+  // 1. .mermaid クラスを持つ div / pre を丸ごと削除
+  $("div.mermaid, pre.mermaid, .mermaid").each((_i, el) => {
+    $(el).remove();
+    changed = true;
+  });
+
+  // 2. Mermaid 構文キーワードを含む pre / code ブロックを削除
+  $("pre, code").each((_i, el) => {
+    const text = $(el).text();
+    if (MERMAID_KEYWORDS.some((k) => text.includes(k))) {
+      // code の場合は親 pre を探して削除
+      const $pre = $(el).closest("pre");
+      if ($pre.length > 0) {
+        $pre.remove();
+      } else {
+        $(el).remove();
+      }
+      changed = true;
+    }
+  });
 
   for (const target of TEXT_TARGETS) {
     // p, a, h2, h3, h4, li で .text() に target を含む要素を探す
