@@ -352,7 +352,7 @@ function ProModal({
             <span className={`inline-block h-3 w-3 rounded-full bg-white shadow transition-transform ${isAnnual ? "translate-x-5" : "translate-x-1"}`} />
           </button>
           <span className={`text-xs ${isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>Annual</span>
-          {isAnnual && <span className="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">Save 16%</span>}
+          {isAnnual && <span className="bg-emerald-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">Save 16%</span>}
         </div>
         <div className="mb-1">
           {isAnnual

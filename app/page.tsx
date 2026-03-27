@@ -138,7 +138,7 @@ export default async function Home() {
         <div className="flex items-center gap-2">
           <span className="text-2xl">🥋</span>
           <span className="font-bold text-lg">BJJ App</span>
-          <span className="ml-1 inline-flex items-center px-1.5 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-wider text-emerald-400">Beta</span>
+          <span className="ml-1 inline-flex items-center px-1.5 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-xs font-bold uppercase tracking-wider text-emerald-400">Beta</span>
         </div>
         <div className="flex items-center gap-3">
           <Link
