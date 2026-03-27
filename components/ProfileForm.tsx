@@ -465,7 +465,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
     <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-xl p-5 border border-white/10">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xs text-gray-500 tracking-wider">{t("profile.title")}</h3>
-        <button onClick={onEdit} className="text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1 transition-colors">
+        <button onClick={onEdit} className="text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-2 min-h-[44px] transition-colors">
           ✏️ {t("training.edit")}
         </button>
       </div>

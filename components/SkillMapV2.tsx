@@ -548,13 +548,13 @@ function AddNodePopup({
         maxLength={80}
       />
       <div className="flex gap-2">
-        <button onClick={onCancel} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-xs text-gray-300 py-1 rounded-lg transition-colors">
+        <button onClick={onCancel} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-xs text-gray-300 py-2 min-h-[44px] rounded-lg transition-colors">
           {t("common.cancel")}
         </button>
         <button
           onClick={() => { if (name.trim()) onAdd(name.trim()); }}
           disabled={!name.trim()}
-          className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-xs text-white py-1 rounded-lg transition-colors"
+          className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-xs text-white py-2 min-h-[44px] rounded-lg transition-colors"
         >
           {t("skillmap.addBtn")}
         </button>
@@ -1078,7 +1078,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
               maxLength={80}
             />
             <div className="flex gap-2">
-              <button onClick={() => setAddPopup(null)} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-xs text-gray-300 py-1 rounded-lg transition-colors">
+              <button onClick={() => setAddPopup(null)} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-xs text-gray-300 py-2 min-h-[44px] rounded-lg transition-colors">
                 {t("common.cancel")}
               </button>
               <button
@@ -1086,7 +1086,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
                   const val = mobileAddRef.current?.value.trim() ?? "";
                   if (val) handleAddNode(val, addPopup.flowX, addPopup.flowY);
                 }}
-                className="flex-1 bg-[#10B981] hover:bg-[#0d9668] text-xs text-white py-1 rounded-lg transition-colors"
+                className="flex-1 bg-[#10B981] hover:bg-[#0d9668] text-xs text-white py-2 min-h-[44px] rounded-lg transition-colors"
               >
                 {t("skillmap.addBtn")}
               </button>
