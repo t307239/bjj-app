@@ -101,7 +101,7 @@ export default function GymJoinClient({
           <p className="text-xs text-gray-500 mt-1">
             {t("gymJoin.managedBy", { owner: ownerName })}
             {maskedEmail && (
-              <span className="ml-1 text-gray-600">({maskedEmail})</span>
+              <span className="ml-1 text-gray-500">({maskedEmail})</span>
             )}
           </p>
         </div>
@@ -140,7 +140,7 @@ export default function GymJoinClient({
           />
           <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
             I am <span className="text-white font-medium">13 years of age or older.</span>{" "}
-            <span className="text-gray-600">(required by US law)</span>
+            <span className="text-gray-500">(required by US law)</span>
           </span>
         </label>
 
@@ -165,7 +165,7 @@ export default function GymJoinClient({
         </button>
 
         {/* Privacy note */}
-        <p className="text-xs text-gray-600 text-center">
+        <p className="text-xs text-gray-500 text-center">
           {t("gymJoin.privacyNote")}
         </p>
 

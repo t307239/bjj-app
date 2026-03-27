@@ -429,7 +429,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
       {/* ── Roll Details: shown only for Gi / No-Gi sparring sessions ─────── */}
       {(form.type === "gi" || form.type === "nogi") && (
         <div className="mb-3 bg-zinc-800/40 border border-white/8 rounded-xl p-3 space-y-3">
-          <p className="text-xs font-semibold text-zinc-400 tracking-wide">🤼 Roll Details <span className="font-normal text-zinc-600">(optional)</span></p>
+          <p className="text-xs font-semibold text-zinc-400 tracking-wide">🤼 Roll Details <span className="font-normal text-zinc-500">(optional)</span></p>
 
           {/* Focus theme */}
           <div>

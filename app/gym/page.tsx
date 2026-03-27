@@ -335,7 +335,7 @@ export default function GymPage() {
         </section>
 
         {/* Footer */}
-        <footer className="px-6 py-8 text-center text-gray-600 text-sm border-t border-white/5">
+        <footer className="px-6 py-8 text-center text-gray-400 text-sm border-t border-white/5">
           <p className="mb-3">© 2026 BJJ App. Built by grapplers, for grapplers.</p>
           <div className="flex justify-center flex-wrap gap-4 text-xs">
             <a href="/terms" className="hover:text-gray-400 transition-colors">Terms</a>

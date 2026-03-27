@@ -345,7 +345,7 @@ export default async function WikiIndexPage({
 
         {/* 未分類の場合の注記 */}
         {uncategorized > 0 && (
-          <p className="text-xs text-zinc-600 text-center">
+          <p className="text-xs text-zinc-400 text-center">
             {uncategorized} articles not yet categorized
           </p>
         )}

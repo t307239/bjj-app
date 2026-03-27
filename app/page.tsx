@@ -196,7 +196,7 @@ export default async function Home() {
             </a>
           </div>
 
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-400 text-sm">
             Sign in with GitHub or Google. No credit card needed.
           </p>
           {/* Fix 7: arrow → (not ↓) */}
@@ -402,7 +402,7 @@ export default async function Home() {
                       <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-yellow-400 rounded-full" style={{ width: "75%" }} />
                       </div>
-                      <div className="text-xs text-gray-600 mt-1">3 / 4 sessions</div>
+                      <div className="text-xs text-gray-400 mt-1">3 / 4 sessions</div>
                     </div>
                     <div>
                       <div className="flex justify-between items-center mb-1">
@@ -412,7 +412,7 @@ export default async function Home() {
                       <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-green-400 rounded-full" style={{ width: "100%" }} />
                       </div>
-                      <div className="text-xs text-gray-600 mt-1">12 / 12 sessions</div>
+                      <div className="text-xs text-gray-400 mt-1">12 / 12 sessions</div>
                     </div>
                   </div>
                 </div>
@@ -642,7 +642,7 @@ export default async function Home() {
       </section>
 
       {/* フッター — Fix 9: SaaS standard footer */}
-      <footer className="px-6 py-8 text-center text-gray-600 text-sm border-t border-white/5">
+      <footer className="px-6 py-8 text-center text-gray-400 text-sm border-t border-white/5">
         <p className="mb-3">© 2026 BJJ App. All rights reserved.</p>
         <div className="flex justify-center flex-wrap gap-4 text-xs">
           <a href="/terms" className="hover:text-gray-400 transition-colors">Terms of Service</a>

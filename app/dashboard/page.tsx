@@ -651,7 +651,7 @@ export default async function DashboardPage({
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-amber-900/10 to-transparent pointer-events-none" />
                 <div className="relative">
-                  <span className="text-xs font-semibold text-zinc-600 tracking-widest block mb-1">
+                  <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-1">
                     {t("dashboard.upsellWinRateLabel")}
                   </span>
                   <div className="flex items-end gap-1.5 mt-1">
@@ -673,7 +673,7 @@ export default async function DashboardPage({
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-rose-900/10 to-transparent pointer-events-none" />
                 <div className="relative">
-                  <span className="text-xs font-semibold text-zinc-600 tracking-widest block mb-1">
+                  <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-1">
                     {t("dashboard.upsellInjuryLabel")}
                   </span>
                   <div className="flex items-end gap-1.5 mt-1">

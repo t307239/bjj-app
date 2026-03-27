@@ -204,7 +204,7 @@ export default function TermsPage() {
           </section>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap gap-6 text-xs text-zinc-600">
+        <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap gap-6 text-xs text-zinc-400">
           <Link href="/privacy" className="hover:text-zinc-400 transition-colors">Privacy Policy</Link>
           <Link href="/legal/tokushoho" className="hover:text-zinc-400 transition-colors">Specified Commercial Transactions Act</Link>
           <Link href="/" className="hover:text-zinc-400 transition-colors">← Home</Link>

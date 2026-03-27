@@ -68,7 +68,7 @@ function IABWarning() {
         >
           {copied ? t("login.iabCopied") : t("login.iabCopy")}
         </button>
-        <p className="text-gray-600 text-xs mt-4">
+        <p className="text-gray-500 text-xs mt-4">
           {t("login.iabPaste")}
         </p>
       </div>
@@ -210,7 +210,7 @@ function LoginForm() {
             />
             <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
               {t("login.ageConfirmPre")} <span className="text-white font-medium">{t("login.ageConfirm")}</span>
-              <span className="text-gray-600"> {t("login.ageConfirmNote")}</span>
+              <span className="text-gray-500"> {t("login.ageConfirmNote")}</span>
             </span>
           </label>
 
@@ -266,7 +266,7 @@ function LoginForm() {
                 <span className="text-white">{email}</span>.<br />
                 {t("login.emailSentTap")}
               </p>
-              <p className="text-gray-600 text-xs mt-3">
+              <p className="text-gray-500 text-xs mt-3">
                 {t("login.emailSentSpam")}
               </p>
               <button
@@ -298,7 +298,7 @@ function LoginForm() {
               >
                 {emailLoading ? t("login.sending") : t("login.sendLink")}
               </button>
-              <p className="text-xs text-gray-600 text-center pt-0.5">
+              <p className="text-xs text-gray-500 text-center pt-0.5">
                 {t("login.noPasswordNote")}
               </p>
             </form>
@@ -322,7 +322,7 @@ function LoginForm() {
 
         {/* Hint when checkboxes not yet checked */}
         {!canProceed && (
-          <p className="text-center text-gray-600 text-xs mt-2">
+          <p className="text-center text-gray-500 text-xs mt-2">
             {t("login.checkboxesRequired")}
           </p>
         )}
@@ -342,7 +342,7 @@ function LoginForm() {
           <p className="text-gray-700 text-xs mt-1">{t("login.guestDesc")}</p>
         </div>
 
-        <p className="text-center text-gray-600 text-xs mt-4">
+        <p className="text-center text-gray-500 text-xs mt-4">
           {t("login.termsAgree")}{" "}
           <Link href="/terms" className="hover:text-gray-400 underline">{t("login.termsLink")}</Link>
           {" & "}

@@ -111,7 +111,7 @@ export default function PrivacyPage() {
               <li><span className="text-zinc-200">Google Analytics 4</span> — anonymized usage analytics</li>
               <li><span className="text-zinc-200">Beehiiv</span> — email newsletter (opt-in only)</li>
             </ul>
-            <p className="mt-3 text-zinc-600">
+            <p className="mt-3 text-zinc-400">
               Each of these services has its own privacy policy. We only share the minimum data
               necessary with each provider.
             </p>
@@ -198,7 +198,7 @@ export default function PrivacyPage() {
           </section>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap gap-6 text-xs text-zinc-600">
+        <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap gap-6 text-xs text-zinc-400">
           <Link href="/terms" className="hover:text-zinc-400 transition-colors">Terms of Service</Link>
           <Link href="/legal/tokushoho" className="hover:text-zinc-400 transition-colors">Specified Commercial Transactions Act</Link>
           <Link href="/" className="hover:text-zinc-400 transition-colors">← Home</Link>
