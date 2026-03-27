@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
@@ -48,6 +48,8 @@ export default function GuestDashboard() {
   const router = useRouter();
   const { t } = useLocale();
   const [logs, setLogs] = useState<GuestLog[]>([]);
+  const logsRef = useRef<GuestLog[]>([]);
+  logsRef.current = logs; // always reflects latest state (stale closure defence)
   const [date, setDate] = useState(getLocalDateString());
   const [duration, setDuration] = useState(60);
   const [type, setType] = useState("gi");
@@ -98,7 +100,8 @@ export default function GuestDashboard() {
     setLogs((prev) => prev.filter((l) => l.id !== id));
     setUndoVisible(true);
     const timerId = setTimeout(() => {
-      saveGuestLogs(logs.filter((l) => l.id !== id));
+      // Use logsRef.current (not stale closure `logs`) to get the latest state
+      saveGuestLogs(logsRef.current.filter((l) => l.id !== id));
       setPendingDelete(null);
       setUndoVisible(false);
     }, 4000);

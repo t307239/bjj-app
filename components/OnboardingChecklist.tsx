@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
 
+const DISMISS_KEY = "bjj_onboarding_dismissed";
+
 type Props = {
   hasFirstLog: boolean;
   hasGoal: boolean;
@@ -20,7 +22,10 @@ type Step = {
 
 export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique }: Props) {
   const { t } = useLocale();
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem(DISMISS_KEY) === "1";
+  });
   // Item 30: celebration state — "idle" | "celebrating" | "fading" | "done"
   const [celebState, setCelebState] = useState<"idle" | "celebrating" | "fading" | "done">("idle");
   const prevCompletedRef = useRef(0);
@@ -122,7 +127,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
     <div className="mb-6 bg-emerald-950/40 border border-emerald-500/30 rounded-2xl p-4 relative">
       {/* Dismiss button */}
       <button
-        onClick={() => setDismissed(true)}
+        onClick={() => { setDismissed(true); localStorage.setItem(DISMISS_KEY, "1"); }}
         className="absolute top-3 right-3 text-zinc-500 hover:text-zinc-300 transition-colors text-xs p-1"
         aria-label={t("common.dismiss")}
       >
@@ -150,7 +155,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
       <div className="space-y-1">
         {steps.map((step) => (
           step.done ? (
-            <div key={step.id} className="flex items-center gap-2.5 px-1 py-1.5 opacity-40">
+            <div key={step.id} className="flex items-center gap-2.5 px-1 py-2.5 min-h-[44px] opacity-40">
               <span className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-xs text-emerald-400">✓</span>
               <span className="text-xs text-zinc-500 line-through">{step.emoji} {step.label}</span>
             </div>
@@ -158,7 +163,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
             <Link
               key={step.id}
               href={step.href}
-              className="flex items-center gap-2.5 px-1 py-1.5 rounded-lg hover:bg-emerald-500/10 transition-colors group"
+              className="flex items-center gap-2.5 px-1 py-2.5 min-h-[44px] rounded-lg hover:bg-emerald-500/10 transition-colors group"
             >
               <span className="w-5 h-5 rounded-full border border-emerald-500/40 flex items-center justify-center shrink-0 group-hover:border-emerald-400 transition-colors" />
               <span className="text-xs text-zinc-300 group-hover:text-emerald-300 transition-colors">

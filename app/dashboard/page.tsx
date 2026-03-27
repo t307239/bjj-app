@@ -40,14 +40,14 @@ function DashboardMotivation({ daysSince }: { daysSince: number | null }) {
 
   const config: { emoji: string; msg: string; color: string } =
     daysSince === 0
-      ? { emoji: "🏆", msg: "今日も練習しました！最高のコンディションを維持して🔥", color: "text-emerald-300" }
+      ? { emoji: "🏆", msg: t("dashboard.motivationTrainedToday"), color: "text-emerald-300" }
       : daysSince === 1
-      ? { emoji: "💪", msg: "昨日はお疲れ様でした！今日も道場に来ませんか？", color: "text-emerald-400" }
+      ? { emoji: "💪", msg: t("dashboard.motivationTrainedYesterday"), color: "text-emerald-400" }
       : daysSince <= 3
-      ? { emoji: "🎯", msg: `${daysSince}日空きました。今週あと1回！継続が力です。`, color: "text-yellow-300" }
+      ? { emoji: "🎯", msg: t("dashboard.motivationGapDays", { n: daysSince }), color: "text-yellow-300" }
       : daysSince <= 7
-      ? { emoji: "🥋", msg: "道場があなたを待っています。また一緒に汗を流しましょう！", color: "text-orange-300" }
-      : { emoji: "👊", msg: "久しぶりですね。また道場に戻りましょう！", color: "text-red-300" };
+      ? { emoji: "🥋", msg: t("dashboard.motivationGapWeek"), color: "text-orange-300" }
+      : { emoji: "👊", msg: t("dashboard.motivationGapLong"), color: "text-red-300" };
 
   return (
     <div className="rounded-2xl border border-white/8 bg-zinc-900/40 px-5 py-4 flex items-center gap-4 mb-5">
