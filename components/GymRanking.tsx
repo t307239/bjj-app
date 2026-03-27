@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import Skeleton from "@/components/ui/Skeleton";
-import { getLocalDateString, getYesterdayDateString } from "@/lib/timezone";
+import { getLogicalTrainingDate } from "@/lib/logicalDate";
 
 type RankRow = {
   student_id: string;
@@ -31,21 +31,19 @@ function beltDot(belt: string): string {
   }
 }
 
-/** Compute consecutive-day streak from sorted date strings (desc) */
+/** Compute consecutive-day streak from date strings (uses logical training date) */
 function computeStreak(dates: string[]): number {
   if (dates.length === 0) return 0;
-  const unique = [...new Set(dates)].sort((a, b) => b.localeCompare(a));
-  const today = getLocalDateString();
-  const yesterday = getYesterdayDateString();
-  if (unique[0] !== today && unique[0] !== yesterday) return 0;
-  let streak = 1;
-  for (let i = 1; i < unique.length; i++) {
-    const prev = new Date(unique[i - 1] as string);
-    const curr = new Date(unique[i] as string);
-    const diff = Math.round((prev.getTime() - curr.getTime()) / 86400000);
-    if (diff === 1) {
+  const unique = [...new Set(dates)].sort().reverse();
+  const today = getLogicalTrainingDate();
+  let checkDateMs = new Date(today + "T00:00:00Z").getTime();
+  let streak = 0;
+  for (const dateStr of unique) {
+    const check = new Date(checkDateMs).toISOString().slice(0, 10);
+    if (dateStr === check) {
       streak++;
-    } else {
+      checkDateMs -= 86400000;
+    } else if (dateStr < check) {
       break;
     }
   }

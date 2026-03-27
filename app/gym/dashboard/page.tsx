@@ -27,12 +27,20 @@ export default async function GymDashboardPage() {
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
-  // Fetch gym
-  const { data: gym } = await supabase
-    .from("gyms")
-    .select("id, name, invite_code, is_active, curriculum_url, curriculum_set_at")
-    .eq("owner_id", user.id)
-    .single();
+  // Fetch gym + profile in parallel
+  const [{ data: gym }, { data: profileData }] = await Promise.all([
+    supabase
+      .from("gyms")
+      .select("id, name, invite_code, is_active, curriculum_url, curriculum_set_at")
+      .eq("owner_id", user.id)
+      .single(),
+    supabase
+      .from("profiles")
+      .select("is_pro")
+      .eq("id", user.id)
+      .single(),
+  ]);
+  const isPro = profileData?.is_pro ?? false;
 
   // Member count (opt-in only)
   let memberCount = 0;
@@ -50,7 +58,7 @@ export default async function GymDashboardPage() {
 
   return (
     <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
-      <NavBar displayName={displayName} avatarUrl={avatarUrl} />
+      <NavBar displayName={displayName} avatarUrl={avatarUrl} isPro={isPro} />
       <main className="max-w-4xl mx-auto px-4 py-5">
 
         {/* ═══════════════════════════════════════════

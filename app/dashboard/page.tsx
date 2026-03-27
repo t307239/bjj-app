@@ -24,12 +24,11 @@ import GymRanking from "@/components/GymRanking";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
 import TimeGreeting from "@/components/TimeGreeting";
 import {
-  getLocalDateString,
-  getYesterdayDateString,
   getWeekStartDate,
   getMonthStartDate,
   getLocalDateParts,
 } from "@/lib/timezone";
+import { getLogicalTrainingDate } from "@/lib/logicalDate";
 import { serverT as t } from "@/lib/i18n";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
@@ -106,23 +105,19 @@ export async function generateMetadata(): Promise<Metadata> {
   const beltLabel = BELT_LABELS[belt] ?? t("dashboard.beltWhite");
 
   let metaStreak = 0;
-  const metaToday = getLocalDateString();
+  const metaToday = getLogicalTrainingDate();
   if (recentLogsForStreak && recentLogsForStreak.length > 0) {
-    const dates = [
+    const uniqueDates = [
       ...new Set(recentLogsForStreak.map((l: { date: string }) => l.date)),
-    ].sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-    const today = getLocalDateString();
-    const yesterday = getYesterdayDateString();
-    if (dates[0] === today || dates[0] === yesterday) {
-      metaStreak = 1;
-      for (let i = 1; i < dates.length; i++) {
-        const diff = Math.round(
-          (new Date(dates[i - 1] as string).getTime() -
-            new Date(dates[i] as string).getTime()) /
-            86400000
-        );
-        if (diff === 1) metaStreak++;
-        else break;
+    ].sort().reverse() as string[];
+    let checkDateMs = new Date(metaToday + "T00:00:00Z").getTime();
+    for (const dateStr of uniqueDates) {
+      const check = new Date(checkDateMs).toISOString().slice(0, 10);
+      if (dateStr === check) {
+        metaStreak++;
+        checkDateMs -= 86400000;
+      } else if (dateStr < check) {
+        break;
       }
     }
   }
@@ -312,31 +307,27 @@ export default async function DashboardPage({
   }
 
   // Days since last training log (for dynamic motivational message)
-  const todayStr = getLocalDateString();
+  const todayStr = getLogicalTrainingDate();
   const lastLogDate = recentLogs?.[0]?.date ?? null;
   const daysSinceLastLog: number | null = lastLogDate
     ? Math.round((new Date(todayStr).getTime() - new Date(lastLogDate).getTime()) / 86400000)
     : null;
 
-  // Calculate streak + trainedToday
+  // Calculate streak + trainedToday (same algorithm as NavBar — uses logical training date)
   const trainedToday = recentLogs?.some((l: { date: string }) => l.date === todayStr) ?? false;
   let streak = 0;
   if (recentLogs && recentLogs.length > 0) {
-    const dates = [
+    const uniqueDates = [
       ...new Set(recentLogs.map((l: { date: string }) => l.date)),
-    ].sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-    const today = getLocalDateString();
-    const yesterday = getYesterdayDateString();
-    if (dates[0] === today || dates[0] === yesterday) {
-      streak = 1;
-      for (let i = 1; i < dates.length; i++) {
-        const diff = Math.round(
-          (new Date(dates[i - 1] as string).getTime() -
-            new Date(dates[i] as string).getTime()) /
-            86400000
-        );
-        if (diff === 1) streak++;
-        else break;
+    ].sort().reverse() as string[];
+    let checkDateMs = new Date(todayStr + "T00:00:00Z").getTime();
+    for (const dateStr of uniqueDates) {
+      const check = new Date(checkDateMs).toISOString().slice(0, 10);
+      if (dateStr === check) {
+        streak++;
+        checkDateMs -= 86400000;
+      } else if (dateStr < check) {
+        break;
       }
     }
   }
@@ -765,10 +756,10 @@ export default async function DashboardPage({
           <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-8 text-center mb-7">
             <div className="text-5xl mb-4">🔥</div>
             <h2 className="text-white font-bold text-lg mb-2">
-              Log your first roll and start your streak!
+              {t("dashboard.emptyStateTitle")}
             </h2>
             <p className="text-gray-400 text-sm mb-6 max-w-xs mx-auto">
-              Record today&apos;s training to unlock your analytics dashboard and keep the momentum going.
+              {t("dashboard.emptyStateDesc")}
             </p>
             <button
               onClick={() => {
@@ -777,11 +768,11 @@ export default async function DashboardPage({
               }}
               className="inline-flex items-center gap-2 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-semibold px-6 py-3 rounded-xl transition-all shadow-lg shadow-[#10B981]/20"
             >
-              <span>+</span> Log Your First Roll
+              <span>+</span> {t("dashboard.emptyStateCta")}
             </button>
             {/* Wiki 初心者リンク */}
             <div className="mt-6 pt-5 border-t border-white/5">
-              <p className="text-zinc-400 text-xs mb-3">New to BJJ?</p>
+              <p className="text-zinc-400 text-xs mb-3">{t("dashboard.emptyStateNewToBjj")}</p>
               <a
                 href="https://wiki.bjj-app.net/wiki/en/bjj-basics"
                 target="_blank"
@@ -789,7 +780,7 @@ export default async function DashboardPage({
                 className="inline-flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 border border-white/10 hover:border-white/20 text-gray-300 text-sm px-4 py-2.5 rounded-xl transition-all"
               >
                 <span>📚</span>
-                <span>Start here: White Belt Fundamentals →</span>
+                <span>{t("dashboard.emptyStateWikiLink")}</span>
               </a>
             </div>
           </div>

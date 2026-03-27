@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
 import { useLocale } from "@/lib/i18n";
-import { getLocalDateString, getYesterdayDateString } from "@/lib/timezone";
+import { getLogicalTrainingDate } from "@/lib/logicalDate";
 
 const STRIPE_PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
 
@@ -154,9 +154,10 @@ export default function StreakFreeze({ userId, streak }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  // Use user's local timezone (replaces JST hardcode)
-  const today = getLocalDateString();
-  const yesterday = getYesterdayDateString();
+  // Use logical training date (before 4AM = previous day)
+  const today = getLogicalTrainingDate();
+  const yesterdayMs = new Date(today + "T00:00:00Z").getTime() - 86400000;
+  const yesterday = new Date(yesterdayMs).toISOString().slice(0, 10);
   const usedToday = historyDates[0] === today;
 
   const [hadYesterdayLog, setHadYesterdayLog] = useState<boolean | null>(null);
