@@ -79,6 +79,7 @@ export function GoalEditor({
   onChange,
   onSave,
   onCancel,
+  saving = false,
 }: {
   header: string;
   currentDoneText: string;
@@ -90,6 +91,7 @@ export function GoalEditor({
   onChange: (v: number) => void;
   onSave: () => void;
   onCancel: () => void;
+  saving?: boolean;
 }) {
   return (
     <div className="bg-white/5 rounded-xl p-4 border border-white/10">
@@ -126,7 +128,7 @@ export function GoalEditor({
         </button>
         <button
           onClick={onSave}
-          disabled={value === 0}
+          disabled={value === 0 || saving}
           className="flex-1 py-2 rounded-lg bg-[#10B981] text-white text-sm font-semibold hover:bg-[#0d9668] active:scale-95 disabled:opacity-40 transition-all"
         >
           {setLabel}

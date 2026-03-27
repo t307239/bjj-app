@@ -38,6 +38,7 @@ export default function GoalTracker({ userId }: Props) {
   const [schemaReady, setSchemaReady] = useState(true);
   const [editing, setEditing] = useState<"weekly" | "monthly" | "technique" | null>(null);
   const [editValue, setEditValue] = useState(0);
+  const [isSaving, setIsSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [monthHistory, setMonthHistory] = useState<MonthHistory[]>([]);
   const [weekHistory, setWeekHistory] = useState<WeekHistory[]>([]);
@@ -141,26 +142,26 @@ export default function GoalTracker({ userId }: Props) {
         setWeekHistory(wh);
       }
 
-      // 過去6ヶ月の達成履歴を計算
+      // 過去6ヶ月の達成履歴を計算（N+1解消: 1クエリで全件取得→client側で月集計）
       if (mGoal > 0) {
         const { year: nowYear, month: nowMonth } = getLocalDateParts();
+        const sixMonthsAgo = new Date(Date.UTC(nowYear, nowMonth - 1 - 5, 1));
+        const sixMonthsAgoStr = `${sixMonthsAgo.getUTCFullYear()}-${String(sixMonthsAgo.getUTCMonth() + 1).padStart(2, "0")}-01`;
+        const { data: mLogs } = await supabase
+          .from("training_logs")
+          .select("date")
+          .eq("user_id", userId)
+          .gte("date", sixMonthsAgoStr);
         const history: MonthHistory[] = [];
         for (let i = 5; i >= 0; i--) {
           const d = new Date(Date.UTC(nowYear, nowMonth - 1 - i, 1));
           const ym = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
-          const nextD = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1));
-          const nextYm = `${nextD.getUTCFullYear()}-${String(nextD.getUTCMonth() + 1).padStart(2, "0")}-01`;
-          const { count: hc } = await supabase
-            .from("training_logs")
-            .select("*", { count: "exact", head: true })
-            .eq("user_id", userId)
-            .gte("date", `${ym}-01`)
-            .lt("date", nextYm);
+          const hc = (mLogs ?? []).filter((l) => l.date.startsWith(ym)).length;
           history.push({
             ym,
             label: `${d.getUTCMonth() + 1}`,
-            count: hc ?? 0,
-            achieved: (hc ?? 0) >= mGoal,
+            count: hc,
+            achieved: hc >= mGoal,
           });
         }
         setMonthHistory(history);
@@ -202,7 +203,8 @@ export default function GoalTracker({ userId }: Props) {
   };
 
   const saveGoal = async () => {
-    if (!editing) return;
+    if (!editing || isSaving) return;
+    setIsSaving(true);
     const col = editing === "weekly" ? "weekly_goal"
       : editing === "monthly" ? "monthly_goal"
       : "technique_goal";
@@ -222,6 +224,7 @@ export default function GoalTracker({ userId }: Props) {
       setToast({ message: t("goal.goalFailed"), type: "error" });
     }
     setEditing(null);
+    setIsSaving(false);
   };
 
   if (loading) return <Skeleton height={200} rounded="2xl" className="mb-4" />;
@@ -359,6 +362,7 @@ export default function GoalTracker({ userId }: Props) {
               onChange={setEditValue}
               onSave={saveGoal}
               onCancel={() => setEditing(null)}
+              saving={isSaving}
             />
           ) : (
             <div
@@ -402,6 +406,7 @@ export default function GoalTracker({ userId }: Props) {
               onChange={setEditValue}
               onSave={saveGoal}
               onCancel={() => setEditing(null)}
+              saving={isSaving}
             />
           ) : (
             <div
@@ -460,6 +465,7 @@ export default function GoalTracker({ userId }: Props) {
               onChange={(v) => setEditValue(Math.min(500, v))}
               onSave={saveGoal}
               onCancel={() => setEditing(null)}
+              saving={isSaving}
             />
           ) : (
             <div
