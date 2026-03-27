@@ -372,7 +372,7 @@ export default async function DashboardPage({
               </div>
               <div className="min-w-0">
                 <TimeGreeting displayName={displayName} />
-                <p className="text-gray-500 text-xs mt-0.5 truncate">
+                <p className="text-gray-400 text-xs mt-0.5 truncate">
                   {streak >= 7
                     ? `🔥 ${streak}-day streak`
                     : streak >= 3
@@ -504,7 +504,7 @@ export default async function DashboardPage({
           {/* This month — wide */}
           <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-emerald-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200 flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-zinc-500 tracking-widest">
+              <span className="text-xs font-semibold text-zinc-400 tracking-widest">
                 {t("dashboard.monthTraining")}
               </span>
               {prevMonthCount !== null && prevMonthCount !== undefined && prevMonthCount > 0 && (
@@ -550,7 +550,7 @@ export default async function DashboardPage({
                 </span>
               )}
               {remainingDays > 0 && (
-                <span className="text-xs text-zinc-500">
+                <span className="text-xs text-zinc-400">
                   {t("dashboard.bentoDaysLeft", { n: remainingDays })}
                   {(monthCount ?? 0) > 0 && dayOfMonth > 0 && (
                     <span className="text-emerald-400 ml-1">
