@@ -303,15 +303,15 @@ function masteryNodeClass(level: number | undefined): string {
 function SkillMapLegend() {
   return (
     <div className="absolute bottom-2 left-3 flex items-center gap-3 bg-zinc-900/80 border border-white/10 backdrop-blur-sm rounded-lg px-3 py-1.5 pointer-events-none select-none">
-      <span className="flex items-center gap-1.5 text-[10px] text-zinc-400">
+      <span className="flex items-center gap-1.5 text-xs text-zinc-400">
         <span className="w-2.5 h-2.5 rounded-sm border border-zinc-500/60 bg-zinc-800 inline-block flex-shrink-0" />
         Locked
       </span>
-      <span className="flex items-center gap-1.5 text-[10px] text-zinc-400">
+      <span className="flex items-center gap-1.5 text-xs text-zinc-400">
         <span className="w-2.5 h-2.5 rounded-sm border border-blue-500/40 bg-blue-500/10 inline-block flex-shrink-0" />
         Learning
       </span>
-      <span className="flex items-center gap-1.5 text-[10px] text-zinc-400">
+      <span className="flex items-center gap-1.5 text-xs text-zinc-400">
         <span className="w-2.5 h-2.5 rounded-sm border border-emerald-500/40 bg-emerald-500/10 inline-block flex-shrink-0" />
         Mastered
       </span>

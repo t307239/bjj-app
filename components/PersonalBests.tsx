@@ -328,11 +328,11 @@ export default function PersonalBests({ userId }: Props) {
           <div className="grid grid-cols-2 gap-2">
             <div className="text-center">
               <div className="text-sm font-semibold text-zinc-200">{fmtTime(bests.maxSessionMin)}</div>
-              <div className="text-[10px] text-zinc-500 uppercase tracking-wider mt-0.5">{t("stats.longestSession")}</div>
+              <div className="text-xs text-zinc-500 uppercase tracking-wider mt-0.5">{t("stats.longestSession")}</div>
             </div>
             <div className="text-center">
               <div className="text-sm font-semibold text-zinc-200">{bests.avgMonthly}{timesUnit}</div>
-              <div className="text-[10px] text-zinc-500 uppercase tracking-wider mt-0.5">{t("stats.monthlyAvg")}</div>
+              <div className="text-xs text-zinc-500 uppercase tracking-wider mt-0.5">{t("stats.monthlyAvg")}</div>
             </div>
           </div>
         </div>
@@ -363,7 +363,7 @@ export default function PersonalBests({ userId }: Props) {
                         background: isBest ? "#10B981" : count > 0 ? "#374151" : "#1f2937",
                       }}
                     />
-                    <span className={`text-[10px] leading-none ${isBest ? "text-[#10B981] font-bold" : "text-gray-500"}`}>
+                    <span className={`text-xs leading-none ${isBest ? "text-[#10B981] font-bold" : "text-gray-500"}`}>
                       {DOW_LABELS[i]}
                     </span>
                   </div>

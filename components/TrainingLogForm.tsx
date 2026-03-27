@@ -141,6 +141,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
   const { t } = useLocale();
   const isOnline = useOnlineStatus();
   const techniqueInputRef = useRef<HTMLInputElement>(null);
+  const [showOptional, setShowOptional] = useState(false);
 
   // Warn user if they try to leave with meaningful unsaved form data (notes only)
   const hasInput = form.notes.trim() !== "";
@@ -358,32 +359,72 @@ const TrainingLogForm = memo(function TrainingLogForm({
         </div>
       )}
 
-      {/* Instructor (B-04: optional, for BJJ Wrapped year-end stats) */}
-      <div className="mb-3">
-        <label className="block text-gray-400 text-xs mb-1">{t("training.instructor")}</label>
-        <input
-          type="text"
-          value={form.instructor_name ?? ""}
-          onChange={(e) => setForm({ ...form, instructor_name: e.target.value })}
-          placeholder={t("training.instructorPlaceholder")}
-          className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
-        />
-      </div>
+      {/* ── Optional details toggle (Instructor, Partner, Weight) ─────────── */}
+      <button
+        type="button"
+        onClick={() => setShowOptional((v) => !v)}
+        className="flex items-center gap-1.5 w-full text-xs text-zinc-500 hover:text-zinc-300 transition-colors py-1 mb-2 group"
+      >
+        <svg
+          className={`w-3 h-3 flex-shrink-0 transition-transform duration-150 ${showOptional ? "rotate-90" : ""}`}
+          viewBox="0 0 24 24" fill="none"
+        >
+          <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <span className="group-hover:text-zinc-300">Optional details</span>
+        <span className="text-zinc-700 ml-1 font-normal">(instructor · partner · weight)</span>
+      </button>
 
-      {/* Partner Tag (B-09: optional @username for sparring partner) */}
-      <div className="mb-3">
-        <label className="block text-gray-400 text-xs mb-1">{t("training.partnerTag")}</label>
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm select-none">@</span>
-          <input
-            type="text"
-            value={form.partner_username}
-            onChange={(e) => setForm({ ...form, partner_username: e.target.value.replace(/^@/, "").replace(/\s/g, "") })}
-            placeholder={t("training.partnerTagPlaceholder")}
-            className="w-full bg-zinc-800 text-white rounded-lg pl-7 pr-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
-          />
+      {showOptional && (
+        <div className="mb-3 space-y-3">
+          {/* Instructor (B-04: optional, for BJJ Wrapped year-end stats) */}
+          <div>
+            <label className="block text-gray-400 text-xs mb-1">{t("training.instructor")}</label>
+            <input
+              type="text"
+              value={form.instructor_name ?? ""}
+              onChange={(e) => setForm({ ...form, instructor_name: e.target.value })}
+              placeholder={t("training.instructorPlaceholder")}
+              className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
+            />
+          </div>
+
+          {/* Partner Tag (B-09: optional @username for sparring partner) */}
+          <div>
+            <label className="block text-gray-400 text-xs mb-1">{t("training.partnerTag")}</label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm select-none">@</span>
+              <input
+                type="text"
+                value={form.partner_username}
+                onChange={(e) => setForm({ ...form, partner_username: e.target.value.replace(/^@/, "").replace(/\s/g, "") })}
+                placeholder={t("training.partnerTagPlaceholder")}
+                className="w-full bg-zinc-800 text-white rounded-lg pl-7 pr-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
+              />
+            </div>
+          </div>
+
+          {/* Post-training weight */}
+          <div>
+            <label className="block text-gray-400 text-xs mb-1">{t("training.weight")}</label>
+            <div className="relative">
+              <input
+                type="number"
+                step="0.1"
+                min="20"
+                max="500"
+                value={form.weight ?? ""}
+                onChange={(e) => setForm({ ...form, weight: e.target.value })}
+                placeholder={t("training.weightPlaceholder")}
+                className="w-full bg-zinc-800 text-white rounded-lg pr-10 px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-600"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none">
+                kg
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ── Roll Details: shown only for Gi / No-Gi sparring sessions ─────── */}
       {(form.type === "gi" || form.type === "nogi") && (
@@ -451,33 +492,13 @@ const TrainingLogForm = memo(function TrainingLogForm({
                   }`}
                 >
                   <span className="text-lg leading-none mt-2 font-bold">{opt.icon}</span>
-                  <span className="text-[10px]">{opt.label}</span>
+                  <span className="text-xs">{opt.label}</span>
                 </button>
               ))}
             </div>
           </div>
         </div>
       )}
-
-      {/* Post-training weight (optional) */}
-      <div className="mb-3">
-        <label className="block text-gray-400 text-xs mb-1">{t("training.weight")}</label>
-        <div className="relative">
-          <input
-            type="number"
-            step="0.1"
-            min="20"
-            max="500"
-            value={form.weight ?? ""}
-            onChange={(e) => setForm({ ...form, weight: e.target.value })}
-            placeholder={t("training.weightPlaceholder")}
-            className="w-full bg-zinc-800 text-white rounded-lg pr-10 px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-600"
-          />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none">
-            kg
-          </span>
-        </div>
-      </div>
 
       {/* Notes */}
       <div className="mb-4">

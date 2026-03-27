@@ -309,13 +309,13 @@ function masteryDotClass(level: number | undefined): string {
 function MasteryLegend() {
   return (
     <div className="flex items-center gap-3 mb-3 px-1">
-      <span className="flex items-center gap-1.5 text-[10px] text-zinc-500">
+      <span className="flex items-center gap-1.5 text-xs text-zinc-500">
         <span className="w-2 h-2 rounded-full bg-zinc-500 inline-block" /> Locked
       </span>
-      <span className="flex items-center gap-1.5 text-[10px] text-zinc-500">
+      <span className="flex items-center gap-1.5 text-xs text-zinc-500">
         <span className="w-2 h-2 rounded-full bg-blue-400 inline-block" /> Learning
       </span>
-      <span className="flex items-center gap-1.5 text-[10px] text-zinc-500">
+      <span className="flex items-center gap-1.5 text-xs text-zinc-500">
         <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" /> Mastered
       </span>
     </div>
