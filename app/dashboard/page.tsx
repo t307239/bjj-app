@@ -644,7 +644,7 @@ export default async function DashboardPage({
           {/* ── Items 28/32: Pro upsell hook cards (free users only) ── */}
           {!isPro && (
             <>
-              {/* Item 28: Sparring Win Rate teaser */}
+              {/* Item 28: 12-Month Training Graph teaser (real Pro feature) */}
               <Link
                 href="/profile#upgrade"
                 className="col-span-2 md:col-span-1 relative bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/5 hover:border-amber-400/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden group"
@@ -654,11 +654,14 @@ export default async function DashboardPage({
                   <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-1">
                     {t("dashboard.upsellWinRateLabel")}
                   </span>
-                  <div className="flex items-end gap-1.5 mt-1">
-                    <span className="text-3xl font-black leading-none tabular-nums text-zinc-700 blur-sm select-none">
-                      68%
-                    </span>
-                    <span className="text-lg ml-0.5">🔒</span>
+                  <div className="flex items-end gap-1.5 mt-1 blur-sm select-none pointer-events-none">
+                    {/* Mini bar chart silhouette */}
+                    <div className="flex items-end gap-0.5 h-8">
+                      {[3,5,2,6,4,7,5,8,6,9,7,8].map((h, i) => (
+                        <div key={i} className="w-1.5 rounded-t bg-amber-600/40" style={{ height: `${h * 4}px` }} />
+                      ))}
+                    </div>
+                    <span className="text-lg ml-1">🔒</span>
                   </div>
                   <span className="mt-2 block text-xs text-amber-500/80 font-semibold group-hover:text-amber-400 transition-colors">
                     {t("dashboard.upsellUpgradeCta")} →
@@ -666,9 +669,9 @@ export default async function DashboardPage({
                 </div>
               </Link>
 
-              {/* Item 32: Injury Predictor teaser */}
+              {/* Item 32: Body Management teaser (real Pro feature) */}
               <Link
-                href="/profile#upgrade"
+                href="/profile"
                 className="col-span-2 md:col-span-1 relative bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/5 hover:border-rose-400/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden group"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-rose-900/10 to-transparent pointer-events-none" />
@@ -676,11 +679,14 @@ export default async function DashboardPage({
                   <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-1">
                     {t("dashboard.upsellInjuryLabel")}
                   </span>
-                  <div className="flex items-end gap-1.5 mt-1">
-                    <span className="text-3xl font-black leading-none tabular-nums text-zinc-700 blur-sm select-none">
-                      Low
-                    </span>
-                    <span className="text-lg ml-0.5">🔒</span>
+                  <div className="flex items-end gap-1.5 mt-1 blur-sm select-none pointer-events-none">
+                    {/* Body heatmap silhouette dots */}
+                    <div className="grid grid-cols-4 gap-1">
+                      {["bg-rose-500/50","bg-rose-400/30","bg-zinc-600/50","bg-rose-600/40","bg-zinc-600/30","bg-rose-500/30","bg-zinc-600/50","bg-rose-400/20"].map((c, i) => (
+                        <div key={i} className={`w-4 h-4 rounded-full ${c}`} />
+                      ))}
+                    </div>
+                    <span className="text-lg ml-1">🔒</span>
                   </div>
                   <span className="mt-2 block text-xs text-rose-500/80 font-semibold group-hover:text-rose-400 transition-colors">
                     {t("dashboard.upsellUpgradeCta")} →
