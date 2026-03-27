@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import PricingSection from "@/components/PricingSection";
+import { serverT as t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "BJJ App - Brazilian Jiu-Jitsu Training Tracker | 練習トラッカー",
@@ -145,14 +146,14 @@ export default async function Home() {
             href="/login"
             className="text-sm text-gray-400 hover:text-white transition-colors"
           >
-            Log in
+            {t("landing.navLogin")}
           </Link>
           {/* Fix 13: Get Started primary CTA in nav */}
           <Link
             href="/login"
             className="text-sm bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-4 py-2 rounded-full transition-colors"
           >
-            Get Started
+            {t("landing.navGetStarted")}
           </Link>
         </div>
       </nav>
@@ -163,20 +164,20 @@ export default async function Home() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-zinc-900 border border-emerald-400/30 rounded-full px-4 py-1.5 text-sm text-emerald-400 mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            Free to start
+            {t("landing.heroBadge")}
           </div>
 
           <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            Prove your BJJ growth
+            {t("landing.heroTitle1")}
             <br />
             <span className="bg-gradient-to-r from-[#10B981] to-cyan-400 bg-clip-text text-transparent">
-              with real data.
+              {t("landing.heroTitle2")}
             </span>
           </h1>
 
           <p className="text-gray-400 text-lg md:text-xl mb-10 leading-relaxed">
-            Track sessions, techniques, and streaks in one place.<br className="hidden md:block" />
-            Every day you log is a step closer to your next belt.
+            {t("landing.heroDesc").split("\n")[0]}<br className="hidden md:block" />
+            {t("landing.heroDesc").split("\n")[1]}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
@@ -185,24 +186,24 @@ export default async function Home() {
               href="/login"
               className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-4 px-8 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#10B981]/20"
             >
-              Start Tracking for Free
+              {t("landing.heroCta")}
               <IconArrowRight className="w-5 h-5" />
             </Link>
             <a
               href="#preview"
               className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-white/5 text-gray-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-white/10"
             >
-              See the app
+              {t("landing.heroSeeApp")}
             </a>
           </div>
 
           <p className="text-gray-400 text-sm">
-            Sign in with GitHub or Google. No credit card needed.
+            {t("landing.heroSubtext")}
           </p>
           {/* Fix 7: arrow → (not ↓) */}
           <p className="text-gray-500 text-xs mt-3">
             <Link href="/dashboard" className="hover:text-gray-300 underline transition-colors">
-              Try without signing up →
+              {t("landing.heroGuest")}
             </Link>
           </p>
 
@@ -229,29 +230,28 @@ export default async function Home() {
       <section id="english" className="px-4 py-16 bg-zinc-950 border-t border-white/5">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl font-bold mb-5 leading-tight text-white">
-            Stop forgetting what you learned.
+            {t("landing.engTitle1")}
             <br />
             <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              Track every technique.
+              {t("landing.engTitle2")}
             </span>
           </h2>
 
           <p className="text-gray-400 text-base md:text-lg mb-8 leading-relaxed">
-            You drill a move. You forget it by next week.<br className="hidden md:block" />
-            BJJ App fixes that — log your sessions, save techniques with mastery ratings,
-            and keep your training streak alive.
+            {t("landing.engDesc").split("\n")[0]}<br className="hidden md:block" />
+            {t("landing.engDesc").split("\n")[1]}
           </p>
 
           {/* Feature pills — Fix 12: no native emoji */}
           <div className="flex flex-wrap gap-2 justify-center mb-10 text-sm">
             {[
-              "Session log (Gi / NoGi / Drilling)",
-              "Technique notebook",
-              "Training streak",
-              "Weekly & monthly goals",
-              "Calendar heatmap",
-              "Competition W/L tracker",
-              "Visual skill map",
+              t("landing.engPillSession"),
+              t("landing.engPillTechnique"),
+              t("landing.engPillStreak"),
+              t("landing.engPillGoals"),
+              t("landing.engPillHeatmap"),
+              t("landing.engPillComp"),
+              t("landing.engPillSkillMap"),
             ].map((f) => (
               <span key={f} className="bg-zinc-900 border border-white/10 text-zinc-300 px-3 py-1.5 rounded-full">
                 {f}
@@ -265,17 +265,17 @@ export default async function Home() {
               href="/login"
               className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-4 px-8 rounded-full text-base transition-all hover:scale-105 shadow-lg shadow-[#10B981]/25"
             >
-              Start Tracking for Free
+              {t("landing.engCta")}
               <IconArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/dashboard"
               className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-white/5 text-gray-300 font-medium py-4 px-8 rounded-full text-base transition-all border border-white/10"
             >
-              Try without signing up
+              {t("landing.engGuest")}
             </Link>
           </div>
-          <p className="text-gray-500 text-xs mt-4">No credit card. Sign in with GitHub or Google. Takes 30 seconds.</p>
+          <p className="text-gray-500 text-xs mt-4">{t("landing.engSubtext")}</p>
         </div>
       </section>
 
@@ -285,31 +285,29 @@ export default async function Home() {
           <div className="text-center mb-12">
             {/* Fix 5: "Trusted by grapplers worldwide" */}
             <div className="inline-flex items-center gap-2 bg-zinc-900 border border-white/10 rounded-full px-4 py-2 mb-6">
-              <span className="text-sm text-green-400">✓ Trusted by grapplers worldwide</span>
+              <span className="text-sm text-green-400">{t("landing.proofBadge")}</span>
             </div>
             <h2 className="text-2xl font-bold text-white flex items-center justify-center gap-2">
               <IconTrendingUp className="w-6 h-6 text-emerald-400" />
-              Real training data
+              {t("landing.proofTitle")}
             </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
-              {/* Fix 5: 5,000+ → 50,000+ */}
-              <div className="text-3xl font-bold text-white mb-1">50,000+</div>
-              <p className="text-gray-400 text-xs">Sessions logged</p>
+              <div className="text-3xl font-bold text-white mb-1">{t("landing.proofSessions")}</div>
+              <p className="text-gray-400 text-xs">{t("landing.proofSessionsLabel")}</p>
             </div>
             <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
-              <div className="text-3xl font-bold text-white mb-1">1,200+</div>
-              <p className="text-gray-400 text-xs">Techniques saved</p>
+              <div className="text-3xl font-bold text-white mb-1">{t("landing.proofTechniques")}</div>
+              <p className="text-gray-400 text-xs">{t("landing.proofTechniquesLabel")}</p>
             </div>
             <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
-              {/* Fix 12: no emoji */}
-              <div className="text-3xl font-bold text-white mb-1">30+</div>
-              <p className="text-gray-400 text-xs">Longest streak (days)</p>
+              <div className="text-3xl font-bold text-white mb-1">{t("landing.proofStreak")}</div>
+              <p className="text-gray-400 text-xs">{t("landing.proofStreakLabel")}</p>
             </div>
             <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
-              <div className="text-3xl font-bold text-white mb-1">Free</div>
-              <p className="text-gray-400 text-xs">All core features</p>
+              <div className="text-3xl font-bold text-white mb-1">{t("landing.proofFree")}</div>
+              <p className="text-gray-400 text-xs">{t("landing.proofFreeLabel")}</p>
             </div>
           </div>
         </div>
@@ -318,23 +316,23 @@ export default async function Home() {
       {/* How it works — Fix 12: no emoji heading */}
       <section className="px-4 py-16 max-w-5xl mx-auto w-full">
         <h2 className="text-2xl font-bold text-center mb-12 text-white">
-          3 steps to visible progress
+          {t("landing.stepsTitle")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-white/10 rounded-full text-xl font-bold text-white mb-4">1</div>
-            <h3 className="font-bold text-lg text-white mb-3">Log</h3>
-            <p className="text-gray-400 text-sm">Record every session. Date, duration, type, and notes in seconds. Works great on mobile.</p>
+            <h3 className="font-bold text-lg text-white mb-3">{t("landing.step1Title")}</h3>
+            <p className="text-gray-400 text-sm">{t("landing.step1Desc")}</p>
           </div>
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-[#10B981]/20 rounded-full text-xl font-bold text-[#10B981] mb-4">2</div>
-            <h3 className="font-bold text-lg text-white mb-3">Track</h3>
-            <p className="text-gray-400 text-sm">Your dashboard updates in real time. Streak, goal progress, and technique count at a glance.</p>
+            <h3 className="font-bold text-lg text-white mb-3">{t("landing.step2Title")}</h3>
+            <p className="text-gray-400 text-sm">{t("landing.step2Desc")}</p>
           </div>
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-[#10B981]/20 rounded-full text-xl font-bold text-[#10B981] mb-4">3</div>
-            <h3 className="font-bold text-lg text-white mb-3">Improve</h3>
-            <p className="text-gray-400 text-sm">Spot your weak areas and fix them. Data proves your progress and keeps motivation high.</p>
+            <h3 className="font-bold text-lg text-white mb-3">{t("landing.step3Title")}</h3>
+            <p className="text-gray-400 text-sm">{t("landing.step3Desc")}</p>
           </div>
         </div>
       </section>
@@ -343,10 +341,9 @@ export default async function Home() {
       <section id="preview" className="px-4 py-16 bg-zinc-900/30">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-3 text-white">
-            Here&apos;s what it looks like
+            {t("landing.previewTitle")}
           </h2>
-          {/* Fix 2: "Core features free forever" instead of "All features free forever" */}
-          <p className="text-gray-500 text-center text-sm mb-12">Ready to use right after sign-up. Core features free forever.</p>
+          <p className="text-gray-500 text-center text-sm mb-12">{t("landing.previewSubtitle")}</p>
 
           <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
             {/* スマホモックアップ */}
@@ -452,8 +449,8 @@ export default async function Home() {
                   <IconBarChart className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white mb-1">Log every session</h3>
-                  <p className="text-gray-400 text-sm">Track Gi, NoGi, drilling, comp, and open mat. Review your calendar anytime.</p>
+                  <h3 className="font-semibold text-white mb-1">{t("landing.featureLogTitle")}</h3>
+                  <p className="text-gray-400 text-sm">{t("landing.featureLogDesc")}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -461,8 +458,8 @@ export default async function Home() {
                   <IconTarget className="w-5 h-5 text-[#10B981]" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white mb-1">Set weekly &amp; monthly goals</h3>
-                  <p className="text-gray-400 text-sm">Track your target with a progress bar. Turns green when you hit it.</p>
+                  <h3 className="font-semibold text-white mb-1">{t("landing.featureGoalsTitle")}</h3>
+                  <p className="text-gray-400 text-sm">{t("landing.featureGoalsDesc")}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -470,8 +467,8 @@ export default async function Home() {
                   <IconBook className="w-5 h-5 text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white mb-1">Spot your weak areas</h3>
-                  <p className="text-gray-400 text-sm">Organize techniques by position. Star ratings show where you need work.</p>
+                  <h3 className="font-semibold text-white mb-1">{t("landing.featureWeakTitle")}</h3>
+                  <p className="text-gray-400 text-sm">{t("landing.featureWeakDesc")}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -479,8 +476,8 @@ export default async function Home() {
                   <IconFlame className="w-5 h-5 text-orange-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white mb-1">Build a streak</h3>
-                  <p className="text-gray-400 text-sm">Auto-counts your consecutive training days. Hard to let it break.</p>
+                  <h3 className="font-semibold text-white mb-1">{t("landing.featureStreakTitle")}</h3>
+                  <p className="text-gray-400 text-sm">{t("landing.featureStreakDesc")}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -488,8 +485,8 @@ export default async function Home() {
                   <IconCalendar className="w-5 h-5 text-green-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white mb-1">Calendar view</h3>
-                  <p className="text-gray-400 text-sm">See your training days on a monthly calendar with color-coded type dots.</p>
+                  <h3 className="font-semibold text-white mb-1">{t("landing.featureCalendarTitle")}</h3>
+                  <p className="text-gray-400 text-sm">{t("landing.featureCalendarDesc")}</p>
                 </div>
               </div>
               {/* Fix 20: Visual Skill Map highlight */}
@@ -498,8 +495,8 @@ export default async function Home() {
                   <IconNetwork className="w-5 h-5 text-cyan-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white mb-1">Visual Skill Map</h3>
-                  <p className="text-gray-400 text-sm">Build a mind map of your techniques. See the connections between positions and submissions.</p>
+                  <h3 className="font-semibold text-white mb-1">{t("landing.featureSkillMapTitle")}</h3>
+                  <p className="text-gray-400 text-sm">{t("landing.featureSkillMapDesc")}</p>
                 </div>
               </div>
 
@@ -508,7 +505,7 @@ export default async function Home() {
                   href="/login"
                   className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-3 px-8 rounded-full transition-all hover:scale-105 w-full text-center"
                 >
-                  Start logging your data
+                  {t("landing.featureStartCta")}
                   <IconArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -520,37 +517,35 @@ export default async function Home() {
       {/* Features — Fix 2: "Core features, always free" | Fix 10: Day Streak | Fix 12: SVG icons | Fix 20: Skill Map */}
       <section className="px-4 py-16 max-w-5xl mx-auto w-full">
         <h2 className="text-2xl font-bold text-center mb-10 text-white">
-          Core features, always free
+          {t("landing.coreTitle")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-colors">
             <div className="mb-3"><IconBarChart className="w-8 h-8 text-emerald-400" /></div>
-            <h3 className="font-bold text-lg mb-2">Training Log</h3>
+            <h3 className="font-bold text-lg mb-2">{t("landing.coreLogTitle")}</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Log date, duration, type, and notes. Auto-totals your monthly sessions and training time.
+              {t("landing.coreLogDesc")}
             </p>
           </div>
           <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-colors">
             <div className="mb-3"><IconBook className="w-8 h-8 text-purple-400" /></div>
-            <h3 className="font-bold text-lg mb-2">Technique Journal</h3>
+            <h3 className="font-bold text-lg mb-2">{t("landing.coreTechTitle")}</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Organize techniques by position. Track mastery levels to spot and fix weak areas.
+              {t("landing.coreTechDesc")}
             </p>
           </div>
-          {/* Fix 10: Streak Tracker → Day Streak */}
           <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-colors">
             <div className="mb-3"><IconFlame className="w-8 h-8 text-orange-400" /></div>
-            <h3 className="font-bold text-lg mb-2">Day Streak</h3>
+            <h3 className="font-bold text-lg mb-2">{t("landing.coreStreakTitle")}</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Automatically counts your consecutive training days. The streak keeps you coming back.
+              {t("landing.coreStreakDesc")}
             </p>
           </div>
-          {/* Fix 20: Visual Skill Map card */}
           <div className="bg-zinc-900 rounded-2xl p-6 border border-cyan-500/30 hover:border-cyan-500/50 transition-colors">
             <div className="mb-3"><IconNetwork className="w-8 h-8 text-cyan-400" /></div>
-            <h3 className="font-bold text-lg mb-2">Visual Skill Map</h3>
+            <h3 className="font-bold text-lg mb-2">{t("landing.coreSkillMapTitle")}</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Mind-map your techniques. Visualize the connections between positions and submissions.
+              {t("landing.coreSkillMapDesc")}
             </p>
           </div>
         </div>
@@ -561,17 +556,17 @@ export default async function Home() {
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-2 text-white flex items-center justify-center gap-2">
             <IconBook className="w-6 h-6 text-emerald-400" />
-            Deepen Your BJJ Knowledge
+            {t("landing.wikiTitle")}
           </h2>
           <p className="text-gray-500 text-center text-sm mb-8">
-            4,000+ pages of free BJJ technique encyclopedia — beginner to advanced
+            {t("landing.wikiSubtitle")}
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             {[
-              { icon: <IconLock className="w-6 h-6 text-emerald-400" />, title: "Guard Systems", desc: "Closed, Half, Spider, DLR", href: "https://wiki.bjj-app.net/en/bjj-guard-retention-advanced.html" },
-              { icon: <IconLegs className="w-6 h-6 text-blue-400" />, title: "Leg Locks", desc: "Heel hooks, Ashi garami, Toe holds", href: "https://wiki.bjj-app.net/en/bjj-leg-lock-system.html" },
-              { icon: <IconTrophy className="w-6 h-6 text-yellow-400" />, title: "Competition Mindset", desc: "Match prep, nerves, strategy", href: "https://wiki.bjj-app.net/en/bjj-competition-mindset.html" },
-              { icon: <IconTrendingUp className="w-6 h-6 text-rose-400" />, title: "Nutrition & Recovery", desc: "Diet for BJJ athletes, injury prevention", href: "https://wiki.bjj-app.net/en/bjj-nutrition-science.html" },
+              { icon: <IconLock className="w-6 h-6 text-emerald-400" />, title: t("landing.wikiGuardTitle"), desc: t("landing.wikiGuardDesc"), href: "https://wiki.bjj-app.net/en/bjj-guard-retention-advanced.html" },
+              { icon: <IconLegs className="w-6 h-6 text-blue-400" />, title: t("landing.wikiLegTitle"), desc: t("landing.wikiLegDesc"), href: "https://wiki.bjj-app.net/en/bjj-leg-lock-system.html" },
+              { icon: <IconTrophy className="w-6 h-6 text-yellow-400" />, title: t("landing.wikiCompTitle"), desc: t("landing.wikiCompDesc"), href: "https://wiki.bjj-app.net/en/bjj-competition-mindset.html" },
+              { icon: <IconTrendingUp className="w-6 h-6 text-rose-400" />, title: t("landing.wikiNutritionTitle"), desc: t("landing.wikiNutritionDesc"), href: "https://wiki.bjj-app.net/en/bjj-nutrition-science.html" },
             ].map((item) => (
               <a
                 key={item.title}
@@ -594,7 +589,7 @@ export default async function Home() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-gray-300 hover:text-white transition-colors text-sm font-medium"
             >
-              Explore the BJJ Wiki
+              {t("landing.wikiExplore")}
               <IconArrowRight className="w-4 h-4" />
             </a>
           </div>
@@ -606,18 +601,14 @@ export default async function Home() {
 
       {/* FAQ — Fix 17: brighter question text | Fix 19: remove "Offline support is also planned" */}
       <section className="px-4 py-16 max-w-3xl mx-auto w-full">
-        <h2 className="text-2xl font-bold text-center mb-10 text-white">Frequently Asked Questions</h2>
+        <h2 className="text-2xl font-bold text-center mb-10 text-white">{t("landing.faqTitle")}</h2>
         <div className="space-y-4">
           {[
-            { q: "Is it really free?", a: "Yes, all core features are completely free. Training log, technique journal, goal tracker, calendar, and graphs are all free. Pro plan ($4.99/month) unlocks unlimited Skill Map, 12-month graphs, and streak freeze." },
-            { q: "Is this good for beginners?", a: "Absolutely! White belts and blue belts are the perfect users. Built to solve two common problems: not remembering technique names, and staying consistent. Logging from day one makes the path to your next belt visible." },
-            { q: "How is this different from a notebook?", a: "Three key differences: (1) Automatic streak counting — never lose momentum, (2) Visual graphs — see your growth in numbers, (3) BJJ Wiki integration — instantly look up any technique from 4,000+ pages. Data proves your progress." },
-            {
-              q: "Does it work on mobile?",
-              // Fix 19: remove "Offline support is also planned."
-              a: "Yes! Fully responsive and works beautifully on your smartphone browser. Add it to your home screen to use it like a native app.",
-            },
-            { q: "Is my data safe?", a: "Data is stored securely in Supabase (enterprise-grade PostgreSQL). Row Level Security means no one can access your data. Export everything as CSV anytime — no lock-in." },
+            { q: t("landing.faq1Q"), a: t("landing.faq1A") },
+            { q: t("landing.faq2Q"), a: t("landing.faq2A") },
+            { q: t("landing.faq3Q"), a: t("landing.faq3A") },
+            { q: t("landing.faq4Q"), a: t("landing.faq4A") },
+            { q: t("landing.faq5Q"), a: t("landing.faq5A") },
           ].map(({ q, a }, i) => (
             <div key={i} className="bg-zinc-900 rounded-xl p-5 border border-white/10">
               {/* Fix 17: zinc-100 for stronger contrast */}
@@ -630,24 +621,24 @@ export default async function Home() {
 
       {/* Final CTA — Fix 15 */}
       <section className="px-4 py-16 text-center bg-zinc-900/30">
-        <h2 className="text-2xl font-bold mb-3 text-white">Start Training Smarter Today</h2>
-        <p className="text-gray-500 text-sm mb-8">No credit card needed. Sign up with GitHub or Google in seconds.</p>
+        <h2 className="text-2xl font-bold mb-3 text-white">{t("landing.finalCtaTitle")}</h2>
+        <p className="text-gray-500 text-sm mb-8">{t("landing.finalCtaSubtitle")}</p>
         <Link
           href="/login"
           className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#10B981]/20"
         >
-          Start Tracking for Free
+          {t("landing.finalCtaButton")}
           <IconArrowRight className="w-5 h-5" />
         </Link>
       </section>
 
       {/* フッター — Fix 9: SaaS standard footer */}
       <footer className="px-6 py-8 text-center text-gray-400 text-sm border-t border-white/5">
-        <p className="mb-3">© 2026 BJJ App. All rights reserved.</p>
+        <p className="mb-3">{t("landing.footerCopyright")}</p>
         <div className="flex justify-center flex-wrap gap-4 text-xs">
-          <a href="/terms" className="hover:text-gray-400 transition-colors">Terms of Service</a>
-          <a href="/privacy" className="hover:text-gray-400 transition-colors">Privacy Policy</a>
-          <a href="/legal/tokushoho" className="hover:text-gray-400 transition-colors">特定商取引法に基づく表記</a>
+          <a href="/terms" className="hover:text-gray-400 transition-colors">{t("landing.footerTerms")}</a>
+          <a href="/privacy" className="hover:text-gray-400 transition-colors">{t("landing.footerPrivacy")}</a>
+          <a href="/legal/tokushoho" className="hover:text-gray-400 transition-colors">{t("landing.footerTokushoho")}</a>
         </div>
       </footer>
     </main>
