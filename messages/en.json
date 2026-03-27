@@ -573,36 +573,6 @@
     "shareButton": "Share on X",
     "shareText": "Just hit {n} training sessions on BJJ App! 🥋 {text} #BJJ #ConsistencyWins #BrazilianJiuJitsu"
   },
-  "quote": {
-    "1.text": "There is no losing in jiu-jitsu. You either win or you learn.",
-    "1.author": "Carlos Gracie",
-    "2.text": "A black belt is a white belt who never quit.",
-    "2.author": "BJJ saying",
-    "3.text": "Train hard, tap often, and never stop learning.",
-    "3.author": "Rickson Gracie",
-    "4.text": "Jiu-jitsu is the art of controlling your own fear.",
-    "4.author": "Saulo Ribeiro",
-    "5.text": "Roll with everyone. You can learn from every partner.",
-    "5.author": "BJJ saying",
-    "6.text": "Position before submission.",
-    "6.author": "Royce Gracie",
-    "7.text": "The mat doesn't care who you are. It only cares what you do.",
-    "7.author": "BJJ saying",
-    "8.text": "Be water, my friend.",
-    "8.author": "Bruce Lee",
-    "9.text": "Smooth is fast. Fast is smooth.",
-    "9.author": "Military saying",
-    "10.text": "The best time to start BJJ was yesterday. The second best time is today.",
-    "10.author": "BJJ saying",
-    "11.text": "Survive first, then escape. Then attack.",
-    "11.author": "Renzo Gracie",
-    "12.text": "Technique controls power.",
-    "12.author": "BJJ wisdom",
-    "13.text": "Daily practice creates who you'll become tomorrow.",
-    "13.author": "BJJ saying",
-    "14.text": "Cherish today's training more than your belt color.",
-    "14.author": "BJJ saying"
-  },
   "csv": {
     "exportFailed": "Export failed",
     "header.date": "Date",
@@ -728,12 +698,6 @@
     "nextPreview": "Tomorrow: {category} ▼",
     "nextHint": "Tomorrow's tip",
     "peekAhead": "Preview →"
-  },
-  "recommend": {
-    "dailyTheme": "Today's Training Theme",
-    "viewYoutube": "Watch on YouTube",
-    "trainingTip": "Today's Tip",
-    "masteryUp": "Improve mastery"
   },
   "error": {
     "title": "Something went wrong",
@@ -947,25 +911,6 @@
     "paywallPoint4": "Roll analytics (coming soon)",
     "paywallCta": "Upgrade to Pro — $4.99/mo",
     "paywallDismiss": "Maybe later"
-  },
-  "affiliate": {
-    "title": "Recommended Instructionals",
-    "viewAll": "View All →",
-    "view": "View →",
-    "disclaimer": "* Affiliate links (BJJ Fanatics)",
-    "level": {
-      "intermediate_advanced": "Int/Advanced",
-      "all": "All Levels",
-      "intermediate": "Intermediate"
-    },
-    "cat": {
-      "all": "All",
-      "guard": "Guard",
-      "submissions": "Submissions",
-      "takedowns": "Takedowns",
-      "back": "Back Attacks",
-      "escapes": "Escapes"
-    }
   },
   "techniquesPage": {
     "title": "Technique Journal",

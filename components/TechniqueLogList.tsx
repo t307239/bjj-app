@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useLocale } from "@/lib/i18n";
-import { getAffiliateInfo } from "@/lib/affiliateMap";
 import {
   type Technique,
   type TechniqueFormState,
@@ -375,23 +374,6 @@ export default function TechniqueLogList({
                     )}
                   </div>
                   <div className="flex gap-1 ml-3 flex-shrink-0">
-                    {(() => {
-                      const dvdInfo = getAffiliateInfo(technique.name);
-                      return dvdInfo ? (
-                        <a
-                          href={dvdInfo.url}
-                          target="_blank"
-                          rel="noopener noreferrer sponsored"
-                          className="flex items-center gap-1 text-xs font-medium text-orange-400/80 hover:text-orange-300 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/20 hover:border-orange-500/40 px-2 py-1 rounded-lg transition-all whitespace-nowrap"
-                          title={`${dvdInfo.title} by ${dvdInfo.instructor}`}
-                        >
-                          <span>📼</span>
-                          <span>
-                            {dvdInfo.instructor.split(" ").slice(-1)[0]}
-                          </span>
-                        </a>
-                      ) : null;
-                    })()}
                     <button
                       onClick={() => onStartEdit(technique)}
                       className="text-gray-500 hover:text-[#10B981] transition-colors p-2 flex items-center justify-center min-w-[44px] min-h-[44px]"

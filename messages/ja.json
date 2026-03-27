@@ -450,36 +450,6 @@
     "shareButton": "Xでシェア",
     "shareText": "BJJアプリで{n}回目の練習記録達成！🥋 {text} #BJJ #ブラジリアン柔術 #続ける力"
   },
-  "quote": {
-    "1.text": "There is no losing in jiu-jitsu. You either win or you learn.",
-    "1.author": "Carlos Gracie",
-    "2.text": "A black belt is a white belt who never quit.",
-    "2.author": "BJJ saying",
-    "3.text": "Train hard, tap often, and never stop learning.",
-    "3.author": "Rickson Gracie",
-    "4.text": "Jiu-jitsu is the art of controlling your own fear.",
-    "4.author": "Saulo Ribeiro",
-    "5.text": "Roll with everyone. You can learn from every partner.",
-    "5.author": "BJJ saying",
-    "6.text": "Position before submission.",
-    "6.author": "Royce Gracie",
-    "7.text": "The mat doesn't care who you are. It only cares what you do.",
-    "7.author": "BJJ saying",
-    "8.text": "Be water, my friend.",
-    "8.author": "Bruce Lee",
-    "9.text": "Smooth is fast. Fast is smooth.",
-    "9.author": "Military saying",
-    "10.text": "The best time to start BJJ was yesterday. The second best time is today.",
-    "10.author": "BJJ saying",
-    "11.text": "Survive first, then escape. Then attack.",
-    "11.author": "Renzo Gracie",
-    "12.text": "技は力を制す。",
-    "12.author": "柔術の精神",
-    "13.text": "毎日の積み重ねが、いつかの自分を作る。",
-    "13.author": "BJJ saying",
-    "14.text": "帯の色より、今日の稽古を大切に。",
-    "14.author": "BJJ saying"
-  },
   "csv": {
     "exportFailed": "エクスポートに失敗しました",
     "header.date": "日付",
@@ -584,12 +554,6 @@
     "nextPreview": "明日: {category} ▼",
     "nextHint": "明日のヒント",
     "peekAhead": "先読みする →"
-  },
-  "recommend": {
-    "dailyTheme": "今日の練習テーマ",
-    "viewYoutube": "YouTubeで動画を見る",
-    "trainingTip": "今日のヒント",
-    "masteryUp": "習熟度を上げよう"
   },
   "error": {
     "title": "エラーが発生しました",
@@ -746,25 +710,6 @@
     "paywallPoint4": "ロール分析（近日公開）",
     "paywallCta": "Proにアップグレード — $4.99/月",
     "paywallDismiss": "またあとで"
-  },
-  "affiliate": {
-    "title": "おすすめインストラクショナル",
-    "viewAll": "すべて見る →",
-    "view": "見る →",
-    "disclaimer": "※ リンク先はBJJ Fanatics（アフィリエイト広告）",
-    "level": {
-      "intermediate_advanced": "中〜上級",
-      "all": "全レベル",
-      "intermediate": "中級"
-    },
-    "cat": {
-      "all": "すべて",
-      "guard": "ガード",
-      "submissions": "サブミッション",
-      "takedowns": "テイクダウン",
-      "back": "バック",
-      "escapes": "エスケープ"
-    }
   },
   "techniquesPage": {
     "title": "テクニックジャーナル",
