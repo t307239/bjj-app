@@ -530,6 +530,13 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
 
     if (pendingDelete) {
       clearTimeout(pendingDelete.timerId);
+      // Immediately commit the skipped-over delete to DB (UI already removed it)
+      void supabase
+        .from("training_logs")
+        .delete()
+        .eq("id", pendingDelete.id)
+        .eq("user_id", userId);
+      setTotalCount((c) => (c !== null ? Math.max(0, c - 1) : null));
     }
 
     setEntries((prev) => prev.filter((e) => e.id !== id));

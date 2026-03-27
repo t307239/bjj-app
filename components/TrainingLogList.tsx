@@ -58,7 +58,7 @@ function DurationPicker({
             key={d}
             type="button"
             onClick={() => onChange(d)}
-            className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+            className={`px-2.5 py-1.5 min-h-[32px] rounded-lg text-xs font-medium transition-colors ${
               value === d
                 ? "bg-[#10B981] text-white"
                 : "bg-zinc-800 text-gray-400 hover:text-white"
@@ -311,7 +311,7 @@ const TrainingLogList = memo(function TrainingLogList({
                 <div className="flex gap-2">
                   <button
                     type="submit"
-                    className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-xs font-semibold py-1.5 rounded-lg transition-all"
+                    className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-xs font-semibold py-2 min-h-[40px] rounded-lg transition-all"
                   >
                     {t("training.update")}
                   </button>
