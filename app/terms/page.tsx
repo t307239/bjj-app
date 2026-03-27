@@ -130,7 +130,7 @@ export default function TermsPage() {
               6. Prohibited Conduct
             </h2>
             <p className="text-zinc-400 mb-2">You agree not to:</p>
-            <ul className="list-disc pl-5 space-y-1.5 text-zinc-500">
+            <ul className="list-disc pl-5 space-y-1.5 text-zinc-400">
               <li>Use the Service for any unlawful purpose</li>
               <li>Attempt to gain unauthorized access to any part of the Service</li>
               <li>Reverse-engineer or scrape the Service at scale</li>

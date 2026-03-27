@@ -315,11 +315,11 @@ export default async function WikiIndexPage({
                   <h2 className={`text-lg font-bold ${cfg.headerClass}`}>
                     {cfg.label}
                   </h2>
-                  <p className="text-xs text-zinc-500 mt-0.5 uppercase tracking-widest">
+                  <p className="text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
                     {cfg.description}
                   </p>
                 </div>
-                <span className="ml-auto text-xs text-zinc-500 bg-white/5 border border-white/10 rounded-full px-2.5 py-0.5 tabular-nums">
+                <span className="ml-auto text-xs text-zinc-400 bg-white/5 border border-white/10 rounded-full px-2.5 py-0.5 tabular-nums">
                   {items.length}
                 </span>
               </div>
@@ -353,7 +353,7 @@ export default async function WikiIndexPage({
 
       {/* ── フッター ── */}
       <footer className="mt-8 border-t border-white/10 py-8">
-        <div className="mx-auto max-w-6xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-zinc-500">
+        <div className="mx-auto max-w-6xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-zinc-400">
           <p>© {new Date().getFullYear()} BJJ Wiki — All rights reserved.</p>
           <div className="flex items-center gap-4">
             {VALID_LANGS.map((l) => (

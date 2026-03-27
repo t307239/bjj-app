@@ -71,7 +71,7 @@ export default async function GymDashboardPage() {
                         ✦ PRO
                       </span>
                     ) : (
-                      <span className="inline-flex items-center text-xs font-semibold text-zinc-500 bg-zinc-800/60 border border-zinc-700/40 px-2 py-0.5 rounded-full">
+                      <span className="inline-flex items-center text-xs font-semibold text-zinc-400 bg-zinc-800/60 border border-zinc-700/40 px-2 py-0.5 rounded-full">
                         FREE
                       </span>
                     )}
@@ -88,7 +88,7 @@ export default async function GymDashboardPage() {
                   <p className="text-2xl font-black text-white tabular-nums">
                     {memberCount}
                   </p>
-                  <p className="text-xs text-zinc-500 uppercase tracking-widest">
+                  <p className="text-xs text-zinc-400 uppercase tracking-widest">
                     members
                   </p>
                 </div>

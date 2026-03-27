@@ -190,7 +190,7 @@ export default async function ProfilePage() {
               <p className="text-2xl font-black text-white tabular-nums">
                 {totalCount ?? 0}
               </p>
-              <p className="text-xs text-zinc-500 mt-0.5 tracking-widest uppercase">
+              <p className="text-xs text-zinc-400 mt-0.5 tracking-widest uppercase">
                 {t("dashboard.sessionsUnit")}
               </p>
             </div>
@@ -198,7 +198,7 @@ export default async function ProfilePage() {
               <p className="text-2xl font-black tabular-nums bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">
                 {streak}
               </p>
-              <p className="text-xs text-zinc-500 mt-0.5 tracking-widest uppercase">
+              <p className="text-xs text-zinc-400 mt-0.5 tracking-widest uppercase">
                 {t("dashboard.streak")}
               </p>
             </div>
@@ -206,7 +206,7 @@ export default async function ProfilePage() {
               <p className="text-2xl font-black text-white tabular-nums">
                 {monthsBJJ}
               </p>
-              <p className="text-xs text-zinc-500 mt-0.5 tracking-widest uppercase">
+              <p className="text-xs text-zinc-400 mt-0.5 tracking-widest uppercase">
                 mo. BJJ
               </p>
             </div>

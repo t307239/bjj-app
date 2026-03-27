@@ -447,14 +447,14 @@ export default async function DashboardPage({
             <svg className="absolute top-3 right-3 w-3.5 h-3.5 text-zinc-500 group-hover:text-yellow-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-            <span className="text-xs font-semibold text-zinc-500 tracking-widest block mb-1">
+            <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-1">
               {t("dashboard.streak")}
             </span>
             <div className="flex items-end gap-1 mt-1">
               <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">
                 {streak}
               </span>
-              <span className="text-zinc-500 text-xs mb-0.5">
+              <span className="text-zinc-400 text-xs mb-0.5">
                 {t("dashboard.streakDaysUnit")}
               </span>
             </div>
@@ -480,14 +480,14 @@ export default async function DashboardPage({
 
           {/* This week */}
           <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-emerald-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200">
-            <span className="text-xs font-semibold text-zinc-500 tracking-widest block mb-1">
+            <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-1">
               {t("dashboard.weekTraining")}
             </span>
             <div className="flex items-end gap-1 mt-1">
               <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
                 {weekCount ?? 0}
               </span>
-              <span className="text-zinc-500 text-xs mb-0.5">
+              <span className="text-zinc-400 text-xs mb-0.5">
                 {t("dashboard.sessionsUnit")}
               </span>
             </div>
@@ -525,7 +525,7 @@ export default async function DashboardPage({
               <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
                 {monthCount ?? 0}
               </span>
-              <span className="text-zinc-500 text-sm mb-0.5">
+              <span className="text-zinc-400 text-sm mb-0.5">
                 {t("dashboard.sessionsUnit")}
               </span>
             </div>
@@ -577,14 +577,14 @@ export default async function DashboardPage({
           {/* Avg session — col-span-2, BeltProgressと同じ行に横並び（dead space解消）*/}
           {avgSessionMin > 0 && (
             <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-white/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200">
-              <span className="text-xs font-semibold text-zinc-500 tracking-widest block mb-1">
+              <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-1">
                 {t("dashboard.bentoAvgSession")}
               </span>
               <div className="flex items-end gap-1 mt-1">
                 <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-zinc-200 to-zinc-400 bg-clip-text text-transparent">
                   {avgSessionMin}
                 </span>
-                <span className="text-zinc-500 text-xs mb-0.5">
+                <span className="text-zinc-400 text-xs mb-0.5">
                   {t("dashboard.bentoMinPerSession")}
                 </span>
               </div>
@@ -598,14 +598,14 @@ export default async function DashboardPage({
           >
             <div className="flex items-center justify-between mb-2">
               <div>
-                <span className="text-xs font-semibold text-zinc-500 tracking-widest block mb-1">
+                <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-1">
                   {t("dashboard.techniques")}
                 </span>
                 <div className="flex items-end gap-1.5">
                   <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-violet-400 to-purple-300 bg-clip-text text-transparent">
                     {techniqueCount ?? 0}
                   </span>
-                  <span className="text-zinc-500 text-xs mb-0.5">
+                  <span className="text-zinc-400 text-xs mb-0.5">
                     {t("dashboard.loggedUnit")}
                   </span>
                 </div>
@@ -696,7 +696,7 @@ export default async function DashboardPage({
             SECTION 3 — THIS WEEK
             ═══════════════════════════════════════════ */}
         <section className="mb-7">
-          <p className="text-xs font-semibold text-zinc-500 tracking-widest px-0.5 mb-3 uppercase">
+          <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
             {t("dashboard.weekTraining")}
           </p>
           <div className="space-y-3">
@@ -710,7 +710,7 @@ export default async function DashboardPage({
             ═══════════════════════════════════════════ */}
         {gymCurriculum && (
           <section className="mb-7">
-            <p className="text-xs font-semibold text-zinc-500 tracking-widest px-0.5 mb-3 uppercase">
+            <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
               {t("dashboard.sectionToday")}
             </p>
             <GymCurriculumCard
@@ -727,7 +727,7 @@ export default async function DashboardPage({
             ═══════════════════════════════════════════ */}
         {gymId && shareDataWithGym && (
           <section className="mb-7">
-            <p className="text-xs font-semibold text-zinc-500 tracking-widest px-0.5 mb-3 uppercase">
+            <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
               {t("dashboard.sectionYourGym")}
             </p>
             <GymRanking userId={user.id} gymId={gymId} />
@@ -786,7 +786,7 @@ export default async function DashboardPage({
             </button>
             {/* Wiki 初心者リンク */}
             <div className="mt-6 pt-5 border-t border-white/5">
-              <p className="text-zinc-500 text-xs mb-3">New to BJJ?</p>
+              <p className="text-zinc-400 text-xs mb-3">New to BJJ?</p>
               <a
                 href="https://wiki.bjj-app.net/wiki/en/bjj-basics"
                 target="_blank"

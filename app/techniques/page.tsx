@@ -139,7 +139,7 @@ export default async function TechniquesPage() {
                 <p className="text-2xl font-black text-white tabular-nums">
                   {totalTechniques}
                 </p>
-                <p className="text-xs text-zinc-500 mt-0.5 uppercase tracking-widest">
+                <p className="text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
                   logged
                 </p>
               </div>
@@ -148,7 +148,7 @@ export default async function TechniquesPage() {
                 <p className="text-2xl font-black text-yellow-400 tabular-nums">
                   {learned + mastered}
                 </p>
-                <p className="text-xs text-zinc-500 mt-0.5 uppercase tracking-widest">
+                <p className="text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
                   solid+
                 </p>
               </div>
@@ -157,7 +157,7 @@ export default async function TechniquesPage() {
                 <p className="text-2xl font-black text-green-400 tabular-nums">
                   {mastered}
                 </p>
-                <p className="text-xs text-zinc-500 mt-0.5 uppercase tracking-widest">
+                <p className="text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
                   mastered
                 </p>
               </div>

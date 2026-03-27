@@ -55,7 +55,7 @@ export default function PrivacyPage() {
               1. Information We Collect
             </h2>
             <p className="text-zinc-400 mb-3">We collect the following information when you use BJJ App:</p>
-            <ul className="list-disc pl-5 space-y-2 text-zinc-500">
+            <ul className="list-disc pl-5 space-y-2 text-zinc-400">
               <li>
                 <span className="text-zinc-200 font-medium">Account information</span> — email address
                 and display name provided by your OAuth provider (Google / GitHub) or directly by you
@@ -79,7 +79,7 @@ export default function PrivacyPage() {
             <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
               2. How We Use Your Information
             </h2>
-            <ul className="list-disc pl-5 space-y-1.5 text-zinc-500">
+            <ul className="list-disc pl-5 space-y-1.5 text-zinc-400">
               <li>To provide and improve the Service</li>
               <li>To display your training data back to you in the dashboard</li>
               <li>To process subscription payments (via Stripe)</li>
@@ -104,7 +104,7 @@ export default function PrivacyPage() {
               4. Third-Party Services
             </h2>
             <p className="text-zinc-400 mb-3">We use the following third-party services:</p>
-            <ul className="list-disc pl-5 space-y-2 text-zinc-500">
+            <ul className="list-disc pl-5 space-y-2 text-zinc-400">
               <li><span className="text-zinc-200">Supabase</span> — database and authentication</li>
               <li><span className="text-zinc-200">Vercel</span> — hosting and deployment</li>
               <li><span className="text-zinc-200">Stripe</span> — payment processing (Pro subscriptions)</li>
@@ -144,7 +144,7 @@ export default function PrivacyPage() {
               7. Your Rights
             </h2>
             <p className="text-zinc-400 mb-2">You have the right to:</p>
-            <ul className="list-disc pl-5 space-y-1.5 text-zinc-500">
+            <ul className="list-disc pl-5 space-y-1.5 text-zinc-400">
               <li>Access all data we hold about you (available via the dashboard export feature)</li>
               <li>Correct inaccurate data (editable in your profile)</li>
               <li>Delete your account and all associated data (Profile → Settings → Delete Account)</li>
