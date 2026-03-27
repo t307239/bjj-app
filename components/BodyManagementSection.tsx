@@ -23,15 +23,20 @@ export default function BodyManagementSection({ userId }: Props) {
   const [chartRefreshKey, setChartRefreshKey] = useState(0);
 
   const loadProfile = useCallback(async () => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("is_pro, body_status")
-      .eq("id", userId)
-      .single();
+    try {
+      const { data } = await supabase
+        .from("profiles")
+        .select("is_pro, body_status")
+        .eq("id", userId)
+        .single();
 
-    setIsPro(data?.is_pro ?? false);
-    setBodyStatus(data?.body_status ?? null);
-    setLoading(false);
+      setIsPro(data?.is_pro ?? false);
+      setBodyStatus(data?.body_status ?? null);
+    } catch {
+      // Network/auth error — show free tier gracefully
+    } finally {
+      setLoading(false);
+    }
   }, [userId]);
 
   useEffect(() => { loadProfile(); }, [loadProfile]);
