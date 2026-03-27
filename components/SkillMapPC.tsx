@@ -274,14 +274,14 @@ function AddNodeInput({
       <div className="flex gap-2">
         <button
           onClick={onCancel}
-          className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-xs text-gray-300 py-1 rounded-lg"
+          className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-xs text-gray-300 py-2 min-h-[40px] rounded-lg"
         >
           {t("common.cancel")}
         </button>
         <button
           onClick={() => { if (name.trim()) onAdd(name.trim()); }}
           disabled={!name.trim()}
-          className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-xs text-white py-1 rounded-lg"
+          className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-xs text-white py-2 min-h-[40px] rounded-lg"
         >
           {t("skillmap.addBtn")}
         </button>

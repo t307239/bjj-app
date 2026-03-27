@@ -733,7 +733,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink, strip
       <div className="flex bg-zinc-800 rounded-xl p-1 mb-4">
         <button
           onClick={() => setViewMode("roots")}
-          className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+          className={`flex-1 py-2 min-h-[44px] rounded-lg text-sm font-medium transition-colors ${
             viewMode === "roots"
               ? "bg-zinc-700 text-white"
               : "text-gray-500 hover:text-gray-300"
@@ -744,7 +744,7 @@ export default function SkillMapMobile({ userId, isPro, stripePaymentLink, strip
         </button>
         <button
           onClick={() => setViewMode("all")}
-          className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+          className={`flex-1 py-2 min-h-[44px] rounded-lg text-sm font-medium transition-colors ${
             viewMode === "all"
               ? "bg-zinc-700 text-white"
               : "text-gray-500 hover:text-gray-300"
