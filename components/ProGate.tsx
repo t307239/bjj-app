@@ -73,7 +73,7 @@ export default function ProGate({
             </button>
             <span className={`text-xs ${isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>Annual</span>
             {isAnnual && (
-              <span className="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+              <span className="bg-emerald-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
                 Save 16%
               </span>
             )}
