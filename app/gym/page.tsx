@@ -80,19 +80,19 @@ export default function GymPage() {
               before they leave.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a
-                href="mailto:307239t777@gmail.com?subject=BJJ%20App%20Academy%20Inquiry"
-                className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-8 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
-              >
-                Request Access →
-              </a>
+            <div className="flex flex-col items-center gap-3">
               <Link
                 href="/gym/dashboard"
-                className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-white/5 text-gray-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-white/10"
+                className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
               >
-                Open Dashboard
+                Open Dashboard — Free →
               </Link>
+              <a
+                href="#waitlist"
+                className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
+              >
+                Or join the waitlist ↓
+              </a>
             </div>
           </div>
         </section>
@@ -266,7 +266,7 @@ export default function GymPage() {
         </section>
 
         {/* Waitlist Section */}
-        <section className="px-4 py-16 bg-zinc-900/20">
+        <section id="waitlist" className="px-4 py-16 bg-zinc-900/20">
           <div className="max-w-md mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-bold text-zinc-100 mb-3">

@@ -626,14 +626,17 @@ export default async function DashboardPage({
             </div>
             {recentTechniques && recentTechniques.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mt-3">
-                {(recentTechniques as { name: string }[]).slice(0, 2).map((tech) => (
-                  <span
-                    key={tech.name}
-                    className="inline-flex items-center rounded-md bg-zinc-800 px-2 py-1 text-xs font-medium text-zinc-300 ring-1 ring-inset ring-zinc-700 truncate max-w-[120px]"
-                  >
-                    {tech.name}
-                  </span>
-                ))}
+                {(recentTechniques as { name: string }[])
+                  .filter((tech) => tech.name && tech.name.length > 1)
+                  .slice(0, 2)
+                  .map((tech) => (
+                    <span
+                      key={tech.name}
+                      className="inline-flex items-center rounded-md bg-zinc-800 px-2 py-1 text-xs font-medium text-zinc-300 ring-1 ring-inset ring-zinc-700 truncate max-w-[120px]"
+                    >
+                      {tech.name}
+                    </span>
+                  ))}
               </div>
             )}
           </Link>
@@ -748,8 +751,8 @@ export default async function DashboardPage({
             ═══════════════════════════════════════════ */}
         {hasFirstLog ? (
           <>
-            {/* Dynamic motivational message */}
-            <DashboardMotivation daysSince={daysSinceLastLog} />
+            {/* Dynamic motivational message — streak危機バナー表示中は非表示（メッセージ重複防止）*/}
+            {streak < 3 && <DashboardMotivation daysSince={daysSinceLastLog} />}
             <CollapsibleSection
               label={t("dashboard.analyticsLabel")}
               defaultOpen={false}
