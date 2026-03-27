@@ -264,7 +264,7 @@ export default function BodyHeatmap({ userId, initialStatus }: Props) {
             />
             <span className="text-gray-400 truncate">{t(p.labelKey)}</span>
             <span
-              className="ml-auto text-[10px] font-semibold"
+              className="ml-auto text-xs font-semibold"
               style={{ color: STATUS_COLOR[status[p.key]!] }}
             >
               {t(`body.status.${status[p.key]}`)}

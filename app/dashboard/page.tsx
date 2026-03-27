@@ -660,7 +660,7 @@ export default async function DashboardPage({
                     </span>
                     <span className="text-lg ml-0.5">🔒</span>
                   </div>
-                  <span className="mt-2 block text-[10px] text-amber-500/80 font-semibold group-hover:text-amber-400 transition-colors">
+                  <span className="mt-2 block text-xs text-amber-500/80 font-semibold group-hover:text-amber-400 transition-colors">
                     {t("dashboard.upsellUpgradeCta")} →
                   </span>
                 </div>
@@ -682,7 +682,7 @@ export default async function DashboardPage({
                     </span>
                     <span className="text-lg ml-0.5">🔒</span>
                   </div>
-                  <span className="mt-2 block text-[10px] text-rose-500/80 font-semibold group-hover:text-rose-400 transition-colors">
+                  <span className="mt-2 block text-xs text-rose-500/80 font-semibold group-hover:text-rose-400 transition-colors">
                     {t("dashboard.upsellUpgradeCta")} →
                   </span>
                 </div>
