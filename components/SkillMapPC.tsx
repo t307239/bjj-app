@@ -859,7 +859,7 @@ export default function SkillMapPC({ userId, isPro, stripePaymentLink, stripeAnn
         <SkillMapLegend />
 
         {/* Helper hint — absolute overlay at bottom-right of canvas */}
-        <p className="absolute bottom-2 right-3 text-[11px] text-zinc-500 pointer-events-none select-none">
+        <p className="absolute bottom-2 right-3 text-xs text-zinc-500 pointer-events-none select-none">
           {t("skillmap.pcContextHint")}
         </p>
       </div>

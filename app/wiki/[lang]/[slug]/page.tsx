@@ -301,7 +301,7 @@ function OnThisPage({ items, lang }: { items: TocItem[]; lang: string }) {
 
   return (
     <nav aria-label={label} className="toc-nav">
-      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+      <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
         {label}
       </p>
       <ul className="space-y-1 border-l border-white/10 pl-3">
@@ -421,7 +421,7 @@ function RelatedVideoSection({
 
   return (
     <div className="mt-12 pt-8 border-t border-white/10">
-      <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+      <p className="mb-4 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
         🎬 {headingLabel}
       </p>
 
@@ -565,7 +565,7 @@ function RelatedArticles({
 
   return (
     <div className="mt-10 pt-8 border-t border-white/10">
-      <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+      <p className="mb-4 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
         {cfg ? `${cfg.emoji} More ${cfg.label}` : "Related Articles"}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

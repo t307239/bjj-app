@@ -155,7 +155,7 @@ function SkillMapLegend() {
         ].map(({ label, cls }) => (
           <span key={label} className="flex items-center gap-1.5">
             <span className={`w-2.5 h-2.5 rounded-sm border ${cls} inline-block`} />
-            <span className="text-[10px] text-zinc-400">{label}</span>
+            <span className="text-xs text-zinc-400">{label}</span>
           </span>
         ))}
       </div>
@@ -259,7 +259,7 @@ function TechniqueNodeComp({
       {/* Delete button */}
       {data.isPro && !confirmDel && (
         <button
-          className="absolute top-1.5 right-1.5 text-zinc-500 hover:text-red-400 text-[11px] leading-none transition-colors"
+          className="absolute top-1.5 right-1.5 text-zinc-500 hover:text-red-400 text-xs leading-none transition-colors"
           onClick={(e) => { e.stopPropagation(); setConfirmDel(true); }}
           aria-label={data.t?.("skillmap.deleteNode") ?? "Remove"}
         >
@@ -269,13 +269,13 @@ function TechniqueNodeComp({
       {data.isPro && confirmDel && (
         <div className="flex items-center gap-1 mt-1.5">
           <button
-            className="text-[10px] bg-red-600 hover:bg-red-500 text-white px-1.5 py-0.5 rounded transition-colors"
+            className="text-xs bg-red-600 hover:bg-red-500 text-white px-1.5 py-0.5 rounded transition-colors"
             onClick={(e) => { e.stopPropagation(); _deleteNodeRef.current(id); }}
           >
             {data.t?.("common.delete") ?? "Del"}
           </button>
           <button
-            className="text-[10px] text-gray-400 hover:text-gray-200 transition-colors"
+            className="text-xs text-gray-400 hover:text-gray-200 transition-colors"
             onClick={(e) => { e.stopPropagation(); setConfirmDel(false); }}
           >
             {data.t?.("common.cancel") ?? "✕"}

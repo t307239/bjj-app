@@ -315,7 +315,7 @@ export default async function WikiIndexPage({
                   <h2 className={`text-lg font-bold ${cfg.headerClass}`}>
                     {cfg.label}
                   </h2>
-                  <p className="text-[11px] text-zinc-500 mt-0.5 uppercase tracking-widest">
+                  <p className="text-xs text-zinc-500 mt-0.5 uppercase tracking-widest">
                     {cfg.description}
                   </p>
                 </div>
