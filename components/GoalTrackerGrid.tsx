@@ -41,7 +41,7 @@ export function GoalWeekDayGrid({
               {trained ? "✓" : isToday ? "•" : ""}
             </div>
             <span className={`text-xs leading-none ${
-              isToday ? "text-gray-300 font-semibold" : isFuture ? "text-gray-600" : "text-gray-500"
+              isToday ? "text-gray-300 font-semibold" : isFuture ? "text-gray-500" : "text-gray-400"
             }`}>
               {label}
             </span>

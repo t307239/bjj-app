@@ -180,7 +180,7 @@ export default function WeeklyStrip({ userId }: Props) {
                     : trained
                     ? "text-gray-300"
                     : isFuture
-                    ? "text-zinc-600"
+                    ? "text-zinc-500"
                     : "text-zinc-400"
                 }`}
               >
