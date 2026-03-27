@@ -199,7 +199,10 @@ export default function GymPage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Starter */}
-              <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10">
+              <div className="bg-zinc-900 rounded-2xl p-8 border border-blue-500/50 relative">
+                <div className="absolute -top-3 right-6 bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-bold">
+                  Popular
+                </div>
                 <h3 className="text-lg font-bold mb-2 text-zinc-100">Starter</h3>
                 <div className="text-3xl font-bold text-zinc-100 mb-1">
                   $49<span className="text-sm font-normal text-gray-500">/month</span>
@@ -228,10 +231,7 @@ export default function GymPage() {
               </div>
 
               {/* Pro */}
-              <div className="bg-zinc-900 rounded-2xl p-8 border border-blue-500/50 relative">
-                <div className="absolute -top-3 right-6 bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-bold">
-                  Popular
-                </div>
+              <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10">
                 <h3 className="text-lg font-bold mb-2 text-zinc-100">Pro</h3>
                 <div className="text-3xl font-bold text-zinc-100 mb-1">
                   $99<span className="text-sm font-normal text-gray-500">/month</span>

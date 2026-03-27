@@ -162,7 +162,7 @@ export default function WeeklyStrip({ userId }: Props) {
                     : day.isToday
                     ? "border-2 border-[#10B981]/50 bg-transparent"
                     : isFuture
-                    ? "bg-white/5"
+                    ? "border border-dashed border-white/15 bg-transparent"
                     : "bg-white/10"
                 }`}
               >
@@ -179,6 +179,8 @@ export default function WeeklyStrip({ userId }: Props) {
                     ? "text-[#10B981] font-semibold"
                     : trained
                     ? "text-gray-300"
+                    : isFuture
+                    ? "text-zinc-600"
                     : "text-zinc-400"
                 }`}
               >

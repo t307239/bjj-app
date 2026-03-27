@@ -502,7 +502,7 @@ export default async function DashboardPage({
           </div>
 
           {/* This month — wide */}
-          <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-rose-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200 flex flex-col justify-between">
+          <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-emerald-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200 flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-zinc-500 tracking-widest">
                 {t("dashboard.monthTraining")}
@@ -511,7 +511,7 @@ export default async function DashboardPage({
                 <span
                   className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                     (monthCount ?? 0) >= prevMonthCount
-                      ? "text-green-400 bg-green-400/10"
+                      ? "text-emerald-400 bg-emerald-400/10"
                       : "text-red-400 bg-red-400/10"
                   }`}
                 >
@@ -522,7 +522,7 @@ export default async function DashboardPage({
               )}
             </div>
             <div className="flex items-end gap-2 mt-2">
-              <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-rose-400 to-orange-400 bg-clip-text text-transparent">
+              <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
                 {monthCount ?? 0}
               </span>
               <span className="text-zinc-500 text-sm mb-0.5">
@@ -531,7 +531,7 @@ export default async function DashboardPage({
             </div>
             <div className="flex items-center gap-3 mt-2 flex-wrap">
               {monthHoursStr && (
-                <span className="inline-flex items-center gap-1 text-xs text-purple-400 font-medium">
+                <span className="inline-flex items-center gap-1 text-xs text-zinc-400 font-medium">
                   <svg
                     className="w-3.5 h-3.5 flex-shrink-0"
                     fill="none"

@@ -66,7 +66,7 @@ export default function GymRegistrationForm({ userId }: Props) {
           value={gymName}
           onChange={(e) => setGymName(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && gymName.trim()) handleCreate(); }}
-          className="w-full bg-zinc-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 mb-4 focus:outline-none focus:border-white/30"
+          className="w-full bg-zinc-800 border border-zinc-600 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 mb-4 focus:outline-none focus:border-white/50"
           maxLength={80}
           aria-label={t("gym.registerTitle")}
         />
@@ -82,7 +82,16 @@ export default function GymRegistrationForm({ userId }: Props) {
 
         {error && <p className="text-red-400 text-xs mt-3">{error}</p>}
 
-        <p className="text-xs text-gray-500 mt-4">
+        {/* Feature pills */}
+        <div className="flex flex-wrap justify-center gap-2 mt-5">
+          {["🔴 Attrition alerts", "📚 Curriculum push", "📱 QR invite"].map((pill) => (
+            <span key={pill} className="text-xs text-zinc-400 bg-zinc-800 border border-white/10 px-3 py-1 rounded-full">
+              {pill}
+            </span>
+          ))}
+        </div>
+
+        <p className="text-sm text-zinc-300 mt-4">
           {t("gym.noCardRequired")}
         </p>
       </div>
