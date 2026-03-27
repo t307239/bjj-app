@@ -40,19 +40,6 @@ export default function DashboardLoading() {
         {/* StreakProtect/StreakFreezeスケルトン */}
         <div className="h-12 bg-zinc-900 rounded-xl border border-white/10 animate-pulse mb-3" />
 
-        {/* DailyRecommendスケルトン */}
-        <div className="bg-zinc-900 rounded-xl border border-white/10 mb-4 overflow-hidden">
-          <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
-            <div className="h-4 w-28 bg-white/10 rounded animate-pulse" />
-            <div className="h-3 w-12 bg-zinc-900/50 rounded animate-pulse" />
-          </div>
-          <div className="p-4">
-            <div className="h-5 w-48 bg-white/10 rounded animate-pulse mb-2" />
-            <div className="h-4 w-full bg-zinc-900/50 rounded animate-pulse mb-1" />
-            <div className="h-4 w-3/4 bg-zinc-900/50 rounded animate-pulse" />
-          </div>
-        </div>
-
         {/* WeeklyStripスケルトン */}
         <div className="bg-zinc-900 rounded-xl px-4 py-3 border border-white/10 mb-4">
           <div className="flex items-center justify-between mb-2">
