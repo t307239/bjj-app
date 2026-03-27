@@ -717,7 +717,7 @@ export default async function WikiPage({
             <div className="flex flex-wrap items-center gap-2 mb-4 text-xs text-slate-500">
               {/* #47: Author badge */}
               <span className="inline-flex items-center gap-1.5 text-slate-500">
-                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-purple-600 text-[9px] font-bold text-white select-none">
+                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-purple-600 text-[10px] font-bold text-white select-none">
                   BJJ
                 </span>
                 <span>BJJ App Team</span>
