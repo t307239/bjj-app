@@ -101,28 +101,32 @@ export default function DailyRecommend({ userId }: Props) {
 
   useEffect(() => {
     const load = async () => {
-      const supabase = createClient();
-      const { data } = await supabase
-        .from("techniques")
-        .select("id, name, category, mastery_level")
-        .eq("user_id", userId)
-        .order("mastery_level", { ascending: true })
-        .limit(10);
+      try {
+        const supabase = createClient();
+        const { data } = await supabase
+          .from("techniques")
+          .select("id, name, category, mastery_level")
+          .eq("user_id", userId)
+          .order("mastery_level", { ascending: true })
+          .limit(10);
 
-      if (data && data.length > 0) {
-        // Rotate candidates by local date (changes daily in user's timezone)
-        const { day } = getLocalDateParts();
-        const dayIndex = day % data.length;
-        setTech(data[dayIndex]);
+        if (data && data.length > 0) {
+          // Rotate candidates by local date (changes daily in user's timezone)
+          const { day } = getLocalDateParts();
+          const dayIndex = day % data.length;
+          setTech(data[dayIndex]);
+        }
+      } catch {
+        // Network/auth error — show tip only (tech stays null)
+      } finally {
+        // Rotate tip by day-of-year in user's local timezone
+        const { year, month, day } = getLocalDateParts();
+        const startOfYear = new Date(Date.UTC(year, 0, 1));
+        const today = new Date(Date.UTC(year, month - 1, day));
+        const dayOfYear = Math.floor((today.getTime() - startOfYear.getTime()) / 86400000) + 1;
+        setTipIndex(dayOfYear % TIPS.length);
+        setLoading(false);
       }
-
-      // Rotate tip by day-of-year in user's local timezone
-      const { year, month, day } = getLocalDateParts();
-      const startOfYear = new Date(Date.UTC(year, 0, 1));
-      const today = new Date(Date.UTC(year, month - 1, day));
-      const dayOfYear = Math.floor((today.getTime() - startOfYear.getTime()) / 86400000) + 1;
-      setTipIndex(dayOfYear % TIPS.length);
-      setLoading(false);
     };
     load();
   }, [userId]);

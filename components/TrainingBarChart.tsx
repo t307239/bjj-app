@@ -77,46 +77,51 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
 
   useEffect(() => {
     const load = async () => {
-      const since = new Date();
-      since.setMonth(since.getMonth() - 11);
-      since.setDate(1);
-      const sinceStr = `${since.getFullYear()}-${String(since.getMonth() + 1).padStart(2, "0")}-01`;
+      try {
+        const since = new Date();
+        since.setMonth(since.getMonth() - 11);
+        since.setDate(1);
+        const sinceStr = `${since.getFullYear()}-${String(since.getMonth() + 1).padStart(2, "0")}-01`;
 
-      const { data: logs } = await supabase
-        .from("training_logs")
-        .select("date, duration_min, type")
-        .eq("user_id", userId)
-        .gte("date", sinceStr);
+        const { data: logs } = await supabase
+          .from("training_logs")
+          .select("date, duration_min, type")
+          .eq("user_id", userId)
+          .gte("date", sinceStr);
 
-      if (logs) {
-        const buildBuckets = (months: number): MonthData[] => {
-          const buckets: Record<string, { count: number; minutes: number; typeBreakdown: TypeBreakdown }> = {};
-          for (let i = months - 1; i >= 0; i--) {
-            const d = new Date();
-            d.setDate(1);
-            d.setMonth(d.getMonth() - i);
-            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-            buckets[key] = { count: 0, minutes: 0, typeBreakdown: {} };
-          }
-          logs.forEach((l: { date: string; duration_min: number; type: string }) => {
-            const key = l.date.substring(0, 7);
-            if (buckets[key]) {
-              buckets[key].count++;
-              buckets[key].minutes += l.duration_min || 0;
-              const t = l.type || "gi";
-              buckets[key].typeBreakdown[t] = (buckets[key].typeBreakdown[t] ?? 0) + 1;
+        if (logs) {
+          const buildBuckets = (months: number): MonthData[] => {
+            const buckets: Record<string, { count: number; minutes: number; typeBreakdown: TypeBreakdown }> = {};
+            for (let i = months - 1; i >= 0; i--) {
+              const d = new Date();
+              d.setDate(1);
+              d.setMonth(d.getMonth() - i);
+              const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+              buckets[key] = { count: 0, minutes: 0, typeBreakdown: {} };
             }
-          });
-          return Object.entries(buckets).map(([month, val]) => {
-            const m = month.split("-")[1];
-            return { month, label: getMonthLabel(month), ...val };
-          });
-        };
+            logs.forEach((l: { date: string; duration_min: number; type: string }) => {
+              const key = l.date.substring(0, 7);
+              if (buckets[key]) {
+                buckets[key].count++;
+                buckets[key].minutes += l.duration_min || 0;
+                const t = l.type || "gi";
+                buckets[key].typeBreakdown[t] = (buckets[key].typeBreakdown[t] ?? 0) + 1;
+              }
+            });
+            return Object.entries(buckets).map(([month, val]) => {
+              const m = month.split("-")[1];
+              return { month, label: getMonthLabel(month), ...val };
+            });
+          };
 
-        setData6(buildBuckets(6));
-        setData12(buildBuckets(12));
+          setData6(buildBuckets(6));
+          setData12(buildBuckets(12));
+        }
+      } catch {
+        // Network/auth error — show empty bars gracefully
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps

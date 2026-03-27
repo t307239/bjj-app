@@ -57,20 +57,25 @@ export default function TrainingCalendar({ userId }: Props) {
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      const firstDay = `${year}-${String(month + 1).padStart(2, "0")}-01`;
-      const lastDay  = new Date(year, month + 1, 0);
-      const lastStr  = `${year}-${String(month + 1).padStart(2, "0")}-${String(lastDay.getDate()).padStart(2, "0")}`;
+      try {
+        const firstDay = `${year}-${String(month + 1).padStart(2, "0")}-01`;
+        const lastDay  = new Date(year, month + 1, 0);
+        const lastStr  = `${year}-${String(month + 1).padStart(2, "0")}-${String(lastDay.getDate()).padStart(2, "0")}`;
 
-      const { data } = await supabase
-        .from("training_logs")
-        .select("id, date, type, duration_min, notes")
-        .eq("user_id", userId)
-        .gte("date", firstDay)
-        .lte("date", lastStr)
-        .order("date", { ascending: true });
+        const { data } = await supabase
+          .from("training_logs")
+          .select("id, date, type, duration_min, notes")
+          .eq("user_id", userId)
+          .gte("date", firstDay)
+          .lte("date", lastStr)
+          .order("date", { ascending: true });
 
-      setLogs(data ?? []);
-      setLoading(false);
+        setLogs(data ?? []);
+      } catch {
+        setLogs([]);
+      } finally {
+        setLoading(false);
+      }
     };
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -53,53 +53,59 @@ export default function WeightChart({ userId, refreshKey }: Props) {
   const loadData = useCallback(async () => {
     setLoading(true);
 
-    const since = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
-    const [{ data: wLogs }, { data: tLogs }] = await Promise.all([
-      supabase
-        .from("weight_logs")
-        .select("weight, measured_at")
-        .eq("user_id", userId)
-        .gte("measured_at", since)
-        .order("measured_at", { ascending: true }),
-      supabase
-        .from("training_logs")
-        .select("weight, date")
-        .eq("user_id", userId)
-        .not("weight", "is", null)
-        .gte("date", since.slice(0, 10))
-        .order("date", { ascending: true }),
-    ]);
+    try {
+      const since = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
+      const [{ data: wLogs }, { data: tLogs }] = await Promise.all([
+        supabase
+          .from("weight_logs")
+          .select("weight, measured_at")
+          .eq("user_id", userId)
+          .gte("measured_at", since)
+          .order("measured_at", { ascending: true }),
+        supabase
+          .from("training_logs")
+          .select("weight, date")
+          .eq("user_id", userId)
+          .not("weight", "is", null)
+          .gte("date", since.slice(0, 10))
+          .order("date", { ascending: true }),
+      ]);
 
-    const map = new Map<string, WeightPoint>();
+      const map = new Map<string, WeightPoint>();
 
-    for (const row of wLogs ?? []) {
-      const key = utcIsoToLocalDateString(row.measured_at as string);
-      const existing = map.get(key);
-      map.set(key, {
-        isoDate: key,
-        dateLabel: formatDateLabel(key),
-        standalone: row.weight as number,
-        postTraining: existing?.postTraining ?? null,
-      });
+      for (const row of wLogs ?? []) {
+        const key = utcIsoToLocalDateString(row.measured_at as string);
+        const existing = map.get(key);
+        map.set(key, {
+          isoDate: key,
+          dateLabel: formatDateLabel(key),
+          standalone: row.weight as number,
+          postTraining: existing?.postTraining ?? null,
+        });
+      }
+
+      for (const row of tLogs ?? []) {
+        const key = row.date as string;
+        const existing = map.get(key);
+        map.set(key, {
+          isoDate: key,
+          dateLabel: existing?.dateLabel ?? formatDateLabel(key),
+          standalone: existing?.standalone ?? null,
+          postTraining: row.weight as number,
+        });
+      }
+
+      const sorted = Array.from(map.values()).sort((a, b) =>
+        a.isoDate.localeCompare(b.isoDate)
+      );
+
+      setData(sorted);
+    } catch {
+      // Network/auth error — show empty state gracefully
+      setData([]);
+    } finally {
+      setLoading(false);
     }
-
-    for (const row of tLogs ?? []) {
-      const key = row.date as string;
-      const existing = map.get(key);
-      map.set(key, {
-        isoDate: key,
-        dateLabel: existing?.dateLabel ?? formatDateLabel(key),
-        standalone: existing?.standalone ?? null,
-        postTraining: row.weight as number,
-      });
-    }
-
-    const sorted = Array.from(map.values()).sort((a, b) =>
-      a.isoDate.localeCompare(b.isoDate)
-    );
-
-    setData(sorted);
-    setLoading(false);
   }, [userId]);
 
   useEffect(() => { loadData(); }, [loadData, refreshKey]);
