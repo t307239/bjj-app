@@ -210,7 +210,7 @@ function LoginForm() {
             />
             <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
               {t("login.ageConfirmPre")} <span className="text-white font-medium">{t("login.ageConfirm")}</span>
-              <span className="text-gray-500"> {t("login.ageConfirmNote")}</span>
+              <span className="text-gray-400"> {t("login.ageConfirmNote")}</span>
             </span>
           </label>
 
@@ -252,7 +252,7 @@ function LoginForm() {
           {/* Divider */}
           <div className="flex items-center gap-3 py-1">
             <div className="flex-1 h-px bg-white/10" />
-            <span className="text-gray-500 text-xs">{t("login.orEmail")}</span>
+            <span className="text-gray-400 text-xs">{t("login.orEmail")}</span>
             <div className="flex-1 h-px bg-white/10" />
           </div>
 
@@ -266,7 +266,7 @@ function LoginForm() {
                 <span className="text-white">{email}</span>.<br />
                 {t("login.emailSentTap")}
               </p>
-              <p className="text-gray-500 text-xs mt-3">
+              <p className="text-gray-400 text-xs mt-3">
                 {t("login.emailSentSpam")}
               </p>
               <button
@@ -298,7 +298,7 @@ function LoginForm() {
               >
                 {emailLoading ? t("login.sending") : t("login.sendLink")}
               </button>
-              <p className="text-xs text-gray-500 text-center pt-0.5">
+              <p className="text-xs text-gray-400 text-center pt-0.5">
                 {t("login.noPasswordNote")}
               </p>
             </form>
@@ -339,7 +339,7 @@ function LoginForm() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
           </Link>
-          <p className="text-gray-700 text-xs mt-1">{t("login.guestDesc")}</p>
+          <p className="text-gray-500 text-xs mt-1">{t("login.guestDesc")}</p>
         </div>
 
         <p className="text-center text-gray-500 text-xs mt-4">
