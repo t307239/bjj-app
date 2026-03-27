@@ -690,7 +690,7 @@ export default async function WikiPage({
           >
             BJJ Wiki
           </a>
-          <span className="text-slate-700">/</span>
+          <span className="text-slate-500">/</span>
           <span className="text-slate-300 truncate max-w-[200px] sm:max-w-none">
             {BADGE_CONFIG[page.content_type as ContentType]?.label ??
               page.content_type}
@@ -722,11 +722,11 @@ export default async function WikiPage({
                 </span>
                 <span>BJJ App Team</span>
               </span>
-              <span className="text-slate-700">·</span>
+              <span className="text-slate-500">·</span>
               <span>⏱️ {readingTime} min read</span>
               {updatedAt && (
                 <>
-                  <span className="text-slate-700">·</span>
+                  <span className="text-slate-500">·</span>
                   <span>🔄 {updatedAt}</span>
                 </>
               )}
@@ -833,7 +833,7 @@ export default async function WikiPage({
 
       {/* #10: フッター（クリーンアップ）*/}
       <footer className="border-t border-white/10 py-8 mt-4">
-        <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
+        <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           <p>© {new Date().getFullYear()} BJJ Wiki — All rights reserved.</p>
           <a
             href="https://bjj-app.net"

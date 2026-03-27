@@ -121,6 +121,29 @@ export function getMonthStartDate(tz?: string): string {
 }
 
 /**
+ * Converts a UTC ISO timestamp to the user's local date string "YYYY-MM-DD".
+ * Used when reading timestamps stored as UTC and converting to local date for display.
+ */
+export function utcIsoToLocalDateString(utcIso: string, tz?: string): string {
+  const timezone = tz ?? getUserTimezone();
+  try {
+    const d = new Date(utcIso);
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: timezone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(d);
+    const y = parts.find((p) => p.type === "year")?.value ?? "";
+    const m = parts.find((p) => p.type === "month")?.value ?? "";
+    const dy = parts.find((p) => p.type === "day")?.value ?? "";
+    return `${y}-${m}-${dy}`;
+  } catch {
+    return utcIso.slice(0, 10);
+  }
+}
+
+/**
  * Returns yesterday's date string "YYYY-MM-DD" in the user's local timezone.
  */
 export function getYesterdayDateString(tz?: string): string {

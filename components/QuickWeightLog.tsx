@@ -26,7 +26,7 @@ export default function QuickWeightLog({ userId, onLogged }: Props) {
     if (isNaN(w) || w <= 0 || w > 500) return;
 
     setSaving(true);
-    const now = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString();
+    const now = new Date().toISOString();
     const { error } = await supabase.from("weight_logs").insert([{
       user_id: userId,
       weight: w,

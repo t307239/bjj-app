@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
+import { utcIsoToLocalDateString } from "@/lib/timezone";
 
 interface WeightPoint {
   isoDate: string;   // YYYY-MM-DD
@@ -72,7 +73,7 @@ export default function WeightChart({ userId, refreshKey }: Props) {
     const map = new Map<string, WeightPoint>();
 
     for (const row of wLogs ?? []) {
-      const key = (row.measured_at as string).slice(0, 10);
+      const key = utcIsoToLocalDateString(row.measured_at as string);
       const existing = map.get(key);
       map.set(key, {
         isoDate: key,
