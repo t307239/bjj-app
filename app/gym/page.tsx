@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import GymWaitlistForm from "@/components/GymWaitlistForm";
+import { serverT as t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "BJJ App for Academies - Keep Your Students Engaged",
@@ -45,16 +46,16 @@ export default function GymPage() {
           </div>
           <div className="flex items-center gap-4">
             <Link href="/" className="text-sm text-gray-400 hover:text-white transition-colors">
-              For Individuals
+              {t("gymLanding.navIndividuals")}
             </Link>
             <Link href="/login" className="text-sm text-gray-400 hover:text-white transition-colors">
-              Sign In
+              {t("gymLanding.navSignIn")}
             </Link>
             <Link
               href="/gym/dashboard"
               className="text-sm bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-1.5 rounded-full transition-colors"
             >
-              Open Dashboard →
+              {t("gymLanding.navDashboard")}
             </Link>
           </div>
         </nav>
@@ -64,20 +65,19 @@ export default function GymPage() {
           <div className="max-w-2xl mx-auto">
             <div className="inline-flex items-center gap-2 bg-zinc-900 border border-blue-500/30 rounded-full px-4 py-1.5 text-sm text-blue-400 mb-8">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-              For Gym Owners & Coaches
+              {t("gymLanding.heroBadge")}
             </div>
 
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-white">
-              Keep Your Students
+              {t("gymLanding.heroTitle1")}
               <br />
               <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                Engaged Between Classes
+                {t("gymLanding.heroTitle2")}
               </span>
             </h1>
 
             <p className="text-gray-400 text-lg md:text-xl mb-10 leading-relaxed">
-              Academy dashboard that tracks which students are training, sends curriculum updates, and catches at-risk dropouts
-              before they leave.
+              {t("gymLanding.heroDesc")}
             </p>
 
             <div className="flex flex-col items-center gap-3">
@@ -85,13 +85,13 @@ export default function GymPage() {
                 href="/gym/dashboard"
                 className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
               >
-                Open Dashboard — Free →
+                {t("gymLanding.heroCta")}
               </Link>
               <a
                 href="#waitlist"
                 className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
               >
-                Or join the waitlist ↓
+                {t("gymLanding.heroWaitlist")}
               </a>
             </div>
           </div>
@@ -101,22 +101,22 @@ export default function GymPage() {
         <section className="px-4 py-16 bg-zinc-900/50">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-2xl font-bold text-center mb-12 text-zinc-100">
-              What You Get
+              {t("gymLanding.featuresTitle")}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Feature 1: Attrition Risk */}
               <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10 hover:border-blue-500/40 transition-colors">
                 <div className="text-4xl mb-4">🔴</div>
                 <h3 className="font-bold text-lg mb-3 text-zinc-100">
-                  Attrition Risk Dashboard
+                  {t("gymLanding.feature1Title")}
                 </h3>
                 <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                  Automatically flag students who haven't logged training in 2+ weeks. See your at-risk dropouts before they disappear.
+                  {t("gymLanding.feature1Desc")}
                 </p>
                 <ul className="text-xs text-gray-400 space-y-2">
-                  <li>✓ Real-time warning system</li>
-                  <li>✓ Contact students before it's too late</li>
-                  <li>✓ Reduce churn by 20-30%</li>
+                  <li>✓ {t("gymLanding.feature1Point1")}</li>
+                  <li>✓ {t("gymLanding.feature1Point2")}</li>
+                  <li>✓ {t("gymLanding.feature1Point3")}</li>
                 </ul>
               </div>
 
@@ -124,15 +124,15 @@ export default function GymPage() {
               <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10 hover:border-blue-500/40 transition-colors">
                 <div className="text-4xl mb-4">📚</div>
                 <h3 className="font-bold text-lg mb-3 text-zinc-100">
-                  Weekly Curriculum Pushes
+                  {t("gymLanding.feature2Title")}
                 </h3>
                 <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                  Link this week's technique from BJJ Wiki. All your students see it in the app. Extend class learning to their home prep.
+                  {t("gymLanding.feature2Desc")}
                 </p>
                 <ul className="text-xs text-gray-400 space-y-2">
-                  <li>✓ Send in 30 seconds</li>
-                  <li>✓ 4,000+ free BJJ Wiki pages available</li>
-                  <li>✓ Increase student retention</li>
+                  <li>✓ {t("gymLanding.feature2Point1")}</li>
+                  <li>✓ {t("gymLanding.feature2Point2")}</li>
+                  <li>✓ {t("gymLanding.feature2Point3")}</li>
                 </ul>
               </div>
 
@@ -140,15 +140,15 @@ export default function GymPage() {
               <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10 hover:border-blue-500/40 transition-colors">
                 <div className="text-4xl mb-4">📱</div>
                 <h3 className="font-bold text-lg mb-3 text-zinc-100">
-                  QR Invite System
+                  {t("gymLanding.feature3Title")}
                 </h3>
                 <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                  Generate a unique QR code for your academy. Students scan → auto-join your gym group. Zero friction onboarding.
+                  {t("gymLanding.feature3Desc")}
                 </p>
                 <ul className="text-xs text-gray-400 space-y-2">
-                  <li>✓ Print on flyers & posters</li>
-                  <li>✓ Share via email/LINE</li>
-                  <li>✓ Instant class integration</li>
+                  <li>✓ {t("gymLanding.feature3Point1")}</li>
+                  <li>✓ {t("gymLanding.feature3Point2")}</li>
+                  <li>✓ {t("gymLanding.feature3Point3")}</li>
                 </ul>
               </div>
             </div>
@@ -158,34 +158,34 @@ export default function GymPage() {
         {/* How It Works */}
         <section className="px-4 py-16 max-w-5xl mx-auto w-full">
           <h2 className="text-2xl font-bold text-center mb-12 text-zinc-100">
-            How It Works
+            {t("gymLanding.howTitle")}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-xl font-bold text-blue-400 mb-4">
                 1
               </div>
-              <h3 className="font-bold text-lg text-zinc-100 mb-3">Students Download</h3>
+              <h3 className="font-bold text-lg text-zinc-100 mb-3">{t("gymLanding.step1Title")}</h3>
               <p className="text-gray-400 text-sm">
-                Your students get the BJJ App from the web (no app store needed). They can use it solo or join your academy group.
+                {t("gymLanding.step1Desc")}
               </p>
             </div>
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-xl font-bold text-blue-400 mb-4">
                 2
               </div>
-              <h3 className="font-bold text-lg text-zinc-100 mb-3">Scan Your QR</h3>
+              <h3 className="font-bold text-lg text-zinc-100 mb-3">{t("gymLanding.step2Title")}</h3>
               <p className="text-gray-400 text-sm">
-                They scan your academy's unique QR code. Instantly linked to your gym data. No forms, no friction, done.
+                {t("gymLanding.step2Desc")}
               </p>
             </div>
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-full text-xl font-bold text-blue-400 mb-4">
                 3
               </div>
-              <h3 className="font-bold text-lg text-zinc-100 mb-3">You Track & Engage</h3>
+              <h3 className="font-bold text-lg text-zinc-100 mb-3">{t("gymLanding.step3Title")}</h3>
               <p className="text-gray-400 text-sm">
-                See who's active, who's slipping, and send curriculum updates. Students get a stronger practice experience.
+                {t("gymLanding.step3Desc")}
               </p>
             </div>
           </div>
@@ -195,72 +195,72 @@ export default function GymPage() {
         <section className="px-4 py-16 bg-zinc-900/50">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-center mb-12 text-zinc-100">
-              Simple Pricing
+              {t("gymLanding.pricingTitle")}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Starter */}
               <div className="bg-zinc-900 rounded-2xl p-8 border border-blue-500/50 relative">
                 <div className="absolute -top-3 right-6 bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-bold">
-                  Popular
+                  {t("gymLanding.pricingPopular")}
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-zinc-100">Starter</h3>
+                <h3 className="text-lg font-bold mb-2 text-zinc-100">{t("gymLanding.pricingStarter")}</h3>
                 <div className="text-3xl font-bold text-zinc-100 mb-1">
-                  $49<span className="text-sm font-normal text-gray-400">/month</span>
+                  $49<span className="text-sm font-normal text-gray-400">/{t("gymLanding.pricingMonth")}</span>
                 </div>
-                <p className="text-gray-400 text-xs mb-6">Up to 50 students</p>
+                <p className="text-gray-400 text-xs mb-6">{t("gymLanding.pricingStarterLimit")}</p>
                 <ul className="space-y-3 text-sm text-gray-400 mb-8">
                   <li className="flex items-center gap-2">
-                    <span className="text-blue-400">✓</span> Attrition risk dashboard
+                    <span className="text-blue-400">✓</span> {t("gymLanding.pricingStarterF1")}
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-blue-400">✓</span> Weekly curriculum pushes
+                    <span className="text-blue-400">✓</span> {t("gymLanding.pricingStarterF2")}
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-blue-400">✓</span> QR invite system
+                    <span className="text-blue-400">✓</span> {t("gymLanding.pricingStarterF3")}
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-blue-400">✓</span> Email support
+                    <span className="text-blue-400">✓</span> {t("gymLanding.pricingStarterF4")}
                   </li>
                 </ul>
                 <a
                   href="mailto:307239t777@gmail.com?subject=Starter%20Plan%20Inquiry"
                   className="w-full block text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-full transition-all"
                 >
-                  Request Access
+                  {t("gymLanding.pricingCta")}
                 </a>
               </div>
 
               {/* Pro */}
               <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10">
-                <h3 className="text-lg font-bold mb-2 text-zinc-100">Pro</h3>
+                <h3 className="text-lg font-bold mb-2 text-zinc-100">{t("gymLanding.pricingPro")}</h3>
                 <div className="text-3xl font-bold text-zinc-100 mb-1">
-                  $99<span className="text-sm font-normal text-gray-400">/month</span>
+                  $99<span className="text-sm font-normal text-gray-400">/{t("gymLanding.pricingMonth")}</span>
                 </div>
-                <p className="text-gray-400 text-xs mb-6">Unlimited students</p>
+                <p className="text-gray-400 text-xs mb-6">{t("gymLanding.pricingProLimit")}</p>
                 <ul className="space-y-3 text-sm text-gray-400 mb-8">
                   <li className="flex items-center gap-2">
-                    <span className="text-blue-400">✓</span> Everything in Starter
+                    <span className="text-blue-400">✓</span> {t("gymLanding.pricingProF1")}
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-blue-400">✓</span> Unlimited student groups
+                    <span className="text-blue-400">✓</span> {t("gymLanding.pricingProF2")}
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-blue-400">✓</span> Advanced analytics
+                    <span className="text-blue-400">✓</span> {t("gymLanding.pricingProF3")}
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-blue-400">✓</span> Priority support
+                    <span className="text-blue-400">✓</span> {t("gymLanding.pricingProF4")}
                   </li>
                 </ul>
                 <a
                   href="mailto:307239t777@gmail.com?subject=Pro%20Plan%20Inquiry"
                   className="w-full block text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-full transition-all"
                 >
-                  Request Access
+                  {t("gymLanding.pricingCta")}
                 </a>
               </div>
             </div>
             <p className="text-gray-500 text-center text-xs mt-8">
-              📩 Email us for custom plans. 14-day free trial included.
+              {t("gymLanding.pricingNote")}
             </p>
           </div>
         </section>
@@ -270,10 +270,10 @@ export default function GymPage() {
           <div className="max-w-md mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-bold text-zinc-100 mb-3">
-                Get Early Access
+                {t("gymLanding.waitlistTitle")}
               </h2>
               <p className="text-gray-500 text-sm leading-relaxed">
-                Gym features are in private beta. Join the waitlist and we'll reach out when your spot is ready.
+                {t("gymLanding.waitlistDesc")}
               </p>
             </div>
             <GymWaitlistForm />
@@ -283,29 +283,29 @@ export default function GymPage() {
         {/* FAQ */}
         <section className="px-4 py-16 max-w-3xl mx-auto w-full">
           <h2 className="text-2xl font-bold text-center mb-10 text-zinc-100">
-            Questions?
+            {t("gymLanding.faqTitle")}
           </h2>
           <div className="space-y-4">
             {[
               {
-                q: "Do students have to pay?",
-                a: "No. Students use BJJ App free. You pay for the academy management features. Students benefit from curriculum pushes and their own tracking — no cost to them.",
+                q: t("gymLanding.faq1Q"),
+                a: t("gymLanding.faq1A"),
               },
               {
-                q: "Is there a setup fee?",
-                a: "No setup fee. No contracts. You can cancel anytime. Get your QR code and start using it immediately after signing up.",
+                q: t("gymLanding.faq2Q"),
+                a: t("gymLanding.faq2A"),
               },
               {
-                q: "Can I use it with Stripe/PayPal for memberships?",
-                a: "Right now, the app focuses on engagement & retention. We're planning payment integration for a future update. For now, use your existing payment system.",
+                q: t("gymLanding.faq3Q"),
+                a: t("gymLanding.faq3A"),
               },
               {
-                q: "Do I need technical skills?",
-                a: "No. Everything is done in the browser. Generate your QR code, share it with students, send curriculum via link. That's it.",
+                q: t("gymLanding.faq4Q"),
+                a: t("gymLanding.faq4A"),
               },
               {
-                q: "What if students quit the app?",
-                a: "The dashboard shows you who's active and who's not. You'll catch disengagement before students quit your academy. That's the whole point.",
+                q: t("gymLanding.faq5Q"),
+                a: t("gymLanding.faq5A"),
               },
             ].map(({ q, a }, i) => (
               <div key={i} className="bg-zinc-900 rounded-xl p-5 border border-white/10">
@@ -321,26 +321,26 @@ export default function GymPage() {
         {/* Final CTA */}
         <section className="px-4 py-16 text-center bg-zinc-900/30">
           <h2 className="text-2xl font-bold mb-3 text-zinc-100">
-            Ready to engage your team?
+            {t("gymLanding.finalCtaTitle")}
           </h2>
           <p className="text-gray-500 text-sm mb-8">
-            14-day free trial. No credit card required. Cancel anytime.
+            {t("gymLanding.finalCtaDesc")}
           </p>
           <a
             href="mailto:307239t777@gmail.com?subject=BJJ%20App%20Academy%20Demo%20Request"
             className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
           >
-            Request Demo →
+            {t("gymLanding.finalCtaButton")}
           </a>
         </section>
 
         {/* Footer */}
         <footer className="px-6 py-8 text-center text-gray-400 text-sm border-t border-white/5">
-          <p className="mb-3">© 2026 BJJ App. Built by grapplers, for grapplers.</p>
+          <p className="mb-3">{t("gymLanding.footerCopyright")}</p>
           <div className="flex justify-center flex-wrap gap-4 text-xs">
-            <a href="/terms" className="hover:text-gray-400 transition-colors">Terms</a>
-            <a href="/privacy" className="hover:text-gray-400 transition-colors">Privacy</a>
-            <a href="/legal/tokushoho" className="hover:text-gray-400 transition-colors">特定商取引法に基づく表記</a>
+            <a href="/terms" className="hover:text-gray-400 transition-colors">{t("gymLanding.footerTerms")}</a>
+            <a href="/privacy" className="hover:text-gray-400 transition-colors">{t("gymLanding.footerPrivacy")}</a>
+            <a href="/legal/tokushoho" className="hover:text-gray-400 transition-colors">{t("gymLanding.footerTokushoho")}</a>
           </div>
         </footer>
       </main>
