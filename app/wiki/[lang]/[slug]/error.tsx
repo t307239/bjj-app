@@ -34,7 +34,7 @@ export default function WikiPageError({
         </p>
 
         {error.digest && (
-          <p className="text-slate-600 text-xs font-mono mt-2 mb-6">
+          <p className="text-slate-500 text-xs font-mono mt-2 mb-6">
             ref: {error.digest}
           </p>
         )}
@@ -55,7 +55,7 @@ export default function WikiPageError({
         </div>
 
         {/* Motivational quote */}
-        <p className="mt-8 text-xs text-slate-700 italic">
+        <p className="mt-8 text-xs text-slate-500 italic">
           &ldquo;A black belt is a white belt that never quit.&rdquo;
         </p>
       </div>

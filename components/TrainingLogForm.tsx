@@ -372,7 +372,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
           <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         <span className="group-hover:text-zinc-300">Optional details</span>
-        <span className="text-zinc-700 ml-1 font-normal">(instructor · partner · weight)</span>
+        <span className="text-zinc-500 ml-1 font-normal">(instructor · partner · weight)</span>
       </button>
 
       {showOptional && (

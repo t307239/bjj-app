@@ -325,7 +325,7 @@ export default function TechniqueLogList({
                             className={`text-sm leading-none transition-colors ${
                               star <= technique.mastery_level
                                 ? MASTERY_COLORS[technique.mastery_level]
-                                : "text-zinc-700 hover:text-zinc-500"
+                                : "text-zinc-500 hover:text-zinc-300"
                             }`}
                             title={
                               t("techniques.mastery") +

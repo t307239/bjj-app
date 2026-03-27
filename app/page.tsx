@@ -200,8 +200,8 @@ export default async function Home() {
             Sign in with GitHub or Google. No credit card needed.
           </p>
           {/* Fix 7: arrow → (not ↓) */}
-          <p className="text-gray-700 text-xs mt-3">
-            <Link href="/dashboard" className="hover:text-gray-500 underline transition-colors">
+          <p className="text-gray-500 text-xs mt-3">
+            <Link href="/dashboard" className="hover:text-gray-300 underline transition-colors">
               Try without signing up →
             </Link>
           </p>
@@ -275,7 +275,7 @@ export default async function Home() {
               Try without signing up
             </Link>
           </div>
-          <p className="text-gray-700 text-xs mt-4">No credit card. Sign in with GitHub or Google. Takes 30 seconds.</p>
+          <p className="text-gray-500 text-xs mt-4">No credit card. Sign in with GitHub or Google. Takes 30 seconds.</p>
         </div>
       </section>
 

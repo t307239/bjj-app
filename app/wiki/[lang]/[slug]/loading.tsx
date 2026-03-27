@@ -10,7 +10,7 @@ export default function WikiPageLoading() {
       <div className="border-b border-white/10 bg-[#0f172a]/95 py-3 px-4">
         <div className="mx-auto max-w-7xl flex items-center gap-2">
           <div className="h-4 w-16 rounded bg-slate-800 animate-pulse" />
-          <span className="text-slate-800">/</span>
+          <span className="text-slate-500">/</span>
           <div className="h-4 w-24 rounded bg-slate-800 animate-pulse" />
         </div>
       </div>

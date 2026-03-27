@@ -153,7 +153,7 @@ export default function UgcVideoSubmit({ slug, lang, ugcLabel, ugcCta }: Props) 
                   {cancelLabel}
                 </button>
               </div>
-              <p className="text-xs text-slate-600">
+              <p className="text-xs text-slate-500">
                 {lang === "ja"
                   ? "※ 送信されたURLは審査後に掲載されます"
                   : lang === "pt"
