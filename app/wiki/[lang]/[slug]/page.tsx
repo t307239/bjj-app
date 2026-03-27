@@ -858,7 +858,7 @@ export default async function WikiPage({
       {/* #34: 読了時の紙吹雪エフェクト */}
       <ConfettiEffect />
       {/* #45: 読書位置の永続化 */}
-      <ReadPersistence slug={slug} />
+      <ReadPersistence slug={slug} lang={lang} />
       {/* #50: コナミコード イースターエッグ */}
       <EasterEgg />
     </div>
