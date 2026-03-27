@@ -224,13 +224,13 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           <div className="flex bg-zinc-800 rounded-lg p-0.5 mr-1">
             <button
               onClick={() => { setRange(6); setSelectedMonth(null); }}
-              className={`text-xs px-2 py-1 rounded-lg transition-all ${range === 6 ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-white"}`}
+              className={`text-xs px-2 py-1.5 rounded-lg transition-all ${range === 6 ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-white"}`}
             >
               6{t("chart.months")}
             </button>
             <button
               onClick={() => { setRange(12); setSelectedMonth(null); }}
-              className={`text-xs px-2 py-1 rounded-lg transition-all ${range === 12 ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-white"}`}
+              className={`text-xs px-2 py-1.5 rounded-lg transition-all ${range === 12 ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-white"}`}
             >
               12{t("chart.months")}
             </button>
@@ -238,7 +238,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           <div className="flex bg-zinc-800 rounded-lg p-0.5">
             <button
               onClick={() => setView("count")}
-              className={`text-xs px-2.5 py-1 rounded-lg transition-all ${
+              className={`text-xs px-2.5 py-1.5 rounded-lg transition-all ${
                 view === "count"
                   ? "bg-zinc-600 text-white shadow-sm"
                   : "text-gray-400 hover:text-white"
@@ -248,7 +248,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             </button>
             <button
               onClick={() => setView("minutes")}
-              className={`text-xs px-2.5 py-1 rounded-lg transition-all ${
+              className={`text-xs px-2.5 py-1.5 rounded-lg transition-all ${
                 view === "minutes"
                   ? "bg-zinc-600 text-white shadow-sm"
                   : "text-gray-400 hover:text-white"

@@ -260,7 +260,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
         <div className="flex bg-zinc-800 rounded-lg p-0.5">
           <button
             onClick={() => setViewMode("heatmap")}
-            className={`text-xs px-3 py-1 rounded-lg transition-all ${
+            className={`text-xs px-3 py-1.5 rounded-lg transition-all ${
               viewMode === "heatmap"
                 ? "bg-zinc-600 text-white shadow-sm"
                 : "text-gray-400 hover:text-white"
@@ -270,7 +270,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
           </button>
           <button
             onClick={() => setViewMode("monthly")}
-            className={`text-xs px-3 py-1 rounded-lg transition-all ${
+            className={`text-xs px-3 py-1.5 rounded-lg transition-all ${
               viewMode === "monthly"
                 ? "bg-zinc-600 text-white shadow-sm"
                 : "text-gray-400 hover:text-white"

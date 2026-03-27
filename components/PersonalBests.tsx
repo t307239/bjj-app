@@ -285,7 +285,7 @@ export default function PersonalBests({ userId }: Props) {
         <button
           onClick={handleShare}
           disabled={isCopied}
-          className={`flex items-center gap-1 text-xs bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg transition-colors ${
+          className={`flex items-center gap-1 text-xs bg-white/5 border border-white/10 px-2.5 py-2 min-h-[44px] rounded-lg transition-colors ${
             isCopied
               ? "text-green-400 border-green-500/30 cursor-default"
               : "text-gray-400 hover:text-white hover:bg-white/10"

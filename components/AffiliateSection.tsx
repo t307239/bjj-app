@@ -98,7 +98,7 @@ export default function AffiliateSection() {
           <button
             key={val}
             onClick={() => setFilterCat(val)}
-            className={`flex-shrink-0 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+            className={`flex-shrink-0 px-2.5 py-1.5 min-h-[36px] rounded-full text-xs font-medium transition-colors ${
               filterCat === val
                 ? "bg-orange-500/80 text-white"
                 : "bg-zinc-900 text-gray-400 border border-white/10 hover:border-orange-500/40"

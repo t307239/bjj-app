@@ -114,7 +114,7 @@ export default function TechniqueLogList({
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortBy)}
-              className="appearance-none text-xs bg-zinc-900 text-zinc-300 border border-zinc-700 hover:border-zinc-600 rounded-lg px-2 py-1 focus:outline-none focus:border-emerald-500 cursor-pointer transition-colors"
+              className="appearance-none text-xs bg-zinc-900 text-zinc-300 border border-zinc-700 hover:border-zinc-600 rounded-lg px-2 py-2 min-h-[36px] focus:outline-none focus:border-emerald-500 cursor-pointer transition-colors"
             >
               <option value="newest">{t("techniques.sortNewest")}</option>
               <option value="mastery_desc">
@@ -183,7 +183,7 @@ export default function TechniqueLogList({
         <div className="flex gap-2 overflow-x-auto pb-2 mb-4 mt-4 scrollbar-hide">
           <button
             onClick={() => setFilterCategory("all")}
-            className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+            className={`flex-shrink-0 px-3 py-1.5 min-h-[36px] rounded-full text-xs font-medium transition-colors ${
               filterCategory === "all"
                 ? "bg-zinc-600 text-white"
                 : "bg-zinc-900 text-gray-400 border border-white/10"
@@ -197,7 +197,7 @@ export default function TechniqueLogList({
             <button
               key={catVal}
               onClick={() => setFilterCategory(catVal)}
-              className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+              className={`flex-shrink-0 px-3 py-1.5 min-h-[36px] rounded-full text-xs font-medium transition-colors ${
                 filterCategory === catVal
                   ? "bg-zinc-600 text-white"
                   : "bg-zinc-900 text-gray-400 border border-white/10"
@@ -468,7 +468,7 @@ export default function TechniqueLogList({
               <button
                 onClick={() => onPageChange(page - 1)}
                 disabled={page <= 1}
-                className="px-3 py-1 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 rounded-md transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="px-3 py-2 min-h-[44px] text-sm text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 rounded-md transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <svg className="w-4 h-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg> {t("training.prev")}
               </button>
@@ -478,7 +478,7 @@ export default function TechniqueLogList({
               <button
                 onClick={() => onPageChange(page + 1)}
                 disabled={page >= totalPages}
-                className="px-3 py-1 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 rounded-md transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="px-3 py-2 min-h-[44px] text-sm text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 rounded-md transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 {t("training.next")} <svg className="w-4 h-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
               </button>
