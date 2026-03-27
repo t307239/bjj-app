@@ -268,15 +268,20 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
 
   useEffect(() => {
     const load = async () => {
-      const { data: logs } = await supabase
-        .from("training_logs")
-        .select("date, type, duration_min")
-        .eq("user_id", userId);
+      try {
+        const { data: logs } = await supabase
+          .from("training_logs")
+          .select("date, type, duration_min")
+          .eq("user_id", userId);
 
-      if (logs) {
-        setAllLogs(logs as { date: string; type: string; duration_min: number | null }[]);
+        if (logs) {
+          setAllLogs(logs as { date: string; type: string; duration_min: number | null }[]);
+        }
+      } catch {
+        // Network/auth error — show empty state gracefully
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps

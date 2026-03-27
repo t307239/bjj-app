@@ -38,64 +38,69 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
 
   useEffect(() => {
     const load = async () => {
-      // 過去12ヶ月分を取得（ヒートマップ + 月別チャート両方に対応）
-      const since = new Date();
-      since.setDate(since.getDate() - 83);
-      const sinceStr = toLocalStr(since);
+      try {
+        // 過去12ヶ月分を取得（ヒートマップ + 月別チャート両方に対応）
+        const since = new Date();
+        since.setDate(since.getDate() - 83);
+        const sinceStr = toLocalStr(since);
 
-      // 月別チャート用: 過去12ヶ月の開始日
-      const monthSince = new Date();
-      monthSince.setMonth(monthSince.getMonth() - 11);
-      monthSince.setDate(1);
-      const monthSinceStr = toLocalStr(monthSince);
+        // 月別チャート用: 過去12ヶ月の開始日
+        const monthSince = new Date();
+        monthSince.setMonth(monthSince.getMonth() - 11);
+        monthSince.setDate(1);
+        const monthSinceStr = toLocalStr(monthSince);
 
-      const { data: logs } = await supabase
-        .from("training_logs")
-        .select("date, duration_min")
-        .eq("user_id", userId)
-        .gte("date", monthSinceStr)
-        .order("date", { ascending: true });
+        const { data: logs } = await supabase
+          .from("training_logs")
+          .select("date, duration_min")
+          .eq("user_id", userId)
+          .gte("date", monthSinceStr)
+          .order("date", { ascending: true });
 
-      if (logs) {
-        // --- ヒートマップ用 ---
-        const counts: Record<string, number> = {};
-        logs.forEach((l: { date: string; duration_min: number }) => {
-          if (l.date >= sinceStr) {
-            counts[l.date] = (counts[l.date] || 0) + 1;
+        if (logs) {
+          // --- ヒートマップ用 ---
+          const counts: Record<string, number> = {};
+          logs.forEach((l: { date: string; duration_min: number }) => {
+            if (l.date >= sinceStr) {
+              counts[l.date] = (counts[l.date] || 0) + 1;
+            }
+          });
+          const days: DayData[] = [];
+          for (let i = 83; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            const dateStr = toLocalStr(d);
+            days.push({ date: dateStr, count: counts[dateStr] || 0 });
           }
-        });
-        const days: DayData[] = [];
-        for (let i = 83; i >= 0; i--) {
-          const d = new Date();
-          d.setDate(d.getDate() - i);
-          const dateStr = toLocalStr(d);
-          days.push({ date: dateStr, count: counts[dateStr] || 0 });
-        }
-        setData(days);
+          setData(days);
 
-        // --- 月別チャート用（過去6ヶ月） ---
-        const mCounts: Record<string, { count: number; minutes: number }> = {};
-        logs.forEach((l: { date: string; duration_min: number }) => {
-          const ym = l.date.slice(0, 7);
-          if (!mCounts[ym]) mCounts[ym] = { count: 0, minutes: 0 };
-          mCounts[ym].count++;
-          mCounts[ym].minutes += l.duration_min ?? 0;
-        });
+          // --- 月別チャート用（過去6ヶ月） ---
+          const mCounts: Record<string, { count: number; minutes: number }> = {};
+          logs.forEach((l: { date: string; duration_min: number }) => {
+            const ym = l.date.slice(0, 7);
+            if (!mCounts[ym]) mCounts[ym] = { count: 0, minutes: 0 };
+            mCounts[ym].count++;
+            mCounts[ym].minutes += l.duration_min ?? 0;
+          });
 
-        // 過去6ヶ月のラベル生成
-        const months: MonthData[] = [];
-        for (let i = 5; i >= 0; i--) {
-          const d = new Date();
-          d.setDate(1);
-          d.setMonth(d.getMonth() - i);
-          const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-          const label = new Intl.DateTimeFormat("en", { month: "short" }).format(d);
-          const info = mCounts[ym] || { count: 0, minutes: 0 };
-          months.push({ ym, label, count: info.count, minutes: info.minutes });
+          // 過去6ヶ月のラベル生成
+          const months: MonthData[] = [];
+          for (let i = 5; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(1);
+            d.setMonth(d.getMonth() - i);
+            const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+            const label = new Intl.DateTimeFormat("en", { month: "short" }).format(d);
+            const info = mCounts[ym] || { count: 0, minutes: 0 };
+            months.push({ ym, label, count: info.count, minutes: info.minutes });
+          }
+          setMonthData(months);
         }
-        setMonthData(months);
+      } catch {
+        // Network/auth error — show empty heatmap gracefully
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps

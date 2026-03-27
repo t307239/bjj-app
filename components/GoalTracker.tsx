@@ -49,125 +49,128 @@ export default function GoalTracker({ userId }: Props) {
 
   useEffect(() => {
     const load = async () => {
-      // Use user's local timezone via Intl API (replaces JST hardcode)
-      const firstDayOfMonth = getMonthStartDate();
-      const firstDayOfWeek = getWeekStartDate();
+      try {
+        // Use user's local timezone via Intl API (replaces JST hardcode)
+        const firstDayOfMonth = getMonthStartDate();
+        const firstDayOfWeek = getWeekStartDate();
 
-      const [{ count: mc }, { count: wc }, { count: tc }, profileRes] = await Promise.all([
-        supabase
-          .from("training_logs")
-          .select("*", { count: "exact", head: true })
-          .eq("user_id", userId)
-          .gte("date", firstDayOfMonth),
-        supabase
-          .from("training_logs")
-          .select("*", { count: "exact", head: true })
-          .eq("user_id", userId)
-          .gte("date", firstDayOfWeek),
-        supabase
-          .from("techniques")
-          .select("*", { count: "exact", head: true })
-          .eq("user_id", userId),
-        supabase
-          .from("profiles")
-          .select("weekly_goal, monthly_goal, technique_goal")
-          .eq("id", userId)
-          .single(),
-      ]);
+        const [{ count: mc }, { count: wc }, { count: tc }, profileRes] = await Promise.all([
+          supabase
+            .from("training_logs")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", userId)
+            .gte("date", firstDayOfMonth),
+          supabase
+            .from("training_logs")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", userId)
+            .gte("date", firstDayOfWeek),
+          supabase
+            .from("techniques")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", userId),
+          supabase
+            .from("profiles")
+            .select("weekly_goal, monthly_goal, technique_goal")
+            .eq("id", userId)
+            .single(),
+        ]);
 
-      // スキーマ未対応チェック（カラム非存在）
-      if (profileRes.error && profileRes.error.code === "42703") {
-        setSchemaReady(false);
-        setLoading(false);
-        return;
-      }
+        // スキーマ未対応チェック（カラム非存在）
+        if (profileRes.error && profileRes.error.code === "42703") {
+          setSchemaReady(false);
+          return;
+        }
 
-      const mGoal = (profileRes.data as { monthly_goal?: number } | null)?.monthly_goal ?? 0;
+        const mGoal = (profileRes.data as { monthly_goal?: number } | null)?.monthly_goal ?? 0;
 
-      setData({
-        weeklyGoal: (profileRes.data as { weekly_goal?: number } | null)?.weekly_goal ?? 0,
-        monthlyGoal: mGoal,
-        techniqueGoal: (profileRes.data as { technique_goal?: number } | null)?.technique_goal ?? 0,
-        weekCount: wc ?? 0,
-        monthCount: mc ?? 0,
-        techniqueCount: tc ?? 0,
-      });
-
-      const wGoal = profileRes.data?.weekly_goal ?? 0;
-
-      // 過去4週の週間達成履歴
-      if (wGoal > 0) {
-        const thisWeekStart = getWeekStartDate();
-        const tw = new Date(thisWeekStart + "T00:00:00Z");
-        const thisWeekMonMs = tw.getTime();
-        const fourWeeksAgoMs = thisWeekMonMs - 3 * 7 * 86400000;
-        const fw = new Date(fourWeeksAgoMs);
-        const fourWeeksAgoStr = `${fw.getUTCFullYear()}-${String(fw.getUTCMonth() + 1).padStart(2, "0")}-${String(fw.getUTCDate()).padStart(2, "0")}`;
-
-        const { data: wLogs } = await supabase
-          .from("training_logs")
-          .select("date")
-          .eq("user_id", userId)
-          .gte("date", fourWeeksAgoStr);
-
-        // 今週の曜日別達成グリッド（月=0...日=6）
-        const dayGrid: boolean[] = Array(7).fill(false);
-        (wLogs ?? []).forEach((l) => {
-          if (l.date >= thisWeekStart) {
-            const d = new Date(l.date + "T00:00:00Z");
-            const dow = d.getUTCDay(); // 0=Sun
-            const idx = dow === 0 ? 6 : dow - 1; // Mon=0...Sun=6
-            dayGrid[idx] = true;
-          }
+        setData({
+          weeklyGoal: (profileRes.data as { weekly_goal?: number } | null)?.weekly_goal ?? 0,
+          monthlyGoal: mGoal,
+          techniqueGoal: (profileRes.data as { technique_goal?: number } | null)?.technique_goal ?? 0,
+          weekCount: wc ?? 0,
+          monthCount: mc ?? 0,
+          techniqueCount: tc ?? 0,
         });
-        setCurrentWeekDayGrid(dayGrid);
 
-        const wh: WeekHistory[] = [];
-        for (let i = 3; i >= 0; i--) {
-          const wStartMs = thisWeekMonMs - i * 7 * 86400000;
-          const wEndMs = wStartMs + 6 * 86400000;
-          const ws = new Date(wStartMs);
-          const we = new Date(wEndMs);
-          const wsStr = `${ws.getUTCFullYear()}-${String(ws.getUTCMonth() + 1).padStart(2, "0")}-${String(ws.getUTCDate()).padStart(2, "0")}`;
-          const weStr = `${we.getUTCFullYear()}-${String(we.getUTCMonth() + 1).padStart(2, "0")}-${String(we.getUTCDate()).padStart(2, "0")}`;
-          const cnt = (wLogs ?? []).filter((l) => l.date >= wsStr && l.date <= weStr).length;
-          wh.push({
-            weekStart: wsStr,
-            label: i === 0 ? t("goal.thisWeek") : i === 1 ? t("goal.lastWeek") : t("goal.weeksAgo", { n: i }),
-            count: cnt,
-            achieved: cnt >= wGoal,
-            isCurrent: i === 0,
+        const wGoal = profileRes.data?.weekly_goal ?? 0;
+
+        // 過去4週の週間達成履歴
+        if (wGoal > 0) {
+          const thisWeekStart = getWeekStartDate();
+          const tw = new Date(thisWeekStart + "T00:00:00Z");
+          const thisWeekMonMs = tw.getTime();
+          const fourWeeksAgoMs = thisWeekMonMs - 3 * 7 * 86400000;
+          const fw = new Date(fourWeeksAgoMs);
+          const fourWeeksAgoStr = `${fw.getUTCFullYear()}-${String(fw.getUTCMonth() + 1).padStart(2, "0")}-${String(fw.getUTCDate()).padStart(2, "0")}`;
+
+          const { data: wLogs } = await supabase
+            .from("training_logs")
+            .select("date")
+            .eq("user_id", userId)
+            .gte("date", fourWeeksAgoStr);
+
+          // 今週の曜日別達成グリッド（月=0...日=6）
+          const dayGrid: boolean[] = Array(7).fill(false);
+          (wLogs ?? []).forEach((l) => {
+            if (l.date >= thisWeekStart) {
+              const d = new Date(l.date + "T00:00:00Z");
+              const dow = d.getUTCDay(); // 0=Sun
+              const idx = dow === 0 ? 6 : dow - 1; // Mon=0...Sun=6
+              dayGrid[idx] = true;
+            }
           });
-        }
-        setWeekHistory(wh);
-      }
+          setCurrentWeekDayGrid(dayGrid);
 
-      // 過去6ヶ月の達成履歴を計算（N+1解消: 1クエリで全件取得→client側で月集計）
-      if (mGoal > 0) {
-        const { year: nowYear, month: nowMonth } = getLocalDateParts();
-        const sixMonthsAgo = new Date(Date.UTC(nowYear, nowMonth - 1 - 5, 1));
-        const sixMonthsAgoStr = `${sixMonthsAgo.getUTCFullYear()}-${String(sixMonthsAgo.getUTCMonth() + 1).padStart(2, "0")}-01`;
-        const { data: mLogs } = await supabase
-          .from("training_logs")
-          .select("date")
-          .eq("user_id", userId)
-          .gte("date", sixMonthsAgoStr);
-        const history: MonthHistory[] = [];
-        for (let i = 5; i >= 0; i--) {
-          const d = new Date(Date.UTC(nowYear, nowMonth - 1 - i, 1));
-          const ym = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
-          const hc = (mLogs ?? []).filter((l) => l.date.startsWith(ym)).length;
-          history.push({
-            ym,
-            label: `${d.getUTCMonth() + 1}`,
-            count: hc,
-            achieved: hc >= mGoal,
-          });
+          const wh: WeekHistory[] = [];
+          for (let i = 3; i >= 0; i--) {
+            const wStartMs = thisWeekMonMs - i * 7 * 86400000;
+            const wEndMs = wStartMs + 6 * 86400000;
+            const ws = new Date(wStartMs);
+            const we = new Date(wEndMs);
+            const wsStr = `${ws.getUTCFullYear()}-${String(ws.getUTCMonth() + 1).padStart(2, "0")}-${String(ws.getUTCDate()).padStart(2, "0")}`;
+            const weStr = `${we.getUTCFullYear()}-${String(we.getUTCMonth() + 1).padStart(2, "0")}-${String(we.getUTCDate()).padStart(2, "0")}`;
+            const cnt = (wLogs ?? []).filter((l) => l.date >= wsStr && l.date <= weStr).length;
+            wh.push({
+              weekStart: wsStr,
+              label: i === 0 ? t("goal.thisWeek") : i === 1 ? t("goal.lastWeek") : t("goal.weeksAgo", { n: i }),
+              count: cnt,
+              achieved: cnt >= wGoal,
+              isCurrent: i === 0,
+            });
+          }
+          setWeekHistory(wh);
         }
-        setMonthHistory(history);
-      }
 
-      setLoading(false);
+        // 過去6ヶ月の達成履歴を計算（N+1解消: 1クエリで全件取得→client側で月集計）
+        if (mGoal > 0) {
+          const { year: nowYear, month: nowMonth } = getLocalDateParts();
+          const sixMonthsAgo = new Date(Date.UTC(nowYear, nowMonth - 1 - 5, 1));
+          const sixMonthsAgoStr = `${sixMonthsAgo.getUTCFullYear()}-${String(sixMonthsAgo.getUTCMonth() + 1).padStart(2, "0")}-01`;
+          const { data: mLogs } = await supabase
+            .from("training_logs")
+            .select("date")
+            .eq("user_id", userId)
+            .gte("date", sixMonthsAgoStr);
+          const history: MonthHistory[] = [];
+          for (let i = 5; i >= 0; i--) {
+            const d = new Date(Date.UTC(nowYear, nowMonth - 1 - i, 1));
+            const ym = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+            const hc = (mLogs ?? []).filter((l) => l.date.startsWith(ym)).length;
+            history.push({
+              ym,
+              label: `${d.getUTCMonth() + 1}`,
+              count: hc,
+              achieved: hc >= mGoal,
+            });
+          }
+          setMonthHistory(history);
+        }
+      } catch {
+        // Network/auth error — show empty state gracefully
+      } finally {
+        setLoading(false);
+      }
     };
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps
