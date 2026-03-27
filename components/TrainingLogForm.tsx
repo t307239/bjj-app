@@ -10,26 +10,26 @@ const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
 
 // ── Roll Focus themes ────────────────────────────────────────────────────────
 const ROLL_FOCUS_OPTIONS = [
-  { value: "flow",       label: "Flow",       emoji: "🌊" },
-  { value: "positional", label: "Positional", emoji: "🎯" },
-  { value: "hard",       label: "Hard Roll",  emoji: "🔥" },
-  { value: "survival",   label: "Survival",   emoji: "🛡️" },
+  { value: "flow",       i18nKey: "training.rollFocusFlow",       emoji: "🌊" },
+  { value: "positional", i18nKey: "training.rollFocusPositional", emoji: "🎯" },
+  { value: "hard",       i18nKey: "training.rollFocusHard",       emoji: "🔥" },
+  { value: "survival",   i18nKey: "training.rollFocusSurvival",   emoji: "🛡️" },
 ] as const;
 
 // ── Partner belt colors (visual circles) ─────────────────────────────────────
 const PARTNER_BELT_OPTIONS = [
-  { value: "white",  label: "White",  bg: "bg-zinc-100",       ring: "ring-zinc-400",   text: "text-zinc-900" },
-  { value: "blue",   label: "Blue",   bg: "bg-blue-600",       ring: "ring-blue-400",   text: "text-white" },
-  { value: "purple", label: "Purple", bg: "bg-purple-600",     ring: "ring-purple-400", text: "text-white" },
-  { value: "brown",  label: "Brown",  bg: "bg-amber-800",      ring: "ring-amber-600",  text: "text-white" },
-  { value: "black",  label: "Black",  bg: "bg-zinc-950 border border-zinc-600", ring: "ring-zinc-500", text: "text-white" },
+  { value: "white",  i18nKey: "training.partnerBeltWhite",  bg: "bg-zinc-100",       ring: "ring-zinc-400",   text: "text-zinc-900" },
+  { value: "blue",   i18nKey: "training.partnerBeltBlue",   bg: "bg-blue-600",       ring: "ring-blue-400",   text: "text-white" },
+  { value: "purple", i18nKey: "training.partnerBeltPurple", bg: "bg-purple-600",     ring: "ring-purple-400", text: "text-white" },
+  { value: "brown",  i18nKey: "training.partnerBeltBrown",  bg: "bg-amber-800",      ring: "ring-amber-600",  text: "text-white" },
+  { value: "black",  i18nKey: "training.partnerBeltBlack",  bg: "bg-zinc-950 border border-zinc-600", ring: "ring-zinc-500", text: "text-white" },
 ] as const;
 
 // ── Size diff options ─────────────────────────────────────────────────────────
 const SIZE_DIFF_OPTIONS = [
-  { value: "heavier", label: "Heavier", icon: "↑" },
-  { value: "similar", label: "Similar", icon: "—" },
-  { value: "lighter", label: "Lighter", icon: "↓" },
+  { value: "heavier", i18nKey: "training.sizeDiffHeavier", icon: "↑" },
+  { value: "similar", i18nKey: "training.sizeDiffSimilar", icon: "—" },
+  { value: "lighter", i18nKey: "training.sizeDiffLighter", icon: "↓" },
 ] as const;
 
 type FormState = {
@@ -89,7 +89,7 @@ function DurationPicker({
               : "bg-zinc-800 border-white/10 text-gray-400 hover:border-white/20"
           }`}
         >
-          {!isPreset && !showCustom ? `${value}m` : "Custom"}
+          {!isPreset && !showCustom ? `${value}m` : t("training.durationCustom")}
         </button>
       </div>
       {/* Custom number input — only shown when Custom is active */}
@@ -429,11 +429,11 @@ const TrainingLogForm = memo(function TrainingLogForm({
       {/* ── Roll Details: shown only for Gi / No-Gi sparring sessions ─────── */}
       {(form.type === "gi" || form.type === "nogi") && (
         <div className="mb-3 bg-zinc-800/40 border border-white/8 rounded-xl p-3 space-y-3">
-          <p className="text-xs font-semibold text-zinc-400 tracking-wide">🤼 Roll Details <span className="font-normal text-zinc-500">(optional)</span></p>
+          <p className="text-xs font-semibold text-zinc-400 tracking-wide">🤼 {t("training.rollDetailsTitle")} <span className="font-normal text-zinc-500">({t("training.rollDetailsOptional")})</span></p>
 
           {/* Focus theme */}
           <div>
-            <p className="text-xs text-zinc-500 mb-1.5">Focus</p>
+            <p className="text-xs text-zinc-500 mb-1.5">{t("training.rollFocusLabel")}</p>
             <div className="grid grid-cols-4 gap-1.5">
               {ROLL_FOCUS_OPTIONS.map((opt) => (
                 <button
@@ -447,7 +447,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
                   }`}
                 >
                   <span className="text-lg leading-none mt-2">{opt.emoji}</span>
-                  <span className="text-xs leading-tight">{opt.label}</span>
+                  <span className="text-xs leading-tight">{t(opt.i18nKey)}</span>
                 </button>
               ))}
             </div>
@@ -455,7 +455,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
 
           {/* Partner belt color */}
           <div>
-            <p className="text-xs text-zinc-500 mb-1.5">Partner Belt</p>
+            <p className="text-xs text-zinc-500 mb-1.5">{t("training.partnerBeltLabel")}</p>
             <div className="flex gap-2">
               {PARTNER_BELT_OPTIONS.map((opt) => (
                 <button
@@ -467,10 +467,10 @@ const TrainingLogForm = memo(function TrainingLogForm({
                       ? `border-white/40 ring-2 ${opt.ring} bg-zinc-800`
                       : "border-white/10 bg-zinc-800/60 hover:border-white/20"
                   }`}
-                  title={opt.label}
+                  title={t(opt.i18nKey)}
                 >
                   <span className={`w-6 h-6 rounded-full ${opt.bg} inline-block mt-2.5`} />
-                  <span className="text-xs text-zinc-500 leading-none mb-1">{opt.label}</span>
+                  <span className="text-xs text-zinc-500 leading-none mb-1">{t(opt.i18nKey)}</span>
                 </button>
               ))}
             </div>
@@ -478,7 +478,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
 
           {/* Size diff */}
           <div>
-            <p className="text-xs text-zinc-500 mb-1.5">Partner Size</p>
+            <p className="text-xs text-zinc-500 mb-1.5">{t("training.partnerSizeLabel")}</p>
             <div className="grid grid-cols-3 gap-1.5">
               {SIZE_DIFF_OPTIONS.map((opt) => (
                 <button
@@ -492,7 +492,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
                   }`}
                 >
                   <span className="text-lg leading-none mt-2 font-bold">{opt.icon}</span>
-                  <span className="text-xs">{opt.label}</span>
+                  <span className="text-xs">{t(opt.i18nKey)}</span>
                 </button>
               ))}
             </div>
