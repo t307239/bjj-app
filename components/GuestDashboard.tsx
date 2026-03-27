@@ -55,6 +55,7 @@ export default function GuestDashboard() {
   const [showForm, setShowForm] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<{ id: string; entry: GuestLog; timerId: ReturnType<typeof setTimeout> } | null>(null);
   const [undoVisible, setUndoVisible] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   // Locale-aware training types (labels from i18n)
   const TRAINING_TYPES = TRAINING_TYPE_VALUES.map((tt) => ({
@@ -67,6 +68,8 @@ export default function GuestDashboard() {
   }, []);
 
   const handleAdd = () => {
+    if (saving) return; // multi-tap guard
+    setSaving(true);
     const newLog: GuestLog = {
       id: crypto.randomUUID(),
       date,
@@ -80,6 +83,7 @@ export default function GuestDashboard() {
     saveGuestLogs(updated);
     setNotes("");
     setShowForm(false);
+    setSaving(false);
   };
 
   const handleDelete = (id: string) => {
@@ -231,7 +235,8 @@ export default function GuestDashboard() {
               />
               <button
                 onClick={handleAdd}
-                className="w-full bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-bold py-3 min-h-[44px] rounded-lg text-sm transition-all"
+                disabled={saving}
+              className="w-full bg-[#10B981] hover:bg-[#0d9668] active:scale-95 disabled:opacity-60 text-white font-bold py-3 min-h-[44px] rounded-lg text-sm transition-all"
               >
                 {t("training.save")}
               </button>
