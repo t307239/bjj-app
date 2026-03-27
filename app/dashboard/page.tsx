@@ -581,7 +581,7 @@ export default async function DashboardPage({
                 {t("dashboard.bentoAvgSession")}
               </span>
               <div className="flex items-end gap-1 mt-1">
-                <span className="text-3xl font-black leading-none tabular-nums text-zinc-300">
+                <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-zinc-200 to-zinc-400 bg-clip-text text-transparent">
                   {avgSessionMin}
                 </span>
                 <span className="text-zinc-500 text-xs mb-0.5">

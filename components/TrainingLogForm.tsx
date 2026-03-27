@@ -70,7 +70,7 @@ function DurationPicker({
             key={p}
             type="button"
             onClick={() => { onChange(p); setShowCustom(false); }}
-            className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
+            className={`px-2.5 py-2 min-h-[36px] rounded-lg text-xs font-medium border transition-colors ${
               value === p && !showCustom
                 ? "bg-[#10B981] border-[#10B981] text-white"
                 : "bg-zinc-800 border-white/10 text-gray-400 hover:border-white/20"
@@ -83,7 +83,7 @@ function DurationPicker({
         <button
           type="button"
           onClick={() => setShowCustom(true)}
-          className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
+          className={`px-2.5 py-2 min-h-[36px] rounded-lg text-xs font-medium border transition-colors ${
             showCustom || !isPreset
               ? "bg-[#10B981] border-[#10B981] text-white"
               : "bg-zinc-800 border-white/10 text-gray-400 hover:border-white/20"
@@ -392,7 +392,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
 
           {/* Focus theme */}
           <div>
-            <p className="text-[11px] text-zinc-500 mb-1.5">Focus</p>
+            <p className="text-xs text-zinc-500 mb-1.5">Focus</p>
             <div className="grid grid-cols-4 gap-1.5">
               {ROLL_FOCUS_OPTIONS.map((opt) => (
                 <button
@@ -406,7 +406,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
                   }`}
                 >
                   <span className="text-lg leading-none mt-2">{opt.emoji}</span>
-                  <span className="text-[10px] leading-tight">{opt.label}</span>
+                  <span className="text-xs leading-tight">{opt.label}</span>
                 </button>
               ))}
             </div>
@@ -414,7 +414,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
 
           {/* Partner belt color */}
           <div>
-            <p className="text-[11px] text-zinc-500 mb-1.5">Partner Belt</p>
+            <p className="text-xs text-zinc-500 mb-1.5">Partner Belt</p>
             <div className="flex gap-2">
               {PARTNER_BELT_OPTIONS.map((opt) => (
                 <button
@@ -429,7 +429,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
                   title={opt.label}
                 >
                   <span className={`w-6 h-6 rounded-full ${opt.bg} inline-block mt-2.5`} />
-                  <span className="text-[9px] text-zinc-500 leading-none mb-1">{opt.label}</span>
+                  <span className="text-xs text-zinc-500 leading-none mb-1">{opt.label}</span>
                 </button>
               ))}
             </div>
@@ -437,7 +437,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
 
           {/* Size diff */}
           <div>
-            <p className="text-[11px] text-zinc-500 mb-1.5">Partner Size</p>
+            <p className="text-xs text-zinc-500 mb-1.5">Partner Size</p>
             <div className="grid grid-cols-3 gap-1.5">
               {SIZE_DIFF_OPTIONS.map((opt) => (
                 <button
@@ -496,14 +496,14 @@ const TrainingLogForm = memo(function TrainingLogForm({
         <button
           type="submit"
           disabled={loading || !isOnline}
-          className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-all"
+          className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 disabled:opacity-50 text-white font-semibold py-3 min-h-[44px] rounded-lg text-sm transition-all"
         >
           {loading ? t("training.saving") : t("training.save")}
         </button>
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 text-zinc-400 hover:text-zinc-100 hover:bg-white/5 border border-white/10 rounded-lg text-sm transition-colors"
+          className="px-4 py-3 min-h-[44px] text-zinc-400 hover:text-zinc-100 hover:bg-white/5 border border-white/10 rounded-lg text-sm transition-colors"
         >
           {t("training.cancel")}
         </button>

@@ -169,7 +169,7 @@ export default function GuestDashboard() {
             <h3 className="font-semibold text-white">{t("training.title")}</h3>
             <button
               onClick={() => setShowForm(!showForm)}
-              className={`text-white text-sm font-bold px-4 py-1.5 rounded-lg transition-colors ${showForm ? "bg-zinc-700 hover:bg-zinc-600" : "bg-[#10B981] hover:bg-[#0d9668]"}`}
+              className={`text-white text-sm font-bold px-4 py-2.5 min-h-[44px] rounded-lg transition-colors ${showForm ? "bg-zinc-700 hover:bg-zinc-600" : "bg-[#10B981] hover:bg-[#0d9668]"}`}
             >
               {showForm ? t("training.cancel") : t("training.add")}
             </button>
@@ -196,7 +196,7 @@ export default function GuestDashboard() {
                       key={d}
                       type="button"
                       onClick={() => setDuration(d)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
+                      className={`px-3 py-2 min-h-[36px] rounded-lg text-sm font-medium border transition-colors ${
                         duration === d
                           ? "bg-zinc-600 border-zinc-600 text-white"
                           : "bg-zinc-800 border-white/10 text-gray-400 hover:text-white"
@@ -231,7 +231,7 @@ export default function GuestDashboard() {
               />
               <button
                 onClick={handleAdd}
-                className="w-full bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-bold py-2 rounded-lg text-sm transition-all"
+                className="w-full bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-bold py-3 min-h-[44px] rounded-lg text-sm transition-all"
               >
                 {t("training.save")}
               </button>
