@@ -49,6 +49,8 @@
     "bentoMinPerSession": "分 / 回",
     "upsellWinRateLabel": "📊 12ヶ月トレーニンググラフ",
     "upsellInjuryLabel": "🩹 ボディ管理",
+    "upsellGraphDesc": "12ヶ月のトレーニング量を詳細なグラフで確認。",
+    "upsellBodyDesc": "怪我や痛みを記録して、賢く練習しよう。",
     "upsellUpgradeCta": "Proにアップグレード",
     "defaultAthleteName": "道場生",
     "beltWhite": "白帯",

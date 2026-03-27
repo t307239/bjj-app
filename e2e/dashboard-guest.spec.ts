@@ -71,7 +71,7 @@ test.describe("Dashboard - Guest Mode", () => {
     expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 10);
   });
 
-  // --- DailyQuote ---
+  // --- Dashboard content ---
 
   test("shows motivational quote or daily content", async ({ page }) => {
     const body = await page.textContent("body");

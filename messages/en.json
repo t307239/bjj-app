@@ -57,6 +57,8 @@
     "bentoMinPerSession": "min / session",
     "upsellWinRateLabel": "📊 12-Month Training Graph",
     "upsellInjuryLabel": "🩹 Body Management",
+    "upsellGraphDesc": "See your training volume over 12 months with detailed charts.",
+    "upsellBodyDesc": "Track injuries and soreness to train smarter.",
     "upsellUpgradeCta": "Upgrade to Pro",
     "sectionLog": "Log",
     "sectionToday": "Today",
