@@ -117,7 +117,7 @@ export default function WeightChart({ userId, refreshKey }: Props) {
         <p className="text-xs text-gray-400 font-semibold mb-2 uppercase tracking-wide">
           {t("body.weightChart")}
         </p>
-        <p className="text-gray-600 text-sm text-center py-6">{t("body.noData")}</p>
+        <p className="text-gray-400 text-sm text-center py-6">{t("body.noData")}</p>
       </div>
     );
   }
@@ -169,7 +169,7 @@ export default function WeightChart({ userId, refreshKey }: Props) {
   return (
     <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
       <p className="text-xs text-gray-400 font-semibold mb-1 uppercase tracking-wide">
-        {t("body.weightChart")} <span className="text-gray-600 font-normal">(90 days)</span>
+        {t("body.weightChart")} <span className="text-gray-500 font-normal">(90 days)</span>
       </p>
 
       {/* Legend */}
