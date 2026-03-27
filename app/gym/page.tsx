@@ -113,7 +113,7 @@ export default function GymPage() {
                 <p className="text-gray-400 text-sm leading-relaxed mb-4">
                   Automatically flag students who haven't logged training in 2+ weeks. See your at-risk dropouts before they disappear.
                 </p>
-                <ul className="text-xs text-gray-500 space-y-2">
+                <ul className="text-xs text-gray-400 space-y-2">
                   <li>✓ Real-time warning system</li>
                   <li>✓ Contact students before it's too late</li>
                   <li>✓ Reduce churn by 20-30%</li>
@@ -129,7 +129,7 @@ export default function GymPage() {
                 <p className="text-gray-400 text-sm leading-relaxed mb-4">
                   Link this week's technique from BJJ Wiki. All your students see it in the app. Extend class learning to their home prep.
                 </p>
-                <ul className="text-xs text-gray-500 space-y-2">
+                <ul className="text-xs text-gray-400 space-y-2">
                   <li>✓ Send in 30 seconds</li>
                   <li>✓ 4,000+ free BJJ Wiki pages available</li>
                   <li>✓ Increase student retention</li>
@@ -145,7 +145,7 @@ export default function GymPage() {
                 <p className="text-gray-400 text-sm leading-relaxed mb-4">
                   Generate a unique QR code for your academy. Students scan → auto-join your gym group. Zero friction onboarding.
                 </p>
-                <ul className="text-xs text-gray-500 space-y-2">
+                <ul className="text-xs text-gray-400 space-y-2">
                   <li>✓ Print on flyers & posters</li>
                   <li>✓ Share via email/LINE</li>
                   <li>✓ Instant class integration</li>
@@ -205,9 +205,9 @@ export default function GymPage() {
                 </div>
                 <h3 className="text-lg font-bold mb-2 text-zinc-100">Starter</h3>
                 <div className="text-3xl font-bold text-zinc-100 mb-1">
-                  $49<span className="text-sm font-normal text-gray-500">/month</span>
+                  $49<span className="text-sm font-normal text-gray-400">/month</span>
                 </div>
-                <p className="text-gray-500 text-xs mb-6">Up to 50 students</p>
+                <p className="text-gray-400 text-xs mb-6">Up to 50 students</p>
                 <ul className="space-y-3 text-sm text-gray-400 mb-8">
                   <li className="flex items-center gap-2">
                     <span className="text-blue-400">✓</span> Attrition risk dashboard
@@ -234,9 +234,9 @@ export default function GymPage() {
               <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10">
                 <h3 className="text-lg font-bold mb-2 text-zinc-100">Pro</h3>
                 <div className="text-3xl font-bold text-zinc-100 mb-1">
-                  $99<span className="text-sm font-normal text-gray-500">/month</span>
+                  $99<span className="text-sm font-normal text-gray-400">/month</span>
                 </div>
-                <p className="text-gray-500 text-xs mb-6">Unlimited students</p>
+                <p className="text-gray-400 text-xs mb-6">Unlimited students</p>
                 <ul className="space-y-3 text-sm text-gray-400 mb-8">
                   <li className="flex items-center gap-2">
                     <span className="text-blue-400">✓</span> Everything in Starter
@@ -312,7 +312,7 @@ export default function GymPage() {
                 <h3 className="font-semibold text-zinc-100 mb-2 text-sm">
                   {q}
                 </h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{a}</p>
+                <p className="text-gray-400 text-sm leading-relaxed">{a}</p>
               </div>
             ))}
           </div>

@@ -120,7 +120,7 @@ export default async function TechniquesPage() {
               <h1 className="text-2xl font-black text-white tracking-tight">
                 {t("techniquesPage.title")}
               </h1>
-              <p className="text-gray-500 text-sm mt-0.5">
+              <p className="text-gray-400 text-sm mt-0.5">
                 {t("techniquesPage.subtitle")}
               </p>
             </div>
@@ -184,11 +184,11 @@ export default async function TechniquesPage() {
             ═══════════════════════════════════════════ */}
         <section className="mb-7">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold text-zinc-500 tracking-widest uppercase">
+            <p className="text-xs font-semibold text-zinc-400 tracking-widest uppercase">
               {t("techniquesPage.skillMap")}
             </p>
             {!isPro && (
-              <span className="text-xs text-zinc-500">
+              <span className="text-xs text-zinc-400">
                 {t("techniquesPage.freeLimit")}
               </span>
             )}
@@ -205,7 +205,7 @@ export default async function TechniquesPage() {
             SECTION 2 — TECHNIQUE LOG
             ═══════════════════════════════════════════ */}
         <section className="mb-7">
-          <p className="text-xs font-semibold text-zinc-500 tracking-widest uppercase mb-3">
+          <p className="text-xs font-semibold text-zinc-400 tracking-widest uppercase mb-3">
             {t("techniquesPage.techniqueLog")}
           </p>
           <Suspense>
@@ -217,7 +217,7 @@ export default async function TechniquesPage() {
             SECTION 3 — LEARN: WIKI LINKS
             ═══════════════════════════════════════════ */}
         <section className="mb-7">
-          <p className="text-xs font-semibold text-zinc-500 tracking-widest uppercase mb-3">
+          <p className="text-xs font-semibold text-zinc-400 tracking-widest uppercase mb-3">
             {t("techniquesPage.learnWiki")}
           </p>
           <div className="bg-zinc-900/40 border border-white/8 rounded-2xl p-4">
@@ -237,7 +237,7 @@ export default async function TechniquesPage() {
                 </a>
               ))}
             </div>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-zinc-400">
               {t("techniquesPage.wikiDesc")}
             </p>
           </div>

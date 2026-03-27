@@ -357,35 +357,35 @@ export default async function Home() {
                   <span className="text-sm font-semibold">BJJ App</span>
                 </div>
                 <div className="flex gap-4">
-                  <span className="text-xs text-gray-500">Log</span>
-                  <span className="text-xs text-gray-500">Tech</span>
-                  <span className="text-xs text-gray-500">Profile</span>
+                  <span className="text-xs text-gray-400">Log</span>
+                  <span className="text-xs text-gray-400">Tech</span>
+                  <span className="text-xs text-gray-400">Profile</span>
                 </div>
               </div>
 
               <div className="p-4">
                 <div className="mb-4">
                   <h3 className="text-base font-bold">Welcome back, grappler</h3>
-                  <p className="text-xs text-gray-500">Tuesday, March 17, 2026</p>
+                  <p className="text-xs text-gray-400">Tuesday, March 17, 2026</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 mb-3">
                   <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     <div className="text-2xl font-bold text-rose-400">12</div>
-                    <div className="text-xs text-gray-500 mt-0.5">This month</div>
+                    <div className="text-xs text-gray-400 mt-0.5">This month</div>
                   </div>
                   <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     <div className="text-2xl font-bold text-blue-400">3</div>
-                    <div className="text-xs text-gray-500 mt-0.5">This week</div>
+                    <div className="text-xs text-gray-400 mt-0.5">This week</div>
                   </div>
                   <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     <div className="text-2xl font-bold text-purple-400">47</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Techniques</div>
+                    <div className="text-xs text-gray-400 mt-0.5">Techniques</div>
                   </div>
                   <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     {/* Fix 12: remove 🔥 emoji from mockup */}
                     <div className="text-xl font-bold text-orange-400">5</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Day streak</div>
+                    <div className="text-xs text-gray-400 mt-0.5">Day streak</div>
                   </div>
                 </div>
 
@@ -418,14 +418,14 @@ export default async function Home() {
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-xs text-gray-500 font-medium mb-1">Recent sessions</div>
+                  <div className="text-xs text-gray-400 font-medium mb-1">Recent sessions</div>
                   <div className="bg-zinc-900 rounded-xl p-3 border border-white/10">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-xs font-medium">2026/03/17</div>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-xs bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded">Gi</span>
-                          <span className="text-xs text-gray-500">1h 30m</span>
+                          <span className="text-xs text-gray-400">1h 30m</span>
                         </div>
                       </div>
                     </div>
@@ -436,7 +436,7 @@ export default async function Home() {
                         <div className="text-xs font-medium">2026/03/15</div>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-xs bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded">NoGi</span>
-                          <span className="text-xs text-gray-500">1h</span>
+                          <span className="text-xs text-gray-400">1h</span>
                         </div>
                       </div>
                     </div>
@@ -453,7 +453,7 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">Log every session</h3>
-                  <p className="text-gray-500 text-sm">Track Gi, NoGi, drilling, comp, and open mat. Review your calendar anytime.</p>
+                  <p className="text-gray-400 text-sm">Track Gi, NoGi, drilling, comp, and open mat. Review your calendar anytime.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -462,7 +462,7 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">Set weekly &amp; monthly goals</h3>
-                  <p className="text-gray-500 text-sm">Track your target with a progress bar. Turns green when you hit it.</p>
+                  <p className="text-gray-400 text-sm">Track your target with a progress bar. Turns green when you hit it.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -471,7 +471,7 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">Spot your weak areas</h3>
-                  <p className="text-gray-500 text-sm">Organize techniques by position. Star ratings show where you need work.</p>
+                  <p className="text-gray-400 text-sm">Organize techniques by position. Star ratings show where you need work.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -480,7 +480,7 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">Build a streak</h3>
-                  <p className="text-gray-500 text-sm">Auto-counts your consecutive training days. Hard to let it break.</p>
+                  <p className="text-gray-400 text-sm">Auto-counts your consecutive training days. Hard to let it break.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -489,7 +489,7 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">Calendar view</h3>
-                  <p className="text-gray-500 text-sm">See your training days on a monthly calendar with color-coded type dots.</p>
+                  <p className="text-gray-400 text-sm">See your training days on a monthly calendar with color-coded type dots.</p>
                 </div>
               </div>
               {/* Fix 20: Visual Skill Map highlight */}
@@ -499,7 +499,7 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">Visual Skill Map</h3>
-                  <p className="text-gray-500 text-sm">Build a mind map of your techniques. See the connections between positions and submissions.</p>
+                  <p className="text-gray-400 text-sm">Build a mind map of your techniques. See the connections between positions and submissions.</p>
                 </div>
               </div>
 
@@ -582,7 +582,7 @@ export default async function Home() {
               >
                 <div className="mb-2">{item.icon}</div>
                 <div className="text-sm font-semibold text-white mb-1">{item.title}</div>
-                <div className="text-xs text-gray-500">{item.desc}</div>
+                <div className="text-xs text-gray-400">{item.desc}</div>
               </a>
             ))}
           </div>
@@ -622,7 +622,7 @@ export default async function Home() {
             <div key={i} className="bg-zinc-900 rounded-xl p-5 border border-white/10">
               {/* Fix 17: zinc-100 for stronger contrast */}
               <h3 className="font-semibold text-zinc-100 mb-2 text-sm">Q. {q}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{a}</p>
+              <p className="text-gray-400 text-sm leading-relaxed">{a}</p>
             </div>
           ))}
         </div>
