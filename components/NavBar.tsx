@@ -16,14 +16,15 @@ const STRIPE_PORTAL_URL = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL || 
 type Props = {
   displayName: string;
   avatarUrl?: string | null;
+  isPro?: boolean;
 };
 
-export default function NavBar({ displayName, avatarUrl }: Props) {
+export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Props) {
   const { t } = useLocale();
   const pathname = usePathname();
   const [trainedToday, setTrainedToday] = useState<boolean | null>(null);
   const [currentStreak, setCurrentStreak] = useState<number>(0);
-  const [isPro, setIsPro] = useState<boolean>(false);
+  const [isPro, setIsPro] = useState<boolean>(isProProp ?? false);
   const [userId, setUserId] = useState<string | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);

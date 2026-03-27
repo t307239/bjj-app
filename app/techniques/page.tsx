@@ -107,7 +107,7 @@ export default async function TechniquesPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <NavBar displayName={displayName} avatarUrl={avatarUrl} />
+      <NavBar displayName={displayName} avatarUrl={avatarUrl} isPro={isPro} />
 
       <main className="max-w-4xl mx-auto px-4 py-5">
 

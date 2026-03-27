@@ -4,10 +4,8 @@ import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import ProfileTabs from "@/components/ProfileTabs";
 import { serverT as t } from "@/lib/i18n";
-import {
-  getLocalDateString,
-  getYesterdayDateString,
-} from "@/lib/timezone";
+import { getLocalDateString } from "@/lib/timezone";
+import { getLogicalTrainingDate } from "@/lib/logicalDate";
 
 export const metadata: Metadata = {
   title: "Profile",
@@ -77,24 +75,21 @@ export default async function ProfilePage() {
   const gymName = profile?.gym_name ?? null;
   const beltStyle = BELT_COLORS[belt] ?? BELT_COLORS.white;
 
-  // Calculate streak
+  // Calculate streak (same algorithm as NavBar — uses logical training date)
   let streak = 0;
   if (recentLogs && recentLogs.length > 0) {
-    const dates = [
+    const uniqueDates = [
       ...new Set(recentLogs.map((l: { date: string }) => l.date)),
-    ].sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-    const today = getLocalDateString();
-    const yesterday = getYesterdayDateString();
-    if (dates[0] === today || dates[0] === yesterday) {
-      streak = 1;
-      for (let i = 1; i < dates.length; i++) {
-        const diff = Math.round(
-          (new Date(dates[i - 1] as string).getTime() -
-            new Date(dates[i] as string).getTime()) /
-            86400000
-        );
-        if (diff === 1) streak++;
-        else break;
+    ].sort().reverse() as string[];
+    const today = getLogicalTrainingDate();
+    let checkDateMs = new Date(today + "T00:00:00Z").getTime();
+    for (const dateStr of uniqueDates) {
+      const check = new Date(checkDateMs).toISOString().slice(0, 10);
+      if (dateStr === check) {
+        streak++;
+        checkDateMs -= 86400000;
+      } else if (dateStr < check) {
+        break;
       }
     }
   }
@@ -117,7 +112,7 @@ export default async function ProfilePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <NavBar displayName={displayName} avatarUrl={avatarUrl} />
+      <NavBar displayName={displayName} avatarUrl={avatarUrl} isPro={isPro} />
 
       <main className="max-w-4xl mx-auto px-4 py-5">
 

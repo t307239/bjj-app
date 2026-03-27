@@ -344,7 +344,7 @@ export default async function DashboardPage({
   return (
     <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
       <InstallBanner />
-      <NavBar displayName={displayName} avatarUrl={avatarUrl} />
+      <NavBar displayName={displayName} avatarUrl={avatarUrl} isPro={isPro} />
       <GuestMigration userId={user.id} />
       <AchievementBadge userId={user.id} totalCount={totalCount ?? 0} />
 
