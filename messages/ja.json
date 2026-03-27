@@ -329,7 +329,10 @@
     "errorAuth": "認証に失敗しました。もう一度お試しください。",
     "errorCallback": "ログインエラーが発生しました。もう一度お試しください。",
     "errorDenied": "アクセスが拒否されました。",
-    "errorGeneric": "エラーが発生しました。もう一度お試しください。"
+    "errorGeneric": "エラーが発生しました。もう一度お試しください。",
+    "errorInvalidEmail": "有効なメールアドレスを入力してください。",
+    "errorSendFailed": "メール送信に失敗しました。もう一度お試しください。",
+    "sessionExpired": "セッションが期限切れです。再ログインしてください — 未保存のデータは保持されています。"
   },
   "stats": {
     "personalBests": "個人記録",
@@ -662,7 +665,8 @@
     "shareData": "練習データをジムと共有",
     "shareDataSub": "頻度と帯のみ。メモは常に非公開。",
     "dashboardTitle": "ジムダッシュボード",
-    "dashboardSubtitle": "生徒の練習状況を把握し、離脱を防ぎましょう"
+    "dashboardSubtitle": "生徒の練習状況を把握し、離脱を防ぎましょう",
+    "membersLabel": "メンバー"
   },
   "gymJoin": {
     "title": "{name} に参加する",
@@ -723,7 +727,10 @@
     "freeLimit": "無料: ノード10個・エッジ15本まで",
     "techniqueLog": "テクニックログ",
     "learnWiki": "BJJ Wikiで学ぶ",
-    "wikiDesc": "BJJ Wikiの無料テクニックガイド、ドリル、動画解説"
+    "wikiDesc": "BJJ Wikiの無料テクニックガイド、ドリル、動画解説",
+    "statsLogged": "記録",
+    "statsSolid": "定着+",
+    "statsMastered": "マスター"
   },
   "beltPromo": {
     "congrats": "おめでとうございます！🎉",

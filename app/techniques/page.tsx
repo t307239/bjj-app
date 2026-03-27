@@ -140,7 +140,7 @@ export default async function TechniquesPage() {
                   {totalTechniques}
                 </p>
                 <p className="text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
-                  logged
+                  {t("techniquesPage.statsLogged")}
                 </p>
               </div>
               {/* Solid+ */}
@@ -149,7 +149,7 @@ export default async function TechniquesPage() {
                   {learned + mastered}
                 </p>
                 <p className="text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
-                  solid+
+                  {t("techniquesPage.statsSolid")}
                 </p>
               </div>
               {/* Mastered */}
@@ -158,7 +158,7 @@ export default async function TechniquesPage() {
                   {mastered}
                 </p>
                 <p className="text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
-                  mastered
+                  {t("techniquesPage.statsMastered")}
                 </p>
               </div>
             </div>

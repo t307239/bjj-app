@@ -29,7 +29,7 @@ function ErrorBanner() {
     auth: t("login.errorAuth"),
     callback: t("login.errorCallback"),
     access_denied: t("login.errorDenied"),
-    session_expired: "Your session expired. Please sign in again — your unsaved data has been preserved.",
+    session_expired: t("login.sessionExpired"),
   };
   return (
     <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 mb-4 text-red-400 text-sm text-center">
@@ -136,7 +136,7 @@ function LoginForm() {
     if (!canProceed) { nudgeCheckboxes(); return; }
     setEmailError(null);
     if (!email || !email.includes("@")) {
-      setEmailError("Please enter a valid email address.");
+      setEmailError(t("login.errorInvalidEmail"));
       return;
     }
     setEmailLoading(true);
@@ -146,7 +146,7 @@ function LoginForm() {
     });
     if (error) {
       console.error("[login] signInWithOtp error:", error.message, error.status);
-      setEmailError("Failed to send email. Please try again.");
+      setEmailError(t("login.errorSendFailed"));
     } else {
       setEmailSent(true);
     }

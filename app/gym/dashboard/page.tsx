@@ -97,7 +97,7 @@ export default async function GymDashboardPage() {
                     {memberCount}
                   </p>
                   <p className="text-xs text-zinc-400 uppercase tracking-widest">
-                    members
+                    {t("gym.membersLabel")}
                   </p>
                 </div>
               </div>

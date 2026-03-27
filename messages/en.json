@@ -440,6 +440,9 @@
     "errorCallback": "Login error. Please try again.",
     "errorDenied": "Access denied.",
     "errorGeneric": "An error occurred. Please try again.",
+    "errorInvalidEmail": "Please enter a valid email address.",
+    "errorSendFailed": "Failed to send email. Please try again.",
+    "sessionExpired": "Your session expired. Please sign in again — your unsaved data has been preserved.",
     "ariaAgeConfirm": "Age confirmation: I am 13 years of age or older",
     "ariaDisclaimerConfirm": "Training disclaimer: I understand BJJ involves physical risk",
     "ariaSignInGoogle": "Sign in with Google",
@@ -807,6 +810,7 @@
     "shareDataSub": "Frequency & belt only. Notes always private.",
     "dashboardTitle": "Gym Dashboard",
     "dashboardSubtitle": "Track your students and reduce churn",
+    "membersLabel": "members",
     "totalSessions30d": "Total sessions (30d)",
     "avgSessions30d": "Avg sessions/member",
     "memberKicked": "Member removed from gym.",
@@ -924,7 +928,10 @@
     "freeLimit": "Free: up to 10 nodes · 15 edges",
     "techniqueLog": "Technique Log",
     "learnWiki": "Learn on BJJ Wiki",
-    "wikiDesc": "Free technique guides, drills, and video breakdowns on BJJ Wiki"
+    "wikiDesc": "Free technique guides, drills, and video breakdowns on BJJ Wiki",
+    "statsLogged": "logged",
+    "statsSolid": "solid+",
+    "statsMastered": "mastered"
   },
   "weeklyStrip": {
     "same": "= same",
