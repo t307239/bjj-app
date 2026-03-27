@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import Skeleton from "@/components/ui/Skeleton";
+import { getLocalDateString, getYesterdayDateString } from "@/lib/timezone";
 
 type RankRow = {
   student_id: string;
@@ -34,8 +35,8 @@ function beltDot(belt: string): string {
 function computeStreak(dates: string[]): number {
   if (dates.length === 0) return 0;
   const unique = [...new Set(dates)].sort((a, b) => b.localeCompare(a));
-  const today = new Date().toISOString().split("T")[0];
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+  const today = getLocalDateString();
+  const yesterday = getYesterdayDateString();
   if (unique[0] !== today && unique[0] !== yesterday) return 0;
   let streak = 1;
   for (let i = 1; i < unique.length; i++) {
