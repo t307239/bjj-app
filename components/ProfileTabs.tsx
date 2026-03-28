@@ -7,8 +7,9 @@ import PersonalBests from "./PersonalBests";
 import ProfileForm from "./ProfileForm";
 import BodyManagementSection from "./BodyManagementSection";
 import TrainingChart from "./TrainingChart";
+import ReferralSection from "./ReferralSection";
 
-function AccountSection({ userId, isPro }: { userId: string; isPro: boolean }) {
+function AccountSection({ userId, isPro, referralCode, referralCount }: { userId: string; isPro: boolean; referralCode: string | null; referralCount: number }) {
   const { t } = useLocale();
   const supabase = createClient();
   const router = useRouter();
@@ -26,6 +27,11 @@ function AccountSection({ userId, isPro }: { userId: string; isPro: boolean }) {
 
   return (
     <div className="space-y-4">
+      {/* Referral section — invite friends */}
+      {referralCode && (
+        <ReferralSection referralCode={referralCode} referralCount={referralCount} />
+      )}
+
       {/* B2B lead card — always show to non-gym-owners; drive them to /gym */}
       {!isPro && (
         <div className="bg-zinc-900 border border-blue-500/20 rounded-xl px-4 py-4 mt-4">
@@ -100,7 +106,7 @@ function AccountSection({ userId, isPro }: { userId: string; isPro: boolean }) {
 
 type TabId = "stats" | "profile" | "body" | "account";
 
-export default function ProfileTabs({ userId, isPro = false }: { userId: string; isPro?: boolean }) {
+export default function ProfileTabs({ userId, isPro = false, referralCode = null, referralCount = 0 }: { userId: string; isPro?: boolean; referralCode?: string | null; referralCount?: number }) {
   const { t } = useLocale();
   const [activeTab, setActiveTab] = useState<TabId>("stats");
   const TABS: { id: TabId; label: string }[] = [
@@ -138,7 +144,7 @@ export default function ProfileTabs({ userId, isPro = false }: { userId: string;
       )}
       {activeTab === "profile" && <ProfileForm userId={userId} hideAccount />}
       {activeTab === "body"    && <BodyManagementSection userId={userId} />}
-      {activeTab === "account" && <AccountSection userId={userId} isPro={isPro} />}
+      {activeTab === "account" && <AccountSection userId={userId} isPro={isPro} referralCode={referralCode} referralCount={referralCount} />}
     </div>
   );
 }

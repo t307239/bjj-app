@@ -40,6 +40,9 @@
     "streakDaysUnit": "days",
     "analyticsLabel": "Analytics",
     "analyticsHint": "Calendar · Charts · Competition",
+    "inviteTitle": "Invite Your Training Partners",
+    "inviteDesc": "Train together, track together. Share BJJ App with your gym crew.",
+    "inviteCta": "Share Invite Link",
     "emptyStateTitle": "Log your first roll and start your streak!",
     "emptyStateDesc": "Record today's training to unlock your analytics dashboard and keep the momentum going.",
     "emptyStateCta": "Log Your First Roll",
@@ -360,7 +363,16 @@
     "ariaPushToggle": "Toggle push notifications",
     "gymLeadTitle": "Running a gym?",
     "gymLeadDesc": "Create your academy page, get a QR invite code, and track your students' progress.",
-    "gymLeadCta": "Set up your gym →"
+    "gymLeadCta": "Set up your gym →",
+    "referralTitle": "Invite Friends",
+    "referralDesc": "Share your referral link with training partners. When they sign up, you'll both be connected.",
+    "referralLink": "Your Referral Link",
+    "referralCopied": "Copied!",
+    "referralCopy": "Copy",
+    "referralCount": "{n} friends invited",
+    "referralCountZero": "No referrals yet — share your link!",
+    "referralShare": "Train BJJ with me! Track your sessions and build your skill map for free:",
+    "referralShareBtn": "Share Invite Link"
   },
   "competition": {
     "title": "Match Record",

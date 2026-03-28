@@ -43,6 +43,7 @@ export type DbProfile = {
   gym_kick_notified: boolean | null;
   share_data_with_gym: boolean;
   signup_source: string | null;
+  referral_code: string | null;
   created_at: string;
 };
 

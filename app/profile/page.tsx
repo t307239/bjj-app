@@ -45,15 +45,16 @@ export default async function ProfilePage() {
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
-  // Fetch profile + stats for hero section
+  // Fetch profile + stats + referral data for hero section
   const [
     { data: profile },
     { count: totalCount },
     { data: recentLogs },
+    { count: referralCount },
   ] = await Promise.all([
     supabase
       .from("profiles")
-      .select("belt, stripe, start_date, is_pro, gym_name")
+      .select("belt, stripe, start_date, is_pro, gym_name, referral_code")
       .eq("id", user.id)
       .single(),
     supabase
@@ -66,12 +67,17 @@ export default async function ProfilePage() {
       .eq("user_id", user.id)
       .order("date", { ascending: false })
       .limit(60),
+    supabase
+      .from("referrals")
+      .select("*", { count: "exact", head: true })
+      .eq("referrer_id", user.id),
   ]);
 
   const belt = profile?.belt ?? "white";
   const stripeCount = profile?.stripe ?? 0;
   const isPro = profile?.is_pro ?? false;
   const gymName = profile?.gym_name ?? null;
+  const referralCode = (profile as { referral_code?: string | null })?.referral_code ?? null;
   const beltStyle = BELT_COLORS[belt] ?? BELT_COLORS.white;
 
   // Calculate streak (same algorithm as NavBar — uses logical training date)
@@ -210,7 +216,7 @@ export default async function ProfilePage() {
         {/* ═══════════════════════════════════════════
             PROFILE TABS (stats / settings / account)
             ═══════════════════════════════════════════ */}
-        <ProfileTabs userId={user.id} isPro={isPro} />
+        <ProfileTabs userId={user.id} isPro={isPro} referralCode={referralCode} referralCount={referralCount ?? 0} />
       </main>
     </div>
   );

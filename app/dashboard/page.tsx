@@ -22,6 +22,7 @@ import OnboardingChecklist from "@/components/OnboardingChecklist";
 import GymKickBanner from "@/components/GymKickBanner";
 import GymRanking from "@/components/GymRanking";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
+import InviteCard from "@/components/InviteCard";
 import TimeGreeting from "@/components/TimeGreeting";
 import {
   getWeekStartDate,
@@ -183,7 +184,7 @@ export default async function DashboardPage({
   const { data: profileData } = await supabase
     .from("profiles")
     .select(
-      "belt, stripe, start_date, is_pro, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym"
+      "belt, stripe, start_date, is_pro, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym, referral_code"
     )
     .eq("id", user.id)
     .single();
@@ -240,6 +241,7 @@ export default async function DashboardPage({
     profileData?.gym_kick_notified === false && !profileData?.gym_id;
   const gymId = profileData?.gym_id ?? null;
   const shareDataWithGym = profileData?.share_data_with_gym ?? false;
+  const referralCode = (profileData as { referral_code?: string | null })?.referral_code ?? null;
 
   let gymCurriculum: {
     curriculum_url: string;
@@ -767,6 +769,15 @@ export default async function DashboardPage({
         {isOnboardingComplete && (
           <section className="mt-7 mb-4">
             <InsightsBanner userId={user.id} />
+          </section>
+        )}
+
+        {/* ═══════════════════════════════════════════
+            SECTION 9 — INVITE FRIENDS (referral system)
+            ═══════════════════════════════════════════ */}
+        {referralCode && hasFirstLog && (
+          <section className="mb-7">
+            <InviteCard referralCode={referralCode} />
           </section>
         )}
       </main>

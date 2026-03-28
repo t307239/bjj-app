@@ -1,0 +1,116 @@
+"use client";
+import { useState } from "react";
+import { useLocale } from "@/lib/i18n";
+
+const APP_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
+
+export default function ReferralSection({
+  referralCode,
+  referralCount,
+}: {
+  referralCode: string;
+  referralCount: number;
+}) {
+  const { t } = useLocale();
+  const [copied, setCopied] = useState(false);
+  const referralLink = `${APP_URL}/login?ref=${referralCode}`;
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(referralLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for older browsers
+      const input = document.createElement("input");
+      input.value = referralLink;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand("copy");
+      document.body.removeChild(input);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleShare = async () => {
+    const shareText = `${t("profile.referralShare")} ${referralLink}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ text: shareText, url: referralLink });
+      } catch {
+        // User cancelled share
+      }
+    } else {
+      await handleCopy();
+    }
+  };
+
+  return (
+    <div className="bg-zinc-900/60 border border-violet-500/20 rounded-xl p-4">
+      <div className="flex items-start gap-3 mb-3">
+        <span className="text-2xl mt-0.5">🤝</span>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-white">
+            {t("profile.referralTitle")}
+          </p>
+          <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">
+            {t("profile.referralDesc")}
+          </p>
+        </div>
+      </div>
+
+      {/* Referral link + copy */}
+      <div className="mb-3">
+        <label className="text-xs text-zinc-400 font-medium block mb-1.5">
+          {t("profile.referralLink")}
+        </label>
+        <div className="flex items-center gap-2">
+          <div className="flex-1 min-w-0 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-zinc-300 font-mono truncate select-all">
+            {referralLink}
+          </div>
+          <button
+            type="button"
+            onClick={handleCopy}
+            className={`flex-shrink-0 px-3 py-2 rounded-lg text-xs font-semibold transition-all active:scale-95 ${
+              copied
+                ? "bg-emerald-600 text-white"
+                : "bg-zinc-700 hover:bg-zinc-600 text-zinc-200"
+            }`}
+          >
+            {copied ? t("profile.referralCopied") : t("profile.referralCopy")}
+          </button>
+        </div>
+      </div>
+
+      {/* Referral count */}
+      <p className="text-xs text-zinc-400 mb-3">
+        {referralCount > 0
+          ? t("profile.referralCount", { n: referralCount })
+          : t("profile.referralCountZero")}
+      </p>
+
+      {/* Share button */}
+      <button
+        type="button"
+        onClick={handleShare}
+        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-bold transition-colors active:scale-95"
+      >
+        <svg
+          className="w-4 h-4 flex-shrink-0"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+          />
+        </svg>
+        {t("profile.referralShareBtn")}
+      </button>
+    </div>
+  );
+}
