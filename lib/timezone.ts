@@ -19,13 +19,14 @@
 
 /**
  * Returns the user's IANA timezone string.
- * Falls back to "Asia/Tokyo" (JST) for SSR / environments without Intl.
+ * Falls back to "UTC" for SSR / environments without Intl.
+ * UTC is the safest neutral default for global users (Brazil, US, Europe, Japan).
  */
 export function getUserTimezone(): string {
   try {
     return Intl.DateTimeFormat().resolvedOptions().timeZone;
   } catch {
-    return "Asia/Tokyo";
+    return "UTC";
   }
 }
 

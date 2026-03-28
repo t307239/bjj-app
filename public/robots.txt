@@ -1,0 +1,7 @@
+# BJJ App — robots.txt
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /auth/
+
+Sitemap: https://bjj-app.net/sitemap.xml

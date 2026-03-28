@@ -1,7 +1,7 @@
 {
-  "name": "BJJ App - Jiu-Jitsu Tracker",
+  "name": "BJJ App - Jiu-Jitsu Training Log & Technique Tracker",
   "short_name": "BJJ App",
-  "description": "Brazilian Jiu-Jitsu training tracker",
+  "description": "Track your Brazilian Jiu-Jitsu training sessions, log techniques by position, maintain streaks, and visualize your progress. Free forever.",
   "start_url": "/dashboard",
   "scope": "/",
   "display": "standalone",
@@ -25,15 +25,15 @@
   "categories": ["sports", "health", "fitness"],
   "shortcuts": [
     {
-      "name": "練習を記録",
-      "short_name": "記録",
-      "description": "練習ログを追加する",
+      "name": "Log Training",
+      "short_name": "Log",
+      "description": "Add a new training session",
       "url": "/dashboard"
     },
     {
-      "name": "テクニック帳",
-      "short_name": "テクニック",
-      "description": "テクニックを確認する",
+      "name": "Technique Journal",
+      "short_name": "Techniques",
+      "description": "Browse and log your techniques",
       "url": "/techniques"
     }
   ]
