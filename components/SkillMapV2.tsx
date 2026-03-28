@@ -62,25 +62,9 @@ interface Dagre {
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const dagre = require("dagre") as Dagre;
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-type DbNode = {
-  id: string;
-  user_id: string;
-  name: string;
-  description: string | null;
-  pos_x: number;
-  pos_y: number;
-  mastery_level?: number; // 0=Locked, 1=Learning, 2=Mastered
-  created_at: string;
-};
-
-type DbEdge = {
-  id: string;
-  source_id: string;
-  target_id: string;
-  label: string | null;
-};
+// ─── Types (from centralized database types) ─────────────────────────────────
+import type { DbTechniqueNode as DbNode, DbTechniqueEdge } from "@/lib/database.types";
+type DbEdge = Pick<DbTechniqueEdge, "id" | "source_id" | "target_id" | "label">;
 
 type Props = {
   userId: string;

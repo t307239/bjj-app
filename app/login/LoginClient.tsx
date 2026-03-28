@@ -88,6 +88,10 @@ function LoginForm() {
   const [emailSent, setEmailSent] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
 
+  // Rate limit guard: prevent brute-force OTP requests (60s cooldown)
+  const lastOtpSentRef = useRef<number>(0);
+  const OTP_COOLDOWN_MS = 60_000;
+
   // COPPA: user must confirm age 13+
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   // Training Disclaimer: user must accept physical risk
@@ -139,7 +143,14 @@ function LoginForm() {
       setEmailError(t("login.errorInvalidEmail"));
       return;
     }
+    // App-level rate limit: prevent rapid OTP brute-force
+    const now = Date.now();
+    if (now - lastOtpSentRef.current < OTP_COOLDOWN_MS) {
+      setEmailError(t("login.errorRateLimit"));
+      return;
+    }
     setEmailLoading(true);
+    lastOtpSentRef.current = now;
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: callbackUrl() },
