@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     siteName: "BJJ App",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "BJJ App",
     description: "Track your BJJ training — log sessions, record techniques, and grow.",
   },
