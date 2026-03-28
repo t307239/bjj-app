@@ -8,6 +8,7 @@ const STRIPE_ANNUAL_LINK = process.env.NEXT_PUBLIC_STRIPE_PRO_ANNUAL_LINK || nul
 
 export default function PricingSection({ userId }: { userId?: string | null }) {
   const [isAnnual, setIsAnnual] = useState(false);
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
 
   // userId がない（未ログイン）場合は /login に誘導する。
   // Stripe に直接飛ばすと client_reference_id が渡らず is_pro が立たない。
@@ -113,9 +114,32 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
               <li className="flex items-center gap-2"><span className="text-yellow-400">★</span> Priority support</li>
             </ul>
 
+            {/* Stripe pre-checkout disclaimer */}
+            <label className="flex items-start gap-2 mt-6 cursor-pointer text-left">
+              <input
+                type="checkbox"
+                checked={disclaimerAccepted}
+                onChange={(e) => setDisclaimerAccepted(e.target.checked)}
+                className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-yellow-500 flex-shrink-0 cursor-pointer"
+                aria-label="Subscription disclaimer acknowledgement"
+              />
+              <span className="text-xs text-gray-400 leading-relaxed">
+                I understand this is a digital subscription service. I agree to the{" "}
+                <Link href="/terms" className="text-emerald-400 hover:underline">Terms of Service</Link>.
+              </span>
+            </label>
+
             <a
-              href={upgradeUrl}
-              className="mt-8 block text-center bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 rounded-full transition-all"
+              href={disclaimerAccepted ? upgradeUrl : undefined}
+              className={`mt-3 block text-center font-bold py-3 rounded-full transition-all ${
+                disclaimerAccepted
+                  ? "bg-yellow-500 hover:bg-yellow-400 text-black cursor-pointer"
+                  : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+              }`}
+              onClick={(e) => {
+                if (!disclaimerAccepted) e.preventDefault();
+              }}
+              aria-disabled={!disclaimerAccepted}
             >
               Upgrade to Pro
             </a>

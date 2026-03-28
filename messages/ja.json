@@ -314,6 +314,7 @@
     "or": "または",
     "ageConfirm": "13歳以上",
     "ageConfirmNote": "（米国法上の要件）",
+    "parentalConsent": "13〜17歳の方は保護者の同意が必要です。",
     "disclaimerConfirm": "BJJには身体的リスクがあることを理解し、安全に練習することに同意します。BJJ Appは怪我に対して責任を負いません。",
     "checkboxesRequired": "↑ 上記2つにチェックしてから続けてください",
     "iabWarning": "SafariまたはChromeで開いてください",
@@ -508,7 +509,9 @@
     "paymentIssueTitle": "お支払いに問題があります — Pro機能が一時停止中",
     "paymentIssueDesc": "最後のお支払いが失敗しました。請求情報を更新してください。",
     "fixNow": "今すぐ修正",
-    "allFeaturesUnlocked": "すべてのPro機能が有効です"
+    "allFeaturesUnlocked": "すべてのPro機能が有効です",
+    "disclaimer": "デジタルサブスクリプションであることを理解し、利用規約に同意します。BJJ Appはトレーニング記録ツールであり、資格のある指導者の代替ではありません。",
+    "disclaimerAria": "サブスクリプション免責事項の確認"
   },
   "common": {
     "close": "閉じる",
@@ -753,7 +756,9 @@
     "wikiDesc": "BJJ Wikiの無料テクニックガイド、ドリル、動画解説",
     "statsLogged": "記録",
     "statsSolid": "定着+",
-    "statsMastered": "マスター"
+    "statsMastered": "マスター",
+    "safetyTitle": "初心者への安全注意",
+    "safetyDesc": "一部のテクニック（ヒールフック、膝十字、首関節技等）は重大な怪我のリスクがあります。必ず有資格の指導者の監督下で練習し、早めにタップしてください。このアプリはトレーニング記録ツールであり、指導の代替ではありません。"
   },
   "beltPromo": {
     "congrats": "おめでとうございます！🎉",

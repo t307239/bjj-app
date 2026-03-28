@@ -72,9 +72,9 @@ export default async function TechniquesPage() {
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
-  // Fetch Pro status + technique stats in parallel
+  // Fetch Pro status + belt + technique stats in parallel
   const [{ data: profile }, { data: techniques }] = await Promise.all([
-    supabase.from("profiles").select("is_pro").eq("id", user.id).single(),
+    supabase.from("profiles").select("is_pro, belt").eq("id", user.id).single(),
     supabase
       .from("techniques")
       .select("mastery_level, category")
@@ -82,6 +82,7 @@ export default async function TechniquesPage() {
   ]);
 
   const isPro = profile?.is_pro ?? false;
+  const userBelt = (profile?.belt as string) || "white";
   const stripePaymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || null;
   const stripeAnnualLink = process.env.NEXT_PUBLIC_STRIPE_PRO_ANNUAL_LINK || null;
 
@@ -178,6 +179,25 @@ export default async function TechniquesPage() {
             </div>
           )}
         </div>
+
+        {/* ═══════════════════════════════════════════
+            SAFETY NOTE — dangerous technique warning for white/blue belts
+            ═══════════════════════════════════════════ */}
+        {(userBelt === "white" || userBelt === "blue") && (
+          <div className="mb-5 p-3.5 rounded-xl bg-amber-950/40 border border-amber-500/30">
+            <div className="flex items-start gap-2.5">
+              <span className="text-amber-400 text-base mt-0.5 flex-shrink-0">⚠️</span>
+              <div>
+                <p className="text-sm font-semibold text-amber-300 mb-1">
+                  {t("techniquesPage.safetyTitle")}
+                </p>
+                <p className="text-xs text-amber-200/80 leading-relaxed">
+                  {t("techniquesPage.safetyDesc")}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ═══════════════════════════════════════════
             SECTION 1 — SKILL MAP

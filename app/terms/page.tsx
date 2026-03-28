@@ -83,7 +83,9 @@ export default function TermsPage() {
             </p>
             <p className="text-zinc-400">
               You must be at least 13 years old to use this Service. By using BJJ App you represent
-              that you meet this requirement.
+              that you meet this requirement. If you are between 13 and 17 years old, you must have
+              the consent of a parent or legal guardian to use this Service. Your parent or guardian
+              agrees to be bound by these Terms on your behalf.
             </p>
           </section>
 
@@ -143,9 +145,14 @@ export default function TermsPage() {
               7. Disclaimers
             </h2>
             <p className="text-zinc-400">
-              The Service is provided &quot;as is&quot; without warranties of any kind. BJJ App is not
-              responsible for any injury or harm resulting from training activities. Always train
-              under qualified supervision.
+              The Service is provided &quot;as is&quot; without warranties of any kind. BJJ App is a
+              training log and informational tool — it is not a substitute for qualified instruction.
+              Brazilian Jiu-Jitsu is a contact sport that carries inherent risks of physical injury.
+              BJJ App is not responsible for any injury, harm, or loss resulting from training
+              activities, whether or not such activities were logged or referenced in the Service.
+              Certain techniques (including but not limited to heel hooks, kneebars, and neck cranks)
+              carry a particularly high risk of serious injury. Always train under qualified
+              supervision and consult a medical professional before beginning any physical training program.
             </p>
           </section>
 

@@ -424,6 +424,7 @@
     "or": "or",
     "ageConfirm": "13 years of age or older",
     "ageConfirmNote": "(required by US law)",
+    "parentalConsent": "Ages 13–17 require parental or guardian consent.",
     "disclaimerConfirm": "I understand that BJJ involves physical risk and agree to train responsibly. I will not hold BJJ App liable for any injuries.",
     "checkboxesRequired": "↑ Please check both boxes above to continue",
     "iabWarning": "Open in Safari or Chrome",
@@ -632,7 +633,9 @@
     "paymentIssueTitle": "Payment issue — Pro features paused",
     "paymentIssueDesc": "Your last payment failed. Update your billing info to continue.",
     "fixNow": "Fix now",
-    "allFeaturesUnlocked": "All Pro features unlocked"
+    "allFeaturesUnlocked": "All Pro features unlocked",
+    "disclaimer": "I understand this is a digital subscription and agree to the Terms of Service. BJJ App is a training log, not a substitute for qualified instruction.",
+    "disclaimerAria": "Subscription disclaimer acknowledgement"
   },
   "beltPromo": {
     "congrats": "Congratulations! 🎉",
@@ -954,7 +957,9 @@
     "wikiDesc": "Free technique guides, drills, and video breakdowns on BJJ Wiki",
     "statsLogged": "logged",
     "statsSolid": "solid+",
-    "statsMastered": "mastered"
+    "statsMastered": "mastered",
+    "safetyTitle": "Safety Note for Beginners",
+    "safetyDesc": "Some techniques (heel hooks, kneebars, neck cranks) carry a high risk of injury. Always practice under qualified instructor supervision and tap early. This app is a training log, not a substitute for proper coaching."
   },
   "weeklyStrip": {
     "same": "= same",

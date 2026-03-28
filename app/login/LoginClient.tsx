@@ -208,7 +208,7 @@ function LoginForm() {
             nudge ? "border-[#10B981] ring-1 ring-[#10B981]/40" : "border-white/10"
           }`}
         >
-          {/* Age confirmation (COPPA) */}
+          {/* Age confirmation (COPPA + parental consent) */}
           <label className="flex items-start gap-3 cursor-pointer group">
             <input
               type="checkbox"
@@ -220,6 +220,8 @@ function LoginForm() {
             <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
               {t("login.ageConfirmPre")} <span className="text-white font-medium">{t("login.ageConfirm")}</span>
               <span className="text-gray-400"> {t("login.ageConfirmNote")}</span>
+              <br />
+              <span className="text-gray-500">{t("login.parentalConsent")}</span>
             </span>
           </label>
 
