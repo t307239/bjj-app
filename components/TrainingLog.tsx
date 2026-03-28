@@ -20,6 +20,7 @@ import {
   encodeRollNotes,
 } from "@/lib/trainingLogHelpers";
 import { getLocalDateParts } from "@/lib/timezone";
+import { trackEvent } from "@/lib/analytics";
 
 type Props = {
   userId: string;
@@ -415,6 +416,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         const prev = parseInt(localStorage.getItem("bjj_log_count") ?? "0", 10);
         localStorage.setItem("bjj_log_count", String(prev + 1));
       }
+      trackEvent("training_logged", { type: form.type });
       setToast({ message: t("training.saved"), type: "success" });
       // Rotate idempotency key for next submission
       idempotencyKey.current = typeof crypto !== "undefined"

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useLocale } from "@/lib/i18n";
+import { trackEvent } from "@/lib/analytics";
 
 const STRIPE_MONTHLY_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
 const STRIPE_ANNUAL_LINK = process.env.NEXT_PUBLIC_STRIPE_PRO_ANNUAL_LINK ?? "#";
@@ -117,9 +118,7 @@ export default function ProGate({
                 e.preventDefault();
                 return;
               }
-              if (typeof gtag !== "undefined") {
-                gtag("event", "upgrade_click", { feature: featureText });
-              }
+              trackEvent("pro_upgrade_click", { feature: featureText });
             }}
             aria-disabled={!disclaimerAccepted}
           >
@@ -133,10 +132,3 @@ export default function ProGate({
     </div>
   );
 }
-
-// Type declaration for gtag (defined in layout.tsx inline script)
-declare function gtag(
-  command: string,
-  action: string,
-  params?: Record<string, string>
-): void;

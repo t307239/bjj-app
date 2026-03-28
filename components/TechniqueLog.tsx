@@ -12,6 +12,7 @@ import {
   type TechniqueFormState,
   isDangerousTechnique,
 } from "@/lib/techniqueLogTypes";
+import { trackEvent } from "@/lib/analytics";
 
 type Props = {
   userId: string;
@@ -120,6 +121,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
       setForm({ name: "", category: "guard", mastery_level: 1, notes: "" });
       setShowForm(false);
       setDangerConfirmPending(false);
+      trackEvent("technique_added", { category: form.category });
       setToast({ message: t("techniques.addedSingle"), type: "success" });
     } else {
       setToast({ message: t("techniques.saveFailed"), type: "error" });

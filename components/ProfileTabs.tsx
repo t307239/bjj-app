@@ -8,6 +8,7 @@ import ProfileForm from "./ProfileForm";
 import BodyManagementSection from "./BodyManagementSection";
 import TrainingChart from "./TrainingChart";
 import ReferralSection from "./ReferralSection";
+import { trackEvent } from "@/lib/analytics";
 
 function AccountSection({ userId, isPro, referralCode, referralCount }: { userId: string; isPro: boolean; referralCode: string | null; referralCount: number }) {
   const { t } = useLocale();
@@ -44,6 +45,7 @@ function AccountSection({ userId, isPro, referralCode, referralCount }: { userId
           </div>
           <a
             href="/gym"
+            onClick={() => trackEvent("gym_lead_click")}
             className="mt-3 block w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm text-center transition-colors active:scale-95"
           >
             {t("profile.gymLeadCta")}

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useLocale } from "@/lib/i18n";
+import { trackEvent } from "@/lib/analytics";
 
 const APP_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
@@ -26,6 +27,7 @@ export default function ReferralSection({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(referralLink);
+      trackEvent("referral_shared", { method: "copy" });
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -45,6 +47,7 @@ export default function ReferralSection({
     if (navigator.share) {
       try {
         await navigator.share({ text: shareText, url: referralLink });
+        trackEvent("referral_shared", { method: "native_share" });
       } catch {
         // User cancelled share
       }

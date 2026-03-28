@@ -8,19 +8,6 @@ import { useLocale } from "@/lib/i18n";
 
 // WIKI_BASE is computed inside the component using locale (see below)
 
-// GA4イベント送信ヘルパー
-function trackWikiClick(slug: string, tag: string) {
-  try {
-    if (typeof window !== "undefined" && typeof (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag === "function") {
-      (window as unknown as { gtag: (...args: unknown[]) => void }).gtag("event", "wiki_link_click", {
-        event_category: "BJJ Wiki",
-        event_label: slug,
-        wiki_tag: tag,
-      });
-    }
-  } catch { /* silent */ }
-}
-
 type QuickLink = {
   emoji: string;
   titleEn: string;
@@ -269,7 +256,6 @@ export default function WikiQuickLinks() {
               href={`${WIKI_BASE}/${link.slug}.html`}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => trackWikiClick(link.slug, link.tagEn)}
               className="flex flex-col items-center text-center p-2.5 rounded-lg bg-white/5 hover:bg-zinc-800 border border-white/10 hover:border-white/25 transition-all group"
             >
               <span className="text-lg mb-1">{link.emoji}</span>

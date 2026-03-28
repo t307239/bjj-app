@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
 import { useLocale } from "@/lib/i18n";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
+import { trackEvent } from "@/lib/analytics";
 
 const STRIPE_PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
 
@@ -85,9 +86,7 @@ function FreezePaywallModal({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              if (typeof gtag !== "undefined") {
-                gtag("event", "upgrade_click", { feature: "streak_freeze_paywall" });
-              }
+              trackEvent("pro_upgrade_click", { feature: "streak_freeze_paywall" });
             }}
             className="block w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm text-center transition-colors active:scale-95"
           >
@@ -332,10 +331,3 @@ export default function StreakFreeze({ userId, streak }: Props) {
     </>
   );
 }
-
-// Type declaration for gtag
-declare function gtag(
-  command: string,
-  action: string,
-  params?: Record<string, string>
-): void;
