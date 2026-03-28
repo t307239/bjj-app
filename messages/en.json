@@ -278,7 +278,10 @@
     "addedWeeksAgo": "{n} weeks ago",
     "addedMonthsAgo": "{n} months ago",
     "addedYearsAgo": "{n} years ago",
-    "map": "Skill Map"
+    "map": "Skill Map",
+    "dangerBadge": "Advanced",
+    "dangerTooltip": "This technique carries higher injury risk. Practice only under qualified supervision.",
+    "dangerConfirm": "⚠️ This is an advanced technique with higher injury risk (heel hooks, knee bars, neck cranks, etc.). Are you sure you want to add it? Always train these under direct supervision of a qualified instructor."
   },
   "profile": {
     "title": "Profile",
@@ -372,7 +375,12 @@
     "referralCount": "{n} friends invited",
     "referralCountZero": "No referrals yet — share your link!",
     "referralShare": "Train BJJ with me! Track your sessions and build your skill map for free:",
-    "referralShareBtn": "Share Invite Link"
+    "referralShareBtn": "Share Invite Link",
+    "referralMilestones": "Referral Badges",
+    "referralFriends": "friends",
+    "referralUnlocked": "Unlocked!",
+    "referralProgress": "{n}/{goal} toward next badge",
+    "referralAllUnlocked": "🏆 All referral badges unlocked — you're a legend!"
   },
   "competition": {
     "title": "Match Record",

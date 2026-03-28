@@ -229,7 +229,7 @@ export default async function TechniquesPage() {
             {t("techniquesPage.techniqueLog")}
           </p>
           <Suspense>
-            <TechniqueLog userId={user.id} isPro={isPro} />
+            <TechniqueLog userId={user.id} isPro={isPro} userBelt={userBelt} />
           </Suspense>
         </section>
 

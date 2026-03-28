@@ -10,17 +10,19 @@ import TechniqueLogList from "./TechniqueLogList";
 import {
   type Technique,
   type TechniqueFormState,
+  isDangerousTechnique,
 } from "@/lib/techniqueLogTypes";
 
 type Props = {
   userId: string;
   isPro?: boolean;
+  userBelt?: string;
 };
 
 const PAGE_SIZE = 3;
 const TECHNIQUE_FREE_LIMIT = 20;
 
-export default function TechniqueLog({ userId, isPro = false }: Props) {
+export default function TechniqueLog({ userId, isPro = false, userBelt = "white" }: Props) {
   const { t } = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -48,6 +50,7 @@ export default function TechniqueLog({ userId, isPro = false }: Props) {
   const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+  const [dangerConfirmPending, setDangerConfirmPending] = useState(false);
   const [form, setForm] = useState<TechniqueFormState>({
     name: "",
     category: "guard",
@@ -102,6 +105,28 @@ export default function TechniqueLog({ userId, isPro = false }: Props) {
   }, [userId]);
 
   // ── Handlers ───────────────────────────────────────────────────────────────
+  const isBeginner = userBelt === "white" || userBelt === "blue";
+
+  /** Core insert logic (shared by normal + danger-confirmed paths) */
+  const doInsert = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("techniques")
+      .insert([{ ...form, name: form.name.trim(), user_id: userId }])
+      .select()
+      .single();
+    if (!error && data) {
+      setTechniques([data, ...techniques]);
+      setForm({ name: "", category: "guard", mastery_level: 1, notes: "" });
+      setShowForm(false);
+      setDangerConfirmPending(false);
+      setToast({ message: t("techniques.addedSingle"), type: "success" });
+    } else {
+      setToast({ message: t("techniques.saveFailed"), type: "error" });
+    }
+    setLoading(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
@@ -114,21 +139,13 @@ export default function TechniqueLog({ userId, isPro = false }: Props) {
       setFormError(`Free plan limit: ${TECHNIQUE_FREE_LIMIT} techniques. Upgrade to Pro for unlimited.`);
       return;
     }
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("techniques")
-      .insert([{ ...form, name: form.name.trim(), user_id: userId }])
-      .select()
-      .single();
-    if (!error && data) {
-      setTechniques([data, ...techniques]);
-      setForm({ name: "", category: "guard", mastery_level: 1, notes: "" });
-      setShowForm(false);
-      setToast({ message: t("techniques.addedSingle"), type: "success" });
-    } else {
-      setToast({ message: t("techniques.saveFailed"), type: "error" });
+    // Belt-based safety gate: show confirmation for dangerous techniques
+    if (isBeginner && isDangerousTechnique(form.name.trim()) && !dangerConfirmPending) {
+      setDangerConfirmPending(true);
+      return;
     }
-    setLoading(false);
+    setDangerConfirmPending(false);
+    await doInsert();
   };
 
   const handleBulkSubmit = async (e: React.FormEvent) => {
@@ -283,9 +300,40 @@ export default function TechniqueLog({ userId, isPro = false }: Props) {
         formError={formError}
         onSubmit={handleSubmit}
         onBulkSubmit={handleBulkSubmit}
-        onClose={() => { setShowForm(false); setFormError(null); }}
+        onClose={() => { setShowForm(false); setFormError(null); setDangerConfirmPending(false); }}
         onCloseBulk={() => { setShowForm(false); setBulkMode(false); setFormError(null); setBulkText(""); }}
       />
+
+      {/* Danger technique confirmation modal for white/blue belts */}
+      {dangerConfirmPending && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-zinc-900 border border-amber-500/40 rounded-2xl p-5 max-w-sm w-full shadow-2xl">
+            <div className="flex items-start gap-3 mb-4">
+              <span className="text-2xl mt-0.5 flex-shrink-0">⚠️</span>
+              <p className="text-sm text-amber-200 leading-relaxed">
+                {t("techniques.dangerConfirm")}
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={async () => { await doInsert(); }}
+                disabled={loading}
+                className="flex-1 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white text-sm font-bold transition-colors active:scale-95"
+              >
+                {loading ? "..." : t("techniques.add")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setDangerConfirmPending(false)}
+                className="flex-1 py-2.5 rounded-xl bg-zinc-700 hover:bg-zinc-600 text-zinc-200 text-sm font-bold transition-colors active:scale-95"
+              >
+                {t("training.cancel")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <TechniqueLogList
         techniques={techniques}
@@ -317,6 +365,7 @@ export default function TechniqueLog({ userId, isPro = false }: Props) {
           setShowForm(!showForm || bulk !== bulkMode);
           setFormError(null);
         }}
+        userBelt={userBelt}
       />
     </div>
   );

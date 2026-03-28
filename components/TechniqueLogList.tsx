@@ -10,6 +10,7 @@ import {
   NOTE_TRUNCATE,
   relativeDate,
   renderNotes,
+  isDangerousTechnique,
 } from "@/lib/techniqueLogTypes";
 
 type SortBy = "newest" | "mastery_desc" | "mastery_asc" | "name";
@@ -40,6 +41,7 @@ type Props = {
   onDelete: (id: string) => void;
   onQuickMastery: (id: string, level: number) => void;
   onShowForm: (bulk?: boolean) => void;
+  userBelt?: string;
 };
 
 export default function TechniqueLogList({
@@ -68,6 +70,7 @@ export default function TechniqueLogList({
   onDelete,
   onQuickMastery,
   onShowForm,
+  userBelt = "white",
 }: Props) {
   const { t } = useLocale();
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -312,6 +315,11 @@ export default function TechniqueLogList({
                         {t("techniques.categories." + technique.category) ||
                           technique.category}
                       </span>
+                      {(userBelt === "white" || userBelt === "blue") && isDangerousTechnique(technique.name) && (
+                        <span className="text-[10px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-1.5 py-0.5 rounded-full flex-shrink-0" title={t("techniques.dangerTooltip")}>
+                          ⚠️ {t("techniques.dangerBadge")}
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
                       <div className="flex items-center gap-0.5">

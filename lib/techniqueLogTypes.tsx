@@ -25,6 +25,32 @@ export const CATEGORY_VALUES = [
   "escapes", "back", "mount", "other",
 ];
 
+/**
+ * Keywords for techniques considered dangerous for beginners (white/blue belts).
+ * Heel hooks, knee reaping, neck cranks, spine locks, etc.
+ * Matching is case-insensitive and checks if any keyword appears in the name.
+ */
+const DANGEROUS_KEYWORDS = [
+  "heel hook", "heelhook",
+  "knee bar", "kneebar", "knee reap", "kneereap",
+  "neck crank", "neckcrank", "can opener", "canopener",
+  "twister", "electric chair",
+  "spine lock", "spinal",
+  "scissor takedown", "slam",
+  "calf slicer", "calf crush",
+  "toe hold", "toehold",
+  // Japanese terms
+  "ヒールフック", "膝十字", "ニーリーパー",
+  "首関節", "ツイスター", "カーフスライサー",
+  "トーホールド",
+];
+
+/** Check if a technique name is considered dangerous for beginners */
+export function isDangerousTechnique(name: string): boolean {
+  const lower = name.toLowerCase();
+  return DANGEROUS_KEYWORDS.some((kw) => lower.includes(kw.toLowerCase()));
+}
+
 export const MASTERY_COLORS = [
   "", "text-gray-400", "text-blue-400", "text-yellow-400",
   "text-orange-400", "text-green-400",

@@ -222,7 +222,10 @@
     "addedWeeksAgo": "{n}週間前",
     "addedMonthsAgo": "{n}ヶ月前",
     "addedYearsAgo": "{n}年前",
-    "map": "スキルマップ"
+    "map": "スキルマップ",
+    "dangerBadge": "上級技",
+    "dangerTooltip": "この技は怪我のリスクが高いです。有資格の指導者の下でのみ練習してください。",
+    "dangerConfirm": "⚠️ これは上級技で怪我のリスクが高い技術です（ヒールフック、膝十字、首関節技など）。追加しますか？必ず有資格のインストラクターの直接指導の下で練習してください。"
   },
   "profile": {
     "title": "プロフィール",
@@ -272,6 +275,11 @@
     "referralCountZero": "まだ招待がありません — リンクをシェアしよう！",
     "referralShare": "一緒にBJJやろう！無料で練習記録とスキルマップを作れるよ：",
     "referralShareBtn": "招待リンクをシェア",
+    "referralMilestones": "招待バッジ",
+    "referralFriends": "人",
+    "referralUnlocked": "達成!",
+    "referralProgress": "{n}/{goal} — 次のバッジまで",
+    "referralAllUnlocked": "🏆 全バッジ解放 — レジェンド認定！",
     "tabs": {
       "stats": "統計",
       "profile": "プロフィール",
