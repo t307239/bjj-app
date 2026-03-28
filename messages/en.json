@@ -981,6 +981,12 @@
     "safetyTitle": "Safety Note for Beginners",
     "safetyDesc": "Some techniques (heel hooks, kneebars, neck cranks) carry a high risk of injury. Always practice under qualified instructor supervision and tap early. This app is a training log, not a substitute for proper coaching."
   },
+  "skillMapPage": {
+    "title": "Skill Map",
+    "back": "Techniques",
+    "cardTitle": "Open Skill Map",
+    "cardDesc": "Visualize your technique tree — explore connections from each position"
+  },
   "weeklyStrip": {
     "same": "= same",
     "vsLastWeek": "vs last week"

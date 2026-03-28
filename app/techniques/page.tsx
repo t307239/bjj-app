@@ -5,7 +5,6 @@ import NavBar from "@/components/NavBar";
 import TechniqueLog from "@/components/TechniqueLog";
 import { serverT as t } from "@/lib/i18n";
 import { Suspense } from "react";
-import SkillMap from "@/components/SkillMap";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -83,8 +82,6 @@ export default async function TechniquesPage() {
 
   const isPro = profile?.is_pro ?? false;
   const userBelt = (profile?.belt as string) || "white";
-  const stripePaymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || null;
-  const stripeAnnualLink = process.env.NEXT_PUBLIC_STRIPE_PRO_ANNUAL_LINK || null;
 
   // Compute mastery breakdown from server data
   const totalTechniques = (techniques ?? []).length;
@@ -200,7 +197,7 @@ export default async function TechniquesPage() {
         )}
 
         {/* ═══════════════════════════════════════════
-            SECTION 1 — SKILL MAP
+            SECTION 1 — SKILL MAP (link to full-screen)
             ═══════════════════════════════════════════ */}
         <section className="mb-7">
           <div className="flex items-center justify-between mb-3">
@@ -213,12 +210,26 @@ export default async function TechniquesPage() {
               </span>
             )}
           </div>
-          <SkillMap
-            userId={user.id}
-            isPro={isPro}
-            stripePaymentLink={stripePaymentLink}
-            stripeAnnualLink={stripeAnnualLink}
-          />
+          <Link
+            href="/techniques/skillmap"
+            className="group block bg-zinc-900/40 border border-white/8 hover:border-emerald-400/30 rounded-2xl p-5 transition-all active:scale-[0.98]"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
+                  {t("skillMapPage.cardTitle")}
+                </p>
+                <p className="text-sm text-zinc-400 mt-0.5">
+                  {t("skillMapPage.cardDesc")}
+                </p>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center shrink-0 ml-4 group-hover:bg-emerald-400/20 transition-colors">
+                <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </div>
+            </div>
+          </Link>
         </section>
 
         {/* ═══════════════════════════════════════════
