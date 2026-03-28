@@ -305,6 +305,30 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
   const [emailMsg, setEmailMsg] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
 
+  // ── Display name change (self-serve) ────────────────────────────────────────
+  const [nameEditing, setNameEditing] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [nameSaving, setNameSaving] = useState(false);
+  const [nameMsg, setNameMsg] = useState<string | null>(null);
+
+  const handleNameChange = async () => {
+    if (!newName.trim()) return;
+    setNameSaving(true);
+    setNameMsg(null);
+    const { error } = await supabase.auth.updateUser({
+      data: { full_name: newName.trim() },
+    });
+    if (error) {
+      setNameMsg(error.message);
+    } else {
+      setNameMsg(t("profile.nameChanged"));
+      setNewName("");
+      setNameEditing(false);
+      router.refresh();
+    }
+    setNameSaving(false);
+  };
+
   const handleEmailChange = async () => {
     if (!newEmail || !newEmail.includes("@")) {
       setEmailError(t("profile.emailInvalid"));
@@ -415,6 +439,52 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
               <button
                 type="button"
                 onClick={() => { setEmailEditing(false); setNewEmail(""); setEmailError(null); }}
+                className="text-xs text-gray-400 hover:text-white px-3 py-2 min-h-[36px]"
+              >
+                {t("training.cancel")}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Display name change — self-serve */}
+      <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
+        {!nameEditing ? (
+          <div className="flex items-center justify-between">
+            <p className="text-gray-400 text-xs">{t("profile.nameChangeDesc")}</p>
+            <button
+              type="button"
+              onClick={() => { setNameEditing(true); setNameMsg(null); }}
+              className="text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
+            >
+              {t("profile.nameChangeBtn")}
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <p className="text-gray-400 text-xs">{t("profile.nameChangeLabel")}</p>
+            <input
+              type="text"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              placeholder="Your Name"
+              maxLength={50}
+              className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-emerald-500"
+            />
+            {nameMsg && <p className="text-emerald-400 text-xs">{nameMsg}</p>}
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={handleNameChange}
+                disabled={nameSaving || !newName.trim()}
+                className="text-xs bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white font-bold px-4 py-2 min-h-[36px] rounded-lg transition-colors"
+              >
+                {nameSaving ? "..." : t("profile.nameChangeSave")}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setNameEditing(false); setNewName(""); setNameMsg(null); }}
                 className="text-xs text-gray-400 hover:text-white px-3 py-2 min-h-[36px]"
               >
                 {t("training.cancel")}
