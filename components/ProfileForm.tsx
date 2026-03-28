@@ -298,6 +298,31 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
 
+  // ── Email change (self-serve) ─────────────────────────────────────────────
+  const [emailEditing, setEmailEditing] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [emailSaving, setEmailSaving] = useState(false);
+  const [emailMsg, setEmailMsg] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
+
+  const handleEmailChange = async () => {
+    if (!newEmail || !newEmail.includes("@")) {
+      setEmailError(t("profile.emailInvalid"));
+      return;
+    }
+    setEmailSaving(true);
+    setEmailError(null);
+    setEmailMsg(null);
+    const { error } = await supabase.auth.updateUser({ email: newEmail });
+    if (error) {
+      setEmailError(error.message);
+    } else {
+      setEmailMsg(t("profile.emailConfirmSent"));
+      setNewEmail("");
+    }
+    setEmailSaving(false);
+  };
+
   // ── CSV export (CCPA/GDPR Right to Data Portability) ────────────────────────
   const handleExportCsv = async () => {
     setExporting(true);
@@ -352,6 +377,52 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
   return (
     <div className="mt-10 border-t border-white/10 pt-6 space-y-4">
       <h3 className="text-gray-500 text-xs tracking-wider">{t("profile.account")}</h3>
+
+      {/* Email change — self-serve (Axis 11 CS) */}
+      <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
+        {!emailEditing ? (
+          <div className="flex items-center justify-between">
+            <p className="text-gray-400 text-xs">{t("profile.emailChangeDesc")}</p>
+            <button
+              type="button"
+              onClick={() => { setEmailEditing(true); setEmailMsg(null); setEmailError(null); }}
+              className="text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
+            >
+              {t("profile.emailChangeBtn")}
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <p className="text-gray-400 text-xs">{t("profile.emailChangeLabel")}</p>
+            <input
+              type="email"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+              placeholder="new@example.com"
+              className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-emerald-500"
+            />
+            {emailError && <p className="text-red-400 text-xs">{emailError}</p>}
+            {emailMsg && <p className="text-emerald-400 text-xs">{emailMsg}</p>}
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={handleEmailChange}
+                disabled={emailSaving || !newEmail}
+                className="text-xs bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white font-bold px-4 py-2 min-h-[36px] rounded-lg transition-colors"
+              >
+                {emailSaving ? "..." : t("profile.emailChangeSend")}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setEmailEditing(false); setNewEmail(""); setEmailError(null); }}
+                className="text-xs text-gray-400 hover:text-white px-3 py-2 min-h-[36px]"
+              >
+                {t("training.cancel")}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Stripe Customer Portal — cancel/downgrade without chargeback risk */}
       <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
