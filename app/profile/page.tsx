@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import ProfileTabs from "@/components/ProfileTabs";
 import { serverT as t } from "@/lib/i18n";
-import { getLocalDateString } from "@/lib/timezone";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
 
 export const metadata: Metadata = {
