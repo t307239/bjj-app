@@ -655,7 +655,8 @@
     "dismiss": "Dismiss",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
-    "understood": "I understand"
+    "understood": "I understand",
+    "share": "Share"
   },
   "skillmap": {
     "tabRoots": "Entry Points",

@@ -130,10 +130,19 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
   const toLabel   = BELT_LABELS[toBelt]   ?? toBelt;
   const fromLabel = BELT_LABELS[fromBelt] ?? fromBelt;
 
-  const shareText = encodeURIComponent(
-    `🥋 I just got promoted from ${fromLabel} to ${toLabel} in BJJ! ${info.emoji}\nTracking my journey on BJJ App: https://bjj-app.net`
-  );
-  const shareUrl = `https://x.com/intent/tweet?text=${shareText}`;
+  const shareTextRaw = `🥋 I just got promoted from ${fromLabel} to ${toLabel} in BJJ! ${info.emoji}\nTracking my journey on BJJ App: https://bjj-app.net`;
+  const shareTextEncoded = encodeURIComponent(shareTextRaw);
+  const twitterUrl = `https://x.com/intent/tweet?text=${shareTextEncoded}`;
+  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent("https://bjj-app.net")}&quote=${shareTextEncoded}`;
+
+  const handleNativeShare = async () => {
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({ text: shareTextRaw, url: "https://bjj-app.net" });
+      } catch { /* user cancelled */ }
+    }
+  };
+  const hasNativeShare = typeof navigator !== "undefined" && !!navigator.share;
 
   // NO auto-close — user must click "OSS 🥋" to dismiss
 
@@ -207,19 +216,37 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
           {t("beltPromo.keepRolling")}
         </p>
 
-        {/* Share button */}
-        <a
-          href={shareUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-3 rounded-xl mb-3 transition-colors text-sm border border-white/10"
-          aria-label={t("beltPromo.ariaShareX")}
-        >
-          <svg className="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.743l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-          </svg>
-          {t("beltPromo.shareOnX")}
-        </a>
+        {/* Share buttons */}
+        <div className="flex gap-2 mb-3">
+          {hasNativeShare && (
+            <button
+              onClick={handleNativeShare}
+              className="flex-1 flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl transition-colors text-sm min-h-[44px]"
+            >
+              📤 {t("common.share") || "Share"}
+            </button>
+          )}
+          <a
+            href={twitterUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 flex items-center justify-center gap-1.5 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-3 rounded-xl transition-colors text-sm border border-white/10 min-h-[44px]"
+            aria-label={t("beltPromo.ariaShareX")}
+          >
+            <svg className="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.743l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            X
+          </a>
+          <a
+            href={facebookUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 flex items-center justify-center gap-1.5 bg-[#1877F2] hover:bg-[#166FE5] text-white font-semibold py-3 rounded-xl transition-colors text-sm min-h-[44px]"
+          >
+            FB
+          </a>
+        </div>
 
         {/* Primary OSS button — required to dismiss */}
         <button

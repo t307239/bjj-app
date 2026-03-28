@@ -35,16 +35,23 @@ export default function ShareButton({ title, url, lang }: ShareButtonProps) {
   const label = labels[lang as keyof typeof labels] ?? labels.en;
   const copiedLabel = copiedLabels[lang as keyof typeof copiedLabels] ?? copiedLabels.en;
 
+  const shareTexts = {
+    en: `${title} — Free BJJ technique guide on BJJ Wiki`,
+    ja: `${title} — BJJ Wikiの無料テクニックガイド`,
+    pt: `${title} — Guia de técnica gratuito no BJJ Wiki`,
+  };
+  const shareText = shareTexts[lang as keyof typeof shareTexts] ?? shareTexts.en;
+
   const handleShare = async () => {
     if (canShare) {
       try {
-        await navigator.share({ title, url, text: title });
+        await navigator.share({ title, url, text: shareText });
       } catch {
         // User cancelled or error — silently ignore
       }
     } else {
       try {
-        await navigator.clipboard.writeText(url);
+        await navigator.clipboard.writeText(`${shareText}\n${url}`);
         setCopied(true);
         setTimeout(() => setCopied(false), 2200);
       } catch {}

@@ -46,13 +46,26 @@ export default function AchievementBadge({
   const milestoneText = t(`achievement.milestone.${milestone}.text`);
   const milestoneSubtext = t(`achievement.milestone.${milestone}.subtext`);
 
-  const handleShare = () => {
-    const text = t("achievement.shareText", {
-      n: milestone,
-      text: milestoneText,
-    });
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-    window.open(url, "_blank");
+  const shareText = t("achievement.shareText", {
+    n: milestone,
+    text: milestoneText,
+  });
+  const shareUrl = "https://bjj-app.net";
+
+  const handleShare = async () => {
+    // Use native share sheet on mobile (Instagram, WhatsApp, Line, etc.)
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({ text: shareText, url: shareUrl });
+        return;
+      } catch { /* user cancelled or not supported */ }
+    }
+    // Fallback: open Twitter
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, "_blank");
+  };
+
+  const handleShareFacebook = () => {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`, "_blank");
   };
 
   return (
@@ -93,19 +106,27 @@ export default function AchievementBadge({
             <p className="text-lg text-white font-semibold mb-6">{milestoneSubtext}</p>
 
             {/* Buttons */}
-            <div className="flex gap-3 justify-center">
+            <div className="flex flex-col gap-2 items-center">
               <button
                 onClick={handleShare}
-                className="bg-white text-violet-600 px-6 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors"
+                className="bg-white text-violet-600 px-6 py-2.5 rounded-lg font-bold hover:bg-gray-100 transition-colors min-h-[44px] w-full max-w-[220px]"
               >
                 {t("achievement.shareButton")}
               </button>
-              <button
-                onClick={() => setShowBadge(false)}
-                className="bg-purple-700 text-white px-6 py-2 rounded-lg font-bold hover:bg-purple-800 transition-colors border border-white border-opacity-30"
-              >
-                ✕
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleShareFacebook}
+                  className="bg-[#1877F2] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#166FE5] transition-colors min-h-[40px]"
+                >
+                  Facebook
+                </button>
+                <button
+                  onClick={() => setShowBadge(false)}
+                  className="bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-800 transition-colors border border-white border-opacity-30 min-h-[40px]"
+                >
+                  ✕ {t("common.close")}
+                </button>
+              </div>
             </div>
           </div>
         </div>
