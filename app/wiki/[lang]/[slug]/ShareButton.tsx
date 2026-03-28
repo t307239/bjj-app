@@ -26,8 +26,14 @@ export default function ShareButton({ title, url, lang }: ShareButtonProps) {
     ja: "シェア",
     pt: "Compartilhar",
   };
+  const copiedLabels = {
+    en: "Copied!",
+    ja: "コピー済み！",
+    pt: "Copiado!",
+  };
 
   const label = labels[lang as keyof typeof labels] ?? labels.en;
+  const copiedLabel = copiedLabels[lang as keyof typeof copiedLabels] ?? copiedLabels.en;
 
   const handleShare = async () => {
     if (canShare) {
@@ -56,7 +62,7 @@ export default function ShareButton({ title, url, lang }: ShareButtonProps) {
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
           </svg>
-          Copied!
+          {copiedLabel}
         </>
       ) : (
         <>
