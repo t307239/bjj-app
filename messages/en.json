@@ -654,7 +654,8 @@
     "delete": "Delete",
     "dismiss": "Dismiss",
     "zoomIn": "Zoom in",
-    "zoomOut": "Zoom out"
+    "zoomOut": "Zoom out",
+    "understood": "I understand"
   },
   "skillmap": {
     "tabRoots": "Entry Points",
@@ -911,6 +912,8 @@
     "step.firstLog": "Log your first training session",
     "step.setGoal": "Set your weekly training goal",
     "step.addTechnique": "Add a technique to your library",
+    "step.safetyAck": "Read the safety disclaimer",
+    "safetyBanner": "⚠️ BJJ involves physical contact and risk of injury. Always train under qualified supervision. This app does not replace professional instruction.",
     "firstRollTitle": "Welcome to the mat! 🥋",
     "firstRollDesc": "Your first roll is logged. The journey has begun.",
     "firstRollCta": "Let's roll 🤙",

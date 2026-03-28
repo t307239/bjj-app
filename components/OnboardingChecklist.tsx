@@ -10,6 +10,7 @@ type Props = {
   hasFirstLog: boolean;
   hasGoal: boolean;
   hasTechnique: boolean;
+  hasSafetyAck?: boolean;
 };
 
 type Step = {
@@ -20,17 +21,36 @@ type Step = {
   emoji: string;
 };
 
-export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique }: Props) {
+const SAFETY_ACK_KEY = "bjj_safety_ack";
+
+export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique, hasSafetyAck }: Props) {
   const { t } = useLocale();
   const [dismissed, setDismissed] = useState(() => {
     if (typeof window === "undefined") return false;
     return localStorage.getItem(DISMISS_KEY) === "1";
   });
+  const [safetyAcked, setSafetyAcked] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem(SAFETY_ACK_KEY) === "1";
+  });
+  const isSafetyDone = hasSafetyAck || safetyAcked;
   // Item 30: celebration state — "idle" | "celebrating" | "fading" | "done"
   const [celebState, setCelebState] = useState<"idle" | "celebrating" | "fading" | "done">("idle");
   const prevCompletedRef = useRef(0);
 
+  const handleSafetyAck = () => {
+    setSafetyAcked(true);
+    localStorage.setItem(SAFETY_ACK_KEY, "1");
+  };
+
   const steps: Step[] = [
+    {
+      id: "safety_ack",
+      label: t("onboarding.step.safetyAck"),
+      href: "/terms#liability",
+      done: isSafetyDone,
+      emoji: "⚠️",
+    },
     {
       id: "first_log",
       label: t("onboarding.step.firstLog"),
@@ -150,6 +170,19 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
           </div>
         </div>
       </div>
+
+      {/* Safety banner (shown until acknowledged) */}
+      {!isSafetyDone && (
+        <div className="mb-3 p-3 rounded-xl bg-amber-950/40 border border-amber-500/30">
+          <p className="text-xs text-amber-200 leading-relaxed mb-2">{t("onboarding.safetyBanner")}</p>
+          <button
+            onClick={handleSafetyAck}
+            className="text-xs font-medium text-amber-400 hover:text-amber-300 transition-colors py-1.5 px-3 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 min-h-[36px]"
+          >
+            {t("common.understood") || "I understand"}
+          </button>
+        </div>
+      )}
 
       {/* Steps */}
       <div className="space-y-1">

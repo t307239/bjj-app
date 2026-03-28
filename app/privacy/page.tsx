@@ -69,8 +69,8 @@ export default function PrivacyPage() {
                 BJJ start date, and any other profile fields you choose to fill in
               </li>
               <li>
-                <span className="text-zinc-200 font-medium">Usage data</span> — basic analytics via
-                Google Analytics 4 (anonymized, no personally identifiable information)
+                <span className="text-zinc-200 font-medium">Usage data</span> — anonymous page-level
+                analytics via Vercel Analytics (no personally identifiable information)
               </li>
             </ul>
           </section>
@@ -83,7 +83,7 @@ export default function PrivacyPage() {
               <li>To provide and improve the Service</li>
               <li>To display your training data back to you in the dashboard</li>
               <li>To process subscription payments (via Stripe)</li>
-              <li>To send product updates if you opt in to our newsletter (via Beehiiv)</li>
+              <li>To send product updates if you opt in to email notifications</li>
               <li>To analyze aggregate usage patterns and improve features</li>
             </ul>
           </section>
@@ -108,8 +108,7 @@ export default function PrivacyPage() {
               <li><span className="text-zinc-200">Supabase</span> — database and authentication</li>
               <li><span className="text-zinc-200">Vercel</span> — hosting and deployment</li>
               <li><span className="text-zinc-200">Stripe</span> — payment processing (Pro subscriptions)</li>
-              <li><span className="text-zinc-200">Google Analytics 4</span> — anonymized usage analytics</li>
-              <li><span className="text-zinc-200">Beehiiv</span> — email newsletter (opt-in only)</li>
+              <li><span className="text-zinc-200">Vercel Analytics</span> — anonymized page-level analytics</li>
             </ul>
             <p className="mt-3 text-zinc-400">
               Each of these services has its own privacy policy. We only share the minimum data
@@ -123,8 +122,7 @@ export default function PrivacyPage() {
             </h2>
             <p className="text-zinc-400">
               We use only essential cookies required for authentication (Supabase session cookies).
-              We do not use advertising cookies or tracking pixels beyond Google Analytics, which
-              is configured in anonymized mode.
+              We do not use advertising cookies or tracking pixels.
             </p>
           </section>
 

@@ -514,7 +514,8 @@
     "close": "閉じる",
     "cancel": "キャンセル",
     "back": "戻る",
-    "loading": "読み込み中..."
+    "loading": "読み込み中...",
+    "understood": "理解しました"
   },
   "skillmap": {
     "tabRoots": "入口技術",
@@ -710,6 +711,8 @@
     "step.firstLog": "最初のトレーニングを記録する",
     "step.setGoal": "週間トレーニング目標を設定する",
     "step.addTechnique": "テクニックをライブラリに追加する",
+    "step.safetyAck": "安全に関する免責事項を確認する",
+    "safetyBanner": "⚠️ 柔術は身体接触と怪我のリスクを伴います。必ず有資格の指導者のもとで練習してください。このアプリは専門的な指導の代わりにはなりません。",
     "firstRollTitle": "マットへようこそ！🥋",
     "firstRollDesc": "最初のロールを記録しました。旅が始まりました。",
     "firstRollCta": "ロールしよう 🤙",
