@@ -736,15 +736,12 @@ export default async function DashboardPage({
             <p className="text-gray-400 text-sm mb-6 max-w-xs mx-auto">
               {t("dashboard.emptyStateDesc")}
             </p>
-            <button
-              onClick={() => {
-                const form = document.getElementById("training-log-form");
-                if (form) form.scrollIntoView({ behavior: "smooth" });
-              }}
+            <a
+              href="#training-log-form"
               className="inline-flex items-center gap-2 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-semibold px-6 py-3 rounded-xl transition-all shadow-lg shadow-[#10B981]/20"
             >
               <span>+</span> {t("dashboard.emptyStateCta")}
-            </button>
+            </a>
             {/* Wiki 初心者リンク */}
             <div className="mt-6 pt-5 border-t border-white/5">
               <p className="text-zinc-400 text-xs mb-3">{t("dashboard.emptyStateNewToBjj")}</p>
