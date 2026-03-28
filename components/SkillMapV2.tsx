@@ -47,9 +47,20 @@ import { useLocale } from "@/lib/i18n";
 import { useOnlineStatus } from "@/lib/useOnlineStatus";
 import Toast from "./Toast";
 
-// ─── dagre (no @types/dagre — use require to avoid TS errors) ─────────────────
+// ─── dagre typings (no @types/dagre available) ───────────────────────────────
+interface DagreGraph {
+  setDefaultEdgeLabel: (fn: () => object) => void;
+  setGraph: (opts: { rankdir: string; nodesep: number; ranksep: number }) => void;
+  setNode: (id: string, dims: { width: number; height: number }) => void;
+  setEdge: (src: string, tgt: string) => void;
+  node: (id: string) => { x: number; y: number };
+}
+interface Dagre {
+  graphlib: { Graph: new () => DagreGraph };
+  layout: (g: DagreGraph) => void;
+}
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const dagre = require("dagre") as any;
+const dagre = require("dagre") as Dagre;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

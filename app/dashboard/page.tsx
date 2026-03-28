@@ -188,63 +188,36 @@ export default async function DashboardPage({
     .eq("id", user.id)
     .single();
 
-  const [
-    { count: monthCount },
-    { count: prevMonthCount },
-    { count: weekCount },
-    { count: techniqueCount },
-    { count: totalCount },
-    { data: recentLogs },
-    { data: monthMinData },
-    { data: recentTechniques },
-  ] = await Promise.all([
-    supabase
-      .from("training_logs")
-      .select("*", { count: "exact", head: true })
-      .eq("user_id", user.id)
-      .gte("date", firstDayOfMonth),
-    supabase
-      .from("training_logs")
-      .select("*", { count: "exact", head: true })
-      .eq("user_id", user.id)
-      .gte("date", firstDayOfPrevMonth)
-      .lt("date", firstDayOfMonth),
-    supabase
-      .from("training_logs")
-      .select("*", { count: "exact", head: true })
-      .eq("user_id", user.id)
-      .gte("date", firstDayOfWeek),
-    supabase
-      .from("techniques")
-      .select("*", { count: "exact", head: true })
-      .eq("user_id", user.id),
-    supabase
-      .from("training_logs")
-      .select("*", { count: "exact", head: true })
-      .eq("user_id", user.id),
-    supabase
-      .from("training_logs")
-      .select("date")
-      .eq("user_id", user.id)
-      .order("date", { ascending: false })
-      .limit(60),
-    supabase
-      .from("training_logs")
-      .select("duration_min")
-      .eq("user_id", user.id)
-      .gte("date", firstDayOfMonth),
-    supabase
-      .from("techniques")
-      .select("name")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(3),
-  ]);
+  // ── Aggregated dashboard metrics (single RPC instead of 6 separate queries) ──
+  const [{ data: metrics }, { data: recentLogs }, { data: recentTechniques }] =
+    await Promise.all([
+      supabase.rpc("get_dashboard_metrics", {
+        p_user_id: user.id,
+        p_month_start: firstDayOfMonth,
+        p_prev_month_start: firstDayOfPrevMonth,
+        p_week_start: firstDayOfWeek,
+      }),
+      supabase
+        .from("training_logs")
+        .select("date")
+        .eq("user_id", user.id)
+        .order("date", { ascending: false })
+        .limit(60),
+      supabase
+        .from("techniques")
+        .select("name")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(3),
+    ]);
 
-  const monthTotalMins = (monthMinData ?? []).reduce(
-    (sum: number, r: { duration_min: number }) => sum + (r.duration_min ?? 0),
-    0
-  );
+  const m = Array.isArray(metrics) ? metrics[0] : metrics;
+  const monthCount = Number(m?.month_count ?? 0);
+  const prevMonthCount = Number(m?.prev_month_count ?? 0);
+  const weekCount = Number(m?.week_count ?? 0);
+  const techniqueCount = Number(m?.technique_count ?? 0);
+  const totalCount = Number(m?.total_count ?? 0);
+  const monthTotalMins = Number(m?.month_total_mins ?? 0);
   const monthHoursStr =
     monthTotalMins >= 60
       ? `${Math.floor(monthTotalMins / 60)}h${monthTotalMins % 60 > 0 ? `${monthTotalMins % 60}m` : ""}`

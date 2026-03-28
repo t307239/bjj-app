@@ -13,7 +13,7 @@
 
 import { describe, it, expect } from "vitest";
 import { TRAINING_TYPES, type TrainingTypeValue } from "@/lib/trainingTypes";
-import { encodeCompNotes, decodeCompNotes, emptyCompData } from "@/lib/compNotes";
+import { encodeCompNotes, decodeCompNotes, emptyCompData } from "@/lib/trainingLogHelpers";
 
 // ── Simulated training log entry (mirrors Supabase schema) ────────────────
 type SimLog = {

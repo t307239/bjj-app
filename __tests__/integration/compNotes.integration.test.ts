@@ -18,7 +18,7 @@ import {
   RESULT_LABELS,
   COMP_PREFIX,
   type CompData,
-} from "@/lib/compNotes";
+} from "@/lib/trainingLogHelpers";
 
 // ── Full encode → decode round-trip ──────────────────────────────────────────
 describe("encode → decode round-trip", () => {

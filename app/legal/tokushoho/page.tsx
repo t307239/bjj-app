@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Specified Commercial Transactions Act",
@@ -117,9 +118,9 @@ export default function TokushohoPage() {
             <a href="/privacy" className="hover:text-white transition-colors">
               Privacy Policy
             </a>
-            <a href="/" className="hover:text-white transition-colors">
+            <Link href="/" className="hover:text-white transition-colors">
               Home
-            </a>
+            </Link>
           </div>
         </div>
       </div>

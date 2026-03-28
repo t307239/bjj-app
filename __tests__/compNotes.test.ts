@@ -13,7 +13,7 @@ import {
   emptyCompData,
   COMP_PREFIX,
   type CompData,
-} from "../lib/compNotes";
+} from "../lib/trainingLogHelpers";
 
 // ── helpers ─────────────────────────────────────────────────────────────────
 

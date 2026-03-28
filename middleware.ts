@@ -32,7 +32,7 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // 保護されたルートはログイン必須（/dashboardはゲストモードOKなので除外）
-  const protectedPaths = ["/techniques", "/profile"];
+  const protectedPaths = ["/techniques", "/profile", "/gym/dashboard"];
   const isProtected = protectedPaths.some((p) =>
     request.nextUrl.pathname.startsWith(p)
   );

@@ -121,6 +121,16 @@ export function decodeRollNotes(notes: string): { roll: RollMeta | null; userNot
 }
 
 /** Formats roll meta as a human-readable badge string */
+/** Empty CompData factory for form initialization */
+export const emptyCompData = (): CompData => ({
+  result: "",
+  opponent: "",
+  finish: "",
+  event: "",
+  opponent_rank: "",
+  gi_type: "",
+});
+
 export function formatRollBadge(roll: RollMeta): string {
   const FOCUS_EMOJI: Record<string, string> = {
     flow: "Flow 🌊", positional: "Positional 🎯", hard: "Hard Roll 🔥", survival: "Survival 🛡️",

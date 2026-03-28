@@ -97,7 +97,7 @@ export default async function GymJoinPage({ params }: Props) {
             </svg>
           </div>
           <p className="text-white font-bold text-lg mb-2">
-            You're already a member of {gym.name}
+            You&apos;re already a member of {gym.name}
           </p>
           <a href="/dashboard" className="mt-6 inline-block text-gray-400 hover:text-white text-sm">
             Go to dashboard →
