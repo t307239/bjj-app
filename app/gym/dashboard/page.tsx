@@ -42,15 +42,31 @@ export default async function GymDashboardPage() {
   ]);
   const isPro = profileData?.is_pro ?? false;
 
-  // Member count (opt-in only)
+  // Member count + aggregate gym stats (opt-in only)
   let memberCount = 0;
+  let totalSessions30d = 0;
+  let avgSessionsPerMember = 0;
   if (gym?.id) {
-    const { count } = await supabase
+    // Get member IDs (opt-in) + count
+    const { data: members, count } = await supabase
       .from("profiles")
-      .select("*", { count: "exact", head: true })
+      .select("id", { count: "exact" })
       .eq("gym_id", gym.id)
       .eq("share_data_with_gym", true);
     memberCount = count ?? 0;
+
+    // Aggregate training sessions in last 30 days for these members
+    if (members && members.length > 0) {
+      const memberIds = members.map((m: { id: string }) => m.id);
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString().split("T")[0];
+      const { count: sessCount } = await supabase
+        .from("training_logs")
+        .select("*", { count: "exact", head: true })
+        .in("user_id", memberIds)
+        .gte("date", thirtyDaysAgo);
+      totalSessions30d = sessCount ?? 0;
+      avgSessionsPerMember = memberCount > 0 ? Math.round((totalSessions30d / memberCount) * 10) / 10 : 0;
+    }
   }
 
   const stripeGymPaymentLink =
@@ -101,6 +117,28 @@ export default async function GymDashboardPage() {
                   </p>
                 </div>
               </div>
+
+              {/* Gym aggregate stats strip */}
+              {memberCount > 0 && (
+                <div className="grid grid-cols-2 gap-2 mt-3">
+                  <div className="bg-zinc-900/60 border border-white/8 rounded-xl p-3 text-center">
+                    <p className="text-xl font-black text-blue-300 tabular-nums">
+                      {totalSessions30d}
+                    </p>
+                    <p className="text-xs text-zinc-400 uppercase tracking-widest">
+                      {t("gym.totalSessions30d")}
+                    </p>
+                  </div>
+                  <div className="bg-zinc-900/60 border border-white/8 rounded-xl p-3 text-center">
+                    <p className="text-xl font-black text-blue-300 tabular-nums">
+                      {avgSessionsPerMember}
+                    </p>
+                    <p className="text-xs text-zinc-400 uppercase tracking-widest">
+                      {t("gym.avgSessions30d")}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         ) : (
