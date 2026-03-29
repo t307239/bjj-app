@@ -13,7 +13,10 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
-    "check-links": "node scripts/check-links.mjs"
+    "check-links": "node scripts/check-links.mjs",
+    "license:audit": "node scripts/license-audit.mjs",
+    "license:audit:full": "node scripts/license-audit.mjs --full",
+    "license:audit:json": "node scripts/license-audit.mjs --json"
   },
   "dependencies": {
     "@vercel/analytics": "^1.4.1",
