@@ -537,6 +537,30 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
         </button>
       </div>
 
+      {/* Help & Support link — Axis 11 CS self-serve */}
+      <div className="flex items-center gap-3 text-xs text-gray-400">
+        <a
+          href="mailto:307239t777@gmail.com?subject=BJJ%20App%20Support"
+          className="hover:text-white transition-colors underline underline-offset-2"
+        >
+          {t("profile.contactSupport")}
+        </a>
+        <span className="text-zinc-700">|</span>
+        <a
+          href="/terms"
+          className="hover:text-white transition-colors underline underline-offset-2"
+        >
+          {t("profile.termsLink")}
+        </a>
+        <span className="text-zinc-700">|</span>
+        <a
+          href="/privacy"
+          className="hover:text-white transition-colors underline underline-offset-2"
+        >
+          {t("profile.privacyLink")}
+        </a>
+      </div>
+
       {/* Delete account — GDPR/CCPA Right to Erasure */}
       {!confirm ? (
         <button
