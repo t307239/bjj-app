@@ -908,7 +908,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           </p>
           {stripePaymentLink ? (
             <a
-              href={stripePaymentLink}
+              href={userId ? `${stripePaymentLink}?client_reference_id=${userId}` : stripePaymentLink}
               className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black text-xs font-semibold px-3 py-1.5 rounded-lg transition-all"
             >
               {t("skillmap.overLimitUpgrade")}

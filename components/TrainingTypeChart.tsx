@@ -337,7 +337,7 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
           <span className="text-2xl mb-2">🔒</span>
           <p className="text-sm font-semibold text-zinc-100">{t("chart.proOnly")}</p>
           {process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ? (
-            <a href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK} className="mt-3 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black text-xs font-semibold px-4 py-2 rounded-lg transition-all">
+            <a href={userId ? `${process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK}?client_reference_id=${userId}` : process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK} className="mt-3 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black text-xs font-semibold px-4 py-2 rounded-lg transition-all">
               {t("chart.upgradeToProBtn")}
             </a>
           ) : (
