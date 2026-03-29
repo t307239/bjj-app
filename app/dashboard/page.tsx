@@ -190,7 +190,7 @@ export default async function DashboardPage({
     .single();
 
   // ── Aggregated dashboard metrics (single RPC instead of 6 separate queries) ──
-  const [{ data: metrics }, { data: recentLogs }, { data: recentTechniques }] =
+  const [{ data: metrics }, { data: recentLogs }, { data: recentTechniques }, { data: typeBreakdownRaw }] =
     await Promise.all([
       supabase.rpc("get_dashboard_metrics", {
         p_user_id: user.id,
@@ -210,6 +210,11 @@ export default async function DashboardPage({
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(3),
+      supabase
+        .from("training_logs")
+        .select("type")
+        .eq("user_id", user.id)
+        .gte("date", firstDayOfMonth),
     ]);
 
   const m = Array.isArray(metrics) ? metrics[0] : metrics;
@@ -231,6 +236,15 @@ export default async function DashboardPage({
     monthSessionCount > 0
       ? Math.round(monthTotalMins / monthSessionCount)
       : 0;
+
+  // Training type breakdown (Gi / No-Gi / Drilling / etc.)
+  const typeBreakdown: Record<string, number> = {};
+  if (typeBreakdownRaw && typeBreakdownRaw.length > 0) {
+    for (const row of typeBreakdownRaw as { type: string }[]) {
+      const t = row.type || "Other";
+      typeBreakdown[t] = (typeBreakdown[t] ?? 0) + 1;
+    }
+  }
 
   const isPro = profileData?.is_pro ?? false;
   const gymName = profileData?.gym_name ?? null;
@@ -553,6 +567,31 @@ export default async function DashboardPage({
                 <span className="text-zinc-400 text-xs mb-0.5">
                   {t("dashboard.bentoMinPerSession")}
                 </span>
+              </div>
+            </div>
+          )}
+
+          {/* Training Type Breakdown — data moat: insights from accumulated logs */}
+          {Object.keys(typeBreakdown).length > 1 && monthCount > 2 && (
+            <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
+              <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-2">
+                {t("dashboard.typeBreakdownTitle")}
+              </span>
+              <div className="flex gap-1.5 flex-wrap">
+                {Object.entries(typeBreakdown)
+                  .sort((a, b) => b[1] - a[1])
+                  .map(([type, count]) => {
+                    const pct = Math.round((count / monthCount) * 100);
+                    return (
+                      <span
+                        key={type}
+                        className="inline-flex items-center gap-1 bg-zinc-800/80 text-xs text-zinc-300 px-2.5 py-1.5 rounded-lg border border-white/5"
+                      >
+                        <span className="font-semibold">{type}</span>
+                        <span className="text-zinc-500">{pct}%</span>
+                      </span>
+                    );
+                  })}
               </div>
             </div>
           )}
