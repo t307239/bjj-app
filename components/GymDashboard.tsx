@@ -110,6 +110,30 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
           {copied ? t("gym.inviteCopied") : t("gym.inviteCopy")}
         </button>
       </div>
+
+      {/* Quick share buttons — coaches share via messaging apps */}
+      <div className="flex gap-2 mt-3">
+        <a
+          href={`https://wa.me/?text=${encodeURIComponent(`Join our gym on BJJ App! ${inviteUrl}`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 text-center bg-green-700/30 hover:bg-green-700/50 text-green-300 text-xs font-semibold py-2 rounded-lg border border-green-600/30 transition-colors"
+        >
+          {t("gym.shareWhatsApp")}
+        </a>
+        <button
+          onClick={() => {
+            if (navigator.share) {
+              navigator.share({ title: gym.name, text: `Join ${gym.name} on BJJ App!`, url: inviteUrl }).catch(() => {});
+            } else {
+              copy();
+            }
+          }}
+          className="flex-1 text-center bg-zinc-700/50 hover:bg-zinc-600/50 text-zinc-300 text-xs font-semibold py-2 rounded-lg border border-white/10 transition-colors"
+        >
+          {t("gym.shareOther")}
+        </button>
+      </div>
       <p className="text-xs text-gray-500 mt-2">
         {t("gym.inviteCode")} <span className="font-mono">{currentCode}</span>
       </p>

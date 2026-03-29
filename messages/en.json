@@ -919,7 +919,9 @@
     "nudgeCopy": "Copy reminder",
     "nudgeCopied": "Copied!",
     "nudgeTemplate": "Hey! We miss you on the mat. Come train with us soon! 🥋",
-    "nudgeAriaLabel": "Copy reminder message for {name}"
+    "nudgeAriaLabel": "Copy reminder message for {name}",
+    "shareWhatsApp": "Share via WhatsApp",
+    "shareOther": "Share link"
   },
   "gymJoin": {
     "title": "Join {name}",
