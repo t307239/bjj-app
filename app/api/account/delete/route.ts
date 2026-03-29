@@ -1,9 +1,26 @@
 import { createServerClient } from "@supabase/ssr";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST() {
+// ── Rate limit: account deletion is irreversible — max 3 attempts per IP per 15 min ──
+const deleteRateMap = new Map<string, { count: number; resetAt: number }>();
+function checkDeleteRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = deleteRateMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    deleteRateMap.set(ip, { count: 1, resetAt: now + 15 * 60 * 1000 });
+    return true;
+  }
+  entry.count++;
+  return entry.count <= 3;
+}
+
+export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (!checkDeleteRateLimit(ip)) {
+    return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+  }
   const cookieStore = await cookies();
 
   // 1. Verify the requesting user's session (anon key)

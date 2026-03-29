@@ -96,6 +96,7 @@ function DurationPicker({
       {(showCustom || !isPreset) && (
         <input
           type="number"
+          inputMode="numeric"
           value={value}
           min={1}
           max={480}
@@ -410,6 +411,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
             <div className="relative">
               <input
                 type="number"
+                inputMode="decimal"
                 step="0.1"
                 min="20"
                 max="500"

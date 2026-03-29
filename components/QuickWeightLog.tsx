@@ -57,6 +57,7 @@ export default function QuickWeightLog({ userId, onLogged }: Props) {
             <label className="block text-gray-400 text-xs mb-1">{t("body.weightKg")}</label>
             <input
               type="number"
+              inputMode="decimal"
               step="0.1"
               min="20"
               max="500"

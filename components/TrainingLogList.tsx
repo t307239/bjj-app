@@ -71,6 +71,7 @@ function DurationPicker({
       <div className="flex items-center gap-2">
         <input
           type="number"
+          inputMode="numeric"
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
           min={1}

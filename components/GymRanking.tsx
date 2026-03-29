@@ -204,17 +204,15 @@ export default function GymRanking({ userId, gymId }: Props) {
   const showRows = sorted.slice(0, 10);
   const needsExtraRow = myRankIdx >= 10 && !showRows.some((r) => r.isMe);
 
-  const medals = ["🥇", "🥈", "🥉"];
-
   const getValue = (row: RankRow) =>
     mode === "sessions" ? row.total_sessions : row.current_streak;
 
   return (
     <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-4">
-      {/* Header + tabs */}
+      {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-white">
-          🏆 {t("gym.rankingTitle")}
+          👥 {t("gym.rankingTitle")}
         </h3>
         {myRank !== null && (
           <span className="text-xs text-gray-400">
@@ -240,6 +238,13 @@ export default function GymRanking({ userId, gymId }: Props) {
         ))}
       </div>
 
+      {/* Rest day reminder for streak mode — injury prevention */}
+      {mode === "streak" && (
+        <p className="text-xs text-amber-500/80 mb-2">
+          🛡️ {t("gym.rankingStreakRestHint")}
+        </p>
+      )}
+
       <div className="space-y-1.5">
         {showRows.map((row, idx) => {
           const rank = idx + 1;
@@ -254,8 +259,9 @@ export default function GymRanking({ userId, gymId }: Props) {
                   : "bg-zinc-800/50"
               }`}
             >
-              <span className="w-5 text-center text-xs font-bold text-gray-400 flex-shrink-0">
-                {rank <= 3 ? medals[rank - 1] : rank}
+              {/* No medal emojis — rank number only (non-competitive framing) */}
+              <span className="w-5 text-center text-xs text-gray-500 flex-shrink-0">
+                {rank}
               </span>
               <div
                 className={`w-3 h-3 rounded-full flex-shrink-0 ${beltDot(row.belt)}`}
@@ -279,7 +285,7 @@ export default function GymRanking({ userId, gymId }: Props) {
           <>
             <div className="text-center text-gray-500 text-xs py-0.5">•••</div>
             <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-white/5 border border-white/20">
-              <span className="w-5 text-center text-xs font-bold text-gray-400 flex-shrink-0">
+              <span className="w-5 text-center text-xs text-gray-500 flex-shrink-0">
                 {myRankIdx + 1}
               </span>
               <div

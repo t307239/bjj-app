@@ -1,10 +1,23 @@
 import Stripe from "stripe";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+// ── Rate limit: Stripe checkout — max 10 per IP per 10 min (prevents Vercel/Stripe abuse) ──
+const checkoutRateMap = new Map<string, { count: number; resetAt: number }>();
+function checkCheckoutRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = checkoutRateMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    checkoutRateMap.set(ip, { count: 1, resetAt: now + 10 * 60 * 1000 });
+    return true;
+  }
+  entry.count++;
+  return entry.count <= 10;
+}
 
 /**
  * POST /api/stripe/checkout
@@ -22,7 +35,12 @@ export const dynamic = "force-dynamic";
  * If the relevant Price ID is not set, returns { fallback: true, url: PAYMENT_LINK }
  * so the caller can redirect to the static Payment Link instead.
  */
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (!checkCheckoutRateLimit(ip)) {
+    return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+  }
+
   const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

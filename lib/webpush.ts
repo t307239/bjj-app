@@ -87,11 +87,15 @@ export async function unsubscribePush(): Promise<void> {
 
 async function savePushSubscription(subscription: PushSubscription): Promise<void> {
   const json = subscription.toJSON();
+  // タイムゾーンを取得して送信。Edge Function がサイレント時間帯 (22:00-08:00) を
+  // 判断するために必須。取得できない場合は "UTC" にフォールバック。
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone ?? "UTC";
   await fetch("/api/push/subscribe", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       endpoint: subscription.endpoint,
+      timezone,
       keys: {
         p256dh: json.keys?.p256dh ?? "",
         auth: json.keys?.auth ?? "",
