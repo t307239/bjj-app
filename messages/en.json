@@ -928,7 +928,20 @@
     "nudgeTemplate": "Hey! We miss you on the mat. Come train with us soon! 🥋",
     "nudgeAriaLabel": "Copy reminder message for {name}",
     "shareWhatsApp": "Share via WhatsApp",
-    "shareOther": "Share link"
+    "shareOther": "Share link",
+    "csvTitle": "Bulk Invite (CSV)",
+    "csvDesc": "Import student emails to generate invite links in seconds.",
+    "csvProRequired": "Upgrade to Gym Pro to bulk-invite students via CSV.",
+    "csvOpen": "Import emails →",
+    "csvInstructions": "Paste student emails below — one per line, or CSV with an 'email' column. Optionally add a 'name' column.",
+    "csvPlaceholder": "alice@example.com\nbob@example.com\n\nOR paste CSV:\nname,email\nAlice Smith,alice@example.com\nBob Jones,bob@example.com",
+    "csvParse": "Generate invite links",
+    "csvResult": "{n} students found",
+    "csvReset": "Start over",
+    "csvCopyAll": "Copy all links",
+    "csvCopiedAll": "Copied!",
+    "csvDownload": "Download CSV",
+    "csvNote": "All students use the same invite link — the invite code ensures they join your gym."
   },
   "gymJoin": {
     "title": "Join {name}",

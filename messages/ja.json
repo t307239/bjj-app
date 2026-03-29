@@ -782,7 +782,20 @@
     "nudgeTemplate": "お疲れ様！最近マットで会えてないよ。一緒に練習しよう！🥋",
     "nudgeAriaLabel": "{name}へのリマインダーをコピー",
     "shareWhatsApp": "WhatsAppで共有",
-    "shareOther": "リンクを共有"
+    "shareOther": "リンクを共有",
+    "csvTitle": "一括招待（CSV）",
+    "csvDesc": "生徒のメールをインポートして招待リンクを一括生成します。",
+    "csvProRequired": "CSVで生徒を一括招待するにはGym Proにアップグレードしてください。",
+    "csvOpen": "メールをインポート →",
+    "csvInstructions": "生徒のメールアドレスを貼り付けてください（1行1件、またはCSVの'email'列）。'name'列も使用できます。",
+    "csvPlaceholder": "alice@example.com\nbob@example.com\n\nまたはCSVを貼り付け:\nname,email\n山田太郎,taro@example.com\n鈴木花子,hanako@example.com",
+    "csvParse": "招待リンクを生成",
+    "csvResult": "{n}人の生徒が見つかりました",
+    "csvReset": "やり直す",
+    "csvCopyAll": "全リンクをコピー",
+    "csvCopiedAll": "コピーしました！",
+    "csvDownload": "CSVをダウンロード",
+    "csvNote": "全生徒が同じ招待リンクを使用します。招待コードにより確実にあなたの道場に参加できます。"
   },
   "gymJoin": {
     "title": "{name} に参加する",
