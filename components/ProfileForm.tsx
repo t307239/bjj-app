@@ -537,8 +537,15 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
         </button>
       </div>
 
-      {/* Help & Support link — Axis 11 CS self-serve */}
-      <div className="flex items-center gap-3 text-xs text-gray-400">
+      {/* Help & Support links — Axis 11 CS self-serve */}
+      <div className="flex items-center gap-3 text-xs text-gray-400 flex-wrap">
+        <a
+          href="/help"
+          className="hover:text-white transition-colors underline underline-offset-2"
+        >
+          {t("profile.helpLink")}
+        </a>
+        <span className="text-zinc-700">|</span>
         <a
           href="mailto:307239t777@gmail.com?subject=BJJ%20App%20Support"
           className="hover:text-white transition-colors underline underline-offset-2"
