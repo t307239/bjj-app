@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import CookieConsent from "@/components/CookieConsent";
 import "./globals.css";
 
 // #41: Next/Font — Google Fonts をビルド時にセルフホスティング化（FOUT/FOIT 防止）
@@ -68,6 +69,7 @@ export default function RootLayout({
       {/* #41: font-sans → Inter variable font */}
       <body className={`${inter.className} min-h-screen bg-zinc-950 text-white antialiased`}>
         {children}
+        <CookieConsent />
         <Analytics />
         <SpeedInsights />
         <script
