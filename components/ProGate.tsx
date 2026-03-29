@@ -5,7 +5,7 @@ import { useLocale } from "@/lib/i18n";
 import { trackEvent } from "@/lib/analytics";
 
 const STRIPE_MONTHLY_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
-const STRIPE_ANNUAL_LINK = process.env.NEXT_PUBLIC_STRIPE_PRO_ANNUAL_LINK ?? "#";
+const STRIPE_ANNUAL_LINK = process.env.NEXT_PUBLIC_STRIPE_ANNUAL_LINK ?? "#";
 
 interface ProGateProps {
   isPro: boolean;
