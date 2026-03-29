@@ -105,7 +105,7 @@ export default function TermsPage() {
               5. Paid Subscription (Pro)
             </h2>
             <p className="text-zinc-400 mb-3">
-              Pro features are available for a monthly subscription fee (USD $9.99/month or $99.99/year, tax inclusive).
+              Pro features are available for a monthly subscription fee (USD $9.99/month or $79.99/year, tax inclusive).
               Payments are processed securely through Stripe (Visa, Mastercard, American Express, JCB).
             </p>
             <p className="text-zinc-400 mb-3">

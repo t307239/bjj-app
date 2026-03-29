@@ -76,7 +76,7 @@ export default function ProGate({
             <span className={`text-xs ${isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>Annual</span>
             {isAnnual && (
               <span className="bg-emerald-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-                Save 17%
+                Save 33%
               </span>
             )}
           </div>
@@ -84,7 +84,7 @@ export default function ProGate({
           {/* Price display */}
           <div className="mb-3">
             {isAnnual ? (
-              <p className="text-white font-bold text-sm">$99.99 / year <span className="text-emerald-400 text-xs">≈ $8.33/mo</span></p>
+              <p className="text-white font-bold text-sm">$79.99 / year <span className="text-emerald-400 text-xs">≈ $6.67/mo</span></p>
             ) : (
               <p className="text-white font-bold text-sm">$9.99 / month</p>
             )}

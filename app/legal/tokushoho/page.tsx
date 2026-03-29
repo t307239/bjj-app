@@ -57,7 +57,7 @@ export default function TokushohoPage() {
           <Row
             label="Price (販売価格)"
             values={[
-              "Pro: USD $9.99/month or $99.99/year (tax inclusive)",
+              "Pro: USD $9.99/month or $79.99/year (tax inclusive)",
               "Gym Starter: USD $49/month (tax inclusive)",
               "Gym Pro: USD $99/month (tax inclusive)",
             ]}

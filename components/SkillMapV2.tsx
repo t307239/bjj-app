@@ -347,11 +347,11 @@ function ProModal({
             <span className={`inline-block h-3 w-3 rounded-full bg-white shadow transition-transform ${isAnnual ? "translate-x-5" : "translate-x-1"}`} />
           </button>
           <span className={`text-xs ${isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>Annual</span>
-          {isAnnual && <span className="bg-emerald-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">Save 17%</span>}
+          {isAnnual && <span className="bg-emerald-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">Save 33%</span>}
         </div>
         <div className="mb-1">
           {isAnnual
-            ? <p className="text-white font-bold text-sm">$99.99 / year <span className="text-emerald-400 text-xs">≈ $8.33/mo</span></p>
+            ? <p className="text-white font-bold text-sm">$79.99 / year <span className="text-emerald-400 text-xs">≈ $6.67/mo</span></p>
             : <p className="text-white font-bold text-sm">$9.99 / month</p>}
         </div>
         <p className="text-xs text-emerald-400 mb-4">✓ 14-day free trial</p>
