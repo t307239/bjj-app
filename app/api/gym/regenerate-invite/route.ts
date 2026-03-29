@@ -1,8 +1,21 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
+
+// ── Rate limit: regenerate-invite — max 10 per IP per hour ──
+const regenerateRateMap = new Map<string, { count: number; resetAt: number }>();
+function checkRegenerateRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = regenerateRateMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    regenerateRateMap.set(ip, { count: 1, resetAt: now + 60 * 60 * 1000 });
+    return true;
+  }
+  entry.count++;
+  return entry.count <= 10;
+}
 
 /**
  * POST /api/gym/regenerate-invite
@@ -12,7 +25,11 @@ export const dynamic = "force-dynamic";
  *
  * Requires: caller must be the gym owner (is_gym_owner = true)
  */
-export async function POST() {
+export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (!checkRegenerateRateLimit(ip)) {
+    return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+  }
   const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

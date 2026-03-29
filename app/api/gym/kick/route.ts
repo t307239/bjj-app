@@ -4,6 +4,19 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
+// ── Rate limit: kick — max 20 per IP per hour ──
+const kickRateMap = new Map<string, { count: number; resetAt: number }>();
+function checkKickRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = kickRateMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    kickRateMap.set(ip, { count: 1, resetAt: now + 60 * 60 * 1000 });
+    return true;
+  }
+  entry.count++;
+  return entry.count <= 20;
+}
+
 /**
  * POST /api/gym/kick
  * Body: { member_id: string }
@@ -15,6 +28,10 @@ export const dynamic = "force-dynamic";
  * Requires: caller must be the gym owner (is_gym_owner = true)
  */
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (!checkKickRateLimit(ip)) {
+    return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+  }
   const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
