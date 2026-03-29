@@ -101,7 +101,7 @@ function detectClientLocale(): Locale {
 let _clientLocale: Locale =
   typeof window !== "undefined" ? detectClientLocale() : "en";
 
-let _setLocaleCallbacks: Array<(l: Locale) => void> = [];
+const _setLocaleCallbacks: Array<(l: Locale) => void> = [];
 
 function setGlobalLocale(locale: Locale) {
   _clientLocale = locale;
