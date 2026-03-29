@@ -315,7 +315,12 @@ export default function TechniqueLogList({
                         {t("techniques.categories." + technique.category) ||
                           technique.category}
                       </span>
-                      {(userBelt === "white" || userBelt === "blue") && isDangerousTechnique(technique.name) && (
+                      {userBelt === "white" && isDangerousTechnique(technique.name) && (
+                        <span className="text-[10px] font-bold text-blue-400 bg-blue-500/10 border border-blue-500/30 px-1.5 py-0.5 rounded-full flex-shrink-0" title={t("techniques.dangerTooltip")}>
+                          🔒 Blue Belt+
+                        </span>
+                      )}
+                      {userBelt === "blue" && isDangerousTechnique(technique.name) && (
                         <span className="text-[10px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-1.5 py-0.5 rounded-full flex-shrink-0" title={t("techniques.dangerTooltip")}>
                           ⚠️ {t("techniques.dangerBadge")}
                         </span>

@@ -7,11 +7,40 @@ import { serverT as t } from "@/lib/i18n";
 import { Suspense } from "react";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Technique Journal",
-  description:
-    "Log and organize every BJJ technique you've learned by position. Track mastery levels and identify weak spots.",
-};
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { title: "Technique Journal" };
+
+  const { count } = await supabase
+    .from("techniques")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", user.id);
+
+  const n = count ?? 0;
+  const ogImage = `${BASE_URL}/api/og?belt=white&count=${n}&months=0&streak=0&mode=techniques`;
+  const title = n > 0 ? `Technique Journal — ${n} Techniques | BJJ App` : "Technique Journal | BJJ App";
+  const description = `${n} BJJ techniques logged. Track mastery levels, identify weak spots, and visualize your skill map.`;
+
+  return {
+    title: "Technique Journal",
+    openGraph: {
+      title,
+      description,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: "BJJ Technique Journal" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
+  };
+}
 
 const jsonLd = {
   "@context": "https://schema.org",

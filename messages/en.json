@@ -660,9 +660,9 @@
   "pro": {
     "defaultFeature": "This feature",
     "available": "Available in Pro plan",
-    "upgradeButton": "Upgrade to Pro — $4.99/month",
+    "upgradeButton": "Upgrade to Pro — $9.99/month",
     "features": "See your weakest positions · Track injuries · Never lose your streak",
-    "bannerTitle": "⚡ Upgrade to Pro — $4.99/month",
+    "bannerTitle": "⚡ Upgrade to Pro — $9.99/month",
     "bannerFeatures": "Find your weak spots · Track recovery · Protect your streak",
     "bannerCta": "Unlock Pro",
     "socialProof": "Join 500+ BJJ athletes training smarter",
@@ -728,7 +728,7 @@
     "proModalBody": "You've added 10 techniques. Upgrade to Pro to keep building.",
     "proModalTitlePC": "You've built an impressive map! 🥋",
     "proModalBodyPC": "Upgrade to Pro to add unlimited techniques and unlock TechniqueLog sync.",
-    "upgradeBtn": "Upgrade to Pro – $4.99/mo",
+    "upgradeBtn": "Upgrade to Pro – $9.99/mo",
     "upgradeAriaLabel": "Upgrade to Pro plan",
     "maybeLater": "Maybe later",
     "addNodeSuccess": "Technique added",
@@ -965,7 +965,7 @@
     "faq6Q": "What is Gym Dashboard?",
     "faq6A": "Gym Dashboard lets gym owners track student activity, send curriculum, and reduce churn. Students join via QR code and can control what data they share.",
     "faq7Q": "What does Pro include?",
-    "faq7A": "Pro unlocks advanced analytics (12-month training graphs, body management, streak freeze), technique skill maps, and priority support. $4.99/month.",
+    "faq7A": "Pro unlocks advanced analytics (12-month training graphs, body management, streak freeze), technique skill maps, and priority support. $9.99/month.",
     "faq8Q": "How do I export my data?",
     "faq8A": "Go to Profile > Account > Download my data (CSV). All your training logs will be exported as a CSV file you can open in any spreadsheet app.",
     "contactTitle": "Still need help?",
@@ -1005,7 +1005,7 @@
     "paywallPoint2": "Training heatmap & analytics",
     "paywallPoint3": "Body & injury tracker",
     "paywallPoint4": "Roll analytics (coming soon)",
-    "paywallCta": "Upgrade to Pro — $4.99/mo",
+    "paywallCta": "Upgrade to Pro — $9.99/mo",
     "paywallDismiss": "Maybe later"
   },
   "techniquesPage": {
@@ -1228,7 +1228,7 @@
     "wikiExplore": "Explore the BJJ Wiki",
     "faqTitle": "Frequently Asked Questions",
     "faq1Q": "Is it really free?",
-    "faq1A": "Yes, all core features are completely free. Training log, technique journal, goal tracker, calendar, and graphs are all free. Pro plan ($4.99/month) unlocks unlimited Skill Map, 12-month graphs, and streak freeze.",
+    "faq1A": "Yes, all core features are completely free. Training log, technique journal, goal tracker, calendar, and graphs are all free. Pro plan ($9.99/month) unlocks unlimited Skill Map, 12-month graphs, and streak freeze.",
     "faq2Q": "Is this good for beginners?",
     "faq2A": "Absolutely! White belts and blue belts are the perfect users. Built to solve two common problems: not remembering technique names, and staying consistent. Logging from day one makes the path to your next belt visible.",
     "faq3Q": "How is this different from a notebook?",
@@ -1244,5 +1244,15 @@
     "footerTerms": "Terms of Service",
     "footerPrivacy": "Privacy Policy",
     "footerTokushoho": "特定商取引法に基づく表記"
+  },
+  "ageGate": {
+    "title": "Age Verification",
+    "body": "BJJ App collects training data. By US law (COPPA), we must verify you are 13 years of age or older before continuing.",
+    "confirm": "✓ I am 13 or older",
+    "deny": "I am under 13",
+    "footer": "Required by US federal law · bjj-app.net",
+    "blockedTitle": "Age Restriction",
+    "blockedBody": "BJJ App is designed for users 13 years of age or older. We cannot allow access for users under 13 (COPPA compliance).",
+    "blockedContact": "If you believe this is an error, please have a parent or guardian contact us at 307239t777@gmail.com"
   }
 }

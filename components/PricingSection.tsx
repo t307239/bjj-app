@@ -89,18 +89,18 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
             {isAnnual ? (
               <>
                 <div className="flex items-baseline gap-2">
-                  <div className="text-3xl font-bold text-white">$49.99</div>
+                  <div className="text-3xl font-bold text-white">$99.99</div>
                   <span className="text-sm font-normal text-gray-500">/ year</span>
                   <span className="bg-emerald-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                    2 Months Free
+                    Save 17%
                   </span>
                 </div>
-                <div className="text-gray-500 text-xs mb-6">≈ $4.17/mo · Billed annually</div>
+                <div className="text-gray-500 text-xs mb-6">≈ $8.33/mo · Billed annually</div>
               </>
             ) : (
               <>
                 <div className="text-3xl font-bold text-white mb-1">
-                  $4.99<span className="text-sm font-normal text-gray-500">/mo (tax incl.)</span>
+                  $9.99<span className="text-sm font-normal text-gray-500">/mo (tax incl.)</span>
                 </div>
                 <div className="text-gray-500 text-xs mb-6">Billed monthly</div>
               </>

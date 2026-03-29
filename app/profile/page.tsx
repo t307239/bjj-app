@@ -6,11 +6,44 @@ import ProfileTabs from "@/components/ProfileTabs";
 import { serverT as t } from "@/lib/i18n";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
 
-export const metadata: Metadata = {
-  title: "Profile",
-  description:
-    "Manage your BJJ profile — belt rank, gym, goals, and lifetime training stats.",
-};
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { title: "Profile" };
+
+  const [{ data: profile }, { count: totalCount }] = await Promise.all([
+    supabase.from("profiles").select("belt, stripe").eq("id", user.id).single(),
+    supabase
+      .from("training_logs")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id),
+  ]);
+
+  const belt = profile?.belt ?? "white";
+  const count = totalCount ?? 0;
+  const ogImage = `${BASE_URL}/api/og?belt=${belt}&count=${count}&months=0&streak=0`;
+  const title = `My BJJ Profile — ${count} Sessions | BJJ App`;
+  const description = `${belt.charAt(0).toUpperCase() + belt.slice(1)} Belt · ${count} total sessions tracked on BJJ App.`;
+
+  return {
+    title: "Profile",
+    openGraph: {
+      title,
+      description,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: "BJJ App Profile" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
+  };
+}
 
 const jsonLd = {
   "@context": "https://schema.org",

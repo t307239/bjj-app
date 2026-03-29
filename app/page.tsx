@@ -28,7 +28,8 @@ const jsonLd = {
   "operatingSystem": "Web",
   "offers": [
     { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
-    { "@type": "Offer", "name": "Pro", "price": "4.99", "priceCurrency": "USD", "billingIncrement": "P1M" },
+    { "@type": "Offer", "name": "Pro Monthly", "price": "9.99", "priceCurrency": "USD", "billingIncrement": "P1M" },
+    { "@type": "Offer", "name": "Pro Annual", "price": "99.99", "priceCurrency": "USD", "billingIncrement": "P1Y" },
   ],
   "inLanguage": ["ja", "en"],
   "audience": { "@type": "Audience", "audienceType": "Brazilian Jiu-Jitsu practitioners" },
