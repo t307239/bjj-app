@@ -173,10 +173,12 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
 
 function ProPaywallBanner({
   riskCount,
-  stripeGymPaymentLink,
+  onUpgradeClick,
+  upgrading,
 }: {
   riskCount: number;
-  stripeGymPaymentLink: string | null;
+  onUpgradeClick: () => void;
+  upgrading: boolean;
 }) {
   const { t } = useLocale();
   return (
@@ -191,22 +193,14 @@ function ProPaywallBanner({
             {t("gym.upgradeToSee")}
           </p>
         </div>
-        {stripeGymPaymentLink ? (
-          <a
-            href={stripeGymPaymentLink}
-            className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
-            aria-label={t("gym.ariaUpgradePro")}
-          >
-            {t("gym.upgradeBtn")}
-          </a>
-        ) : (
-          <span
-            className="flex-shrink-0 bg-zinc-700 text-gray-500 text-xs font-semibold px-3 py-2 rounded-lg cursor-not-allowed"
-            aria-disabled="true"
-          >
-            {t("gym.upgradeBtn")}
-          </span>
-        )}
+        <button
+          onClick={onUpgradeClick}
+          disabled={upgrading}
+          className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-60 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
+          aria-label={t("gym.ariaUpgradePro")}
+        >
+          {upgrading ? "..." : t("gym.upgradeBtn")}
+        </button>
       </div>
     </div>
   );
@@ -216,11 +210,13 @@ function ProPaywallBanner({
 
 function CurriculumSection({
   gym,
-  stripeGymPaymentLink,
+  onUpgradeClick,
+  upgrading,
   isGymPro,
 }: {
   gym: Gym;
-  stripeGymPaymentLink: string | null;
+  onUpgradeClick: () => void;
+  upgrading: boolean;
   isGymPro: boolean;
 }) {
   const { t } = useLocale();
@@ -255,21 +251,13 @@ function CurriculumSection({
             <p className="text-sm font-semibold text-white">{t("gym.curriculumTitle")}</p>
             <p className="text-xs text-gray-500 mt-0.5">{t("gym.curriculumProRequired")}</p>
           </div>
-          {stripeGymPaymentLink ? (
-            <a
-              href={stripeGymPaymentLink}
-              className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
-            >
-              {t("gym.upgradeBtn")}
-            </a>
-          ) : (
-            <span
-              className="flex-shrink-0 bg-zinc-700 text-gray-500 text-xs font-semibold px-3 py-2 rounded-lg cursor-not-allowed"
-              aria-disabled="true"
-            >
-              {t("gym.upgradeBtn")}
-            </span>
-          )}
+          <button
+            onClick={onUpgradeClick}
+            disabled={upgrading}
+            className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-60 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
+          >
+            {upgrading ? "..." : t("gym.upgradeBtn")}
+          </button>
         </div>
       </div>
     );
@@ -394,6 +382,34 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [kickTarget, setKickTarget] = useState<MemberRow | null>(null);
+  const [upgrading, setUpgrading] = useState(false);
+
+  // Programmatic Stripe Checkout (self-serve, fully automated)
+  const handleGymUpgrade = useCallback(async () => {
+    setUpgrading(true);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: "gym" }),
+      });
+      const data = await res.json() as { url?: string | null; fallback?: boolean; error?: string };
+      if (data.error) {
+        setToast({ message: data.error, type: "error" });
+        return;
+      }
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        // No URL and no error — STRIPE_GYM_PRICE_ID not configured
+        setToast({ message: "Stripe not configured. Please contact support.", type: "error" });
+      }
+    } catch {
+      setToast({ message: "Network error. Please try again.", type: "error" });
+    } finally {
+      setUpgrading(false);
+    }
+  }, []);
 
   const printLeaderboard = useCallback(() => {
     const now = new Date();
@@ -529,7 +545,8 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
       {/* Curriculum dispatch (Pro feature) */}
       <CurriculumSection
         gym={gym}
-        stripeGymPaymentLink={stripeGymPaymentLink}
+        onUpgradeClick={handleGymUpgrade}
+        upgrading={upgrading}
         isGymPro={isGymPro}
       />
 
@@ -586,7 +603,8 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
       {!isGymPro && atRiskCount > 0 && (
         <ProPaywallBanner
           riskCount={atRiskCount}
-          stripeGymPaymentLink={stripeGymPaymentLink}
+          onUpgradeClick={handleGymUpgrade}
+          upgrading={upgrading}
         />
       )}
 
@@ -624,7 +642,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
                     risk="yellow"
                     showDetail={isGymPro}
                     proRequired={!isGymPro}
-                    stripeGymPaymentLink={stripeGymPaymentLink}
+                    onUpgradeClick={handleGymUpgrade}
                     onKickRequest={handleKickRequest}
                   />
                 ))}
@@ -644,7 +662,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
                     risk="red"
                     showDetail={isGymPro}
                     proRequired={!isGymPro}
-                    stripeGymPaymentLink={stripeGymPaymentLink}
+                    onUpgradeClick={handleGymUpgrade}
                     onKickRequest={handleKickRequest}
                   />
                 ))}
@@ -701,14 +719,14 @@ function MemberCard({
   risk,
   showDetail,
   proRequired = false,
-  stripeGymPaymentLink,
+  onUpgradeClick,
   onKickRequest,
 }: {
   member: MemberRow;
   risk: RiskLevel;
   showDetail: boolean;
   proRequired?: boolean;
-  stripeGymPaymentLink?: string | null;
+  onUpgradeClick?: () => void;
   onKickRequest?: (member: MemberRow) => void;
 }) {
   const { t } = useLocale();
@@ -760,10 +778,10 @@ function MemberCard({
         ) : proRequired ? (
           <span className="text-xs text-gray-500 italic">
             {t("gym.detailsHidden")}{" "}
-            {stripeGymPaymentLink && (
-              <a href={stripeGymPaymentLink} className="text-yellow-400 hover:underline">
+            {onUpgradeClick && (
+              <button onClick={onUpgradeClick} className="text-yellow-400 hover:underline">
                 {t("gym.upgradeToSeeLink")}
-              </a>
+              </button>
             )}
           </span>
         ) : null}

@@ -8,23 +8,19 @@ export const dynamic = "force-dynamic";
 
 /**
  * POST /api/stripe/checkout
- * Creates a Stripe Checkout Session with a 14-day free trial.
+ * Creates a Stripe Checkout Session.
  *
- * Body: { plan: "monthly" | "annual" }
+ * Body: { plan: "monthly" | "annual" | "gym" }
  *
  * Required env vars:
  *   STRIPE_SECRET_KEY
- *   STRIPE_B2C_PRICE_ID        — Stripe Price ID for B2C Pro monthly
- *   STRIPE_ANNUAL_PRICE_ID     — Stripe Price ID for B2C Pro annual (optional)
+ *   STRIPE_B2C_PRICE_ID        — B2C Pro monthly Price ID (with 14-day trial)
+ *   STRIPE_ANNUAL_PRICE_ID     — B2C Pro annual Price ID (optional, with 14-day trial)
+ *   STRIPE_GYM_PRICE_ID        — B2B Gym monthly Price ID (no trial)
  *   NEXT_PUBLIC_APP_URL        — e.g. https://bjj-app.net
  *
- * If STRIPE_B2C_PRICE_ID is not set, returns { fallback: true, url: PAYMENT_LINK }
+ * If the relevant Price ID is not set, returns { fallback: true, url: PAYMENT_LINK }
  * so the caller can redirect to the static Payment Link instead.
- *
- * NOTE: To configure this in Stripe Dashboard (Payment Links cannot carry trials):
- *   1. Stripe Dashboard → Products → B2C Pro → Prices → copy Price ID
- *   2. Add to Vercel env: STRIPE_B2C_PRICE_ID=price_xxxx
- *   3. Optionally add STRIPE_ANNUAL_PRICE_ID=price_yyyy for the annual plan
  */
 export async function POST(req: Request) {
   const cookieStore = await cookies();
@@ -48,15 +44,75 @@ export async function POST(req: Request) {
   }
 
   const body = (await req.json()) as { plan?: string };
-  const isAnnual = body.plan === "annual";
+  const plan = body.plan ?? "monthly";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://bjj-app.net";
 
-  // Prefer programmatic checkout (supports trial periods)
+  // ── B2B Gym plan ─────────────────────────────────────────────────────────────
+  if (plan === "gym") {
+    const gymPriceId = process.env.STRIPE_GYM_PRICE_ID;
+
+    if (!gymPriceId) {
+      // Fallback to static Payment Link (no automation)
+      const fallbackUrl = process.env.NEXT_PUBLIC_STRIPE_GYM_PAYMENT_LINK ?? null;
+      return NextResponse.json({ url: fallbackUrl, fallback: true });
+    }
+
+    // Look up the user's gym (they must be the owner)
+    const { data: gym, error: gymError } = await supabase
+      .from("gyms")
+      .select("id, name, is_active")
+      .eq("owner_id", user.id)
+      .single();
+
+    if (gymError || !gym) {
+      return NextResponse.json(
+        { error: "No gym found for this user. Please create a gym first." },
+        { status: 404 }
+      );
+    }
+
+    if (gym.is_active) {
+      return NextResponse.json(
+        { error: "Gym plan is already active." },
+        { status: 409 }
+      );
+    }
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
+    try {
+      const session = await stripe.checkout.sessions.create({
+        mode: "subscription",
+        line_items: [{ price: gymPriceId, quantity: 1 }],
+        subscription_data: {
+          metadata: {
+            plan_type: "b2b_gym",
+            gym_id: gym.id,
+          },
+        },
+        client_reference_id: user.id,
+        success_url: `${appUrl}/gym/dashboard?upgraded=1`,
+        cancel_url: `${appUrl}/gym/dashboard`,
+      });
+
+      return NextResponse.json({ url: session.url });
+    } catch (err) {
+      console.error("Stripe gym checkout session error:", err);
+      return NextResponse.json(
+        { error: "Failed to create checkout session" },
+        { status: 500 }
+      );
+    }
+  }
+
+  // ── B2C Pro plan (monthly / annual) ──────────────────────────────────────────
+  const isAnnual = plan === "annual";
   const priceId = isAnnual
     ? process.env.STRIPE_ANNUAL_PRICE_ID
     : process.env.STRIPE_B2C_PRICE_ID;
 
   if (!priceId) {
-    // Fall back to static Payment Link — no trial support but still works
+    // Fallback to static Payment Link (no trial support but still works)
     const fallbackUrl = isAnnual
       ? (process.env.NEXT_PUBLIC_STRIPE_ANNUAL_LINK ?? process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? null)
       : (process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? null);
@@ -64,7 +120,6 @@ export async function POST(req: Request) {
   }
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://bjj-app.net";
 
   try {
     const session = await stripe.checkout.sessions.create({
