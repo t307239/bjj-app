@@ -696,7 +696,19 @@
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
     "understood": "I understand",
-    "share": "Share"
+    "share": "Share",
+    "upgradePro": "Upgrade to Pro"
+  },
+  "aiCoach": {
+    "title": "🤖 AI Micro-Coach",
+    "proDesc": "Unlock personalized weekly coaching insights based on your training data.",
+    "generateDesc": "Get a personalized coaching insight based on your last 30 days of training.",
+    "generateBtn": "Generate my coaching",
+    "generating": "Analyzing your training…",
+    "refresh": "Refresh",
+    "challenge": "This week's challenge",
+    "error": "Failed to generate coaching. Please try again.",
+    "poweredBy": "Powered by Claude AI"
   },
   "skillmap": {
     "tabRoots": "Entry Points",

@@ -24,6 +24,7 @@ import GymRanking from "@/components/GymRanking";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
 import InviteCard from "@/components/InviteCard";
 import TimeGreeting from "@/components/TimeGreeting";
+import AICoachCard from "@/components/AICoachCard";
 import {
   getWeekStartDate,
   getMonthStartDate,
@@ -184,7 +185,7 @@ export default async function DashboardPage({
   const { data: profileData } = await supabase
     .from("profiles")
     .select(
-      "belt, stripe, start_date, is_pro, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym, referral_code"
+      "belt, stripe, start_date, is_pro, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym, referral_code, ai_coach_cache, ai_coach_last_generated"
     )
     .eq("id", user.id)
     .single();
@@ -764,6 +765,14 @@ export default async function DashboardPage({
               <CompetitionStats userId={user.id} />
               {/* TrainingChart (heatmap) moved to Profile → Analytics tab */}
             </CollapsibleSection>
+
+            {/* AI Micro-Coach (Pro + all users see gate) */}
+            <AICoachCard
+              userId={user.id}
+              isPro={isPro}
+              initialCoaching={(profileData as { ai_coach_cache?: string | null })?.ai_coach_cache ?? null}
+              initialGeneratedAt={(profileData as { ai_coach_last_generated?: string | null })?.ai_coach_last_generated ?? null}
+            />
           </>
         ) : (
           /* Empty state: Day 1 ユーザー向けCTA */

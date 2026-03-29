@@ -555,7 +555,19 @@
     "back": "戻る",
     "loading": "読み込み中...",
     "understood": "理解しました",
-    "share": "シェア"
+    "share": "シェア",
+    "upgradePro": "Proにアップグレード"
+  },
+  "aiCoach": {
+    "title": "🤖 AIマイクロコーチ",
+    "proDesc": "練習データに基づいた週次コーチングインサイトを解放します。",
+    "generateDesc": "過去30日間の練習データを元にパーソナライズされたコーチングを取得します。",
+    "generateBtn": "コーチングを生成する",
+    "generating": "練習データを分析中…",
+    "refresh": "更新",
+    "challenge": "今週のチャレンジ",
+    "error": "コーチングの生成に失敗しました。もう一度お試しください。",
+    "poweredBy": "Claude AIによる提供"
   },
   "skillmap": {
     "tabRoots": "入口技術",
