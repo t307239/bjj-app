@@ -97,11 +97,15 @@ export default function GymRanking({ userId, gymId }: Props) {
 
       const memberIds = profiles.map((p) => p.id);
 
-      // 2. Get all training log dates for each member (for streaks + counts)
+      // 2. Get training log dates for each member (last 365 days — caps query size)
+      const oneYearAgo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .slice(0, 10);
       const { data: logs } = await supabase
         .from("training_logs")
         .select("user_id, date")
         .in("user_id", memberIds)
+        .gte("date", oneYearAgo)
         .order("date", { ascending: false });
 
       // 3. Build per-member log maps

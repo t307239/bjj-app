@@ -10,6 +10,7 @@ import TrainingLogList from "./TrainingLogList";
 import TrainingLogStats from "./TrainingLogStats";
 import FirstRollCelebration from "./FirstRollCelebration";
 import { useTrainingLog } from "@/hooks/useTrainingLog";
+import { decodeCompNotes } from "@/lib/trainingLogHelpers";
 
 type Props = {
   userId: string;
@@ -98,16 +99,6 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
   const ref = useRef<HTMLDivElement>(null);
   const supabase = createClient();
 
-  const COMP_PREFIX = "__comp__";
-  type CompData = { result: string; opponent: string; finish: string; event: string };
-  function decodeNotes(notes: string): { comp: CompData | null; userNotes: string } {
-    if (!notes || !notes.startsWith(COMP_PREFIX)) return { comp: null, userNotes: notes };
-    const nl = notes.indexOf("\n");
-    const jsonStr = nl === -1 ? notes.slice(COMP_PREFIX.length) : notes.slice(COMP_PREFIX.length, nl);
-    try { return { comp: JSON.parse(jsonStr) as CompData, userNotes: nl === -1 ? "" : notes.slice(nl + 1) }; }
-    catch { return { comp: null, userNotes: notes }; }
-  }
-
   // Close on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -132,7 +123,7 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
       if (!logs) return;
       const headers = ["Date","Type","Duration(min)","Result","Opponent","Finish","Event","Notes"];
       const rows = (logs as { date: string; type: string; duration_min: number; notes: string }[]).map((l) => {
-        const { comp, userNotes } = decodeNotes(l.notes ?? "");
+        const { comp, userNotes } = decodeCompNotes(l.notes ?? "");
         return [l.date, l.type, l.duration_min ?? "", comp?.result ?? "", comp?.opponent ?? "", comp?.finish ?? "", comp?.event ?? "", (userNotes ?? "").replace(/"/g, '""')];
       });
       downloadCsv([headers, ...rows].map((r) => r.map((c) => `"${c}"`).join(",")).join("\r\n"),

@@ -3,28 +3,13 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
+import { decodeCompNotes } from "@/lib/trainingLogHelpers";
 // ProGate import removed — CSV is now free for all users (CCPA/GDPR data portability)
 
 type Props = {
   userId: string;
   isPro?: boolean; // kept for API compatibility but no longer used to gate export
 };
-
-// 試合詳細デコード（TrainingLog.tsx と同一ロジック）
-const COMP_PREFIX = "__comp__";
-type CompData = { result: string; opponent: string; finish: string; event: string };
-
-function decodeCompNotes(notes: string): { comp: CompData | null; userNotes: string } {
-  if (!notes || !notes.startsWith(COMP_PREFIX)) return { comp: null, userNotes: notes };
-  const nl = notes.indexOf("\n");
-  const jsonStr = nl === -1 ? notes.slice(COMP_PREFIX.length) : notes.slice(COMP_PREFIX.length, nl);
-  const userNotes = nl === -1 ? "" : notes.slice(nl + 1);
-  try {
-    return { comp: JSON.parse(jsonStr) as CompData, userNotes };
-  } catch {
-    return { comp: null, userNotes: notes };
-  }
-}
 
 // ExportBtn サブコンポーネント
 function ExportBtn({
