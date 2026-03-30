@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { getLocalDateString } from "@/lib/timezone";
 import { useProfile } from "@/hooks/useProfile";
 import { useRouter } from "next/navigation";
@@ -610,8 +609,8 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
               {(() => {
                 const [y, m] = profile.start_date.split("-");
                 const d = new Date(parseInt(y), parseInt(m) - 1, 1);
-                const fmt = new Intl.DateTimeFormat("en", { month: "short", year: "numeric" }).format(d);
-                return `(${fmt} – Present)`;
+                const fmt = new Intl.DateTimeFormat(undefined, { month: "short", year: "numeric" }).format(d);
+                return `(${fmt} – ${t("profile.datePresent")})`;
               })()}
             </span>
           </div>
@@ -645,7 +644,13 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
   );
 }
 
-function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSave: (updated: Profile) => void; onCancel: () => void }) {
+function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
+  profile: Profile;
+  onSave: (updated: Profile) => void;
+  onCancel: () => void;
+  supabase: SupabaseClient;
+  userId: string;
+}) {
   const { t } = useLocale();
   const isOnline = useOnlineStatus();
   const [form, setForm] = useState<Profile>(profile);
@@ -654,7 +659,6 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [promotionFrom, setPromotionFrom] = useState<string | null>(null);
   const today = getLocalDateString();
-  const supabase = createClient();
   const belts = BELTS({ t });
   const currentBelt = belts.find((b) => b.value === form.belt);
 
@@ -666,24 +670,18 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
       return;
     }
     setLoading(true);
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      setFormError(t("profile.authError"));
-      setLoading(false);
-      return;
-    }
     // Check if disclaimer has already been recorded; if not, record it now.
     // (Migration: supabase/migrations/20260322_add_disclaimer_agreed.sql)
     const { data: existingProfile } = await supabase
       .from("profiles")
       .select("training_disclaimer_agreed_at")
-      .eq("id", user.id)
+      .eq("id", userId)
       .single();
     const disclaimerAlreadyRecorded = !!existingProfile?.training_disclaimer_agreed_at;
 
     const { error } = await supabase.from("profiles").upsert(
       {
-        id: user.id,
+        id: userId,
         belt: form.belt,
         stripe: form.stripe,
         gym: form.gym,          // existing column
@@ -811,7 +809,7 @@ export default function ProfileForm({ userId, hideAccount }: Props) {
           <div className="flex items-center gap-2 mb-2">
             <h2 className="text-white font-semibold text-sm">{t("profile.title")}</h2>
           </div>
-          <ProfileEditForm profile={profile} onSave={(updated) => { setProfile(updated); setIsEditing(false); router.refresh(); }} onCancel={() => setIsEditing(false)} />
+          <ProfileEditForm profile={profile} onSave={(updated) => { setProfile(updated); setIsEditing(false); router.refresh(); }} onCancel={() => setIsEditing(false)} supabase={supabase} userId={userId} />
         </>
       ) : (
         <ProfileViewCard profile={profile} stats={stats} onEdit={() => setIsEditing(true)} />
