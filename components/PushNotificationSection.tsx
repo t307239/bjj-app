@@ -66,13 +66,17 @@ export default function PushNotificationSection() {
             onClick={handleToggle}
             disabled={toggling || subState === null}
             aria-label={t("profile.ariaPushToggle")}
-            className={`shrink-0 relative inline-flex h-6 w-11 items-center rounded-full transition-colors disabled:opacity-50 ${
-              subState === true ? "bg-[#10B981]" : "bg-zinc-700"
+            className={`shrink-0 relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+              toggling ? "bg-zinc-600" : subState === true ? "bg-[#10B981]" : "bg-zinc-700"
             }`}
           >
             <span
-              className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform ${
-                subState === true ? "translate-x-6" : "translate-x-1"
+              className={`inline-block h-4 w-4 rounded-full shadow transition-transform ${
+                toggling
+                  ? "bg-zinc-400 animate-spin translate-x-3"
+                  : subState === true
+                  ? "bg-white translate-x-6"
+                  : "bg-white translate-x-1"
               }`}
             />
           </button>
