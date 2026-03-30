@@ -32,6 +32,9 @@ type UseTrainingLogProps = {
 export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLogProps) {
   const supabase = useMemo(() => createClient(), []);
   const router = useRouter();
+  // t is recreated every render by makeT() — use ref to keep deps stable
+  const tRef = useRef(t);
+  tRef.current = t;
   const idempotencyKey = useRef(
     typeof crypto !== "undefined" ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`
   );
@@ -373,7 +376,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         setTotalCount((c) => (c !== null ? Math.max(0, c - 1) : null));
       } else {
         setEntries((prev) => [removed, ...prev].sort((a, b) => b.date.localeCompare(a.date)));
-        setToast({ message: t("training.deleteFailed"), type: "error" });
+        setToast({ message: tRef.current("training.deleteFailed"), type: "error" });
       }
       setDeletingId(null);
     }, 5000);
@@ -381,7 +384,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     setPendingDelete({ id, entry: removed, timerId });
 
     setToast({
-      message: t("training.deletedUndo"),
+      message: tRef.current("training.deletedUndo"),
       type: "success",
       duration: 5000,
       onUndo: () => {
@@ -391,7 +394,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         setToast(null);
       },
     });
-  }, [entries, pendingDelete, userId, supabase, t]);
+  }, [entries, pendingDelete, userId, supabase]); // t via tRef
 
   // ── Edit ──────────────────────────────────────────────────────────────────
   const cancelEdit = useCallback(() => setEditingId(null), []);
@@ -418,7 +421,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     const prevEntry = entries.find((en) => en.id === id);
     setEntries((prev) => prev.map((en) => en.id === id ? { ...en, ...editForm, notes: finalEditNotes } : en));
     setEditingId(null);
-    setToast({ message: t("training.updated"), type: "success" });
+    setToast({ message: tRef.current("training.updated"), type: "success" });
 
     const { data, error } = await supabase
       .from("training_logs")
@@ -433,9 +436,9 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     } else {
       if (prevEntry) setEntries((prev) => prev.map((en) => en.id === id ? prevEntry : en));
       setEditingId(id);
-      setToast({ message: t("training.updateFailed"), type: "error" });
+      setToast({ message: tRef.current("training.updateFailed"), type: "error" });
     }
-  }, [editForm, editCompForm, entries, userId, supabase, t]);
+  }, [editForm, editCompForm, entries, userId, supabase]); // t via tRef
 
   // ── Pagination ────────────────────────────────────────────────────────────
   const handlePageChange = useCallback(async (newPage: number) => {

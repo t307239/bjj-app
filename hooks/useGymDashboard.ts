@@ -59,6 +59,9 @@ type UseGymDashboardProps = {
 
 export function useGymDashboard({ initialGym, t }: UseGymDashboardProps) {
   const supabase = useRef(createClient()).current;
+  // t is recreated every render by makeT() — use ref to keep deps stable
+  const tRef = useRef(t);
+  tRef.current = t;
 
   const [gym, setGym] = useState<Gym>(initialGym);
   const [members, setMembers] = useState<MemberRow[]>([]);
@@ -178,16 +181,16 @@ export function useGymDashboard({ initialGym, t }: UseGymDashboardProps) {
       });
       if (res.ok) {
         setMembers((prev) => prev.filter((m) => m.student_id !== memberId));
-        setToast({ message: t("gym.memberKicked"), type: "success" });
+        setToast({ message: tRef.current("gym.memberKicked"), type: "success" });
       } else {
         const data = await res.json().catch(() => ({}));
-        setToast({ message: data.error ?? t("gym.kickFailed"), type: "error" });
+        setToast({ message: data.error ?? tRef.current("gym.kickFailed"), type: "error" });
       }
     } catch {
-      setToast({ message: t("gym.kickFailed"), type: "error" });
+      setToast({ message: tRef.current("gym.kickFailed"), type: "error" });
     }
     setKickTarget(null);
-  }, [t]);
+  }, []); // t via tRef
 
   const handleKickRequest = useCallback((member: MemberRow) => {
     setKickTarget(member);
