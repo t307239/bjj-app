@@ -44,6 +44,9 @@ export type DbProfile = {
   share_data_with_gym: boolean;
   signup_source: string | null;
   referral_code: string | null;
+  stripe_customer_id: string | null;
+  subscription_status: "active" | "past_due" | "canceled" | "trialing" | null;
+  is_gym_owner: boolean | null;
   created_at: string;
 };
 
