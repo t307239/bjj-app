@@ -125,7 +125,8 @@
     "deleteAccount": "Excluir conta",
     "deleteConfirm": "Tem certeza? Esta ação é irreversível.",
     "deleteExportFirst": "Antes de excluir, baixe seus dados — não será possível recuperá-los depois.",
-    "logoutBtn": "Sair"
+    "logoutBtn": "Sair",
+    "monthsBjj": "meses BJJ"
   },
   "gym": {
     "inviteTitle": "📎 Convidar Alunos",
@@ -155,7 +156,16 @@
     "csvCopiedAll": "Copiado!",
     "csvDownload": "Baixar CSV",
     "noMembers": "Nenhum membro compartilhando dados ainda",
-    "noMembersDesc": "Compartilhe seu link de convite com os alunos. Eles aparecerão aqui ao entrar e ativar o compartilhamento de dados."
+    "noMembersDesc": "Compartilhe seu link de convite com os alunos. Eles aparecerão aqui ao entrar e ativar o compartilhamento de dados.",
+    "printLeaderboard": "Imprimir classificação",
+    "printLeaderboardTitle": "Classificação Mensal",
+    "printLeaderboardGenerated": "Gerado pelo BJJ App · bjj-app.net",
+    "printLeaderboardRank": "Pos.",
+    "printLeaderboardAthlete": "Atleta",
+    "printLeaderboardBelt": "Faixa",
+    "printLeaderboardSessions": "Treinos (30d)",
+    "stripeNotConfigured": "Stripe não configurado. Entre em contato com o suporte.",
+    "networkError": "Erro de rede. Tente novamente."
   },
   "common_error": {
     "title": "Algo deu errado",

@@ -140,8 +140,6 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
   }
 
   // Normal checklist
-  const remaining = steps.filter((s) => !s.done);
-  void remaining;
 
   return (
     <div className="mb-6 bg-emerald-950/40 border border-emerald-500/30 rounded-2xl p-4 relative">

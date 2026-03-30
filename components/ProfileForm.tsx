@@ -121,25 +121,29 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
 
   const handleLeave = async () => {
     setLeaving(true);
-    await supabase
+    const { error } = await supabase
       .from("profiles")
       .update({ gym_id: null, share_data_with_gym: false })
       .eq("id", userId);
-    setGymId(null);
-    setGymName(null);
-    setSharing(false);
-    setConfirmLeave(false);
+    if (!error) {
+      setGymId(null);
+      setGymName(null);
+      setSharing(false);
+      setConfirmLeave(false);
+    }
     setLeaving(false);
   };
 
   const handleToggleSharing = async () => {
     setToggleLoading(true);
     const next = !sharing;
-    await supabase
+    const { error } = await supabase
       .from("profiles")
       .update({ share_data_with_gym: next })
       .eq("id", userId);
-    setSharing(next);
+    if (!error) {
+      setSharing(next);
+    }
     setToggleLoading(false);
   };
 

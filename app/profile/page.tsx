@@ -240,7 +240,7 @@ export default async function ProfilePage() {
                 {monthsBJJ}
               </p>
               <p className="text-xs text-zinc-400 mt-0.5 tracking-widest uppercase">
-                mo. BJJ
+                {t("profile.monthsBjj")}
               </p>
             </div>
           </div>

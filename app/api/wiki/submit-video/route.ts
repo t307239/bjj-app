@@ -16,25 +16,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-// ── レート制限（サーバー側メモリ / Edge-compatible な簡易実装）──────────────
-// 同一 IP から 10 分以内の連続投稿を 5 件に制限。
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 分
+// ── レート制限定数 ─────────────────────────────────────────────────────────
 const RATE_LIMIT_MAX = 5;
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return true; // OK
-  }
-
-  entry.count++;
-  if (entry.count > RATE_LIMIT_MAX) return false; // NG
-  return true; // OK
-}
+const RATE_LIMIT_WINDOW_MINS = 10;
 
 // ── YouTube video ID バリデーション ─────────────────────────────────────────
 const VALID_VIDEO_ID = /^[A-Za-z0-9_-]{11}$/;
@@ -46,12 +30,30 @@ export async function POST(req: NextRequest) {
     req.headers.get("x-real-ip") ??
     "unknown";
 
-  // ── レート制限チェック ─────────────────────────────────────────────────
-  if (!checkRateLimit(ip)) {
-    return NextResponse.json(
-      { error: "Too many submissions. Please try again later." },
-      { status: 429 }
-    );
+  // ── Supabase クライアント（anon key — レート制限チェック + 挿入共用）────
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
+  );
+
+  // ── DB ベースレート制限（cold start を跨いでも有効）──────────────────
+  // ugc_video_submissions.submitter_ip を使って直近 10 分の投稿件数を確認。
+  // NOTE: anon RLS が SELECT を許可していない場合は count = 0 扱いでスキップ。
+  {
+    const windowStart = new Date(Date.now() - RATE_LIMIT_WINDOW_MINS * 60 * 1000).toISOString();
+    const { count } = await supabase
+      .from("ugc_video_submissions")
+      .select("*", { count: "exact", head: true })
+      .eq("submitter_ip", ip)
+      .gte("created_at", windowStart);
+    if ((count ?? 0) >= RATE_LIMIT_MAX) {
+      return NextResponse.json(
+        { error: "Too many submissions. Please try again later." },
+        { status: 429 }
+      );
+    }
   }
 
   // ── リクエストボディ検証 ────────────────────────────────────────────────
@@ -76,20 +78,6 @@ export async function POST(req: NextRequest) {
   if (!video_id || !VALID_VIDEO_ID.test(video_id)) {
     return NextResponse.json({ error: "Invalid video_id" }, { status: 400 });
   }
-
-  // ── Supabase 挿入（service_role ではなく anon key を使用）──────────────
-  // RLS で anon の INSERT を許可しているため、anon key で INSERT 可能。
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll: () => {},
-      },
-    }
-  );
 
   const { error } = await supabase.from("ugc_video_submissions").insert({
     slug,

@@ -296,6 +296,7 @@
     "referralUnlocked": "達成!",
     "referralProgress": "{n}/{goal} — 次のバッジまで",
     "referralAllUnlocked": "🏆 全バッジ解放 — レジェンド認定！",
+    "monthsBjj": "ヶ月 BJJ",
     "tabs": {
       "stats": "統計",
       "profile": "プロフィール",
@@ -807,7 +808,16 @@
     "csvCopyAll": "全リンクをコピー",
     "csvCopiedAll": "コピーしました！",
     "csvDownload": "CSVをダウンロード",
-    "csvNote": "全生徒が同じ招待リンクを使用します。招待コードにより確実にあなたの道場に参加できます。"
+    "csvNote": "全生徒が同じ招待リンクを使用します。招待コードにより確実にあなたの道場に参加できます。",
+    "printLeaderboard": "リーダーボードを印刷",
+    "printLeaderboardTitle": "月間ランキング",
+    "printLeaderboardGenerated": "BJJ App · bjj-app.net",
+    "printLeaderboardRank": "順位",
+    "printLeaderboardAthlete": "選手",
+    "printLeaderboardBelt": "帯",
+    "printLeaderboardSessions": "練習回数 (30日)",
+    "stripeNotConfigured": "Stripeが設定されていません。サポートにお問い合わせください。",
+    "networkError": "ネットワークエラーが発生しました。もう一度お試しください。"
   },
   "gymJoin": {
     "title": "{name} に参加する",
