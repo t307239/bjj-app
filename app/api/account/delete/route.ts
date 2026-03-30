@@ -48,7 +48,8 @@ export async function POST(req: NextRequest) {
   );
   const { error: deleteError } = await serviceClient.auth.admin.deleteUser(user.id);
   if (deleteError) {
-    return NextResponse.json({ error: deleteError.message }, { status: 500 });
+    console.error("[account/delete] deleteUser error:", deleteError.message);
+    return NextResponse.json({ error: "Account deletion failed. Please try again." }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true });
