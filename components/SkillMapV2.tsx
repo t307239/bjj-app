@@ -680,10 +680,13 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         )}
       </div>
 
-      {/* React Flow canvas */}
+      {/* React Flow canvas
+          touch-action:none on the wrapper prevents iOS Safari from intercepting
+          pointer events for page scroll / native pinch-zoom, letting ReactFlow
+          handle all touch gestures (pan + pinch-zoom) without interference.    */}
       <div
         className="w-full rounded-xl overflow-hidden border border-white/10"
-        style={{ height: "clamp(350px, 60vh, 620px)" }}
+        style={{ height: "clamp(350px, 60vh, 620px)", touchAction: "none" }}
       >
         <ReactFlow
           nodes={rfNodes}
@@ -705,6 +708,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           elementsSelectable={!isLockedReadOnly && editMode}
           deleteKeyCode={!isLockedReadOnly && isPro ? "Backspace" : null}
           panOnDrag={!connectingFrom}
+          preventScrolling
           minZoom={0.2}
           maxZoom={2.5}
           style={{ background: "#080f1e" }}
