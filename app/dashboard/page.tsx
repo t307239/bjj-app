@@ -795,8 +795,8 @@ export default async function DashboardPage({
             <AICoachCard
               userId={user.id}
               isPro={isPro}
-              initialCoaching={(profileData as { ai_coach_cache?: string | null })?.ai_coach_cache ?? null}
-              initialGeneratedAt={(profileData as { ai_coach_last_generated?: string | null })?.ai_coach_last_generated ?? null}
+              initialCoaching={profileData?.ai_coach_cache ?? null}
+              initialGeneratedAt={profileData?.ai_coach_last_generated ?? null}
             />
           </>
         ) : (

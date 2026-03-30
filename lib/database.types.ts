@@ -47,6 +47,8 @@ export type DbProfile = {
   stripe_customer_id: string | null;
   subscription_status: "active" | "past_due" | "canceled" | "trialing" | null;
   is_gym_owner: boolean | null;
+  ai_coach_cache: string | null;
+  ai_coach_last_generated: string | null;
   created_at: string;
 };
 
