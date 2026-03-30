@@ -3,6 +3,7 @@
 import React from "react";
 import { useLocale } from "@/lib/i18n";
 import { CATEGORY_VALUES, type TechniqueFormState } from "@/lib/techniqueLogTypes";
+import BottomSheet from "@/components/ui/BottomSheet";
 
 type Props = {
   showForm: boolean;
@@ -43,14 +44,17 @@ export default function TechniqueLogForm({
 }: Props) {
   const { t } = useLocale();
 
-  if (!showForm) return null;
-
   // ── Single add form ────────────────────────────────────────────────────────
   if (!bulkMode) {
     return (
+      <BottomSheet
+        isOpen={showForm}
+        onClose={onClose}
+        title={t("techniques.title")}
+      >
       <form
         onSubmit={onSubmit}
-        className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4"
+        className=""
       >
         {formError && (
           <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2 mb-3 text-red-400 text-xs">
@@ -138,14 +142,20 @@ export default function TechniqueLogForm({
           </button>
         </div>
       </form>
+      </BottomSheet>
     );
   }
 
   // ── Bulk add form ──────────────────────────────────────────────────────────
   return (
+    <BottomSheet
+      isOpen={showForm}
+      onClose={onCloseBulk}
+      title={t("techniques.bulkTitle")}
+    >
     <form
       onSubmit={onBulkSubmit}
-      className="bg-zinc-900 rounded-xl p-4 border border-violet-600/40 mb-4"
+      className=""
     >
       <div className="flex items-center gap-2 mb-3">
         <span className="text-sm font-semibold text-violet-600">
@@ -228,5 +238,6 @@ export default function TechniqueLogForm({
         </button>
       </div>
     </form>
+    </BottomSheet>
   );
 }

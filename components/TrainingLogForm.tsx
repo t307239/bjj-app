@@ -5,6 +5,7 @@ import { useLocale } from "@/lib/i18n";
 import { useOnlineStatus } from "@/lib/useOnlineStatus";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type CompData, BELT_RANKS } from "@/lib/trainingLogHelpers";
+import BottomSheet from "@/components/ui/BottomSheet";
 
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
 
@@ -166,12 +167,15 @@ const TrainingLogForm = memo(function TrainingLogForm({
     if (techniqueInputRef.current) techniqueInputRef.current.value = "";
   };
 
-  if (!showForm) return null;
-
   return (
+    <BottomSheet
+      isOpen={showForm}
+      onClose={onClose}
+      title={t("training.title")}
+    >
     <form
       onSubmit={onSubmit}
-      className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4"
+      className=""
     >
       {formError && (
         <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2 mb-3 text-red-400 text-xs">
@@ -532,6 +536,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
         </button>
       </div>
     </form>
+    </BottomSheet>
   );
 });
 
