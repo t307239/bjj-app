@@ -45,10 +45,16 @@ export async function subscribePush(): Promise<boolean> {
     const permission = await Notification.requestPermission();
     if (permission !== "granted") return false;
 
-    const subscription = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(vapidKey),
-    });
+    // 10s timeout — Brave's push relay can be slow; avoids infinite hang
+    const subscription = await Promise.race([
+      registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(vapidKey),
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Push subscribe timeout")), 10_000)
+      ),
+    ]);
 
     await savePushSubscription(subscription);
     return true;

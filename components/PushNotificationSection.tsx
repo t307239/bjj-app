@@ -52,8 +52,8 @@ export default function PushNotificationSection() {
 
   return (
     <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
-      <div className="flex items-start justify-between gap-3">
-        <div>
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
           <p className="text-gray-300 text-xs font-semibold mb-0.5">🔔 {t("profile.pushNotifications")}</p>
           <p className="text-gray-500 text-xs leading-relaxed">{t("profile.pushNotificationsDesc")}</p>
           {subState === "blocked" && (
@@ -61,25 +61,32 @@ export default function PushNotificationSection() {
           )}
         </div>
         {subState !== "blocked" && (
-          <button
-            type="button"
-            onClick={handleToggle}
-            disabled={toggling || subState === null}
-            aria-label={t("profile.ariaPushToggle")}
-            className={`shrink-0 relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              toggling ? "bg-zinc-600" : subState === true ? "bg-[#10B981]" : "bg-zinc-700"
-            }`}
-          >
-            <span
-              className={`inline-block h-4 w-4 rounded-full shadow transition-transform ${
+          <div className="shrink-0 flex items-center gap-2">
+            {toggling && (
+              <span className="text-zinc-500 text-xs whitespace-nowrap animate-pulse">
+                {subState === false ? t("profile.pushEnabling") : t("profile.pushDisabling")}
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={handleToggle}
+              disabled={toggling || subState === null}
+              aria-label={t("profile.ariaPushToggle")}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 toggling
-                  ? "bg-zinc-400 animate-spin translate-x-3"
+                  ? "bg-zinc-600 animate-pulse"
                   : subState === true
-                  ? "bg-white translate-x-6"
-                  : "bg-white translate-x-1"
+                  ? "bg-[#10B981]"
+                  : "bg-zinc-700"
               }`}
-            />
-          </button>
+            >
+              <span
+                className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform duration-300 ${
+                  subState === true ? "translate-x-6" : "translate-x-1"
+                }`}
+              />
+            </button>
+          </div>
         )}
       </div>
     </div>

@@ -380,6 +380,8 @@
     "pushEnabled": "✅ Notifications on",
     "pushBlocked": "Notifications blocked by browser. Enable in your device settings.",
     "pushNotSupported": "Push notifications are not supported on this browser/device.",
+    "pushEnabling": "Enabling…",
+    "pushDisabling": "Disabling…",
     "ariaPushToggle": "Toggle push notifications",
     "gymLeadTitle": "Running a gym?",
     "gymLeadDesc": "Create your academy page, get a QR invite code, and track your students' progress.",
