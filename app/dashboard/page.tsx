@@ -191,7 +191,8 @@ export default async function DashboardPage({
     .single();
 
   // ── Aggregated dashboard metrics (single RPC instead of 6 separate queries) ──
-  const [{ data: metrics }, { data: recentLogs }, { data: recentTechniques }, { data: typeBreakdownRaw }] =
+  // Fallback: if the RPC function is not deployed yet, run direct count queries.
+  const [rpcRes, { data: recentLogs }, { data: recentTechniques }, { data: typeBreakdownRaw }] =
     await Promise.all([
       supabase.rpc("get_dashboard_metrics", {
         p_user_id: user.id,
@@ -217,6 +218,27 @@ export default async function DashboardPage({
         .eq("user_id", user.id)
         .gte("date", firstDayOfMonth),
     ]);
+
+  // Use RPC result if available; otherwise fall back to direct count queries
+  let metrics = rpcRes.data;
+  if (!metrics || (Array.isArray(metrics) && metrics.length === 0)) {
+    const [mRes, pmRes, wRes, tRes, totRes, mMinsRes] = await Promise.all([
+      supabase.from("training_logs").select("*", { count: "exact", head: true }).eq("user_id", user.id).gte("date", firstDayOfMonth),
+      supabase.from("training_logs").select("*", { count: "exact", head: true }).eq("user_id", user.id).gte("date", firstDayOfPrevMonth).lt("date", firstDayOfMonth),
+      supabase.from("training_logs").select("*", { count: "exact", head: true }).eq("user_id", user.id).gte("date", firstDayOfWeek),
+      supabase.from("techniques").select("*", { count: "exact", head: true }).eq("user_id", user.id),
+      supabase.from("training_logs").select("*", { count: "exact", head: true }).eq("user_id", user.id),
+      supabase.from("training_logs").select("duration_min").eq("user_id", user.id).gte("date", firstDayOfMonth),
+    ]);
+    metrics = [{
+      month_count: mRes.count ?? 0,
+      prev_month_count: pmRes.count ?? 0,
+      week_count: wRes.count ?? 0,
+      technique_count: tRes.count ?? 0,
+      total_count: totRes.count ?? 0,
+      month_total_mins: (mMinsRes.data ?? []).reduce((s: number, r: { duration_min: number }) => s + (r.duration_min || 0), 0),
+    }];
+  }
 
   const m = Array.isArray(metrics) ? metrics[0] : metrics;
   const monthCount = Number(m?.month_count ?? 0);

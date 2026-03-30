@@ -36,6 +36,20 @@ textarea::placeholder {
   color: rgb(156 163 175); /* gray-400 */
 }
 
+/* iOS Safari: prevent auto-zoom on input focus (font-size < 16px triggers zoom) */
+@media screen and (max-width: 767px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="date"],
+  input[type="search"],
+  input[type="password"],
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
 /* #139 / #15: Custom slim scrollbar for dark UI immersion */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

@@ -25,7 +25,13 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
   const [animating, setAnimating] = useState(false);
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
+    const x = e.touches[0].clientX;
+    // Leave a 20px zone on the left edge for iOS back-swipe navigation
+    if (x < 20) {
+      touchStartX.current = null;
+      return;
+    }
+    touchStartX.current = x;
     touchStartY.current = e.touches[0].clientY;
     isHorizontal.current = null;
     setAnimating(false);
@@ -128,6 +134,7 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
           willChange: "transform",
           position: "relative",
           zIndex: 1,
+          touchAction: "pan-y",  // iOS: allow vertical scroll, block horizontal browser gestures
         }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
