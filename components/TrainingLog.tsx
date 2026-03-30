@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { useLocale } from "@/lib/i18n";
@@ -15,12 +14,9 @@ import {
   type TrainingEntry,
   type CompData,
   getLocalDateString,
-  encodeCompNotes,
   decodeCompNotes,
-  encodeRollNotes,
 } from "@/lib/trainingLogHelpers";
-import { getLocalDateParts } from "@/lib/timezone";
-import { trackEvent } from "@/lib/analytics";
+import { useTrainingLog } from "@/hooks/useTrainingLog";
 
 type Props = {
   userId: string;
@@ -206,512 +202,49 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
 }
 
 export default function TrainingLog({ userId, isPro = false, initialOpen = false }: Props) {
-  const [entries, setEntries] = useState<TrainingEntry[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
-  const [pageLoading, setPageLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [techniqueSuggestions, setTechniqueSuggestions] = useState<string[]>([]);
-  const PAGE_SIZE = 10;
-  // B-05: initialOpen=true when ?welcome=1 + no logs (new user Aha! moment)
-  const [showForm, setShowForm] = useState(initialOpen);
-  const [filterType, setFilterType] = useState("all");
-  const [periodFilter, setPeriodFilter] = useState<"all" | "month" | "week">("all");
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
-  const [totalCount, setTotalCount] = useState<number | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [formError, setFormError] = useState<string | null>(null);
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error"; duration?: number; onUndo?: () => void } | null>(null);
-  const [pendingDelete, setPendingDelete] = useState<{ id: string; entry: TrainingEntry; timerId: ReturnType<typeof setTimeout> } | null>(null);
-  const [pdfLoading, setPdfLoading] = useState(false);
-
-  const [showCelebration, setShowCelebration] = useState(false);
-  const today = getLocalDateString();
-  const [form, setForm] = useState({
-    date: getLocalDateString(),
-    duration_min: 60,
-    type: "gi",
-    notes: "",
-    instructor_name: "",
-    partner_username: "",   // B-09: sparring partner tag
-    weight: "",             // Body Management: post-training weight (kg)
-    roll_focus: "",         // Roll Details: Focus theme (gi/nogi only)
-    partner_belt: "",       // Roll Details: Partner belt color
-    size_diff: "",          // Roll Details: Partner size diff
-  });
-
-  // #72: detect ?addLog=YYYY-MM-DD from calendar empty-day click
-  // B-05: also clean up ?welcome=1 from URL after mount
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    const addLogDate = params.get("addLog");
-    const hasWelcome = params.has("welcome");
-
-    if (addLogDate && /^\d{4}-\d{2}-\d{2}$/.test(addLogDate)) {
-      setForm((f) => ({ ...f, date: addLogDate }));
-      setShowForm(true);
-    }
-
-    // Clean up transient URL params without triggering navigation
-    if (addLogDate || hasWelcome) {
-      const url = new URL(window.location.href);
-      url.searchParams.delete("addLog");
-      url.searchParams.delete("welcome");
-      window.history.replaceState({}, "", url.toString());
-    }
-  }, []);
-  const [editForm, setEditForm] = useState({
-    date: "",
-    duration_min: 60,
-    type: "gi",
-    notes: "",
-  });
-  const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
-  const [searchQuery, setSearchQuery] = useState("");
-  const [trainedToday, setTrainedToday] = useState<boolean | null>(null);
-  const [compForm, setCompForm] = useState<CompData>({
-    result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi",
-  });
-  const [editCompForm, setEditCompForm] = useState<CompData>({
-    result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi",
-  });
-  // useMemo ensures the same client instance across renders (prevents useCallback dep churn)
-  const supabase = useMemo(() => createClient(), []);
-  const router = useRouter();
   const { t } = useLocale();
-  // Idempotency key: client-generated UUID sent as row id to prevent duplicate INSERTs
-  // on network retry. Reset after each successful/failed submit.
-  const idempotencyKey = useRef(
-    typeof crypto !== "undefined" ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`
-  );
-
-  // Initial data load
-  useEffect(() => {
-    const loadEntries = async () => {
-      setInitialLoading(true);
-
-      // Free plan: restrict visible history to the last 30 days (JST)
-      const oneMonthAgoDate = (() => {
-        const d = new Date(Date.now() + 9 * 60 * 60 * 1000);
-        d.setMonth(d.getMonth() - 1);
-        return d.toISOString().slice(0, 10);
-      })();
-
-      let logsQuery = supabase
-        .from("training_logs")
-        .select("id, date, duration_min, type, notes, created_at, instructor_name, partner_username")
-        .eq("user_id", userId)
-        .order("date", { ascending: false });
-      if (!isPro) logsQuery = logsQuery.gte("date", oneMonthAgoDate);
-
-      let countQuery = supabase
-        .from("training_logs")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", userId);
-      if (!isPro) countQuery = countQuery.gte("date", oneMonthAgoDate);
-
-      const [{ data, error }, { data: techData }, { count }] = await Promise.all([
-        logsQuery.range(0, PAGE_SIZE - 1),
-        // Phase 2.5: fetch technique names for autocomplete suggestions
-        supabase
-          .from("technique_nodes")
-          .select("label")
-          .eq("user_id", userId)
-          .order("label", { ascending: true }),
-        // #138: total session count for header badge
-        countQuery,
-      ]);
-
-      if (!error && data) {
-        setEntries(data);
-        setPage(1);
-        setTrainedToday(data.some((e: TrainingEntry) => e.date === getLocalDateString()));
-      } else {
-        setTrainedToday(false);
-      }
-      if (techData) {
-        const names = [...new Set(techData.map((t: { label: string }) => t.label).filter(Boolean))];
-        setTechniqueSuggestions(names);
-      }
-      if (count !== null) setTotalCount(count);
-      setInitialLoading(false);
-    };
-
-    loadEntries();
-
-    // Restore pending form data after session-expiry login redirect
-    try {
-      const pending = localStorage.getItem("pending_training_log");
-      if (pending) {
-        const saved = JSON.parse(pending) as typeof form;
-        if (saved && typeof saved === "object") {
-          setForm((prev) => ({ ...prev, ...saved }));
-          setShowForm(true);
-          localStorage.removeItem("pending_training_log");
-          setToast({ message: t("training.restoredDraft"), type: "success" });
-        }
-      }
-    } catch { /* ignore */ }
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormError(null);
-
-    if (form.date > today) {
-      setFormError(t("training.futureDate"));
-      return;
-    }
-    if (form.duration_min < 1 || form.duration_min > 480) {
-      setFormError(t("training.durationRange"));
-      return;
-    }
-
-    const finalNotes = form.type === "competition"
-      ? encodeCompNotes(compForm, form.notes)
-      : (form.type === "gi" || form.type === "nogi")
-        ? encodeRollNotes(form.roll_focus, form.partner_belt, form.size_diff, form.notes)
-        : form.notes;
-
-    // Optimistic UI
-    const optimisticId = `optimistic-${Date.now()}`;
-    const optimisticEntry: TrainingEntry = {
-      id: optimisticId,
-      date: form.date,
-      duration_min: form.duration_min,
-      type: form.type,
-      notes: finalNotes,
-      created_at: new Date().toISOString(),
-    };
-    setEntries((prev) => [optimisticEntry, ...prev]);
-    setTrainedToday(true);
-    setShowForm(false);
-    setForm({ date: getLocalDateString(), duration_min: 60, type: "gi", notes: "", instructor_name: "", partner_username: "", weight: "", roll_focus: "", partner_belt: "", size_diff: "" });
-    setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
-
-    // Parse weight: convert non-empty string to number, otherwise null
-    const weightNum = form.weight !== "" ? parseFloat(form.weight) : null;
-    const weightValue = weightNum !== null && !isNaN(weightNum) && weightNum > 0 ? weightNum : null;
-
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("training_logs")
-      .insert([{ id: idempotencyKey.current, ...form, notes: finalNotes, user_id: userId, weight: weightValue }])
-      .select()
-      .single();
-
-    if (!error && data) {
-      if (typeof navigator !== "undefined") navigator.vibrate?.([50]);
-      setEntries((prev) => prev.map((e) => e.id === optimisticId ? data : e));
-      // First roll celebration (#7) — trigger before incrementing so we can check 0
-      if (totalCount === 0) setShowCelebration(true);
-      setTotalCount((c) => (c !== null ? c + 1 : null));
-      // B-03: Track log count for PWA install prompt timing (show after 3rd log)
-      if (typeof localStorage !== "undefined") {
-        const prev = parseInt(localStorage.getItem("bjj_log_count") ?? "0", 10);
-        localStorage.setItem("bjj_log_count", String(prev + 1));
-      }
-      trackEvent("training_logged", { type: form.type });
-      setToast({ message: t("training.saved"), type: "success" });
-      // Rotate idempotency key for next submission
-      idempotencyKey.current = typeof crypto !== "undefined"
-        ? crypto.randomUUID()
-        : `${Date.now()}-${Math.random()}`;
-    } else {
-      setEntries((prev) => prev.filter((e) => e.id !== optimisticId));
-      setShowForm(true);
-      // Detect auth expiry (ITP/Safari session loss) — redirect with form data preserved
-      const isAuthError = error?.code === "401"
-        || error?.message?.toLowerCase().includes("jwt")
-        || error?.message?.toLowerCase().includes("unauthorized");
-      if (isAuthError) {
-        try { localStorage.setItem("pending_training_log", JSON.stringify({ ...form, notes: finalNotes })); } catch { /* ignore */ }
-        router.push("/login?reason=session_expired");
-      } else {
-        setToast({ message: t("training.saveFailed"), type: "error" });
-      }
-      // Reset key so retry uses a fresh UUID
-      idempotencyKey.current = typeof crypto !== "undefined"
-        ? crypto.randomUUID()
-        : `${Date.now()}-${Math.random()}`;
-    }
-    setLoading(false);
-  };
-
-  // ⑫ PDF Export: generates a print-ready popup with full training log table
-  const handlePdfExport = async () => {
-    if (pdfLoading) return;
-    setPdfLoading(true);
-    try {
-      // Fetch all visible logs (30-day limit for free plan)
-      let allLogsQuery = supabase
-        .from("training_logs")
-        .select("date, duration_min, type, notes, instructor_name")
-        .eq("user_id", userId)
-        .order("date", { ascending: false });
-      if (!isPro) {
-        const d = new Date(Date.now() + 9 * 60 * 60 * 1000);
-        d.setMonth(d.getMonth() - 1);
-        allLogsQuery = allLogsQuery.gte("date", d.toISOString().slice(0, 10));
-      }
-      const { data: allLogs } = await allLogsQuery;
-
-      const logs = allLogs ?? [];
-      const typeLabel = (type: string) =>
-        TRAINING_TYPES.find((tt) => tt.value === type)?.label ?? type;
-      const fmtDuration = (min: number) => {
-        if (min < 60) return `${min}m`;
-        const h = Math.floor(min / 60);
-        const m = min % 60;
-        return m > 0 ? `${h}h${m}m` : `${h}h`;
-      };
-
-      const rows = logs
-        .map((l) => {
-          const rawNotes = l.notes ?? "";
-          const displayNotes = rawNotes.startsWith("__comp__")
-            ? decodeCompNotes(rawNotes).userNotes
-            : rawNotes;
-          return `<tr>
-            <td>${l.date}</td>
-            <td>${typeLabel(l.type)}</td>
-            <td style="text-align:center">${fmtDuration(l.duration_min ?? 0)}</td>
-            <td>${l.instructor_name ?? ""}</td>
-            <td>${displayNotes.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</td>
-          </tr>`;
-        })
-        .join("");
-
-      const totalMin = logs.reduce((s, l) => s + (l.duration_min ?? 0), 0);
-      const totalH = Math.floor(totalMin / 60);
-      const totalM = totalMin % 60;
-      const totalStr = totalM > 0 ? `${totalH}h${totalM}m` : `${totalH}h`;
-
-      const html = `<!DOCTYPE html><html><head><meta charset="utf-8">
-        <title>BJJ Training Log</title>
-        <style>
-          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 11px; color: #111; margin: 16px; }
-          h1 { font-size: 16px; margin-bottom: 4px; }
-          .meta { color: #555; font-size: 10px; margin-bottom: 12px; }
-          table { width: 100%; border-collapse: collapse; }
-          th { background: #1a1a2e; color: white; padding: 6px 8px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
-          td { padding: 5px 8px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
-          tr:nth-child(even) td { background: #f9fafb; }
-          .footer { margin-top: 12px; font-size: 10px; color: #555; text-align: right; }
-          @media print { body { margin: 0; } }
-        </style>
-      </head><body>
-        <h1>🥋 BJJ Training Log</h1>
-        <div class="meta">Exported ${new Date().toLocaleDateString()} · ${logs.length} sessions · ${totalStr} total</div>
-        <table>
-          <thead><tr><th>Date</th><th>Type</th><th>Duration</th><th>Instructor</th><th>Notes</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-        <div class="footer">bjj-app.net</div>
-        <script>window.addEventListener("load", () => { window.print(); });<\/script>
-      </body></html>`;
-
-      const win = window.open("", "_blank", "width=900,height=700");
-      if (win) {
-        win.document.write(html);
-        win.document.close();
-      }
-    } finally {
-      setPdfLoading(false);
-    }
-  };
-
-  const handleDelete = useCallback((id: string) => {
-    const removed = entries.find((e) => e.id === id);
-    if (!removed) return;
-
-    if (pendingDelete) {
-      clearTimeout(pendingDelete.timerId);
-      // Immediately commit the skipped-over delete to DB (UI already removed it)
-      void supabase
-        .from("training_logs")
-        .delete()
-        .eq("id", pendingDelete.id)
-        .eq("user_id", userId);
-      setTotalCount((c) => (c !== null ? Math.max(0, c - 1) : null));
-    }
-
-    setEntries((prev) => prev.filter((e) => e.id !== id));
-
-    const timerId = setTimeout(async () => {
-      setPendingDelete(null);
-      setDeletingId(id);
-      const { error } = await supabase
-        .from("training_logs")
-        .delete()
-        .eq("id", id)
-        .eq("user_id", userId);
-
-      if (!error) {
-        if (typeof navigator !== "undefined") navigator.vibrate?.([30, 20, 30]);
-        setTotalCount((c) => (c !== null ? Math.max(0, c - 1) : null));
-      } else {
-        setEntries((prev) => [removed, ...prev].sort((a, b) => b.date.localeCompare(a.date)));
-        setToast({ message: t("training.deleteFailed"), type: "error" });
-      }
-      setDeletingId(null);
-    }, 5000);
-
-    setPendingDelete({ id, entry: removed, timerId });
-
-    setToast({
-      message: t("training.deletedUndo"),
-      type: "success",
-      duration: 5000,
-      onUndo: () => {
-        clearTimeout(timerId);
-        setPendingDelete(null);
-        setEntries((prev) => [removed, ...prev].sort((a, b) => b.date.localeCompare(a.date)));
-        setToast(null);
-      },
-    });
-  }, [entries, pendingDelete, userId, supabase, t]);
-
-  const cancelEdit = useCallback(() => setEditingId(null), []);
-
-  const startEdit = useCallback((entry: TrainingEntry) => {
-    setEditingId(entry.id);
-    // ⑧ Fix: decode __comp__ prefix so competition notes display cleanly in the edit textarea
-    const displayNotes = entry.type === "competition"
-      ? decodeCompNotes(entry.notes).userNotes
-      : entry.notes;
-    setEditForm({
-      date: entry.date,
-      duration_min: entry.duration_min,
-      type: entry.type,
-      notes: displayNotes,
-    });
-    if (entry.type === "competition") {
-      const { comp } = decodeCompNotes(entry.notes);
-      if (comp) setEditCompForm(comp);
-      else setEditCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
-    }
-  }, []);
-
-  const handleUpdate = useCallback(async (e: React.FormEvent, id: string) => {
-    e.preventDefault();
-    const finalEditNotes = editForm.type === "competition"
-      ? encodeCompNotes(editCompForm, editForm.notes)
-      : editForm.notes;
-
-    // Optimistic update: apply immediately, rollback on error
-    const prevEntry = entries.find((en) => en.id === id);
-    setEntries((prev) => prev.map((en) => en.id === id ? { ...en, ...editForm, notes: finalEditNotes } : en));
-    setEditingId(null);
-    setToast({ message: t("training.updated"), type: "success" });
-
-    const { data, error } = await supabase
-      .from("training_logs")
-      .update({ ...editForm, notes: finalEditNotes })
-      .eq("id", id)
-      .eq("user_id", userId)
-      .select("id, date, duration_min, type, notes, created_at, instructor_name, partner_username")
-      .single();
-
-    if (!error && data) {
-      // Reconcile with server response (ensures created_at etc. are accurate)
-      setEntries((prev) => prev.map((en) => en.id === id ? data : en));
-    } else {
-      // Rollback optimistic change and re-open edit form
-      if (prevEntry) setEntries((prev) => prev.map((en) => en.id === id ? prevEntry : en));
-      setEditingId(id);
-      setToast({ message: t("training.updateFailed"), type: "error" });
-    }
-  }, [editForm, editCompForm, entries, userId, supabase, t]);
-
-  const handlePageChange = useCallback(async (newPage: number) => {
-    setPageLoading(true);
-    const from = (newPage - 1) * PAGE_SIZE;
-    const to = newPage * PAGE_SIZE - 1;
-    let query = supabase
-      .from("training_logs")
-      .select("id, date, duration_min, type, notes, created_at, instructor_name, partner_username")
-      .eq("user_id", userId)
-      .order("date", { ascending: false });
-    if (!isPro) {
-      const d = new Date(Date.now() + 9 * 60 * 60 * 1000);
-      d.setMonth(d.getMonth() - 1);
-      query = query.gte("date", d.toISOString().slice(0, 10));
-    }
-    const { data, error } = await query.range(from, to);
-
-    if (!error && data) {
-      setEntries(data);
-      setPage(newPage);
-    }
-    setPageLoading(false);
-  }, [userId, supabase, isPro]);
-
-  const totalPages = useMemo(() => Math.ceil((totalCount ?? 0) / PAGE_SIZE), [totalCount]);
-
-  // Period filter start date — memoized so it's not recomputed on every render
-  const periodStart = useMemo((): string | null => {
-    if (periodFilter === "all") return null;
-    const now = new Date();
-    if (periodFilter === "month") {
-      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
-    }
-    const dayOfWeek = now.getDay();
-    const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-    const monday = new Date(now);
-    monday.setDate(now.getDate() - daysToMonday);
-    return `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, "0")}-${String(monday.getDate()).padStart(2, "0")}`;
-  }, [periodFilter]);
-
-  // Type filter + period filter + keyword search — only recomputed when filter criteria or entries change
-  const filtered = useMemo(() => entries
-    .filter((e) => filterType === "all" || e.type === filterType)
-    .filter((e) => !periodStart || e.date >= periodStart)
-    .filter((e) => !dateFrom || e.date >= dateFrom)
-    .filter((e) => !dateTo || e.date <= dateTo)
-    .filter((e) => {
-      if (!searchQuery.trim()) return true;
-      const q = searchQuery.toLowerCase();
-      const { userNotes } = decodeCompNotes(e.notes);
-      const typeLabel = TRAINING_TYPES.find((t) => t.value === e.type)?.label ?? e.type;
-      return (
-        e.date.includes(q) ||
-        typeLabel.toLowerCase().includes(q) ||
-        userNotes.toLowerCase().includes(q)
-      );
-    }), [entries, filterType, periodStart, dateFrom, dateTo, searchQuery]);
-
-  // This month stats — memoized, only recomputed when entries change
-  const { monthEntries, monthHoursDisplay, monthProjected, remainingDaysLog, monthDelta } = useMemo(() => {
-    const thisMonth = getLocalDateString().slice(0, 7);
-    const me = entries.filter((e) => e.date.startsWith(thisMonth));
-    const totalMins = me.reduce((sum, e) => sum + e.duration_min, 0);
-    const hoursDisplay = totalMins >= 60
-      ? `${Math.floor(totalMins / 60)}h${totalMins % 60 > 0 ? `${totalMins % 60}m` : ""}`
-      : `${totalMins}m`;
-    const { day: curDay, month: curMonth, year: curYear, daysInMonth } = getLocalDateParts();
-    const projected = curDay > 0 ? Math.round(me.length / curDay * daysInMonth) : 0;
-    const remaining = daysInMonth - curDay;
-    const prevM = curMonth === 1 ? 12 : curMonth - 1;
-    const prevY = curMonth === 1 ? curYear - 1 : curYear;
-    const prevYM = `${prevY}-${String(prevM).padStart(2, "0")}`;
-    const lastMonthCount = entries.filter((e) => {
-      if (!e.date.startsWith(prevYM)) return false;
-      return parseInt(e.date.slice(8, 10), 10) <= curDay;
-    }).length;
-    return {
-      monthEntries: me,
-      monthHoursDisplay: hoursDisplay,
-      monthProjected: projected,
-      remainingDaysLog: remaining,
-      monthDelta: me.length - lastMonthCount,
-    };
-  }, [entries]);
+  const {
+    today,
+    entries,
+    loading,
+    initialLoading,
+    pageLoading,
+    page,
+    techniqueSuggestions,
+    totalCount, setTotalCount,
+    trainedToday, setTrainedToday,
+    showCelebration, setShowCelebration,
+    pdfLoading,
+    showForm, setShowForm,
+    form, setForm,
+    compForm, setCompForm,
+    formError, setFormError,
+    editingId, setEditingId,
+    editForm, setEditForm,
+    editCompForm, setEditCompForm,
+    filterType, setFilterType,
+    periodFilter, setPeriodFilter,
+    dateFrom, setDateFrom,
+    dateTo, setDateTo,
+    searchQuery, setSearchQuery,
+    expandedNotes, setExpandedNotes,
+    toast, setToast,
+    deletingId,
+    handleSubmit,
+    handlePdfExport,
+    handleDelete,
+    cancelEdit,
+    startEdit,
+    handleUpdate,
+    handlePageChange,
+    totalPages,
+    filtered,
+    monthEntries,
+    monthHoursDisplay,
+    monthProjected,
+    remainingDaysLog,
+    monthDelta,
+  } = useTrainingLog({ userId, isPro, initialOpen, t });
 
   // Suppress unused-var TS warnings for stats used in Bento/Analytics (kept for future use)
   void monthHoursDisplay;

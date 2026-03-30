@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getLocalDateString } from "@/lib/timezone";
+import { useProfile } from "@/hooks/useProfile";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
 import { useOnlineStatus } from "@/lib/useOnlineStatus";
@@ -782,43 +783,13 @@ function ProfileEditForm({ profile, onSave, onCancel }: { profile: Profile; onSa
 export default function ProfileForm({ userId, hideAccount }: Props) {
   const { t } = useLocale();
   const router = useRouter();
-  const [profile, setProfile] = useState<Profile>({ belt: "white", stripe: 0, gym: "", bio: "", start_date: "" });
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [initialLoading, setInitialLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
-  const supabase = createClient();
-
-  useEffect(() => {
-    const loadProfile = async () => {
-      setInitialLoading(true);
-      const [profileRes, logsRes, techRes] = await Promise.all([
-        supabase.from("profiles").select("belt, stripe, gym, bio, start_date").eq("id", userId).single(),
-        supabase.from("training_logs").select("duration_min").eq("user_id", userId),
-        supabase.from("techniques").select("*", { count: "exact", head: true }).eq("user_id", userId),
-      ]);
-      if (profileRes.data) {
-        setProfile({
-          belt: profileRes.data.belt || "white",
-          stripe: profileRes.data.stripe || 0,
-          gym: profileRes.data.gym || "",
-          bio: profileRes.data.bio || "",
-          start_date: profileRes.data.start_date || "",
-        });
-      } else {
-        setIsEditing(true);
-      }
-      if (logsRes.data) {
-        setStats({
-          totalCount: logsRes.data.length,
-          totalMinutes: logsRes.data.reduce((s: number, l: { duration_min: number }) => s + (l.duration_min || 0), 0),
-          techniqueCount: techRes.count ?? 0,
-        });
-      }
-      setInitialLoading(false);
-    };
-    loadProfile();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
+  const {
+    supabase,
+    profile, setProfile,
+    stats,
+    initialLoading,
+    isEditing, setIsEditing,
+  } = useProfile({ userId });
 
   if (initialLoading) {
     return (

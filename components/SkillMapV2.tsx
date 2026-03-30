@@ -26,45 +26,21 @@ import {
   BackgroundVariant,
   Panel,
   MiniMap,
-  useNodesState,
-  useEdgesState,
-  addEdge,
   Handle,
   Position,
-  MarkerType,
   useReactFlow,
   type Node,
   type Edge,
-  type Connection,
   type NodeTypes,
   type NodeMouseHandler,
-  type OnEdgesDelete,
-  type OnNodesDelete,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
-import { useOnlineStatus } from "@/lib/useOnlineStatus";
+import { masteryNodeClass, masterySelectedRing, NODE_W, NODE_H } from "@/lib/skillMapUtils";
+import { useSkillMap } from "@/hooks/useSkillMap";
 import Toast from "./Toast";
 
-// ─── dagre typings (no @types/dagre available) ───────────────────────────────
-interface DagreGraph {
-  setDefaultEdgeLabel: (fn: () => object) => void;
-  setGraph: (opts: { rankdir: string; nodesep: number; ranksep: number }) => void;
-  setNode: (id: string, dims: { width: number; height: number }) => void;
-  setEdge: (src: string, tgt: string) => void;
-  node: (id: string) => { x: number; y: number };
-}
-interface Dagre {
-  graphlib: { Graph: new () => DagreGraph };
-  layout: (g: DagreGraph) => void;
-}
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const dagre = require("dagre") as Dagre;
-
-// ─── Types (from centralized database types) ─────────────────────────────────
-import type { DbTechniqueNode as DbNode, DbTechniqueEdge } from "@/lib/database.types";
-type DbEdge = Pick<DbTechniqueEdge, "id" | "source_id" | "target_id" | "label">;
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 type Props = {
   userId: string;
@@ -73,69 +49,9 @@ type Props = {
   stripeAnnualLink: string | null;
 };
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
-const NODE_W = 160;
-const NODE_H = 60;
-
 // ─── Stable delete ref (avoids stale-closure in custom node data) ─────────────
 
 const _deleteNodeRef = { current: (_id: string) => {} };
-
-// ─── DAG cycle detection ──────────────────────────────────────────────────────
-
-function wouldCreateCycle(edges: Edge[], srcId: string, tgtId: string): boolean {
-  const adj = new Map<string, string[]>();
-  for (const e of edges) {
-    if (!adj.has(e.source)) adj.set(e.source, []);
-    adj.get(e.source)!.push(e.target);
-  }
-  if (!adj.has(srcId)) adj.set(srcId, []);
-  adj.get(srcId)!.push(tgtId);
-  const visited = new Set<string>();
-  const stack = [tgtId];
-  while (stack.length) {
-    const n = stack.pop()!;
-    if (n === srcId) return true;
-    if (visited.has(n)) continue;
-    visited.add(n);
-    for (const nb of adj.get(n) ?? []) stack.push(nb);
-  }
-  return false;
-}
-
-// ─── dagre auto-layout (Top → Bottom) ────────────────────────────────────────
-
-function getLayoutedNodes(nodes: Node[], edges: Edge[]): Node[] {
-  if (nodes.length === 0) return nodes;
-  const g = new dagre.graphlib.Graph();
-  g.setGraph({ rankdir: "TB", ranksep: 80, nodesep: 50 });
-  g.setDefaultEdgeLabel(() => ({}));
-  nodes.forEach((n) => g.setNode(n.id, { width: NODE_W, height: NODE_H }));
-  edges.forEach((e) => {
-    try { g.setEdge(e.source, e.target); } catch { /* skip bad edges */ }
-  });
-  dagre.layout(g);
-  return nodes.map((n) => {
-    const pos = g.node(n.id);
-    if (!pos) return n;
-    return { ...n, position: { x: pos.x - NODE_W / 2, y: pos.y - NODE_H / 2 } };
-  });
-}
-
-// ─── Mastery level → glass morphism node classes ─────────────────────────────
-
-function masteryNodeClass(level: number | undefined): string {
-  if (level === 2) return "bg-emerald-900/20 border-emerald-500/50 text-emerald-300";
-  if (level === 1) return "bg-blue-900/20 border-blue-500/50 text-blue-300";
-  return "bg-zinc-800/50 border-zinc-700 text-zinc-400"; // 0 or undefined = Locked
-}
-
-function masterySelectedRing(level: number | undefined): string {
-  if (level === 2) return "ring-2 ring-emerald-400/40";
-  if (level === 1) return "ring-2 ring-blue-400/40";
-  return "ring-2 ring-[#6366f1]/40";
-}
 
 // ─── Canvas Legend ─────────────────────────────────────────────────────────────
 
@@ -192,30 +108,6 @@ function CustomZoomControls() {
   );
 }
 
-// ─── DB → React Flow converters ───────────────────────────────────────────────
-
-function dbNodeToRF(n: DbNode): Node {
-  return {
-    id: n.id,
-    type: "technique",
-    position: { x: n.pos_x, y: n.pos_y },
-    data: { label: n.name, mastery_level: n.mastery_level ?? 0 },
-  };
-}
-
-function dbEdgeToRF(e: DbEdge): Edge {
-  return {
-    id: e.id,
-    source: e.source_id,
-    target: e.target_id,
-    label: e.label ?? undefined,
-    type: "smoothstep",
-    animated: false,
-    style: { stroke: "#6366f1", strokeWidth: 2 },
-    markerEnd: { type: MarkerType.ArrowClosed, color: "#6366f1" },
-  };
-}
-
 // ─── Custom Technique Node ────────────────────────────────────────────────────
 
 function TechniqueNodeComp({
@@ -233,25 +125,18 @@ function TechniqueNodeComp({
   return (
     <div
       className={`relative border rounded-xl px-3 py-2.5 shadow-lg transition-all select-none backdrop-blur-sm ${masteryNodeClass(mastery)} ${
-        selected
-          ? masterySelectedRing(mastery)
-          : "hover:brightness-110"
+        selected ? masterySelectedRing(mastery) : "hover:brightness-110"
       }`}
       style={{ width: NODE_W, minHeight: NODE_H }}
     >
-      {/* Target handle */}
       <Handle
         type="target"
         position={Position.Top}
         style={{ width: 12, height: 12, background: "#3f3f46", border: "2px solid #6366f1", borderRadius: "50%", top: -6 }}
       />
-
-      {/* Label */}
       <span className="block text-xs font-medium break-words whitespace-pre-wrap leading-snug pr-4">
         {data.label}
       </span>
-
-      {/* Delete button */}
       {data.isPro && !confirmDel && (
         <button
           className="absolute top-1.5 right-1.5 text-zinc-500 hover:text-red-400 text-xs leading-none transition-colors"
@@ -277,8 +162,6 @@ function TechniqueNodeComp({
           </button>
         </div>
       )}
-
-      {/* Source handle */}
       <Handle
         type="source"
         position={Position.Bottom}
@@ -325,7 +208,6 @@ function ProModal({
     } catch {
       // network error — fall through to static link
     }
-    // Fallback: redirect to static Stripe Payment Link (no trial)
     if (fallbackUrl) window.location.href = fallbackUrl;
     setIsLoading(false);
   };
@@ -562,40 +444,41 @@ function AddNodePopup({
 
 function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: Props) {
   const { t } = useLocale();
-  const { fitView, screenToFlowPosition } = useReactFlow();
-  const supabase = useRef(createClient()).current;
+  const { screenToFlowPosition } = useReactFlow();
 
-  const [rfNodes, setRfNodes, onNodesChange] = useNodesState<Node>([]);
-  const [rfEdges, setRfEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const [loading, setLoading] = useState(true);
+  // ── Data layer (Supabase + ReactFlow state) ──────────────────────────────
+  const {
+    rfNodes, setRfNodes, onNodesChange,
+    rfEdges, onEdgesChange,
+    loading,
+    showProModal, setShowProModal,
+    isOrganizing,
+    toast, setToast,
+    isOnline,
+    connectingFrom, setConnectingFrom,
+    handleDeleteNode,
+    onConnect,
+    onNodeDragStop,
+    onEdgesDelete,
+    onNodesDelete,
+    handleAddNode,
+    handleAddChildNode,
+    handleMobileConnect,
+    handleMagicOrganize,
+  } = useSkillMap({ userId, isPro, t });
 
-  // Device + mode
+  // ── UI state ─────────────────────────────────────────────────────────────
   const [isMobile, setIsMobile] = useState(false);
   const [editMode, setEditMode] = useState(true);
-
-  // Mobile: connecting mode
-  const [connectingFrom, setConnectingFrom] = useState<string | null>(null);
-
-  // Mobile: bottom drawer
   const [drawerNode, setDrawerNode] = useState<Node | null>(null);
-
-  // PC: add node popup
   const [addPopup, setAddPopup] = useState<{ screenX: number; screenY: number; flowX: number; flowY: number } | null>(null);
-
-  // Pro modal
-  const [showProModal, setShowProModal] = useState(false);
-
-  // Magic Organize
-  const [isOrganizing, setIsOrganizing] = useState(false);
-
-  // Toast
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
-
-  // Online status (Supabase calls fail when offline → block write actions)
-  const isOnline = useOnlineStatus();
-
-  // Fullscreen
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [emptyAddName, setEmptyAddName] = useState("");
+  const emptyRef = useRef<HTMLInputElement>(null);
+  const mobileAddRef = useRef<HTMLInputElement>(null);
+
+  // Keep module-level ref up-to-date (used by TechniqueNodeComp to avoid stale closure)
+  useEffect(() => { _deleteNodeRef.current = handleDeleteNode; }, [handleDeleteNode]);
 
   // Mobile detection
   useEffect(() => {
@@ -612,197 +495,15 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
     return () => document.removeEventListener("fullscreenchange", onFsChange);
   }, []);
 
-  const showToast = useCallback((message: string, type: "success" | "error") => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  }, []);
-
-  // ── Delete node handler (stable via module-level ref) ────────────────────
-  const handleDeleteNode = useCallback(async (nodeId: string) => {
-    setRfNodes((prev: Node[]) => prev.filter((n: Node) => n.id !== nodeId));
-    setRfEdges((prev: Edge[]) => prev.filter((e: Edge) => e.source !== nodeId && e.target !== nodeId));
-    await supabase.from("technique_nodes").delete().eq("id", nodeId);
-  }, [supabase, setRfNodes, setRfEdges]);
-
-  // Keep module-level ref up-to-date
-  useEffect(() => { _deleteNodeRef.current = handleDeleteNode; }, [handleDeleteNode]);
-
-  // Sync isPro + t into node data when they change (preserve mastery_level)
-  useEffect(() => {
-    setRfNodes((prev: Node[]) =>
-      prev.map((n: Node) => ({ ...n, data: { ...n.data, isPro, t } }))
-    );
-  }, [isPro, t, setRfNodes]);
-
-  // ── Load data ────────────────────────────────────────────────────────────
-  const loadData = useCallback(async () => {
-    try {
-      // 8秒タイムアウト — auth session がハングしても確実に loading を解除する
-      const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 8000));
-      const query = Promise.all([
-        supabase.from("technique_nodes").select("id, user_id, name, description, pos_x, pos_y, mastery_level, created_at").eq("user_id", userId).order("created_at"),
-        supabase.from("technique_edges").select("id, source_id, target_id, label").eq("user_id", userId),
-      ]);
-      const result = await Promise.race([query, timeout]);
-      if (result) {
-        const [nr, er] = result;
-        if (!nr.error) {
-          setRfNodes(
-            (nr.data ?? []).map((n: DbNode) => ({
-              ...dbNodeToRF(n),
-              data: { label: n.name, isPro, t, mastery_level: n.mastery_level ?? 0 },
-            }))
-          );
-        }
-        if (!er.error) {
-          setRfEdges((er.data ?? []).map((e: DbEdge) => dbEdgeToRF(e)));
-        }
-      }
-    } catch (e) {
-      console.error("[SkillMap] loadData error:", e);
-    } finally {
-      setLoading(false);
-    }
-  }, [userId, isPro, t, supabase, setRfNodes, setRfEdges]);
-
-  useEffect(() => { loadData(); }, [loadData]);
-
-  // ── onConnect (drag handle to handle, PC) ────────────────────────────────
-  const onConnect = useCallback(
-    async (connection: Connection) => {
-      if (!connection.source || !connection.target) return;
-      if (!isPro && rfEdges.length >= 15) { setShowProModal(true); return; }
-      if (wouldCreateCycle(rfEdges, connection.source, connection.target)) {
-        showToast(t("skillmap.cycleError"), "error"); return;
-      }
-      if (rfEdges.some((e) => e.source === connection.source && e.target === connection.target)) {
-        showToast(t("skillmap.addEdgeError"), "error"); return;
-      }
-      const { data, error } = await supabase
-        .from("technique_edges")
-        .insert({ user_id: userId, source_id: connection.source, target_id: connection.target, label: null, created_at: new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString() })
-        .select()
-        .single();
-      if (error) { showToast(t("skillmap.addEdgeError"), "error"); return; }
-      setRfEdges((prev: Edge[]) => addEdge(dbEdgeToRF(data), prev));
-      showToast(t("skillmap.connectSuccess"), "success");
-    },
-    [rfEdges, isPro, userId, t, showToast, supabase, setRfEdges]
-  );
-
-  // ── Node drag stop → persist position ───────────────────────────────────
-  const onNodeDragStop = useCallback(
-    async (_: React.MouseEvent, node: Node) => {
-      await supabase.from("technique_nodes").update({ pos_x: node.position.x, pos_y: node.position.y }).eq("id", node.id);
-    },
-    [supabase]
-  );
-
-  // ── Edge delete (keyboard Delete / click ✕ on edge) ─────────────────────
-  const onEdgesDelete: OnEdgesDelete = useCallback(
-    async (deleted) => {
-      for (const e of deleted) {
-        await supabase.from("technique_edges").delete().eq("id", e.id);
-      }
-    },
-    [supabase]
-  );
-
-  // ── Nodes delete (keyboard Delete when node selected) ───────────────────
-  const onNodesDelete: OnNodesDelete = useCallback(
-    async (deleted) => {
-      for (const n of deleted) {
-        await supabase.from("technique_nodes").delete().eq("id", n.id);
-      }
-    },
-    [supabase]
-  );
-
-  // ── Add node (PC right-click or mobile button) ───────────────────────────
-  const handleAddNode = async (name: string, flowX: number, flowY: number) => {
-    setAddPopup(null);
-    if (!isPro && rfNodes.length >= 10) { setShowProModal(true); return; }
-    const { data, error } = await supabase
-      .from("technique_nodes")
-      .insert({ user_id: userId, name, description: null, pos_x: flowX, pos_y: flowY, created_at: new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString() })
-      .select()
-      .single();
-    if (error) { showToast(t("skillmap.addNodeError"), "error"); return; }
-    setRfNodes((prev: Node[]) => [...prev, { ...dbNodeToRF(data), data: { label: data.name, isPro, t, mastery_level: 0 } }]);
-    showToast(t("skillmap.addNodeSuccess"), "success");
-  };
-
-  // ── Add child node (mobile Bottom Drawer) ────────────────────────────────
-  const handleAddChildNode = useCallback(
-    async (parentId: string, childName: string) => {
-      if (!isPro && rfNodes.length >= 10) { setShowProModal(true); return; }
-      if (!isPro && rfEdges.length >= 15) { setShowProModal(true); return; }
-      const parent = rfNodes.find((n) => n.id === parentId);
-      const spawnX = parent ? parent.position.x + 180 : 100;
-      const spawnY = parent ? parent.position.y + 120 : 200;
-      const { data: nodeData, error: nodeErr } = await supabase
-        .from("technique_nodes")
-        .insert({ user_id: userId, name: childName, description: null, pos_x: spawnX, pos_y: spawnY, created_at: new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString() })
-        .select()
-        .single();
-      if (nodeErr) { showToast(t("skillmap.addNodeError"), "error"); return; }
-      const { data: edgeData, error: edgeErr } = await supabase
-        .from("technique_edges")
-        .insert({ user_id: userId, source_id: parentId, target_id: nodeData.id, label: null, created_at: new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString() })
-        .select()
-        .single();
-      if (edgeErr) {
-        await supabase.from("technique_nodes").delete().eq("id", nodeData.id);
-        showToast(t("skillmap.addEdgeError"), "error"); return;
-      }
-      setRfNodes((prev: Node[]) => [...prev, { ...dbNodeToRF(nodeData), data: { label: nodeData.name, isPro, t, mastery_level: 0 } }]);
-      setRfEdges((prev: Edge[]) => [...prev, dbEdgeToRF(edgeData)]);
-      showToast(t("skillmap.addNodeSuccess"), "success");
-    },
-    [rfNodes, rfEdges, isPro, userId, t, showToast, supabase, setRfNodes, setRfEdges]
-  );
-
-  // ── Mobile: complete edge connection ─────────────────────────────────────
-  const handleMobileConnect = useCallback(
-    async (targetId: string) => {
-      if (!connectingFrom || connectingFrom === targetId) { setConnectingFrom(null); return; }
-      if (!isPro && rfEdges.length >= 15) { setShowProModal(true); setConnectingFrom(null); return; }
-      if (wouldCreateCycle(rfEdges, connectingFrom, targetId)) {
-        showToast(t("skillmap.cycleError"), "error"); setConnectingFrom(null); return;
-      }
-      if (rfEdges.some((e) => e.source === connectingFrom && e.target === targetId)) {
-        showToast(t("skillmap.addEdgeError"), "error"); setConnectingFrom(null); return;
-      }
-      const { data, error } = await supabase
-        .from("technique_edges")
-        .insert({ user_id: userId, source_id: connectingFrom, target_id: targetId, label: null, created_at: new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString() })
-        .select()
-        .single();
-      if (error) { showToast(t("skillmap.addEdgeError"), "error"); setConnectingFrom(null); return; }
-      setRfEdges((prev: Edge[]) => [...prev, dbEdgeToRF(data)]);
-      setConnectingFrom(null);
-      showToast(t("skillmap.connectSuccess"), "success");
-    },
-    [connectingFrom, rfEdges, isPro, userId, t, showToast, supabase, setRfEdges]
-  );
-
-  // ── Node click ───────────────────────────────────────────────────────────
+  // ── Event handlers ────────────────────────────────────────────────────────
   const onNodeClick: NodeMouseHandler = useCallback(
     (_, node) => {
-      // Mobile connecting mode: tap target node
-      if (connectingFrom) {
-        handleMobileConnect(node.id);
-        return;
-      }
-      // Mobile edit mode: open bottom drawer
-      if (isMobile && editMode) {
-        setDrawerNode(node);
-      }
+      if (connectingFrom) { handleMobileConnect(node.id); return; }
+      if (isMobile && editMode) { setDrawerNode(node); }
     },
     [isMobile, editMode, connectingFrom, handleMobileConnect]
   );
 
-  // ── Pane right-click → add node (PC only) ────────────────────────────────
   const onPaneContextMenu = useCallback(
     (e: MouseEvent | React.MouseEvent) => {
       e.preventDefault();
@@ -811,37 +512,15 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
       const flowPos = screenToFlowPosition({ x: (e as MouseEvent).clientX, y: (e as MouseEvent).clientY });
       setAddPopup({ screenX: (e as MouseEvent).clientX, screenY: (e as MouseEvent).clientY, flowX: flowPos.x, flowY: flowPos.y });
     },
-    [isMobile, isPro, rfNodes.length, screenToFlowPosition]
+    [isMobile, isPro, rfNodes.length, screenToFlowPosition, setShowProModal]
   );
 
-  // Close add popup on pane click
   const onPaneClick = useCallback(() => {
     setAddPopup(null);
     if (connectingFrom) setConnectingFrom(null);
-  }, [connectingFrom]);
+  }, [connectingFrom, setConnectingFrom]);
 
-  // ── Magic Organize ────────────────────────────────────────────────────────
-  const handleMagicOrganize = async () => {
-    if (rfNodes.length === 0) return;
-    setIsOrganizing(true);
-    const layouted = getLayoutedNodes(rfNodes, rfEdges);
-    setRfNodes(layouted);
-    await Promise.all(
-      layouted.map((n) =>
-        supabase.from("technique_nodes").update({ pos_x: n.position.x, pos_y: n.position.y }).eq("id", n.id)
-      )
-    );
-    setTimeout(() => fitView({ padding: 0.15, duration: 500 }), 50);
-    setIsOrganizing(false);
-    showToast(t("skillmap.organizeSuccess"), "success");
-  };
-
-  // ── Add first node (empty state button) ──────────────────────────────────
-  const [emptyAddName, setEmptyAddName] = useState("");
-  const emptyRef = useRef<HTMLInputElement>(null);
-  const mobileAddRef = useRef<HTMLInputElement>(null);
-
-  // ── Paywall: lock canvas read-only when free user exceeds node limit ────
+  // ── Paywall ───────────────────────────────────────────────────────────────
   const isLockedReadOnly = !isPro && rfNodes.length > 10;
 
   // ── Loading ───────────────────────────────────────────────────────────────
@@ -862,7 +541,11 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         <p className="text-gray-500 text-sm mb-5">{isMobile ? t("skillmap.emptyBody") : t("skillmap.emptyBodyPC")}</p>
         {!emptyAddName ? (
           <button
-            onClick={() => { if (!isPro && rfNodes.length >= 10) { setShowProModal(true); return; } setEmptyAddName(" "); setTimeout(() => emptyRef.current?.focus(), 50); }}
+            onClick={() => {
+              if (!isPro && rfNodes.length >= 10) { setShowProModal(true); return; }
+              setEmptyAddName(" ");
+              setTimeout(() => emptyRef.current?.focus(), 50);
+            }}
             className="bg-[#10B981] hover:bg-[#0d9668] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors active:scale-95"
           >
             + {t("skillmap.addFirstTechnique")}
@@ -876,7 +559,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
               value={emptyAddName.trim() ? emptyAddName : ""}
               onChange={(e) => setEmptyAddName(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && emptyAddName.trim()) handleAddNode(emptyAddName.trim(), 200, 200);
+                if (e.key === "Enter" && emptyAddName.trim()) { handleAddNode(emptyAddName.trim(), 200, 200); setEmptyAddName(""); }
                 if (e.key === "Escape") setEmptyAddName("");
               }}
               className="w-full bg-zinc-800 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/30"
@@ -885,7 +568,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
             <div className="flex gap-2 w-full">
               <button onClick={() => setEmptyAddName("")} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 text-sm py-2 rounded-xl transition-colors">{t("common.cancel")}</button>
               <button
-                onClick={() => { if (emptyAddName.trim()) handleAddNode(emptyAddName.trim(), 200, 200); }}
+                onClick={() => { if (emptyAddName.trim()) { handleAddNode(emptyAddName.trim(), 200, 200); setEmptyAddName(""); } }}
                 disabled={!emptyAddName.trim()}
                 className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-white text-sm font-semibold py-2 rounded-xl transition-colors"
               >{t("skillmap.addBtn")}</button>
@@ -900,7 +583,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   // ── Canvas ────────────────────────────────────────────────────────────────
   return (
     <div className="relative">
-      {/* Paywall banner: shown when free user already has > 10 nodes */}
+      {/* Paywall banner */}
       {isLockedReadOnly && (
         <div className="mb-2 px-3 py-2.5 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-center justify-between gap-3">
           <p className="text-xs text-amber-300 leading-snug">
@@ -926,7 +609,6 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
 
       {/* Toolbar */}
       <div className="flex items-center gap-2 mb-2 px-1 flex-wrap">
-        {/* Mobile: View/Edit toggle */}
         {isMobile && (
           <div className="flex items-center gap-1.5 bg-zinc-800 rounded-lg p-1">
             <button
@@ -943,15 +625,11 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
             </button>
           </div>
         )}
-
-        {/* Mobile connecting hint */}
         {connectingFrom && (
           <span className="text-xs text-yellow-400 animate-pulse">
             {t("skillmap.connectMobileHint")}
           </span>
         )}
-
-        {/* Magic Organize */}
         <button
           onClick={handleMagicOrganize}
           disabled={isOrganizing || rfNodes.length === 0 || !isOnline}
@@ -960,8 +638,6 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         >
           {isOrganizing ? "⏳" : "✨"} {t("skillmap.magicOrganize")}
         </button>
-
-        {/* Full Screen toggle */}
         <button
           onClick={() => {
             if (!document.fullscreenElement) {
@@ -984,13 +660,9 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
             </svg>
           )}
         </button>
-
-        {/* PC hint */}
         {!isMobile && (
           <span className="text-xs text-gray-500 ml-2 hidden sm:inline">{t("skillmap.pcHint")}</span>
         )}
-
-        {/* Mobile: Add technique button */}
         {isMobile && editMode && (
           <button
             disabled={!isOnline}
@@ -1054,10 +726,9 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         </ReactFlow>
       </div>
 
-      {/* Add node popup: fixed position on PC, inline full-width on Mobile */}
+      {/* Add node popup */}
       {addPopup && (
         addPopup.screenX === 0 ? (
-          // Mobile: show inline below toolbar (not fixed-positioned)
           <div className="mt-2 bg-zinc-800 border border-white/20 rounded-xl shadow-2xl p-3 w-full">
             <input
               ref={mobileAddRef}
@@ -1066,7 +737,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
               placeholder={t("skillmap.namePlaceholder")}
               onKeyDown={(e) => {
                 const val = (e.target as HTMLInputElement).value.trim();
-                if (e.key === "Enter" && val) handleAddNode(val, addPopup.flowX, addPopup.flowY);
+                if (e.key === "Enter" && val) { handleAddNode(val, addPopup.flowX, addPopup.flowY); setAddPopup(null); }
                 if (e.key === "Escape") setAddPopup(null);
               }}
               className="w-full bg-zinc-700 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none mb-2"
@@ -1079,7 +750,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
               <button
                 onClick={() => {
                   const val = mobileAddRef.current?.value.trim() ?? "";
-                  if (val) handleAddNode(val, addPopup.flowX, addPopup.flowY);
+                  if (val) { handleAddNode(val, addPopup.flowX, addPopup.flowY); setAddPopup(null); }
                 }}
                 className="flex-1 bg-[#10B981] hover:bg-[#0d9668] text-xs text-white py-2 min-h-[44px] rounded-lg transition-colors"
               >
@@ -1088,11 +759,10 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
             </div>
           </div>
         ) : (
-          // PC: fixed position at right-click location
           <AddNodePopup
             screenX={addPopup.screenX}
             screenY={addPopup.screenY}
-            onAdd={(name) => handleAddNode(name, addPopup.flowX, addPopup.flowY)}
+            onAdd={(name) => { handleAddNode(name, addPopup.flowX, addPopup.flowY); setAddPopup(null); }}
             onCancel={() => setAddPopup(null)}
             t={t}
           />
