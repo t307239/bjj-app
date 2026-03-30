@@ -5,17 +5,10 @@ import { createClient } from "@/lib/supabase/client";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { useLocale } from "@/lib/i18n";
 import Toast from "./Toast";
-import CsvExport from "./CsvExport";
 import TrainingLogForm from "./TrainingLogForm";
 import TrainingLogList from "./TrainingLogList";
 import TrainingLogStats from "./TrainingLogStats";
 import FirstRollCelebration from "./FirstRollCelebration";
-import {
-  type TrainingEntry,
-  type CompData,
-  getLocalDateString,
-  decodeCompNotes,
-} from "@/lib/trainingLogHelpers";
 import { useTrainingLog } from "@/hooks/useTrainingLog";
 
 type Props = {
