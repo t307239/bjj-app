@@ -38,6 +38,10 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
   const { fitView } = useReactFlow();
   const supabase = useRef(createClient()).current;
   const isOnline = useOnlineStatus();
+  // t is recreated every render by makeT() — use a ref to avoid infinite loops
+  // in useCallback/useEffect deps while still having access to the latest value.
+  const tRef = useRef(t);
+  tRef.current = t;
 
   const [rfNodes, setRfNodes, onNodesChange] = useNodesState<Node>([]);
   const [rfEdges, setRfEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -52,12 +56,12 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
     setTimeout(() => setToast(null), 3000);
   }, []);
 
-  // Sync isPro + t into node data when they change (preserve mastery_level)
+  // Sync isPro into node data when it changes (t via tRef — stable reference)
   useEffect(() => {
     setRfNodes((prev: Node[]) =>
-      prev.map((n: Node) => ({ ...n, data: { ...n.data, isPro, t } }))
+      prev.map((n: Node) => ({ ...n, data: { ...n.data, isPro, t: tRef.current } }))
     );
-  }, [isPro, t, setRfNodes]);
+  }, [isPro, setRfNodes]);
 
   // ── Load data ────────────────────────────────────────────────────────────
   const loadData = useCallback(async () => {
@@ -82,7 +86,7 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
           setRfNodes(
             (nr.data ?? []).map((n: DbNode) => ({
               ...dbNodeToRF(n),
-              data: { label: n.name, isPro, t, mastery_level: n.mastery_level ?? 0 },
+              data: { label: n.name, isPro, t: tRef.current, mastery_level: n.mastery_level ?? 0 },
             }))
           );
         }
@@ -95,7 +99,7 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
     } finally {
       setLoading(false);
     }
-  }, [userId, isPro, t, supabase, setRfNodes, setRfEdges]);
+  }, [userId, isPro, supabase, setRfNodes, setRfEdges]); // t via tRef — not in deps
 
   useEffect(() => { loadData(); }, [loadData]);
 
@@ -117,10 +121,10 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
       if (!connection.source || !connection.target) return;
       if (!isPro && rfEdges.length >= 15) { setShowProModal(true); return; }
       if (wouldCreateCycle(rfEdges, connection.source, connection.target)) {
-        showToast(t("skillmap.cycleError"), "error"); return;
+        showToast(tRef.current("skillmap.cycleError"), "error"); return;
       }
       if (rfEdges.some((e) => e.source === connection.source && e.target === connection.target)) {
-        showToast(t("skillmap.addEdgeError"), "error"); return;
+        showToast(tRef.current("skillmap.addEdgeError"), "error"); return;
       }
       const { data, error } = await supabase
         .from("technique_edges")
@@ -133,11 +137,11 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
         })
         .select()
         .single();
-      if (error) { showToast(t("skillmap.addEdgeError"), "error"); return; }
+      if (error) { showToast(tRef.current("skillmap.addEdgeError"), "error"); return; }
       setRfEdges((prev: Edge[]) => addEdge(dbEdgeToRF(data), prev));
-      showToast(t("skillmap.connectSuccess"), "success");
+      showToast(tRef.current("skillmap.connectSuccess"), "success");
     },
-    [rfEdges, isPro, userId, t, showToast, supabase, setRfEdges]
+    [rfEdges, isPro, userId, showToast, supabase, setRfEdges] // t via tRef
   );
 
   // ── Node drag stop → persist position ───────────────────────────────────
@@ -187,14 +191,14 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
         })
         .select()
         .single();
-      if (error) { showToast(t("skillmap.addNodeError"), "error"); return; }
+      if (error) { showToast(tRef.current("skillmap.addNodeError"), "error"); return; }
       setRfNodes((prev: Node[]) => [
         ...prev,
-        { ...dbNodeToRF(data), data: { label: data.name, isPro, t, mastery_level: 0 } },
+        { ...dbNodeToRF(data), data: { label: data.name, isPro, t: tRef.current, mastery_level: 0 } },
       ]);
-      showToast(t("skillmap.addNodeSuccess"), "success");
+      showToast(tRef.current("skillmap.addNodeSuccess"), "success");
     },
-    [rfNodes.length, isPro, userId, t, showToast, supabase, setRfNodes]
+    [rfNodes.length, isPro, userId, showToast, supabase, setRfNodes] // t via tRef
   );
 
   // ── Add child node (mobile Bottom Drawer) ────────────────────────────────
@@ -217,7 +221,7 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
         })
         .select()
         .single();
-      if (nodeErr) { showToast(t("skillmap.addNodeError"), "error"); return; }
+      if (nodeErr) { showToast(tRef.current("skillmap.addNodeError"), "error"); return; }
       const { data: edgeData, error: edgeErr } = await supabase
         .from("technique_edges")
         .insert({
@@ -231,16 +235,16 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
         .single();
       if (edgeErr) {
         await supabase.from("technique_nodes").delete().eq("id", nodeData.id);
-        showToast(t("skillmap.addEdgeError"), "error"); return;
+        showToast(tRef.current("skillmap.addEdgeError"), "error"); return;
       }
       setRfNodes((prev: Node[]) => [
         ...prev,
-        { ...dbNodeToRF(nodeData), data: { label: nodeData.name, isPro, t, mastery_level: 0 } },
+        { ...dbNodeToRF(nodeData), data: { label: nodeData.name, isPro, t: tRef.current, mastery_level: 0 } },
       ]);
       setRfEdges((prev: Edge[]) => [...prev, dbEdgeToRF(edgeData)]);
-      showToast(t("skillmap.addNodeSuccess"), "success");
+      showToast(tRef.current("skillmap.addNodeSuccess"), "success");
     },
-    [rfNodes, rfEdges, isPro, userId, t, showToast, supabase, setRfNodes, setRfEdges]
+    [rfNodes, rfEdges, isPro, userId, showToast, supabase, setRfNodes, setRfEdges] // t via tRef
   );
 
   // ── Mobile: complete edge connection ─────────────────────────────────────
@@ -249,10 +253,10 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
       if (!connectingFrom || connectingFrom === targetId) { setConnectingFrom(null); return; }
       if (!isPro && rfEdges.length >= 15) { setShowProModal(true); setConnectingFrom(null); return; }
       if (wouldCreateCycle(rfEdges, connectingFrom, targetId)) {
-        showToast(t("skillmap.cycleError"), "error"); setConnectingFrom(null); return;
+        showToast(tRef.current("skillmap.cycleError"), "error"); setConnectingFrom(null); return;
       }
       if (rfEdges.some((e) => e.source === connectingFrom && e.target === targetId)) {
-        showToast(t("skillmap.addEdgeError"), "error"); setConnectingFrom(null); return;
+        showToast(tRef.current("skillmap.addEdgeError"), "error"); setConnectingFrom(null); return;
       }
       const { data, error } = await supabase
         .from("technique_edges")
@@ -265,12 +269,12 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
         })
         .select()
         .single();
-      if (error) { showToast(t("skillmap.addEdgeError"), "error"); setConnectingFrom(null); return; }
+      if (error) { showToast(tRef.current("skillmap.addEdgeError"), "error"); setConnectingFrom(null); return; }
       setRfEdges((prev: Edge[]) => [...prev, dbEdgeToRF(data)]);
       setConnectingFrom(null);
-      showToast(t("skillmap.connectSuccess"), "success");
+      showToast(tRef.current("skillmap.connectSuccess"), "success");
     },
-    [connectingFrom, rfEdges, isPro, userId, t, showToast, supabase, setRfEdges]
+    [connectingFrom, rfEdges, isPro, userId, showToast, supabase, setRfEdges] // t via tRef
   );
 
   // ── Magic Organize ────────────────────────────────────────────────────────
@@ -289,8 +293,8 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
     );
     setTimeout(() => fitView({ padding: 0.15, duration: 500 }), 50);
     setIsOrganizing(false);
-    showToast(t("skillmap.organizeSuccess"), "success");
-  }, [rfNodes, rfEdges, fitView, supabase, setRfNodes, showToast, t]);
+    showToast(tRef.current("skillmap.organizeSuccess"), "success");
+  }, [rfNodes, rfEdges, fitView, supabase, setRfNodes, showToast]); // t via tRef
 
   return {
     rfNodes, setRfNodes, onNodesChange,
