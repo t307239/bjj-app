@@ -32,6 +32,7 @@ import {
 } from "@/lib/timezone";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
 import { serverT as t } from "@/lib/i18n";
+import ProStatusBanner from "@/components/ProStatusBanner";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
@@ -185,7 +186,7 @@ export default async function DashboardPage({
   const { data: profileData } = await supabase
     .from("profiles")
     .select(
-      "belt, stripe, start_date, is_pro, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym, referral_code, ai_coach_cache, ai_coach_last_generated"
+      "belt, stripe, start_date, is_pro, subscription_status, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym, referral_code, ai_coach_cache, ai_coach_last_generated"
     )
     .eq("id", user.id)
     .single();
@@ -270,6 +271,7 @@ export default async function DashboardPage({
   }
 
   const isPro = profileData?.is_pro ?? false;
+  const subscriptionStatus = profileData?.subscription_status ?? "active";
   const gymName = profileData?.gym_name ?? null;
   const belt = profileData?.belt ?? "white";
   const stripeCount = profileData?.stripe ?? 0;
@@ -348,6 +350,7 @@ export default async function DashboardPage({
     <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
       <InstallBanner />
       <NavBar displayName={displayName} avatarUrl={avatarUrl} isPro={isPro} />
+      <ProStatusBanner subscriptionStatus={subscriptionStatus} />
       <GuestMigration userId={user.id} />
       <AchievementBadge userId={user.id} totalCount={totalCount ?? 0} />
 
