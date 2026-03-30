@@ -10,6 +10,7 @@
   },
   "common": {
     "close": "Fechar",
+    "save": "Salvar",
     "cancel": "Cancelar",
     "back": "Voltar",
     "loading": "Carregando...",
@@ -126,7 +127,8 @@
     "deleteConfirm": "Tem certeza? Esta ação é irreversível.",
     "deleteExportFirst": "Antes de excluir, baixe seus dados — não será possível recuperá-los depois.",
     "logoutBtn": "Sair",
-    "monthsBjj": "meses BJJ"
+    "monthsBjj": "meses BJJ",
+    "datePresent": "Presente"
   },
   "gym": {
     "inviteTitle": "📎 Convidar Alunos",
@@ -182,6 +184,22 @@
     "challenge": "Desafio desta semana",
     "error": "Falha ao gerar coaching. Tente novamente.",
     "poweredBy": "Desenvolvido por Claude IA"
+  },
+  "milestones": {
+    "title": "Conquistas de Treino",
+    "nextBadge": "Próxima conquista em {n} sessões",
+    "allEarned": "Todas as conquistas obtidas!"
+  },
+  "rollAnalytics": {
+    "title": "Análise de Rolls",
+    "unlockHint": "Registre mais {n} rolls com detalhes para desbloquear a análise",
+    "rollsLogged": "rolls registrados",
+    "rollsAnalyzed": "rolls analisados",
+    "logTip": "Preencha a seção Detalhes do Roll ao registrar sessões Gi / No-Gi.",
+    "partnerBelt": "Faixa do Parceiro",
+    "rollFocus": "Foco do Roll",
+    "sizeDiff": "Diferença de Tamanho",
+    "weaknessTitle": "Insights de Padrão"
   },
   "error": {
     "title": "Algo deu errado",
