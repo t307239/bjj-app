@@ -8,6 +8,7 @@ import { useLocale } from "@/lib/i18n";
 import { useOnlineStatus } from "@/lib/useOnlineStatus";
 import Toast from "./Toast";
 import PushNotificationSection from "./PushNotificationSection";
+import CsvExport from "./CsvExport";
 import BeltPromotionCelebration, { isBeltPromotion } from "./BeltPromotionCelebration";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -456,15 +457,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
       {/* Data export — CCPA/GDPR Right to Data Portability */}
       <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
         <p className="text-gray-400 text-xs mb-2">{t("profile.exportDesc")}</p>
-        <button
-          type="button"
-          onClick={handleExportCsv}
-          disabled={exporting}
-          aria-label={t("profile.ariaDownloadCSV")}
-          className="inline-flex items-center gap-1.5 text-xs text-[#10B981] hover:text-[#0d9668] border border-[#10B981]/30 hover:border-[#10B981]/60 rounded-lg px-3 py-1.5 transition-colors disabled:opacity-50"
-        >
-          {exporting ? t("profile.exporting") : t("profile.exportBtn")}
-        </button>
+        <CsvExport userId={userId} />
       </div>
 
       {/* Help & Support links — Axis 11 CS self-serve */}
