@@ -8,6 +8,7 @@ import ProfileForm from "./ProfileForm";
 import BodyManagementSection from "./BodyManagementSection";
 import TrainingChart from "./TrainingChart";
 import ReferralSection from "./ReferralSection";
+import PushNotificationSection from "./PushNotificationSection";
 import { trackEvent } from "@/lib/analytics";
 
 function AccountSection({ userId, isPro, referralCode, referralCount }: { userId: string; isPro: boolean; referralCode: string | null; referralCount: number }) {
@@ -53,11 +54,8 @@ function AccountSection({ userId, isPro, referralCode, referralCount }: { userId
         </div>
       )}
 
-      {/* ㉘ App Settings — intentional empty state with dashed border */}
-      <div className="border-2 border-dashed border-zinc-800 rounded-xl p-8 flex flex-col items-center justify-center text-center">
-        <h3 className="text-zinc-500 text-sm font-semibold mb-2">{t("profile.appSettings")}</h3>
-        <p className="text-zinc-500 text-xs">{t("profile.settingsSoon")}</p>
-      </div>
+      {/* ㉘ App Settings — Push Notifications */}
+      <PushNotificationSection />
       <div className="rounded-xl border border-red-900/50 overflow-hidden">
         <div className="bg-red-950/30 px-5 py-3 border-b border-red-900/30">
           <h3 className="text-red-500 text-sm font-semibold">{t("profile.dangerZone")}</h3>
