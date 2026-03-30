@@ -31,6 +31,7 @@ import { NextRequest, NextResponse } from "next/server";
 import webpush from "web-push";
 import { createClient } from "@/lib/supabase/server";
 import { filterSendableSubscriptions } from "@/lib/notificationSafeHours";
+import { logger } from "@/lib/logger";
 
 // ── VAPID setup ───────────────────────────────────────────────────────────────
 const VAPID_SUBJECT    = process.env.VAPID_SUBJECT ?? "";
@@ -104,7 +105,7 @@ export async function POST(req: NextRequest) {
     .select("id, endpoint, p256dh, auth_key, timezone");
 
   if (dbError) {
-    console.error("push/send: DB error", dbError.message);
+    logger.error("push.send_db_error", {}, dbError as Error);
     return NextResponse.json({ error: "DB error" }, { status: 500 });
   }
 
@@ -135,7 +136,7 @@ export async function POST(req: NextRequest) {
         if (status === 404 || status === 410) {
           staleEndpoints.push(sub.endpoint);
         } else {
-          console.error("push/send: sendNotification error", (err as Error).message);
+          logger.warn("push.send_notification_error", { endpoint: sub.endpoint, statusCode: status, message: (err as Error).message });
         }
         failed++;
       }

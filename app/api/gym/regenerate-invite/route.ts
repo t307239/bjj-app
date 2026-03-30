@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -74,7 +75,7 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error || !updatedGym) {
-    console.error("Regenerate invite error:", error);
+    logger.error("gym.regenerate_invite_error", { gymId: ownerProfile.gym_id, userId: user.id }, error as Error);
     return NextResponse.json({ error: "Failed to regenerate invite code" }, { status: 500 });
   }
 

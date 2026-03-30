@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 // ── Rate limit (in-memory, same pattern as submit-video) ─────────────────────
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -41,7 +42,7 @@ export async function POST(req: NextRequest) {
 
     if (!pubId || !apiKey) {
       // Fallback: log and return success (Beehiiv not configured yet)
-      console.log(`[GymWaitlist] New signup: ${email} | gym: ${gymName}`);
+      logger.info("gym_waitlist.signup_no_beehiiv", { email, gymName });
       return NextResponse.json({ success: true });
     }
 
@@ -73,14 +74,14 @@ export async function POST(req: NextRequest) {
 
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
-      console.error("[GymWaitlist] Beehiiv error:", data);
+      logger.warn("gym_waitlist.beehiiv_error", { status: response.status, data });
       // Don't fail the user — log and return success
       return NextResponse.json({ success: true });
     }
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error("[GymWaitlist] Error:", err);
+    logger.error("gym_waitlist.error", {}, err as Error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

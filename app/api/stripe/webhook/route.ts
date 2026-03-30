@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (err) {
-    console.error("Webhook signature verification failed:", err);
+    logger.error("stripe.webhook.sig_failed", { message: (err as Error).message });
     return new Response("Webhook signature verification failed", {
       status: 400,
     });
@@ -58,9 +59,9 @@ export async function POST(req: Request) {
                 .eq("id", gymId)
                 .eq("owner_id", userId);
               if (gymError) {
-                console.error(`❌ Failed to activate gym ${gymId}:`, gymError);
+                logger.error("stripe.webhook.gym_activate_failed", { gymId, userId }, gymError as Error);
               } else {
-                console.log(`✅ Gym ${gymId} activated for owner ${userId}`);
+                logger.info("stripe.webhook.gym_activated", { gymId, userId });
               }
             }
 
@@ -79,11 +80,11 @@ export async function POST(req: Request) {
               for (const sub of existingSubs.data) {
                 if (sub.metadata?.plan_type === "b2c_pro") {
                   await stripe.subscriptions.cancel(sub.id);
-                  console.log(`✅ Cancelled B2C Pro sub ${sub.id} for B2B customer ${customerId}`);
+                  logger.info("stripe.webhook.b2c_sub_cancelled", { subId: sub.id, customerId });
                 }
               }
             }
-            console.log(`✅ B2B Gym checkout completed for user ${userId}`);
+            logger.info("stripe.webhook.b2b_checkout_completed", { userId });
           } else {
             // B2C Pro plan
             const { error } = await supabase
@@ -94,13 +95,13 @@ export async function POST(req: Request) {
               })
               .eq("id", userId);
             if (error) {
-              console.error(`❌ Failed to update is_pro for user ${userId}:`, error);
+              logger.error("stripe.webhook.b2c_upgrade_failed", { userId, customerId }, error as Error);
             } else {
-              console.log(`✅ User ${userId} upgraded to Pro (customer: ${customerId})`);
+              logger.info("stripe.webhook.b2c_upgraded", { userId, customerId });
             }
           }
         } else {
-          console.warn("⚠️ checkout.session.completed: no userId found in client_reference_id or metadata");
+          logger.warn("stripe.webhook.checkout_no_user_id", { sessionId: session.id });
         }
         break;
       }
@@ -136,14 +137,14 @@ export async function POST(req: Request) {
               .from("profiles")
               .update({ is_pro: hasB2cPro, subscription_status: "canceled" })
               .eq("stripe_customer_id", customerId);
-            console.log(`⬇️ B2B cancelled for customer ${customerId}. is_pro set to ${hasB2cPro}`);
+            logger.info("stripe.webhook.b2b_cancelled", { customerId, isProRetained: hasB2cPro });
           } else {
             // B2C Pro cancelled
             await supabase
               .from("profiles")
               .update({ is_pro: false, subscription_status: "canceled" })
               .eq("stripe_customer_id", customerId);
-            console.log(`⬇️ B2C Pro cancelled for customer ${customerId}`);
+            logger.info("stripe.webhook.b2c_cancelled", { customerId });
           }
         }
         break;
@@ -159,7 +160,7 @@ export async function POST(req: Request) {
             .from("profiles")
             .update({ subscription_status: "past_due" })
             .eq("stripe_customer_id", customerId);
-          console.log(`⚠️ Payment failed for customer ${customerId} — marked past_due`);
+          logger.warn("stripe.webhook.payment_failed", { customerId });
         }
         break;
       }
@@ -179,10 +180,10 @@ export async function POST(req: Request) {
       }
 
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        logger.debug("stripe.webhook.unhandled_event", { eventType: event.type });
     }
   } catch (err) {
-    console.error("Error processing webhook:", err);
+    logger.error("stripe.webhook.processing_error", { eventType: event.type }, err as Error);
     return new Response("Internal server error", { status: 500 });
   }
 

@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -75,7 +76,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.redirect(session.url);
   } catch (err) {
-    console.error("Stripe portal session error:", err);
+    logger.error("stripe.portal.session_error", { customerId: profile.stripe_customer_id }, err as Error);
     return NextResponse.json(
       { error: "Failed to create portal session" },
       { status: 500 }

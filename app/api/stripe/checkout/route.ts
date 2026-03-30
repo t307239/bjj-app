@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -115,7 +116,7 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({ url: session.url });
     } catch (err) {
-      console.error("Stripe gym checkout session error:", err);
+      logger.error("stripe.checkout.gym_session_error", { gymId: gym.id, userId: user.id }, err as Error);
       return NextResponse.json(
         { error: "Failed to create checkout session" },
         { status: 500 }
@@ -154,7 +155,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ url: session.url });
   } catch (err) {
-    console.error("Stripe checkout session error:", err);
+    logger.error("stripe.checkout.b2c_session_error", { plan, userId: user.id }, err as Error);
     return NextResponse.json(
       { error: "Failed to create checkout session" },
       { status: 500 }

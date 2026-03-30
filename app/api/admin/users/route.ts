@@ -14,6 +14,7 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 // ── Rate limit: admin queries — max 60 per IP per 10 min ──
 const adminRateMap = new Map<string, { count: number; resetAt: number }>();
@@ -78,7 +79,7 @@ export async function GET(req: NextRequest) {
   });
 
   if (authError) {
-    console.error("admin listUsers error:", authError.message);
+    logger.error("admin.list_users_error", {}, authError as Error);
     return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
   }
 

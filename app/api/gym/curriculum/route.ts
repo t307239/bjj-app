@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -95,7 +96,7 @@ export async function POST(req: NextRequest) {
     .eq("owner_id", user.id);
 
   if (error) {
-    console.error("Curriculum dispatch error:", error);
+    logger.error("gym.curriculum_dispatch_error", { gymId: ownerProfile.gym_id, userId: user.id }, error as Error);
     return NextResponse.json({ error: "Failed to dispatch curriculum" }, { status: 500 });
   }
 

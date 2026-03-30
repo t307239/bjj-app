@@ -13,6 +13,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -89,7 +90,7 @@ export async function POST(req: NextRequest) {
   });
 
   if (error) {
-    console.error("[submit-video] Supabase insert error:", error.message);
+    logger.error("wiki.submit_video_insert_error", { slug, lang }, error as Error);
     return NextResponse.json(
       { error: "Failed to save submission. Please try again." },
       { status: 500 }

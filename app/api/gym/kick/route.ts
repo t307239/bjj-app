@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -90,7 +91,7 @@ export async function POST(req: NextRequest) {
     .eq("id", memberId);
 
   if (error) {
-    console.error("Kick error:", error);
+    logger.error("gym.kick_error", { memberId, gymId: ownerProfile.gym_id }, error as Error);
     return NextResponse.json({ error: "Failed to kick member" }, { status: 500 });
   }
 

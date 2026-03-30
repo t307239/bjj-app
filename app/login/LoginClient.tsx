@@ -4,6 +4,7 @@ import { Suspense, useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
+import { logClientError } from "@/lib/logger";
 import Link from "next/link";
 
 // ─── IAB (In-App Browser) detection ───────────────────────────────────────────
@@ -156,7 +157,7 @@ function LoginForm() {
       options: { emailRedirectTo: callbackUrl() },
     });
     if (error) {
-      console.error("[login] signInWithOtp error:", error.message, error.status);
+      logClientError("login.otp_error", error, { status: error.status });
       setEmailError(t("login.errorSendFailed"));
     } else {
       setEmailSent(true);

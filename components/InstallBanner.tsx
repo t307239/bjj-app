@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useLocale } from "@/lib/i18n";
+import { logClientError } from "@/lib/logger";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -44,7 +45,7 @@ export default function InstallBanner() {
       const choiceResult = await deferredPrompt.userChoice;
       if (choiceResult.outcome === "accepted") { localStorage.setItem("bjj_install_dismissed", "1"); setDismissed(true); }
     } catch (err) {
-      console.error("Install prompt error:", err);
+      logClientError("pwa.install_prompt_error", err);
       setInstallError(true);
       setTimeout(() => setInstallError(false), 3000);
     }

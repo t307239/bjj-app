@@ -13,6 +13,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -52,7 +53,7 @@ async function callAnthropicAPI(prompt: string): Promise<string | null> {
     });
 
     if (!res.ok) {
-      console.error("Anthropic API error:", res.status);
+      logger.warn("ai_coach.anthropic_api_error", { status: res.status });
       return null;
     }
 
@@ -61,7 +62,7 @@ async function callAnthropicAPI(prompt: string): Promise<string | null> {
     };
     return data.content?.[0]?.text ?? null;
   } catch (err) {
-    console.error("Anthropic fetch error:", err);
+    logger.error("ai_coach.anthropic_fetch_error", {}, err as Error);
     return null;
   }
 }

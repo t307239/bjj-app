@@ -14,6 +14,8 @@
  *   npx web-push generate-vapid-keys
  */
 
+import { logClientError } from "@/lib/logger";
+
 export function getPushVapidKey(): string {
   return process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "";
 }
@@ -29,7 +31,7 @@ export async function subscribePush(): Promise<boolean> {
 
   const vapidKey = getPushVapidKey();
   if (!vapidKey) {
-    console.warn("NEXT_PUBLIC_VAPID_PUBLIC_KEY is not set");
+    logClientError("push.vapid_key_missing", new Error("NEXT_PUBLIC_VAPID_PUBLIC_KEY is not set"));
     return false;
   }
 
@@ -59,7 +61,7 @@ export async function subscribePush(): Promise<boolean> {
     await savePushSubscription(subscription);
     return true;
   } catch (err) {
-    console.error("subscribePush error:", err);
+    logClientError("push.subscribe_error", err);
     return false;
   }
 }
@@ -87,7 +89,7 @@ export async function unsubscribePush(): Promise<void> {
     // Unsubscribe from browser
     await subscription.unsubscribe();
   } catch (err) {
-    console.error("unsubscribePush error:", err);
+    logClientError("push.unsubscribe_error", err);
   }
 }
 

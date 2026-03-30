@@ -8,6 +8,7 @@
 import { useState, useCallback } from "react";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type TrainingEntry } from "@/lib/trainingLogHelpers";
+import { logClientError } from "@/lib/logger";
 
 type Props = {
   entry: TrainingEntry;
@@ -190,7 +191,7 @@ export default function ShareButton({ entry }: Props) {
     } catch (err) {
       // User cancelled share — not an error
       if ((err as Error).name !== "AbortError") {
-        console.error("[ShareButton]", err);
+        logClientError("share_button.share_error", err);
       }
     } finally {
       setSharing(false);

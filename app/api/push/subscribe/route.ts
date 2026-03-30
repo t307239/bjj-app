@@ -21,6 +21,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/logger";
 
 // ── Rate limit: push subscribe — max 20 per IP per 10 min ──
 const pushRateMap = new Map<string, { count: number; resetAt: number }>();
@@ -89,7 +90,7 @@ export async function POST(req: NextRequest) {
   );
 
   if (error) {
-    console.error("push_subscriptions upsert error:", error.message);
+    logger.error("push.subscribe_upsert_error", { userId: user.id }, error as Error);
     return NextResponse.json({ error: "DB error" }, { status: 500 });
   }
 
@@ -124,7 +125,7 @@ export async function DELETE(req: NextRequest) {
     .eq("endpoint", body.endpoint);
 
   if (error) {
-    console.error("push_subscriptions delete error:", error.message);
+    logger.error("push.unsubscribe_delete_error", { userId: user.id }, error as Error);
     return NextResponse.json({ error: "DB error" }, { status: 500 });
   }
 
