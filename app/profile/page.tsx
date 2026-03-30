@@ -249,7 +249,7 @@ export default async function ProfilePage() {
         {/* ═══════════════════════════════════════════
             PROFILE TABS (stats / settings / account)
             ═══════════════════════════════════════════ */}
-        <ProfileTabs userId={user.id} isPro={isPro} referralCode={referralCode} referralCount={referralCount ?? 0} />
+        <ProfileTabs userId={user.id} isPro={isPro} referralCode={referralCode} referralCount={referralCount ?? 0} totalCount={totalCount ?? 0} />
       </main>
     </div>
   );

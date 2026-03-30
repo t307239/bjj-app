@@ -212,6 +212,10 @@
     "addedSingle": "テクニックを追加しました！",
     "addedBulk": "{n}件追加しました！",
     "saveFailed": "保存に失敗しました",
+    "addVideo": "+ 動画",
+    "watchVideo": "動画を見る",
+    "editVideo": "動画URLを編集",
+    "removeVideo": "動画を削除",
     "confirmDelete": "このテクニックを削除しますか？",
     "deleted": "テクニックを削除しました",
     "deleteFailed": "削除に失敗しました",
@@ -553,6 +557,7 @@
   },
   "common": {
     "close": "閉じる",
+    "save": "保存",
     "cancel": "キャンセル",
     "back": "戻る",
     "loading": "読み込み中...",
@@ -896,6 +901,11 @@
     "paywallPoint4": "ロール分析（近日公開）",
     "paywallCta": "Proにアップグレード — $9.99/月",
     "paywallDismiss": "またあとで"
+  },
+  "milestones": {
+    "title": "練習マイルストーン",
+    "nextBadge": "次のバッジまであと {n} 回",
+    "allEarned": "全マイルストーン達成！"
   },
   "rollAnalytics": {
     "title": "ロール分析",

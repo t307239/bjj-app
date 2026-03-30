@@ -12,6 +12,7 @@ import {
   renderNotes,
   isDangerousTechnique,
 } from "@/lib/techniqueLogTypes";
+import TechniqueVideoButton from "./TechniqueVideoButton";
 
 type SortBy = "newest" | "mastery_desc" | "mastery_asc" | "name";
 
@@ -385,6 +386,8 @@ export default function TechniqueLogList({
                         )}
                       </div>
                     )}
+                    {/* B-23: Private reference video URL (localStorage) */}
+                    <TechniqueVideoButton techniqueId={technique.id} />
                   </div>
                   <div className="flex gap-1 ml-3 flex-shrink-0">
                     <button

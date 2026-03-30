@@ -11,6 +11,7 @@ import ReferralSection from "./ReferralSection";
 import PushNotificationSection from "./PushNotificationSection";
 import ProGate from "./ProGate";
 import RollAnalyticsCard from "./RollAnalyticsCard";
+import MilestoneBadgeGrid from "./MilestoneBadgeGrid";
 import { trackEvent } from "@/lib/analytics";
 
 function AccountSection({ userId, isPro, referralCode, referralCount }: { userId: string; isPro: boolean; referralCode: string | null; referralCount: number }) {
@@ -108,7 +109,7 @@ function AccountSection({ userId, isPro, referralCode, referralCount }: { userId
 
 type TabId = "stats" | "profile" | "body" | "account";
 
-export default function ProfileTabs({ userId, isPro = false, referralCode = null, referralCount = 0 }: { userId: string; isPro?: boolean; referralCode?: string | null; referralCount?: number }) {
+export default function ProfileTabs({ userId, isPro = false, referralCode = null, referralCount = 0, totalCount = 0 }: { userId: string; isPro?: boolean; referralCode?: string | null; referralCount?: number; totalCount?: number }) {
   const { t } = useLocale();
   const [activeTab, setActiveTab] = useState<TabId>("stats");
   const TABS: { id: TabId; label: string }[] = [
@@ -142,6 +143,8 @@ export default function ProfileTabs({ userId, isPro = false, referralCode = null
           <div className="mt-6">
             <TrainingChart userId={userId} isPro={isPro} />
           </div>
+          {/* B-24: Milestone Badge Grid */}
+          <MilestoneBadgeGrid totalCount={totalCount} />
           {/* B-32 / B-13: Roll Analytics + Weakness Insights (Pro) */}
           <div className="mt-4">
             <ProGate isPro={isPro} feature="Roll Analytics & Pattern Insights" userId={userId}>
