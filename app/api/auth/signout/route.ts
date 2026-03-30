@@ -8,13 +8,11 @@ export const dynamic = "force-dynamic";
  * Server-side sign out — clears the Supabase session cookie and redirects to /login.
  * Handles direct URL navigation (e.g. from non-JS environments or logout links).
  */
-export async function GET() {
+export async function GET(req: Request) {
   const supabase = await createClient();
   await supabase.auth.signOut();
 
-  const redirectUrl = process.env.NEXT_PUBLIC_SITE_URL
-    ? new URL("/login", process.env.NEXT_PUBLIC_SITE_URL)
-    : new URL("https://bjj-app.net/login");
-
-  return NextResponse.redirect(redirectUrl);
+  // Use request origin so this works in any environment (dev, preview, production)
+  const origin = new URL(req.url).origin;
+  return NextResponse.redirect(new URL("/login", origin));
 }
