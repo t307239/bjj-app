@@ -44,6 +44,9 @@ export const metadata: Metadata = {
     index: true, // LPはGoogle検索対象（ダッシュボードは認証保護）
     follow: true,
   },
+  verification: {
+    google: "fnH74hZXRuzUw4kAupmkh0kBkvLL1b4C8ZxOtayWieA",
+  },
 };
 
 export const viewport: Viewport = {
