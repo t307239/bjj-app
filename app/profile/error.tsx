@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useLocale } from "@/lib/i18n";
+import { logClientError } from "@/lib/logger";
 
 export default function ProfileError({
   error,
@@ -12,7 +13,7 @@ export default function ProfileError({
 }) {
   const { t } = useLocale();
   useEffect(() => {
-    console.error(error);
+    logClientError("profile.error", error, { digest: error.digest });
   }, [error]);
 
   return (

@@ -174,6 +174,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
                     src={avatarUrl}
                     alt={displayName}
                     className="w-8 h-8 rounded-full"
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                   />
                 ) : (
                   <span className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-semibold text-white">

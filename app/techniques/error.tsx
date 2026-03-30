@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useLocale } from "@/lib/i18n";
+import { logClientError } from "@/lib/logger";
 
 export default function TechniquesError({
   error,
@@ -12,7 +13,7 @@ export default function TechniquesError({
 }) {
   const { t } = useLocale();
   useEffect(() => {
-    console.error(error);
+    logClientError("techniques.error", error, { digest: error.digest });
   }, [error]);
 
   return (

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { logClientError } from "@/lib/logger";
 
 /**
  * #43: Error Boundary for Wiki Article Pages
@@ -16,8 +17,7 @@ export default function WikiPageError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log to error monitoring (Sentry etc.) when integrated
-    console.error("Wiki page render error:", error);
+    logClientError("wiki.page.error", error, { digest: error.digest });
   }, [error]);
 
   return (

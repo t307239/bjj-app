@@ -79,6 +79,13 @@ export default function YouTubeLiteEmbed({ videoId, title, isShorts = false }: P
           loading="lazy"
           decoding="async"
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          onError={(e) => {
+            const img = e.currentTarget as HTMLImageElement;
+            // Fall back to mqdefault if hqdefault is unavailable
+            if (!img.src.includes('mqdefault')) {
+              img.src = `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
+            }
+          }}
         />
 
         {/* 暗幕オーバーレイ */}

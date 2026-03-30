@@ -164,6 +164,7 @@ export default function WikiContentEnhancer() {
             alt="Expanded view"
             className="max-w-full max-h-[90vh] rounded-xl shadow-2xl object-contain"
             onClick={(e) => e.stopPropagation()}
+            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
           />
         </div>
       )}

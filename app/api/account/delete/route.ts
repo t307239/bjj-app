@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 // ── Rate limit: account deletion is irreversible — max 3 attempts per IP per 15 min ──
 const deleteRateMap = new Map<string, { count: number; resetAt: number }>();
@@ -48,9 +49,10 @@ export async function POST(req: NextRequest) {
   );
   const { error: deleteError } = await serviceClient.auth.admin.deleteUser(user.id);
   if (deleteError) {
-    console.error("[account/delete] deleteUser error:", deleteError.message);
+    logger.error("account.delete", { userId: user.id }, deleteError);
     return NextResponse.json({ error: "Account deletion failed. Please try again." }, { status: 500 });
   }
 
+  logger.info("account.delete", { userId: user.id, result: "ok" });
   return NextResponse.json({ ok: true });
 }

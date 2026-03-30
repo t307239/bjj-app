@@ -395,6 +395,7 @@ export default async function DashboardPage({
                 src={avatarUrl}
                 alt={displayName}
                 className="w-9 h-9 rounded-full border border-white/20 shrink-0 object-cover"
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
               />
             ) : (
               <div className="flex-shrink-0 flex items-center gap-1.5 bg-zinc-900/60 border border-white/10 rounded-full px-3 py-1.5">

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useLocale } from "@/lib/i18n";
+import { logClientError } from "@/lib/logger";
 
 export default function DashboardError({
   error,
@@ -12,7 +13,7 @@ export default function DashboardError({
 }) {
   const { t } = useLocale();
   useEffect(() => {
-    console.error(error);
+    logClientError("dashboard.error", error, { digest: error.digest });
   }, [error]);
 
   return (
