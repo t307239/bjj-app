@@ -361,6 +361,7 @@
     "ariaDeleteInput": "Type DELETE to confirm account deletion",
     "ariaDeleteConfirm": "Confirm account deletion",
     "monthsBjj": "mo. BJJ",
+    "datePresent": "Present",
     "tabs": {
       "stats": "Stats",
       "profile": "Profile",
@@ -1046,6 +1047,17 @@
     "paywallPoint4": "Roll analytics (coming soon)",
     "paywallCta": "Upgrade to Pro — $9.99/mo",
     "paywallDismiss": "Maybe later"
+  },
+  "rollAnalytics": {
+    "title": "Roll Analytics",
+    "unlockHint": "Log {n} more rolls with Roll Details to unlock your analysis",
+    "rollsLogged": "rolls logged",
+    "rollsAnalyzed": "rolls analyzed",
+    "logTip": "Tap the Roll Details section when logging Gi / No-Gi sessions to track partner belt, focus, and size.",
+    "partnerBelt": "Partner Belt",
+    "rollFocus": "Roll Focus",
+    "sizeDiff": "Size Differential",
+    "weaknessTitle": "Pattern Insights"
   },
   "techniquesPage": {
     "title": "Technique Journal",

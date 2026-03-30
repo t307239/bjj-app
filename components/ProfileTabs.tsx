@@ -9,6 +9,8 @@ import BodyManagementSection from "./BodyManagementSection";
 import TrainingChart from "./TrainingChart";
 import ReferralSection from "./ReferralSection";
 import PushNotificationSection from "./PushNotificationSection";
+import ProGate from "./ProGate";
+import RollAnalyticsCard from "./RollAnalyticsCard";
 import { trackEvent } from "@/lib/analytics";
 
 function AccountSection({ userId, isPro, referralCode, referralCount }: { userId: string; isPro: boolean; referralCode: string | null; referralCount: number }) {
@@ -139,6 +141,12 @@ export default function ProfileTabs({ userId, isPro = false, referralCode = null
           {/* Training calendar heatmap (moved from Dashboard ③-4) */}
           <div className="mt-6">
             <TrainingChart userId={userId} isPro={isPro} />
+          </div>
+          {/* B-32 / B-13: Roll Analytics + Weakness Insights (Pro) */}
+          <div className="mt-4">
+            <ProGate isPro={isPro} feature="Roll Analytics & Pattern Insights" userId={userId}>
+              <RollAnalyticsCard userId={userId} />
+            </ProGate>
           </div>
         </>
       )}

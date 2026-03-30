@@ -297,6 +297,7 @@
     "referralProgress": "{n}/{goal} — 次のバッジまで",
     "referralAllUnlocked": "🏆 全バッジ解放 — レジェンド認定！",
     "monthsBjj": "ヶ月 BJJ",
+    "datePresent": "現在",
     "tabs": {
       "stats": "統計",
       "profile": "プロフィール",
@@ -895,6 +896,17 @@
     "paywallPoint4": "ロール分析（近日公開）",
     "paywallCta": "Proにアップグレード — $9.99/月",
     "paywallDismiss": "またあとで"
+  },
+  "rollAnalytics": {
+    "title": "ロール分析",
+    "unlockHint": "あと{n}回ロールを記録するとロール分析が解放されます",
+    "rollsLogged": "ロール記録済み",
+    "rollsAnalyzed": "ロール分析済み",
+    "logTip": "Gi / No-Gi 記録時に「ロール詳細」セクションでパートナーの帯・フォーカス・体格差を入力してください。",
+    "partnerBelt": "パートナー帯色",
+    "rollFocus": "ロールフォーカス",
+    "sizeDiff": "体格差",
+    "weaknessTitle": "パターン分析"
   },
   "techniquesPage": {
     "title": "テクニックジャーナル",
