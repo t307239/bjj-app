@@ -5,6 +5,7 @@ import NavBar from "@/components/NavBar";
 import ProfileTabs from "@/components/ProfileTabs";
 import { serverT as t } from "@/lib/i18n";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
+import AvatarImage from "@/components/AvatarImage";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
@@ -161,12 +162,10 @@ export default async function ProfilePage() {
           <div className="flex items-start gap-4">
             {/* Avatar */}
             {avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <AvatarImage
                 src={avatarUrl}
                 alt={displayName}
                 className="w-16 h-16 rounded-2xl border border-white/15 object-cover flex-shrink-0"
-                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
               />
             ) : (
               <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-500 to-emerald-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-violet-900/30">

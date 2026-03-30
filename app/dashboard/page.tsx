@@ -33,6 +33,7 @@ import {
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
 import { serverT as t } from "@/lib/i18n";
 import ProStatusBanner from "@/components/ProStatusBanner";
+import AvatarImage from "@/components/AvatarImage";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
@@ -393,12 +394,10 @@ export default async function DashboardPage({
             </div>
             {/* Avatar or belt pill — always visible */}
             {avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <AvatarImage
                 src={avatarUrl}
                 alt={displayName}
                 className="w-9 h-9 rounded-full border border-white/20 shrink-0 object-cover"
-                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
               />
             ) : (
               <div className="flex-shrink-0 flex items-center gap-1.5 bg-zinc-900/60 border border-white/10 rounded-full px-3 py-1.5">
