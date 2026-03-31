@@ -632,7 +632,10 @@
     "drawerRemove": "ノードを削除",
     "connectMobileHint": "接続するテクニックをタップ →",
     "deleteConfirmMsg": "このテクニックと接続を削除しますか？",
-    "addNodeMobile": "テクニックを追加"
+    "addNodeMobile": "テクニックを追加",
+    "collapse": "折りたたむ",
+    "expand": "展開する",
+    "recentFocus": "最近:"
   },
   "wiki": {
     "dailyTip": "今日のBJJ知識",

@@ -255,5 +255,10 @@
     "heroSub": "Registre treinos, acompanhe técnicas e visualize seu progresso com o melhor aplicativo de jiu-jitsu.",
     "ctaStart": "Começar Gratuitamente",
     "ctaLearn": "Saiba mais"
+  },
+  "skillmap": {
+    "collapse": "Recolher filhos",
+    "expand": "Expandir filhos",
+    "recentFocus": "Recentes:"
   }
 }

@@ -16,6 +16,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useMemo,
   useRef,
   useLayoutEffect,
 } from "react";
@@ -49,9 +50,29 @@ type Props = {
   stripeAnnualLink: string | null;
 };
 
-// ─── Stable delete ref (avoids stale-closure in custom node data) ─────────────
+// ─── Stable action refs (avoids stale-closure in custom node data) ────────────
 
 const _deleteNodeRef = { current: (_id: string) => {} };
+const _toggleCollapseRef = { current: (_id: string) => {} };
+
+// BFS: returns all descendant node IDs of a given node via edges
+function getDescendantIds(
+  nodeId: string,
+  edges: { source: string; target: string }[]
+): Set<string> {
+  const descendants = new Set<string>();
+  const queue = [nodeId];
+  while (queue.length > 0) {
+    const current = queue.shift()!;
+    for (const edge of edges) {
+      if (edge.source === current && !descendants.has(edge.target)) {
+        descendants.add(edge.target);
+        queue.push(edge.target);
+      }
+    }
+  }
+  return descendants;
+}
 
 // ─── Canvas Legend ─────────────────────────────────────────────────────────────
 
@@ -116,11 +137,19 @@ function TechniqueNodeComp({
   selected,
 }: {
   id: string;
-  data: { label: string; isPro?: boolean; t?: (k: string) => string; mastery_level?: number };
+  data: {
+    label: string;
+    isPro?: boolean;
+    t?: (k: string) => string;
+    mastery_level?: number;
+    childCount?: number;
+    isCollapsed?: boolean;
+  };
   selected: boolean;
 }) {
   const [confirmDel, setConfirmDel] = useState(false);
   const mastery = data.mastery_level ?? 0;
+  const hasChildren = (data.childCount ?? 0) > 0;
 
   return (
     <div
@@ -161,6 +190,20 @@ function TechniqueNodeComp({
             {data.t?.("common.cancel") ?? "✕"}
           </button>
         </div>
+      )}
+      {/* Collapse/expand toggle — shown only for Pro users with children */}
+      {hasChildren && data.isPro && !confirmDel && (
+        <button
+          className="flex items-center justify-center gap-0.5 mt-1.5 w-full text-[10px] text-zinc-500 hover:text-zinc-200 transition-colors leading-none"
+          onClick={(e) => { e.stopPropagation(); _toggleCollapseRef.current(id); }}
+          aria-label={
+            data.isCollapsed
+              ? (data.t?.("skillmap.expand") ?? "Expand")
+              : (data.t?.("skillmap.collapse") ?? "Collapse")
+          }
+        >
+          {data.isCollapsed ? `▶ ${data.childCount}` : "▼"}
+        </button>
       )}
       <Handle
         type="source"
@@ -440,11 +483,54 @@ function AddNodePopup({
   );
 }
 
+// ─── Recent Focus Bar — Pro only ──────────────────────────────────────────────
+
+function RecentFocusBar({
+  nodes,
+  recentIds,
+  onFocus,
+  t,
+}: {
+  nodes: Node[];
+  recentIds: string[];
+  onFocus: (id: string) => void;
+  t: (k: string) => string;
+}) {
+  const visible = recentIds.filter((id) => nodes.some((n) => n.id === id));
+  if (visible.length === 0) return null;
+
+  return (
+    <div
+      className="mb-2 flex items-center gap-1.5 overflow-x-auto pb-0.5"
+      style={{ scrollbarWidth: "none" }}
+    >
+      <span className="flex-shrink-0 text-[10px] text-zinc-500 font-semibold uppercase tracking-wide">
+        {t("skillmap.recentFocus")}
+      </span>
+      {visible.map((id) => {
+        const node = nodes.find((n) => n.id === id);
+        if (!node) return null;
+        const label = String((node.data as { label?: unknown }).label ?? "");
+        return (
+          <button
+            key={id}
+            onClick={() => onFocus(id)}
+            className="flex-shrink-0 text-xs bg-zinc-800 hover:bg-zinc-700 border border-white/10 text-zinc-300 hover:text-white px-2.5 py-0.5 rounded-full transition-all active:scale-95 max-w-[140px] truncate"
+            title={label}
+          >
+            {label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 // ─── Main inner component (must be inside ReactFlowProvider) ──────────────────
 
 function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: Props) {
   const { t } = useLocale();
-  const { screenToFlowPosition } = useReactFlow();
+  const { screenToFlowPosition, setCenter } = useReactFlow();
 
   // ── Data layer (Supabase + ReactFlow state) ──────────────────────────────
   const {
@@ -467,6 +553,12 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
     handleMagicOrganize,
   } = useSkillMap({ userId, isPro, t });
 
+  // ── Collapse / expand state (Pro only) ───────────────────────────────────
+  const [collapsedIds, setCollapsedIds] = useState<Set<string>>(new Set());
+
+  // ── Recent Focus state (Pro only, max 5) ─────────────────────────────────
+  const [recentFocusIds, setRecentFocusIds] = useState<string[]>([]);
+
   // ── UI state ─────────────────────────────────────────────────────────────
   const [isMobile, setIsMobile] = useState(false);
   const [editMode, setEditMode] = useState(true);
@@ -477,8 +569,71 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   const emptyRef = useRef<HTMLInputElement>(null);
   const mobileAddRef = useRef<HTMLInputElement>(null);
 
-  // Keep module-level ref up-to-date (used by TechniqueNodeComp to avoid stale closure)
+  // Keep module-level refs up-to-date (used by TechniqueNodeComp to avoid stale closure)
   useEffect(() => { _deleteNodeRef.current = handleDeleteNode; }, [handleDeleteNode]);
+
+  // ── Collapse toggle handler ───────────────────────────────────────────────
+  const handleToggleCollapse = useCallback((nodeId: string) => {
+    setCollapsedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(nodeId)) next.delete(nodeId);
+      else next.add(nodeId);
+      return next;
+    });
+  }, []);
+  useEffect(() => { _toggleCollapseRef.current = handleToggleCollapse; }, [handleToggleCollapse]);
+
+  // ── Focus / jump to node (Recent Focus bar) ──────────────────────────────
+  const handleFocusNode = useCallback((nodeId: string) => {
+    const node = rfNodes.find((n) => n.id === nodeId);
+    if (!node) return;
+    // Uncollapse any ancestor that is hiding this node
+    setCollapsedIds((prev) => {
+      const next = new Set(prev);
+      for (const cid of prev) {
+        if (getDescendantIds(cid, rfEdges).has(nodeId)) next.delete(cid);
+      }
+      return next;
+    });
+    setCenter(node.position.x + NODE_W / 2, node.position.y + NODE_H / 2, {
+      zoom: 1.5,
+      duration: 600,
+    });
+  }, [rfNodes, rfEdges, setCenter]);
+
+  // ── Hidden IDs: descendants of all collapsed nodes ────────────────────────
+  const hiddenIds = useMemo(() => {
+    const hidden = new Set<string>();
+    for (const cid of collapsedIds) {
+      getDescendantIds(cid, rfEdges).forEach((id) => hidden.add(id));
+    }
+    return hidden;
+  }, [collapsedIds, rfEdges]);
+
+  // ── Display nodes (add childCount / isCollapsed / hidden) ─────────────────
+  const displayNodes = useMemo(
+    () =>
+      rfNodes.map((n) => ({
+        ...n,
+        hidden: hiddenIds.has(n.id),
+        data: {
+          ...n.data,
+          childCount: rfEdges.filter((e) => e.source === n.id).length,
+          isCollapsed: collapsedIds.has(n.id),
+        },
+      })),
+    [rfNodes, rfEdges, hiddenIds, collapsedIds]
+  );
+
+  // ── Display edges (hide edges whose endpoints are hidden) ─────────────────
+  const displayEdges = useMemo(
+    () =>
+      rfEdges.map((e) => ({
+        ...e,
+        hidden: hiddenIds.has(e.target) || hiddenIds.has(e.source),
+      })),
+    [rfEdges, hiddenIds]
+  );
 
   // Mobile detection
   useEffect(() => {
@@ -500,8 +655,12 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
     (_, node) => {
       if (connectingFrom) { handleMobileConnect(node.id); return; }
       if (isMobile && editMode) { setDrawerNode(node); }
+      // Track recently focused nodes — Pro only, dedup, max 5
+      if (isPro) {
+        setRecentFocusIds((prev) => [node.id, ...prev.filter((id) => id !== node.id)].slice(0, 5));
+      }
     },
-    [isMobile, editMode, connectingFrom, handleMobileConnect]
+    [isMobile, editMode, connectingFrom, handleMobileConnect, isPro]
   );
 
   const onPaneContextMenu = useCallback(
@@ -607,6 +766,16 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         </div>
       )}
 
+      {/* Recent Focus bar — Pro only */}
+      {isPro && (
+        <RecentFocusBar
+          nodes={rfNodes}
+          recentIds={recentFocusIds}
+          onFocus={handleFocusNode}
+          t={t}
+        />
+      )}
+
       {/* Toolbar */}
       <div className="flex items-center gap-2 mb-2 px-1 flex-wrap">
         {isMobile && (
@@ -689,8 +858,8 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         style={{ height: "clamp(350px, 60vh, 620px)", touchAction: "none" }}
       >
         <ReactFlow
-          nodes={rfNodes}
-          edges={rfEdges}
+          nodes={displayNodes}
+          edges={displayEdges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}

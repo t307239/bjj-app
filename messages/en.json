@@ -779,7 +779,10 @@
     "fullScreen": "Full Screen",
     "exitFullScreen": "Exit Full Screen",
     "overLimitBanner": "You've exceeded the free limit. Upgrade to Pro to resume editing your {count} techniques.",
-    "overLimitUpgrade": "Upgrade to Pro"
+    "overLimitUpgrade": "Upgrade to Pro",
+    "collapse": "Collapse children",
+    "expand": "Expand children",
+    "recentFocus": "Recent:"
   },
   "wiki": {
     "dailyTip": "Today's BJJ Knowledge",
