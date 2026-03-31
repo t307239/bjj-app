@@ -166,15 +166,18 @@ export async function POST(req: Request) {
       }
 
       case "invoice.paid": {
-        // Clear past_due when payment recovers
+        // Clear past_due when payment recovers + ensure is_pro=true for active subscribers
+        // Fixes: is_pro が false のまま subscription_status だけ active になるケース
+        // （解約→再契約時に checkout.session.completed が is_pro を復元できなかった場合の安全弁）
         const invoice = event.data.object as Stripe.Invoice;
         const customerId =
           typeof invoice.customer === "string" ? invoice.customer : null;
         if (customerId) {
           await supabase
             .from("profiles")
-            .update({ subscription_status: "active" })
+            .update({ subscription_status: "active", is_pro: true })
             .eq("stripe_customer_id", customerId);
+          logger.info("stripe.webhook.invoice_paid", { customerId });
         }
         break;
       }
