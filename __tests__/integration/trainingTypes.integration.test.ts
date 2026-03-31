@@ -134,9 +134,9 @@ describe("competition TrainingType × compNotes integration", () => {
     expect(decoded?.result).toBe("win");
   });
 
-  it("competition type label matches expected Japanese text", () => {
+  it("competition type label matches expected value", () => {
     const compType = TRAINING_TYPES.find((t) => t.value === "competition");
-    expect(compType?.label).toContain("試合");
+    expect(compType?.label).toBe("Competition");
   });
 
   it("competition icon is a trophy", () => {

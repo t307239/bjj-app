@@ -9,8 +9,8 @@ import { describe, it, expect } from "vitest";
 import { TRAINING_TYPES } from "../lib/trainingTypes";
 
 describe("TRAINING_TYPES", () => {
-  it("has exactly 5 types", () => {
-    expect(TRAINING_TYPES).toHaveLength(5);
+  it("has exactly 6 types", () => {
+    expect(TRAINING_TYPES).toHaveLength(6);
   });
 
   it("includes all expected type values", () => {
@@ -20,6 +20,7 @@ describe("TRAINING_TYPES", () => {
     expect(values).toContain("drilling");
     expect(values).toContain("competition");
     expect(values).toContain("open_mat");
+    expect(values).toContain("recovery");
   });
 
   it("every type has a non-empty label, color and icon", () => {
