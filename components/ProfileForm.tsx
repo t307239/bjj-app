@@ -215,6 +215,28 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
           <span className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform ${sharing ? "translate-x-6" : "translate-x-1"}`} />
         </button>
       </div>
+      {/* Privacy Shield disclosure — B-33: shown when sharing is ON */}
+      {sharing && (
+        <div className="mt-2 bg-blue-950/20 border border-blue-500/10 rounded-lg p-2.5">
+          <p className="text-[10px] font-semibold text-blue-400 mb-1.5">
+            🔒 {t("gym.shareDataShieldTitle")}
+          </p>
+          <div className="grid grid-cols-2 gap-x-3">
+            <div>
+              <p className="text-[10px] text-zinc-500 mb-1 uppercase tracking-wide">{t("gym.shareDataShieldSees")}</p>
+              {([1, 2, 3] as const).map((i) => (
+                <p key={i} className="text-[10px] text-gray-300 leading-relaxed">✅ {t(`gym.shareDataShieldVisible${i}`)}</p>
+              ))}
+            </div>
+            <div>
+              <p className="text-[10px] text-zinc-500 mb-1 uppercase tracking-wide">{t("gym.shareDataShieldHides")}</p>
+              {([1, 2, 3] as const).map((i) => (
+                <p key={i} className="text-[10px] text-gray-500 leading-relaxed">🔒 {t(`gym.shareDataShieldHidden${i}`)}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

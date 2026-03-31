@@ -32,6 +32,56 @@ type Props = {
   stripeGymPaymentLink: string | null;
 };
 
+// ─── Privacy Shield Badge (B-33: Trust Boundary) ─────────────────────────────
+
+function PrivacyShieldBadge() {
+  const { t } = useLocale();
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <div className="bg-blue-950/20 border border-blue-500/15 rounded-xl p-3 mb-4">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="w-full flex items-center justify-between text-left"
+        aria-expanded={expanded}
+      >
+        <span className="text-xs font-semibold text-blue-400 flex items-center gap-1.5">
+          🔒 {t("gym.privacyShieldTitle")}
+        </span>
+        <span className="text-zinc-500 text-xs">{expanded ? "▲" : "▼"}</span>
+      </button>
+      {expanded && (
+        <>
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <div>
+              <p className="text-[10px] font-semibold text-green-400 mb-1.5 uppercase tracking-wide">
+                ✅ {t("gym.privacyShieldCoachSees")}
+              </p>
+              {([1, 2, 3] as const).map((i) => (
+                <p key={i} className="text-xs text-gray-300 leading-relaxed">
+                  {t(`gym.privacyShieldVisible${i}`)}
+                </p>
+              ))}
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold text-zinc-500 mb-1.5 uppercase tracking-wide">
+                🔒 {t("gym.privacyShieldNeverSeen")}
+              </p>
+              {([1, 2, 3] as const).map((i) => (
+                <p key={i} className="text-xs text-gray-500 leading-relaxed line-through decoration-zinc-600">
+                  {t(`gym.privacyShieldHidden${i}`)}
+                </p>
+              ))}
+            </div>
+          </div>
+          <p className="text-[10px] text-zinc-600 mt-2.5 pt-2 border-t border-white/5">
+            {t("gym.privacyShieldStudentControl")}
+          </p>
+        </>
+      )}
+    </div>
+  );
+}
+
 // ─── Belt color helper ────────────────────────────────────────────────────────
 
 function beltColor(belt: string): string {
@@ -652,6 +702,9 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
     <div className="pb-6">
       {/* Invite section */}
       <InviteSection gym={gym} onInviteRegenerated={handleInviteRegenerated} />
+
+      {/* Privacy Shield — B-33: Trust Boundary */}
+      <PrivacyShieldBadge />
 
       {/* CSV Bulk Invite (Pro feature) */}
       <CsvImportSection
