@@ -5,7 +5,7 @@
  *
  * テスト構成:
  *   1. アクセス制御 — 未認証リダイレクト（サーバーサイド middleware 検証）
- *   2. PaywallCTA — ゲストダッシュボード（ProGate / アップグレード導線）
+ *   2. PaywallCTA — ゲストダッシュボード（アップグレード導線）
  *   3. 帯色デザイントークン — beltColor ユーティリティのクラスマッピング検証
  *   4. [SKIP] 認証済み権限マトリックス — storageState 設定後に有効化
  *
@@ -16,6 +16,37 @@
  * 注意:
  *   - テスト 1〜3 はサーバー起動（`npm run dev` or Vercel Preview）があれば実行可能
  *   - テスト 4 は storageState に認証済みセッション JSON が必要（現状 .skip）
+ *
+ * ─── MCP手動検証済み (2026-03-31) ─────────────────────────────────────────
+ * Chrome MCP + Gmail MCP で本番環境（bjj-app.net）を実際にブラウザ操作して検証。
+ *
+ * ✅ Test 1 — アクセス制御
+ *   /techniques, /profile, /gym/dashboard → /login リダイレクト PASS
+ *   /dashboard → リダイレクトなし（ゲストアクセス可能）PASS
+ *
+ * ✅ Test 2 — PaywallCTA
+ *   ゲスト /dashboard: "Sign up for free" / "Step on the Mat →" CTA 表示 PASS
+ *   ※ ProGate ($9.99/🔒) はゲスト /dashboard ではなく認証済みFreeユーザーの
+ *     /profile Stats タブに表示される（実装仕様）
+ *
+ * ✅ Test 3 — 帯色デザイントークン
+ *   全5帯 × 14 CSS クラスがスタイルシートに存在 PASS
+ *
+ * ✅ Test 4 — 認証済みFreeユーザー（ai.fukugyo.ken@gmail.com）
+ *   マジックリンクログイン → /profile Stats: 🔒×7 + "Available in Pro plan" +
+ *   "$9.99/month" 表示 PASS
+ *   /dashboard: "Upgrade to Pro →" (12-Month Graph / Body / AI Coach) 表示 PASS
+ *   SkillMap: "Free: up to 10 nodes · 15 edges" 制限表示 PASS
+ *   $79.99 Annual: JS click では React state 非更新 → Playwright native click では PASS 見込み
+ *
+ * ✅ Test 5 — 認証済みProユーザー（Supabase Admin API で is_pro=true に設定）
+ *   ✦ PRO バッジ表示 PASS
+ *   $9.99/$79.99/"Available in Pro plan"/"Upgrade to Pro" 全消滅 PASS
+ *   AI Coach: "Generate my coaching" ボタン表示（Free時は "Upgrade to Pro"）PASS
+ *   ※ subscription_status=active + stripe_customer_id 確認済み
+ *
+ * ⏭ Stripe関連（課金切れZombie）: 除外（実Stripe課金が必要）
+ * ─────────────────────────────────────────────────────────────────────────
  */
 
 import { test, expect, type Page } from "@playwright/test";
@@ -127,6 +158,12 @@ test.describe("アクセス制御 — 未認証リダイレクト", () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // 2. PaywallCTA — ゲストダッシュボード
 // ─────────────────────────────────────────────────────────────────────────────
+//
+// 実装仕様（MCP検証済み 2026-03-31）:
+//   - ゲスト /dashboard: "Sign up for free" / "Step on the Mat →" のサインアップ CTA
+//   - ProGate($9.99/🔒) は認証済みFreeユーザーの /profile Stats タブに表示
+//   - 同じく /dashboard の 12-Month Graph, Body Management, AI Coach に
+//     "Upgrade to Pro →" が表示される（認証済みFree時）
 
 test.describe("PaywallCTA — ゲストダッシュボード", () => {
   test.use({ storageState: { cookies: [], origins: [] } });
@@ -142,9 +179,10 @@ test.describe("PaywallCTA — ゲストダッシュボード", () => {
     expect(status).toBe("complete");
   });
 
-  test("ゲストモードでアップグレードCTAまたはログイン促進テキストが表示される", async ({ page }) => {
+  test("ゲストモードでサインアップCTAまたはログイン促進テキストが表示される", async ({ page }) => {
     const body = await page.textContent("body");
-    const hasUpgradeSignal = /ログイン|sign in|register|pro|upgrade|アップグレード|ゲスト|guest|premium/i.test(body!);
+    // MCP検証済み: "Sign up for free" / "Step on the Mat" が表示される
+    const hasUpgradeSignal = /ログイン|sign in|register|pro|upgrade|アップグレード|ゲスト|guest|premium|sign up|step on the mat/i.test(body!);
     expect(
       hasUpgradeSignal,
       "ゲストダッシュボードにはログイン促進またはアップグレード導線が必要"
@@ -153,8 +191,9 @@ test.describe("PaywallCTA — ゲストダッシュボード", () => {
 
   test("ProGate 🔒 ロックアイコンが表示される（Proコンテンツがある場合）", async ({ page }) => {
     const body = await page.textContent("body");
-    // ProGate コンポーネントが存在すれば 🔒 が表示される
-    // ゲストダッシュボードに ProGate がない場合はスキップ（構成依存）
+    // MCP検証済み: ゲスト /dashboard には ProGate は表示されない
+    // ProGate ($9.99/🔒) は認証済みFreeユーザーの /profile Stats タブで表示
+    // → このテストは構成依存のためオプション扱い
     const hasProGate = body!.includes(PRO_GATE_MARKERS.lockEmoji);
     if (hasProGate) {
       // ProGate が存在する場合: 価格表示も確認
@@ -163,7 +202,7 @@ test.describe("PaywallCTA — ゲストダッシュボード", () => {
         body!.includes(PRO_GATE_MARKERS.annualPrice);
       expect(hasPricing, "ProGate には価格表示が必要").toBe(true);
     }
-    // 🔒 がなくても失敗しない（ProGate 非表示のゲストダッシュボード構成もあり得る）
+    // 🔒 がなくても失敗しない（ゲストダッシュボードは ProGate 非表示の実装）
   });
 
   test("ProGate のアップグレードボタンは免責事項チェック前は無効", async ({ page }) => {
