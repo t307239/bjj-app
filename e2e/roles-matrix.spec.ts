@@ -50,6 +50,7 @@
  */
 
 import { test, expect, type Page } from "@playwright/test";
+import { existsSync } from "fs";
 
 // ─── 定数 ────────────────────────────────────────────────────────────────────
 
@@ -369,18 +370,25 @@ test.describe("認証済み権限マトリックス", () => {
 
   /**
    * storageState JSON が存在しない場合（初回実行前 / setup 失敗時）に
-   * テストを安全にスキップするヘルパー。
+   * テストを安全にスキップするための beforeEach ヘルパー。
+   * 各 test.describe ブロックの beforeEach で呼び出す。
    */
-  import { existsSync } from "fs";
   function skipIfNoSession(role: Role) {
-    if (!existsSync(ROLE_CONFIGS[role].storageState)) {
-      test.skip(true, `${ROLE_CONFIGS[role].storageState} が未生成 — npx playwright test を実行して auth setup を完了させてください`);
-    }
+    test.beforeEach(({ }, testInfo) => {
+      if (!existsSync(ROLE_CONFIGS[role].storageState)) {
+        testInfo.skip(true,
+          `${ROLE_CONFIGS[role].storageState} が未生成 ` +
+          `— NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY を設定して ` +
+          `npx playwright test を実行すると auth.setup.ts が自動生成します`
+        );
+      }
+    });
   }
 
   // ── B2C Free ──────────────────────────────────────────────────────────────
   test.describe("B2C Free ユーザー", () => {
     test.use({ storageState: ROLE_CONFIGS["free"].storageState });
+    skipIfNoSession("free");
 
     test("/dashboard アクセス可能", async ({ page }) => {
       await page.goto("/dashboard");
@@ -427,6 +435,7 @@ test.describe("認証済み権限マトリックス", () => {
   // ── B2C Pro ───────────────────────────────────────────────────────────────
   test.describe("B2C Pro ユーザー", () => {
     test.use({ storageState: ROLE_CONFIGS["pro"].storageState });
+    skipIfNoSession("pro");
 
     test("ProGate ロックが表示されない（全機能アンロック）", async ({ page }) => {
       await page.goto("/dashboard");
@@ -448,6 +457,7 @@ test.describe("認証済み権限マトリックス", () => {
   // ── 道場長 (GymOwner) ─────────────────────────────────────────────────────
   test.describe("道場長 (GymOwner)", () => {
     test.use({ storageState: ROLE_CONFIGS["gym-owner"].storageState });
+    skipIfNoSession("gym-owner");
 
     test("/gym/dashboard アクセス可能", async ({ page }) => {
       await page.goto("/gym/dashboard");
@@ -482,6 +492,7 @@ test.describe("認証済み権限マトリックス", () => {
   // ── 道場メンバー ───────────────────────────────────────────────────────────
   test.describe("道場メンバー (Member)", () => {
     test.use({ storageState: ROLE_CONFIGS["gym-member"].storageState });
+    skipIfNoSession("gym-member");
 
     test("/gym/dashboard はアクセス不可（メンバーは道場長ではない）", async ({ page }) => {
       await page.goto("/gym/dashboard", { waitUntil: "commit" });
