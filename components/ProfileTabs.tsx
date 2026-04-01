@@ -146,7 +146,7 @@ export default function ProfileTabs({ userId, isPro = false, referralCode = null
         {TABS.map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => { setActiveTab(tab.id); trackEvent("tab_viewed", { tab: tab.id }); }}
             onMouseEnter={() => PRELOAD_MAP[tab.id]?.()}
             onFocus={() => PRELOAD_MAP[tab.id]?.()}
             className={`flex-1 py-2 rounded-md text-xs font-semibold transition-all active:scale-95 ${

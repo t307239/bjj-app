@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
+import { trackEvent } from "@/lib/analytics";
 import { useLocale } from "@/lib/i18n";
 
 type Props = {
@@ -82,11 +83,12 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
     setError(null);
     try {
       const res = await fetch("/api/ai-coach/generate", { method: "POST" });
-      const data = await res.json() as { coaching?: string; generated_at?: string; error?: string };
+      const data = await res.json() as { coaching?: string; generated_at?: string; cached?: boolean; error?: string };
       if (!res.ok || data.error) {
         setError(data.error ?? t("aiCoach.error"));
         return;
       }
+      trackEvent("ai_coach_generated", { source: data.cached ? "cache_hit" : "fresh" });
       setCoaching(data.coaching ?? null);
       setGeneratedAt(data.generated_at ?? null);
     } catch {
@@ -109,6 +111,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
           <a
             href="/techniques#pro"
             className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
+            onClick={() => trackEvent("pro_upgrade_click", { feature: "ai_coach" })}
           >
             {t("common.upgradePro")}
           </a>

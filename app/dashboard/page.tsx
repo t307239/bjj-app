@@ -28,6 +28,7 @@ import {
 } from "@/lib/timezone";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
 import { serverT as t } from "@/lib/i18n";
+import { calcBjjDuration, formatBjjDuration } from "@/lib/bjjDuration";
 import ProStatusBanner from "@/components/ProStatusBanner";
 import AvatarImage from "@/components/AvatarImage";
 
@@ -111,16 +112,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const belt = profile?.belt ?? "white";
   const count = totalCount ?? 0;
-  let months = 0;
-  if (profile?.start_date) {
-    months = Math.max(
-      0,
-      Math.floor(
-        (Date.now() - new Date(profile.start_date).getTime()) /
-          (1000 * 60 * 60 * 24 * 30)
-      )
-    );
-  }
+  const { totalMonths: months } = profile?.start_date
+    ? calcBjjDuration(profile.start_date)
+    : { totalMonths: 0 };
   const BELT_LABELS: Record<string, string> = {
     white: t("dashboard.beltWhite"),
     blue: t("dashboard.beltBlue"),
@@ -150,7 +144,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const ogImageUrl = `${BASE_URL}/api/og?belt=${belt}&count=${count}&months=${months}&streak=${metaStreak}`;
   const title = `BJJ Training Log — ${count} Sessions! | BJJ App`;
-  const description = `${beltLabel} · ${count} total sessions · ${months} months of BJJ — tracking every roll with BJJ App`;
+  const bjjDurLabel = profile?.start_date ? formatBjjDuration(profile.start_date, t) : null;
+  const description = bjjDurLabel
+    ? `${beltLabel} · ${count} total sessions · ${bjjDurLabel} of BJJ — tracking every roll with BJJ App`
+    : `${beltLabel} · ${count} total sessions — tracking every roll with BJJ App`;
 
   return {
     title: count > 0 ? `Dashboard — ${count} sessions` : "Dashboard",
@@ -336,16 +333,9 @@ export default async function DashboardPage({
   // Onboarding complete = all 3 steps done → show InsightsBanner, hide checklist
   const isOnboardingComplete = hasFirstLog && hasGoal && hasTechnique;
 
-  let monthsAtBelt = 0;
-  if (profileData?.start_date) {
-    monthsAtBelt = Math.max(
-      0,
-      Math.floor(
-        (Date.now() - new Date(profileData.start_date).getTime()) /
-          (1000 * 60 * 60 * 24 * 30)
-      )
-    );
-  }
+  const monthsAtBelt = profileData?.start_date
+    ? calcBjjDuration(profileData.start_date).totalMonths
+    : 0;
 
   // Days since last training log (for dynamic motivational message)
   const todayStr = getLogicalTrainingDate();

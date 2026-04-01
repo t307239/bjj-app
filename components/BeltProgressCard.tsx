@@ -175,13 +175,19 @@ export default function BeltProgressCard({
         </span>
       </div>
 
-      {/* Time at belt */}
+      {/* Time at belt — years+months format */}
       {monthsAtBelt > 0 && (
         <div className="mt-3 pt-2 border-t border-white/5">
           <span className="text-xs text-zinc-500">
-            {monthsAtBelt}{" "}
-            {monthsAtBelt !== 1 ? t("beltProgress.months") : t("beltProgress.month")}{" "}
-            {t("beltProgress.monthsAt", { belt: label.replace(t("beltProgress.beltSuffix"), "") })}
+            {(() => {
+              const yrs = Math.floor(monthsAtBelt / 12);
+              const mos = monthsAtBelt % 12;
+              let dur = "";
+              if (yrs === 0) dur = t("profile.bjjHistoryMonths", { n: mos });
+              else if (mos === 0) dur = t("profile.bjjHistoryYears", { n: yrs });
+              else dur = t("profile.bjjHistoryYearsMonths", { y: yrs, m: mos });
+              return dur;
+            })()} {t("beltProgress.monthsAt", { belt: label.replace(t("beltProgress.beltSuffix"), "") })}
           </span>
         </div>
       )}

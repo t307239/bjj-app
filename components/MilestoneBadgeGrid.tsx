@@ -1,9 +1,26 @@
 "use client";
 
 import { useLocale } from "@/lib/i18n";
+import { useEffect, useState } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 const MILESTONES = [1, 7, 10, 30, 50, 100, 200, 365, 500, 1000] as const;
 type Milestone = (typeof MILESTONES)[number];
+
+const LS_KEY = "bjj_milestone_shared";
+
+function loadSharedSet(): Set<number> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    return new Set(raw ? (JSON.parse(raw) as number[]) : []);
+  } catch { return new Set(); }
+}
+function markShared(n: number): void {
+  const set = loadSharedSet();
+  set.add(n);
+  try { localStorage.setItem(LS_KEY, JSON.stringify([...set])); } catch { /* ignore */ }
+}
 
 interface Props {
   totalCount: number;
@@ -43,6 +60,43 @@ function BadgeCell({ milestone, earned }: { milestone: Milestone; earned: boolea
 
 export default function MilestoneBadgeGrid({ totalCount }: Props) {
   const { t } = useLocale();
+  const [sharePrompt, setSharePrompt] = useState<Milestone | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  // Check if we just hit a milestone (totalCount exactly equals one)
+  useEffect(() => {
+    const justEarned = MILESTONES.find((m) => m === totalCount);
+    if (!justEarned) return;
+    const shared = loadSharedSet();
+    if (!shared.has(justEarned)) {
+      setSharePrompt(justEarned);
+    }
+  }, [totalCount]);
+
+  const handleShare = async () => {
+    if (!sharePrompt) return;
+    const emoji = t(`achievement.milestone.${sharePrompt}.emoji`);
+    const text = `${emoji} Just hit ${sharePrompt} BJJ training sessions! 🥋 Tracking every roll with BJJ App → https://bjj-app.net`;
+    trackEvent("milestone_share", { milestone: sharePrompt });
+    markShared(sharePrompt);
+    if (navigator.share) {
+      try {
+        await navigator.share({ text });
+      } catch {
+        // User cancelled — still mark as seen
+      }
+    } else {
+      await navigator.clipboard.writeText(text).catch(() => {});
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+    setSharePrompt(null);
+  };
+
+  const handleDismiss = () => {
+    if (sharePrompt) markShared(sharePrompt);
+    setSharePrompt(null);
+  };
 
   const nextMilestone = MILESTONES.find((m) => m > totalCount) ?? null;
   const earnedCount = MILESTONES.filter((m) => m <= totalCount).length;
@@ -57,6 +111,34 @@ export default function MilestoneBadgeGrid({ totalCount }: Props) {
           {earnedCount} / {MILESTONES.length}
         </span>
       </div>
+
+      {/* Just-earned share banner */}
+      {sharePrompt !== null && (
+        <div className="mb-4 rounded-xl bg-violet-600/20 border border-violet-500/40 px-4 py-3 flex items-center gap-3">
+          <span className="text-2xl flex-shrink-0">🎉</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-violet-200 leading-tight">
+              {sharePrompt} sessions reached!
+            </p>
+            <p className="text-xs text-violet-300/70">Share this milestone with your training crew.</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <button
+              onClick={handleShare}
+              className="bg-violet-600 hover:bg-violet-500 active:scale-95 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-all"
+            >
+              {copied ? "Copied!" : "Share 🔗"}
+            </button>
+            <button
+              onClick={handleDismiss}
+              className="text-zinc-500 hover:text-zinc-300 text-xs px-2 transition-colors"
+              aria-label="Dismiss"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Grid: 5 columns × 2 rows */}
       <div className="grid grid-cols-5 gap-2">

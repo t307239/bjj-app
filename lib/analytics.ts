@@ -10,7 +10,10 @@ type KpiEvent =
   | "pro_upgrade_click"    // conversion
   | "referral_shared"      // viral coefficient
   | "technique_added"      // engagement
-  | "gym_lead_click";      // B2B pipeline
+  | "gym_lead_click"       // B2B pipeline
+  | "ai_coach_generated"   // AI coach usage (cache_hit | fresh)
+  | "milestone_share"      // viral share on achievement
+  | "tab_viewed";          // profile tab engagement
 
 /**
  * Fire a KPI event. Safe to call on the server (no-op).

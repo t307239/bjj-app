@@ -5,6 +5,7 @@ import NavBar from "@/components/NavBar";
 import ProfileTabs from "@/components/ProfileTabs";
 import { serverT as t } from "@/lib/i18n";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
+import { formatBjjDuration } from "@/lib/bjjDuration";
 import AvatarImage from "@/components/AvatarImage";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
@@ -133,17 +134,8 @@ export default async function ProfilePage() {
     }
   }
 
-  // BJJ months
-  let monthsBJJ = 0;
-  if (profile?.start_date) {
-    monthsBJJ = Math.max(
-      0,
-      Math.floor(
-        (Date.now() - new Date(profile.start_date).getTime()) /
-          (1000 * 60 * 60 * 24 * 30)
-      )
-    );
-  }
+  // BJJ duration — calendar-accurate years+months
+  const bjjDurationLabel = profile?.start_date ? formatBjjDuration(profile.start_date, t) : "";
 
   return (
     <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
@@ -236,14 +228,16 @@ export default async function ProfilePage() {
                 {t("dashboard.streak")}
               </p>
             </div>
-            <div className="text-center">
-              <p className="text-2xl font-black text-white tabular-nums">
-                {monthsBJJ}
-              </p>
-              <p className="text-xs text-zinc-400 mt-0.5 tracking-widest uppercase">
-                {t("profile.monthsBjj")}
-              </p>
-            </div>
+            {bjjDurationLabel && (
+              <div className="text-center">
+                <p className="text-lg font-black text-white leading-tight">
+                  {bjjDurationLabel}
+                </p>
+                <p className="text-xs text-zinc-400 mt-0.5 tracking-widest uppercase">
+                  BJJ
+                </p>
+              </div>
+            )}
           </div>
         </div>
 

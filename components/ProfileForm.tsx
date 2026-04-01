@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { formatBjjDuration } from "@/lib/bjjDuration";
 import { getLocalDateString } from "@/lib/timezone";
 import { useProfile } from "@/hooks/useProfile";
 import { useRouter } from "next/navigation";
@@ -53,33 +54,7 @@ type Props = {
 
 // getLocalDateString() from lib/timezone replaces the old JST-hardcoded getJSTDateString()
 
-/**
- * formatBjjDuration
- * Returns human-readable BJJ experience from "YYYY-MM" or "YYYY-MM-DD".
- *   0y 0m  → "Just started"
- *   0y Nm  → "N months"
- *   Ny 0m  → "N years"
- *   Ny Nm  → "N years N months"
- */
-function formatBjjDuration(
-  startDate: string,
-  t: (k: string, v?: Record<string, string | number>) => string
-): string {
-  const parts = startDate.split("-").map(Number);
-  const start = new Date(parts[0], (parts[1] ?? 1) - 1, 1);
-  const now = new Date();
-  const totalMonths = Math.max(
-    0,
-    (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth())
-  );
-  const years = Math.floor(totalMonths / 12);
-  const months = totalMonths % 12;
-
-  if (years === 0 && months === 0) return t("profile.bjjHistoryJustStarted");
-  if (years === 0) return t("profile.bjjHistoryMonths", { n: months });
-  if (months === 0) return t("profile.bjjHistoryYears", { n: years });
-  return t("profile.bjjHistoryYearsMonths", { y: years, m: months });
-}
+// formatBjjDuration moved to lib/bjjDuration.ts
 
 // Stripe Customer Portal URL — configure in .env.local (Stripe Dashboard > Customer Portal)
 const CUSTOMER_PORTAL_URL = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL ?? "";
