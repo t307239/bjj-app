@@ -42,6 +42,10 @@ export default async function GymDashboardPage() {
   ]);
   const isPro = profileData?.is_pro ?? false;
 
+  // 道場長でないユーザー（gym が存在しない）はアクセス不可 → /dashboard にリダイレクト
+  // これにより Free/Pro/道場メンバーが /gym/dashboard に直打ちしても弾かれる（IDOR防止）
+  if (!gym) redirect("/dashboard");
+
   // Member count + aggregate gym stats (opt-in only)
   let memberCount = 0;
   let totalSessions30d = 0;
