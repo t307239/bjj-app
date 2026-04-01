@@ -266,7 +266,7 @@ export default function PersonalBests({ userId }: Props) {
       <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mt-2">
       <div className="flex items-center justify-between mb-3">
         <div>
-          {bests.lastMonthCount > 0 && (() => {
+          {bests.lastMonthCount > 0 && bests.thisMonthCount > 0 && (() => {
             const diff = bests.thisMonthCount - bests.lastMonthCount;
             const pct = Math.round(Math.abs(diff) / bests.lastMonthCount * 100);
             if (diff > 0) return (

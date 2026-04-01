@@ -620,7 +620,9 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
           </div>
           <div>
             <div className="text-lg font-bold text-[#10B981]">
-              {stats.totalMinutes >= 60 ? Math.floor(stats.totalMinutes / 60) + "h" : stats.totalMinutes + "m"}
+              {stats.totalMinutes >= 60
+                ? `${Math.floor(stats.totalMinutes / 60)}h${stats.totalMinutes % 60 > 0 ? `${stats.totalMinutes % 60}m` : ""}`
+                : `${stats.totalMinutes}m`}
             </div>
             <div className="text-xs text-gray-500">{t("stats.totalMinutes")}</div>
           </div>
