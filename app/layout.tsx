@@ -66,6 +66,7 @@ export default function RootLayout({
     <html lang="en" className={`dark ${inter.variable}`}>
       <head>
         <link rel="apple-touch-icon" href="/icon-192.png" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
         <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
