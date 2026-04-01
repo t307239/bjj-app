@@ -79,6 +79,9 @@ const PRO_GATE_MARKERS = {
   lockEmoji: "🔒",
   monthlyPrice: "$9.99",
   annualPrice: "$79.99",
+  /** MCP検証済み(2026-03-31): 認証済みFreeユーザーの /dashboard に表示されるアップグレード導線 */
+  upgradeCta: "Upgrade to Pro",
+  upgradeHistory: "Upgrade for full history",
 } as const;
 
 // ─── ヘルパー ─────────────────────────────────────────────────────────────────
@@ -385,10 +388,29 @@ test.describe("認証済み権限マトリックス", () => {
     });
   }
 
+  /**
+   * 各プロジェクト（ロール）専用の describe ブロックに付ける skip ヘルパー。
+   * playwright.config.ts では全 4 プロジェクトが roles-matrix.spec.ts を実行するため、
+   * 各ブロックが自分のプロジェクト以外で走るとクロスロール誤判定が起きる。
+   * このヘルパーで「自分のプロジェクト以外ならスキップ」を強制する（分類3: マトリックス大爆発対策）。
+   *
+   * ただし "chromium" / "mobile"（ゲスト）プロジェクトは testMatch が roles-matrix.spec.ts に
+   * マッチしないため実際には問題ないが、念のため全プロジェクトで制御する。
+   */
+  function skipIfWrongProject(expectedProject: string) {
+    test.beforeEach(({ }, testInfo) => {
+      testInfo.skip(
+        testInfo.project.name !== expectedProject,
+        `このブロックは ${expectedProject} プロジェクト専用です（現在: ${testInfo.project.name}）`
+      );
+    });
+  }
+
   // ── B2C Free ──────────────────────────────────────────────────────────────
   test.describe("B2C Free ユーザー", () => {
     test.use({ storageState: ROLE_CONFIGS["free"].storageState });
     skipIfNoSession("free");
+    skipIfWrongProject("free-user");
 
     test("/dashboard アクセス可能", async ({ page }) => {
       await page.goto("/dashboard");
@@ -411,7 +433,18 @@ test.describe("認証済み権限マトリックス", () => {
       await page.goto("/dashboard");
       await page.waitForLoadState("networkidle").catch(() => {});
       const body = await page.textContent("body");
-      expect(body).toContain(PRO_GATE_MARKERS.lockEmoji);
+      // MCP検証済み(2026-03-31): 認証済みFreeユーザーの /dashboard では
+      //   "Upgrade to Pro →" (TrainingBarChart/Body/AI Coach) または
+      //   "Upgrade for full history" (TrainingLog) または
+      //   "🔒" (ProGate overlay / TrainingChart等) のいずれかが必ず表示される
+      const hasProGate =
+        body!.includes(PRO_GATE_MARKERS.upgradeCta) ||
+        body!.includes(PRO_GATE_MARKERS.upgradeHistory) ||
+        body!.includes(PRO_GATE_MARKERS.lockEmoji);
+      expect(
+        hasProGate,
+        'Pro機能エリアに "Upgrade to Pro" / "Upgrade for full history" / "🔒" のいずれかが必要'
+      ).toBe(true);
     });
 
     for (const belt of BELTS_MATRIX) {
@@ -436,6 +469,7 @@ test.describe("認証済み権限マトリックス", () => {
   test.describe("B2C Pro ユーザー", () => {
     test.use({ storageState: ROLE_CONFIGS["pro"].storageState });
     skipIfNoSession("pro");
+    skipIfWrongProject("pro-user");
 
     test("ProGate ロックが表示されない（全機能アンロック）", async ({ page }) => {
       await page.goto("/dashboard");
@@ -458,6 +492,7 @@ test.describe("認証済み権限マトリックス", () => {
   test.describe("道場長 (GymOwner)", () => {
     test.use({ storageState: ROLE_CONFIGS["gym-owner"].storageState });
     skipIfNoSession("gym-owner");
+    skipIfWrongProject("gym-owner");
 
     test("/gym/dashboard アクセス可能", async ({ page }) => {
       await page.goto("/gym/dashboard");
@@ -493,6 +528,7 @@ test.describe("認証済み権限マトリックス", () => {
   test.describe("道場メンバー (Member)", () => {
     test.use({ storageState: ROLE_CONFIGS["gym-member"].storageState });
     skipIfNoSession("gym-member");
+    skipIfWrongProject("gym-member");
 
     test("/gym/dashboard はアクセス不可（メンバーは道場長ではない）", async ({ page }) => {
       await page.goto("/gym/dashboard", { waitUntil: "commit" });
