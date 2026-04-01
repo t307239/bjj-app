@@ -10,6 +10,10 @@
   },
   "dashboard": {
     "welcomeBack": "おかえり、{name} 👋",
+    "greetingMorning": "おはようございます",
+    "greetingAfternoon": "練習の時間だ！",
+    "greetingEvening": "夜練いかが？",
+    "greetingNight": "しっかり休んでください",
     "monthTraining": "今月の練習",
     "weekTraining": "今週の練習",
     "techniques": "習得テクニック",
@@ -1158,6 +1162,23 @@
       "week1Sore": "筋肉痛があります。今日は軽めに、回復を優先しましょう。",
       "week3": "そろそろ回復してきましたか？モビリティ・ストレッチでしっかりケアしましょう。",
       "month1": "1ヶ月以上痛みが続いています。専門医の受診をお勧めします。"
+    },
+    "weightChartPeriod": "90日 · kg",
+    "parts": {
+      "neck": "首",
+      "leftShoulder": "左肩",
+      "rightShoulder": "右肩",
+      "leftElbow": "左肘",
+      "rightElbow": "右肘",
+      "leftWrist": "左手首",
+      "rightWrist": "右手首",
+      "lowerBack": "腰",
+      "leftHip": "左腰",
+      "rightHip": "右腰",
+      "leftKnee": "左膝",
+      "rightKnee": "右膝",
+      "leftAnkle": "左足首",
+      "rightAnkle": "右足首"
     }
   },
   "ageGate": {

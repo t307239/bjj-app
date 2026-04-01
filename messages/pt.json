@@ -61,6 +61,10 @@
     "sessionExpired": "Sua sessão expirou. Por favor, entre novamente."
   },
   "dashboard": {
+    "greetingMorning": "Bom dia",
+    "greetingAfternoon": "Hora de treinar",
+    "greetingEvening": "Sessão noturna?",
+    "greetingNight": "Descanse bem",
     "title": "Bem-vindo de volta",
     "subtitle": "Seu painel de treinamento BJJ",
     "emptyStateTitle": "Registre seu primeiro treino e comece sua sequência!",
@@ -263,6 +267,23 @@
       "week1Sore": "Dor muscular detectada. Treine leve e priorize a recuperação.",
       "week3": "Melhorando? Continue com mobilidade e alongamento.",
       "month1": "Dor persistindo há mais de um mês. Considere consultar um especialista."
+    },
+    "weightChartPeriod": "90 dias · kg",
+    "parts": {
+      "neck": "Pescoço",
+      "leftShoulder": "Om. Esq.",
+      "rightShoulder": "Om. Dir.",
+      "leftElbow": "Cot. Esq.",
+      "rightElbow": "Cot. Dir.",
+      "leftWrist": "Pun. Esq.",
+      "rightWrist": "Pun. Dir.",
+      "lowerBack": "Lombar",
+      "leftHip": "Quad. Esq.",
+      "rightHip": "Quad. Dir.",
+      "leftKnee": "Joe. Esq.",
+      "rightKnee": "Joe. Dir.",
+      "leftAnkle": "Tor. Esq.",
+      "rightAnkle": "Tor. Dir."
     }
   },
   "skillmap": {

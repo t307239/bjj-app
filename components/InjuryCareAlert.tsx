@@ -89,16 +89,23 @@ function getAlertConfig(daysElapsed: number, status: string): AlertConfig {
   }
 }
 
-// ─── Part label mapping (simple English — i18n can be extended later) ─────────
+// ─── DB snake_case part key → i18n camelCase key mapping ──────────────────────
 
-const PART_LABELS: Record<string, string> = {
-  neck: "Neck", lower_back: "Lower Back",
-  left_shoulder: "Left Shoulder", right_shoulder: "Right Shoulder",
-  left_elbow: "Left Elbow", right_elbow: "Right Elbow",
-  left_wrist: "Left Wrist", right_wrist: "Right Wrist",
-  left_hip: "Left Hip", right_hip: "Right Hip",
-  left_knee: "Left Knee", right_knee: "Right Knee",
-  left_ankle: "Left Ankle", right_ankle: "Right Ankle",
+const PART_I18N: Record<string, string> = {
+  neck: "body.parts.neck",
+  lower_back: "body.parts.lowerBack",
+  left_shoulder: "body.parts.leftShoulder",
+  right_shoulder: "body.parts.rightShoulder",
+  left_elbow: "body.parts.leftElbow",
+  right_elbow: "body.parts.rightElbow",
+  left_wrist: "body.parts.leftWrist",
+  right_wrist: "body.parts.rightWrist",
+  left_hip: "body.parts.leftHip",
+  right_hip: "body.parts.rightHip",
+  left_knee: "body.parts.leftKnee",
+  right_knee: "body.parts.rightKnee",
+  left_ankle: "body.parts.leftAnkle",
+  right_ankle: "body.parts.rightAnkle",
 };
 
 // ─── Main component ────────────────────────────────────────────────────────────
@@ -168,7 +175,7 @@ export default function InjuryCareAlert({ bodyStatus, bodyStatusDates }: Props) 
           <span className="flex-shrink-0 text-base mt-0.5">{config.emoji}</span>
           <div className="flex-1 min-w-0">
             <p className={`text-xs font-semibold ${config.text} mb-0.5`}>
-              {PART_LABELS[partKey] ?? partKey} — {t("body.injuryAlert.dayCount", { n: daysElapsed + 1 })}
+              {t(PART_I18N[partKey] ?? partKey)} — {t("body.injuryAlert.dayCount", { n: daysElapsed + 1 })}
             </p>
             <p className="text-xs text-zinc-400 leading-relaxed">{t(config.messageKey)}</p>
           </div>

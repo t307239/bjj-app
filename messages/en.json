@@ -10,6 +10,10 @@
   },
   "dashboard": {
     "welcomeBack": "Welcome back, {name} 👋",
+    "greetingMorning": "Good morning",
+    "greetingAfternoon": "Time to train",
+    "greetingEvening": "Evening session?",
+    "greetingNight": "Rest well",
     "monthTraining": "This Month",
     "weekTraining": "This Week",
     "techniques": "Techniques",
@@ -1167,6 +1171,7 @@
       "week3": "Getting better? Keep up mobility work and stretching.",
       "month1": "Pain persisting over a month. Consider seeing a specialist."
     },
+    "weightChartPeriod": "90 days · kg",
     "parts": {
       "neck": "Neck",
       "leftShoulder": "L. Shoulder",
