@@ -90,7 +90,7 @@ export default function BeltProgressCard({
           </span>
           {isHype && (
             <span className="text-xs font-bold text-yellow-400 animate-pulse">
-              🔥 Almost there!
+              🔥 {t("beltProgress.almostThere")}
             </span>
           )}
         </div>

@@ -3,8 +3,8 @@
     "home": "Home",
     "techniques": "Techniques",
     "profile": "Profile",
-    "logout": "Logout",
-    "loggingOut": "Logging out…",
+    "logout": "Sign out",
+    "loggingOut": "Signing out…",
     "streakBadge": "🔥 {n} days straight",
     "streakDays": "{n} days",
     "streakDaysStraight": "{n}-day streak"
@@ -85,9 +85,15 @@
     "weeklyOnPace": " ✓ on pace",
     "weeklyPickUpPace": " ⚠ pick up the pace"
   },
+  "trainingLog": {
+    "totalLabel": "total",
+    "perSession": "session",
+    "paginationNote": "Stats reflect current page only. Navigate pages to see all sessions."
+  },
   "beltProgress": {
     "title": "Belt Progress",
     "editTitle": "Edit belt in Profile",
+    "almostThere": "Almost there!",
     "stripe": "stripe",
     "stripes": "stripes",
     "stripesOf4": "{n} / 4 stripes",
@@ -486,7 +492,7 @@
     "iabCopy": "Copy URL",
     "iabCopied": "✓ Copied!",
     "getStarted": "Step on the Mat",
-    "subtitle": "Sign up or log in — no password needed",
+    "subtitle": "Sign up or sign in — no password needed",
     "free": "Free",
     "freeDesc": "forever",
     "streaks": "Streaks",
@@ -1268,7 +1274,7 @@
     "footerTokushoho": "特定商取引法に基づく表記"
   },
   "landing": {
-    "navLogin": "Log in",
+    "navLogin": "Sign in",
     "navGetStarted": "Get Started",
     "heroBadge": "Free to start",
     "heroTitle1": "Prove your BJJ growth",

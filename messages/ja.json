@@ -3,8 +3,8 @@
     "home": "ホーム",
     "techniques": "テクニック",
     "profile": "プロフィール",
-    "logout": "ログアウト",
-    "loggingOut": "ログアウト中…",
+    "logout": "サインアウト",
+    "loggingOut": "サインアウト中…",
     "streakBadge": "🔥 {n}日連続練習中",
     "streakDays": "{n}日",
     "streakDaysStraight": "{n}日連続練習中"
@@ -73,9 +73,15 @@
     "beltBrown": "茶帯",
     "beltBlack": "黒帯"
   },
+  "trainingLog": {
+    "totalLabel": "合計",
+    "perSession": "回",
+    "paginationNote": "表示中のページの統計のみです。全セッションを見るにはページを移動してください。"
+  },
   "beltProgress": {
     "title": "帯の進捗",
     "editTitle": "プロフィールで帯を編集",
+    "almostThere": "あと少し！",
     "stripe": "本線",
     "stripes": "本線",
     "stripesOf4": "{n} / 4 本線",

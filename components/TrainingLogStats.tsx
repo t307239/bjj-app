@@ -3,6 +3,7 @@
 import { memo } from "react";
 import { type TrainingEntry, formatDuration } from "@/lib/trainingLogHelpers";
 import { getWeekStartDate } from "@/lib/timezone";
+import { useLocale } from "@/lib/i18n";
 
 type Props = {
   entries: TrainingEntry[];
@@ -12,6 +13,7 @@ type Props = {
 
 // memo: pure display component — only re-renders when entries/pagination changes
 const TrainingLogStats = memo(function TrainingLogStats({ entries, totalPages, page }: Props) {
+  const { t } = useLocale();
   if (entries.length === 0) return null;
 
   // This week summary (Monday start, timezone-aware)
@@ -31,23 +33,23 @@ const TrainingLogStats = memo(function TrainingLogStats({ entries, totalPages, p
       {weekEntries.length > 0 && (
         <div className="flex items-center gap-3 mb-1 pb-1">
           <span className="text-xs font-semibold text-zinc-400 tracking-wide flex-shrink-0">
-            This Week
+            {t("dashboard.weekTraining")}
           </span>
           <div className="flex items-center gap-3 flex-1">
             <div className="flex items-center gap-1.5">
               <span className="text-sm font-bold text-white">{weekEntries.length}</span>
-              <span className="text-xs text-gray-500">sessions</span>
+              <span className="text-xs text-gray-500">{t("dashboard.sessionsUnit")}</span>
             </div>
             <div className="w-px h-4 bg-white/10" />
             <div className="flex items-center gap-1.5">
               <span className="text-sm font-bold text-white">{weekHoursDisplay}</span>
-              <span className="text-xs text-gray-500">total</span>
+              <span className="text-xs text-gray-500">{t("trainingLog.totalLabel")}</span>
             </div>
             {weekEntries.length > 0 && (
               <>
                 <div className="w-px h-4 bg-white/10" />
                 <span className="text-xs text-gray-400">
-                  {formatDuration(Math.round(weekTotalMins / weekEntries.length))}/session
+                  {formatDuration(Math.round(weekTotalMins / weekEntries.length))}/{t("trainingLog.perSession")}
                 </span>
               </>
             )}
@@ -56,7 +58,7 @@ const TrainingLogStats = memo(function TrainingLogStats({ entries, totalPages, p
       )}
       {totalPages > 1 && page < totalPages && (
         <p className="text-gray-500 text-xs text-center mt-2">
-          ※ Stats reflect current page only. Navigate pages to see all sessions.
+          {t("trainingLog.paginationNote")}
         </p>
       )}
     </div>

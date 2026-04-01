@@ -122,9 +122,15 @@
     "deleteCancelBtn": "Cancelar",
     "deleteConfirmBtn": "Sim, excluir"
   },
+  "trainingLog": {
+    "totalLabel": "total",
+    "perSession": "sessão",
+    "paginationNote": "Estatísticas refletem apenas a página atual. Navegue entre as páginas para ver todas as sessões."
+  },
   "beltProgress": {
     "title": "Progresso da Faixa",
     "editTitle": "Editar faixa no Perfil",
+    "almostThere": "Quase lá!",
     "stripe": "listra",
     "stripes": "listras",
     "stripesOf4": "{n} / 4 listras",
