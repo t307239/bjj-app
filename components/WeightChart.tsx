@@ -176,7 +176,7 @@ export default function WeightChart({ userId, refreshKey }: Props) {
   return (
     <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
       <p className="text-xs text-gray-400 font-semibold mb-1 uppercase tracking-wide">
-        {t("body.weightChart")} <span className="text-gray-500 font-normal">(90 days)</span>
+        {t("body.weightChart")} <span className="text-gray-500 font-normal">(90 days · kg)</span>
       </p>
 
       {/* Legend */}
@@ -221,11 +221,6 @@ export default function WeightChart({ userId, refreshKey }: Props) {
             {label}
           </text>
         ))}
-
-        {/* kg unit */}
-        <text x={PAD.left - 4} y={PAD.top - 2} textAnchor="end" fontSize="7" fill="#4b5563">
-          kg
-        </text>
 
         {/* Standalone lines */}
         {standaloneSegs.map((seg, si) =>
