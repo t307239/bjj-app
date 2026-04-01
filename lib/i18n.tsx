@@ -93,7 +93,8 @@ function detectClientLocale(): Locale {
   }
   const lang = navigator.language?.toLowerCase() ?? "en";
   if (lang.startsWith("ja")) return "ja";
-  if (lang.startsWith("pt")) return "pt";
+  // pt auto-detection disabled: pt.json coverage is ~18% — would show mixed pt/en UI.
+  // Portuguese users can explicitly select "Português" in Settings → Language.
   return "en";
 }
 

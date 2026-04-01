@@ -13,6 +13,7 @@
  */
 
 import { useEffect, useState } from "react";
+import { useLocale } from "@/lib/i18n";
 
 interface Props {
   bodyStatus: Record<string, string> | null;
@@ -52,7 +53,7 @@ function saveSnooze(map: SnoozeMap): void {
 
 interface AlertConfig {
   emoji: string;
-  message: string;
+  messageKey: string; // i18n key (body.injuryAlert.*)
   bg: string;
   border: string;
   text: string;
@@ -64,9 +65,7 @@ function getAlertConfig(daysElapsed: number, status: string): AlertConfig {
   if (daysElapsed <= 7) {
     return {
       emoji: "🔴",
-      message: isInjured
-        ? "怪我の記録があります。スパーリングは控え、今日は無理せずドリルに集中しませんか？"
-        : "筋肉痛があります。今日は軽めに、回復を優先しましょう。",
+      messageKey: isInjured ? "body.injuryAlert.week1Injured" : "body.injuryAlert.week1Sore",
       bg: "bg-red-950/40",
       border: "border-red-500/30",
       text: "text-red-300",
@@ -74,7 +73,7 @@ function getAlertConfig(daysElapsed: number, status: string): AlertConfig {
   } else if (daysElapsed <= 21) {
     return {
       emoji: "🟡",
-      message: "そろそろ回復してきましたか？モビリティ・ストレッチでしっかりケアしましょう。",
+      messageKey: "body.injuryAlert.week3",
       bg: "bg-yellow-950/40",
       border: "border-yellow-500/30",
       text: "text-yellow-300",
@@ -82,7 +81,7 @@ function getAlertConfig(daysElapsed: number, status: string): AlertConfig {
   } else {
     return {
       emoji: "⚪",
-      message: "1ヶ月以上痛みが続いています。専門医の受診をお勧めします。",
+      messageKey: "body.injuryAlert.month1",
       bg: "bg-zinc-800/40",
       border: "border-zinc-500/30",
       text: "text-zinc-300",
@@ -105,6 +104,7 @@ const PART_LABELS: Record<string, string> = {
 // ─── Main component ────────────────────────────────────────────────────────────
 
 export default function InjuryCareAlert({ bodyStatus, bodyStatusDates }: Props) {
+  const { t } = useLocale();
   const [alerts, setAlerts] = useState<
     { partKey: string; status: string; daysElapsed: number; config: AlertConfig }[]
   >([]);
@@ -168,9 +168,9 @@ export default function InjuryCareAlert({ bodyStatus, bodyStatusDates }: Props) 
           <span className="flex-shrink-0 text-base mt-0.5">{config.emoji}</span>
           <div className="flex-1 min-w-0">
             <p className={`text-xs font-semibold ${config.text} mb-0.5`}>
-              {PART_LABELS[partKey] ?? partKey} — Day {daysElapsed + 1}
+              {PART_LABELS[partKey] ?? partKey} — {t("body.injuryAlert.dayCount", { n: daysElapsed + 1 })}
             </p>
-            <p className="text-xs text-zinc-400 leading-relaxed">{config.message}</p>
+            <p className="text-xs text-zinc-400 leading-relaxed">{t(config.messageKey)}</p>
           </div>
           <button
             onClick={() => handleDismiss(partKey)}

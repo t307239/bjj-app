@@ -256,6 +256,15 @@
     "ctaStart": "Começar Gratuitamente",
     "ctaLearn": "Saiba mais"
   },
+  "body": {
+    "injuryAlert": {
+      "dayCount": "Dia {n}",
+      "week1Injured": "Lesão registrada. Evite o sparring — foque no drilling hoje.",
+      "week1Sore": "Dor muscular detectada. Treine leve e priorize a recuperação.",
+      "week3": "Melhorando? Continue com mobilidade e alongamento.",
+      "month1": "Dor persistindo há mais de um mês. Considere consultar um especialista."
+    }
+  },
   "skillmap": {
     "collapse": "Recolher filhos",
     "expand": "Expandir filhos",

@@ -1160,6 +1160,13 @@
       "untouched": "Not set",
       "tapToMark": "Tap to mark sore/injured"
     },
+    "injuryAlert": {
+      "dayCount": "Day {n}",
+      "week1Injured": "Injury recorded. Skip sparring — focus on drilling today.",
+      "week1Sore": "Muscle soreness detected. Go light and prioritize recovery.",
+      "week3": "Getting better? Keep up mobility work and stretching.",
+      "month1": "Pain persisting over a month. Consider seeing a specialist."
+    },
     "parts": {
       "neck": "Neck",
       "leftShoulder": "L. Shoulder",
