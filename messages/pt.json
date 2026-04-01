@@ -297,7 +297,12 @@
       "week3": "Melhorando? Continue com mobilidade e alongamento.",
       "month1": "Dor persistindo há mais de um mês. Considere consultar um especialista."
     },
+    "weightChart": "Tendência de Peso",
     "weightChartPeriod": "90 dias",
+    "weightUnit": "kg",
+    "standalone": "Manhã / Avulso",
+    "postTraining": "Pós-Treino",
+    "noData": "Sem dados de peso. Registre seu primeiro peso acima.",
     "parts": {
       "neck": "Pescoço",
       "leftShoulder": "Om. Esq.",

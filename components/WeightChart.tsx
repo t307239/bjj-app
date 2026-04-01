@@ -25,18 +25,25 @@ function formatDateLabel(iso: string): string {
 
 const W = 300; // SVG width
 const H = 140; // SVG height
-const PAD = { top: 10, right: 10, bottom: 28, left: 34 };
+const PAD_BASE = { top: 10, right: 10, bottom: 28 };
 
-function toSvgX(i: number, total: number): number {
-  if (total <= 1) return PAD.left + (W - PAD.left - PAD.right) / 2;
-  return PAD.left + (i / (total - 1)) * (W - PAD.left - PAD.right);
+/** Compute left padding based on max Y-axis label width (3-digit vs 4-digit) */
+function padLeft(maxVal: number): number {
+  const digits = Math.max(String(Math.ceil(maxVal + 1)).length, 2);
+  // ~8px per digit at fontSize 8, plus 6px margin, minimum 34 for clean look
+  return Math.max(digits * 8 + 6, 34);
+}
+
+function toSvgX(i: number, total: number, left: number): number {
+  if (total <= 1) return left + (W - left - PAD_BASE.right) / 2;
+  return left + (i / (total - 1)) * (W - left - PAD_BASE.right);
 }
 
 function toSvgY(val: number, minW: number, maxW: number): number {
-  if (maxW === minW) return PAD.top + (H - PAD.top - PAD.bottom) / 2;
+  if (maxW === minW) return PAD_BASE.top + (H - PAD_BASE.top - PAD_BASE.bottom) / 2;
   const range = maxW - minW;
   const ratio = (val - minW) / range;
-  return PAD.top + (H - PAD.top - PAD.bottom) * (1 - ratio);
+  return PAD_BASE.top + (H - PAD_BASE.top - PAD_BASE.bottom) * (1 - ratio);
 }
 
 function pointsToPolyline(pts: { x: number; y: number }[]): string {
@@ -134,13 +141,14 @@ export default function WeightChart({ userId, refreshKey }: Props) {
     .filter((v): v is number => v !== null);
   const minW = Math.floor(Math.min(...allWeights) - 1);
   const maxW = Math.ceil(Math.max(...allWeights) + 1);
+  const PL = padLeft(maxW); // dynamic left padding
 
   // Build line path segments (skip nulls by breaking the line)
   const standalonePts = data.map((d, i) =>
-    d.standalone !== null ? { x: toSvgX(i, data.length), y: toSvgY(d.standalone, minW, maxW) } : null
+    d.standalone !== null ? { x: toSvgX(i, data.length, PL), y: toSvgY(d.standalone, minW, maxW) } : null
   );
   const postPts = data.map((d, i) =>
-    d.postTraining !== null ? { x: toSvgX(i, data.length), y: toSvgY(d.postTraining, minW, maxW) } : null
+    d.postTraining !== null ? { x: toSvgX(i, data.length, PL), y: toSvgY(d.postTraining, minW, maxW) } : null
   );
 
   // Group consecutive non-null points into segments
@@ -179,21 +187,21 @@ export default function WeightChart({ userId, refreshKey }: Props) {
         {t("body.weightChart")} <span className="text-gray-500 font-normal">({t("body.weightChartPeriod")})</span>
       </p>
 
-      {/* Legend */}
-      <div className="flex gap-4 mb-2">
-        <span className="flex items-center gap-1.5 text-xs text-gray-400">
-          <span className="inline-block w-5 h-0.5 bg-[#10B981] rounded" />
+      {/* Legend — flex-wrap for narrow viewports */}
+      <div className="flex flex-wrap gap-x-4 gap-y-1 mb-2">
+        <span className="flex items-center gap-1.5 text-xs text-gray-400 whitespace-nowrap">
+          <span className="inline-block w-5 h-0.5 bg-[#10B981] rounded flex-shrink-0" />
           {t("body.standalone")}
         </span>
-        <span className="flex items-center gap-1.5 text-xs text-gray-400">
-          <span className="inline-block w-5 h-0.5 bg-[#60a5fa] rounded border-t-2 border-dashed border-[#60a5fa]" />
+        <span className="flex items-center gap-1.5 text-xs text-gray-400 whitespace-nowrap">
+          <span className="inline-block w-5 h-0.5 bg-[#60a5fa] rounded border-t-2 border-dashed border-[#60a5fa] flex-shrink-0" />
           {t("body.postTraining")}
         </span>
       </div>
 
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" aria-label={t("body.weightChart")}>
         {/* Y-axis unit label */}
-        <text x={PAD.left - 4} y={PAD.top - 2} textAnchor="end" fontSize="7" fill="#4b5563">
+        <text x={PL - 4} y={PAD_BASE.top - 2} textAnchor="end" fontSize="7" fill="#4b5563">
           {t("body.weightUnit")}
         </text>
         {/* Grid lines */}
@@ -202,10 +210,10 @@ export default function WeightChart({ userId, refreshKey }: Props) {
           return (
             <g key={tick}>
               <line
-                x1={PAD.left} y1={y} x2={W - PAD.right} y2={y}
+                x1={PL} y1={y} x2={W - PAD_BASE.right} y2={y}
                 stroke="#27272a" strokeWidth="1" strokeDasharray="3 3"
               />
-              <text x={PAD.left - 4} y={y + 3} textAnchor="end" fontSize="8" fill="#6b7280">
+              <text x={PL - 4} y={y + 3} textAnchor="end" fontSize="8" fill="#6b7280">
                 {tick}
               </text>
             </g>
@@ -216,7 +224,7 @@ export default function WeightChart({ userId, refreshKey }: Props) {
         {xLabels.map(({ i, label }) => (
           <text
             key={i}
-            x={toSvgX(i, data.length)}
+            x={toSvgX(i, data.length, PL)}
             y={H - 4}
             textAnchor="middle"
             fontSize="8"

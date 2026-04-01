@@ -1186,7 +1186,12 @@
       "week3": "そろそろ回復してきましたか？モビリティ・ストレッチでしっかりケアしましょう。",
       "month1": "1ヶ月以上痛みが続いています。専門医の受診をお勧めします。"
     },
+    "weightChart": "体重推移",
     "weightChartPeriod": "90日",
+    "weightUnit": "kg",
+    "standalone": "朝 / 単独計測",
+    "postTraining": "練習後",
+    "noData": "体重データがありません。上で最初の体重を記録しましょう。",
     "parts": {
       "neck": "首",
       "leftShoulder": "左肩",
