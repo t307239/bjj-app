@@ -25,7 +25,7 @@ function formatDateLabel(iso: string): string {
 
 const W = 300; // SVG width
 const H = 140; // SVG height
-const PAD_BASE = { top: 10, right: 10, bottom: 28 };
+const PAD_BASE = { top: 18, right: 10, bottom: 28 };
 
 /** Compute left padding based on max Y-axis label width (3-digit vs 4-digit) */
 function padLeft(maxVal: number): number {
@@ -201,7 +201,7 @@ export default function WeightChart({ userId, refreshKey }: Props) {
 
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" aria-label={t("body.weightChart")}>
         {/* Y-axis unit label */}
-        <text x={PL - 4} y={PAD_BASE.top - 2} textAnchor="end" fontSize="7" fill="#4b5563">
+        <text x={PL - 4} y={PAD_BASE.top - 6} textAnchor="end" fontSize="7" fill="#4b5563">
           {t("body.weightUnit")}
         </text>
         {/* Grid lines */}
