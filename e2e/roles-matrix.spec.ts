@@ -505,20 +505,23 @@ test.describe("認証済み権限マトリックス", () => {
       await page.waitForLoadState("networkidle").catch(() => {});
       // GymDashboard は members.length === 0 の場合に「🏫 No members yet」空状態UIを表示する。
       // テストデータ依存を避けるため、「メンバーリスト or 空状態」どちらかが表示されれば PASS とする。
+      // ※ text=🏫 は CSS selector と混在できないため body テキスト検査で代替する。
+      const body = await page.textContent("body");
+
+      // メンバーカードが存在するか確認（CSS selector のみ）
       const memberSection = page.locator(
-        '[data-testid="member-list"], .member-card, [class*="member"], text=🏫'
+        '[data-testid="member-list"], .member-card, [class*="member"]'
       ).first();
-      const hasSection = (await memberSection.count()) > 0;
-      if (hasSection) {
-        // 要素が存在する場合は visible を確認
+      const hasCards = (await memberSection.count()) > 0;
+
+      if (hasCards) {
         await expect(memberSection).toBeVisible({ timeout: 10000 });
       } else {
-        // 要素が存在しない場合も GymDashboard はレンダリングされているはずなので body を確認
-        const body = await page.textContent("body");
+        // メンバー0人の空状態 or ダッシュボード自体が表示されていることを確認
         expect(
           body,
-          "道場ダッシュボードには GymDashboard コンテンツが必要"
-        ).toMatch(/ACTIVE MEMBERS|Active Members|Members|GYM DASHBOARD|gym|道場/i);
+          "道場ダッシュボードには GymDashboard コンテンツ or 空状態UIが必要"
+        ).toMatch(/🏫|ACTIVE MEMBERS|Active Members|Members|GYM DASHBOARD|道場|Gym/i);
       }
     });
 
