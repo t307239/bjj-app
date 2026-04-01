@@ -15,6 +15,7 @@ import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
+import { serverEnv } from "@/lib/env";
 
 // ── Rate limit: admin queries — max 60 per IP per 10 min ──
 const adminRateMap = new Map<string, { count: number; resetAt: number }>();
@@ -69,7 +70,7 @@ export async function GET(req: NextRequest) {
   // 3. Query via Service Role (bypasses RLS)
   const serviceClient = createServiceClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    serverEnv.supabaseServiceRoleKey()
   );
 
   // Fetch users from auth.users via Supabase Admin API

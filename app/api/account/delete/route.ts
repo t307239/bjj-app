@@ -3,6 +3,7 @@ import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
+import { serverEnv } from "@/lib/env";
 
 // ── Rate limit: account deletion is irreversible — max 3 attempts per IP per 15 min ──
 const deleteRateMap = new Map<string, { count: number; resetAt: number }>();
@@ -45,7 +46,7 @@ export async function POST(req: NextRequest) {
   // 2. Delete auth user via service role (triggers CASCADE on all related data)
   const serviceClient = createServiceClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    serverEnv.supabaseServiceRoleKey()
   );
   const { error: deleteError } = await serviceClient.auth.admin.deleteUser(user.id);
   if (deleteError) {

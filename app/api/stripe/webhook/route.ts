@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
+import { serverEnv } from "@/lib/env";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,14 +14,14 @@ export async function POST(req: Request) {
     return new Response("Missing stripe-signature header", { status: 400 });
   }
 
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+  const stripe = new Stripe(serverEnv.stripeSecretKey());
   let event: Stripe.Event;
 
   try {
     event = stripe.webhooks.constructEvent(
       body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      serverEnv.stripeWebhookSecret()
     );
   } catch (err) {
     logger.error("stripe.webhook.sig_failed", { message: (err as Error).message });
@@ -31,7 +32,7 @@ export async function POST(req: Request) {
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    serverEnv.supabaseServiceRoleKey()
   );
 
   try {

@@ -32,7 +32,8 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // 保護されたルートはログイン必須（/dashboardはゲストモードOKなので除外）
-  const protectedPaths = ["/techniques", "/profile", "/gym/dashboard"];
+  // /admin: ページ側でも ADMIN_EMAIL チェックするが多層防御としてここでも認証要求
+  const protectedPaths = ["/techniques", "/profile", "/gym/dashboard", "/admin"];
   const isProtected = protectedPaths.some((p) =>
     request.nextUrl.pathname.startsWith(p)
   );
