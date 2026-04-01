@@ -74,9 +74,12 @@ export function relativeDate(
   if (diffDays === 0) return t("techniques.addedToday");
   if (diffDays === 1) return t("techniques.addedYesterday");
   if (diffDays < 7) return t("techniques.addedDaysAgo", { n: diffDays });
-  if (diffDays < 30) return t("techniques.addedWeeksAgo", { n: Math.floor(diffDays / 7) });
-  if (diffDays < 365) return t("techniques.addedMonthsAgo", { n: Math.floor(diffDays / 30) });
-  return t("techniques.addedYearsAgo", { n: Math.floor(diffDays / 365) });
+  const weeks = Math.floor(diffDays / 7);
+  if (diffDays < 30) return t(weeks === 1 ? "techniques.addedWeekAgo" : "techniques.addedWeeksAgo", { n: weeks });
+  const months = Math.floor(diffDays / 30);
+  if (diffDays < 365) return t(months === 1 ? "techniques.addedMonthAgo" : "techniques.addedMonthsAgo", { n: months });
+  const years = Math.floor(diffDays / 365);
+  return t(years === 1 ? "techniques.addedYearAgo" : "techniques.addedYearsAgo", { n: years });
 }
 
 /** YouTube URLからvideoIdを抽出 */
