@@ -65,9 +65,9 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
 
       {/* ── Sheet container ───────────────────────────────────────────────── */}
       {/* Mobile: pinned to bottom | Desktop: centered via flex */}
+      {/* NOTE: aria-hidden removed — was hiding the dialog from iOS focus/tap tree */}
       <div
         className="fixed inset-x-0 bottom-0 z-[61] md:inset-0 md:flex md:items-center md:justify-center md:px-4 pointer-events-none"
-        aria-hidden="true"
       >
         <div
           ref={sheetRef}
@@ -77,14 +77,15 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
           className={[
             // Layout
             "pointer-events-auto w-full flex flex-col",
-            // Sizing: mobile fills up to 92% viewport height; desktop capped at 85%
-            "max-h-[92svh] md:max-h-[85vh] md:max-w-lg",
+            // Sizing: svh fallback chain for older iOS Safari (15.x doesn't support svh)
+            // max-h order: svh → dvh → 92vh fallback
+            "max-h-[92vh] max-h-[92dvh] max-h-[92svh] md:max-h-[85vh]",
+            "md:max-w-lg",
             // Appearance
             "bg-zinc-900 border border-white/10 shadow-2xl outline-none",
             // Shape: mobile rounded top, desktop fully rounded
             "rounded-t-2xl md:rounded-2xl",
             // Animation: slide up on mobile, no extra animation needed on desktop
-            // (desktop appears via backdrop fade which is sufficient)
             "animate-sheet-up md:animate-none",
           ].join(" ")}
           // Prevent backdrop click from propagating through the sheet
@@ -120,9 +121,13 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
           )}
 
           {/* ── Scrollable body ────────────────────────────────────────── */}
+          {/* -webkit-overflow-scrolling: touch enables momentum scroll on iOS Safari */}
           <div
             className="flex-1 overflow-y-auto overscroll-contain px-4 py-4"
-            style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
+            style={{
+              paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
+              WebkitOverflowScrolling: "touch",
+            }}
           >
             {children}
           </div>

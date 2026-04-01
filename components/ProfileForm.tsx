@@ -752,7 +752,16 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.startDate")}</label>
           <input type="date" value={form.start_date} max={today} onChange={(e) => setForm({ ...form, start_date: e.target.value })} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30" />
-          {form.start_date && <p className="text-gray-500 text-xs mt-1">{formatBjjDuration(form.start_date, t)}</p>}
+          {form.start_date && (
+            <p className="text-gray-500 text-xs mt-1">
+              {(() => {
+                const [y, m] = form.start_date.split("-");
+                const d = new Date(parseInt(y), parseInt(m) - 1, 1);
+                const fmt = new Intl.DateTimeFormat(undefined, { year: "numeric", month: "long" }).format(d);
+                return `${fmt} → ${formatBjjDuration(form.start_date, t)}`;
+              })()}
+            </p>
+          )}
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.bio")}</label>

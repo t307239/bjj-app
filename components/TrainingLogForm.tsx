@@ -422,9 +422,9 @@ const TrainingLogForm = memo(function TrainingLogForm({
                 value={form.weight ?? ""}
                 onChange={(e) => setForm({ ...form, weight: e.target.value })}
                 placeholder={t("training.weightPlaceholder")}
-                className="w-full bg-zinc-800 text-white rounded-lg pr-10 px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-600"
+                className="w-full bg-zinc-800 text-white rounded-lg pr-14 px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-600"
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none">
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none select-none">
                 kg
               </span>
             </div>
