@@ -18,6 +18,7 @@ export default function BodyManagementSection({ userId }: Props) {
 
   const [isPro, setIsPro] = useState(false);
   const [bodyStatus, setBodyStatus] = useState<Record<string, string> | null>(null);
+  const [bodyStatusDates, setBodyStatusDates] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   // Incrementing this key triggers a WeightChart re-fetch after QuickWeightLog saves
   const [chartRefreshKey, setChartRefreshKey] = useState(0);
@@ -26,12 +27,13 @@ export default function BodyManagementSection({ userId }: Props) {
     try {
       const { data } = await supabase
         .from("profiles")
-        .select("is_pro, body_status")
+        .select("is_pro, body_status, body_status_dates")
         .eq("id", userId)
         .single();
 
       setIsPro(data?.is_pro ?? false);
       setBodyStatus(data?.body_status ?? null);
+      setBodyStatusDates((data?.body_status_dates as Record<string, string>) ?? {});
     } catch {
       // Network/auth error — show free tier gracefully
     } finally {
@@ -90,7 +92,7 @@ export default function BodyManagementSection({ userId }: Props) {
 
         {/* Injury care alert with 7-day snooze (shown when sore/injured parts exist) */}
         {isPro && (
-          <InjuryCareAlert bodyStatus={bodyStatus} />
+          <InjuryCareAlert bodyStatus={bodyStatus} bodyStatusDates={bodyStatusDates} />
         )}
 
         {/* Body heatmap — blurred behind paywall */}

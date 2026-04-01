@@ -87,14 +87,20 @@ function LegendChip({ status, label }: { status: PartStatus; label: string }) {
 interface Props {
   userId: string;
   initialStatus?: BodyStatus | null;
+  initialDates?: Record<string, string> | null;
 }
 
-export default function BodyHeatmap({ userId, initialStatus }: Props) {
+function toDateStr(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+export default function BodyHeatmap({ userId, initialStatus, initialDates }: Props) {
   const { t } = useLocale();
   const isOnline = useOnlineStatus();
   const supabase = createClient();
 
   const [status, setStatus] = useState<BodyStatus>(initialStatus ?? {});
+  const [statusDates, setStatusDates] = useState<Record<string, string>>(initialDates ?? {});
   const [savingPart, setSavingPart] = useState<PartKey | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -103,6 +109,10 @@ export default function BodyHeatmap({ userId, initialStatus }: Props) {
   useEffect(() => {
     if (initialStatus) setStatus(initialStatus);
   }, [initialStatus]);
+
+  useEffect(() => {
+    if (initialDates) setStatusDates(initialDates);
+  }, [initialDates]);
 
   const showToast = useCallback((msg: string) => {
     setToast(msg);
@@ -125,24 +135,32 @@ export default function BodyHeatmap({ userId, initialStatus }: Props) {
       // injured → delete part (back to healthy default)
       const newStatusClean: BodyStatus = { ...status };
       delete newStatusClean[part];
+      const newDatesClean = { ...statusDates };
+      delete newDatesClean[part];
       setStatus(newStatusClean);
+      setStatusDates(newDatesClean);
       setSavingPart(part);
       const { error } = await supabase
         .from("profiles")
-        .update({ body_status: newStatusClean })
+        .update({ body_status: newStatusClean, body_status_dates: newDatesClean })
         .eq("id", userId);
       setSavingPart(null);
-      if (error) { setStatus(status); showToast(t("body.saveError")); }
+      if (error) { setStatus(status); setStatusDates(statusDates); showToast(t("body.saveError")); }
       return;
     }
 
+    // Record first-seen date when a part is first marked sore/injured
+    const today = toDateStr(new Date());
+    const newDates = statusDates[part] ? statusDates : { ...statusDates, [part]: today };
+
     const newStatus: BodyStatus = { ...status, [part]: next };
     setStatus(newStatus);
+    setStatusDates(newDates);
     setSavingPart(part);
 
     const { error } = await supabase
       .from("profiles")
-      .update({ body_status: newStatus })
+      .update({ body_status: newStatus, body_status_dates: newDates })
       .eq("id", userId);
 
     setSavingPart(null);
@@ -150,6 +168,7 @@ export default function BodyHeatmap({ userId, initialStatus }: Props) {
     if (error) {
       // Revert on error
       setStatus(status);
+      setStatusDates(statusDates);
       showToast(t("body.saveError"));
     }
   }, [isOnline, status, userId, supabase, showToast, t]);
