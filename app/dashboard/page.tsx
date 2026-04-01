@@ -474,7 +474,7 @@ export default async function DashboardPage({
             <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-1">
               {t("dashboard.streak")}
             </span>
-            <div className="flex items-end gap-1 mt-1">
+            <div className="flex items-baseline gap-1 whitespace-nowrap mt-1">
               <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">
                 {streak}
               </span>
@@ -507,7 +507,7 @@ export default async function DashboardPage({
             <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-1">
               {t("dashboard.weekTraining")}
             </span>
-            <div className="flex items-end gap-1 mt-1">
+            <div className="flex items-baseline gap-1 whitespace-nowrap mt-1">
               <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
                 {weekCount ?? 0}
               </span>
@@ -545,11 +545,11 @@ export default async function DashboardPage({
                 </span>
               )}
             </div>
-            <div className="flex items-end gap-2 mt-2">
+            <div className="flex items-baseline gap-2 whitespace-nowrap mt-2">
               <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
                 {monthCount ?? 0}
               </span>
-              <span className="text-zinc-400 text-sm mb-0.5">
+              <span className="text-zinc-400 text-sm">
                 {t("dashboard.sessionsUnit")}
               </span>
             </div>
@@ -650,11 +650,11 @@ export default async function DashboardPage({
                 <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-1">
                   {t("dashboard.techniques")}
                 </span>
-                <div className="flex items-end gap-1.5">
+                <div className="flex items-baseline gap-1.5 whitespace-nowrap">
                   <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-violet-400 to-purple-300 bg-clip-text text-transparent">
                     {techniqueCount ?? 0}
                   </span>
-                  <span className="text-zinc-400 text-xs mb-0.5">
+                  <span className="text-zinc-400 text-xs">
                     {t("dashboard.loggedUnit")}
                   </span>
                 </div>

@@ -425,7 +425,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
                 className="w-full bg-zinc-800 text-white rounded-lg pr-14 px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-600"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none select-none">
-                kg
+                {t("body.weightUnit")}
               </span>
             </div>
           </div>

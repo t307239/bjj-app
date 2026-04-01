@@ -1146,6 +1146,7 @@
     "title": "Body Management",
     "quickLog": "Quick Weight Log",
     "weightKg": "Weight (kg)",
+    "weightUnit": "kg",
     "logWeight": "Log Weight",
     "saving": "Saving...",
     "saved": "Logged ✓",

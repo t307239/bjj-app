@@ -76,6 +76,19 @@
     "thisMonth": "Este mês",
     "streak": "Sequência",
     "days": "dias",
+    "streakDaysUnit": "dias",
+    "streakCardExcellent": "💪 Excelente",
+    "streakCardOnARoll": "⚡ Em sequência",
+    "streakCardKeepGoing": "🎯 Continue assim",
+    "streakCardKeepRolling": "⚡ Continue rolando",
+    "streakCardStart": "Comece sua sequência",
+    "streakCardLogToday": "Registre a sessão de hoje para manter a sequência",
+    "streakCardStartFresh": "Comece do zero — registre sua primeira sessão",
+    "sessionsUnit": "treinos",
+    "monthTraining": "Este mês",
+    "bentoVsLastMonth": "vs mês passado",
+    "bentoGoalLabel": "Meta",
+    "bentoDaysLeft": "dias restantes",
     "logTraining": "Registrar Treino",
     "noLogs": "Nenhum treino ainda",
     "proFeature": "Recurso Pro"
@@ -107,6 +120,17 @@
     "deleteDesc": "Esta ação não pode ser desfeita.",
     "deleteCancelBtn": "Cancelar",
     "deleteConfirmBtn": "Sim, excluir"
+  },
+  "beltProgress": {
+    "title": "Progresso da Faixa",
+    "editTitle": "Editar faixa no Perfil",
+    "stripe": "listra",
+    "stripes": "listras",
+    "stripesOf4": "{n} / 4 listras",
+    "month": "mês",
+    "months": "meses",
+    "monthsAt": "de {belt}",
+    "beltSuffix": ""
   },
   "profile": {
     "title": "Perfil",

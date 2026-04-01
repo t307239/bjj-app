@@ -72,6 +72,17 @@
     "beltBrown": "茶帯",
     "beltBlack": "黒帯"
   },
+  "beltProgress": {
+    "title": "帯の進捗",
+    "editTitle": "プロフィールで帯を編集",
+    "stripe": "本線",
+    "stripes": "本線",
+    "stripesOf4": "{n} / 4 本線",
+    "month": "ヶ月",
+    "months": "ヶ月",
+    "monthsAt": "{belt}で",
+    "beltSuffix": ""
+  },
   "training": {
     "title": "練習記録",
     "logSession": "ロールを記録",
