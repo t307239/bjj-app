@@ -122,6 +122,14 @@ function AccountSection({ userId, isPro, referralCode, referralCount }: { userId
 
 type TabId = "stats" | "profile" | "body" | "account";
 
+// perf: タブにホバー/フォーカスした時点でチャンクを先読みしておく
+// → クリック時には既にロード済みになりスケルトンが出ない
+const PRELOAD_MAP: Partial<Record<TabId, () => void>> = {
+  stats:   () => { void import("./RollAnalyticsCard"); },
+  body:    () => { void import("./BodyManagementSection"); },
+  profile: () => { void import("./ProfileForm"); },
+};
+
 export default function ProfileTabs({ userId, isPro = false, referralCode = null, referralCount = 0, totalCount = 0 }: { userId: string; isPro?: boolean; referralCode?: string | null; referralCount?: number; totalCount?: number }) {
   const { t } = useLocale();
   const [activeTab, setActiveTab] = useState<TabId>("stats");
@@ -139,6 +147,8 @@ export default function ProfileTabs({ userId, isPro = false, referralCode = null
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
+            onMouseEnter={() => PRELOAD_MAP[tab.id]?.()}
+            onFocus={() => PRELOAD_MAP[tab.id]?.()}
             className={`flex-1 py-2 rounded-md text-xs font-semibold transition-all active:scale-95 ${
               activeTab === tab.id
                 ? "bg-zinc-700 text-white shadow-sm font-medium"
