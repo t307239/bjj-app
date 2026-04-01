@@ -78,38 +78,6 @@ export default function TechniqueLogList({
 
   return (
     <div>
-      {/* 統計バー */}
-      {!initialLoading && techniques.length > 0 && (
-        <div className="bg-zinc-900 rounded-xl py-6 px-4 border border-white/10 mb-4">
-          <div className="flex items-center gap-4 text-sm">
-            <div className="flex-1 text-center">
-              <div className="text-4xl font-bold text-zinc-100">
-                {techniques.length}
-              </div>
-              <div className="text-xs font-medium text-zinc-500 tracking-wider uppercase mt-1.5">
-                {t("techniques.totalTechniques")}
-              </div>
-            </div>
-            <div className="w-px h-8 bg-white/10" />
-            <div className="flex-1 text-center">
-              <div className="text-4xl font-bold text-green-400">
-                {techniques.filter((t) => t.mastery_level >= 4).length}
-              </div>
-              <div className="text-xs font-medium text-zinc-500 tracking-wider uppercase mt-1.5">{t("techniques.favorites")}</div>
-            </div>
-            <div className="w-px h-8 bg-white/10" />
-            <div className="flex-1 text-center">
-              <div className="text-4xl font-bold text-[#10B981]">
-                {new Set(techniques.map((t) => t.category)).size}
-              </div>
-              <div className="text-xs font-medium text-zinc-500 tracking-wider uppercase mt-1.5">
-                {t("techniques.categoryCount")}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* ヘッダー: ソート + 追加ボタン */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
