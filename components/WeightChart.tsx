@@ -192,6 +192,10 @@ export default function WeightChart({ userId, refreshKey }: Props) {
       </div>
 
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" aria-label={t("body.weightChart")}>
+        {/* Y-axis unit label */}
+        <text x={PAD.left - 4} y={PAD.top - 2} textAnchor="end" fontSize="7" fill="#4b5563">
+          {t("body.weightUnit")}
+        </text>
         {/* Grid lines */}
         {yTicks.map((tick) => {
           const y = toSvgY(tick, minW, maxW);
