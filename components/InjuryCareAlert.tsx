@@ -6,24 +6,23 @@
  * body_statusのsore/injuredパーツを検出し、経過日数に応じたケア提案を表示。
  * ✕で閉じると7日間非表示（スヌーズ）。
  *
- * localStorage key: "bjj_injury_tracking"
- * Format: { [partKey]: { firstSeen: ISO string, snoozedUntil: ISO string | null } }
+ * firstSeen: DBのbody_status_dates（デバイス跨ぎ対応）
+ * snooze: localStorage（UI設定なのでローカルで十分）
+ * localStorage key: "bjj_injury_snooze"
+ * Format: { [partKey]: { snoozedUntil: ISO string | null } }
  */
 
 import { useEffect, useState } from "react";
 
 interface Props {
   bodyStatus: Record<string, string> | null;
+  bodyStatusDates: Record<string, string>; // DB-stored first-seen dates per part
 }
 
-interface PartTracking {
-  firstSeen: string;          // ISO date string (YYYY-MM-DD)
-  snoozedUntil: string | null; // ISO date string or null
-}
+// Snooze-only localStorage (firstSeen now lives in DB via body_status_dates)
+type SnoozeMap = Record<string, { snoozedUntil: string | null }>;
 
-type TrackingMap = Record<string, PartTracking>;
-
-const LS_KEY = "bjj_injury_tracking";
+const LS_SNOOZE_KEY = "bjj_injury_snooze";
 
 function toDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -33,19 +32,19 @@ function daysBetween(a: string, b: string): number {
   return Math.floor((new Date(b).getTime() - new Date(a).getTime()) / 86400000);
 }
 
-function loadTracking(): TrackingMap {
+function loadSnooze(): SnoozeMap {
   if (typeof window === "undefined") return {};
   try {
-    const raw = localStorage.getItem(LS_KEY);
-    return raw ? (JSON.parse(raw) as TrackingMap) : {};
+    const raw = localStorage.getItem(LS_SNOOZE_KEY);
+    return raw ? (JSON.parse(raw) as SnoozeMap) : {};
   } catch {
     return {};
   }
 }
 
-function saveTracking(map: TrackingMap): void {
+function saveSnooze(map: SnoozeMap): void {
   try {
-    localStorage.setItem(LS_KEY, JSON.stringify(map));
+    localStorage.setItem(LS_SNOOZE_KEY, JSON.stringify(map));
   } catch { /* ignore */ }
 }
 
@@ -105,7 +104,7 @@ const PART_LABELS: Record<string, string> = {
 
 // ─── Main component ────────────────────────────────────────────────────────────
 
-export default function InjuryCareAlert({ bodyStatus }: Props) {
+export default function InjuryCareAlert({ bodyStatus, bodyStatusDates }: Props) {
   const [alerts, setAlerts] = useState<
     { partKey: string; status: string; daysElapsed: number; config: AlertConfig }[]
   >([]);
@@ -115,39 +114,23 @@ export default function InjuryCareAlert({ bodyStatus }: Props) {
     if (!bodyStatus) return;
 
     const today = toDateStr(new Date());
-    const tracking = loadTracking();
+    const snooze = loadSnooze();
 
-    // Update tracking: add new sore/injured parts, clean up recovered parts
     const injuredParts = Object.entries(bodyStatus).filter(
       ([, v]) => v === "sore" || v === "injured"
     );
 
-    // Add first-seen for newly recorded injuries
-    for (const [key] of injuredParts) {
-      if (!tracking[key]) {
-        tracking[key] = { firstSeen: today, snoozedUntil: null };
-      }
-    }
-
-    // Remove tracking for parts that are now ok
-    for (const key of Object.keys(tracking)) {
-      if (!bodyStatus[key] || bodyStatus[key] === "ok") {
-        delete tracking[key];
-      }
-    }
-
-    saveTracking(tracking);
-
-    // Build alerts: skip snoozed
+    // Build alerts using DB-stored firstSeen dates (device-independent)
     const activeAlerts = injuredParts
       .map(([partKey, status]) => {
-        const track = tracking[partKey];
-        if (!track) return null;
+        // firstSeen comes from DB; fall back to today if not yet recorded
+        const firstSeen = bodyStatusDates[partKey] ?? today;
 
-        // Check snooze
-        if (track.snoozedUntil && track.snoozedUntil >= today) return null;
+        // Check snooze (stored locally — UI preference only)
+        const snoozedUntil = snooze[partKey]?.snoozedUntil;
+        if (snoozedUntil && snoozedUntil >= today) return null;
 
-        const daysElapsed = daysBetween(track.firstSeen, today);
+        const daysElapsed = daysBetween(firstSeen, today);
         const config = getAlertConfig(daysElapsed, status);
         return { partKey, status, daysElapsed, config };
       })
@@ -160,17 +143,14 @@ export default function InjuryCareAlert({ bodyStatus }: Props) {
     });
 
     setAlerts(activeAlerts);
-  }, [bodyStatus]);
+  }, [bodyStatus, bodyStatusDates]);
 
   const handleDismiss = (partKey: string) => {
-    const tracking = loadTracking();
-    if (tracking[partKey]) {
-      // Snooze for 7 days
-      const snoozeDate = new Date();
-      snoozeDate.setDate(snoozeDate.getDate() + 7);
-      tracking[partKey].snoozedUntil = toDateStr(snoozeDate);
-      saveTracking(tracking);
-    }
+    const snooze = loadSnooze();
+    const snoozeDate = new Date();
+    snoozeDate.setDate(snoozeDate.getDate() + 7);
+    snooze[partKey] = { snoozedUntil: toDateStr(snoozeDate) };
+    saveSnooze(snooze);
     setDismissed((prev) => new Set([...prev, partKey]));
   };
 

@@ -97,7 +97,7 @@ export default function BodyManagementSection({ userId }: Props) {
 
         {/* Body heatmap — blurred behind paywall */}
         <div className={!isPro ? "pointer-events-none select-none blur-sm opacity-40" : ""}>
-          <BodyHeatmap userId={userId} initialStatus={bodyStatus} />
+          <BodyHeatmap userId={userId} initialStatus={bodyStatus} initialDates={bodyStatusDates} />
         </div>
       </div>
     </div>

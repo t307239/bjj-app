@@ -115,11 +115,11 @@
     "saving": "Salvando…",
     "saved": "Perfil salvo!",
     "belts": {
-      "white": "Branca",
-      "blue": "Azul",
-      "purple": "Roxa",
-      "brown": "Marrom",
-      "black": "Preta"
+      "white": "White",
+      "blue": "Blue",
+      "purple": "Purple",
+      "brown": "Brown",
+      "black": "Black"
     },
     "exportBtn": "Exportar CSV",
     "exporting": "Exportando…",
@@ -219,7 +219,7 @@
     "goHome": "Voltar ao início"
   },
   "aiCoach": {
-    "title": "🤖 Micro-Coach IA",
+    "title": "🤖 AI Micro-Coach",
     "proDesc": "Desbloqueie insights de coaching personalizados baseados nos seus dados de treino.",
     "generateDesc": "Obtenha um insight de coaching personalizado com base nos últimos 30 dias de treino.",
     "generateBtn": "Gerar meu coaching",
