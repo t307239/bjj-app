@@ -260,5 +260,9 @@
     "collapse": "Recolher filhos",
     "expand": "Expandir filhos",
     "recentFocus": "Recentes:"
+  },
+  "chart": {
+    "days84": "3 meses",
+    "past84Days": "Últimos 3 meses: {n} sessões"
   }
 }

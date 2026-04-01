@@ -163,7 +163,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-gray-300">{t("chart.activity")}</span>
             <div className="flex bg-zinc-800 rounded-lg p-0.5 gap-0.5">
-              <span className="text-xs px-3 py-1 rounded-lg bg-zinc-600 text-white">84 days</span>
+              <span className="text-xs px-3 py-1 rounded-lg bg-zinc-600 text-white">3 months</span>
               <span className="text-xs px-3 py-1 text-gray-400">Monthly</span>
             </div>
           </div>
