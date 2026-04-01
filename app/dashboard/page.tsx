@@ -531,7 +531,7 @@ export default async function DashboardPage({
               <span className="text-xs font-semibold text-zinc-400 tracking-widest">
                 {t("dashboard.monthTraining")}
               </span>
-              {prevMonthCount !== null && prevMonthCount !== undefined && prevMonthCount > 0 && (
+              {prevMonthCount !== null && prevMonthCount !== undefined && prevMonthCount > 0 && (monthCount ?? 0) > 0 && (
                 <span
                   className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                     (monthCount ?? 0) >= prevMonthCount
