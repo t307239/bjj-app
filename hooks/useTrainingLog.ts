@@ -226,10 +226,13 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     const weightNum = form.weight !== "" ? parseFloat(form.weight) : null;
     const weightValue = weightNum !== null && !isNaN(weightNum) && weightNum > 0 ? weightNum : null;
 
+    // Exclude roll-detail fields that are encoded into notes; they have no DB columns
+    const { roll_focus: _rf, partner_belt: _pb, size_diff: _sd, ...insertForm } = form;
+
     setLoading(true);
     const { data, error } = await supabase
       .from("training_logs")
-      .insert([{ id: idempotencyKey.current, ...form, notes: finalNotes, user_id: userId, weight: weightValue }])
+      .insert([{ id: idempotencyKey.current, ...insertForm, notes: finalNotes, user_id: userId, weight: weightValue }])
       .select()
       .single();
 
