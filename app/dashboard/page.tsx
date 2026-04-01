@@ -18,11 +18,9 @@ import CollapsibleSection from "@/components/CollapsibleSection";
 import BeltProgressCard from "@/components/BeltProgressCard";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
 import GymKickBanner from "@/components/GymKickBanner";
-import GymRanking from "@/components/GymRanking";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
 import InviteCard from "@/components/InviteCard";
 import TimeGreeting from "@/components/TimeGreeting";
-import AICoachCard from "@/components/AICoachCard";
 import {
   getWeekStartDate,
   getMonthStartDate,
@@ -32,6 +30,18 @@ import { getLogicalTrainingDate } from "@/lib/logicalDate";
 import { serverT as t } from "@/lib/i18n";
 import ProStatusBanner from "@/components/ProStatusBanner";
 import AvatarImage from "@/components/AvatarImage";
+
+// perf: 条件表示コンポーネント（gym 所属者のみ / Pro のみ）を遅延読み込み
+// → 未所属ユーザーは GymRanking のコードを一切ダウンロードしない
+const GymRanking = dynamic(() => import("@/components/GymRanking"), {
+  ssr: false,
+  loading: () => <div className="h-24 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
+// perf: AI Coach は Pro ユーザー向けかつ折り返し以下 → 遅延読み込み
+const AICoachCard = dynamic(() => import("@/components/AICoachCard"), {
+  ssr: false,
+  loading: () => <div className="h-32 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
 
 // perf: 折り返し以下の重いチャート群を遅延読み込み（初期JSバンドルから除外）
 const TrainingBarChart = dynamic(() => import("@/components/TrainingBarChart"), {

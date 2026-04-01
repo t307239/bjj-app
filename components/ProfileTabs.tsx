@@ -1,18 +1,31 @@
 "use client";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
 import PersonalBests from "./PersonalBests";
 import ProfileForm from "./ProfileForm";
-import BodyManagementSection from "./BodyManagementSection";
-import TrainingChart from "./TrainingChart";
 import ReferralSection from "./ReferralSection";
 import PushNotificationSection from "./PushNotificationSection";
 import ProGate from "./ProGate";
-import RollAnalyticsCard from "./RollAnalyticsCard";
 import MilestoneBadgeGrid from "./MilestoneBadgeGrid";
 import { trackEvent } from "@/lib/analytics";
+
+// perf: タブ切り替え時に初めて必要になるコンポーネントを遅延読み込み
+// stats タブの重いチャート・分析カード、body タブのキャンバス系を初期バンドルから除外
+const TrainingChart = dynamic(() => import("./TrainingChart"), {
+  ssr: false,
+  loading: () => <div className="h-48 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
+const RollAnalyticsCard = dynamic(() => import("./RollAnalyticsCard"), {
+  ssr: false,
+  loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
+const BodyManagementSection = dynamic(() => import("./BodyManagementSection"), {
+  ssr: false,
+  loading: () => <div className="h-48 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
 
 function AccountSection({ userId, isPro, referralCode, referralCount }: { userId: string; isPro: boolean; referralCode: string | null; referralCount: number }) {
   const { t } = useLocale();
