@@ -324,17 +324,9 @@ export default function PersonalBests({ userId }: Props) {
         ))}
       </div>
       {bests.maxSessionMin > 0 && (
-        <div className="mt-3 pt-3 border-t border-zinc-800/50">
-          <div className="grid grid-cols-2 gap-2">
-            <div className="text-center">
-              <div className="text-sm font-semibold text-zinc-200">{fmtTime(bests.maxSessionMin)}</div>
-              <div className="text-xs text-zinc-500 uppercase tracking-wider mt-0.5">{t("stats.longestSession")}</div>
-            </div>
-            <div className="text-center">
-              <div className="text-sm font-semibold text-zinc-200">{bests.avgMonthly}{timesUnit}</div>
-              <div className="text-xs text-zinc-500 uppercase tracking-wider mt-0.5">{t("stats.monthlyAvg")}</div>
-            </div>
-          </div>
+        <div className="mt-3 pt-3 border-t border-zinc-800/50 text-center">
+          <div className="text-sm font-semibold text-zinc-200">{fmtTime(bests.maxSessionMin)}</div>
+          <div className="text-xs text-zinc-500 uppercase tracking-wider mt-0.5">{t("stats.longestSession")}</div>
         </div>
       )}
       {/* 曜日別練習頻度ミニグラフ */}

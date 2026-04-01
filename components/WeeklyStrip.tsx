@@ -113,8 +113,8 @@ export default function WeeklyStrip({ userId }: Props) {
   const trainedThisWeek = weekDays.filter((d) => trainedDates.has(d.dateStr)).length;
   const totalPastDays = weekDays.filter((d) => d.isPast).length;
 
-  // Count delta vs last week (single comparison line — minutes delta removed for clarity)
-  const countDelta = lastWeekCount !== null && lastWeekCount > 0
+  // Count delta vs last week — only show when user has trained at least once this week
+  const countDelta = lastWeekCount !== null && lastWeekCount > 0 && trainedThisWeek > 0
     ? trainedThisWeek - lastWeekCount
     : null;
 
