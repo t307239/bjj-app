@@ -82,7 +82,10 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
     if (allDone && prevCompletedRef.current < steps.length && celebState === "idle") {
       setCelebState("celebrating");
       const fadeTimer = setTimeout(() => setCelebState("fading"), 2800);
-      const doneTimer = setTimeout(() => setCelebState("done"), 3800);
+      const doneTimer = setTimeout(() => {
+        setCelebState("done");
+        localStorage.setItem(DISMISS_KEY, "1"); // never show celebration again
+      }, 3800);
       prevCompletedRef.current = completedCount;
       return () => { clearTimeout(fadeTimer); clearTimeout(doneTimer); };
     }

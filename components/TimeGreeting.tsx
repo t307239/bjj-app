@@ -42,9 +42,12 @@ export default function TimeGreeting({ displayName }: TimeGreetingProps) {
     );
   }
 
+  const greetingText = t(greeting.key);
+  const endsWithPunct = /[?!？！]$/.test(greetingText);
+
   return (
     <h2 className="text-xl font-bold tracking-tight">
-      {greeting.emoji} {t(greeting.key)}, {displayName}
+      {greeting.emoji} {greetingText}{endsWithPunct ? ` ${displayName}` : `, ${displayName}`}
     </h2>
   );
 }
