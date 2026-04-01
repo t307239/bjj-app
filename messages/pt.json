@@ -6,7 +6,8 @@
     "logout": "Sair",
     "loggingOut": "Saindo…",
     "streakBadge": "🔥 {n} dias seguidos",
-    "streakDays": "{n} dias"
+    "streakDays": "{n} dias",
+    "streakDaysStraight": "sequência de {n} dias"
   },
   "common": {
     "close": "Fechar",

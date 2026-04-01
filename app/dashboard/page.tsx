@@ -396,11 +396,11 @@ export default async function DashboardPage({
               </div>
               <div className="min-w-0">
                 <TimeGreeting displayName={displayName} />
-                <p className="text-gray-400 text-xs mt-0.5 truncate">
+                <p className="text-gray-400 text-xs mt-0.5 break-words leading-tight">
                   {streak >= 7
-                    ? `🔥 ${streak}-day streak`
+                    ? `🔥 ${t("dashboard.streakDaysStraight", { n: streak })}`
                     : streak >= 3
-                      ? `🎯 ${streak}-day streak`
+                      ? `🎯 ${t("dashboard.streakDaysStraight", { n: streak })}`
                       : streak >= 1
                         ? t("dashboard.streakCardLogToday")
                         : hasFirstLog

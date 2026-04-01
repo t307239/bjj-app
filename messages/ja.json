@@ -6,7 +6,8 @@
     "logout": "ログアウト",
     "loggingOut": "ログアウト中…",
     "streakBadge": "🔥 {n}日連続練習中",
-    "streakDays": "{n}日"
+    "streakDays": "{n}日",
+    "streakDaysStraight": "{n}日連続練習中"
   },
   "dashboard": {
     "welcomeBack": "おかえり、{name} 👋",

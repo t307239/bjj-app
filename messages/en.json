@@ -6,7 +6,8 @@
     "logout": "Logout",
     "loggingOut": "Logging out…",
     "streakBadge": "🔥 {n} days straight",
-    "streakDays": "{n} days"
+    "streakDays": "{n} days",
+    "streakDaysStraight": "{n}-day streak"
   },
   "dashboard": {
     "welcomeBack": "Welcome back, {name} 👋",
