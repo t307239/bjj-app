@@ -1,42 +1,50 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLocale } from "@/lib/i18n";
 
 interface TimeGreetingProps {
   displayName: string;
 }
 
-function getGreeting(hour: number): { text: string; emoji: string } {
+type GreetingKey =
+  | "dashboard.greetingMorning"
+  | "dashboard.greetingAfternoon"
+  | "dashboard.greetingEvening"
+  | "dashboard.greetingNight";
+
+function getGreetingKey(hour: number): { key: GreetingKey; emoji: string } {
   if (hour >= 5 && hour < 12) {
-    return { text: "Good morning", emoji: "🌅" };
+    return { key: "dashboard.greetingMorning", emoji: "🌅" };
   } else if (hour >= 12 && hour < 17) {
-    return { text: "Time to train", emoji: "☀️" };
+    return { key: "dashboard.greetingAfternoon", emoji: "☀️" };
   } else if (hour >= 17 && hour < 22) {
-    return { text: "Evening session?", emoji: "🌆" };
+    return { key: "dashboard.greetingEvening", emoji: "🌆" };
   } else {
-    return { text: "Rest well", emoji: "🌙" };
+    return { key: "dashboard.greetingNight", emoji: "🌙" };
   }
 }
 
 export default function TimeGreeting({ displayName }: TimeGreetingProps) {
-  const [greeting, setGreeting] = useState<{ text: string; emoji: string } | null>(null);
+  const { t } = useLocale();
+  const [greeting, setGreeting] = useState<{ key: GreetingKey; emoji: string } | null>(null);
 
   useEffect(() => {
-    setGreeting(getGreeting(new Date().getHours()));
+    setGreeting(getGreetingKey(new Date().getHours()));
   }, []);
 
-  // SSR / before hydration: show static greeting
+  // SSR / before hydration: use welcomeBack key
   if (!greeting) {
     return (
       <h2 className="text-xl font-bold tracking-tight">
-        Welcome back, {displayName}
+        {t("dashboard.welcomeBack", { name: displayName })}
       </h2>
     );
   }
 
   return (
     <h2 className="text-xl font-bold tracking-tight">
-      {greeting.emoji} {greeting.text}, {displayName}
+      {greeting.emoji} {t(greeting.key)}, {displayName}
     </h2>
   );
 }
