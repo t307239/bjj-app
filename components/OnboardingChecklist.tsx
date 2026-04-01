@@ -77,9 +77,14 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
   const completedCount = steps.filter((s) => s.done).length;
   const allDone = completedCount === steps.length;
 
-  // Item 30: Trigger celebration when all steps just completed
+  // Item 30: Trigger celebration only when user just completed the final step this session
   useEffect(() => {
     if (allDone && prevCompletedRef.current < steps.length && celebState === "idle") {
+      // Skip re-firing on fresh page loads where all steps were already done before
+      if (localStorage.getItem(DISMISS_KEY) === "1") {
+        prevCompletedRef.current = completedCount;
+        return;
+      }
       setCelebState("celebrating");
       const fadeTimer = setTimeout(() => setCelebState("fading"), 2800);
       const doneTimer = setTimeout(() => {

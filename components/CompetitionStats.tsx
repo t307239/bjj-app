@@ -153,8 +153,9 @@ export default function CompetitionStats({ userId }: Props) {
         data.forEach((l: { notes: string; date: string }) => {
           const ym = l.date.slice(0, 7);
           if (!monthMap[ym]) {
-            const m = parseInt(ym.split("-")[1], 10);
-            monthMap[ym] = { ym, label: `${m}月`, win: 0, loss: 0, draw: 0, total: 0 };
+            const [y2, m2] = ym.split("-");
+            const monthLabel = new Intl.DateTimeFormat("en", { month: "short" }).format(new Date(parseInt(y2), parseInt(m2) - 1, 1));
+            monthMap[ym] = { ym, label: monthLabel, win: 0, loss: 0, draw: 0, total: 0 };
           }
           monthMap[ym].total++;
           const entry = decodeEntry(l.notes);
@@ -301,7 +302,7 @@ export default function CompetitionStats({ userId }: Props) {
           )}
           {lossToSub > 0 && (
             <span className="text-xs bg-red-500/10 border border-red-500/20 text-red-400 px-2 py-1 rounded-full">
-              一本負 {lossToSub}
+              {t("competition.lossBySubmission")} {lossToSub}
             </span>
           )}
         </div>

@@ -109,7 +109,6 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
               }
             });
             return Object.entries(buckets).map(([month, val]) => {
-              const m = month.split("-")[1];
               return { month, label: getMonthLabel(month), ...val };
             });
           };
@@ -348,7 +347,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                     </div>
                   )}
                   <span
-                    className={`leading-none transition-opacity ${range === 12 ? "text-xs" : "text-xs"} ${
+                    className={`leading-none transition-opacity text-xs ${
                       val > 0 && (range === 6 || isCurrentMonth) ? "opacity-100" : "opacity-0"
                     } ${isCurrentMonth ? "text-[#10B981]" : "text-gray-500"}`}
                   >
@@ -385,7 +384,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                     />
                   )}
                   <span
-                    className={`leading-none ${range === 12 ? "text-xs" : "text-xs"} ${
+                    className={`leading-none text-xs ${
                       isSelected
                         ? "text-yellow-400 font-semibold"
                         : isCurrentMonth

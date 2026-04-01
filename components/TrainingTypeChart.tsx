@@ -51,11 +51,12 @@ function fmtMins(mins: number): string {
   return m > 0 ? `${h}h${m}m` : `${h}h`;
 }
 
-function DonutChart({ data, mode, timesUnit, sessionsLabel }: {
+function DonutChart({ data, mode, timesUnit, sessionsLabel, totalTimeLabel }: {
   data: TypeCount[];
   mode: "time" | "count";
   timesUnit: string;
   sessionsLabel: string;
+  totalTimeLabel: string;
 }) {
   const [hovered, setHovered] = useState<string | null>(null);
   const getValue = (d: TypeCount) => mode === "time" ? d.totalMins : d.count;
@@ -140,7 +141,7 @@ function DonutChart({ data, mode, timesUnit, sessionsLabel }: {
             {mode === "time" ? fmtMins(total) : String(total)}
           </text>
           <text x={cx} y={cy + 10} textAnchor="middle" fill="#9ca3af" fontSize="7">
-            {mode === "time" ? "total time" : sessionsLabel}
+            {mode === "time" ? totalTimeLabel : sessionsLabel}
           </text>
         </>
       )}
@@ -380,7 +381,7 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
         )
       ) : (
         <div className="flex items-center gap-4">
-          <DonutChart data={data} mode={chartMode} timesUnit={t("chart.timesUnit")} sessionsLabel={t("chart.sessions")} />
+          <DonutChart data={data} mode={chartMode} timesUnit={t("chart.timesUnit")} sessionsLabel={t("chart.sessions")} totalTimeLabel={t("chart.totalTime")} />
           <div className="flex-1 space-y-1.5">
             {data
               .filter((d) => chartMode === "time" ? d.totalMins > 0 : d.count > 0)
