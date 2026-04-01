@@ -131,6 +131,10 @@
     "deleteConfirm": "Tem certeza? Esta ação é irreversível.",
     "deleteExportFirst": "Antes de excluir, baixe seus dados — não será possível recuperá-los depois.",
     "logoutBtn": "Sair",
+    "bjjHistoryJustStarted": "Começando",
+    "bjjHistoryMonths": "{n} meses",
+    "bjjHistoryYears": "{n} anos",
+    "bjjHistoryYearsMonths": "{y} anos {m} meses",
     "monthsBjj": "meses BJJ",
     "datePresent": "Presente"
   },
