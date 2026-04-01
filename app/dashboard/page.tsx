@@ -11,6 +11,7 @@ import GuestDashboard from "@/components/GuestDashboard";
 import GuestMigration from "@/components/GuestMigration";
 import StreakProtect from "@/components/StreakProtect";
 import StreakFreeze from "@/components/StreakFreeze";
+import StreakMilestoneShare from "@/components/StreakMilestoneShare";
 import AchievementBadge from "@/components/AchievementBadge";
 import InstallBanner from "@/components/InstallBanner";
 import InsightsBanner from "@/components/InsightsBanner";
@@ -794,6 +795,8 @@ export default async function DashboardPage({
             ═══════════════════════════════════════════ */}
         {hasFirstLog ? (
           <>
+            {/* Streak milestone share (30/100/365日) */}
+            <StreakMilestoneShare streak={streak} />
             {/* Dynamic motivational message — streak危機バナー表示中は非表示（メッセージ重複防止）*/}
             {streak < 3 && <DashboardMotivation daysSince={daysSinceLastLog} />}
             <CollapsibleSection
