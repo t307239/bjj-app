@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import NavBar from "@/components/NavBar";
 import TrainingLog from "@/components/TrainingLog";
 // TrainingChart moved to Profile/Analytics tab (③-4)
-import TrainingBarChart from "@/components/TrainingBarChart";
-import TrainingTypeChart from "@/components/TrainingTypeChart";
-import CompetitionStats from "@/components/CompetitionStats";
 import GoalTracker from "@/components/GoalTracker";
 import WeeklyStrip from "@/components/WeeklyStrip";
 import GuestDashboard from "@/components/GuestDashboard";
@@ -34,6 +32,20 @@ import { getLogicalTrainingDate } from "@/lib/logicalDate";
 import { serverT as t } from "@/lib/i18n";
 import ProStatusBanner from "@/components/ProStatusBanner";
 import AvatarImage from "@/components/AvatarImage";
+
+// perf: 折り返し以下の重いチャート群を遅延読み込み（初期JSバンドルから除外）
+const TrainingBarChart = dynamic(() => import("@/components/TrainingBarChart"), {
+  ssr: false,
+  loading: () => <div className="h-48 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
+const TrainingTypeChart = dynamic(() => import("@/components/TrainingTypeChart"), {
+  ssr: false,
+  loading: () => <div className="h-40 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
+const CompetitionStats = dynamic(() => import("@/components/CompetitionStats"), {
+  ssr: false,
+  loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
@@ -67,14 +79,14 @@ export async function generateMetadata(): Promise<Metadata> {
   } = await supabase.auth.getUser();
   if (!user) return { title: "Dashboard" };
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("belt, stripe, start_date")
-    .eq("id", user.id)
-    .single();
-
-  const [{ count: totalCount }, { data: recentLogsForStreak }] =
+  // perf: profile を単独 await → Promise.all 化して waterfall を解消
+  const [{ data: profile }, { count: totalCount }, { data: recentLogsForStreak }] =
     await Promise.all([
+      supabase
+        .from("profiles")
+        .select("belt, stripe, start_date")
+        .eq("id", user.id)
+        .single(),
       supabase
         .from("training_logs")
         .select("*", { count: "exact", head: true })
@@ -184,42 +196,46 @@ export default async function DashboardPage({
   const prevYear = month === 1 ? year - 1 : year;
   const firstDayOfPrevMonth = `${prevYear}-${String(prevMonth).padStart(2, "0")}-01`;
 
-  const { data: profileData } = await supabase
-    .from("profiles")
-    .select(
-      "belt, stripe, start_date, is_pro, subscription_status, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym, referral_code, ai_coach_cache, ai_coach_last_generated"
-    )
-    .eq("id", user.id)
-    .single();
-
-  // ── Aggregated dashboard metrics (single RPC instead of 6 separate queries) ──
-  // Fallback: if the RPC function is not deployed yet, run direct count queries.
-  const [rpcRes, { data: recentLogs }, { data: recentTechniques }, { data: typeBreakdownRaw }] =
-    await Promise.all([
-      supabase.rpc("get_dashboard_metrics", {
-        p_user_id: user.id,
-        p_month_start: firstDayOfMonth,
-        p_prev_month_start: firstDayOfPrevMonth,
-        p_week_start: firstDayOfWeek,
-      }),
-      supabase
-        .from("training_logs")
-        .select("date")
-        .eq("user_id", user.id)
-        .order("date", { ascending: false })
-        .limit(60),
-      supabase
-        .from("techniques")
-        .select("name")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(3),
-      supabase
-        .from("training_logs")
-        .select("type")
-        .eq("user_id", user.id)
-        .gte("date", firstDayOfMonth),
-    ]);
+  // ── 全データを並列フェッチ（profile + RPC metrics + logs を1ウェーブで取得）──
+  // perf: profileData を単独 await から Promise.all に移動して waterfall を解消
+  const [
+    { data: profileData },
+    rpcRes,
+    { data: recentLogs },
+    { data: recentTechniques },
+    { data: typeBreakdownRaw },
+  ] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select(
+        "belt, stripe, start_date, is_pro, subscription_status, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym, referral_code, ai_coach_cache, ai_coach_last_generated"
+      )
+      .eq("id", user.id)
+      .single(),
+    supabase.rpc("get_dashboard_metrics", {
+      p_user_id: user.id,
+      p_month_start: firstDayOfMonth,
+      p_prev_month_start: firstDayOfPrevMonth,
+      p_week_start: firstDayOfWeek,
+    }),
+    supabase
+      .from("training_logs")
+      .select("date")
+      .eq("user_id", user.id)
+      .order("date", { ascending: false })
+      .limit(60),
+    supabase
+      .from("techniques")
+      .select("name")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(3),
+    supabase
+      .from("training_logs")
+      .select("type")
+      .eq("user_id", user.id)
+      .gte("date", firstDayOfMonth),
+  ]);
 
   // Use RPC result if available; otherwise fall back to direct count queries
   let metrics = rpcRes.data;
@@ -398,6 +414,7 @@ export default async function DashboardPage({
                 src={avatarUrl}
                 alt={displayName}
                 className="w-9 h-9 rounded-full border border-white/20 shrink-0 object-cover"
+                priority
               />
             ) : (
               <div className="flex-shrink-0 flex items-center gap-1.5 bg-zinc-900/60 border border-white/10 rounded-full px-3 py-1.5">

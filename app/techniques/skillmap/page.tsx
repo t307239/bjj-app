@@ -1,10 +1,24 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import dynamic from "next/dynamic";
 import NavBar from "@/components/NavBar";
-import SkillMap from "@/components/SkillMap";
 import { serverT as t } from "@/lib/i18n";
 import Link from "next/link";
+
+// perf: @xyflow/react (~300KB) + dagre を遅延読み込み。
+// SSR 不要（インタラクティブなキャンバス）なので ssr:false で初期 HTML には含めない。
+const SkillMap = dynamic(() => import("@/components/SkillMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center bg-zinc-950">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-10 h-10 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
+        <p className="text-xs text-zinc-500">Loading Skill Map…</p>
+      </div>
+    </div>
+  ),
+});
 
 export const metadata: Metadata = {
   title: "Skill Map — BJJ App",

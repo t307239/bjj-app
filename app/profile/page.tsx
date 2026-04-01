@@ -166,6 +166,7 @@ export default async function ProfilePage() {
                 src={avatarUrl}
                 alt={displayName}
                 className="w-16 h-16 rounded-2xl border border-white/15 object-cover flex-shrink-0"
+                priority
               />
             ) : (
               <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-500 to-emerald-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-violet-900/30">
