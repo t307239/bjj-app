@@ -9,9 +9,13 @@ import { defineConfig, devices } from "@playwright/test";
  *   npx playwright test --headed     # ブラウザ表示
  *   npx playwright test e2e/lp.spec.ts  # 特定ファイル
  *
- * セットアップ:
- *   npm install --save-dev @playwright/test
- *   npx playwright install chromium
+ * 権限マトリックステスト:
+ *   npx playwright test e2e/roles-matrix.spec.ts           # 全プロジェクト
+ *   npx playwright test e2e/roles-matrix.spec.ts --project=free-user
+ *
+ * storageState セットアップ:
+ *   globalSetup (e2e/auth.setup.ts) が自動で e2e/auth/*.json を生成する。
+ *   NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY が必要。
  */
 export default defineConfig({
   testDir: "./e2e",
@@ -20,15 +24,24 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
+
+  /* auth.setup.ts で storageState JSON を自動生成 */
+  globalSetup: "./e2e/auth.setup.ts",
+
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
+
   projects: [
+    // ── ゲスト（認証なし）── デフォルトテスト用
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: { cookies: [], origins: [] },
+      },
     },
     {
       name: "mobile",
@@ -36,9 +49,48 @@ export default defineConfig({
         ...devices["Desktop Chrome"],
         viewport: { width: 375, height: 812 },
         isMobile: true,
+        storageState: { cookies: [], origins: [] },
       },
     },
+
+    // ── 認証済み権限マトリックス用プロジェクト ──────────────────────────────
+    // auth.setup.ts が生成した storageState を使う。
+    // JSON が存在しない場合（setup 失敗時など）は Playwright がエラーを出す。
+    {
+      name: "free-user",
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "e2e/auth/free.json",
+      },
+      // roles-matrix.spec.ts の認証済みセクションのみ実行
+      testMatch: /roles-matrix\.spec\.ts/,
+    },
+    {
+      name: "pro-user",
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "e2e/auth/pro.json",
+      },
+      testMatch: /roles-matrix\.spec\.ts/,
+    },
+    {
+      name: "gym-owner",
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "e2e/auth/gym-owner.json",
+      },
+      testMatch: /roles-matrix\.spec\.ts/,
+    },
+    {
+      name: "gym-member",
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "e2e/auth/gym-member.json",
+      },
+      testMatch: /roles-matrix\.spec\.ts/,
+    },
   ],
+
   /* Dev server auto-start (comment out if testing against production) */
   webServer: {
     command: "npm run dev",
