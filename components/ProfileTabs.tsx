@@ -177,7 +177,7 @@ export default function ProfileTabs({ userId, isPro = false, referralCode = null
         </>
       )}
       {activeTab === "profile" && <ProfileForm userId={userId} hideAccount />}
-      {activeTab === "body"    && <BodyManagementSection userId={userId} />}
+      {activeTab === "body"    && <BodyManagementSection userId={userId} isPro={isPro} />}
       {activeTab === "account" && <AccountSection userId={userId} isPro={isPro} referralCode={referralCode} referralCount={referralCount} />}
     </div>
   );

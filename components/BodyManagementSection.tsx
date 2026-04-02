@@ -10,13 +10,14 @@ import InjuryCareAlert from "@/components/InjuryCareAlert";
 
 interface Props {
   userId: string;
+  isPro?: boolean;
 }
 
-export default function BodyManagementSection({ userId }: Props) {
+export default function BodyManagementSection({ userId, isPro: isProProp = false }: Props) {
   const { t } = useLocale();
   const supabase = createClient();
 
-  const [isPro, setIsPro] = useState(false);
+  const [isPro, setIsPro] = useState(isProProp);
   const [bodyStatus, setBodyStatus] = useState<Record<string, string> | null>(null);
   const [bodyStatusDates, setBodyStatusDates] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
