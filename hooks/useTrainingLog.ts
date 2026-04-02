@@ -154,9 +154,9 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         logsQuery.range(0, PAGE_SIZE - 1),
         supabase
           .from("technique_nodes")
-          .select("label")
+          .select("name")
           .eq("user_id", userId)
-          .order("label", { ascending: true }),
+          .order("name", { ascending: true }),
         countQuery,
       ]);
 
@@ -168,7 +168,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         setTrainedToday(false);
       }
       if (techData) {
-        const names = [...new Set(techData.map((t: { label: string }) => t.label).filter(Boolean))];
+        const names = [...new Set(techData.map((t: { name: string }) => t.name).filter(Boolean))];
         setTechniqueSuggestions(names);
       }
       if (count !== null) setTotalCount(count);
