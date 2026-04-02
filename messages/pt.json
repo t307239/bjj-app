@@ -7,7 +7,10 @@
     "loggingOut": "Saindo…",
     "streakBadge": "🔥 {n} dias seguidos",
     "streakDays": "{n} dias",
-    "streakDaysStraight": "sequência de {n} dias"
+    "streakDaysStraight": "sequência de {n} dias",
+    "proManage": "Pro · Gerenciar",
+    "proLabel": "Pro",
+    "upgradeToPro": "Upgrade para Pro"
   },
   "common": {
     "close": "Fechar",

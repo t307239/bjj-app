@@ -185,7 +185,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
             onClick={handleSafetyAck}
             className="text-xs font-medium text-amber-400 hover:text-amber-300 transition-colors py-1.5 px-3 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 min-h-[36px]"
           >
-            {t("common.understood") || "I understand"}
+            {t("common.understood")}
           </button>
         </div>
       )}

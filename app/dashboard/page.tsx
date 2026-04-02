@@ -290,8 +290,8 @@ export default async function DashboardPage({
   const typeBreakdown: Record<string, number> = {};
   if (typeBreakdownRaw && typeBreakdownRaw.length > 0) {
     for (const row of typeBreakdownRaw as { type: string }[]) {
-      const t = row.type || "Other";
-      typeBreakdown[t] = (typeBreakdown[t] ?? 0) + 1;
+      const tp = row.type || t("dashboard.typeOther");
+      typeBreakdown[tp] = (typeBreakdown[tp] ?? 0) + 1;
     }
   }
 

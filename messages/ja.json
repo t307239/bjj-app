@@ -7,7 +7,10 @@
     "loggingOut": "サインアウト中…",
     "streakBadge": "🔥 {n}日連続練習中",
     "streakDays": "{n}日",
-    "streakDaysStraight": "{n}日連続練習中"
+    "streakDaysStraight": "{n}日連続練習中",
+    "proManage": "Pro · 管理",
+    "proLabel": "Pro",
+    "upgradeToPro": "Proにアップグレード"
   },
   "dashboard": {
     "welcomeBack": "おかえり、{name} 👋",
@@ -60,6 +63,7 @@
     "bentoOnPaceFor": "→ 月{n}回ペース",
     "bentoAvgSession": "平均セッション",
     "typeBreakdownTitle": "今月の練習タイプ",
+    "typeOther": "その他",
     "bentoMinPerSession": "分 / 回",
     "upsellWinRateLabel": "📊 12ヶ月トレーニンググラフ",
     "upsellInjuryLabel": "🩹 ボディ管理",

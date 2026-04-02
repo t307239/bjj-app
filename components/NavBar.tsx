@@ -122,11 +122,11 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
           <div className="flex items-center gap-2">
             {currentStreak >= 30 ? (
               <span className="hidden sm:flex items-center gap-1 text-xs text-orange-400 bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-full">
-                🔥 {currentStreak} days straight
+                {t("nav.streakBadge", { n: currentStreak })}
               </span>
             ) : currentStreak >= 7 ? (
               <span className="hidden sm:flex items-center gap-1 text-xs text-orange-400 bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-full">
-                ⚡ {currentStreak} days
+                ⚡ {t("nav.streakDays", { n: currentStreak })}
               </span>
             ) : null}
             {/* Pro Plan 導線 */}
@@ -138,11 +138,11 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
                   rel="noopener noreferrer"
                   className="hidden sm:flex items-center gap-1 text-xs text-yellow-400 hover:text-yellow-300 transition-colors"
                 >
-                  ✓ Pro · Manage
+                  ✓ {t("nav.proManage")}
                 </a>
               ) : (
                 <span className="hidden sm:flex items-center gap-1 text-xs text-yellow-400">
-                  ✓ Pro
+                  ✓ {t("nav.proLabel")}
                 </span>
               )
             ) : (
@@ -153,11 +153,11 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
                   rel="noopener noreferrer"
                   className="hidden sm:flex items-center gap-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 shadow-[0_0_15px_rgba(245,158,11,0.2)] active:scale-95 text-white font-bold px-3 py-1.5 rounded-full text-xs transition-all"
                 >
-                  ⚡ Upgrade to Pro
+                  ⚡ {t("nav.upgradeToPro")}
                 </a>
               ) : (
                 <span className="hidden sm:flex items-center gap-1 bg-zinc-700 text-gray-500 font-bold px-3 py-1 rounded-lg text-xs cursor-not-allowed" aria-disabled="true">
-                  ⚡ Upgrade to Pro
+                  ⚡ {t("nav.upgradeToPro")}
                 </span>
               )
             )}
@@ -198,7 +198,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                     </svg>
-                    Profile
+                    {t("nav.profile")}
                   </Link>
                   <LogoutButton
                     onDone={() => setShowUserMenu(false)}
@@ -215,11 +215,11 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
       <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-zinc-950/80 backdrop-blur-xl border-t border-white/[0.08] z-50">
         {currentStreak >= 30 ? (
           <div className="flex justify-center py-1 border-b border-white/5 bg-orange-500/5">
-            <span className="text-xs text-orange-400">🔥 {currentStreak} days straight</span>
+            <span className="text-xs text-orange-400">{t("nav.streakBadge", { n: currentStreak })}</span>
           </div>
         ) : currentStreak >= 7 ? (
           <div className="flex justify-center py-1 border-b border-white/5 bg-orange-500/5">
-            <span className="text-xs text-orange-400">⚡ {currentStreak} days</span>
+            <span className="text-xs text-orange-400">⚡ {t("nav.streakDays", { n: currentStreak })}</span>
           </div>
         ) : null}
         <div className="grid grid-cols-3 pb-safe">
