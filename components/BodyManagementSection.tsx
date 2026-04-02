@@ -32,7 +32,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
         .eq("id", userId)
         .single();
 
-      setIsPro(data?.is_pro ?? false);
+      if (data) setIsPro(data.is_pro ?? isProProp);
       setBodyStatus(data?.body_status ?? null);
       setBodyStatusDates((data?.body_status_dates as Record<string, string>) ?? {});
     } catch {
