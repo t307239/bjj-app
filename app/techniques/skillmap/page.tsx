@@ -7,9 +7,8 @@ import { serverT as t } from "@/lib/i18n";
 import Link from "next/link";
 
 // perf: @xyflow/react (~300KB) + dagre を遅延読み込み。
-// SSR 不要（インタラクティブなキャンバス）なので ssr:false で初期 HTML には含めない。
+// "use client" コンポーネントなので dynamic() のみで遅延読み込み（ssr:false は Server Component で不可）
 const SkillMap = dynamic(() => import("@/components/SkillMap"), {
-  ssr: false,
   loading: () => (
     <div className="w-full h-full flex items-center justify-center bg-zinc-950">
       <div className="flex flex-col items-center gap-3">
