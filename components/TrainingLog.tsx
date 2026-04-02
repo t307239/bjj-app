@@ -308,8 +308,8 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       )}
 
       {/* Header row — title + Export ▼ dropdown + Add CTA (item 2: de-cluttered) */}
-      <div className="flex items-center justify-between mb-3 gap-2">
-        <h3 className="text-lg font-semibold flex-1 min-w-0">
+      <div className="flex flex-wrap items-center justify-between mb-3 gap-x-2 gap-y-1">
+        <h3 className="text-lg font-semibold whitespace-nowrap">
           {t("training.title")}
           {totalCount !== null && totalCount > 0 && (
             <span className="ml-2 text-sm font-normal text-gray-500">({totalCount})</span>

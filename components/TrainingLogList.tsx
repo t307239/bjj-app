@@ -350,7 +350,7 @@ const TrainingLogList = memo(function TrainingLogList({
                     <span className="text-gray-400 text-xs truncate">{formatRelativeDate(entry.date, t)}</span>
                   </div>
                   {/* Right: duration + action buttons */}
-                  <div className="flex items-center gap-0.5 ml-3 flex-shrink-0">
+                  <div className="flex items-center gap-0.5 ml-2 flex-shrink-0">
                     <span className="inline-flex items-center gap-1 text-zinc-400 text-xs font-medium mr-1">
                       <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <circle cx="12" cy="12" r="10" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
@@ -365,7 +365,7 @@ const TrainingLogList = memo(function TrainingLogList({
                     <ShareButton entry={entry} />
                     <button
                       onClick={() => onStartEdit(entry)}
-                      className="text-gray-500 hover:text-[#10B981] transition-colors p-2.5 rounded-lg flex items-center justify-center min-w-[44px] min-h-[44px]"
+                      className="text-gray-500 hover:text-[#10B981] transition-colors p-1.5 sm:p-2.5 rounded-lg flex items-center justify-center min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px]"
                       title={t("training.edit")}
                       aria-label={t("training.edit")}
                     >
@@ -381,7 +381,7 @@ const TrainingLogList = memo(function TrainingLogList({
                     <button
                       onClick={() => onDelete(entry.id)}
                       disabled={deletingId === entry.id}
-                      className="text-gray-500 hover:text-red-400 transition-colors p-2.5 rounded-lg flex items-center justify-center min-w-[44px] min-h-[44px] disabled:opacity-50"
+                      className="text-gray-500 hover:text-red-400 transition-colors p-1.5 sm:p-2.5 rounded-lg flex items-center justify-center min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] disabled:opacity-50"
                       title={t("training.delete")}
                       aria-label={t("training.delete")}
                     >
