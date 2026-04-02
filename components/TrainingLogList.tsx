@@ -11,6 +11,8 @@ import {
   BELT_RANKS,
   RESULT_LABELS,
   decodeCompNotes,
+  decodeRollNotes,
+  formatRollBadge,
 } from "@/lib/trainingLogHelpers";
 
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
@@ -419,10 +421,11 @@ const TrainingLogList = memo(function TrainingLogList({
                     )}
                   </div>
                 )}
-                {/* Tertiary row: notes / competition details */}
+                {/* Tertiary row: notes / roll details / competition details */}
                 {entry.notes &&
                   (() => {
-                    const { comp, userNotes } = decodeCompNotes(entry.notes);
+                    const { comp, userNotes: afterComp } = decodeCompNotes(entry.notes);
+                    const { roll, userNotes } = decodeRollNotes(afterComp);
                     return (
                       <>
                         {comp && (
@@ -465,6 +468,11 @@ const TrainingLogList = memo(function TrainingLogList({
                               <span className="text-xs text-gray-500">🏟 {comp.event}</span>
                             )}
                           </div>
+                        )}
+                        {roll && (
+                          <p className="text-xs text-emerald-400/80 mt-1">
+                            {formatRollBadge(roll)}
+                          </p>
                         )}
                         {userNotes &&
                           (expandedNotes.has(entry.id) || userNotes.length <= 80 ? (
