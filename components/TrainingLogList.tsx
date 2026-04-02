@@ -32,7 +32,9 @@ function formatRelativeDate(dateStr: string, t: (key: string, vars?: Record<stri
   const diffMs = today.setHours(0, 0, 0, 0) - logDate.setHours(0, 0, 0, 0);
   const diffDays = Math.round(diffMs / 86400000);
   if (diffDays < 7) return t("gym.daysAgo", { n: diffDays });
-  return logDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: diffDays > 365 ? "numeric" : undefined });
+  // Compact format: "3/26" or "3/26/24" for >1 year — short enough for 320px screens
+  const shortYear = diffDays > 365 ? `/${String(logDate.getFullYear()).slice(2)}` : "";
+  return `${logDate.getMonth() + 1}/${logDate.getDate()}${shortYear}`;
 }
 
 function formatDuration(min: number): string {
@@ -347,7 +349,7 @@ const TrainingLogList = memo(function TrainingLogList({
                         {TRAINING_TYPES.find((t) => t.value === entry.type)?.label || entry.type}
                       </span>
                     </span>
-                    <span className="text-gray-400 text-xs truncate">{formatRelativeDate(entry.date, t)}</span>
+                    <span className="text-gray-400 text-xs whitespace-nowrap">{formatRelativeDate(entry.date, t)}</span>
                   </div>
                   {/* Right: duration + action buttons */}
                   <div className="flex items-center gap-0.5 ml-2 flex-shrink-0">
