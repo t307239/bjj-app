@@ -137,7 +137,7 @@ export default async function Home() {
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-[100dvh] flex flex-col">
       {/* ナビゲーション — Fix 3: BETA badge + Get Started CTA */}
       <nav className="px-6 py-4 flex items-center justify-between max-w-5xl mx-auto w-full">
         <div className="flex items-center gap-2">

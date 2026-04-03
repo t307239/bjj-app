@@ -382,7 +382,7 @@ export default async function DashboardPage({
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
+    <div className="min-h-[100dvh] bg-zinc-950 pb-20 sm:pb-0">
       <InstallBanner />
       <NavBar displayName={displayName} avatarUrl={avatarUrl} isPro={isPro} />
       <ProStatusBanner subscriptionStatus={subscriptionStatus} />

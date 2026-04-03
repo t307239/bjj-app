@@ -212,7 +212,7 @@ export default async function WikiIndexPage({
   const totalCount = articles.length;
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white">
+    <div className="min-h-[100dvh] bg-[#0f172a] text-white">
       {/* ── ヘッダー — Linear/Vercel風 ── */}
       <header className="sticky top-0 z-20 border-b border-white/10 bg-[#0f172a]/95 backdrop-blur-sm">
         <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">

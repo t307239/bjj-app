@@ -132,7 +132,7 @@ export default async function TechniquesPage() {
     .slice(0, 4);
 
   return (
-    <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
+    <div className="min-h-[100dvh] bg-zinc-950 pb-20 sm:pb-0">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

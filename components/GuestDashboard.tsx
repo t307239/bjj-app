@@ -123,7 +123,7 @@ export default function GuestDashboard() {
   const typeInfo = (t: string) => TRAINING_TYPES.find((tt) => tt.value === t) ?? TRAINING_TYPES[0];
 
   return (
-    <div className="min-h-screen bg-zinc-950 pb-20 sm:pb-0">
+    <div className="min-h-[100dvh] bg-zinc-950 pb-20 sm:pb-0">
       {/* Undo Toast */}
       {undoVisible && (
         <div className="fixed bottom-24 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-zinc-800 border border-white/10 px-4 py-2.5 rounded-xl text-sm text-white shadow-lg">

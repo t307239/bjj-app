@@ -71,6 +71,15 @@ button, a, [role="button"], [role="tab"], nav, .select-none {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* #38: ページ遷移 fade-in アニメーション（template.tsx で使用） */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-page-in {
+  animation: page-in 0.2s ease-out both;
+}
+
 /* #121: Focus ring — now handled by tailwind.config.ts plugin (emerald brand) */
 
 /* #122: Japanese text line-height */

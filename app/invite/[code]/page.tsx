@@ -44,7 +44,7 @@ export default async function InvitePage({ params }: Props) {
   const loginUrl = `/login?ref=${encodeURIComponent(code)}`;
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-[100dvh] bg-zinc-950 flex flex-col items-center justify-center px-4 py-12">
       {/* Logo */}
       <div className="flex items-center gap-3 mb-10">
         <span className="text-4xl">🥋</span>

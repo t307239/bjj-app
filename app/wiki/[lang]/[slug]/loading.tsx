@@ -5,7 +5,7 @@
  */
 export default function WikiPageLoading() {
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white">
+    <div className="min-h-[100dvh] bg-[#0f172a] text-white">
       {/* Fake sticky header */}
       <div className="border-b border-white/10 bg-[#0f172a]/95 py-3 px-4">
         <div className="mx-auto max-w-7xl flex items-center gap-2">

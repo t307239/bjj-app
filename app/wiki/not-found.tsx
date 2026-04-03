@@ -5,7 +5,7 @@ import Link from "next/link";
  */
 export default function WikiNotFound() {
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white flex items-center justify-center px-4">
+    <div className="min-h-[100dvh] bg-[#0f172a] text-white flex items-center justify-center px-4">
       <div className="text-center max-w-md">
         <div className="text-7xl mb-6">🥋</div>
 

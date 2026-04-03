@@ -40,7 +40,7 @@ export default async function GymPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <main className="min-h-screen flex flex-col bg-zinc-950">
+      <main className="min-h-[100dvh] flex flex-col bg-zinc-950">
         {/* Navigation */}
         <nav className="px-6 py-4 flex items-center justify-between max-w-5xl mx-auto w-full">
           <div className="flex items-center gap-2">

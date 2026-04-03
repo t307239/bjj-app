@@ -667,7 +667,7 @@ export default async function WikiPage({
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white">
+    <div className="min-h-[100dvh] bg-[#0f172a] text-white">
       {/* #19: JSON-LD 構造化データ */}
       <script
         type="application/ld+json"
