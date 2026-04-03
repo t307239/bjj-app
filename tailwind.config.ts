@@ -19,13 +19,17 @@ const config: Config = {
   },
   plugins: [
     require("@tailwindcss/typography"),
-    // タスク6: ADA対応 — キーボード操作時のフォーカスリンクをグローバル適用
-    // ブランドカラー紫 (#7c3aed) で統一。UI_DESIGN.md準拠。
+    // タスク6: ADA対応 — キーボード操作時のフォーカスリングをグローバル適用
+    // ブランドカラー emerald (#10B981) で統一
     plugin(({ addBase }) => {
       addBase({
         "*:focus-visible": {
+          outline: "2px solid #10B981",
+          "outline-offset": "2px",
+          "border-radius": "4px",
+        },
+        "input:focus-visible, textarea:focus-visible, select:focus-visible": {
           outline: "none",
-          "box-shadow": "0 0 0 2px rgba(124, 58, 237, 0.6), 0 0 0 4px rgba(9, 9, 11, 0.8)",
         },
       });
     }),

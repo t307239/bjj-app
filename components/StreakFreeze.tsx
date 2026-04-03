@@ -39,7 +39,7 @@ function FreezePaywallModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-sm mx-4 mb-4 sm:mb-0 bg-zinc-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+        className="w-full max-w-sm mx-4 mb-4 sm:mb-0 bg-zinc-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
