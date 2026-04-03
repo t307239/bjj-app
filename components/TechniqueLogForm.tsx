@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocale } from "@/lib/i18n";
 import { CATEGORY_VALUES, type TechniqueFormState } from "@/lib/techniqueLogTypes";
 import BottomSheet from "@/components/ui/BottomSheet";
@@ -43,6 +43,18 @@ export default function TechniqueLogForm({
   onCloseBulk,
 }: Props) {
   const { t } = useLocale();
+
+  // ── beforeunload: warn if unsaved form input ──────────────────────────────
+  const hasInput = showForm && (form.name.trim() !== "" || form.notes.trim() !== "" || bulkText.trim() !== "");
+  useEffect(() => {
+    if (!hasInput) return;
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasInput]);
 
   // ── Single add form ────────────────────────────────────────────────────────
   if (!bulkMode) {
