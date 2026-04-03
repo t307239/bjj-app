@@ -109,23 +109,42 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
   // ── Handlers ───────────────────────────────────────────────────────────────
   const isBeginner = userBelt === "white" || userBelt === "blue";
 
-  /** Core insert logic (shared by normal + danger-confirmed paths) */
+  /** Core insert logic — optimistic UI: add immediately, reconcile with server */
   const doInsert = async () => {
+    const trimmedName = form.name.trim();
+    const optimisticId = `optimistic-${Date.now()}`;
+    const optimistic: Technique = {
+      id: optimisticId,
+      name: trimmedName,
+      category: form.category,
+      mastery_level: form.mastery_level,
+      notes: form.notes,
+      created_at: new Date().toISOString(),
+    };
+
+    // Optimistic: add to state immediately
+    setTechniques((prev) => [optimistic, ...prev]);
+    setForm({ name: "", category: "guard", mastery_level: 1, notes: "" });
+    setShowForm(false);
+    setDangerConfirmPending(false);
     setLoading(true);
+
     const { data, error } = await supabase
       .from("techniques")
-      .insert([{ ...form, name: form.name.trim(), user_id: userId }])
+      .insert([{ ...form, name: trimmedName, user_id: userId }])
       .select()
       .single();
     if (!error && data) {
-      setTechniques([data, ...techniques]);
-      setForm({ name: "", category: "guard", mastery_level: 1, notes: "" });
-      setShowForm(false);
-      setDangerConfirmPending(false);
+      // Replace optimistic entry with real server data
+      setTechniques((prev) => prev.map((t) => (t.id === optimisticId ? data : t)));
       trackEvent("technique_added", { category: form.category });
       setToast({ message: t("techniques.addedSingle"), type: "success" });
+      navigator.vibrate?.([50]);
     } else {
+      // Rollback: remove optimistic entry
+      setTechniques((prev) => prev.filter((t) => t.id !== optimisticId));
       setToast({ message: t("techniques.saveFailed"), type: "error" });
+      navigator.vibrate?.([30, 20, 30]);
     }
     setLoading(false);
   };
@@ -185,24 +204,33 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
       setBulkMode(false);
       setShowForm(false);
       setToast({ message: t("techniques.addedBulk", { n: data.length }), type: "success" });
+      navigator.vibrate?.([50]);
     } else {
       setToast({ message: t("techniques.saveFailed"), type: "error" });
+      navigator.vibrate?.([30, 20, 30]);
     }
     setLoading(false);
   };
 
   const handleDelete = async (id: string) => {
+    // Optimistic: remove from state immediately
+    const snapshot = techniques;
+    setTechniques((prev) => prev.filter((t) => t.id !== id));
     setDeletingId(id);
+
     const { error } = await supabase
       .from("techniques")
       .delete()
       .eq("id", id)
       .eq("user_id", userId);
     if (!error) {
-      setTechniques(techniques.filter((t) => t.id !== id));
       setToast({ message: t("techniques.deleted"), type: "success" });
+      navigator.vibrate?.([30, 20, 30]);
     } else {
+      // Rollback on error
+      setTechniques(snapshot);
       setToast({ message: t("techniques.deleteFailed"), type: "error" });
+      navigator.vibrate?.([50, 100, 50]);
     }
     setDeletingId(null);
   };
@@ -216,6 +244,14 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
     e.preventDefault();
     if (updating) return;
     setUpdating(true);
+
+    // Optimistic: apply edit immediately
+    const snapshot = techniques;
+    setTechniques((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, ...editForm } : t)),
+    );
+    setEditingId(null);
+
     const { data, error } = await supabase
       .from("techniques")
       .update(editForm)
@@ -224,16 +260,26 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
       .select()
       .single();
     if (!error && data) {
-      setTechniques(techniques.map((t) => (t.id === id ? data : t)));
-      setEditingId(null);
+      setTechniques((prev) => prev.map((t) => (t.id === id ? data : t)));
       setToast({ message: t("techniques.updated"), type: "success" });
+      navigator.vibrate?.([50]);
     } else {
+      // Rollback on error
+      setTechniques(snapshot);
       setToast({ message: t("techniques.updateFailed"), type: "error" });
+      navigator.vibrate?.([50, 100, 50]);
     }
     setUpdating(false);
   };
 
   const handleQuickMastery = async (id: string, newLevel: number) => {
+    // Optimistic: update mastery immediately
+    const snapshot = techniques;
+    setTechniques((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, mastery_level: newLevel } : t)),
+    );
+    navigator.vibrate?.([30]);
+
     const { data, error } = await supabase
       .from("techniques")
       .update({ mastery_level: newLevel })
@@ -242,7 +288,10 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
       .select()
       .single();
     if (!error && data) {
-      setTechniques(techniques.map((t) => (t.id === id ? data : t)));
+      setTechniques((prev) => prev.map((t) => (t.id === id ? data : t)));
+    } else {
+      // Rollback
+      setTechniques(snapshot);
     }
   };
 

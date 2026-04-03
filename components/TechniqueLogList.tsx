@@ -13,6 +13,7 @@ import {
   isDangerousTechnique,
 } from "@/lib/techniqueLogTypes";
 import TechniqueVideoButton from "./TechniqueVideoButton";
+import SwipeableCard from "./SwipeableCard";
 
 type SortBy = "newest" | "mastery_desc" | "mastery_asc" | "name";
 
@@ -203,8 +204,10 @@ export default function TechniqueLogList({
       {!initialLoading && filtered.length > 0 && (
         <div className="space-y-3">
           {filtered.slice((page - 1) * pageSize, page * pageSize).map((technique) => (
-            <div
+            <SwipeableCard
               key={technique.id}
+              onDelete={() => onDelete(technique.id)}
+              onEdit={() => onStartEdit(technique)}
               className="bg-zinc-900 rounded-xl p-4 border border-white/10 hover:bg-white/[0.04] active:bg-white/[0.06] transition-colors duration-150"
             >
               {editingId === technique.id ? (
@@ -429,7 +432,7 @@ export default function TechniqueLogList({
                   </div>
                 </div>
               )}
-            </div>
+            </SwipeableCard>
           ))}
           {/* Prev / Next pagination */}
           {totalPages > 1 && (
