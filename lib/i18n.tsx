@@ -79,6 +79,26 @@ export function makeT(locale: Locale) {
 
 export const serverT = makeT("en");
 
+// ── Server-side locale detection (for SSR in Server Components) ──────────────
+// Reads bjj_locale cookie → Accept-Language header → "en"
+// NOTE: pt disabled on server — pt.json is ~18% complete
+export async function detectServerLocale(): Promise<Locale> {
+  // Dynamic imports to avoid bundling next/headers in client code
+  const { cookies, headers } = await import("next/headers");
+  try {
+    const cookieStore = await cookies();
+    const cookieLocale = cookieStore.get(LOCALE_STORAGE_KEY)?.value;
+    if (cookieLocale === "ja") return "ja";
+    // pt disabled server-side (coverage too low)
+  } catch { /* ignore — cookies() may throw outside request context */ }
+  try {
+    const hdrs = await headers();
+    const acceptLang = hdrs.get("accept-language") ?? "";
+    if (acceptLang.toLowerCase().startsWith("ja")) return "ja";
+  } catch { /* ignore */ }
+  return "en";
+}
+
 // ── Client-side locale detection (runs once at module load) ──────────────────
 
 function syncLocaleCookie(locale: Locale) {
