@@ -64,6 +64,13 @@ textarea::placeholder {
   display: none;                  /* Chrome / Safari / Edge */
 }
 
+/* #31: ネイティブ錯覚 — 操作系UI要素のテキスト選択を無効化（モバイルタップ時の青ハイライト防止） */
+button, a, [role="button"], [role="tab"], nav, .select-none {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* #121: Focus ring — now handled by tailwind.config.ts plugin (emerald brand) */
 
 /* #122: Japanese text line-height */
