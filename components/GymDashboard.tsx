@@ -4,31 +4,18 @@ import React, { useState } from "react";
 import Toast from "./Toast";
 import { useLocale } from "@/lib/i18n";
 import { useGymDashboard } from "@/hooks/useGymDashboard";
+import { type MemberRow, type Gym } from "./gym/types";
+import MemberCard from "./gym/MemberCard";
+import BeltDistributionChart from "./gym/BeltDistributionChart";
+import CsvBulkInvite from "./gym/CsvBulkInvite";
+import CurriculumDispatch from "./gym/CurriculumDispatch";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-
-type MemberRow = {
-  student_id: string;
-  belt: string;
-  stripe_count: number;
-  display_name: string | null;
-  last_training_date: string | null;
-  sessions_last_30d: number;
-};
-
-type Gym = {
-  id: string;
-  name: string;
-  invite_code: string;
-  is_active: boolean;
-  curriculum_url?: string | null;
-  curriculum_set_at?: string | null;
-};
 
 type Props = {
   userId: string;
   gym: Gym;
-  isGymPro: boolean; // is_active = Stripe paid
+  isGymPro: boolean;
   stripeGymPaymentLink: string | null;
 };
 
@@ -82,32 +69,7 @@ function PrivacyShieldBadge() {
   );
 }
 
-// ─── Belt color helper ────────────────────────────────────────────────────────
-
-function beltColor(belt: string): string {
-  switch (belt) {
-    case "black": return "bg-zinc-900 text-white border-zinc-600";
-    case "brown": return "bg-amber-900/50 text-amber-200 border-amber-700";
-    case "purple": return "bg-purple-900/50 text-purple-200 border-purple-500";
-    case "blue": return "bg-blue-900/50 text-blue-200 border-blue-500";
-    default: return "bg-zinc-700/50 text-white border-zinc-500"; // white
-  }
-}
-
-// ─── Churn risk helper ────────────────────────────────────────────────────────
-
-type RiskLevel = "green" | "yellow" | "red";
-
-function churnRisk(lastDate: string | null, sessions30d: number): RiskLevel {
-  if (!lastDate) return "red";
-  const diffDays = Math.floor((Date.now() - new Date(lastDate).getTime()) / 86400000);
-  if (diffDays > 21 || sessions30d === 0) return "red";
-  if (diffDays > 10 || sessions30d <= 1) return "yellow";
-  return "green";
-}
-
 // ─── QR Code display (using qr-code data URI via API) ────────────────────────
-// We use a simple text-based URL display since qrcode lib may not be available
 
 function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegenerated: (newCode: string) => void }) {
   const { t } = useLocale();
@@ -161,7 +123,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
         </button>
       </div>
 
-      {/* Quick share buttons — coaches share via messaging apps */}
+      {/* Quick share buttons */}
       <div className="flex gap-2 mt-3">
         <a
           href={`https://wa.me/?text=${encodeURIComponent(`Join our gym on BJJ App! ${inviteUrl}`)}`}
@@ -187,7 +149,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
       <p className="text-xs text-gray-500 mt-2">
         {t("gym.inviteCode")} <span className="font-mono">{currentCode}</span>
       </p>
-      {/* Regenerate — inline confirm to avoid window.confirm() */}
+      {/* Regenerate — inline confirm */}
       {confirmRegen ? (
         <div className="mt-3 flex items-center gap-2">
           <span className="text-xs text-orange-400">{t("gym.regenerateConfirm")}</span>
@@ -234,491 +196,20 @@ function ProPaywallBanner({
   return (
     <div className="bg-[#e94560]/10 border border-[#e94560]/30 rounded-xl p-4 mb-6">
       <div className="flex items-center gap-3">
-        <span className="text-2xl flex-shrink-0">🔴</span>
+        <span className="text-xl flex-shrink-0">⚠️</span>
         <div className="flex-1">
           <p className="text-sm font-semibold text-white">
-            {riskCount === 1 ? t("gym.atChurnRisk1") : t("gym.atChurnRisk", { n: riskCount })}
+            {t("gym.churnAlertTitle", { n: riskCount })}
           </p>
-          <p className="text-xs text-gray-400 mt-0.5">
-            {t("gym.upgradeToSee")}
-          </p>
+          <p className="text-xs text-gray-400 mt-0.5">{t("gym.churnAlertDesc")}</p>
         </div>
         <button
           onClick={onUpgradeClick}
           disabled={upgrading}
           className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-60 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
-          aria-label={t("gym.ariaUpgradePro")}
         >
           {upgrading ? "..." : t("gym.upgradeBtn")}
         </button>
-      </div>
-    </div>
-  );
-}
-
-// ─── Curriculum dispatch section (Pro only) ──────────────────────────────────
-
-// ─── Curriculum template definitions (B-34) ──────────────────────────────────
-
-type TemplateLevel = "white" | "blue" | "purple";
-
-const CURRICULUM_TEMPLATES: { level: TemplateLevel; labelKey: string; slug: string }[] = [
-  { level: "white",  labelKey: "curriculumTemplateClosedGuard",  slug: "closed-guard" },
-  { level: "white",  labelKey: "curriculumTemplateMountBasics",  slug: "mount" },
-  { level: "white",  labelKey: "curriculumTemplateSideControl",  slug: "side-control" },
-  { level: "white",  labelKey: "curriculumTemplateRnc",          slug: "rear-naked-choke" },
-  { level: "white",  labelKey: "curriculumTemplateGuardPassing", slug: "guard-passing" },
-  { level: "blue",   labelKey: "curriculumTemplateTriangle",     slug: "triangle-choke" },
-  { level: "blue",   labelKey: "curriculumTemplateArmbar",       slug: "armbar" },
-  { level: "blue",   labelKey: "curriculumTemplateBackControl",  slug: "back-control" },
-  { level: "blue",   labelKey: "curriculumTemplateOpenGuard",    slug: "open-guard" },
-  { level: "purple", labelKey: "curriculumTemplateLegLocks",     slug: "leg-locks" },
-  { level: "purple", labelKey: "curriculumTemplateTurtle",       slug: "turtle-position" },
-];
-
-const LEVEL_LABELS: Record<TemplateLevel, string> = {
-  white:  "curriculumTemplateWhite",
-  blue:   "curriculumTemplateBlue",
-  purple: "curriculumTemplatePurple",
-};
-
-const LEVEL_COLORS: Record<TemplateLevel, string> = {
-  white:  "bg-zinc-700/60 hover:bg-zinc-600/60 text-gray-200 border-zinc-600/40",
-  blue:   "bg-blue-900/40 hover:bg-blue-800/40 text-blue-200 border-blue-700/40",
-  purple: "bg-purple-900/40 hover:bg-purple-800/40 text-purple-200 border-purple-700/40",
-};
-
-function CurriculumSection({
-  gym,
-  onUpgradeClick,
-  upgrading,
-  isGymPro,
-}: {
-  gym: Gym;
-  onUpgradeClick: () => void;
-  upgrading: boolean;
-  isGymPro: boolean;
-}) {
-  const { t, locale } = useLocale();
-  const [url, setUrl] = useState(gym.curriculum_url ?? "");
-  const [dispatching, setDispatching] = useState(false);
-  const [confirmDispatch, setConfirmDispatch] = useState(false);
-  const [lastSentAt, setLastSentAt] = useState<string | null>(gym.curriculum_set_at ?? null);
-
-  const wikiLang = locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en";
-  const wikiBase = `https://wiki.bjj-app.net/${wikiLang}`;
-
-  const dispatch = async () => {
-    setConfirmDispatch(false);
-    setDispatching(true);
-    try {
-      const res = await fetch("/api/gym/curriculum", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ curriculum_url: url.trim() }),
-      });
-      if (res.ok) {
-        setLastSentAt(new Date().toISOString());
-      }
-    } finally {
-      setDispatching(false);
-    }
-  };
-
-  if (!isGymPro) {
-    return (
-      <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
-        <div className="flex items-center gap-3">
-          <span className="text-xl flex-shrink-0">📚</span>
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-white">{t("gym.curriculumTitle")}</p>
-            <p className="text-xs text-gray-500 mt-0.5">{t("gym.curriculumProRequired")}</p>
-          </div>
-          <button
-            onClick={onUpgradeClick}
-            disabled={upgrading}
-            className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-60 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
-          >
-            {upgrading ? "..." : t("gym.upgradeBtn")}
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const sentAgo = lastSentAt
-    ? (() => {
-        const d = Math.floor((Date.now() - new Date(lastSentAt).getTime()) / 86400000);
-        if (d === 0) return t("gym.today");
-        if (d === 1) return t("gym.yesterday");
-        return t("gym.daysAgo", { n: d });
-      })()
-    : null;
-
-  // Group templates by level for rendering
-  const levels: TemplateLevel[] = ["white", "blue", "purple"];
-
-  return (
-    <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
-      <h3 className="text-sm font-semibold text-white mb-1">📚 {t("gym.curriculumTitle")}</h3>
-      <p className="text-xs text-gray-500 mb-3">{t("gym.curriculumDesc")}</p>
-
-      {/* B-34: 1-Click Template Picker */}
-      <div className="mb-3">
-        <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wide mb-2">
-          {t("gym.curriculumTemplatesLabel")}
-        </p>
-        {levels.map((level) => (
-          <div key={level} className="mb-1.5">
-            <span className="text-[10px] text-zinc-500 mr-1.5">{t(`gym.${LEVEL_LABELS[level]}`)}</span>
-            {CURRICULUM_TEMPLATES.filter((tpl) => tpl.level === level).map((tpl) => (
-              <button
-                key={tpl.slug}
-                onClick={() => { setUrl(`${wikiBase}/${tpl.slug}`); setConfirmDispatch(false); }}
-                className={`inline-flex items-center text-[10px] font-medium px-2 py-0.5 rounded border mr-1 mb-1 transition-colors ${LEVEL_COLORS[level]}`}
-              >
-                {t(`gym.${tpl.labelKey}`)}
-              </button>
-            ))}
-          </div>
-        ))}
-      </div>
-
-      <div className="flex gap-2">
-        <input
-          type="url"
-          value={url}
-          onChange={(e) => { setUrl(e.target.value); setConfirmDispatch(false); }}
-          placeholder={`${wikiBase}/...`}
-          className="flex-1 bg-zinc-800 text-xs text-gray-300 placeholder-gray-500 px-3 py-2 rounded-lg border border-white/10 focus:outline-none focus:border-white/30"
-        />
-        <button
-          onClick={() => { if (!url.trim()) return; setConfirmDispatch(true); }}
-          disabled={dispatching || !url.trim() || confirmDispatch}
-          className="flex-shrink-0 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
-        >
-          {dispatching ? t("gym.curriculumSending") : t("gym.curriculumDispatch")}
-        </button>
-      </div>
-      {/* Inline dispatch confirmation — avoids window.confirm() */}
-      {confirmDispatch && (
-        <div className="mt-2 flex items-center gap-2">
-          <span className="text-xs text-blue-400">{t("gym.curriculumConfirm")}</span>
-          <button
-            onClick={dispatch}
-            disabled={dispatching}
-            className="text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 px-2 py-0.5 rounded transition-colors disabled:opacity-50"
-          >
-            {t("gym.confirmYes")}
-          </button>
-          <button
-            onClick={() => setConfirmDispatch(false)}
-            className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
-          >
-            {t("training.cancel")}
-          </button>
-        </div>
-      )}
-      {sentAgo && (
-        <p className="text-xs text-gray-500 mt-2">
-          {t("gym.curriculumLastSent", { text: sentAgo })}
-        </p>
-      )}
-    </div>
-  );
-}
-
-// ─── CSV Bulk Invite section (Pro only) ──────────────────────────────────────
-
-function CsvImportSection({
-  gym,
-  onUpgradeClick,
-  upgrading,
-  isGymPro,
-}: {
-  gym: Gym;
-  onUpgradeClick: () => void;
-  upgrading: boolean;
-  isGymPro: boolean;
-}) {
-  const { t } = useLocale();
-  const [open, setOpen] = useState(false);
-  const [input, setInput] = useState("");
-  const [rows, setRows] = useState<{ email: string; name: string }[]>([]);
-  const [parsed, setParsed] = useState(false);
-  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
-  const [copiedAll, setCopiedAll] = useState(false);
-
-  const inviteBase =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/gym/join/${gym.invite_code}`
-      : `https://bjj-app.net/gym/join/${gym.invite_code}`;
-
-  const parseInput = () => {
-    const lines = input.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-    if (lines.length === 0) return;
-
-    const result: { email: string; name: string }[] = [];
-    // Detect CSV with header row containing "email"
-    const firstLine = lines[0].toLowerCase();
-    const hasHeader = firstLine.includes("email");
-    const startIdx = hasHeader ? 1 : 0;
-
-    // Determine column indices from header
-    let emailCol = 0;
-    let nameCol = -1;
-    if (hasHeader) {
-      const cols = firstLine.split(",").map((c) => c.trim());
-      emailCol = cols.findIndex((c) => c.includes("email"));
-      nameCol = cols.findIndex((c) => c.includes("name") || c.includes("student") || c.includes("athlete"));
-      if (emailCol < 0) emailCol = 0;
-    }
-
-    for (let i = startIdx; i < lines.length; i++) {
-      const line = lines[i];
-      if (line.includes(",")) {
-        // CSV row
-        const cols = line.split(",").map((c) => c.trim().replace(/^"|"$/g, ""));
-        const email = cols[emailCol] ?? "";
-        const name = nameCol >= 0 ? (cols[nameCol] ?? "") : "";
-        if (email.includes("@")) result.push({ email, name });
-      } else {
-        // Plain email address
-        const email = line.trim();
-        if (email.includes("@")) result.push({ email, name: "" });
-      }
-    }
-
-    setRows(result);
-    setParsed(true);
-  };
-
-  const copyLink = async (idx: number) => {
-    try {
-      await navigator.clipboard.writeText(inviteBase);
-      setCopiedIdx(idx);
-      setTimeout(() => setCopiedIdx(null), 2000);
-    } catch {/* ignore */}
-  };
-
-  const copyAll = async () => {
-    const text = rows
-      .map((r) =>
-        r.name ? `${r.name} (${r.email}): ${inviteBase}` : `${r.email}: ${inviteBase}`
-      )
-      .join("\n");
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedAll(true);
-      setTimeout(() => setCopiedAll(false), 2000);
-    } catch {/* ignore */}
-  };
-
-  const downloadCsv = () => {
-    const header = "name,email,invite_link,status\n";
-    const body = rows
-      .map((r) => `"${r.name}","${r.email}","${inviteBase}","pending"`)
-      .join("\n");
-    const blob = new Blob([header + body], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${gym.name.replace(/\s+/g, "_")}_invites.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const reset = () => {
-    setInput("");
-    setRows([]);
-    setParsed(false);
-    setCopiedIdx(null);
-    setCopiedAll(false);
-  };
-
-  if (!isGymPro) {
-    return (
-      <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
-        <div className="flex items-center gap-3">
-          <span className="text-xl flex-shrink-0">📥</span>
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-white">{t("gym.csvTitle")}</p>
-            <p className="text-xs text-gray-500 mt-0.5">{t("gym.csvProRequired")}</p>
-          </div>
-          <button
-            onClick={onUpgradeClick}
-            disabled={upgrading}
-            className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-60 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
-          >
-            {upgrading ? "..." : t("gym.upgradeBtn")}
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <>
-      <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-semibold text-white">📥 {t("gym.csvTitle")}</h3>
-            <p className="text-xs text-gray-500 mt-0.5">{t("gym.csvDesc")}</p>
-          </div>
-          <button
-            onClick={() => { setOpen(true); reset(); }}
-            className="flex-shrink-0 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-all"
-          >
-            {t("gym.csvOpen")}
-          </button>
-        </div>
-      </div>
-
-      {/* Modal */}
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-8 pb-4 bg-black/70 overflow-y-auto">
-          <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-lg shadow-2xl">
-            {/* Header */}
-            <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-white/10">
-              <h2 className="text-base font-bold text-white">📥 {t("gym.csvTitle")}</h2>
-              <button
-                onClick={() => setOpen(false)}
-                className="text-gray-400 hover:text-white transition-colors"
-                aria-label={t("common.close")}
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="p-5">
-              {!parsed ? (
-                <>
-                  <p className="text-xs text-gray-400 mb-3">{t("gym.csvInstructions")}</p>
-                  <textarea
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder={t("gym.csvPlaceholder")}
-                    rows={8}
-                    className="w-full bg-zinc-800 text-xs text-gray-200 placeholder-gray-600 px-3 py-2.5 rounded-lg border border-white/10 focus:outline-none focus:border-white/30 resize-none font-mono"
-                  />
-                  <button
-                    onClick={parseInput}
-                    disabled={!input.trim()}
-                    className="mt-3 w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors"
-                  >
-                    {t("gym.csvParse")}
-                  </button>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between mb-3">
-                    <p className="text-xs text-gray-400">
-                      {t("gym.csvResult", { n: rows.length })}
-                    </p>
-                    <button
-                      onClick={reset}
-                      className="text-xs text-gray-500 hover:text-white transition-colors"
-                    >
-                      {t("gym.csvReset")}
-                    </button>
-                  </div>
-
-                  {/* Results table */}
-                  <div className="max-h-60 overflow-y-auto space-y-1.5 mb-4">
-                    {rows.map((row, idx) => (
-                      <div key={idx} className="flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-2">
-                        <div className="flex-1 min-w-0">
-                          {row.name && (
-                            <p className="text-xs font-medium text-white truncate">{row.name}</p>
-                          )}
-                          <p className="text-xs text-gray-400 truncate">{row.email}</p>
-                        </div>
-                        <button
-                          onClick={() => copyLink(idx)}
-                          className="flex-shrink-0 text-xs bg-zinc-700 hover:bg-zinc-600 text-gray-300 px-2.5 py-1 rounded-lg transition-colors"
-                        >
-                          {copiedIdx === idx ? t("gym.inviteCopied") : t("gym.inviteCopy")}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Bulk actions */}
-                  <div className="flex gap-2">
-                    <button
-                      onClick={copyAll}
-                      className="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold py-2.5 rounded-xl transition-colors"
-                    >
-                      {copiedAll ? t("gym.csvCopiedAll") : t("gym.csvCopyAll")}
-                    </button>
-                    <button
-                      onClick={downloadCsv}
-                      className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 text-xs font-semibold py-2.5 rounded-xl transition-colors"
-                    >
-                      {t("gym.csvDownload")}
-                    </button>
-                  </div>
-
-                  <p className="text-xs text-gray-600 mt-3 text-center">
-                    {t("gym.csvNote")}
-                  </p>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
-
-// ─── Belt distribution chart ──────────────────────────────────────────────────
-
-function BeltDistribution({ members }: { members: MemberRow[] }) {
-  const { t } = useLocale();
-  const BELTS = ["white", "blue", "purple", "brown", "black"];
-  const counts: Record<string, number> = {};
-  for (const b of BELTS) counts[b] = 0;
-  for (const m of members) {
-    const b = m.belt ?? "white";
-    counts[b] = (counts[b] ?? 0) + 1;
-  }
-  const max = Math.max(...Object.values(counts), 1);
-
-  const BELT_LABELS: Record<string, string> = {
-    white: t("profile.belts.white"),
-    blue: t("profile.belts.blue"),
-    purple: t("profile.belts.purple"),
-    brown: t("profile.belts.brown"),
-    black: t("profile.belts.black"),
-  };
-
-  const BELT_BG: Record<string, string> = {
-    white: "bg-gray-400",
-    blue: "bg-blue-500",
-    purple: "bg-purple-500",
-    brown: "bg-amber-800",
-    black: "bg-zinc-800 border border-zinc-600",
-  };
-
-  return (
-    <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
-      <h3 className="text-sm font-semibold text-white mb-3">{t("gym.beltDistribution")}</h3>
-      <div className="space-y-2">
-        {BELTS.map((belt) => (
-          <div key={belt} className="flex items-center gap-2">
-            <span className="text-xs text-gray-400 w-12">{BELT_LABELS[belt]}</span>
-            <div className="flex-1 bg-zinc-800 rounded-full h-2 overflow-hidden">
-              <div
-                className={`h-full rounded-full ${BELT_BG[belt]}`}
-                style={{ width: `${(counts[belt] / max) * 100}%`, minWidth: counts[belt] > 0 ? "8px" : "0" }}
-              />
-            </div>
-            <span className="text-xs text-gray-500 w-4 text-right">{counts[belt]}</span>
-          </div>
-        ))}
       </div>
     </div>
   );
@@ -765,7 +256,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
       <PrivacyShieldBadge />
 
       {/* CSV Bulk Invite (Pro feature) */}
-      <CsvImportSection
+      <CsvBulkInvite
         gym={gym}
         onUpgradeClick={handleGymUpgrade}
         upgrading={upgrading}
@@ -773,7 +264,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
       />
 
       {/* Curriculum dispatch (Pro feature) */}
-      <CurriculumSection
+      <CurriculumDispatch
         gym={gym}
         onUpgradeClick={handleGymUpgrade}
         upgrading={upgrading}
@@ -812,7 +303,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
           <div className="text-xs text-gray-500 mt-0.5">{t("gym.atRisk")}</div>
         </div>
       </div>
-      {/* Gym-wide stats row (second row) */}
+      {/* Gym-wide stats row */}
       {members.length > 0 && (
         <div className="grid grid-cols-2 gap-3 mb-6">
           <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
@@ -827,9 +318,9 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
       )}
 
       {/* Belt distribution */}
-      {members.length > 0 && <BeltDistribution members={members} />}
+      {members.length > 0 && <BeltDistributionChart members={members} />}
 
-      {/* Churn risk paywall (free tier: show count, block details) */}
+      {/* Churn risk paywall (free tier) */}
       {!isGymPro && atRiskCount > 0 && (
         <ProPaywallBanner
           riskCount={atRiskCount}
@@ -854,12 +345,10 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
           </div>
         ) : (
           <div className="space-y-2">
-            {/* Show green members freely */}
             {greenMembers.map((m) => (
               <MemberCard key={m.student_id} member={m} risk="green" showDetail={true} onKickRequest={handleKickRequest} />
             ))}
 
-            {/* Yellow members: free shows count + basic card, Pro shows last-seen */}
             {yellowMembers.length > 0 && (
               <div className="mt-4">
                 <h3 className="text-sm font-semibold text-yellow-400 mb-2">
@@ -879,7 +368,6 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
               </div>
             )}
 
-            {/* Red members: count shown free, details Pro only */}
             {redMembers.length > 0 && (
               <div className="mt-4">
                 <h3 className="text-sm font-semibold text-[#e94560] mb-2">
@@ -937,114 +425,6 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
             </div>
           </div>
         </div>
-      )}
-    </div>
-  );
-}
-
-// ─── Member Card ──────────────────────────────────────────────────────────────
-
-function MemberCard({
-  member,
-  risk,
-  showDetail,
-  proRequired = false,
-  onUpgradeClick,
-  onKickRequest,
-}: {
-  member: MemberRow;
-  risk: RiskLevel;
-  showDetail: boolean;
-  proRequired?: boolean;
-  onUpgradeClick?: () => void;
-  onKickRequest?: (member: MemberRow) => void;
-}) {
-  const { t } = useLocale();
-  const [nudgeCopied, setNudgeCopied] = useState(false);
-
-  const handleNudge = () => {
-    const msg = t("gym.nudgeTemplate");
-    navigator.clipboard.writeText(msg).then(() => {
-      setNudgeCopied(true);
-      setTimeout(() => setNudgeCopied(false), 2000);
-    });
-  };
-  const lastSeenText = member.last_training_date
-    ? (() => {
-        const days = Math.floor((Date.now() - new Date(member.last_training_date).getTime()) / 86400000);
-        if (days === 0) return t("gym.today");
-        if (days === 1) return t("gym.yesterday");
-        return t("gym.daysAgo", { n: days });
-      })()
-    : t("gym.never");
-
-  const riskDot: Record<RiskLevel, string> = {
-    green: "bg-green-400",
-    yellow: "bg-yellow-400",
-    red: "bg-[#e94560]",
-  };
-
-  return (
-    <div className="flex items-center gap-3 bg-zinc-900 border border-white/10 rounded-xl px-4 py-3">
-      {/* Risk indicator */}
-      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${riskDot[risk]}`} />
-
-      {/* Belt badge */}
-      <span
-        className={`text-xs px-2 py-0.5 rounded-full border flex-shrink-0 ${beltColor(member.belt)}`}
-      >
-        {member.belt}
-        {member.stripe_count > 0 && ` ${"▪".repeat(member.stripe_count)}`}
-      </span>
-
-      {/* Detail */}
-      <div className="flex-1 min-w-0">
-        {showDetail ? (
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400">{t("gym.lastSeen", { text: lastSeenText })}</span>
-            <span className="text-xs text-gray-500">·</span>
-            <span className="text-xs text-gray-400">{t("gym.sessionsPerMonth", { n: member.sessions_last_30d })}</span>
-          </div>
-        ) : proRequired ? (
-          <span className="text-xs text-gray-500 italic">
-            {t("gym.detailsHidden")}{" "}
-            {onUpgradeClick && (
-              <button onClick={onUpgradeClick} className="text-yellow-400 hover:underline">
-                {t("gym.upgradeToSeeLink")}
-              </button>
-            )}
-          </span>
-        ) : null}
-      </div>
-
-      {/* Nudge button: copy reminder msg for at-risk members (Pro only) */}
-      {showDetail && (risk === "yellow" || risk === "red") && (
-        <button
-          onClick={handleNudge}
-          className={`flex-shrink-0 text-xs px-2 py-1 rounded-lg transition-colors ${
-            nudgeCopied
-              ? "text-green-400 bg-green-400/10"
-              : "text-gray-500 hover:text-yellow-400 hover:bg-yellow-400/10"
-          }`}
-          title={t("gym.nudgeAriaLabel", { name: member.display_name ?? "member" })}
-          aria-label={t("gym.nudgeAriaLabel", { name: member.display_name ?? "member" })}
-        >
-          {nudgeCopied ? t("gym.nudgeCopied") : t("gym.nudgeCopy")}
-        </button>
-      )}
-
-      {/* Kick button (gym owner only) */}
-      {onKickRequest && (
-        <button
-          onClick={() => onKickRequest(member)}
-          className="flex-shrink-0 text-gray-500 hover:text-[#e94560] transition-colors p-1"
-          title={t("gym.removeMemberTitle")}
-          aria-label={`Remove ${member.display_name || "member"} from gym`}
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
       )}
     </div>
   );
