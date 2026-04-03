@@ -48,6 +48,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
   });
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [updating, setUpdating] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
@@ -213,6 +214,8 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
 
   const handleUpdate = async (e: React.FormEvent, id: string) => {
     e.preventDefault();
+    if (updating) return;
+    setUpdating(true);
     const { data, error } = await supabase
       .from("techniques")
       .update(editForm)
@@ -227,6 +230,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
     } else {
       setToast({ message: t("techniques.updateFailed"), type: "error" });
     }
+    setUpdating(false);
   };
 
   const handleQuickMastery = async (id: string, newLevel: number) => {
@@ -360,6 +364,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
         onStartEdit={startEdit}
         onCancelEdit={() => setEditingId(null)}
         onUpdate={handleUpdate}
+        updating={updating}
         onDelete={handleDelete}
         onQuickMastery={handleQuickMastery}
         onShowForm={(bulk = false) => {

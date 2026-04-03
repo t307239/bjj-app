@@ -40,7 +40,15 @@ export default function CollapsibleSection({ label, defaultOpen = true, contentH
           <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
-      {isOpen && <div className="space-y-3">{children}</div>}
+      {/* CLS防御: grid rows transition で滑らかに展開/折畳み */}
+      <div
+        className="grid transition-[grid-template-rows] duration-300 ease-in-out"
+        style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+      >
+        <div className="overflow-hidden">
+          <div className="space-y-3">{children}</div>
+        </div>
+      </div>
     </section>
   );
 }

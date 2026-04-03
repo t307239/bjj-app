@@ -37,22 +37,23 @@ import AvatarImage from "@/components/AvatarImage";
 // perf: 条件表示コンポーネント（gym 所属者のみ / Pro のみ）を遅延読み込み
 // → 未所属ユーザーは GymRanking のコードを一切ダウンロードしない
 const GymRanking = dynamic(() => import("@/components/GymRanking"), {
-  loading: () => <div className="h-24 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 // perf: AI Coach は Pro ユーザー向けかつ折り返し以下 → 遅延読み込み
 const AICoachCard = dynamic(() => import("@/components/AICoachCard"), {
-  loading: () => <div className="h-32 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="min-h-[128px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 
 // perf: 折り返し以下の重いチャート群を遅延読み込み（初期JSバンドルから除外）
+// CLS防御: loading skeleton の高さを実コンポーネントの内部 Skeleton と揃えて min-h で確保
 const TrainingBarChart = dynamic(() => import("@/components/TrainingBarChart"), {
-  loading: () => <div className="h-48 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 const TrainingTypeChart = dynamic(() => import("@/components/TrainingTypeChart"), {
-  loading: () => <div className="h-40 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 const CompetitionStats = dynamic(() => import("@/components/CompetitionStats"), {
-  loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="min-h-[100px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";

@@ -225,6 +225,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
+  const [portalLoading, setPortalLoading] = useState(false);
 
   // ── Email change (self-serve) ─────────────────────────────────────────────
   const [emailEditing, setEmailEditing] = useState(false);
@@ -436,13 +437,14 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
             💳 {t("profile.manageSub")}
           </a>
         ) : (
-          <form method="POST" action="/api/stripe/portal">
+          <form method="POST" action="/api/stripe/portal" onSubmit={() => setPortalLoading(true)}>
             <button
               type="submit"
+              disabled={portalLoading}
               aria-label={t("profile.ariaManageSub")}
-              className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors disabled:opacity-50 disabled:pointer-events-none"
             >
-              💳 {t("profile.manageSub")}
+              {portalLoading ? "…" : <>💳 {t("profile.manageSub")}</>}
             </button>
           </form>
         )}

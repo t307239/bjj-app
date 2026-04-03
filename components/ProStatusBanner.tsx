@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
 
@@ -18,6 +19,7 @@ interface ProStatusBannerProps {
  */
 export default function ProStatusBanner({ subscriptionStatus }: ProStatusBannerProps) {
   const { t } = useLocale();
+  const [portalLoading, setPortalLoading] = useState(false);
 
   if (!subscriptionStatus || subscriptionStatus === "active" || subscriptionStatus === "trialing") {
     return null;
@@ -33,12 +35,13 @@ export default function ProStatusBanner({ subscriptionStatus }: ProStatusBannerP
             {t("pro.pastDueDesc")}
           </p>
         </div>
-        <form action="/api/stripe/portal" method="POST" className="flex-shrink-0">
+        <form action="/api/stripe/portal" method="POST" className="flex-shrink-0" onSubmit={() => setPortalLoading(true)}>
           <button
             type="submit"
-            className="rounded-lg bg-red-500 hover:bg-red-400 px-3 py-1.5 text-xs font-bold text-white transition-colors whitespace-nowrap"
+            disabled={portalLoading}
+            className="rounded-lg bg-red-500 hover:bg-red-400 px-3 py-1.5 text-xs font-bold text-white transition-colors whitespace-nowrap disabled:opacity-50 disabled:pointer-events-none"
           >
-            {t("pro.updateCard")}
+            {portalLoading ? "…" : t("pro.updateCard")}
           </button>
         </form>
       </div>

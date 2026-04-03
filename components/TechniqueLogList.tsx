@@ -39,6 +39,7 @@ type Props = {
   onStartEdit: (t: Technique) => void;
   onCancelEdit: () => void;
   onUpdate: (e: React.FormEvent, id: string) => void;
+  updating: boolean;
   onDelete: (id: string) => void;
   onQuickMastery: (id: string, level: number) => void;
   onShowForm: (bulk?: boolean) => void;
@@ -68,6 +69,7 @@ export default function TechniqueLogList({
   onStartEdit,
   onCancelEdit,
   onUpdate,
+  updating,
   onDelete,
   onQuickMastery,
   onShowForm,
@@ -259,9 +261,10 @@ export default function TechniqueLogList({
                   <div className="flex gap-2">
                     <button
                       type="submit"
-                      className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-xs font-semibold py-1.5 rounded-lg transition-all"
+                      disabled={updating}
+                      className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-xs font-semibold py-1.5 rounded-lg transition-all disabled:opacity-50 disabled:pointer-events-none"
                     >
-                      {t("techniques.update")}
+                      {updating ? t("techniques.saving") : t("techniques.update")}
                     </button>
                     <button
                       type="button"
