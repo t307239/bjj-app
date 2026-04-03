@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import ProfileTabs from "@/components/ProfileTabs";
-import { serverT as t } from "@/lib/i18n";
+import { detectServerLocale, makeT } from "@/lib/i18n";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
 import { formatBjjDuration } from "@/lib/bjjDuration";
 import AvatarImage from "@/components/AvatarImage";
@@ -71,6 +71,9 @@ export default async function ProfilePage() {
   } = await supabase.auth.getUser();
 
   if (!user) redirect("/login?next=/profile");
+
+  const locale = await detectServerLocale();
+  const t = makeT(locale);
 
   const displayName =
     user.user_metadata?.full_name ||

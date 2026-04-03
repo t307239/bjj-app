@@ -3,7 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import PricingSection from "@/components/PricingSection";
-import { serverT as t } from "@/lib/i18n";
+import { detectServerLocale, makeT } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "BJJ App - Brazilian Jiu-Jitsu Training Tracker | 練習トラッカー",
@@ -127,6 +127,9 @@ export default async function Home() {
   if (user) {
     redirect("/dashboard");
   }
+
+  const locale = await detectServerLocale();
+  const t = makeT(locale);
 
   return (
     <>

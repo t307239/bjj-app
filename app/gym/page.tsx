@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import GymWaitlistForm from "@/components/GymWaitlistForm";
-import { serverT as t } from "@/lib/i18n";
+import { detectServerLocale, makeT } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "BJJ App for Academies - Keep Your Students Engaged",
@@ -30,7 +30,10 @@ const jsonLd = {
   url: "https://bjj-app.net/gym",
 };
 
-export default function GymPage() {
+export default async function GymPage() {
+  const locale = await detectServerLocale();
+  const t = makeT(locale);
+
   return (
     <>
       <script

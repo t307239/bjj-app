@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
-import { serverT as t } from "@/lib/i18n";
+import { detectServerLocale, makeT } from "@/lib/i18n";
 import GymDashboard from "@/components/GymDashboard";
 import GymRegistrationForm from "@/components/GymRegistrationForm";
 
@@ -18,6 +18,9 @@ export default async function GymDashboardPage() {
   } = await supabase.auth.getUser();
 
   if (!user) redirect("/login?next=/gym/dashboard");
+
+  const locale = await detectServerLocale();
+  const t = makeT(locale);
 
   const displayName =
     user.user_metadata?.full_name ||

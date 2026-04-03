@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { serverT as t } from "@/lib/i18n";
+import { detectServerLocale, makeT } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Help & FAQ",
@@ -10,7 +10,10 @@ export const metadata: Metadata = {
 
 type FaqItem = { q: string; a: string };
 
-export default function HelpPage() {
+export default async function HelpPage() {
+  const locale = await detectServerLocale();
+  const t = makeT(locale);
+
   const faqs: FaqItem[] = [
     { q: t("help.faq1Q"), a: t("help.faq1A") },
     { q: t("help.faq2Q"), a: t("help.faq2A") },

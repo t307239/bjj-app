@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import GymJoinClient from "./GymJoinClient";
-import { serverT as t } from "@/lib/i18n";
+import { detectServerLocale, makeT } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Join Gym",
@@ -33,6 +33,9 @@ export default async function GymJoinPage({ params }: Props) {
   if (!user) {
     redirect(`/login?next=/gym/join/${invite_code}`);
   }
+
+  const locale = await detectServerLocale();
+  const t = makeT(locale);
 
   // Fetch gym by invite_code
   const { data: gym, error: gymError } = await supabase
