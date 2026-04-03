@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -283,18 +283,23 @@ export default async function DashboardPage({
       : 0;
 
   // ── Locale-aware translation for page body (metadata stays EN for SEO) ──
-  // Priority: profile.locale (ja only) → Accept-Language header → "en"
+  // Priority: bjj_locale cookie → profile.locale (ja only) → Accept-Language → "en"
   // NOTE: pt disabled on server — pt.json is ~18% complete, would show mixed pt/en
   let userLocale: Locale = "en";
-  const profileLocale = (profileData as { locale?: string | null })?.locale;
-  if (profileLocale === "ja") {
+  const cookieStore = await cookies();
+  const cookieLocale = cookieStore.get("bjj_locale")?.value;
+  if (cookieLocale === "ja") {
     userLocale = "ja";
-  } else if (!profileLocale || profileLocale === "en") {
-    const hdrs = await headers();
-    const acceptLang = hdrs.get("accept-language") ?? "";
-    if (acceptLang.toLowerCase().startsWith("ja")) userLocale = "ja";
+  } else {
+    const profileLocale = (profileData as { locale?: string | null })?.locale;
+    if (profileLocale === "ja") {
+      userLocale = "ja";
+    } else {
+      const hdrs = await headers();
+      const acceptLang = hdrs.get("accept-language") ?? "";
+      if (acceptLang.toLowerCase().startsWith("ja")) userLocale = "ja";
+    }
   }
-  // If profile.locale is "pt" or other, fall through to "en" until pt.json is complete
   const t = makeT(userLocale);
 
   // Training type breakdown (Gi / No-Gi / Drilling / etc.)

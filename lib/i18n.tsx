@@ -81,21 +81,31 @@ export const serverT = makeT("en");
 
 // ── Client-side locale detection (runs once at module load) ──────────────────
 
+function syncLocaleCookie(locale: Locale) {
+  try {
+    document.cookie = `${LOCALE_STORAGE_KEY}=${locale};path=/;max-age=${365 * 86400};SameSite=Lax`;
+  } catch { /* ignore */ }
+}
+
 function detectClientLocale(): Locale {
   if (typeof window === "undefined") return "en";
+  let detected: Locale = "en";
   try {
     const stored = localStorage.getItem(LOCALE_STORAGE_KEY);
     if (stored === "en" || stored === "ja" || stored === "pt") {
-      return stored as Locale;
+      detected = stored as Locale;
+      syncLocaleCookie(detected);
+      return detected;
     }
   } catch {
     /* ignore */
   }
   const lang = navigator.language?.toLowerCase() ?? "en";
-  if (lang.startsWith("ja")) return "ja";
+  if (lang.startsWith("ja")) detected = "ja";
   // pt auto-detection disabled: pt.json coverage is ~18% — would show mixed pt/en UI.
   // Portuguese users can explicitly select "Português" in Settings → Language.
-  return "en";
+  syncLocaleCookie(detected);
+  return detected;
 }
 
 // Module-level locale state (safe: only written on client)
@@ -111,6 +121,7 @@ function setGlobalLocale(locale: Locale) {
   } catch {
     /* ignore */
   }
+  syncLocaleCookie(locale);
   _setLocaleCallbacks.forEach((cb) => cb(locale));
 }
 
