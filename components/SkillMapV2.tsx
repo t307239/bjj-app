@@ -18,7 +18,6 @@ import React, {
   useCallback,
   useMemo,
   useRef,
-  useLayoutEffect,
 } from "react";
 import {
   ReactFlow,
@@ -27,19 +26,21 @@ import {
   BackgroundVariant,
   Panel,
   MiniMap,
-  Handle,
-  Position,
   useReactFlow,
   type Node,
-  type Edge,
-  type NodeTypes,
   type NodeMouseHandler,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useLocale } from "@/lib/i18n";
-import { masteryNodeClass, masterySelectedRing, NODE_W, NODE_H } from "@/lib/skillMapUtils";
+import { NODE_W, NODE_H } from "@/lib/skillMapUtils";
 import { useSkillMap } from "@/hooks/useSkillMap";
 import Toast from "./Toast";
+
+// ─── Extracted sub-components ─────────────────────────────────────────────────
+import { nodeTypes, deleteNodeRef, toggleCollapseRef, getDescendantIds } from "./skillmap/TechniqueNode";
+import ProModal from "./skillmap/ProModal";
+import BottomDrawer from "./skillmap/BottomDrawer";
+import AddNodePopup from "./skillmap/AddNodePopup";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -49,30 +50,6 @@ type Props = {
   stripePaymentLink: string | null;
   stripeAnnualLink: string | null;
 };
-
-// ─── Stable action refs (avoids stale-closure in custom node data) ────────────
-
-const _deleteNodeRef = { current: (_id: string) => {} };
-const _toggleCollapseRef = { current: (_id: string) => {} };
-
-// BFS: returns all descendant node IDs of a given node via edges
-function getDescendantIds(
-  nodeId: string,
-  edges: { source: string; target: string }[]
-): Set<string> {
-  const descendants = new Set<string>();
-  const queue = [nodeId];
-  while (queue.length > 0) {
-    const current = queue.shift()!;
-    for (const edge of edges) {
-      if (edge.source === current && !descendants.has(edge.target)) {
-        descendants.add(edge.target);
-        queue.push(edge.target);
-      }
-    }
-  }
-  return descendants;
-}
 
 // ─── Canvas Legend ─────────────────────────────────────────────────────────────
 
@@ -126,360 +103,6 @@ function CustomZoomControls() {
         </button>
       </div>
     </Panel>
-  );
-}
-
-// ─── Custom Technique Node ────────────────────────────────────────────────────
-
-function TechniqueNodeComp({
-  id,
-  data,
-  selected,
-}: {
-  id: string;
-  data: {
-    label: string;
-    isPro?: boolean;
-    t?: (k: string) => string;
-    mastery_level?: number;
-    childCount?: number;
-    isCollapsed?: boolean;
-  };
-  selected: boolean;
-}) {
-  const [confirmDel, setConfirmDel] = useState(false);
-  const mastery = data.mastery_level ?? 0;
-  const hasChildren = (data.childCount ?? 0) > 0;
-
-  return (
-    <div
-      className={`relative border rounded-xl px-3 py-2.5 shadow-lg transition-all select-none backdrop-blur-sm ${masteryNodeClass(mastery)} ${
-        selected ? masterySelectedRing(mastery) : "hover:brightness-110"
-      }`}
-      style={{ width: NODE_W, minHeight: NODE_H }}
-    >
-      <Handle
-        type="target"
-        position={Position.Top}
-        style={{ width: 12, height: 12, background: "#3f3f46", border: "2px solid #6366f1", borderRadius: "50%", top: -6 }}
-      />
-      <span className="block text-xs font-medium break-words whitespace-pre-wrap leading-snug pr-4">
-        {data.label}
-      </span>
-      {data.isPro && !confirmDel && (
-        <button
-          className="absolute top-1.5 right-1.5 text-zinc-500 hover:text-red-400 text-xs leading-none transition-colors"
-          onClick={(e) => { e.stopPropagation(); setConfirmDel(true); }}
-          aria-label={data.t?.("skillmap.deleteNode") ?? "Remove"}
-        >
-          ✕
-        </button>
-      )}
-      {data.isPro && confirmDel && (
-        <div className="flex items-center gap-1 mt-1.5">
-          <button
-            className="text-xs bg-red-600 hover:bg-red-500 text-white px-1.5 py-0.5 rounded transition-colors"
-            onClick={(e) => { e.stopPropagation(); _deleteNodeRef.current(id); }}
-          >
-            {data.t?.("common.delete") ?? "Del"}
-          </button>
-          <button
-            className="text-xs text-gray-400 hover:text-gray-200 transition-colors"
-            onClick={(e) => { e.stopPropagation(); setConfirmDel(false); }}
-          >
-            {data.t?.("common.cancel") ?? "✕"}
-          </button>
-        </div>
-      )}
-      {/* Collapse/expand toggle — shown only for Pro users with children */}
-      {hasChildren && data.isPro && !confirmDel && (
-        <button
-          className="flex items-center justify-center gap-0.5 mt-1.5 w-full text-[10px] text-zinc-500 hover:text-zinc-200 transition-colors leading-none"
-          onClick={(e) => { e.stopPropagation(); _toggleCollapseRef.current(id); }}
-          aria-label={
-            data.isCollapsed
-              ? (data.t?.("skillmap.expand") ?? "Expand")
-              : (data.t?.("skillmap.collapse") ?? "Collapse")
-          }
-        >
-          {data.isCollapsed ? `▶ ${data.childCount}` : "▼"}
-        </button>
-      )}
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        style={{ width: 12, height: 12, background: "#3f3f46", border: "2px solid #6366f1", borderRadius: "50%", bottom: -6 }}
-      />
-    </div>
-  );
-}
-
-const nodeTypes: NodeTypes = { technique: TechniqueNodeComp };
-
-// ─── Pro Modal ────────────────────────────────────────────────────────────────
-
-function ProModal({
-  onClose,
-  stripePaymentLink,
-  stripeAnnualLink,
-  t,
-}: {
-  onClose: () => void;
-  stripePaymentLink: string | null;
-  stripeAnnualLink: string | null;
-  t: (k: string) => string;
-}) {
-  const [isAnnual, setIsAnnual] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const fallbackUrl = isAnnual ? stripeAnnualLink : stripePaymentLink;
-
-  const handleCheckout = async () => {
-    setIsLoading(true);
-    try {
-      const res = await fetch("/api/stripe/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: isAnnual ? "annual" : "monthly" }),
-      });
-      if (res.ok) {
-        const json = await res.json() as { url?: string; fallback?: boolean };
-        if (json.url && !json.fallback) {
-          window.location.href = json.url;
-          return;
-        }
-      }
-    } catch {
-      // network error — fall through to static link
-    }
-    if (fallbackUrl) window.location.href = fallbackUrl;
-    setIsLoading(false);
-  };
-
-  const hasLink = !!fallbackUrl;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="bg-zinc-900 border border-white/10 rounded-2xl p-7 max-w-sm w-full text-center shadow-2xl mx-4">
-        <div className="text-4xl mb-3">🥋</div>
-        <h3 className="text-lg font-bold text-white mb-2">{t("skillmap.proModalTitlePC")}</h3>
-        <p className="text-sm text-gray-400 mb-4">{t("skillmap.proModalBodyPC")}</p>
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <span className={`text-xs ${!isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>Monthly</span>
-          <button
-            onClick={() => setIsAnnual((v) => !v)}
-            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${isAnnual ? "bg-emerald-600" : "bg-zinc-600"}`}
-          >
-            <span className={`inline-block h-3 w-3 rounded-full bg-white shadow transition-transform ${isAnnual ? "translate-x-5" : "translate-x-1"}`} />
-          </button>
-          <span className={`text-xs ${isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>Annual</span>
-          {isAnnual && <span className="bg-emerald-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">Save 33%</span>}
-        </div>
-        <div className="mb-1">
-          {isAnnual
-            ? <p className="text-white font-bold text-sm">$79.99 / year <span className="text-emerald-400 text-xs">≈ $6.67/mo</span></p>
-            : <p className="text-white font-bold text-sm">$9.99 / month</p>}
-        </div>
-        <p className="text-xs text-emerald-400 mb-4">✓ 14-day free trial</p>
-        {hasLink ? (
-          <button
-            onClick={handleCheckout}
-            disabled={isLoading}
-            className="block w-full bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-60 text-black font-semibold py-3 rounded-xl mb-3 transition-all"
-          >
-            {isLoading ? "…" : t("skillmap.upgradeBtn")}
-          </button>
-        ) : (
-          <span className="block w-full bg-zinc-700 text-gray-500 font-semibold py-3 rounded-xl mb-3 cursor-not-allowed">
-            {t("skillmap.upgradeBtn")}
-          </span>
-        )}
-        <button onClick={onClose} className="text-sm text-gray-500 hover:text-gray-300 min-h-[44px] px-6 py-2">{t("skillmap.maybeLater")}</button>
-      </div>
-    </div>
-  );
-}
-
-// ─── Bottom Drawer (mobile node tap menu) ─────────────────────────────────────
-
-function BottomDrawer({
-  node,
-  isPro,
-  onAddChild,
-  onConnectTo,
-  onRemove,
-  onClose,
-  t,
-}: {
-  node: Node;
-  isPro: boolean;
-  onAddChild: (name: string) => void;
-  onConnectTo: () => void;
-  onRemove: () => void;
-  onClose: () => void;
-  t: (k: string) => string;
-}) {
-  const [mode, setMode] = useState<"menu" | "addChild" | "confirmDelete">("menu");
-  const [childName, setChildName] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-  useLayoutEffect(() => { if (mode === "addChild") inputRef.current?.focus(); }, [mode]);
-
-  return (
-    <div className="fixed inset-0 z-50" onPointerDown={onClose}>
-      <div className="absolute inset-0 bg-black/40" />
-      <div
-        className="absolute bottom-0 left-0 right-0 bg-zinc-900 border-t border-white/10 rounded-t-2xl p-5 pb-8"
-        onPointerDown={(e) => e.stopPropagation()}
-      >
-        <div className="w-10 h-1 bg-zinc-600 rounded-full mx-auto mb-4" />
-        <p className="text-xs text-gray-400 text-center mb-4 font-semibold truncate px-6">
-          {String(node.data.label)}
-        </p>
-
-        {mode === "menu" && (
-          <div className="flex flex-col gap-2">
-            <button
-              onClick={() => setMode("addChild")}
-              className="w-full flex items-center gap-3 bg-zinc-800 hover:bg-zinc-700 active:scale-[0.98] text-white text-sm font-medium px-4 py-3.5 rounded-xl transition-all"
-            >
-              <span className="text-lg w-7 text-center">➕</span>
-              {t("skillmap.drawerAddChild")}
-            </button>
-            <button
-              onClick={() => { onClose(); onConnectTo(); }}
-              className="w-full flex items-center gap-3 bg-zinc-800 hover:bg-zinc-700 active:scale-[0.98] text-white text-sm font-medium px-4 py-3.5 rounded-xl transition-all"
-            >
-              <span className="text-lg w-7 text-center">🔗</span>
-              {t("skillmap.drawerConnect")}
-            </button>
-            {isPro ? (
-              <button
-                onClick={() => setMode("confirmDelete")}
-                className="w-full flex items-center gap-3 bg-zinc-800 hover:bg-zinc-700 active:scale-[0.98] text-red-400 text-sm font-medium px-4 py-3.5 rounded-xl transition-all"
-              >
-                <span className="text-lg w-7 text-center">🗑️</span>
-                {t("skillmap.drawerRemove")}
-              </button>
-            ) : (
-              <div className="w-full flex items-center gap-3 bg-zinc-800/50 text-zinc-500 text-sm px-4 py-3.5 rounded-xl cursor-not-allowed">
-                <span className="text-lg w-7 text-center">🔒</span>
-                {t("skillmap.drawerRemove")} (Pro)
-              </div>
-            )}
-            <button onClick={onClose} className="w-full text-sm text-gray-500 hover:text-gray-300 py-2.5 mt-1 transition-colors">
-              {t("common.cancel")}
-            </button>
-          </div>
-        )}
-
-        {mode === "addChild" && (
-          <div className="flex flex-col gap-3">
-            <p className="text-xs text-gray-400 text-center">{t("skillmap.drawerAddChildHint")}</p>
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder={t("skillmap.namePlaceholder")}
-              value={childName}
-              onChange={(e) => setChildName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && childName.trim()) { onAddChild(childName.trim()); onClose(); }
-                if (e.key === "Escape") setMode("menu");
-              }}
-              className="w-full bg-zinc-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/30"
-              maxLength={80}
-            />
-            <div className="flex gap-2">
-              <button
-                onClick={() => setMode("menu")}
-                className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 text-sm py-3 rounded-xl transition-colors"
-              >
-                {t("common.cancel")}
-              </button>
-              <button
-                onClick={() => { if (childName.trim()) { onAddChild(childName.trim()); onClose(); } }}
-                disabled={!childName.trim()}
-                className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-white text-sm font-semibold py-3 rounded-xl transition-colors"
-              >
-                {t("skillmap.addBtn")}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {mode === "confirmDelete" && (
-          <div className="flex flex-col gap-3">
-            <p className="text-sm text-gray-300 text-center px-4">{t("skillmap.deleteConfirmMsg")}</p>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setMode("menu")}
-                className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 text-sm py-3 rounded-xl transition-colors"
-              >
-                {t("common.cancel")}
-              </button>
-              <button
-                onClick={() => { onRemove(); onClose(); }}
-                className="flex-1 bg-red-600 hover:bg-red-500 text-white text-sm font-semibold py-3 rounded-xl transition-colors"
-              >
-                {t("common.delete")}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// ─── Add Node Popup (PC right-click) ─────────────────────────────────────────
-
-function AddNodePopup({
-  screenX,
-  screenY,
-  onAdd,
-  onCancel,
-  t,
-}: {
-  screenX: number;
-  screenY: number;
-  onAdd: (name: string) => void;
-  onCancel: () => void;
-  t: (k: string) => string;
-}) {
-  const [name, setName] = useState("");
-  const ref = useRef<HTMLInputElement>(null);
-  useLayoutEffect(() => { ref.current?.focus(); }, []);
-
-  return (
-    <div
-      style={{ position: "fixed", left: screenX, top: screenY, zIndex: 30 }}
-      className="bg-zinc-800 border border-white/20 rounded-xl shadow-2xl p-3 w-48"
-      onMouseDown={(e) => e.stopPropagation()}
-    >
-      <input
-        ref={ref}
-        type="text"
-        placeholder={t("skillmap.namePlaceholder")}
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && name.trim()) onAdd(name.trim());
-          if (e.key === "Escape") onCancel();
-        }}
-        className="w-full bg-zinc-700 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none mb-2"
-        maxLength={80}
-      />
-      <div className="flex gap-2">
-        <button onClick={onCancel} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-xs text-gray-300 py-2 min-h-[44px] rounded-lg transition-colors">
-          {t("common.cancel")}
-        </button>
-        <button
-          onClick={() => { if (name.trim()) onAdd(name.trim()); }}
-          disabled={!name.trim()}
-          className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-xs text-white py-2 min-h-[44px] rounded-lg transition-colors"
-        >
-          {t("skillmap.addBtn")}
-        </button>
-      </div>
-    </div>
   );
 }
 
@@ -570,7 +193,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   const mobileAddRef = useRef<HTMLInputElement>(null);
 
   // Keep module-level refs up-to-date (used by TechniqueNodeComp to avoid stale closure)
-  useEffect(() => { _deleteNodeRef.current = handleDeleteNode; }, [handleDeleteNode]);
+  useEffect(() => { deleteNodeRef.current = handleDeleteNode; }, [handleDeleteNode]);
 
   // ── Collapse toggle handler ───────────────────────────────────────────────
   const handleToggleCollapse = useCallback((nodeId: string) => {
@@ -581,7 +204,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
       return next;
     });
   }, []);
-  useEffect(() => { _toggleCollapseRef.current = handleToggleCollapse; }, [handleToggleCollapse]);
+  useEffect(() => { toggleCollapseRef.current = handleToggleCollapse; }, [handleToggleCollapse]);
 
   // ── Focus / jump to node (Recent Focus bar) ──────────────────────────────
   const handleFocusNode = useCallback((nodeId: string) => {
