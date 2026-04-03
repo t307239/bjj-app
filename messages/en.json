@@ -698,6 +698,12 @@
     "paymentIssueTitle": "Payment issue — Pro features paused",
     "paymentIssueDesc": "Your last payment failed. Update your billing info to continue.",
     "fixNow": "Fix now",
+    "pastDueTitle": "Payment failed",
+    "pastDueDesc": "Your card may have expired or has insufficient funds. Please update your payment info to keep Pro access.",
+    "updateCard": "Update card",
+    "canceledTitle": "Pro plan canceled",
+    "canceledDesc": "Premium features are disabled. Upgrade again to unlock all features.",
+    "rejoin": "Rejoin",
     "allFeaturesUnlocked": "All Pro features unlocked",
     "disclaimer": "I understand this is a digital subscription and agree to the Terms of Service. BJJ App is a training log, not a substitute for qualified instruction.",
     "disclaimerAria": "Subscription disclaimer acknowledgement"
