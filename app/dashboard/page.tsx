@@ -283,17 +283,18 @@ export default async function DashboardPage({
       : 0;
 
   // ── Locale-aware translation for page body (metadata stays EN for SEO) ──
-  // Priority: profile.locale → Accept-Language header → "en"
+  // Priority: profile.locale (ja only) → Accept-Language header → "en"
+  // NOTE: pt disabled on server — pt.json is ~18% complete, would show mixed pt/en
   let userLocale: Locale = "en";
   const profileLocale = (profileData as { locale?: string | null })?.locale;
-  if (profileLocale === "ja" || profileLocale === "pt") {
-    userLocale = profileLocale;
-  } else if (!profileLocale) {
+  if (profileLocale === "ja") {
+    userLocale = "ja";
+  } else if (!profileLocale || profileLocale === "en") {
     const hdrs = await headers();
     const acceptLang = hdrs.get("accept-language") ?? "";
     if (acceptLang.toLowerCase().startsWith("ja")) userLocale = "ja";
-    // pt auto-detection disabled (same as client-side — pt.json coverage ~18%)
   }
+  // If profile.locale is "pt" or other, fall through to "en" until pt.json is complete
   const t = makeT(userLocale);
 
   // Training type breakdown (Gi / No-Gi / Drilling / etc.)
