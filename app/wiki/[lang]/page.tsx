@@ -268,7 +268,7 @@ export default async function WikiIndexPage({
             </div>
             {/* 記事カウント — glassmorphism */}
             <div className="rounded-xl bg-white/5 border border-white/10 px-6 py-4 text-center min-w-[120px] backdrop-blur-sm">
-              <p className="text-2xl font-bold text-white tabular-nums">
+              <p className="text-2xl font-bold text-white tabular-nums" suppressHydrationWarning>
                 {totalCount.toLocaleString()}
               </p>
               <p className="text-xs text-gray-400 mt-0.5 uppercase tracking-widest">
@@ -354,7 +354,7 @@ export default async function WikiIndexPage({
       {/* ── フッター ── */}
       <footer className="mt-8 border-t border-white/10 py-8">
         <div className="mx-auto max-w-6xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-zinc-400">
-          <p>© {new Date().getFullYear()} BJJ Wiki — All rights reserved.</p>
+          <p suppressHydrationWarning>© {new Date().getFullYear()} BJJ Wiki — All rights reserved.</p>
           <div className="flex items-center gap-4">
             {VALID_LANGS.map((l) => (
               <a

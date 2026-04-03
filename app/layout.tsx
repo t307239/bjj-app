@@ -63,7 +63,7 @@ export default function RootLayout({
 }) {
   return (
     // #48: dark クラスを固定 — Tailwind の dark: modifier を常に有効化
-    <html lang="en" className={`dark ${inter.variable}`}>
+    <html lang="en" className={`dark ${inter.variable} overscroll-none`}>
       <head>
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -72,7 +72,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
       </head>
       {/* #41: font-sans → Inter variable font */}
-      <body className={`${inter.className} min-h-screen bg-zinc-950 text-white antialiased`}>
+      <body className={`${inter.className} min-h-screen bg-zinc-950 text-white antialiased overscroll-none`}>
         <AgeGate />
         {children}
         <CookieConsent />

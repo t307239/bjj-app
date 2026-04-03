@@ -727,7 +727,7 @@ export default async function WikiPage({
               {updatedAt && (
                 <>
                   <span className="text-slate-500">·</span>
-                  <span>🔄 {updatedAt}</span>
+                  <span suppressHydrationWarning>🔄 {updatedAt}</span>
                 </>
               )}
               {/* #32: Share button */}
@@ -834,7 +834,7 @@ export default async function WikiPage({
       {/* #10: フッター（クリーンアップ）*/}
       <footer className="border-t border-white/10 py-8 mt-4">
         <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-          <p>© {new Date().getFullYear()} BJJ Wiki — All rights reserved.</p>
+          <p suppressHydrationWarning>© {new Date().getFullYear()} BJJ Wiki — All rights reserved.</p>
           <a
             href="https://bjj-app.net"
             className="hover:text-slate-400 transition-colors"

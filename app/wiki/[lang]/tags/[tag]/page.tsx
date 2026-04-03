@@ -183,7 +183,7 @@ export default async function TagArchivePage({
       {/* Footer */}
       <footer className="border-t border-white/10 py-8 mt-8">
         <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} BJJ Wiki — All rights reserved.</p>
+          <p suppressHydrationWarning>© {new Date().getFullYear()} BJJ Wiki — All rights reserved.</p>
           <a href="https://bjj-app.net" className="hover:text-slate-400 transition-colors">
             BJJ App →
           </a>
