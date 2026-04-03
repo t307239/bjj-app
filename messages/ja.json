@@ -75,7 +75,20 @@
     "beltBlue": "青帯",
     "beltPurple": "紫帯",
     "beltBrown": "茶帯",
-    "beltBlack": "黒帯"
+    "beltBlack": "黒帯",
+    "defaultCoachName": "コーチ",
+    "motivationGapDays": "前回の練習から{n}日。今週あと1回 — 継続は力なり。",
+    "motivationGapLong": "久しぶりですね — マットに戻りましょう！",
+    "motivationGapWeek": "道場が待っています。戻ってきてロールしましょう！",
+    "motivationTrainedToday": "今日もいい練習でした！この勢いを維持しましょう 🔥",
+    "motivationTrainedYesterday": "昨日の練習お疲れ様！今日も練習しますか？",
+    "weeklyGoalDone": "目標: {done} · 達成: {count}",
+    "weeklyGoalReached": "週間目標達成！",
+    "weeklyMoreSessions": "あと{n}回で週間目標達成",
+    "weeklyMoreSessionsPlural": "あと{n}回で週間目標達成",
+    "weeklyOnPace": " ✓ 順調",
+    "weeklyPickUpPace": " ⚠ ペースアップ必要",
+    "weeklyProgressLabel": "{done}/{goal}達成 · 残り{days}日"
   },
   "trainingLog": {
     "totalLabel": "合計",
@@ -166,7 +179,40 @@
     "durationCustom": "カスタム",
     "periodAll": "全期間",
     "periodMonth": "今月",
-    "periodWeek": "今週"
+    "periodWeek": "今週",
+    "backToToday": "今日に戻る",
+    "bentoSessions": "セッション",
+    "bentoTypeMix": "タイプミックス",
+    "calendarComp": "試合",
+    "calendarDrill": "ドリル",
+    "calendarGi": "道着",
+    "calendarNogi": "ノーギ",
+    "calendarOpen": "オープン",
+    "calendarTapToLog": "タップしてこの日のセッションを記録",
+    "collapse": "閉じる ▲",
+    "customMinutes": "カスタム分数",
+    "dismissForToday": "今日は閉じる",
+    "emptyCloud": "✓ クラウド同期",
+    "emptyFree": "✓ 無料で使える",
+    "emptyTrack": "✓ 進捗を記録",
+    "filterByDate": "日付でフィルタ",
+    "logNudgeSubtitle": "タップしてロールを記録",
+    "logNudgeTitle": "今日のセッションを記録しよう！",
+    "memoFormPlaceholder": "重要なポイント、コツ、学んだこと...",
+    "more": "もっと見る",
+    "next": "次へ",
+    "periodLabel": "期間",
+    "prev": "前へ",
+    "printPDF": "印刷 / PDF保存",
+    "recovery": "リカバリー",
+    "restoredDraft": "未保存のセッションが復元されました。保存してください。",
+    "searchPlaceholder": "メモやテクニックで検索...",
+    "showMore": "もっと見る ▼",
+    "typeShort": "タイプ",
+    "weight": "練習後の体重（任意）",
+    "weightPlaceholder": "例: 75.5",
+    "freePlanNotice": "🗓 無料プラン: 直近30日を表示",
+    "upgradeFullHistory": "全履歴を見る →"
   },
   "techniques": {
     "mastery1": "入門",
@@ -259,7 +305,9 @@
     "map": "スキルマップ",
     "dangerBadge": "上級技",
     "dangerTooltip": "この技は怪我のリスクが高いです。有資格の指導者の下でのみ練習してください。",
-    "dangerConfirm": "⚠️ これは上級技で怪我のリスクが高い技術です（ヒールフック、膝十字、首関節技など）。追加しますか？必ず有資格のインストラクターの直接指導の下で練習してください。"
+    "dangerConfirm": "⚠️ これは上級技で怪我のリスクが高い技術です（ヒールフック、膝十字、首関節技など）。追加しますか？必ず有資格のインストラクターの直接指導の下で練習してください。",
+    "allDuplicates": "すべてのテクニックは既に登録済みです — 新規追加はありません",
+    "bulkTooMany": "テクニックが多すぎます — 一度に100件以下で入力してください"
   },
   "profile": {
     "title": "プロフィール",
@@ -338,8 +386,47 @@
     "tabs": {
       "stats": "統計",
       "profile": "プロフィール",
-      "settings": "設定"
-    }
+      "settings": "設定",
+      "body": "ボディ"
+    },
+    "ariaDeleteConfirm": "アカウント削除を確認",
+    "ariaDeleteInput": "DELETEと入力してアカウント削除を確認",
+    "ariaDisableSharing": "データ共有を無効化",
+    "ariaDownloadCSV": "トレーニングデータをCSVでダウンロード",
+    "ariaEnableSharing": "データ共有を有効化",
+    "ariaLeaveGym": "ジムを退会",
+    "ariaLeaveGymCancel": "ジム退会をキャンセル",
+    "ariaLeaveGymConfirm": "ジム退会を確認",
+    "ariaManageSub": "Stripeカスタマーポータルでサブスクリプションを管理",
+    "ariaPushToggle": "プッシュ通知を切り替え",
+    "csvHeaderCreatedAt": "作成日",
+    "csvHeaderDate": "日付",
+    "csvHeaderDuration": "時間(分)",
+    "csvHeaderNotes": "メモ",
+    "csvHeaderType": "タイプ",
+    "deleteAccountPermanently": "アカウントを完全に削除",
+    "deleteDesc": "すべてのトレーニング記録、テクニックメモ、プロフィールデータが完全に削除され、復元できなくなります。",
+    "deleteError": "アカウント削除に失敗しました。もう一度お試しください。",
+    "deleteExportFirst": "削除する前に、データをダウンロードしてください — 後から復元はできません。",
+    "deleteNetworkError": "ネットワークエラーです。もう一度お試しください。",
+    "deleteTitle": "アカウントを削除しますか？",
+    "deleteTypeLabel": "確認のため",
+    "deleteTypePlaceholder": "DELETE",
+    "deleteTypeToConfirm": "と入力してください",
+    "deletingLabel": "削除中…",
+    "exportBtn": "📥 データをダウンロード (CSV)",
+    "exportDesc": "すべてのトレーニング記録をCSVファイルでダウンロードできます。",
+    "exporting": "エクスポート中…",
+    "pushBlocked": "ブラウザで通知がブロックされています。デバイスの設定で有効にしてください。",
+    "pushDisable": "通知をオフにする",
+    "pushDisabling": "無効化中…",
+    "pushEnable": "通知をオンにする",
+    "pushEnabled": "✅ 通知がオンです",
+    "pushEnabling": "有効化中…",
+    "pushNotSupported": "このブラウザ/デバイスではプッシュ通知がサポートされていません。",
+    "pushNotifications": "プッシュ通知",
+    "pushNotificationsDesc": "アプリを閉じていても、ストリークのリマインダーやジムの更新を受け取れます。",
+    "saveFailedUnknown": "不明なエラー"
   },
   "competition": {
     "title": "試合戦績",
@@ -358,7 +445,21 @@
     "currentStreak": "現在{n}連勝中",
     "bestStreak": "最長{n}連勝",
     "monthly": "月別",
-    "matchesSuffix": "試合"
+    "matchesSuffix": "試合",
+    "eventPlaceholder": "例: 東京オープン",
+    "eventShortPlaceholder": "大会名",
+    "finishPlaceholder": "例: ヒールフック",
+    "finishShortPlaceholder": "フィニッシュテクニック",
+    "formHeader": "🏆 試合記録",
+    "giType": "道着タイプ",
+    "noCompetitions": "まだ試合記録がありません",
+    "noCompetitionsHint": "最初の試合を記録して戦績を管理しよう",
+    "opponentBelt": "対戦相手の帯",
+    "opponentPlaceholder": "対戦相手の名前",
+    "opponentShortPlaceholder": "対戦相手",
+    "quickTechniqueTag": "テクニックタグ",
+    "searchTechniquesPlaceholder": "テクニックを検索…",
+    "techAppendNote": "テクニックを選択してメモに追加"
   },
   "guest": {
     "banner": "ゲストモードで体験中",
@@ -428,7 +529,13 @@
     "errorInvalidEmail": "有効なメールアドレスを入力してください。",
     "errorSendFailed": "メール送信に失敗しました。もう一度お試しください。",
     "errorRateLimit": "60秒間隔を空けてから再度お試しください。",
-    "sessionExpired": "セッションが期限切れです。再ログインしてください — 未保存のデータは保持されています。"
+    "sessionExpired": "セッションが期限切れです。再ログインしてください — 未保存のデータは保持されています。",
+    "ariaAgeConfirm": "年齢確認: 13歳以上であることを確認します",
+    "ariaDisclaimerConfirm": "トレーニング免責事項: BJJには身体的リスクが伴うことを理解しています",
+    "ariaEmailAddress": "メールアドレス",
+    "ariaSendMagicLink": "マジックログインリンクを送信",
+    "ariaSignInGitHub": "GitHubでサインイン",
+    "ariaSignInGoogle": "Googleでサインイン"
   },
   "stats": {
     "personalBests": "個人記録",
@@ -467,7 +574,11 @@
     "lastMonthCompareSame": "先月と同じペース ➡️",
     "thisMonthRecording": "今月 {n}回記録中 ✨",
     "longestStreak": "最長連続：{n}日",
-    "consistencyRate": "{emoji} 継続率 {rate}%"
+    "consistencyRate": "{emoji} 継続率 {rate}%",
+    "dismiss": "閉じる",
+    "wikiConceptualLearning": "読む: BJJコンセプチュアル・ラーニング",
+    "wikiDrilling": "読む: ドリル方法論",
+    "wikiFlowState": "読む: フロー・ステート・トレーニング"
   },
   "chart": {
     "monthlyGraph": "月別練習グラフ",
@@ -521,7 +632,8 @@
   },
   "streak": {
     "protect": "{n,plural,one={📅 1日連続記録中 — 今日の練習を忘れずに!}other={🔥 {n}日連続記録が危機！今すぐ練習を記録しよう!}}",
-    "maintainDesc": "今日の練習を記録するとストリークが維持されます"
+    "maintainDesc": "今日の練習を記録するとストリークが維持されます",
+    "protect1": "⏰ 1日のストリーク — 今日のセッションを忘れずに！"
   },
   "achievement": {
     "milestone.1.emoji": "🎯",
@@ -574,7 +686,8 @@
     "draw": "引き分け",
     "button.training": "CSV出力",
     "button.techniques": "技術CSV",
-    "locked": "CSV (Pro)"
+    "locked": "CSV (Pro)",
+    "win": "勝ち"
   },
   "pro": {
     "defaultFeature": "この機能",
@@ -588,6 +701,12 @@
     "paymentIssueTitle": "お支払いに問題があります — Pro機能が一時停止中",
     "paymentIssueDesc": "最後のお支払いが失敗しました。請求情報を更新してください。",
     "fixNow": "今すぐ修正",
+    "pastDueTitle": "お支払いが失敗しました",
+    "pastDueDesc": "カードの有効期限切れまたは残高不足です。Proアクセスを維持するには決済情報を更新してください。",
+    "updateCard": "カードを更新",
+    "canceledTitle": "Proプランが解約されました",
+    "canceledDesc": "プレミアム機能は無効化されています。再度アップグレードして全機能をご利用ください。",
+    "rejoin": "再加入",
     "allFeaturesUnlocked": "すべてのPro機能が有効です",
     "disclaimer": "デジタルサブスクリプションであることを理解し、利用規約に同意します。BJJ Appはトレーニング記録ツールであり、資格のある指導者の代替ではありません。",
     "disclaimerAria": "サブスクリプション免責事項の確認"
@@ -600,7 +719,13 @@
     "loading": "読み込み中...",
     "understood": "理解しました",
     "share": "シェア",
-    "upgradePro": "Proにアップグレード"
+    "upgradePro": "Proにアップグレード",
+    "delete": "削除",
+    "dismiss": "閉じる",
+    "dismissNotification": "通知を閉じる",
+    "userMenu": "ユーザーメニュー",
+    "zoomIn": "拡大",
+    "zoomOut": "縮小"
   },
   "aiCoach": {
     "title": "🤖 AIマイクロコーチ",
@@ -672,7 +797,12 @@
     "addNodeMobile": "テクニックを追加",
     "collapse": "折りたたむ",
     "expand": "展開する",
-    "recentFocus": "最近:"
+    "recentFocus": "最近:",
+    "canvasShortcuts": "キャンバスのキーボードショートカット",
+    "exitFullScreen": "フルスクリーン解除",
+    "fullScreen": "フルスクリーン",
+    "overLimitBanner": "無料プランの上限を超えました。Proにアップグレードして{count}件のテクニックの編集を再開しましょう。",
+    "overLimitUpgrade": "Proにアップグレード"
   },
   "wiki": {
     "dailyTip": "今日のBJJ知識",
@@ -897,7 +1027,8 @@
     "printLeaderboardBelt": "帯",
     "printLeaderboardSessions": "練習回数 (30日)",
     "stripeNotConfigured": "Stripeが設定されていません。サポートにお問い合わせください。",
-    "networkError": "ネットワークエラーが発生しました。もう一度お試しください。"
+    "networkError": "ネットワークエラーが発生しました。もう一度お試しください。",
+    "rankingStreakRestHint": "レスト日は怪我を防ぎます — ストリークは楽しみのためで、プレッシャーではありません。"
   },
   "gymJoin": {
     "title": "{name} に参加する",
@@ -914,7 +1045,10 @@
     "error": "参加に失敗しました。もう一度お試しください。",
     "transferTitle": "ジムを移籍しますか？",
     "transferDesc": "あなたは現在別のジムに所属しています。{name} に参加すると現在のジムから退会となり、前のオーナーはあなたのデータを見られなくなります。",
-    "transferYes": "{name} に移籍する"
+    "transferYes": "{name} に移籍する",
+    "ariaAgeConfirm": "年齢確認: 13歳以上であることを確認します",
+    "ariaJoinNoShare": "データを共有せずにジムに参加",
+    "ariaJoinShare": "トレーニングデータを共有してジムに参加"
   },
   "help": {
     "title": "ヘルプ・よくある質問",
@@ -1217,7 +1351,29 @@
       "rightKnee": "右膝",
       "leftAnkle": "左足首",
       "rightAnkle": "右足首"
-    }
+    },
+    "bodyMap": "ボディマップ",
+    "logWeight": "体重を記録",
+    "note": "メモ（任意）",
+    "notePlaceholder": "空腹時、練習後、ワークアウト後...",
+    "offlineError": "オフラインです — 変更は保存されません。",
+    "paywallCta": "Proにアップグレード",
+    "paywallDesc": "体重推移チャートとボディ損傷マップはPro機能です。",
+    "paywallTitle": "Proで体重とコンディションを管理 🔒",
+    "quickLog": "かんたん体重記録",
+    "saveError": "保存に失敗しました。もう一度お試しください。",
+    "saved": "記録しました ✓",
+    "saving": "保存中...",
+    "status": {
+      "injured": "怪我",
+      "ok": "OK",
+      "sore": "痛み",
+      "tapToMark": "タップして痛み/怪我をマーク",
+      "untouched": "未設定"
+    },
+    "tapHint": "体の部位をタップ: OK → 痛み → 怪我",
+    "title": "ボディ管理",
+    "weightKg": "体重 (kg)"
   },
   "ageGate": {
     "title": "年齢確認",
@@ -1228,5 +1384,12 @@
     "blockedTitle": "年齢制限",
     "blockedBody": "BJJ Appは13歳以上のユーザー向けに設計されています。13歳未満の方はご利用いただけません（COPPA準拠）。",
     "blockedContact": "誤りと思われる場合は、保護者の方が 307239t777@gmail.com までご連絡ください。"
+  },
+  "offline": {
+    "banner": "オフラインです。再接続するまで一部の機能が無効になります。"
+  },
+  "weeklyStrip": {
+    "same": "= 同じ",
+    "vsLastWeek": "先週比"
   }
 }

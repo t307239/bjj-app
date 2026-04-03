@@ -17,6 +17,8 @@ interface ProStatusBannerProps {
  *            (is_pro=false at this point so this banner rarely shows, but kept as safety net)
  */
 export default function ProStatusBanner({ subscriptionStatus }: ProStatusBannerProps) {
+  const { t } = useLocale();
+
   if (!subscriptionStatus || subscriptionStatus === "active" || subscriptionStatus === "trialing") {
     return null;
   }
@@ -26,9 +28,9 @@ export default function ProStatusBanner({ subscriptionStatus }: ProStatusBannerP
       <div className="mx-4 mt-4 flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-950/40 px-4 py-3 text-sm">
         <span className="text-lg leading-none" aria-hidden="true">⚠️</span>
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-red-300">お支払いが失敗しました</p>
+          <p className="font-semibold text-red-300">{t("pro.pastDueTitle")}</p>
           <p className="text-red-400/80 text-xs mt-0.5">
-            カードの有効期限切れまたは残高不足です。Proアクセスを維持するには決済情報を更新してください。
+            {t("pro.pastDueDesc")}
           </p>
         </div>
         <form action="/api/stripe/portal" method="POST" className="flex-shrink-0">
@@ -36,7 +38,7 @@ export default function ProStatusBanner({ subscriptionStatus }: ProStatusBannerP
             type="submit"
             className="rounded-lg bg-red-500 hover:bg-red-400 px-3 py-1.5 text-xs font-bold text-white transition-colors whitespace-nowrap"
           >
-            カードを更新
+            {t("pro.updateCard")}
           </button>
         </form>
       </div>
@@ -48,16 +50,16 @@ export default function ProStatusBanner({ subscriptionStatus }: ProStatusBannerP
       <div className="mx-4 mt-4 flex items-start gap-3 rounded-xl border border-zinc-600/40 bg-zinc-900/60 px-4 py-3 text-sm">
         <span className="text-lg leading-none" aria-hidden="true">🔒</span>
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-zinc-300">Proプランが解約されました</p>
+          <p className="font-semibold text-zinc-300">{t("pro.canceledTitle")}</p>
           <p className="text-zinc-500 text-xs mt-0.5">
-            プレミアム機能は無効化されています。再度アップグレードして全機能をご利用ください。
+            {t("pro.canceledDesc")}
           </p>
         </div>
         <Link
           href="/profile#upgrade"
           className="flex-shrink-0 rounded-lg bg-yellow-500 hover:bg-yellow-400 px-3 py-1.5 text-xs font-bold text-black transition-colors whitespace-nowrap"
         >
-          再加入
+          {t("pro.rejoin")}
         </Link>
       </div>
     );

@@ -301,9 +301,9 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       {!isPro && !initialLoading && (
         <div className="mb-3 px-4 py-2.5 rounded-xl border border-amber-500/20 bg-amber-500/8 flex items-center justify-between gap-3">
           <span className="text-xs text-amber-300/80">
-            🗓 Free plan: showing last 30 days
+            {t("training.freePlanNotice")}
           </span>
-          <span className="text-xs font-medium text-blue-400 whitespace-nowrap">Upgrade for full history →</span>
+          <span className="text-xs font-medium text-blue-400 whitespace-nowrap">{t("training.upgradeFullHistory")}</span>
         </div>
       )}
 

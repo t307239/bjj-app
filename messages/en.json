@@ -209,7 +209,9 @@
     "periodWeek": "This Week",
     "filterByDate": "Filter by Date",
     "weight": "Post-training weight (optional)",
-    "weightPlaceholder": "e.g. 75.5"
+    "weightPlaceholder": "e.g. 75.5",
+    "freePlanNotice": "🗓 Free plan: showing last 30 days",
+    "upgradeFullHistory": "Upgrade for full history →"
   },
   "techniques": {
     "mastery1": "Know it",
