@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -282,8 +283,18 @@ export default async function DashboardPage({
       : 0;
 
   // ── Locale-aware translation for page body (metadata stays EN for SEO) ──
-  const userLocale = ((profileData as { locale?: string | null })?.locale ?? "en") as Locale;
-  const t = makeT(userLocale === "ja" || userLocale === "pt" ? userLocale : "en");
+  // Priority: profile.locale → Accept-Language header → "en"
+  let userLocale: Locale = "en";
+  const profileLocale = (profileData as { locale?: string | null })?.locale;
+  if (profileLocale === "ja" || profileLocale === "pt") {
+    userLocale = profileLocale;
+  } else if (!profileLocale) {
+    const hdrs = await headers();
+    const acceptLang = hdrs.get("accept-language") ?? "";
+    if (acceptLang.toLowerCase().startsWith("ja")) userLocale = "ja";
+    // pt auto-detection disabled (same as client-side — pt.json coverage ~18%)
+  }
+  const t = makeT(userLocale);
 
   // Training type breakdown (Gi / No-Gi / Drilling / etc.)
   const typeBreakdown: Record<string, number> = {};
