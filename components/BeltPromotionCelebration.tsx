@@ -117,6 +117,13 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
   const pulsed = usePulse();
   useConfetti(canvasRef, true);
 
+  // ESC to dismiss
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   const info = BELT_COLORS[toBelt] ?? BELT_COLORS.white;
   const fromInfo = BELT_COLORS[fromBelt] ?? BELT_COLORS.white;
 

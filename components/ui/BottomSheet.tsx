@@ -6,6 +6,7 @@
  * B-29: Reusable bottom sheet / modal hybrid
  * - Mobile  (< md): slides up from bottom, full-width, rounded-t-2xl
  * - Desktop (≥ md): centered dialog, max-w-lg, rounded-2xl
+ * - Swipe-to-close: drag down on mobile to dismiss (threshold 80px)
  *
  * Usage:
  *   <BottomSheet isOpen={open} onClose={() => setOpen(false)} title="記録を追加">
@@ -13,7 +14,7 @@
  *   </BottomSheet>
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -22,8 +23,68 @@ type Props = {
   children: React.ReactNode;
 };
 
+const CLOSE_THRESHOLD = 80; // px — swipe distance to trigger close
+
 export default function BottomSheet({ isOpen, onClose, title, children }: Props) {
   const sheetRef = useRef<HTMLDivElement>(null);
+
+  // ── Swipe-to-close state ────────────────────────────────────────────────
+  const [dragY, setDragY] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const touchStartY = useRef<number | null>(null);
+  const touchStartX = useRef<number | null>(null);
+  const isVertical = useRef<boolean | null>(null);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    // Only enable swipe on the drag handle area or when content is scrolled to top
+    const target = e.target as HTMLElement;
+    const isHandle = target.closest("[data-drag-handle]");
+    const scrollBody = sheetRef.current?.querySelector("[data-scroll-body]") as HTMLElement | null;
+    const isScrolledToTop = !scrollBody || scrollBody.scrollTop <= 0;
+
+    if (!isHandle && !isScrolledToTop) return;
+
+    touchStartY.current = e.touches[0].clientY;
+    touchStartX.current = e.touches[0].clientX;
+    isVertical.current = null;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (touchStartY.current === null || touchStartX.current === null) return;
+    const dy = e.touches[0].clientY - touchStartY.current;
+    const dx = e.touches[0].clientX - touchStartX.current;
+
+    // Determine gesture direction on first significant movement
+    if (isVertical.current === null && (Math.abs(dy) > 4 || Math.abs(dx) > 4)) {
+      isVertical.current = Math.abs(dy) > Math.abs(dx);
+    }
+    if (!isVertical.current) return;
+
+    // Only allow downward drag (positive dy)
+    if (dy > 0) {
+      setDragY(dy);
+      setDragging(true);
+    }
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (dragY > CLOSE_THRESHOLD) {
+      onClose();
+    }
+    setDragY(0);
+    setDragging(false);
+    touchStartY.current = null;
+    touchStartX.current = null;
+    isVertical.current = null;
+  }, [dragY, onClose]);
+
+  // Reset drag state when closing
+  useEffect(() => {
+    if (!isOpen) {
+      setDragY(0);
+      setDragging(false);
+    }
+  }, [isOpen]);
 
   // ── Body scroll lock ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -45,27 +106,51 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
     return () => document.removeEventListener("keydown", onKey);
   }, [isOpen, onClose]);
 
-  // ── Focus trap: initial focus on sheet ───────────────────────────────────
+  // ── Focus trap: initial focus + Tab cycling within sheet ────────────────
   useEffect(() => {
-    if (isOpen && sheetRef.current) {
-      sheetRef.current.focus();
-    }
+    if (!isOpen || !sheetRef.current) return;
+    sheetRef.current.focus();
+
+    const sheet = sheetRef.current;
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const focusable = sheet.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea, input:not([disabled]), select, [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first || document.activeElement === sheet) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", handleTab);
+    return () => document.removeEventListener("keydown", handleTab);
   }, [isOpen]);
 
   if (!isOpen) return null;
+
+  const backdropOpacity = dragging ? Math.max(0, 1 - dragY / 300) : 1;
 
   return (
     <>
       {/* ── Backdrop ─────────────────────────────────────────────────────── */}
       <div
         className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm animate-sheet-fade"
+        style={{ opacity: backdropOpacity }}
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* ── Sheet container ───────────────────────────────────────────────── */}
-      {/* Mobile: pinned to bottom | Desktop: centered via flex */}
-      {/* NOTE: aria-hidden removed — was hiding the dialog from iOS focus/tap tree */}
       <div
         className="fixed inset-x-0 bottom-0 z-[61] md:inset-0 md:flex md:items-center md:justify-center md:px-4 pointer-events-none"
       >
@@ -75,24 +160,24 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
           aria-modal="true"
           tabIndex={-1}
           className={[
-            // Layout
             "pointer-events-auto w-full flex flex-col",
-            // Sizing: svh fallback chain for older iOS Safari (15.x doesn't support svh)
-            // max-h order: svh → dvh → 92vh fallback
             "max-h-[92vh] max-h-[92dvh] max-h-[92svh] md:max-h-[85vh]",
             "md:max-w-lg",
-            // Appearance
             "bg-zinc-900 border border-white/10 shadow-2xl outline-none",
-            // Shape: mobile rounded top, desktop fully rounded
             "rounded-t-2xl md:rounded-2xl",
-            // Animation: slide up on mobile, no extra animation needed on desktop
             "animate-sheet-up md:animate-none",
           ].join(" ")}
-          // Prevent backdrop click from propagating through the sheet
+          style={{
+            transform: dragY > 0 ? `translateY(${dragY}px)` : undefined,
+            transition: dragging ? "none" : "transform 0.2s ease",
+          }}
           onClick={(e) => e.stopPropagation()}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           {/* ── Drag handle (mobile only) ───────────────────────────────── */}
-          <div className="flex justify-center pt-3 pb-1 md:hidden shrink-0">
+          <div className="flex justify-center pt-3 pb-1 md:hidden shrink-0 cursor-grab" data-drag-handle>
             <div className="w-9 h-1 bg-white/20 rounded-full" />
           </div>
 
@@ -121,9 +206,9 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
           )}
 
           {/* ── Scrollable body ────────────────────────────────────────── */}
-          {/* -webkit-overflow-scrolling: touch enables momentum scroll on iOS Safari */}
           <div
             className="flex-1 overflow-y-auto overscroll-contain px-4 py-4"
+            data-scroll-body
             style={{
               paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
               WebkitOverflowScrolling: "touch",

@@ -16,16 +16,16 @@ interface AvatarImageProps {
 }
 
 /**
- * AvatarImage — client component wrapper for avatar <img> with onError fallback.
+ * AvatarImage — client component wrapper for avatar <img> with onError fallback
+ * and blur-up fade-in transition.
  * Shows fallback initials or default icon if image fails to load.
- * Must be a client component because onError is an event handler.
  * perf: priority prop で LCP スコアを最適化 (fetchpriority="high" / loading="lazy" の切り替え)
  */
 export default function AvatarImage({ src, alt, className, priority = false, fallbackInitials }: AvatarImageProps) {
   const [errored, setErrored] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   if (errored || !src) {
-    // Fallback: initials circle or default user icon
     return (
       <div
         className={`${className ?? ""} flex items-center justify-center bg-zinc-800 text-zinc-400 font-semibold text-xs`}
@@ -43,16 +43,23 @@ export default function AvatarImage({ src, alt, className, priority = false, fal
   }
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={src}
-      alt={alt}
-      className={className}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      fetchPriority={priority ? "high" : "auto"}
-      loading={priority ? "eager" : "lazy"}
-      decoding={priority ? "sync" : "async"}
-      onError={() => setErrored(true)}
-    />
+    <div className={`${className ?? ""} relative overflow-hidden bg-zinc-800`}>
+      {/* Skeleton placeholder — visible until image loads */}
+      {!loaded && (
+        <div className="absolute inset-0 animate-pulse bg-zinc-700/50" />
+      )}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={alt}
+        className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        fetchPriority={priority ? "high" : "auto"}
+        loading={priority ? "eager" : "lazy"}
+        decoding={priority ? "sync" : "async"}
+        onLoad={() => setLoaded(true)}
+        onError={() => setErrored(true)}
+      />
+    </div>
   );
 }

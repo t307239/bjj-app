@@ -98,6 +98,13 @@ export default function FirstRollCelebration({ onDismiss }: Props) {
     return () => clearTimeout(timer);
   }, [onDismiss]);
 
+  // ESC to dismiss
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onDismiss(); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onDismiss]);
+
   return (
     <>
       <ConfettiCanvas />

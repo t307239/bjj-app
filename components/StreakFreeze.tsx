@@ -22,6 +22,14 @@ function FreezePaywallModal({
   onClose: () => void;
 }) {
   const { t } = useLocale();
+
+  // ESC to dismiss
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   const href = userId
     ? `${STRIPE_PAYMENT_LINK}?client_reference_id=${userId}`
     : STRIPE_PAYMENT_LINK;
