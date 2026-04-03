@@ -205,7 +205,7 @@ export default function TechniqueLogList({
           {filtered.slice((page - 1) * pageSize, page * pageSize).map((technique) => (
             <div
               key={technique.id}
-              className="bg-zinc-900 rounded-xl p-4 border border-white/10"
+              className="bg-zinc-900 rounded-xl p-4 border border-white/10 hover:bg-white/[0.04] active:bg-white/[0.06] transition-colors duration-150"
             >
               {editingId === technique.id ? (
                 // インライン編集フォーム

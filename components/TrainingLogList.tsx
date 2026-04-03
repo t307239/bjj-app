@@ -214,7 +214,7 @@ const TrainingLogList = memo(function TrainingLogList({
             key={entry.id}
             onDelete={() => onDelete(entry.id)}
             onEdit={() => onStartEdit(entry)}
-            className={`bg-zinc-900/50 backdrop-blur-sm rounded-2xl py-3 px-4 border border-white/10 hover:bg-white/[0.04] transition-colors duration-150${
+            className={`bg-zinc-900/50 backdrop-blur-sm rounded-2xl py-3 px-4 border border-white/10 hover:bg-white/[0.04] active:bg-white/[0.06] transition-colors duration-150${
               entry.type === "competition" ? " border-l-2 border-l-red-500" : ""
             }`}
           >

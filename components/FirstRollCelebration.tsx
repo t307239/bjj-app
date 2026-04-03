@@ -103,11 +103,11 @@ export default function FirstRollCelebration({ onDismiss }: Props) {
       <ConfettiCanvas />
       {/* Modal overlay */}
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-6"
+        className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm px-0 sm:px-6"
         onClick={onDismiss}
       >
         <div
-          className="bg-zinc-900 border border-[#10B981]/40 rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl shadow-[#10B981]/10 animate-in fade-in zoom-in-95 duration-300 max-h-[85vh] overflow-y-auto"
+          className="bg-zinc-900 border border-[#10B981]/40 rounded-t-2xl sm:rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl shadow-[#10B981]/10 max-h-[85vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="text-5xl mb-4">🥋</div>

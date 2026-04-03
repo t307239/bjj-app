@@ -148,7 +148,7 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm"
       aria-modal="true"
       role="dialog"
       aria-label={t("beltPromo.ariaDialog")}
@@ -163,7 +163,7 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
 
       {/* Modal card */}
       <div
-        className="relative z-10 rounded-2xl p-8 max-w-sm w-full mx-4 text-center shadow-2xl max-h-[90vh] overflow-y-auto"
+        className="relative z-10 rounded-t-2xl sm:rounded-2xl p-8 max-w-sm w-full mx-0 sm:mx-4 text-center shadow-2xl max-h-[90vh] overflow-y-auto"
         style={{
           background: "linear-gradient(160deg, #18181b 0%, #09090b 100%)",
           border: `1px solid ${info.glow}`,
