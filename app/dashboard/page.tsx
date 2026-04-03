@@ -28,7 +28,7 @@ import {
   getLocalDateParts,
 } from "@/lib/timezone";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
-import { serverT as t } from "@/lib/i18n";
+import { serverT, makeT, type Locale } from "@/lib/i18n";
 import { calcBjjDuration, formatBjjDuration } from "@/lib/bjjDuration";
 import ProStatusBanner from "@/components/ProStatusBanner";
 import AvatarImage from "@/components/AvatarImage";
@@ -57,7 +57,7 @@ const CompetitionStats = dynamic(() => import("@/components/CompetitionStats"), 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
 // ── Dynamic motivational message based on last training date ─────────────────
-function DashboardMotivation({ daysSince }: { daysSince: number | null }) {
+function DashboardMotivation({ daysSince, t }: { daysSince: number | null; t: (key: string, vars?: Record<string, string | number>) => string }) {
   if (daysSince === null) return null;
 
   const config: { emoji: string; msg: string; color: string } =
@@ -112,13 +112,13 @@ export async function generateMetadata(): Promise<Metadata> {
     ? calcBjjDuration(profile.start_date)
     : { totalMonths: 0 };
   const BELT_LABELS: Record<string, string> = {
-    white: t("dashboard.beltWhite"),
-    blue: t("dashboard.beltBlue"),
-    purple: t("dashboard.beltPurple"),
-    brown: t("dashboard.beltBrown"),
-    black: t("dashboard.beltBlack"),
+    white: serverT("dashboard.beltWhite"),
+    blue: serverT("dashboard.beltBlue"),
+    purple: serverT("dashboard.beltPurple"),
+    brown: serverT("dashboard.beltBrown"),
+    black: serverT("dashboard.beltBlack"),
   };
-  const beltLabel = BELT_LABELS[belt] ?? t("dashboard.beltWhite");
+  const beltLabel = BELT_LABELS[belt] ?? serverT("dashboard.beltWhite");
 
   let metaStreak = 0;
   const metaToday = getLogicalTrainingDate();
@@ -140,7 +140,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const ogImageUrl = `${BASE_URL}/api/og?belt=${belt}&count=${count}&months=${months}&streak=${metaStreak}`;
   const title = `BJJ Training Log — ${count} Sessions! | BJJ App`;
-  const bjjDurLabel = profile?.start_date ? formatBjjDuration(profile.start_date, t) : null;
+  const bjjDurLabel = profile?.start_date ? formatBjjDuration(profile.start_date, serverT) : null;
   const description = bjjDurLabel
     ? `${beltLabel} · ${count} total sessions · ${bjjDurLabel} of BJJ — tracking every roll with BJJ App`
     : `${beltLabel} · ${count} total sessions — tracking every roll with BJJ App`;
@@ -186,7 +186,7 @@ export default async function DashboardPage({
     user.user_metadata?.full_name ||
     user.user_metadata?.name ||
     user.email?.split("@")[0] ||
-    t("dashboard.defaultAthleteName");
+    serverT("dashboard.defaultAthleteName");
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
@@ -211,7 +211,7 @@ export default async function DashboardPage({
     supabase
       .from("profiles")
       .select(
-        "belt, stripe, start_date, is_pro, subscription_status, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym, referral_code, ai_coach_cache, ai_coach_last_generated"
+        "belt, stripe, start_date, is_pro, subscription_status, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym, referral_code, ai_coach_cache, ai_coach_last_generated, locale"
       )
       .eq("id", user.id)
       .single(),
@@ -280,6 +280,10 @@ export default async function DashboardPage({
     monthSessionCount > 0
       ? Math.round(monthTotalMins / monthSessionCount)
       : 0;
+
+  // ── Locale-aware translation for page body (metadata stays EN for SEO) ──
+  const userLocale = ((profileData as { locale?: string | null })?.locale ?? "en") as Locale;
+  const t = makeT(userLocale === "ja" || userLocale === "pt" ? userLocale : "en");
 
   // Training type breakdown (Gi / No-Gi / Drilling / etc.)
   const typeBreakdown: Record<string, number> = {};
@@ -793,7 +797,7 @@ export default async function DashboardPage({
             {/* Streak milestone share (30/100/365日) */}
             <StreakMilestoneShare streak={streak} />
             {/* Dynamic motivational message — streak危機バナー表示中は非表示（メッセージ重複防止）*/}
-            {streak < 3 && <DashboardMotivation daysSince={daysSinceLastLog} />}
+            {streak < 3 && <DashboardMotivation daysSince={daysSinceLastLog} t={t} />}
             <CollapsibleSection
               label={t("dashboard.analyticsLabel")}
               defaultOpen={false}

@@ -55,7 +55,7 @@ export const flatMessages: Record<Locale, Record<string, string>> = {
 
 // ── Translation function ──────────────────────────────────────────────────────
 
-function makeT(locale: Locale) {
+export function makeT(locale: Locale) {
   return function t(
     key: string,
     vars?: Record<string, string | number>
