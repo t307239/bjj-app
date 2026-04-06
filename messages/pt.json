@@ -26,7 +26,8 @@
     "zoomOut": "Reduzir",
     "understood": "Entendi",
     "share": "Compartilhar",
-    "upgradePro": "Upgrade para Pro"
+    "upgradePro": "Upgrade para Pro",
+    "cookieConsent": "Consentimento de cookies"
   },
   "login": {
     "title": "Entrar no BJJ App",
@@ -171,7 +172,9 @@
     "bjjHistoryYears": "{n} anos",
     "bjjHistoryYearsMonths": "{y} anos {m} meses",
     "monthsBjj": "meses BJJ",
-    "datePresent": "Presente"
+    "datePresent": "Presente",
+    "namePlaceholder": "Seu nome",
+    "gymPlaceholder": "Ex: Academia Gracie Tokyo"
   },
   "gym": {
     "inviteTitle": "📎 Convidar Alunos",
@@ -338,5 +341,9 @@
   "chart": {
     "days84": "3 meses",
     "past84Days": "Últimos 3 meses: {n} sessões"
+  },
+  "injury": {
+    "snooze7d": "Adiar por 7 dias",
+    "hide7d": "Ocultar por 7 dias"
   }
 }

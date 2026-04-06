@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLocale } from "@/lib/i18n";
 
 const STORAGE_KEY = "bjj_cookie_consent";
 
 export default function CookieConsent() {
+  const { t } = useLocale();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export default function CookieConsent() {
   return (
     <div
       role="dialog"
-      aria-label="Cookie consent"
+      aria-label={t("common.cookieConsent")}
       className="fixed bottom-0 inset-x-0 z-[9999] p-3 sm:p-4"
     >
       <div className="max-w-lg mx-auto bg-zinc-900 border border-white/10 rounded-2xl p-4 shadow-2xl">

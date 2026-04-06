@@ -426,7 +426,9 @@
     "referralFriends": "friends",
     "referralUnlocked": "Unlocked!",
     "referralProgress": "{n}/{goal} toward next badge",
-    "referralAllUnlocked": "🏆 All referral badges unlocked — you're a legend!"
+    "referralAllUnlocked": "🏆 All referral badges unlocked — you're a legend!",
+    "namePlaceholder": "Your Name",
+    "gymPlaceholder": "e.g. Gracie Academy Tokyo"
   },
   "competition": {
     "title": "Match Record",
@@ -735,7 +737,8 @@
     "zoomOut": "Zoom out",
     "understood": "I understand",
     "share": "Share",
-    "upgradePro": "Upgrade to Pro"
+    "upgradePro": "Upgrade to Pro",
+    "cookieConsent": "Cookie consent"
   },
   "aiCoach": {
     "title": "🤖 AI Micro-Coach",
@@ -1390,5 +1393,9 @@
     "blockedTitle": "Age Restriction",
     "blockedBody": "BJJ App is designed for users 13 years of age or older. We cannot allow access for users under 13 (COPPA compliance).",
     "blockedContact": "If you believe this is an error, please have a parent or guardian contact us at 307239t777@gmail.com"
+  },
+  "injury": {
+    "snooze7d": "Snooze for 7 days",
+    "hide7d": "Hide for 7 days"
   }
 }

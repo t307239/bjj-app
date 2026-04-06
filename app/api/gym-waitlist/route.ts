@@ -75,8 +75,10 @@ export async function POST(req: NextRequest) {
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
       logger.warn("gym_waitlist.beehiiv_error", { status: response.status, data });
-      // Don't fail the user — log and return success
-      return NextResponse.json({ success: true });
+      return NextResponse.json(
+        { error: "Failed to register. Please try again later." },
+        { status: 502 },
+      );
     }
 
     return NextResponse.json({ success: true });

@@ -397,7 +397,7 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
               type="text"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              placeholder="Your Name"
+              placeholder={t("profile.namePlaceholder")}
               maxLength={50}
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-emerald-500"
             />
@@ -751,7 +751,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-1">{t("profile.gym")}</label>
           <p className="text-gray-500 text-xs mb-2">{t("profile.gymSubtext")}</p>
-          <input type="text" value={form.gym} onChange={(e) => setForm({ ...form, gym: e.target.value })} placeholder="e.g. Gracie Academy Tokyo" className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30" />
+          <input type="text" value={form.gym} onChange={(e) => setForm({ ...form, gym: e.target.value })} placeholder={t("profile.gymPlaceholder")} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30" />
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.startDate")}</label>

@@ -427,7 +427,9 @@
     "pushNotSupported": "このブラウザ/デバイスではプッシュ通知がサポートされていません。",
     "pushNotifications": "プッシュ通知",
     "pushNotificationsDesc": "アプリを閉じていても、ストリークのリマインダーやジムの更新を受け取れます。",
-    "saveFailedUnknown": "不明なエラー"
+    "saveFailedUnknown": "不明なエラー",
+    "namePlaceholder": "名前を入力",
+    "gymPlaceholder": "例: グレイシーアカデミー東京"
   },
   "competition": {
     "title": "試合戦績",
@@ -726,7 +728,8 @@
     "dismissNotification": "通知を閉じる",
     "userMenu": "ユーザーメニュー",
     "zoomIn": "拡大",
-    "zoomOut": "縮小"
+    "zoomOut": "縮小",
+    "cookieConsent": "Cookie同意"
   },
   "aiCoach": {
     "title": "🤖 AIマイクロコーチ",
@@ -1392,5 +1395,9 @@
   "weeklyStrip": {
     "same": "= 同じ",
     "vsLastWeek": "先週比"
+  },
+  "injury": {
+    "snooze7d": "7日間スヌーズ",
+    "hide7d": "7日間非表示"
   }
 }
