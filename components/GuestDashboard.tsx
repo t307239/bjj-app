@@ -86,6 +86,7 @@ export default function GuestDashboard() {
     setNotes("");
     setShowForm(false);
     setSaving(false);
+    window.scrollTo({ top: 0, behavior: "instant" });
   };
 
   const handleDelete = (id: string) => {
