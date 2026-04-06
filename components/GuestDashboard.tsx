@@ -85,9 +85,13 @@ export default function GuestDashboard() {
     setLogs(updated);
     saveGuestLogs(updated);
     setNotes("");
-    setShowForm(false);
     setSaving(false);
-    window.scrollTo({ top: 0, behavior: "instant" });
+    if (continuousInput) {
+      // Keep form open with date/duration/type preserved; only notes cleared
+    } else {
+      setShowForm(false);
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
   };
 
   const handleDelete = (id: string) => {
@@ -238,6 +242,16 @@ export default function GuestDashboard() {
                 placeholder={t("training.memoOptional")}
                 className="w-full bg-zinc-800 text-white text-sm rounded-lg px-3 py-2 border border-white/10 focus:outline-none focus:border-white/30"
               />
+              {/* 連続入力チェックボックス */}
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={continuousInput}
+                  onChange={(e) => setContinuousInput(e.target.checked)}
+                  className="w-4 h-4 rounded accent-[#10B981] cursor-pointer"
+                />
+                <span className="text-gray-400 text-xs">{t("training.continuousInput")}</span>
+              </label>
               <button
                 onClick={handleAdd}
                 disabled={saving}

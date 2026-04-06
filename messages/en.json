@@ -211,7 +211,8 @@
     "weight": "Post-training weight (optional)",
     "weightPlaceholder": "e.g. 75.5",
     "freePlanNotice": "🗓 Free plan: showing last 30 days",
-    "upgradeFullHistory": "Upgrade for full history →"
+    "upgradeFullHistory": "Upgrade for full history →",
+    "continuousInput": "Keep fields (date, type, duration) for next entry"
   },
   "techniques": {
     "mastery1": "Know it",
