@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 
 const STRIPE_MONTHLY_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || null;
-const STRIPE_ANNUAL_LINK = process.env.NEXT_PUBLIC_STRIPE_PRO_ANNUAL_LINK || null;
+const STRIPE_ANNUAL_LINK = process.env.NEXT_PUBLIC_STRIPE_ANNUAL_LINK || null;
 
 export default function PricingSection({ userId }: { userId?: string | null }) {
   const [isAnnual, setIsAnnual] = useState(false);

@@ -132,7 +132,7 @@ export default function BeltProgressCard({
                   right: (i + 1) * 11,
                   background: i < stripes
                     ? "linear-gradient(180deg,rgba(255,255,255,0.95) 0%,rgba(255,255,255,0.65) 50%,rgba(255,255,255,0.90) 100%)"
-                    : "rgba(255,255,255,0.08)",
+                    : "rgba(255,255,255,0.20)",
                   boxShadow: i < stripes ? "0 0 4px rgba(255,255,255,0.4)" : "none",
                 }}
               />

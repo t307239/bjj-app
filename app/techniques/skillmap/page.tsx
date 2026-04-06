@@ -52,7 +52,7 @@ export default async function SkillMapPage() {
 
   const isPro = profile?.is_pro ?? false;
   const stripePaymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || null;
-  const stripeAnnualLink = process.env.NEXT_PUBLIC_STRIPE_PRO_ANNUAL_LINK || null;
+  const stripeAnnualLink = process.env.NEXT_PUBLIC_STRIPE_ANNUAL_LINK || null;
 
   return (
     <div className="h-screen flex flex-col bg-zinc-950">
