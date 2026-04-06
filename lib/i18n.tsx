@@ -8,7 +8,7 @@
  * on client and refreshed via LocaleProvider when profile locale is set.
  */
 
-import React, { useState, useEffect, type ReactNode } from "react";
+import React, { type ReactNode } from "react";
 
 import en from "@/messages/en.json";
 import ja from "@/messages/ja.json";
@@ -148,25 +148,12 @@ function setGlobalLocale(locale: Locale) {
 // ── useLocale hook ────────────────────────────────────────────────────────────
 
 export function useLocale() {
-  // Start with "en" to match SSR output — prevents Hydration Error #418.
-  // Switch to real client locale in useEffect (after hydration completes).
-  const [locale, setLocaleState] = useState<Locale>("en");
-
-  useEffect(() => {
-    // Apply the real client locale (already detected at module init)
-    setLocaleState(_clientLocale);
-    // Subscribe to global locale changes (e.g. user changes language in Settings)
-    _setLocaleCallbacks.push(setLocaleState);
-    return () => {
-      const i = _setLocaleCallbacks.indexOf(setLocaleState);
-      if (i !== -1) _setLocaleCallbacks.splice(i, 1);
-    };
-  }, []);
-
+  // GuestDashboard は ssr:false で client-only レンダリング → hydration mismatch なし
+  // 他コンポーネントも _clientLocale は module init 時に確定するため re-render 不要
   return {
-    locale,
+    locale: _clientLocale,
     setLocale: setGlobalLocale,
-    t: makeT(locale),
+    t: makeT(_clientLocale),
   };
 }
 
