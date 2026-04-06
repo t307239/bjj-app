@@ -55,6 +55,7 @@ export default function GuestDashboard() {
   const [type, setType] = useState("gi");
   const [notes, setNotes] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [continuousInput, setContinuousInput] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<{ id: string; entry: GuestLog; timerId: ReturnType<typeof setTimeout> } | null>(null);
   const [undoVisible, setUndoVisible] = useState(false);
   const [saving, setSaving] = useState(false);
