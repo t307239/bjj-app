@@ -6,6 +6,7 @@ import { useOnlineStatus } from "@/lib/useOnlineStatus";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type CompData, BELT_RANKS } from "@/lib/trainingLogHelpers";
 import BottomSheet from "@/components/ui/BottomSheet";
+import { getYesterdayDateString } from "@/lib/timezone";
 
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
 
@@ -187,15 +188,26 @@ const TrainingLogForm = memo(function TrainingLogForm({
       <div className="mb-3">
         <div className="flex items-center justify-between mb-1">
           <label className="text-gray-400 text-xs">{t("training.date")}</label>
-          {form.date !== today && (
-            <button
-              type="button"
-              onClick={() => setForm({ ...form, date: today })}
-              className="text-xs text-gray-500 hover:text-white font-medium"
-            >
-              {t("training.backToToday")}
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {form.date !== getYesterdayDateString() && (
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, date: getYesterdayDateString() })}
+                className="text-xs text-gray-500 hover:text-white font-medium"
+              >
+                {t("training.yesterday")}
+              </button>
+            )}
+            {form.date !== today && (
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, date: today })}
+                className="text-xs text-emerald-500 hover:text-emerald-300 font-medium"
+              >
+                {t("training.backToToday")}
+              </button>
+            )}
+          </div>
         </div>
         <input
           type="date"

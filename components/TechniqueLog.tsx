@@ -357,6 +357,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
         onBulkSubmit={handleBulkSubmit}
         onClose={() => { setShowForm(false); setFormError(null); setDangerConfirmPending(false); }}
         onCloseBulk={() => { setShowForm(false); setBulkMode(false); setFormError(null); setBulkText(""); }}
+        existingNames={techniques.map((t) => t.name)}
       />
 
       {/* Danger technique confirmation modal for white/blue belts */}

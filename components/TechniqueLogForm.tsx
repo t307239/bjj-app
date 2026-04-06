@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useLocale } from "@/lib/i18n";
 import { CATEGORY_VALUES, type TechniqueFormState } from "@/lib/techniqueLogTypes";
 import BottomSheet from "@/components/ui/BottomSheet";
+import { BJJ_TECHNIQUE_SUGGESTIONS } from "@/lib/bjjTechniques";
 
 type Props = {
   showForm: boolean;
@@ -22,6 +23,8 @@ type Props = {
   onBulkSubmit: (e: React.FormEvent) => void;
   onClose: () => void;
   onCloseBulk: () => void;
+  /** Existing user technique names for autocomplete de-duplication */
+  existingNames?: string[];
 };
 
 export default function TechniqueLogForm({
@@ -41,8 +44,16 @@ export default function TechniqueLogForm({
   onBulkSubmit,
   onClose,
   onCloseBulk,
+  existingNames = [],
 }: Props) {
   const { t } = useLocale();
+
+  // Build deduplicated suggestions: existing user techniques first, then static list
+  const existingSet = new Set(existingNames.map((n) => n.toLowerCase()));
+  const nameSuggestions = [
+    ...existingNames,
+    ...BJJ_TECHNIQUE_SUGGESTIONS.filter((s) => !existingSet.has(s.toLowerCase())),
+  ];
 
   // ── beforeunload: warn if unsaved form input ──────────────────────────────
   const hasInput = showForm && (form.name.trim() !== "" || form.notes.trim() !== "" || bulkText.trim() !== "");
@@ -82,9 +93,16 @@ export default function TechniqueLogForm({
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             placeholder={t("techniques.namePlaceholder")}
+            list="technique-name-suggestions"
+            autoComplete="off"
             className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
             required
           />
+          <datalist id="technique-name-suggestions">
+            {nameSuggestions.map((name) => (
+              <option key={name} value={name} />
+            ))}
+          </datalist>
         </div>
 
         <div className="grid grid-cols-2 gap-3 mb-3">

@@ -125,7 +125,8 @@
     "deleteDesc": "Esta ação não pode ser desfeita.",
     "deleteCancelBtn": "Cancelar",
     "deleteConfirmBtn": "Sim, excluir",
-    "continuousInput": "Manter campos (data, tipo, duração) para próxima entrada"
+    "continuousInput": "Manter campos (data, tipo, duração) para próxima entrada",
+    "yesterday": "Ontem"
   },
   "trainingLog": {
     "totalLabel": "total",

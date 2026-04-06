@@ -213,7 +213,8 @@
     "weightPlaceholder": "例: 75.5",
     "freePlanNotice": "🗓 無料プラン: 直近30日を表示",
     "upgradeFullHistory": "全履歴を見る →",
-    "continuousInput": "連続入力（日付・タイプ・時間を保持）"
+    "continuousInput": "連続入力（日付・タイプ・時間を保持）",
+    "yesterday": "昨日"
   },
   "techniques": {
     "mastery1": "入門",

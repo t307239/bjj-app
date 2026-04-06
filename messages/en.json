@@ -212,7 +212,8 @@
     "weightPlaceholder": "e.g. 75.5",
     "freePlanNotice": "🗓 Free plan: showing last 30 days",
     "upgradeFullHistory": "Upgrade for full history →",
-    "continuousInput": "Keep fields (date, type, duration) for next entry"
+    "continuousInput": "Keep fields (date, type, duration) for next entry",
+    "yesterday": "Yesterday"
   },
   "techniques": {
     "mastery1": "Know it",
