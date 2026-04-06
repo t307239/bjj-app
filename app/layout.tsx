@@ -4,6 +4,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import CookieConsent from "@/components/CookieConsent";
 import AgeGate from "@/components/AgeGate";
+import LocaleProvider from "@/components/LocaleProvider";
+import { detectServerLocale } from "@/lib/i18n";
 import "./globals.css";
 
 // #41: Next/Font — Google Fonts をビルド時にセルフホスティング化（FOUT/FOIT 防止）
@@ -56,14 +58,18 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Detect locale on server (cookie → Accept-Language → "en")
+  // Passed to LocaleProvider to align SSR and client _clientLocale → fixes #418
+  const locale = await detectServerLocale();
+
   return (
     // #48: dark クラスを固定 — Tailwind の dark: modifier を常に有効化
-    <html lang="en" className={`dark ${inter.variable} overscroll-none`}>
+    <html lang={locale} className={`dark ${inter.variable} overscroll-none`}>
       <head>
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -73,11 +79,15 @@ export default function RootLayout({
       </head>
       {/* #41: font-sans → Inter variable font */}
       <body className={`${inter.className} min-h-screen bg-zinc-950 text-white antialiased overscroll-none`}>
-        <AgeGate />
-        {children}
-        <CookieConsent />
-        <Analytics />
-        <SpeedInsights />
+        {/* I-14: LocaleProvider aligns _clientLocale with server-detected locale
+            before any children render → eliminates Hydration Error #418 */}
+        <LocaleProvider locale={locale}>
+          <AgeGate />
+          {children}
+          <CookieConsent />
+          <Analytics />
+          <SpeedInsights />
+        </LocaleProvider>
         <script
           dangerouslySetInnerHTML={{
             __html: `if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{})}`,

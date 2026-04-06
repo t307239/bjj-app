@@ -145,6 +145,12 @@ function setGlobalLocale(locale: Locale) {
   _setLocaleCallbacks.forEach((cb) => cb(locale));
 }
 
+// ── Sync initial locale (called by LocaleProvider before children render) ────
+// Lets server-detected locale override the module-init value, preventing #418
+export function setInitialLocale(locale: Locale) {
+  _clientLocale = locale;
+}
+
 // ── useLocale hook ────────────────────────────────────────────────────────────
 
 export function useLocale() {
