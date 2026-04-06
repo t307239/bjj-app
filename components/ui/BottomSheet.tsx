@@ -86,13 +86,16 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
     }
   }, [isOpen]);
 
-  // ── Body scroll lock ──────────────────────────────────────────────────────
+  // ── Body scroll lock (scroll position preserved) ─────────────────────────
   useEffect(() => {
     if (!isOpen) return;
+    const scrollY = window.scrollY;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prev;
+      // Restore scroll position to prevent jump-to-bottom on close
+      window.scrollTo({ top: scrollY, behavior: "instant" });
     };
   }, [isOpen]);
 
@@ -144,7 +147,7 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
     <>
       {/* ── Backdrop ─────────────────────────────────────────────────────── */}
       <div
-        className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm animate-sheet-fade"
+        className="fixed inset-0 z-[60] bg-black/60 animate-sheet-fade"
         style={{ opacity: backdropOpacity }}
         onClick={onClose}
         aria-hidden="true"

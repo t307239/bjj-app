@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { useLocale } from "@/lib/i18n";
@@ -230,21 +229,6 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     remainingDaysLog,
     monthDelta,
   } = useTrainingLog({ userId, isPro, initialOpen, t });
-
-  // Bug #10: Read ?addLog= URL param and auto-open form with pre-filled date
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
-  const addLogParam = searchParams?.get("addLog");
-
-  useEffect(() => {
-    if (addLogParam) {
-      setShowForm(true);
-      setForm((prev) => ({ ...prev, date: addLogParam }));
-      router.replace(pathname, { scroll: false });
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addLogParam]);
 
   // Suppress unused-var TS warnings for stats used in Bento/Analytics (kept for future use)
   void monthHoursDisplay;
