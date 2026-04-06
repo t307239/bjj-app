@@ -220,6 +220,8 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     setEntries((prev) => [optimisticEntry, ...prev]);
     setTrainedToday(true);
     setShowForm(false);
+    // I-17: Restore scroll position to top after closing form (prevents snap to bottom)
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "instant" });
     setForm({ date: getLocalDateString(), duration_min: 60, type: "gi", notes: "", instructor_name: "", partner_username: "", weight: "", roll_focus: "", partner_belt: "", size_diff: "" });
     setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
 

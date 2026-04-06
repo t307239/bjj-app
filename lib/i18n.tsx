@@ -8,7 +8,7 @@
  * on client and refreshed via LocaleProvider when profile locale is set.
  */
 
-import React, { type ReactNode } from "react";
+import React, { useState, useEffect, type ReactNode } from "react";
 
 import en from "@/messages/en.json";
 import ja from "@/messages/ja.json";
@@ -148,13 +148,25 @@ function setGlobalLocale(locale: Locale) {
 // ── useLocale hook ────────────────────────────────────────────────────────────
 
 export function useLocale() {
-  // Non-hook return: works in both server and client contexts
-  // For reactivity when locale changes via setLocale, components re-render
-  // because setLocale triggers subscription callbacks (see LocaleProvider)
+  // Start with "en" to match SSR output — prevents Hydration Error #418.
+  // Switch to real client locale in useEffect (after hydration completes).
+  const [locale, setLocaleState] = useState<Locale>("en");
+
+  useEffect(() => {
+    // Apply the real client locale (already detected at module init)
+    setLocaleState(_clientLocale);
+    // Subscribe to global locale changes (e.g. user changes language in Settings)
+    _setLocaleCallbacks.push(setLocaleState);
+    return () => {
+      const i = _setLocaleCallbacks.indexOf(setLocaleState);
+      if (i !== -1) _setLocaleCallbacks.splice(i, 1);
+    };
+  }, []);
+
   return {
-    locale: _clientLocale,
+    locale,
     setLocale: setGlobalLocale,
-    t: makeT(_clientLocale),
+    t: makeT(locale),
   };
 }
 
