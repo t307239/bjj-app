@@ -28,6 +28,7 @@ import { getLogicalTrainingDate } from "@/lib/logicalDate";
 import { serverT, makeT, type Locale } from "@/lib/i18n";
 import { calcBjjDuration, formatBjjDuration } from "@/lib/bjjDuration";
 import ProStatusBanner from "@/components/ProStatusBanner";
+import GuestDashboardClient from "@/components/GuestDashboardClient";
 
 // ─── Extracted sub-components ─────────────────────────────────────────────────
 import HeroCard from "@/components/dashboard/HeroCard";
@@ -54,24 +55,6 @@ const TrainingTypeChart = dynamic(() => import("@/components/TrainingTypeChart")
 });
 const CompetitionStats = dynamic(() => import("@/components/CompetitionStats"), {
   loading: () => <div className="min-h-[100px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
-});
-// GuestDashboard: localStorage使用のためssr:false — hydration mismatch を構造的に排除
-const GuestDashboard = dynamic(() => import("@/components/GuestDashboard"), {
-  ssr: false,
-  loading: () => (
-    <div className="min-h-[100dvh] bg-zinc-950">
-      <div className="h-14 bg-gradient-to-r from-violet-600/70 to-indigo-600/60" />
-      <div className="max-w-4xl mx-auto px-4 py-6 animate-pulse">
-        <div className="h-7 w-44 bg-zinc-800 rounded-lg mb-2" />
-        <div className="h-4 w-60 bg-zinc-800 rounded mb-6" />
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          <div className="h-24 bg-zinc-900 rounded-xl border border-white/10" />
-          <div className="h-24 bg-zinc-900 rounded-xl border border-white/10" />
-        </div>
-        <div className="h-48 bg-zinc-900 rounded-xl border border-white/10" />
-      </div>
-    </div>
-  ),
 });
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
@@ -177,7 +160,7 @@ export default async function DashboardPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return <GuestDashboard />;
+  if (!user) return <GuestDashboardClient />;
 
   const displayName =
     user.user_metadata?.full_name ||
