@@ -15,6 +15,8 @@ interface WeightPoint {
 interface Props {
   userId: string;
   refreshKey?: number;
+  targetWeight?: number | null;
+  targetDate?: string | null; // YYYY-MM-DD
 }
 
 function formatDateLabel(iso: string): string {
@@ -50,7 +52,7 @@ function pointsToPolyline(pts: { x: number; y: number }[]): string {
   return pts.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
 }
 
-export default function WeightChart({ userId, refreshKey }: Props) {
+export default function WeightChart({ userId, refreshKey, targetWeight, targetDate }: Props) {
   const { t } = useLocale();
   const supabase = createClient();
 
@@ -139,8 +141,11 @@ export default function WeightChart({ userId, refreshKey }: Props) {
   const allWeights = data
     .flatMap((d) => [d.standalone, d.postTraining])
     .filter((v): v is number => v !== null);
-  const minW = Math.floor(Math.min(...allWeights) - 1);
-  const maxW = Math.ceil(Math.max(...allWeights) + 1);
+
+  // Include targetWeight in min/max calculation so goal line is always visible
+  const allForRange = targetWeight != null ? [...allWeights, targetWeight] : allWeights;
+  const minW = Math.floor(Math.min(...allForRange) - 1);
+  const maxW = Math.ceil(Math.max(...allForRange) + 1);
   const PL = padLeft(maxW); // dynamic left padding
 
   // Build line path segments (skip nulls by breaking the line)
@@ -197,6 +202,12 @@ export default function WeightChart({ userId, refreshKey }: Props) {
           <span className="inline-block w-5 h-0.5 bg-[#60a5fa] rounded border-t-2 border-dashed border-[#60a5fa] flex-shrink-0" />
           {t("body.postTraining")}
         </span>
+        {targetWeight != null && (
+          <span className="flex items-center gap-1.5 text-xs text-amber-400 whitespace-nowrap font-medium">
+            <span className="inline-block w-5 h-0.5 border-t-2 border-dashed border-amber-400 flex-shrink-0" />
+            {t("body.targetWeight")} {targetWeight}{t("body.weightUnit")}
+          </span>
+        )}
       </div>
 
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" aria-label={t("body.weightChart")}>
@@ -278,6 +289,25 @@ export default function WeightChart({ userId, refreshKey }: Props) {
             <circle key={`pd-${i}`} cx={pt.x} cy={pt.y} r="2.5" fill="#60a5fa" />
           ) : null
         )}
+
+        {/* Goal line — amber dashed horizontal */}
+        {targetWeight != null && (() => {
+          const gy = toSvgY(targetWeight, minW, maxW);
+          return (
+            <g key="goal">
+              <line
+                x1={PL} y1={gy} x2={W - PAD_BASE.right} y2={gy}
+                stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="5 3"
+              />
+              <text
+                x={W - PAD_BASE.right - 2} y={gy - 3}
+                textAnchor="end" fontSize="7" fill="#f59e0b" fontWeight="600"
+              >
+                {t("body.goal")} {targetWeight}
+              </text>
+            </g>
+          );
+        })()}
       </svg>
     </div>
   );

@@ -24,17 +24,36 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
   // Incrementing this key triggers a WeightChart re-fetch after QuickWeightLog saves
   const [chartRefreshKey, setChartRefreshKey] = useState(0);
 
+  // T-31: Target weight state
+  const [targetWeight, setTargetWeight] = useState<number | null>(null);
+  const [targetDate, setTargetDate] = useState<string>("");
+  const [targetWeightInput, setTargetWeightInput] = useState("");
+  const [targetDateInput, setTargetDateInput] = useState("");
+  const [targetSaving, setTargetSaving] = useState(false);
+  const [targetSaved, setTargetSaved] = useState(false);
+  const [showTargetForm, setShowTargetForm] = useState(false);
+
   const loadProfile = useCallback(async () => {
     try {
       const { data } = await supabase
         .from("profiles")
-        .select("is_pro, body_status, body_status_dates")
+        .select("is_pro, body_status, body_status_dates, target_weight, target_weight_date")
         .eq("id", userId)
         .single();
 
-      if (data) setIsPro(data.is_pro ?? isProProp);
-      setBodyStatus(data?.body_status ?? null);
-      setBodyStatusDates((data?.body_status_dates as Record<string, string>) ?? {});
+      if (data) {
+        setIsPro(data.is_pro ?? isProProp);
+        setBodyStatus(data?.body_status ?? null);
+        setBodyStatusDates((data?.body_status_dates as Record<string, string>) ?? {});
+        if (data.target_weight != null) {
+          setTargetWeight(Number(data.target_weight));
+          setTargetWeightInput(String(data.target_weight));
+        }
+        if (data.target_weight_date) {
+          setTargetDate(data.target_weight_date as string);
+          setTargetDateInput(data.target_weight_date as string);
+        }
+      }
     } catch {
       // Network/auth error — show free tier gracefully
     } finally {
@@ -44,6 +63,49 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
 
   useEffect(() => { loadProfile(); }, [loadProfile]);
 
+  const handleSaveTarget = async () => {
+    const val = parseFloat(targetWeightInput);
+    if (isNaN(val) || val <= 0) return;
+    setTargetSaving(true);
+    try {
+      await supabase
+        .from("profiles")
+        .update({
+          target_weight: val,
+          target_weight_date: targetDateInput || null,
+        })
+        .eq("id", userId);
+      setTargetWeight(val);
+      setTargetDate(targetDateInput);
+      setTargetSaved(true);
+      setShowTargetForm(false);
+      setTimeout(() => setTargetSaved(false), 2000);
+    } catch {
+      // ignore
+    } finally {
+      setTargetSaving(false);
+    }
+  };
+
+  const handleClearTarget = async () => {
+    setTargetSaving(true);
+    try {
+      await supabase
+        .from("profiles")
+        .update({ target_weight: null, target_weight_date: null })
+        .eq("id", userId);
+      setTargetWeight(null);
+      setTargetDate("");
+      setTargetWeightInput("");
+      setTargetDateInput("");
+      setShowTargetForm(false);
+    } catch {
+      // ignore
+    } finally {
+      setTargetSaving(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-40">
@@ -51,6 +113,11 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
       </div>
     );
   }
+
+  // Compute days remaining to target date
+  const daysRemaining = targetDate
+    ? Math.ceil((new Date(targetDate + "T00:00:00").getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+    : null;
 
   return (
     <div className="space-y-4">
@@ -86,9 +153,108 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
           </div>
         )}
 
+        {/* T-31: Target weight section (Pro only) */}
+        {isPro && (
+          <div className="bg-zinc-900 rounded-xl border border-white/10 p-4">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">
+                🎯 {t("body.targetWeightTitle")}
+              </p>
+              <button
+                onClick={() => { setShowTargetForm(!showTargetForm); setTargetWeightInput(String(targetWeight ?? "")); setTargetDateInput(targetDate); }}
+                className="text-xs text-zinc-400 hover:text-white transition-colors active:scale-95 px-2 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700"
+              >
+                {targetWeight != null ? t("body.targetWeightEdit") : t("body.targetWeightSet")}
+              </button>
+            </div>
+
+            {/* Current goal display */}
+            {targetWeight != null && !showTargetForm && (
+              <div className="flex items-baseline gap-3 flex-wrap">
+                <span className="text-2xl font-bold text-amber-400 tabular-nums">
+                  {targetWeight}
+                  <span className="text-sm font-normal text-zinc-400 ml-1">{t("body.weightUnit")}</span>
+                </span>
+                {daysRemaining != null && daysRemaining > 0 && (
+                  <span className="text-xs text-zinc-400">
+                    {t("body.targetDaysLeft").replace("{n}", String(daysRemaining))}
+                  </span>
+                )}
+                {daysRemaining != null && daysRemaining <= 0 && targetDate && (
+                  <span className="text-xs text-emerald-400 font-semibold">
+                    🎉 {t("body.targetDateReached")}
+                  </span>
+                )}
+                {targetSaved && (
+                  <span className="text-xs text-emerald-400 font-semibold">{t("body.targetSaved")}</span>
+                )}
+              </div>
+            )}
+
+            {/* No goal set */}
+            {targetWeight == null && !showTargetForm && (
+              <p className="text-xs text-zinc-500">{t("body.targetWeightNone")}</p>
+            )}
+
+            {/* Edit form */}
+            {showTargetForm && (
+              <div className="flex flex-col gap-2 mt-2">
+                <div className="flex gap-2">
+                  <div className="flex-1">
+                    <label className="text-xs text-zinc-400 mb-1 block">{t("body.weightKg")}</label>
+                    <input
+                      type="number"
+                      min="20"
+                      max="300"
+                      step="0.1"
+                      value={targetWeightInput}
+                      onChange={(e) => setTargetWeightInput(e.target.value)}
+                      placeholder="70.0"
+                      className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-400/50"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-xs text-zinc-400 mb-1 block">{t("body.targetDate")}</label>
+                    <input
+                      type="date"
+                      value={targetDateInput}
+                      onChange={(e) => setTargetDateInput(e.target.value)}
+                      className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400/50"
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleSaveTarget}
+                    disabled={targetSaving || !targetWeightInput}
+                    className="flex-1 bg-amber-500 hover:bg-amber-400 disabled:opacity-40 text-black text-sm font-bold py-2 rounded-lg transition-colors active:scale-95"
+                  >
+                    {targetSaving ? t("body.saving") : t("body.targetSaveBtn")}
+                  </button>
+                  {targetWeight != null && (
+                    <button
+                      onClick={handleClearTarget}
+                      disabled={targetSaving}
+                      className="px-3 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-2 rounded-lg transition-colors active:scale-95"
+                    >
+                      {t("body.targetClear")}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setShowTargetForm(false)}
+                    className="px-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 text-sm py-2 rounded-lg transition-colors active:scale-95"
+                  >
+                    {t("training.cancel")}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Chart — blurred behind paywall */}
         <div className={!isPro ? "pointer-events-none select-none blur-sm opacity-40" : ""}>
-          <WeightChart userId={userId} refreshKey={chartRefreshKey} />
+          <WeightChart userId={userId} refreshKey={chartRefreshKey} targetWeight={targetWeight} targetDate={targetDate || null} />
         </div>
 
         {/* Injury care alert with 7-day snooze (shown when sore/injured parts exist) */}
