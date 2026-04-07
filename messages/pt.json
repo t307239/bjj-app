@@ -175,7 +175,8 @@
     "monthsBjj": "meses BJJ",
     "datePresent": "Presente",
     "namePlaceholder": "Seu nome",
-    "gymPlaceholder": "Ex: Academia Gracie Tokyo"
+    "gymPlaceholder": "Ex: Academia Gracie Tokyo",
+    "gymMatched": "Vinculado à academia"
   },
   "gym": {
     "inviteTitle": "📎 Convidar Alunos",

@@ -429,7 +429,8 @@
     "referralProgress": "{n}/{goal} toward next badge",
     "referralAllUnlocked": "🏆 All referral badges unlocked — you're a legend!",
     "namePlaceholder": "Your Name",
-    "gymPlaceholder": "e.g. Gracie Academy Tokyo"
+    "gymPlaceholder": "e.g. Gracie Academy Tokyo",
+    "gymMatched": "Linked to gym"
   },
   "competition": {
     "title": "Match Record",

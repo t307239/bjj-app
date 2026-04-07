@@ -652,9 +652,21 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
   const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [promotionFrom, setPromotionFrom] = useState<string | null>(null);
+  const [gymSuggestions, setGymSuggestions] = useState<{ id: string; name: string }[]>([]);
   const today = getLocalDateString();
   const belts = BELTS({ t });
   const currentBelt = belts.find((b) => b.value === form.belt);
+
+  // Fetch all gym names for autocomplete + gym_id auto-linking (T-30)
+  useEffect(() => {
+    supabase
+      .from("gyms")
+      .select("id, name")
+      .order("name", { ascending: true })
+      .then(({ data }) => {
+        if (data) setGymSuggestions(data as { id: string; name: string }[]);
+      });
+  }, [supabase]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -673,15 +685,21 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
       .single();
     const disclaimerAlreadyRecorded = !!existingProfile?.training_disclaimer_agreed_at;
 
+    // Auto-link gym_id when user's typed gym name exactly matches a known gym (T-30)
+    const matchedGymId = gymSuggestions.find(
+      (g) => g.name.trim().toLowerCase() === form.gym.trim().toLowerCase()
+    )?.id ?? null;
+
     const { error } = await supabase.from("profiles").upsert(
       {
         id: userId,
         belt: form.belt,
         stripe: form.stripe,
-        gym: form.gym,          // existing column
-        // gym_name: form.gym,  // TODO: add gym_name column via migration when B2B aggregation query is activated
+        gym: form.gym,
         bio: form.bio,
         start_date: form.start_date || null,
+        // Auto-link gym_id when name matches a known gym — only set, never clear (B2B Trojan Horse)
+        ...(matchedGymId ? { gym_id: matchedGymId } : {}),
         // Training disclaimer: set once, never cleared (legal defense evidence)
         ...(disclaimerAlreadyRecorded ? {} : {
           training_disclaimer_agreed: true,
@@ -751,7 +769,23 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-1">{t("profile.gym")}</label>
           <p className="text-gray-500 text-xs mb-2">{t("profile.gymSubtext")}</p>
-          <input type="text" value={form.gym} onChange={(e) => setForm({ ...form, gym: e.target.value })} placeholder={t("profile.gymPlaceholder")} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30" />
+          <input
+            type="text"
+            value={form.gym}
+            onChange={(e) => setForm({ ...form, gym: e.target.value })}
+            placeholder={t("profile.gymPlaceholder")}
+            list="gym-name-suggestions"
+            autoComplete="off"
+            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
+          />
+          <datalist id="gym-name-suggestions">
+            {gymSuggestions.map((g) => (
+              <option key={g.id} value={g.name} />
+            ))}
+          </datalist>
+          {gymSuggestions.some((g) => g.name.trim().toLowerCase() === form.gym.trim().toLowerCase()) && form.gym.trim() !== "" && (
+            <p className="text-xs text-emerald-400 mt-1">✓ {t("profile.gymMatched")}</p>
+          )}
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.startDate")}</label>

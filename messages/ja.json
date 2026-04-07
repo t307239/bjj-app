@@ -430,7 +430,8 @@
     "pushNotificationsDesc": "アプリを閉じていても、ストリークのリマインダーやジムの更新を受け取れます。",
     "saveFailedUnknown": "不明なエラー",
     "namePlaceholder": "名前を入力",
-    "gymPlaceholder": "例: グレイシーアカデミー東京"
+    "gymPlaceholder": "例: グレイシーアカデミー東京",
+    "gymMatched": "ジムと連携済み"
   },
   "competition": {
     "title": "試合戦績",
