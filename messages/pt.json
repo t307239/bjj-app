@@ -259,7 +259,8 @@
     "curriculumTemplateBackControl": "Pegada pelas Costas",
     "curriculumTemplateOpenGuard": "Guarda Aberta",
     "curriculumTemplateLegLocks": "Leg Locks",
-    "curriculumTemplateTurtle": "Posição Tartaruga"
+    "curriculumTemplateTurtle": "Posição Tartaruga",
+    "upgradeSuccess": "Plano do gym ativado! Seu painel está disponível."
   },
   "common_error": {
     "title": "Algo deu errado",

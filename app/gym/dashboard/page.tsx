@@ -11,7 +11,13 @@ export const metadata: Metadata = {
   description: "Manage your BJJ gym — track member activity and reduce churn.",
 };
 
-export default async function GymDashboardPage() {
+export default async function GymDashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ upgraded?: string }>;
+}) {
+  const params = await searchParams;
+  const justUpgraded = params.upgraded === "1";
   const supabase = await createClient();
   const {
     data: { user },
@@ -44,10 +50,9 @@ export default async function GymDashboardPage() {
       .single(),
   ]);
   const isPro = profileData?.is_pro ?? false;
-
-  // 道場長でないユーザー（gym が存在しない）はアクセス不可 → /dashboard にリダイレクト
-  // これにより Free/Pro/道場メンバーが /gym/dashboard に直打ちしても弾かれる（IDOR防止）
-  if (!gym) redirect("/dashboard");
+  // gym が null の場合 → GymRegistrationForm を表示（新規登録フロー）
+  // gym が存在 → GymDashboard を表示（既存道場長）
+  // ※ redirect を削除: gym未登録ユーザーが登録フォームに辿り着けるよう変更 (T-34)
 
   // Member count + aggregate gym stats (opt-in only)
   let memberCount = 0;
@@ -82,6 +87,13 @@ export default async function GymDashboardPage() {
   return (
     <div className="min-h-[100dvh] bg-zinc-950 pb-20 sm:pb-0">
       <NavBar displayName={displayName} avatarUrl={avatarUrl} isPro={isPro} />
+      {justUpgraded && (
+        <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/15 border-b border-green-500/30 px-4 py-3 text-center">
+          <p className="text-green-300 text-sm font-semibold">
+            🎉 {t("gym.upgradeSuccess")}
+          </p>
+        </div>
+      )}
       <main className="max-w-4xl mx-auto px-4 py-5">
 
         {/* ═══════════════════════════════════════════

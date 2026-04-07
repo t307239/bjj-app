@@ -1042,7 +1042,8 @@
     "printLeaderboardBelt": "Belt",
     "printLeaderboardSessions": "Sessions (30d)",
     "stripeNotConfigured": "Stripe not configured. Please contact support.",
-    "networkError": "Network error. Please try again."
+    "networkError": "Network error. Please try again.",
+    "upgradeSuccess": "Gym plan activated! Your dashboard is now live."
   },
   "gymJoin": {
     "title": "Join {name}",

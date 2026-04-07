@@ -225,12 +225,12 @@ export default async function GymPage() {
                     <span className="text-blue-400">✓</span> {t("gymLanding.pricingStarterF4")}
                   </li>
                 </ul>
-                <a
-                  href="mailto:307239t777@gmail.com?subject=Starter%20Plan%20Inquiry"
-                  className="w-full block text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-full transition-all"
+                <Link
+                  href="/gym/dashboard"
+                  className="w-full block text-center bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-bold py-3 rounded-full transition-all"
                 >
                   {t("gymLanding.pricingCta")}
-                </a>
+                </Link>
               </div>
 
               {/* Pro */}
@@ -254,12 +254,12 @@ export default async function GymPage() {
                     <span className="text-blue-400">✓</span> {t("gymLanding.pricingProF4")}
                   </li>
                 </ul>
-                <a
-                  href="mailto:307239t777@gmail.com?subject=Pro%20Plan%20Inquiry"
-                  className="w-full block text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-full transition-all"
+                <Link
+                  href="/gym/dashboard"
+                  className="w-full block text-center bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-bold py-3 rounded-full transition-all"
                 >
                   {t("gymLanding.pricingCta")}
-                </a>
+                </Link>
               </div>
             </div>
             <p className="text-gray-500 text-center text-xs mt-8">
@@ -329,12 +329,12 @@ export default async function GymPage() {
           <p className="text-gray-500 text-sm mb-8">
             {t("gymLanding.finalCtaDesc")}
           </p>
-          <a
-            href="mailto:307239t777@gmail.com?subject=BJJ%20App%20Academy%20Demo%20Request"
-            className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
+          <Link
+            href="/gym/dashboard"
+            className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
           >
             {t("gymLanding.finalCtaButton")}
-          </a>
+          </Link>
         </section>
 
         {/* Footer */}
