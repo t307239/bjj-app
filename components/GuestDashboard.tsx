@@ -31,6 +31,12 @@ function getLocalDateString(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
+function getYesterdayLocalDateString(): string {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 function loadGuestLogs(): GuestLog[] {
   if (typeof window === "undefined") return [];
   try {
@@ -191,13 +197,36 @@ export default function GuestDashboard() {
           {/* 入力フォーム */}
           {showForm && (
             <div className="space-y-3 mb-4 border border-white/10 rounded-xl p-4 bg-white/5">
-              <div className="flex gap-2">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-gray-400 text-xs">{t("training.date")}</label>
+                  <div className="flex items-center gap-2">
+                    {date !== getYesterdayLocalDateString() && (
+                      <button
+                        type="button"
+                        onClick={() => setDate(getYesterdayLocalDateString())}
+                        className="text-xs text-gray-500 hover:text-white font-medium"
+                      >
+                        {t("training.yesterday")}
+                      </button>
+                    )}
+                    {date !== getLocalDateString() && (
+                      <button
+                        type="button"
+                        onClick={() => setDate(getLocalDateString())}
+                        className="text-xs text-emerald-500 hover:text-emerald-300 font-medium"
+                      >
+                        {t("training.backToToday")}
+                      </button>
+                    )}
+                  </div>
+                </div>
                 <input
                   type="date"
                   value={date}
                   max={getLocalDateString()}
                   onChange={(e) => setDate(e.target.value)}
-                  className="flex-1 bg-zinc-800 text-white text-sm rounded-lg px-3 py-2 border border-white/10 focus:outline-none focus:border-white/30"
+                  className="w-full bg-zinc-800 text-white text-sm rounded-lg px-3 py-2 border border-white/10 focus:outline-none focus:border-white/30"
                 />
               </div>
               {/* 時間プリセット */}
