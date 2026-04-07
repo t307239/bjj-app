@@ -431,7 +431,15 @@
     "saveFailedUnknown": "不明なエラー",
     "namePlaceholder": "名前を入力",
     "gymPlaceholder": "例: グレイシーアカデミー東京",
-    "gymMatched": "ジムと連携済み"
+    "gymMatched": "ジムと連携済み",
+    "timezone": "タイムゾーン",
+    "timezoneDesc": "正確な日付計算のためにローカルタイムゾーンを選択してください",
+    "timezoneLabel": "あなたのタイムゾーン",
+    "timezonePlaceholder": "タイムゾーンを選択",
+    "timezoneAsia": "Asia/Tokyo",
+    "timezoneAmerica": "America/New_York",
+    "timezoneBrazil": "America/Sao_Paulo",
+    "timezoneEurope": "Europe/London"
   },
   "competition": {
     "title": "試合戦績",

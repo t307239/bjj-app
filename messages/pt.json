@@ -176,7 +176,15 @@
     "datePresent": "Presente",
     "namePlaceholder": "Seu nome",
     "gymPlaceholder": "Ex: Academia Gracie Tokyo",
-    "gymMatched": "Vinculado à academia"
+    "gymMatched": "Vinculado à academia",
+    "timezone": "Fuso Horário",
+    "timezoneDesc": "Selecione seu fuso horário local para cálculos de data precisos",
+    "timezoneLabel": "Seu Fuso Horário",
+    "timezonePlaceholder": "Selecione fuso horário",
+    "timezoneAsia": "Asia/Tokyo",
+    "timezoneAmerica": "America/New_York",
+    "timezoneBrazil": "America/Sao_Paulo",
+    "timezoneEurope": "Europe/London"
   },
   "gym": {
     "inviteTitle": "📎 Convidar Alunos",

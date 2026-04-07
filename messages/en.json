@@ -430,7 +430,15 @@
     "referralAllUnlocked": "🏆 All referral badges unlocked — you're a legend!",
     "namePlaceholder": "Your Name",
     "gymPlaceholder": "e.g. Gracie Academy Tokyo",
-    "gymMatched": "Linked to gym"
+    "gymMatched": "Linked to gym",
+    "timezone": "Timezone",
+    "timezoneDesc": "Select your local timezone for accurate date calculations",
+    "timezoneLabel": "Your Timezone",
+    "timezonePlaceholder": "Select timezone",
+    "timezoneAsia": "Asia/Tokyo",
+    "timezoneAmerica": "America/New_York",
+    "timezoneBrazil": "America/Sao_Paulo",
+    "timezoneEurope": "Europe/London"
   },
   "competition": {
     "title": "Match Record",

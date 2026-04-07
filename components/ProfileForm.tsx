@@ -19,6 +19,7 @@ type Profile = {
   gym: string;   // = gym_name in Supabase profiles table (B2B Trojan horse key field)
   bio: string;
   start_date: string;
+  timezone?: string;  // IANA timezone (e.g. "Asia/Tokyo")
 };
 
 /*
@@ -638,6 +639,14 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
   );
 }
 
+const TIMEZONE_OPTIONS = [
+  { value: "Asia/Tokyo",        label: "Asia/Tokyo" },
+  { value: "America/New_York",  label: "America/New_York" },
+  { value: "America/Sao_Paulo", label: "America/Sao_Paulo" },
+  { value: "Europe/London",     label: "Europe/London" },
+  { value: "UTC",               label: "UTC" },
+] as const;
+
 function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
   profile: Profile;
   onSave: (updated: Profile) => void;
@@ -698,6 +707,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
         gym: form.gym,
         bio: form.bio,
         start_date: form.start_date || null,
+        timezone: form.timezone || "UTC",
         // Auto-link gym_id when name matches a known gym — only set, never clear (B2B Trojan Horse)
         ...(matchedGymId ? { gym_id: matchedGymId } : {}),
         // Training disclaimer: set once, never cleared (legal defense evidence)
@@ -804,6 +814,19 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.bio")}</label>
           <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder={t("profile.bioPlaceholder")} rows={3} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 resize-none" />
+        </div>
+        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
+          <label className="block text-gray-300 text-sm font-medium mb-1">{t("profile.timezone")}</label>
+          <p className="text-gray-500 text-xs mb-2">{t("profile.timezoneDesc")}</p>
+          <select
+            value={form.timezone || "UTC"}
+            onChange={(e) => setForm({ ...form, timezone: e.target.value })}
+            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
+          >
+            {TIMEZONE_OPTIONS.map((tz) => (
+              <option key={tz.value} value={tz.value}>{tz.label}</option>
+            ))}
+          </select>
         </div>
         {formError && <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">{formError}</div>}
         <div className="flex gap-3">
