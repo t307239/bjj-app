@@ -1258,6 +1258,18 @@
       "month1": "Pain persisting over a month. Consider seeing a specialist."
     },
     "weightChartPeriod": "90 days",
+    "targetWeight": "Goal",
+    "goal": "Goal",
+    "targetWeightTitle": "Weight Goal",
+    "targetWeightSet": "Set Goal",
+    "targetWeightEdit": "Edit",
+    "targetWeightNone": "No weight goal set yet.",
+    "targetDate": "Target Date",
+    "targetDaysLeft": "{n} days left",
+    "targetDateReached": "Target date reached!",
+    "targetSaved": "Saved ✓",
+    "targetSaveBtn": "Save Goal",
+    "targetClear": "Clear",
     "parts": {
       "neck": "Neck",
       "leftShoulder": "L. Shoulder",

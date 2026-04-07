@@ -18,6 +18,7 @@ import CollapsibleSection from "@/components/CollapsibleSection";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
 import GymKickBanner from "@/components/GymKickBanner";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
+import WeightGoalWidget from "@/components/WeightGoalWidget";
 import InviteCard from "@/components/InviteCard";
 import {
   getWeekStartDate,
@@ -191,7 +192,7 @@ export default async function DashboardPage({
     supabase
       .from("profiles")
       .select(
-        "belt, stripe, start_date, is_pro, subscription_status, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym, referral_code, ai_coach_cache, ai_coach_last_generated, locale"
+        "belt, stripe, start_date, is_pro, subscription_status, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym, referral_code, ai_coach_cache, ai_coach_last_generated, locale, target_weight, target_weight_date"
       )
       .eq("id", user.id)
       .single(),
@@ -301,6 +302,8 @@ export default async function DashboardPage({
   const gymId = profileData?.gym_id ?? null;
   const shareDataWithGym = profileData?.share_data_with_gym ?? false;
   const referralCode = (profileData as { referral_code?: string | null })?.referral_code ?? null;
+  const targetWeight = profileData?.target_weight != null ? Number(profileData.target_weight) : null;
+  const targetWeightDate = (profileData as { target_weight_date?: string | null })?.target_weight_date ?? null;
 
   let gymCurriculum: {
     curriculum_url: string;
@@ -440,6 +443,9 @@ export default async function DashboardPage({
           <div className="space-y-3">
             <WeeklyStrip userId={user.id} />
             {hasFirstLog && <GoalTracker userId={user.id} />}
+            {targetWeight != null && isPro && (
+              <WeightGoalWidget targetWeight={targetWeight} targetDate={targetWeightDate} />
+            )}
           </div>
         </section>
 
