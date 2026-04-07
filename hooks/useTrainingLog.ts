@@ -17,7 +17,7 @@ import {
   decodeCompNotes,
   encodeRollNotes,
 } from "@/lib/trainingLogHelpers";
-import { getLocalDateParts } from "@/lib/timezone";
+import { getLocalDateParts, getLogicalTrainingDate } from "@/lib/timezone";
 import { trackEvent } from "@/lib/analytics";
 
 const PAGE_SIZE = 10;
@@ -57,7 +57,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
   // ── Form state ────────────────────────────────────────────────────────────
   const [showForm, setShowForm] = useState(initialOpen);
   const [form, setForm] = useState({
-    date: getLocalDateString(),
+    date: getLogicalTrainingDate(),
     duration_min: 60,
     type: "gi",
     notes: "",

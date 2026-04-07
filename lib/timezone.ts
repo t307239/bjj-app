@@ -152,3 +152,32 @@ export function getYesterdayDateString(tz?: string): string {
   const yesterday = new Date(Date.UTC(year, month - 1, day - 1));
   return `${yesterday.getUTCFullYear()}-${String(yesterday.getUTCMonth() + 1).padStart(2, "0")}-${String(yesterday.getUTCDate()).padStart(2, "0")}`;
 }
+
+/**
+ * Returns the logical training date for log entry forms.
+ * If current time is 0:00-4:59 (deep night), returns yesterday.
+ * Otherwise returns today.
+ * This solves the "I trained late last night but now it's 2am" problem.
+ */
+export function getLogicalTrainingDate(tz?: string): string {
+  const timezone = tz ?? getUserTimezone();
+  try {
+    const now = new Date();
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: timezone,
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).formatToParts(now);
+    const hour = parseInt(parts.find((p) => p.type === "hour")?.value ?? "0", 10);
+
+    // If hour is 0-4 (0:00-4:59), return yesterday
+    if (hour >= 0 && hour < 5) {
+      return getYesterdayDateString(tz);
+    }
+    return getLocalDateString(tz);
+  } catch {
+    // Fallback: just return today
+    return getLocalDateString(tz);
+  }
+}
