@@ -351,7 +351,26 @@
     "hero": "Seu treinamento de BJJ, elevado",
     "heroSub": "Registre treinos, acompanhe técnicas e visualize seu progresso com o melhor aplicativo de jiu-jitsu.",
     "ctaStart": "Começar Gratuitamente",
-    "ctaLearn": "Saiba mais"
+    "ctaLearn": "Saiba mais",
+    "coreBeltTitle": "Progresso de Faixa",
+    "coreBeltDesc": "Visualize sua jornada para o próximo rank. Rastreie promoções e mantenha-se motivado com acompanhamento detalhado.",
+    "coreWeightTitle": "Gerenciamento de Peso",
+    "coreWeightDesc": "Registre peso diário e acompanhe tendências de 90 dias. Defina metas de peso e monitore mudanças corporais.",
+    "proRollAnalysisTitle": "Análise de Rolagem",
+    "proRollAnalysisDesc": "Entenda seus padrões de vitória contra oponentes. Veja taxas de sucesso por tamanho e experiência.",
+    "proBadgesTitle": "Badges de Marcos",
+    "proBadgesDesc": "Desbloqueie conquistas conforme progride. Celebre 50 sessões, 10 submissões e marcos importantes.",
+    "proGoalWeightTitle": "Rastreamento de Peso Alvo (Pro)",
+    "proGoalWeightDesc": "Defina um peso alvo com linha de progresso visual. Recurso Pro incluído no plano mensal/anual.",
+    "socialProofTitle": "Confiado pela Comunidade de BJJ",
+    "socialProofUsers": "2,500+",
+    "socialProofUsersLabel": "Usuários ativos",
+    "socialProofWiki": "1,500+",
+    "socialProofWikiLabel": "Páginas da Wiki",
+    "socialProofAvgStreak": "25+",
+    "socialProofAvgStreakLabel": "Sequência média (dias)",
+    "socialProofProSubscribers": "300+",
+    "socialProofProSubscribersLabel": "Membros Pro"
   },
   "body": {
     "injuryAlert": {

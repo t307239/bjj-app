@@ -1381,7 +1381,26 @@
     "footerCopyright": "© 2026 BJJ App. All rights reserved.",
     "footerTerms": "利用規約",
     "footerPrivacy": "プライバシーポリシー",
-    "footerTokushoho": "特定商取引法に基づく表記"
+    "footerTokushoho": "特定商取引法に基づく表記",
+    "coreBeltTitle": "ベルト進捗",
+    "coreBeltDesc": "次の帯ランクへの道のりを可視化。昇段を記録し、詳細な進捗管理で動機づけを保つ。",
+    "coreWeightTitle": "体重管理",
+    "coreWeightDesc": "毎日の体重を記録し、90日間の推移を追跡。目標体重を設定して、体組成の変化を監視。",
+    "proRollAnalysisTitle": "ロール分析",
+    "proRollAnalysisDesc": "相手との対戦パターンを分析。体格差や経験差別の勝率を可視化。",
+    "proBadgesTitle": "マイルストーンバッジ",
+    "proBadgesDesc": "進捗に応じてアンロック。50セッション、10スブミッション、主要なマイルストーンを祝う。",
+    "proGoalWeightTitle": "目標体重トラッキング（Pro）",
+    "proGoalWeightDesc": "目標体重を設定して、ビジュアル進捗ラインを表示。月額・年額プランに含まれる。",
+    "socialProofTitle": "柔術コミュニティに信頼されるアプリ",
+    "socialProofUsers": "2,500+",
+    "socialProofUsersLabel": "アクティブユーザー",
+    "socialProofWiki": "1,500+",
+    "socialProofWikiLabel": "Wiki ページ",
+    "socialProofAvgStreak": "25+",
+    "socialProofAvgStreakLabel": "平均ストリーク（日数）",
+    "socialProofProSubscribers": "300+",
+    "socialProofProSubscribersLabel": "Pro会員"
   },
   "body": {
     "injuryAlert": {

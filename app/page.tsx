@@ -246,7 +246,7 @@ export default async function Home() {
             {t("landing.engDesc").split("\n")[1]}
           </p>
 
-          {/* Feature pills — Fix 12: no native emoji */}
+          {/* Feature pills — Fix 12: no native emoji | T-32: Added weight & belt */}
           <div className="flex flex-wrap gap-2 justify-center mb-10 text-sm">
             {[
               t("landing.engPillSession"),
@@ -256,6 +256,8 @@ export default async function Home() {
               t("landing.engPillHeatmap"),
               t("landing.engPillComp"),
               t("landing.engPillSkillMap"),
+              "Weight Management",
+              "Belt Progress",
             ].map((f) => (
               <span key={f} className="bg-zinc-900 border border-white/10 text-zinc-300 px-3 py-1.5 rounded-full">
                 {f}
@@ -312,6 +314,22 @@ export default async function Home() {
             <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
               <div className="text-3xl font-bold text-white mb-1">{t("landing.proofFree")}</div>
               <p className="text-gray-400 text-xs">{t("landing.proofFreeLabel")}</p>
+            </div>
+            <div className="bg-zinc-900 rounded-2xl p-6 border border-emerald-500/30 text-center">
+              <div className="text-3xl font-bold text-emerald-400 mb-1">{t("landing.socialProofUsers")}</div>
+              <p className="text-gray-400 text-xs">{t("landing.socialProofUsersLabel")}</p>
+            </div>
+            <div className="bg-zinc-900 rounded-2xl p-6 border border-purple-500/30 text-center">
+              <div className="text-3xl font-bold text-purple-400 mb-1">{t("landing.socialProofWiki")}</div>
+              <p className="text-gray-400 text-xs">{t("landing.socialProofWikiLabel")}</p>
+            </div>
+            <div className="bg-zinc-900 rounded-2xl p-6 border border-orange-500/30 text-center">
+              <div className="text-3xl font-bold text-orange-400 mb-1">{t("landing.socialProofAvgStreak")}</div>
+              <p className="text-gray-400 text-xs">{t("landing.socialProofAvgStreakLabel")}</p>
+            </div>
+            <div className="bg-zinc-900 rounded-2xl p-6 border border-pink-500/30 text-center">
+              <div className="text-3xl font-bold text-pink-400 mb-1">{t("landing.socialProofProSubscribers")}</div>
+              <p className="text-gray-400 text-xs">{t("landing.socialProofProSubscribersLabel")}</p>
             </div>
           </div>
         </div>
@@ -552,6 +570,20 @@ export default async function Home() {
               {t("landing.coreSkillMapDesc")}
             </p>
           </div>
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-emerald-500/30 hover:border-emerald-500/50 transition-colors">
+            <div className="mb-3"><IconTrophy className="w-8 h-8 text-yellow-400" /></div>
+            <h3 className="font-bold text-lg mb-2">{t("landing.coreBeltTitle")}</h3>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              {t("landing.coreBeltDesc")}
+            </p>
+          </div>
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-blue-500/30 hover:border-blue-500/50 transition-colors">
+            <div className="mb-3"><IconTrendingUp className="w-8 h-8 text-blue-400" /></div>
+            <h3 className="font-bold text-lg mb-2">{t("landing.coreWeightTitle")}</h3>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              {t("landing.coreWeightDesc")}
+            </p>
+          </div>
         </div>
       </section>
 
@@ -596,6 +628,39 @@ export default async function Home() {
               {t("landing.wikiExplore")}
               <IconArrowRight className="w-4 h-4" />
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Pro Features — T-32: Roll Analysis, Badges, Goal Weight */}
+      <section className="px-4 py-16 max-w-5xl mx-auto w-full">
+        <h2 className="text-2xl font-bold text-center mb-10 text-white">
+          {t("landing.coreTitle")} & <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Pro Features</span>
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-purple-500/30 hover:border-purple-500/50 transition-colors">
+            <div className="mb-3"><IconNetwork className="w-8 h-8 text-purple-400" /></div>
+            <h3 className="font-bold text-lg mb-2">{t("landing.proRollAnalysisTitle")}</h3>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              {t("landing.proRollAnalysisDesc")}
+            </p>
+            <p className="text-purple-400 text-xs font-semibold mt-3">Pro</p>
+          </div>
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-pink-500/30 hover:border-pink-500/50 transition-colors">
+            <div className="mb-3"><IconTrophy className="w-8 h-8 text-pink-400" /></div>
+            <h3 className="font-bold text-lg mb-2">{t("landing.proBadgesTitle")}</h3>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              {t("landing.proBadgesDesc")}
+            </p>
+            <p className="text-pink-400 text-xs font-semibold mt-3">Pro</p>
+          </div>
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-blue-500/30 hover:border-blue-500/50 transition-colors">
+            <div className="mb-3"><IconTarget className="w-8 h-8 text-blue-400" /></div>
+            <h3 className="font-bold text-lg mb-2">{t("landing.proGoalWeightTitle")}</h3>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              {t("landing.proGoalWeightDesc")}
+            </p>
+            <p className="text-blue-400 text-xs font-semibold mt-3">Pro</p>
           </div>
         </div>
       </section>
