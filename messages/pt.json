@@ -283,6 +283,43 @@
     "nextBadge": "Próxima conquista em {n} sessões",
     "allEarned": "Todas as conquistas obtidas!"
   },
+  "extendedBadges": {
+    "title": "Conquistas",
+    "earned": "✅ Conquistado",
+    "allEarned": "Todas as conquistas desbloqueadas! 🏆",
+    "gi_nogi": {
+      "name": "Gi & No-Gi",
+      "progress": "Registre Gi e No-Gi ({current}/2)"
+    },
+    "technique_1": {
+      "name": "Primeira Técnica",
+      "progress": "Adicione sua primeira técnica ({current}/1)"
+    },
+    "technique_10": {
+      "name": "Colecionador",
+      "progress": "Adicione 10 técnicas ({current}/10)"
+    },
+    "technique_30": {
+      "name": "Enciclopédia Viva",
+      "progress": "Adicione 30 técnicas ({current}/30)"
+    },
+    "partner_5": {
+      "name": "Parceiro de Treino",
+      "progress": "5 sessões com parceiro ({current}/5)"
+    },
+    "competition": {
+      "name": "Competidor",
+      "progress": "Registre sua primeira competição ({current}/1)"
+    },
+    "weekly_4": {
+      "name": "Guerreiro das 4 Semanas",
+      "progress": "Treine 4 semanas seguidas ({current}/4)"
+    },
+    "monthly_8": {
+      "name": "Rato do Tatame",
+      "progress": "8+ sessões em um mês ({current}/8)"
+    }
+  },
   "partnerStats": {
     "title": "Estatísticas de Parceiros",
     "topPartners": "Parceiros de Treino Frequentes",

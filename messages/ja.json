@@ -1122,6 +1122,43 @@
     "nextBadge": "次のバッジまであと {n} 回",
     "allEarned": "全マイルストーン達成！"
   },
+  "extendedBadges": {
+    "title": "アチーブメントバッジ",
+    "earned": "✅ 獲得済み",
+    "allEarned": "全アチーブメントバッジ獲得！🏆",
+    "gi_nogi": {
+      "name": "Gi & No-Gi",
+      "progress": "GiとNo-Gi両方を記録 ({current}/2)"
+    },
+    "technique_1": {
+      "name": "最初のテクニック",
+      "progress": "最初のテクニックを追加 ({current}/1)"
+    },
+    "technique_10": {
+      "name": "テクニック収集家",
+      "progress": "テクニックを10個追加 ({current}/10)"
+    },
+    "technique_30": {
+      "name": "歩く百科事典",
+      "progress": "テクニックを30個追加 ({current}/30)"
+    },
+    "partner_5": {
+      "name": "トレーニング仲間",
+      "progress": "パートナーとの練習を5回記録 ({current}/5)"
+    },
+    "competition": {
+      "name": "コンペティター",
+      "progress": "最初の試合を記録 ({current}/1)"
+    },
+    "weekly_4": {
+      "name": "4週連続戦士",
+      "progress": "4週連続で練習 ({current}/4)"
+    },
+    "monthly_8": {
+      "name": "マット番長",
+      "progress": "1ヶ月に8回以上の練習 ({current}/8)"
+    }
+  },
   "partnerStats": {
     "title": "パートナー統計",
     "topPartners": "よく練習するパートナー",

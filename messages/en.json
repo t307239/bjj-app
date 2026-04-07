@@ -1130,6 +1130,43 @@
     "nextBadge": "Next badge at {n} sessions",
     "allEarned": "All milestones earned!"
   },
+  "extendedBadges": {
+    "title": "Achievement Badges",
+    "earned": "✅ Earned",
+    "allEarned": "All achievement badges earned! 🏆",
+    "gi_nogi": {
+      "name": "Gi & No-Gi",
+      "progress": "Log both Gi and No-Gi ({current}/2)"
+    },
+    "technique_1": {
+      "name": "First Technique",
+      "progress": "Add your first technique ({current}/1)"
+    },
+    "technique_10": {
+      "name": "Technique Hoarder",
+      "progress": "Add 10 techniques ({current}/10)"
+    },
+    "technique_30": {
+      "name": "Walking Encyclopedia",
+      "progress": "Add 30 techniques ({current}/30)"
+    },
+    "partner_5": {
+      "name": "Training Buddy",
+      "progress": "Log 5 partner sessions ({current}/5)"
+    },
+    "competition": {
+      "name": "Competitor",
+      "progress": "Log your first competition ({current}/1)"
+    },
+    "weekly_4": {
+      "name": "4-Week Warrior",
+      "progress": "Train 4 weeks straight ({current}/4)"
+    },
+    "monthly_8": {
+      "name": "Mat Rat",
+      "progress": "8+ sessions in one month ({current}/8)"
+    }
+  },
   "partnerStats": {
     "title": "Partner Stats",
     "topPartners": "Top Sparring Partners",
