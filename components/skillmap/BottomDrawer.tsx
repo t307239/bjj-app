@@ -2,13 +2,7 @@
 
 import { useState, useRef, useLayoutEffect } from "react";
 import { type Node } from "@xyflow/react";
-
-// T-29: preset position tags
-const PRESET_POSITIONS = [
-  "Closed Guard", "Half Guard", "Open Guard",
-  "Mount", "Side Control", "Back",
-  "Standing", "Turtle", "Leg Entanglement",
-];
+import { PRESET_POSITIONS } from "./constants";
 
 type Props = {
   node: Node;

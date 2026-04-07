@@ -43,13 +43,7 @@ import { nodeTypes, deleteNodeRef, toggleCollapseRef, getDescendantIds } from ".
 import ProModal from "./skillmap/ProModal";
 import BottomDrawer from "./skillmap/BottomDrawer";
 import AddNodePopup from "./skillmap/AddNodePopup";
-
-// ─── T-29: Preset position tags ───────────────────────────────────────────────
-const PRESET_POSITIONS = [
-  "Closed Guard", "Half Guard", "Open Guard",
-  "Mount", "Side Control", "Back",
-  "Standing", "Turtle", "Leg Entanglement",
-];
+import { PRESET_POSITIONS } from "./skillmap/constants";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
