@@ -30,6 +30,10 @@ const ExtendedBadgeGrid = dynamic(() => import("./ExtendedBadgeGrid"), {
   ssr: false,
   loading: () => <div className="h-48 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
+const BeltProgressCard = dynamic(() => import("./BeltProgressCard"), {
+  ssr: false,
+  loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
 const BodyManagementSection = dynamic(() => import("./BodyManagementSection"), {
   ssr: false,
   loading: () => <div className="h-48 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
@@ -133,12 +137,12 @@ type TabId = "stats" | "profile" | "body" | "account";
 // perf: タブにホバー/フォーカスした時点でチャンクを先読みしておく
 // → クリック時には既にロード済みになりスケルトンが出ない
 const PRELOAD_MAP: Partial<Record<TabId, () => void>> = {
-  stats:   () => { void import("./RollAnalyticsCard"); void import("./PartnerStatsCard"); void import("./ExtendedBadgeGrid"); },
+  stats:   () => { void import("./RollAnalyticsCard"); void import("./PartnerStatsCard"); void import("./ExtendedBadgeGrid"); void import("./BeltProgressCard"); },
   body:    () => { void import("./BodyManagementSection"); },
   profile: () => { void import("./ProfileForm"); },
 };
 
-export default function ProfileTabs({ userId, isPro = false, referralCode = null, referralCount = 0, totalCount = 0 }: { userId: string; isPro?: boolean; referralCode?: string | null; referralCount?: number; totalCount?: number }) {
+export default function ProfileTabs({ userId, isPro = false, referralCode = null, referralCount = 0, totalCount = 0, belt = "white", stripeCount = 0, monthsAtBelt = 0 }: { userId: string; isPro?: boolean; referralCode?: string | null; referralCount?: number; totalCount?: number; belt?: string; stripeCount?: number; monthsAtBelt?: number }) {
   const { t } = useLocale();
   const [activeTab, setActiveTab] = useState<TabId>("stats");
   const TABS: { id: TabId; label: string }[] = [
@@ -169,6 +173,8 @@ export default function ProfileTabs({ userId, isPro = false, referralCode = null
       </div>
       {activeTab === "stats"   && (
         <>
+          {/* T-24: Belt Progress Card — replaces plain text badge in hero */}
+          <BeltProgressCard belt={belt} stripes={stripeCount} monthsAtBelt={monthsAtBelt} className="mb-4" />
           <PersonalBests userId={userId} />
           {/* Training calendar heatmap (moved from Dashboard ③-4) */}
           <div className="mt-6">

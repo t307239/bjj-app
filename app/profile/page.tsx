@@ -5,7 +5,7 @@ import NavBar from "@/components/NavBar";
 import ProfileTabs from "@/components/ProfileTabs";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
-import { formatBjjDuration } from "@/lib/bjjDuration";
+import { formatBjjDuration, calcBjjDuration } from "@/lib/bjjDuration";
 import AvatarImage from "@/components/AvatarImage";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
@@ -113,6 +113,7 @@ export default async function ProfilePage() {
 
   const belt = profile?.belt ?? "white";
   const stripeCount = profile?.stripe ?? 0;
+  const monthsAtBelt = profile?.start_date ? calcBjjDuration(profile.start_date).totalMonths : 0;
   const isPro = profile?.is_pro ?? false;
   const gymName = profile?.gym_name ?? null;
   const referralCode = (profile as { referral_code?: string | null })?.referral_code ?? null;
@@ -247,7 +248,7 @@ export default async function ProfilePage() {
         {/* ═══════════════════════════════════════════
             PROFILE TABS (stats / settings / account)
             ═══════════════════════════════════════════ */}
-        <ProfileTabs userId={user.id} isPro={isPro} referralCode={referralCode} referralCount={referralCount ?? 0} totalCount={totalCount ?? 0} />
+        <ProfileTabs userId={user.id} isPro={isPro} referralCode={referralCode} referralCount={referralCount ?? 0} totalCount={totalCount ?? 0} belt={belt} stripeCount={stripeCount} monthsAtBelt={monthsAtBelt} />
       </main>
     </div>
   );
