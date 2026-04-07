@@ -22,6 +22,10 @@ const RollAnalyticsCard = dynamic(() => import("./RollAnalyticsCard"), {
   ssr: false,
   loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
+const PartnerStatsCard = dynamic(() => import("./PartnerStatsCard"), {
+  ssr: false,
+  loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
 const BodyManagementSection = dynamic(() => import("./BodyManagementSection"), {
   ssr: false,
   loading: () => <div className="h-48 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
@@ -125,7 +129,7 @@ type TabId = "stats" | "profile" | "body" | "account";
 // perf: タブにホバー/フォーカスした時点でチャンクを先読みしておく
 // → クリック時には既にロード済みになりスケルトンが出ない
 const PRELOAD_MAP: Partial<Record<TabId, () => void>> = {
-  stats:   () => { void import("./RollAnalyticsCard"); },
+  stats:   () => { void import("./RollAnalyticsCard"); void import("./PartnerStatsCard"); },
   body:    () => { void import("./BodyManagementSection"); },
   profile: () => { void import("./ProfileForm"); },
 };
@@ -172,6 +176,12 @@ export default function ProfileTabs({ userId, isPro = false, referralCode = null
           <div className="mt-4">
             <ProGate isPro={isPro} feature="Roll Analytics & Pattern Insights" userId={userId}>
               <RollAnalyticsCard userId={userId} />
+            </ProGate>
+          </div>
+          {/* T-35: Partner Stats (Pro) */}
+          <div className="mt-4">
+            <ProGate isPro={isPro} feature="Partner Stats & Analysis" userId={userId}>
+              <PartnerStatsCard userId={userId} />
             </ProGate>
           </div>
         </>

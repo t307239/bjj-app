@@ -1122,6 +1122,17 @@
     "nextBadge": "次のバッジまであと {n} 回",
     "allEarned": "全マイルストーン達成！"
   },
+  "partnerStats": {
+    "title": "パートナー統計",
+    "topPartners": "よく練習するパートナー",
+    "uniquePartners": "{n}人",
+    "rolledWith": "{n}回",
+    "unlockHint": "あと{n}回パートナーとのセッションを記録するとパートナー統計が解放されます",
+    "unlockTip": "Gi / No-Giのセッション記録時にパートナー欄に@ユーザー名を入力してください",
+    "insights": "相性インサイト",
+    "mostFrequentInsight": "@{partner}さんとの練習が最多（{count}回 / 全パートナーセッションの{pct}%）",
+    "diversityInsight": "{n}人の異なるパートナーと練習済み！多様な相手と練習することで適応力が鍛えられます"
+  },
   "rollAnalytics": {
     "title": "ロール分析",
     "unlockHint": "あと{n}回ロールを記録するとロール分析が解放されます",

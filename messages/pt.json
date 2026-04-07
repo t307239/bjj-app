@@ -283,6 +283,17 @@
     "nextBadge": "Próxima conquista em {n} sessões",
     "allEarned": "Todas as conquistas obtidas!"
   },
+  "partnerStats": {
+    "title": "Estatísticas de Parceiros",
+    "topPartners": "Parceiros de Treino Frequentes",
+    "uniquePartners": "{n} parceiros",
+    "rolledWith": "{n} sessões",
+    "unlockHint": "Registre mais {n} sessões com parceiro para desbloquear as estatísticas",
+    "unlockTip": "Adicione um @usuário no campo parceiro ao registrar sessões Gi / No-Gi",
+    "insights": "Insights de Compatibilidade",
+    "mostFrequentInsight": "Você treina mais com @{partner} — {count} sessões ({pct}% dos rolls com parceiro registrados)",
+    "diversityInsight": "Você treinou com {n} parceiros diferentes — ótimo para desenvolver adaptabilidade!"
+  },
   "rollAnalytics": {
     "title": "Análise de Rolls",
     "unlockHint": "Registre mais {n} rolls com detalhes para desbloquear a análise",

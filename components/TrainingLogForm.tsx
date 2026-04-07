@@ -124,6 +124,7 @@ type Props = {
   compForm: CompData;
   setCompForm: (f: CompData) => void;
   techniqueSuggestions?: string[];
+  partnerSuggestions?: string[];
 };
 
 // ── Component ────────────────────────────────────────────────────────────────
@@ -140,6 +141,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
   compForm,
   setCompForm,
   techniqueSuggestions = [],
+  partnerSuggestions = [],
 }: Props) {
   const { t } = useLocale();
   const isOnline = useOnlineStatus();
@@ -413,11 +415,19 @@ const TrainingLogForm = memo(function TrainingLogForm({
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm select-none">@</span>
               <input
                 type="text"
+                list="partner-suggestions-list"
                 value={form.partner_username}
                 onChange={(e) => setForm({ ...form, partner_username: e.target.value.replace(/^@/, "").replace(/\s/g, "") })}
                 placeholder={t("training.partnerTagPlaceholder")}
                 className="w-full bg-zinc-800 text-white rounded-lg pl-7 pr-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
               />
+              {partnerSuggestions.length > 0 && (
+                <datalist id="partner-suggestions-list">
+                  {partnerSuggestions.map((p) => (
+                    <option key={p} value={p} />
+                  ))}
+                </datalist>
+              )}
             </div>
           </div>
 

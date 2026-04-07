@@ -48,6 +48,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
   const [pageLoading, setPageLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [techniqueSuggestions, setTechniqueSuggestions] = useState<string[]>([]);
+  const [partnerSuggestions, setPartnerSuggestions] = useState<string[]>([]);
   const [totalCount, setTotalCount] = useState<number | null>(null);
   const [trainedToday, setTrainedToday] = useState<boolean | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
@@ -150,13 +151,19 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         .eq("user_id", userId);
       if (!isPro) countQuery = countQuery.gte("date", oneMonthAgoDate);
 
-      const [{ data, error }, { data: techData }, { count }] = await Promise.all([
+      const [{ data, error }, { data: techData }, { data: partnerData }, { count }] = await Promise.all([
         logsQuery.range(0, PAGE_SIZE - 1),
         supabase
           .from("technique_nodes")
           .select("name")
           .eq("user_id", userId)
           .order("name", { ascending: true }),
+        supabase
+          .from("training_logs")
+          .select("partner_username")
+          .eq("user_id", userId)
+          .not("partner_username", "is", null)
+          .neq("partner_username", ""),
         countQuery,
       ]);
 
@@ -170,6 +177,14 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       if (techData) {
         const names = [...new Set(techData.map((t: { name: string }) => t.name).filter(Boolean))];
         setTechniqueSuggestions(names);
+      }
+      if (partnerData) {
+        const partners = [...new Set(
+          partnerData
+            .map((r: { partner_username: string | null }) => r.partner_username)
+            .filter((p): p is string => !!p && p.trim() !== "")
+        )].sort();
+        setPartnerSuggestions(partners);
       }
       if (count !== null) setTotalCount(count);
       setInitialLoading(false);
@@ -532,6 +547,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     pageLoading,
     page,
     techniqueSuggestions,
+    partnerSuggestions,
     totalCount, setTotalCount,
     trainedToday, setTrainedToday,
     showCelebration, setShowCelebration,

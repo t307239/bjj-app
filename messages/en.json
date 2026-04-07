@@ -1130,6 +1130,17 @@
     "nextBadge": "Next badge at {n} sessions",
     "allEarned": "All milestones earned!"
   },
+  "partnerStats": {
+    "title": "Partner Stats",
+    "topPartners": "Top Sparring Partners",
+    "uniquePartners": "{n} partners",
+    "rolledWith": "{n} sessions",
+    "unlockHint": "Log {n} more sessions with a partner to unlock your stats",
+    "unlockTip": "Add a @username in the partner field when logging Gi / No-Gi sessions",
+    "insights": "Compatibility Insights",
+    "mostFrequentInsight": "You train most with @{partner} — {count} sessions ({pct}% of logged partner rolls)",
+    "diversityInsight": "You've rolled with {n} different partners — great for developing adaptability!"
+  },
   "rollAnalytics": {
     "title": "Roll Analytics",
     "unlockHint": "Log {n} more rolls with Roll Details to unlock your analysis",

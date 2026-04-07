@@ -195,6 +195,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     pageLoading,
     page,
     techniqueSuggestions,
+    partnerSuggestions,
     totalCount, setTotalCount,
     trainedToday, setTrainedToday,
     showCelebration, setShowCelebration,
@@ -323,6 +324,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         compForm={compForm}
         setCompForm={setCompForm}
         techniqueSuggestions={techniqueSuggestions}
+        partnerSuggestions={partnerSuggestions}
       />
 
       {/* Keyword search */}
