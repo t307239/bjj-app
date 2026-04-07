@@ -808,7 +808,13 @@
     "exitFullScreen": "フルスクリーン解除",
     "fullScreen": "フルスクリーン",
     "overLimitBanner": "無料プランの上限を超えました。Proにアップグレードして{count}件のテクニックの編集を再開しましょう。",
-    "overLimitUpgrade": "Proにアップグレード"
+    "overLimitUpgrade": "Proにアップグレード",
+    "filterAll": "すべて",
+    "drawerEditTags": "ポジションタグを編集",
+    "drawerEditTagsHint": "このテクニックのポジションをタグ付けする",
+    "tagCustomPlaceholder": "カスタムタグ...",
+    "edgeNotesTitle": "接続メモ",
+    "edgeNotesPlaceholder": "この接続についてのメモを追加..."
   },
   "wiki": {
     "dailyTip": "今日のBJJ知識",

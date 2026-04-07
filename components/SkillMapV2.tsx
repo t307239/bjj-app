@@ -28,7 +28,9 @@ import {
   MiniMap,
   useReactFlow,
   type Node,
+  type Edge,
   type NodeMouseHandler,
+  type EdgeMouseHandler,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useLocale } from "@/lib/i18n";
@@ -41,6 +43,13 @@ import { nodeTypes, deleteNodeRef, toggleCollapseRef, getDescendantIds } from ".
 import ProModal from "./skillmap/ProModal";
 import BottomDrawer from "./skillmap/BottomDrawer";
 import AddNodePopup from "./skillmap/AddNodePopup";
+
+// ─── T-29: Preset position tags ───────────────────────────────────────────────
+const PRESET_POSITIONS = [
+  "Closed Guard", "Half Guard", "Open Guard",
+  "Mount", "Side Control", "Back",
+  "Standing", "Turtle", "Leg Entanglement",
+];
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -174,6 +183,8 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
     handleAddChildNode,
     handleMobileConnect,
     handleMagicOrganize,
+    handleUpdateEdgeNotes,
+    handleUpdateNodeTags,
   } = useSkillMap({ userId, isPro, t });
 
   // ── Collapse / expand state (Pro only) ───────────────────────────────────
@@ -191,6 +202,10 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   const [emptyAddName, setEmptyAddName] = useState("");
   const emptyRef = useRef<HTMLInputElement>(null);
   const mobileAddRef = useRef<HTMLInputElement>(null);
+
+  // T-29: position filter + edge notes
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [edgeNotes, setEdgeNotes] = useState<{ id: string; notes: string } | null>(null);
 
   // Keep module-level refs up-to-date (used by TechniqueNodeComp to avoid stale closure)
   useEffect(() => { deleteNodeRef.current = handleDeleteNode; }, [handleDeleteNode]);
@@ -254,9 +269,52 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
       rfEdges.map((e) => ({
         ...e,
         hidden: hiddenIds.has(e.target) || hiddenIds.has(e.source),
+        // T-29: show 📝 label if edge has notes
+        label: (e.data as { notes?: string })?.notes ? "📝" : (e.label ?? undefined),
       })),
     [rfEdges, hiddenIds]
   );
+
+  // T-29: unique non-preset tags from user's nodes (for custom tag chips)
+  const customTags = useMemo(() => {
+    const set = new Set<string>();
+    for (const n of rfNodes) {
+      for (const tag of ((n.data as { tags?: string[] }).tags ?? [])) {
+        if (!PRESET_POSITIONS.includes(tag)) set.add(tag);
+      }
+    }
+    return [...set];
+  }, [rfNodes]);
+
+  // T-29: tags that are actually used (for highlighting active chips)
+  const usedTags = useMemo(() => {
+    const set = new Set<string>();
+    for (const n of rfNodes) {
+      for (const tag of ((n.data as { tags?: string[] }).tags ?? [])) {
+        set.add(tag);
+      }
+    }
+    return set;
+  }, [rfNodes]);
+
+  // T-29: filter nodes by selected tag
+  const filteredDisplayNodes = useMemo(() => {
+    if (!selectedTag) return displayNodes;
+    return displayNodes.map((n) => {
+      const tags = (n.data as { tags?: string[] }).tags ?? [];
+      return { ...n, hidden: n.hidden || !tags.includes(selectedTag) };
+    });
+  }, [displayNodes, selectedTag]);
+
+  // T-29: filter edges — hide if either endpoint is hidden by tag filter
+  const filteredDisplayEdges = useMemo(() => {
+    if (!selectedTag) return displayEdges;
+    const visibleIds = new Set(filteredDisplayNodes.filter((n) => !n.hidden).map((n) => n.id));
+    return displayEdges.map((e) => ({
+      ...e,
+      hidden: e.hidden || !visibleIds.has(e.source) || !visibleIds.has(e.target),
+    }));
+  }, [displayEdges, filteredDisplayNodes, selectedTag]);
 
   // Mobile detection
   useEffect(() => {
@@ -301,6 +359,15 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
     setAddPopup(null);
     if (connectingFrom) setConnectingFrom(null);
   }, [connectingFrom, setConnectingFrom]);
+
+  // T-29: edge click → open notes panel
+  const onEdgeClick: EdgeMouseHandler = useCallback(
+    (_, edge: Edge) => {
+      const notes = (edge.data as { notes?: string })?.notes ?? "";
+      setEdgeNotes({ id: edge.id, notes });
+    },
+    []
+  );
 
   // ── Paywall ───────────────────────────────────────────────────────────────
   const isLockedReadOnly = !isPro && rfNodes.length > 10;
@@ -388,6 +455,38 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           )}
         </div>
       )}
+
+      {/* T-29: Position filter chips */}
+      <div
+        className="mb-2 flex items-center gap-1.5 overflow-x-auto pb-0.5"
+        style={{ scrollbarWidth: "none" }}
+      >
+        <button
+          onClick={() => setSelectedTag(null)}
+          className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95 ${
+            !selectedTag
+              ? "bg-indigo-600 border-indigo-500 text-white font-semibold"
+              : "bg-zinc-800 border-white/10 text-zinc-400 hover:border-white/30"
+          }`}
+        >
+          {t("skillmap.filterAll")}
+        </button>
+        {[...PRESET_POSITIONS, ...customTags].map((tag) => (
+          <button
+            key={tag}
+            onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
+            className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95 ${
+              selectedTag === tag
+                ? "bg-indigo-600 border-indigo-500 text-white font-semibold"
+                : usedTags.has(tag)
+                  ? "bg-zinc-800 border-white/20 text-zinc-300 hover:border-white/40"
+                  : "bg-zinc-900 border-white/8 text-zinc-600"
+            }`}
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
 
       {/* Recent Focus bar — Pro only */}
       {isPro && (
@@ -481,8 +580,8 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         style={{ height: "clamp(350px, 60vh, 620px)", touchAction: "none" }}
       >
         <ReactFlow
-          nodes={displayNodes}
-          edges={displayEdges}
+          nodes={filteredDisplayNodes}
+          edges={filteredDisplayEdges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
@@ -490,6 +589,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           onEdgesDelete={onEdgesDelete}
           onNodesDelete={onNodesDelete}
           onNodeClick={onNodeClick}
+          onEdgeClick={onEdgeClick}
           onPaneClick={onPaneClick}
           onPaneContextMenu={onPaneContextMenu}
           nodeTypes={nodeTypes}
@@ -521,6 +621,45 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           <SkillMapLegend />
         </ReactFlow>
       </div>
+
+      {/* T-29: Edge notes panel */}
+      {edgeNotes && (
+        <div className="mt-2 bg-zinc-900 border border-indigo-500/30 rounded-xl p-3 shadow-xl">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-semibold text-white">📝 {t("skillmap.edgeNotesTitle")}</span>
+            <button
+              onClick={() => setEdgeNotes(null)}
+              className="ml-auto text-zinc-500 hover:text-zinc-300 text-sm leading-none"
+              aria-label={t("common.cancel")}
+            >✕</button>
+          </div>
+          <textarea
+            value={edgeNotes.notes}
+            onChange={(e) => setEdgeNotes((prev) => prev ? { ...prev, notes: e.target.value } : null)}
+            placeholder={t("skillmap.edgeNotesPlaceholder")}
+            className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 resize-none"
+            rows={3}
+            autoFocus
+          />
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={() => setEdgeNotes(null)}
+              className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 text-sm py-2 rounded-lg transition-colors"
+            >
+              {t("common.cancel")}
+            </button>
+            <button
+              onClick={() => {
+                handleUpdateEdgeNotes(edgeNotes.id, edgeNotes.notes);
+                setEdgeNotes(null);
+              }}
+              className="flex-1 bg-emerald-700 hover:bg-emerald-600 text-white text-sm font-semibold py-2 rounded-lg transition-colors"
+            >
+              {t("common.save")}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Add node popup */}
       {addPopup && (
@@ -573,6 +712,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           onAddChild={(name) => handleAddChildNode(drawerNode.id, name)}
           onConnectTo={() => setConnectingFrom(drawerNode.id)}
           onRemove={() => handleDeleteNode(drawerNode.id)}
+          onEditTags={(tags) => handleUpdateNodeTags(drawerNode.id, tags)}
           onClose={() => setDrawerNode(null)}
           t={t}
         />

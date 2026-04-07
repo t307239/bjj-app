@@ -387,7 +387,13 @@
   "skillmap": {
     "collapse": "Recolher filhos",
     "expand": "Expandir filhos",
-    "recentFocus": "Recentes:"
+    "recentFocus": "Recentes:",
+    "filterAll": "Tudo",
+    "drawerEditTags": "Editar Tags de Posição",
+    "drawerEditTagsHint": "Adicione uma posição a esta técnica",
+    "tagCustomPlaceholder": "Tag personalizada...",
+    "edgeNotesTitle": "Notas da Conexão",
+    "edgeNotesPlaceholder": "Adicione notas sobre esta conexão..."
   },
   "chart": {
     "days84": "3 meses",

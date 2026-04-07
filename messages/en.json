@@ -816,7 +816,13 @@
     "overLimitUpgrade": "Upgrade to Pro",
     "collapse": "Collapse children",
     "expand": "Expand children",
-    "recentFocus": "Recent:"
+    "recentFocus": "Recent:",
+    "filterAll": "All",
+    "drawerEditTags": "Edit Position Tags",
+    "drawerEditTagsHint": "Tag this technique with its position",
+    "tagCustomPlaceholder": "Custom tag...",
+    "edgeNotesTitle": "Connection Notes",
+    "edgeNotesPlaceholder": "Add notes about this connection..."
   },
   "wiki": {
     "dailyTip": "Today's BJJ Knowledge",

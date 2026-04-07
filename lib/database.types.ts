@@ -17,6 +17,7 @@ export type DbTechniqueNode = {
   pos_x: number;
   pos_y: number;
   mastery_level: number | null; // 0=Locked, 1=Learning, 2=Mastered (nullable for legacy rows)
+  tags: string[] | null;        // T-29: position tags for filter chips (e.g. ["Closed Guard", "Mount"])
   created_at: string;
 };
 
@@ -27,6 +28,7 @@ export type DbTechniqueEdge = {
   source_id: string;
   target_id: string;
   label: string | null;
+  notes: string | null;         // T-29: edge annotation memo
   created_at: string;
 };
 

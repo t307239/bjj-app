@@ -7,7 +7,7 @@ import { MarkerType, type Edge, type Node } from "@xyflow/react";
 import type { DbTechniqueNode as DbNode, DbTechniqueEdge } from "@/lib/database.types";
 
 // ─── Type alias ───────────────────────────────────────────────────────────────
-export type DbEdge = Pick<DbTechniqueEdge, "id" | "source_id" | "target_id" | "label">;
+export type DbEdge = Pick<DbTechniqueEdge, "id" | "source_id" | "target_id" | "label" | "notes">;
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 export const NODE_W = 160;
@@ -100,5 +100,6 @@ export function dbEdgeToRF(e: DbEdge): Edge {
     animated: false,
     style: { stroke: "#6366f1", strokeWidth: 2 },
     markerEnd: { type: MarkerType.ArrowClosed, color: "#6366f1" },
+    data: { notes: e.notes ?? "" },
   };
 }

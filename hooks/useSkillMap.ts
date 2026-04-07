@@ -71,12 +71,12 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
       const query = Promise.all([
         supabase
           .from("technique_nodes")
-          .select("id, user_id, name, description, pos_x, pos_y, mastery_level, created_at")
+          .select("id, user_id, name, description, pos_x, pos_y, mastery_level, tags, created_at")
           .eq("user_id", userId)
           .order("created_at"),
         supabase
           .from("technique_edges")
-          .select("id, source_id, target_id, label")
+          .select("id, source_id, target_id, label, notes")
           .eq("user_id", userId),
       ]);
       const result = await Promise.race([query, timeout]);
@@ -86,7 +86,7 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
           setRfNodes(
             (nr.data ?? []).map((n: DbNode) => ({
               ...dbNodeToRF(n),
-              data: { label: n.name, isPro, t: tRef.current, mastery_level: n.mastery_level ?? 0 },
+              data: { label: n.name, isPro, t: tRef.current, mastery_level: n.mastery_level ?? 0, tags: n.tags ?? [] },
             }))
           );
         }
@@ -296,6 +296,34 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
     showToast(tRef.current("skillmap.organizeSuccess"), "success");
   }, [rfNodes, rfEdges, fitView, supabase, setRfNodes, showToast]); // t via tRef
 
+  // ── T-29: Update edge notes ───────────────────────────────────────────────
+  const handleUpdateEdgeNotes = useCallback(
+    async (edgeId: string, notes: string) => {
+      setRfEdges((prev: Edge[]) =>
+        prev.map((e: Edge) => e.id === edgeId ? { ...e, data: { ...(e.data ?? {}), notes } } : e)
+      );
+      await supabase
+        .from("technique_edges")
+        .update({ notes: notes.trim() || null })
+        .eq("id", edgeId);
+    },
+    [supabase, setRfEdges]
+  );
+
+  // ── T-29: Update node position tags ──────────────────────────────────────
+  const handleUpdateNodeTags = useCallback(
+    async (nodeId: string, tags: string[]) => {
+      setRfNodes((prev: Node[]) =>
+        prev.map((n: Node) => n.id === nodeId ? { ...n, data: { ...n.data, tags } } : n)
+      );
+      await supabase
+        .from("technique_nodes")
+        .update({ tags })
+        .eq("id", nodeId);
+    },
+    [supabase, setRfNodes]
+  );
+
   return {
     rfNodes, setRfNodes, onNodesChange,
     rfEdges, setRfEdges, onEdgesChange,
@@ -314,5 +342,7 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
     handleAddChildNode,
     handleMobileConnect,
     handleMagicOrganize,
+    handleUpdateEdgeNotes,
+    handleUpdateNodeTags,
   };
 }
