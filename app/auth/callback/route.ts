@@ -26,6 +26,18 @@ export async function GET(request: Request) {
     if (!error) {
       const { data: { user } } = await supabase.auth.getUser();
 
+      // Soft-delete check: redirect deleted users to restore page
+      if (user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("deleted_at")
+          .eq("id", user.id)
+          .single();
+        if (profile?.deleted_at) {
+          return NextResponse.redirect(`${origin}/account-deleted`);
+        }
+      }
+
       if (user && refParam) {
         if (isUserReferralCode(refParam)) {
           // ── User referral: record in referrals table ──────────────

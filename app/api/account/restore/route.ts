@@ -5,24 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
 import { serverEnv } from "@/lib/env";
 
-// ── Rate limit: max 3 attempts per IP per 15 min ──
-const deleteRateMap = new Map<string, { count: number; resetAt: number }>();
-function checkDeleteRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = deleteRateMap.get(ip);
-  if (!entry || now > entry.resetAt) {
-    deleteRateMap.set(ip, { count: 1, resetAt: now + 15 * 60 * 1000 });
-    return true;
-  }
-  entry.count++;
-  return entry.count <= 3;
-}
-
 export async function POST(req: NextRequest) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (!checkDeleteRateLimit(ip)) {
-    return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
-  }
   const cookieStore = await cookies();
 
   // 1. Verify the requesting user's session
@@ -43,22 +26,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // 2. Soft delete: set deleted_at timestamp (data preserved for potential restore)
+  // 2. Restore: clear deleted_at
   const serviceClient = createServiceClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     serverEnv.supabaseServiceRoleKey()
   );
-  const deletedAt = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString(); // JST
-  const { error: softDeleteError } = await serviceClient
+  const { error: restoreError } = await serviceClient
     .from("profiles")
-    .update({ deleted_at: deletedAt })
+    .update({ deleted_at: null })
     .eq("id", user.id);
 
-  if (softDeleteError) {
-    logger.error("account.softDelete", { userId: user.id }, softDeleteError);
-    return NextResponse.json({ error: "Account deletion failed. Please try again." }, { status: 500 });
+  if (restoreError) {
+    logger.error("account.restore", { userId: user.id }, restoreError);
+    return NextResponse.json({ error: "Restore failed. Please try again." }, { status: 500 });
   }
 
-  logger.info("account.softDelete", { userId: user.id, deletedAt, result: "ok" });
+  logger.info("account.restore", { userId: user.id, result: "ok" });
   return NextResponse.json({ ok: true });
 }

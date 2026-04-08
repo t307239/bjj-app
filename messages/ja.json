@@ -439,7 +439,14 @@
     "timezoneAsia": "Asia/Tokyo",
     "timezoneAmerica": "America/New_York",
     "timezoneBrazil": "America/Sao_Paulo",
-    "timezoneEurope": "Europe/London"
+    "timezoneEurope": "Europe/London",
+    "restoreTitle": "アカウントを復元しますか？",
+    "restoreDesc": "アカウントは削除済みですが、データはまだ保存されています。今すぐ復元できます。",
+    "restoreBtn": "アカウントを復元する",
+    "restoring": "復元中...",
+    "restoreError": "復元に失敗しました。もう一度お試しください。",
+    "accountDeletedTitle": "アカウントが削除されました",
+    "accountDeletedDesc": "ご利用ありがとうございました。またのご利用をお待ちしております。"
   },
   "competition": {
     "title": "試合戦績",

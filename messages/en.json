@@ -438,7 +438,14 @@
     "timezoneAsia": "Asia/Tokyo",
     "timezoneAmerica": "America/New_York",
     "timezoneBrazil": "America/Sao_Paulo",
-    "timezoneEurope": "Europe/London"
+    "timezoneEurope": "Europe/London",
+    "restoreTitle": "Restore your account?",
+    "restoreDesc": "Your account has been deleted, but your data is still saved. You can restore it now.",
+    "restoreBtn": "Restore account",
+    "restoring": "Restoring...",
+    "restoreError": "Restore failed. Please try again.",
+    "accountDeletedTitle": "Account deleted",
+    "accountDeletedDesc": "Thank you for using BJJ App. We hope to see you again."
   },
   "competition": {
     "title": "Match Record",

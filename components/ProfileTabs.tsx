@@ -58,9 +58,18 @@ function AccountSection({ userId, isPro, referralCode, referralCount }: { userId
 
   const handleDelete = async () => {
     setDeleting(true);
-    await supabase.from("training_logs").delete().eq("user_id", userId);
-    await supabase.from("techniques").delete().eq("user_id", userId);
-    await supabase.from("profiles").delete().eq("id", userId);
+    try {
+      const res = await fetch("/api/account/delete", { method: "POST" });
+      const json = await res.json();
+      if (!res.ok) {
+        console.error("account.delete failed", json.error);
+        setDeleting(false);
+        return;
+      }
+    } catch {
+      setDeleting(false);
+      return;
+    }
     await supabase.auth.signOut();
     router.push("/?deleted=1");
   };
