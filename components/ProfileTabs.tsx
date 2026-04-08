@@ -13,8 +13,8 @@ import ProGate from "./ProGate";
 import MilestoneBadgeGrid from "./MilestoneBadgeGrid";
 import { trackEvent } from "@/lib/analytics";
 
-// perf: ã¿ãåãæ¿ãæã«åãã¦å¿è¦ã«ãªãã³ã³ãã¼ãã³ããéå»¶èª­ã¿è¾¼ã¿
-// stats ã¿ãã®éããã£ã¼ãã»åæã«ã¼ããbody ã¿ãã®ã­ã£ã³ãã¹ç³»ãåæãã³ãã«ããé¤å¤
+// perf: タブ切り替え時に初めて必要になるコンポーネントを遅延読み込み
+// stats タブの重いチャート・分析カードと body タブのキャンバス系を初期バンドルから除外
 const TrainingChart = dynamic(() => import("./TrainingChart"), {
   ssr: false,
   loading: () => <div className="h-48 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
@@ -76,16 +76,16 @@ function AccountSection({ userId, isPro, referralCode, referralCount }: { userId
 
   return (
     <div className="space-y-4">
-      {/* Referral section â invite friends */}
+      {/* Referral section — invite friends */}
       {referralCode && (
         <ReferralSection referralCode={referralCode} referralCount={referralCount} />
       )}
 
-      {/* B2B lead card â always show to non-gym-owners; drive them to /gym */}
+      {/* B2B lead card — always show to non-gym-owners; drive them to /gym */}
       {!isPro && (
         <div className="bg-zinc-900 border border-blue-500/20 rounded-xl px-4 py-4 mt-4">
           <div className="flex items-start gap-3">
-            <span className="text-2xl mt-0.5">ð¥</span>
+            <span className="text-2xl mt-0.5">🥋</span>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-white">{t("profile.gymLeadTitle")}</p>
               <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">{t("profile.gymLeadDesc")}</p>
@@ -101,7 +101,7 @@ function AccountSection({ userId, isPro, referralCode, referralCount }: { userId
         </div>
       )}
 
-      {/* ã App Settings â Push Notifications */}
+      {/* ⚙ App Settings — Push Notifications */}
       <PushNotificationSection />
       <div className="rounded-xl border border-red-900/50 overflow-hidden">
         <div className="bg-red-950/30 px-5 py-3 border-b border-red-900/30">
@@ -170,8 +170,8 @@ function AccountSection({ userId, isPro, referralCode, referralCount }: { userId
 
 type TabId = "stats" | "profile" | "body" | "account";
 
-// perf: ã¿ãã«ããã¼/ãã©ã¼ã«ã¹ããæç¹ã§ãã£ã³ã¯ãåèª­ã¿ãã¦ãã
-// â ã¯ãªãã¯æã«ã¯æ¢ã«ã­ã¼ãæ¸ã¿ã«ãªãã¹ã±ã«ãã³ãåºãªã
+// perf: タブにホバー/フォーカスした時点でチャンクを先読みしておく
+// → クリック時には既にロード済みになりスケルトンが出ない
 const PRELOAD_MAP: Partial<Record<TabId, () => void>> = {
   stats:   () => { void import("./RollAnalyticsCard"); void import("./PartnerStatsCard"); void import("./ExtendedBadgeGrid"); void import("./BeltProgressCard"); void import("./TrainingBarChart"); void import("./TrainingTypeChart"); },
   body:    () => { void import("./BodyManagementSection"); },
@@ -184,9 +184,9 @@ export default function ProfileTabs({ userId, isPro = false, referralCode = null
   const { t } = useLocale();
   const [activeTab, setActiveTab] = useState<TabId>("stats");
 
-  // URLãã©ã¡ã¼ã¿(?tab=bodyç­)ãååãã¦ã³ãå¾ã«èª­ãã§ã¿ããåæå
-  // useSearchParams ã¯ Suspense å¿é ã§ dynamic import ã¨å¹²æ¸ãããã
-  // window.location.search ã useEffect ã§èª­ãæ¹å¼ãæ¡ç¨
+  // URLパラメータ(?tab=body等)を初回マウント後に読んで初期化
+  // useSearchParams は Suspense 必須で dynamic import と干渉するため
+  // window.location.search を useEffect で読む方式を採用
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const tabParam = params.get("tab") as TabId | null;
@@ -222,18 +222,18 @@ export default function ProfileTabs({ userId, isPro = false, referralCode = null
       </div>
       {activeTab === "stats"   && (
         <>
-          {/* T-24: Belt Progress Card â replaces plain text badge in hero */}
+          {/* T-24: Belt Progress Card — replaces plain text badge in hero */}
           <BeltProgressCard belt={belt} stripes={stripeCount} monthsAtBelt={monthsAtBelt} className="mb-4" />
           <PersonalBests userId={userId} />
-          {/* Training calendar heatmap (moved from Dashboard â¢-4) */}
+          {/* Training calendar heatmap (moved from Dashboard ✢-4) */}
           <div className="mt-6">
             <TrainingChart userId={userId} isPro={isPro} />
           </div>
           {/* B-24: Milestone Badge Grid */}
           <MilestoneBadgeGrid totalCount={totalCount} />
-          {/* T-36: Achievement Badges â consistency, diversity, technique mastery */}
+          {/* T-36: Achievement Badges — consistency, diversity, technique mastery */}
           <ExtendedBadgeGrid userId={userId} />
-          {/* T-25: é·æåæãã£ã¼ãï¼æ£ã°ã©ã + ã¿ã¤ãå¥ï¼â ããã·ã¥ãã¼ãããç§»å */}
+          {/* T-25: 長期分析チャート（棒グラフ＋タイプ別）— ダッシュボードから移動 */}
           <div className="mt-4">
             <TrainingBarChart userId={userId} isPro={isPro} />
           </div>
