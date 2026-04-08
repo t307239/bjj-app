@@ -184,7 +184,10 @@
     "timezoneAsia": "Asia/Tokyo",
     "timezoneAmerica": "America/New_York",
     "timezoneBrazil": "America/Sao_Paulo",
-    "timezoneEurope": "Europe/London"
+    "timezoneEurope": "Europe/London",
+    "deleteTitle": "⚠️ Excluir Conta (Irreversível)",
+    "deleteDesc": "Todos os seus dados serão excluídos permanentemente e não poderão ser recuperados.",
+    "deleteTypeLabel": "Digite DELETE para confirmar"
   },
   "gym": {
     "inviteTitle": "📎 Convidar Alunos",

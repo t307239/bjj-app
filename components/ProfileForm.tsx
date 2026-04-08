@@ -502,25 +502,21 @@ function AccountSection({ userId, supabase }: { userId: string; supabase: Supaba
         </button>
       ) : (
         <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 space-y-3">
-          <p className="text-red-400 text-sm font-semibold">{t("profile.deleteTitle")}</p>
-          {/* Data portability reminder before deletion — GDPR/CCPA best practice */}
-          <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg px-3 py-2 flex items-center gap-2">
-            <span className="text-amber-400 text-xs flex-shrink-0">💾</span>
-            <p className="text-amber-400 text-xs">{t("profile.deleteExportFirst")}</p>
+          {/* Title + CSV export in one row */}
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-red-400 text-sm font-semibold">{t("profile.deleteTitle")}</p>
             <button
               type="button"
               onClick={handleExportCsv}
               disabled={exporting}
-              className="ml-auto text-xs text-amber-400 underline underline-offset-2 hover:text-amber-300 flex-shrink-0 disabled:opacity-50"
+              className="text-xs text-amber-400 underline underline-offset-2 hover:text-amber-300 flex-shrink-0 disabled:opacity-50 whitespace-nowrap"
             >
-              {exporting ? t("profile.exporting") : t("profile.exportBtn")}
+              💾 {exporting ? t("profile.exporting") : t("profile.exportBtn")}
             </button>
           </div>
-          <p className="text-gray-400 text-xs leading-relaxed">
-            {t("profile.deleteDesc")}
-          </p>
+          <p className="text-gray-400 text-xs leading-relaxed">{t("profile.deleteDesc")}</p>
           <div>
-            <label className="text-gray-500 text-xs mb-1 block">{t("profile.deleteTypeLabel")} <span className="font-mono text-white">{t("profile.deleteTypePlaceholder")}</span> {t("profile.deleteTypeToConfirm")}</label>
+            <label className="text-gray-500 text-xs mb-1 block">{t("profile.deleteTypeLabel")}</label>
             <input
               type="text"
               value={deleteInput}

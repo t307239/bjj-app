@@ -605,6 +605,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           touch-action:none on the wrapper prevents iOS Safari from intercepting
           pointer events for page scroll / native pinch-zoom, letting ReactFlow
           handle all touch gestures (pan + pinch-zoom) without interference.    */}
+      <div className="relative">
       <div
         className="w-full rounded-xl overflow-hidden border border-white/10"
         style={{ height: "clamp(350px, 60vh, 620px)", touchAction: "none" }}
@@ -651,6 +652,25 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           <SkillMapLegend />
         </ReactFlow>
       </div>
+
+      {/* I-19: FAB — floating "+" button on canvas (mobile + editMode only) */}
+      {isMobile && editMode && (
+        <button
+          disabled={!isOnline}
+          onClick={() => {
+            if (!isPro && rfNodes.length >= 10) { setShowProModal(true); return; }
+            const lastNode = rfNodes[rfNodes.length - 1];
+            const x = lastNode ? lastNode.position.x + 200 : 100;
+            const y = lastNode ? lastNode.position.y : 100;
+            setAddPopup({ screenX: 0, screenY: 0, flowX: x, flowY: y });
+          }}
+          aria-label={t("skillmap.addNodeMobile")}
+          className="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white text-2xl font-bold shadow-lg shadow-emerald-900/40 flex items-center justify-center transition-all active:scale-90 z-10"
+        >
+          +
+        </button>
+      )}
+      </div>{/* end relative canvas wrapper */}
 
       {/* T-29: Edge notes panel */}
       {edgeNotes && (
