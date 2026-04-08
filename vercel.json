@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/gym-milestone",
+      "schedule": "0 10 * * *"
+    }
+  ]
+}

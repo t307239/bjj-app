@@ -1057,7 +1057,10 @@
     "printLeaderboardSessions": "Sessions (30d)",
     "stripeNotConfigured": "Stripe not configured. Please contact support.",
     "networkError": "Network error. Please try again.",
-    "upgradeSuccess": "Gym plan activated! Your dashboard is now live."
+    "upgradeSuccess": "Gym plan activated! Your dashboard is now live.",
+    "freePlanBannerTitle": "You're on the Free Plan",
+    "freePlanBannerDesc": "Unlock churn alerts, curriculum dispatch, and CSV bulk invites.",
+    "freePlanBannerCta": "Upgrade to Gym Pro – $49/mo"
   },
   "gymJoin": {
     "title": "Join {name}",

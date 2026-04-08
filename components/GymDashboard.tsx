@@ -181,6 +181,40 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
   );
 }
 
+// ─── Free plan activation banner ─────────────────────────────────────────────
+
+function FreePlanBanner({
+  onUpgradeClick,
+  upgrading,
+}: {
+  onUpgradeClick: () => void;
+  upgrading: boolean;
+}) {
+  const { t } = useLocale();
+  return (
+    <div className="bg-amber-950/20 border border-amber-500/25 rounded-xl p-4 mb-6">
+      <div className="flex items-start gap-3">
+        <span className="text-xl flex-shrink-0 mt-0.5">🚀</span>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-amber-300">
+            {t("gym.freePlanBannerTitle")}
+          </p>
+          <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">
+            {t("gym.freePlanBannerDesc")}
+          </p>
+        </div>
+      </div>
+      <button
+        onClick={onUpgradeClick}
+        disabled={upgrading}
+        className="mt-3 w-full bg-amber-500 hover:bg-amber-400 active:scale-95 disabled:opacity-60 text-black text-sm font-semibold py-2.5 rounded-lg transition-all"
+      >
+        {upgrading ? "..." : t("gym.freePlanBannerCta")}
+      </button>
+    </div>
+  );
+}
+
 // ─── Pro paywall banner ───────────────────────────────────────────────────────
 
 function ProPaywallBanner({
@@ -249,6 +283,11 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
 
   return (
     <div className="pb-6">
+      {/* Free plan activation CTA (always show until upgraded) */}
+      {!isGymPro && (
+        <FreePlanBanner onUpgradeClick={handleGymUpgrade} upgrading={upgrading} />
+      )}
+
       {/* Invite section */}
       <InviteSection gym={gym} onInviteRegenerated={handleInviteRegenerated} />
 

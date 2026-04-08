@@ -268,7 +268,10 @@
     "curriculumTemplateOpenGuard": "Guarda Aberta",
     "curriculumTemplateLegLocks": "Leg Locks",
     "curriculumTemplateTurtle": "Posição Tartaruga",
-    "upgradeSuccess": "Plano do gym ativado! Seu painel está disponível."
+    "upgradeSuccess": "Plano do gym ativado! Seu painel está disponível.",
+    "freePlanBannerTitle": "Você está no Plano Gratuito",
+    "freePlanBannerDesc": "Desbloqueie alertas de churn, envio de currículo e convites em massa por CSV.",
+    "freePlanBannerCta": "Upgrade para Gym Pro – $49/mês"
   },
   "common_error": {
     "title": "Algo deu errado",

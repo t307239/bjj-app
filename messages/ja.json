@@ -1049,7 +1049,10 @@
     "stripeNotConfigured": "Stripeが設定されていません。サポートにお問い合わせください。",
     "networkError": "ネットワークエラーが発生しました。もう一度お試しください。",
     "rankingStreakRestHint": "レスト日は怪我を防ぎます — ストリークは楽しみのためで、プレッシャーではありません。",
-    "upgradeSuccess": "ジムプランが有効化されました！ダッシュボードが利用可能になりました。"
+    "upgradeSuccess": "ジムプランが有効化されました！ダッシュボードが利用可能になりました。",
+    "freePlanBannerTitle": "フリープラン利用中",
+    "freePlanBannerDesc": "Gym Proにアップグレードして、チャーンアラート・カリキュラム配信・CSV一括招待を解放しましょう。",
+    "freePlanBannerCta": "Gym Proにアップグレード – $49/月"
   },
   "gymJoin": {
     "title": "{name} に参加する",
