@@ -4,20 +4,16 @@ import { createClient } from "@/lib/supabase/server";
 import dynamic from "next/dynamic";
 import NavBar from "@/components/NavBar";
 import TrainingLog from "@/components/TrainingLog";
-// TrainingChart moved to Profile/Analytics tab (③-4)
 import GoalTracker from "@/components/GoalTracker";
-import WeeklyStrip from "@/components/WeeklyStrip";
 import GuestMigration from "@/components/GuestMigration";
 import StreakProtect from "@/components/StreakProtect";
 import StreakFreeze from "@/components/StreakFreeze";
 import AchievementBadge from "@/components/AchievementBadge";
 import InstallBanner from "@/components/InstallBanner";
-import InsightsBanner from "@/components/InsightsBanner";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
 import GymKickBanner from "@/components/GymKickBanner";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
 import WeightGoalWidget from "@/components/WeightGoalWidget";
-import InviteCard from "@/components/InviteCard";
 import {
   getWeekStartDate,
   getMonthStartDate,
@@ -180,7 +176,7 @@ export default async function DashboardPage({
     supabase
       .from("profiles")
       .select(
-        "belt, stripe, start_date, is_pro, subscription_status, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym, referral_code, ai_coach_cache, ai_coach_last_generated, locale, target_weight, target_weight_date"
+        "belt, stripe, start_date, is_pro, subscription_status, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym, ai_coach_cache, ai_coach_last_generated, locale, target_weight, target_weight_date"
       )
       .eq("id", user.id)
       .single(),
@@ -289,7 +285,6 @@ export default async function DashboardPage({
     profileData?.gym_kick_notified === false && !profileData?.gym_id;
   const gymId = profileData?.gym_id ?? null;
   const shareDataWithGym = profileData?.share_data_with_gym ?? false;
-  const referralCode = (profileData as { referral_code?: string | null })?.referral_code ?? null;
   const targetWeight = profileData?.target_weight != null ? Number(profileData.target_weight) : null;
   const targetWeightDate = (profileData as { target_weight_date?: string | null })?.target_weight_date ?? null;
 
@@ -317,8 +312,6 @@ export default async function DashboardPage({
   const hasFirstLog = (totalCount ?? 0) > 0;
   const hasGoal = (weeklyGoal ?? 0) > 0;
   const hasTechnique = (techniqueCount ?? 0) > 0;
-  // Onboarding complete = all 3 steps done → show InsightsBanner, hide checklist
-  const isOnboardingComplete = hasFirstLog && hasGoal && hasTechnique;
 
   // Calculate streak (same algorithm as NavBar — uses logical training date)
   const todayStr = getLogicalTrainingDate();
@@ -418,20 +411,21 @@ export default async function DashboardPage({
         )}
 
         {/* ═══════════════════════════════════════════
-            SECTION 3 — THIS WEEK
+            SECTION 3 — THIS WEEK (GoalTracker + Weight)
             ═══════════════════════════════════════════ */}
-        <section className="mb-7">
-          <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
-            {t("dashboard.weekTraining")}
-          </p>
-          <div className="space-y-3">
-            <WeeklyStrip userId={user.id} />
-            {hasFirstLog && <GoalTracker userId={user.id} />}
-            {targetWeight != null && isPro && (
-              <WeightGoalWidget targetWeight={targetWeight} targetDate={targetWeightDate} />
-            )}
-          </div>
-        </section>
+        {hasFirstLog && (
+          <section className="mb-7">
+            <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
+              {t("dashboard.weekTraining")}
+            </p>
+            <div className="space-y-3">
+              <GoalTracker userId={user.id} />
+              {targetWeight != null && isPro && (
+                <WeightGoalWidget targetWeight={targetWeight} targetDate={targetWeightDate} />
+              )}
+            </div>
+          </section>
+        )}
 
         {/* ═══════════════════════════════════════════
             SECTION 4 — GYM CURRICULUM (members only)
@@ -473,25 +467,7 @@ export default async function DashboardPage({
           </section>
         )}
 
-        {/* ═══════════════════════════════════════════
-            SECTION 7 — INSIGHTS
-            Exclusive with OnboardingChecklist:
-            shown only after all 3 onboarding steps done
-            ═══════════════════════════════════════════ */}
-        {isOnboardingComplete && (
-          <section className="mt-7 mb-4">
-            <InsightsBanner userId={user.id} />
-          </section>
-        )}
-
-        {/* ═══════════════════════════════════════════
-            SECTION 8 — INVITE FRIENDS (referral system)
-            ═══════════════════════════════════════════ */}
-        {referralCode && hasFirstLog && (
-          <section className="mb-7">
-            <InviteCard referralCode={referralCode} />
-          </section>
-        )}
+        {/* InsightsBanner / InviteCard removed — data redundant with BentoStatsGrid */}
       </main>
     </div>
   );
