@@ -197,7 +197,7 @@
     "gymNamePlaceholder": "Nome da academia (ex: Gracie Barra SP)",
     "createBtn": "Criar academia (gratuito)",
     "creating": "Criando...",
-    "noCardRequired": "Sem cartão de crédito para começar. Upgrade para Gym Pro ($49/mês) para desbloquear alertas de churn e transmissão de currículo.",
+    "noCardRequired": "Sem cartão de crédito para começar. Upgrade para Gym Pro ($99/mês) para desbloquear alertas de churn e transmissão de currículo.",
     "shareData": "Compartilhar dados de treino com a academia",
     "shareDataSub": "Frequência e faixa apenas. Notas sempre privadas.",
     "shareDataShieldTitle": "O que seu professor vê",
@@ -225,7 +225,7 @@
     "trainingWell": "Treinando bem",
     "atRisk": "Em risco",
     "beltDistribution": "🥋 Distribuição de Faixas",
-    "upgradeBtn": "Upgrade – $49/mês",
+    "upgradeBtn": "Upgrade – $99/mês",
     "csvTitle": "Convite em Massa (CSV)",
     "csvDesc": "Importe e-mails dos alunos para gerar links de convite em segundos.",
     "csvProRequired": "Upgrade para Gym Pro para convidar alunos em massa via CSV.",
@@ -271,7 +271,7 @@
     "upgradeSuccess": "Plano do gym ativado! Seu painel está disponível.",
     "freePlanBannerTitle": "Você está no Plano Gratuito",
     "freePlanBannerDesc": "Desbloqueie alertas de churn, envio de currículo e convites em massa por CSV.",
-    "freePlanBannerCta": "Upgrade para Gym Pro – $49/mês"
+    "freePlanBannerCta": "Upgrade para Gym Pro – $99/mês"
   },
   "common_error": {
     "title": "Algo deu errado",

@@ -889,7 +889,7 @@
     "inviteCode": "招待コード：",
     "atChurnRisk": "{n,plural,one{1人の生徒が離脱リスク}other{{n}人の生徒が離脱リスク}}",
     "upgradeToSee": "Gym Proにアップグレードして誰が危機か確認し、辞める前に声をかけましょう。",
-    "upgradeBtn": "アップグレード – $49/月",
+    "upgradeBtn": "アップグレード – $99/月",
     "beltDistribution": "🥋 帯分布",
     "activeMembers": "アクティブ会員",
     "trainingWell": "良いペースで練習中",
@@ -913,7 +913,7 @@
     "creating": "作成中...",
     "createBtn": "ジムを作成（無料）",
     "createError": "ジムの作成に失敗しました。もう一度お試しください。",
-    "noCardRequired": "クレジットカード不要で開始できます。Gym Pro（$49/月）にアップグレードすると、離脱アラートとカリキュラム配信が使えます。",
+    "noCardRequired": "クレジットカード不要で開始できます。Gym Pro（$99/月）にアップグレードすると、離脱アラートとカリキュラム配信が使えます。",
     "waitlistEmailLabel": "メールアドレス *",
     "waitlistGymLabel": "ジム・道場名",
     "waitlistEmailPlaceholder": "coach@yourgym.com",
@@ -1052,7 +1052,7 @@
     "upgradeSuccess": "ジムプランが有効化されました！ダッシュボードが利用可能になりました。",
     "freePlanBannerTitle": "フリープラン利用中",
     "freePlanBannerDesc": "Gym Proにアップグレードして、チャーンアラート・カリキュラム配信・CSV一括招待を解放しましょう。",
-    "freePlanBannerCta": "Gym Proにアップグレード – $49/月"
+    "freePlanBannerCta": "Gym Proにアップグレード – $99/月"
   },
   "gymJoin": {
     "title": "{name} に参加する",

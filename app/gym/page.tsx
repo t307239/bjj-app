@@ -6,7 +6,7 @@ import { detectServerLocale, makeT } from "@/lib/i18n";
 export const metadata: Metadata = {
   title: "BJJ App for Academies - Keep Your Students Engaged",
   description:
-    "Coach dashboard for BJJ academies. Track student engagement, send weekly curriculum, manage your team. $49-$99/month. No setup required.",
+    "Coach dashboard for BJJ academies. Track student engagement, send weekly curriculum, manage your team. $99/month. No setup required.",
   keywords: [
     "BJJ academy management",
     "BJJ coach dashboard",
@@ -208,7 +208,7 @@ export default async function GymPage() {
                 </div>
                 <h3 className="text-lg font-bold mb-2 text-zinc-100">{t("gymLanding.pricingStarter")}</h3>
                 <div className="text-3xl font-bold text-zinc-100 mb-1">
-                  $49<span className="text-sm font-normal text-gray-400">/{t("gymLanding.pricingMonth")}</span>
+                  $99<span className="text-sm font-normal text-gray-400">/{t("gymLanding.pricingMonth")}</span>
                 </div>
                 <p className="text-gray-400 text-xs mb-6">{t("gymLanding.pricingStarterLimit")}</p>
                 <ul className="space-y-3 text-sm text-gray-400 mb-8">

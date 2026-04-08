@@ -58,7 +58,6 @@ export default function TokushohoPage() {
             label="Price (販売価格)"
             values={[
               "Pro: USD $9.99/month or $79.99/year (tax inclusive)",
-              "Gym Starter: USD $49/month (tax inclusive)",
               "Gym Pro: USD $99/month (tax inclusive)",
             ]}
             note="Prices are in US Dollars. Foreign exchange rates may apply for JPY charges."

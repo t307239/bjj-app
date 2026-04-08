@@ -897,7 +897,7 @@
     "inviteCode": "Invite code:",
     "atChurnRisk": "{n} students at churn risk",
     "upgradeToSee": "Upgrade to Gym Pro to see who — and reach out before they quit.",
-    "upgradeBtn": "Upgrade – $49/mo",
+    "upgradeBtn": "Upgrade – $99/mo",
     "beltDistribution": "🥋 Belt Distribution",
     "activeMembers": "Active members",
     "trainingWell": "Training well",
@@ -921,7 +921,7 @@
     "creating": "Creating...",
     "createBtn": "Create gym (free)",
     "createError": "Failed to create gym. Please try again.",
-    "noCardRequired": "No credit card required to start. Upgrade to Gym Pro ($49/mo) to unlock churn alerts and curriculum broadcasts.",
+    "noCardRequired": "No credit card required to start. Upgrade to Gym Pro ($99/mo) to unlock churn alerts and curriculum broadcasts.",
     "waitlistEmailLabel": "Your email *",
     "waitlistGymLabel": "Gym / Academy name",
     "waitlistEmailPlaceholder": "coach@yourgym.com",
@@ -1060,7 +1060,7 @@
     "upgradeSuccess": "Gym plan activated! Your dashboard is now live.",
     "freePlanBannerTitle": "You're on the Free Plan",
     "freePlanBannerDesc": "Unlock churn alerts, curriculum dispatch, and CSV bulk invites.",
-    "freePlanBannerCta": "Upgrade to Gym Pro – $49/mo"
+    "freePlanBannerCta": "Upgrade to Gym Pro – $99/mo"
   },
   "gymJoin": {
     "title": "Join {name}",
