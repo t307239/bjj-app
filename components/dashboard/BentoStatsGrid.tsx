@@ -1,5 +1,4 @@
 import Link from "next/link";
-import BeltProgressCard from "@/components/BeltProgressCard";
 
 type Props = {
   streak: number;
@@ -15,9 +14,6 @@ type Props = {
   typeBreakdown: Record<string, number>;
   techniqueCount: number;
   recentTechniques: { name: string }[] | null;
-  belt: string;
-  stripeCount: number;
-  monthsAtBelt: number;
   isPro: boolean;
   t: (key: string, vars?: Record<string, string | number>) => string;
 };
@@ -36,9 +32,6 @@ export default function BentoStatsGrid({
   typeBreakdown,
   techniqueCount,
   recentTechniques,
-  belt,
-  stripeCount,
-  monthsAtBelt,
   isPro,
   t,
 }: Props) {
@@ -171,14 +164,6 @@ export default function BentoStatsGrid({
           )}
         </div>
       </div>
-
-      {/* Belt progress */}
-      <BeltProgressCard
-        belt={belt}
-        stripes={stripeCount}
-        monthsAtBelt={monthsAtBelt}
-        className="col-span-2"
-      />
 
       {/* Avg session — col-span-2 */}
       {avgSessionMin > 0 && (

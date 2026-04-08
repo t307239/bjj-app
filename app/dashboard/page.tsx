@@ -320,10 +320,6 @@ export default async function DashboardPage({
   // Onboarding complete = all 3 steps done → show InsightsBanner, hide checklist
   const isOnboardingComplete = hasFirstLog && hasGoal && hasTechnique;
 
-  const monthsAtBelt = profileData?.start_date
-    ? calcBjjDuration(profileData.start_date).totalMonths
-    : 0;
-
   // Calculate streak (same algorithm as NavBar — uses logical training date)
   const todayStr = getLogicalTrainingDate();
   let streak = 0;
@@ -405,12 +401,21 @@ export default async function DashboardPage({
           typeBreakdown={typeBreakdown}
           techniqueCount={techniqueCount}
           recentTechniques={recentTechniques as { name: string }[] | null}
-          belt={belt}
-          stripeCount={stripeCount}
-          monthsAtBelt={monthsAtBelt}
           isPro={isPro}
           t={t}
         />
+
+        {/* ═══════════════════════════════════════════
+            SECTION 2.5 — AI MICRO-COACH (≥10 logs only)
+            ═══════════════════════════════════════════ */}
+        {totalCount >= 10 && (
+          <AICoachCard
+            userId={user.id}
+            isPro={isPro}
+            initialCoaching={profileData?.ai_coach_cache ?? null}
+            initialGeneratedAt={profileData?.ai_coach_last_generated ?? null}
+          />
+        )}
 
         {/* ═══════════════════════════════════════════
             SECTION 3 — THIS WEEK
@@ -469,19 +474,7 @@ export default async function DashboardPage({
         )}
 
         {/* ═══════════════════════════════════════════
-            SECTION 7 — AI MICRO-COACH
-            ═══════════════════════════════════════════ */}
-        {hasFirstLog && (
-          <AICoachCard
-            userId={user.id}
-            isPro={isPro}
-            initialCoaching={profileData?.ai_coach_cache ?? null}
-            initialGeneratedAt={profileData?.ai_coach_last_generated ?? null}
-          />
-        )}
-
-        {/* ═══════════════════════════════════════════
-            SECTION 8 — INSIGHTS
+            SECTION 7 — INSIGHTS
             Exclusive with OnboardingChecklist:
             shown only after all 3 onboarding steps done
             ═══════════════════════════════════════════ */}
