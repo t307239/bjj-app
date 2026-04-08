@@ -147,10 +147,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ welcome?: string }>;
+  searchParams?: Promise<{ welcome?: string; addLog?: string }>;
 }) {
   const resolvedParams = searchParams ? await searchParams : {};
   const isWelcomeRedirect = resolvedParams?.welcome === "1";
+  const addLogParam = resolvedParams?.addLog ?? null;
   const supabase = await createClient();
   const {
     data: { user },
@@ -398,6 +399,7 @@ export default async function DashboardPage({
             ═══════════════════════════════════════════ */}
         <section className="mb-7">
           <TrainingLog
+            key={addLogParam ?? "default"}
             userId={user.id}
             isPro={isPro}
             initialOpen={isWelcomeRedirect && (totalCount ?? 0) === 0}
