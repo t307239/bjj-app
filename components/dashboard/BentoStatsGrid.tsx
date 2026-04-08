@@ -2,16 +2,12 @@ import Link from "next/link";
 
 type Props = {
   streak: number;
-  weekCount: number;
   monthCount: number;
   prevMonthCount: number;
-  weeklyGoal: number;
   monthHoursStr: string | null;
   remainingDays: number;
   dayOfMonth: number;
   daysInMonth: number;
-  avgSessionMin: number;
-  typeBreakdown: Record<string, number>;
   techniqueCount: number;
   recentTechniques: { name: string }[] | null;
   isPro: boolean;
@@ -20,16 +16,12 @@ type Props = {
 
 export default function BentoStatsGrid({
   streak,
-  weekCount,
   monthCount,
   prevMonthCount,
-  weeklyGoal,
   monthHoursStr,
   remainingDays,
   dayOfMonth,
   daysInMonth,
-  avgSessionMin,
-  typeBreakdown,
   techniqueCount,
   recentTechniques,
   isPro,
@@ -77,31 +69,8 @@ export default function BentoStatsGrid({
         </span>
       </Link>
 
-      {/* This week */}
-      <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-emerald-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200">
-        <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-1">
-          {t("dashboard.weekTraining")}
-        </span>
-        <div className="flex items-baseline gap-1 whitespace-nowrap mt-1">
-          <span className="text-4xl font-black leading-none tabular-nums bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
-            {weekCount}
-          </span>
-          <span className="text-zinc-400 text-xs mb-0.5">
-            {t("dashboard.sessionsUnit")}
-          </span>
-        </div>
-        {weeklyGoal > 0 && (
-          <span className="mt-1.5 block text-xs text-emerald-400/80">
-            {t("dashboard.bentoGoalLabel", {
-              done: weekCount,
-              goal: weeklyGoal,
-            })}
-          </span>
-        )}
-      </div>
-
-      {/* This month — wide */}
-      <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-emerald-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200 flex flex-col justify-between">
+      {/* This month */}
+      <div className="col-span-1 md:col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-emerald-400/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200 flex flex-col justify-between">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-zinc-400 tracking-widest">
             {t("dashboard.monthTraining")}
@@ -164,48 +133,6 @@ export default function BentoStatsGrid({
           )}
         </div>
       </div>
-
-      {/* Avg session — col-span-2 */}
-      {avgSessionMin > 0 && (
-        <div className="col-span-1 md:col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-white/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200">
-          <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-1">
-            {t("dashboard.bentoAvgSession")}
-          </span>
-          <div className="flex items-end gap-1 mt-1">
-            <span className="text-3xl font-black leading-none tabular-nums bg-gradient-to-r from-zinc-200 to-zinc-400 bg-clip-text text-transparent">
-              {avgSessionMin}
-            </span>
-            <span className="text-zinc-400 text-xs mb-0.5">
-              {t("dashboard.bentoMinPerSession")}
-            </span>
-          </div>
-        </div>
-      )}
-
-      {/* Training Type Breakdown */}
-      {Object.keys(typeBreakdown).length > 1 && monthCount > 2 && (
-        <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
-          <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-2">
-            {t("dashboard.typeBreakdownTitle")}
-          </span>
-          <div className="flex gap-1.5 flex-wrap">
-            {Object.entries(typeBreakdown)
-              .sort((a, b) => b[1] - a[1])
-              .map(([type, count]) => {
-                const pct = Math.round((count / monthCount) * 100);
-                return (
-                  <span
-                    key={type}
-                    className="inline-flex items-center gap-1 bg-zinc-800/80 text-xs text-zinc-300 px-2.5 py-1.5 rounded-lg border border-white/5"
-                  >
-                    <span className="font-semibold">{type}</span>
-                    <span className="text-zinc-500">{pct}%</span>
-                  </span>
-                );
-              })}
-          </div>
-        </div>
-      )}
 
       {/* Techniques */}
       <Link

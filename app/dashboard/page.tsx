@@ -171,7 +171,6 @@ export default async function DashboardPage({
     rpcRes,
     { data: recentLogs },
     { data: recentTechniques },
-    { data: typeBreakdownRaw },
   ] = await Promise.all([
     supabase
       .from("profiles")
@@ -198,11 +197,6 @@ export default async function DashboardPage({
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
       .limit(3),
-    supabase
-      .from("training_logs")
-      .select("type")
-      .eq("user_id", user.id)
-      .gte("date", firstDayOfMonth),
   ]);
 
   // Use RPC result if available; otherwise fall back to direct count queries
@@ -240,12 +234,6 @@ export default async function DashboardPage({
         ? `${monthTotalMins}m`
         : null;
 
-  const monthSessionCount = monthCount ?? 0;
-  const avgSessionMin =
-    monthSessionCount > 0
-      ? Math.round(monthTotalMins / monthSessionCount)
-      : 0;
-
   // ── Locale-aware translation for page body (metadata stays EN for SEO) ──
   // Priority: bjj_locale cookie → profile.locale (ja only) → Accept-Language → "en"
   // NOTE: pt disabled on server — pt.json is ~18% complete, would show mixed pt/en
@@ -265,15 +253,6 @@ export default async function DashboardPage({
     }
   }
   const t = makeT(userLocale);
-
-  // Training type breakdown (Gi / No-Gi / Drilling / etc.)
-  const typeBreakdown: Record<string, number> = {};
-  if (typeBreakdownRaw && typeBreakdownRaw.length > 0) {
-    for (const row of typeBreakdownRaw as { type: string }[]) {
-      const tp = row.type || t("dashboard.typeOther");
-      typeBreakdown[tp] = (typeBreakdown[tp] ?? 0) + 1;
-    }
-  }
 
   const isPro = profileData?.is_pro ?? false;
   const subscriptionStatus = profileData?.subscription_status ?? "active";
@@ -382,16 +361,12 @@ export default async function DashboardPage({
             ═══════════════════════════════════════════ */}
         <BentoStatsGrid
           streak={streak}
-          weekCount={weekCount}
           monthCount={monthCount}
           prevMonthCount={prevMonthCount}
-          weeklyGoal={weeklyGoal}
           monthHoursStr={monthHoursStr}
           remainingDays={remainingDays}
           dayOfMonth={dayOfMonth}
           daysInMonth={daysInMonth}
-          avgSessionMin={avgSessionMin}
-          typeBreakdown={typeBreakdown}
           techniqueCount={techniqueCount}
           recentTechniques={recentTechniques as { name: string }[] | null}
           isPro={isPro}
