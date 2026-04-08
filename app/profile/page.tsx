@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
@@ -249,9 +248,7 @@ export default async function ProfilePage() {
         {/* ═══════════════════════════════════════════
             PROFILE TABS (stats / settings / account)
             ═══════════════════════════════════════════ */}
-        <Suspense fallback={<div className="h-96 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />}>
-          <ProfileTabs userId={user.id} isPro={isPro} referralCode={referralCode} referralCount={referralCount ?? 0} totalCount={totalCount ?? 0} belt={belt} stripeCount={stripeCount} monthsAtBelt={monthsAtBelt} />
-        </Suspense>
+        <ProfileTabs userId={user.id} isPro={isPro} referralCode={referralCode} referralCount={referralCount ?? 0} totalCount={totalCount ?? 0} belt={belt} stripeCount={stripeCount} monthsAtBelt={monthsAtBelt} />
       </main>
     </div>
   );

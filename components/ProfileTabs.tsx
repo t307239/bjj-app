@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
 import PersonalBests from "./PersonalBests";
 import ProfileForm from "./ProfileForm";
@@ -146,11 +146,18 @@ const VALID_TABS: TabId[] = ["stats", "profile", "body", "account"];
 
 export default function ProfileTabs({ userId, isPro = false, referralCode = null, referralCount = 0, totalCount = 0, belt = "white", stripeCount = 0, monthsAtBelt = 0 }: { userId: string; isPro?: boolean; referralCode?: string | null; referralCount?: number; totalCount?: number; belt?: string; stripeCount?: number; monthsAtBelt?: number }) {
   const { t } = useLocale();
-  const searchParams = useSearchParams();
-  const tabParam = searchParams.get("tab") as TabId | null;
-  const [activeTab, setActiveTab] = useState<TabId>(
-    VALID_TABS.includes(tabParam!) ? tabParam! : "stats"
-  );
+  const [activeTab, setActiveTab] = useState<TabId>("stats");
+
+  // URLパラメータ(?tab=body等)を初回マウント後に読んでタブを初期化
+  // useSearchParams は Suspense 必須で dynamic import と干渉するため
+  // window.location.search を useEffect で読む方式を採用
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get("tab") as TabId | null;
+    if (tabParam && VALID_TABS.includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, []);
   const TABS: { id: TabId; label: string }[] = [
     { id: "stats",   label: t("profile.tabs.stats") },
     { id: "profile", label: t("profile.tabs.profile") },
