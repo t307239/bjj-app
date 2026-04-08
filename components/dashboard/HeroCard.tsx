@@ -1,4 +1,3 @@
-import Link from "next/link";
 import AvatarImage from "@/components/AvatarImage";
 import TimeGreeting from "@/components/TimeGreeting";
 
@@ -9,8 +8,6 @@ type Props = {
   stripeCount: number;
   streak: number;
   hasFirstLog: boolean;
-  trainedToday: boolean;
-  todayStr: string;
   t: (key: string, vars?: Record<string, string | number>) => string;
 };
 
@@ -21,8 +18,6 @@ export default function HeroCard({
   stripeCount,
   streak,
   hasFirstLog,
-  trainedToday,
-  todayStr,
   t,
 }: Props) {
   return (
