@@ -353,107 +353,91 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         </div>
       )}
 
-      {/* Unified filter row: Period + Type + DateFilter — all flat siblings in one flex container */}
+      {/* Unified filter row: horizontal scroll chip bar — Period + Type pills + Date */}
       {!initialLoading && entries.length > 0 && (() => {
         const usedTypes = TRAINING_TYPES.filter((tt) => entries.some((e) => e.type === tt.value));
-        const pillTypes = usedTypes.slice(0, 2);
-        const dropdownTypes = usedTypes.slice(2);
         const hasDateFilter = !!(dateFrom || dateTo);
         return (
-          <div className="flex flex-wrap items-center gap-2 mb-4">
-            {/* Period — item 3: select dropdown (logically separate from type pills) */}
-            <select
-              value={periodFilter}
-              onChange={(e) => setPeriodFilter(e.target.value as "all" | "month" | "week")}
-              className="flex-shrink-0 bg-zinc-900 text-xs text-gray-300 border border-white/10 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-white/30 cursor-pointer hover:border-white/20 transition-colors"
-              aria-label="Filter by period"
-            >
-              <option value="all">{t("training.periodAll")}</option>
-              <option value="month">{t("training.periodMonth")}</option>
-              <option value="week">{t("training.periodWeek")}</option>
-            </select>
-            {/* Divider */}
-            <div className="w-px h-4 bg-white/10 flex-shrink-0" />
-            {/* Type: All */}
-            <button
-              onClick={() => setFilterType("all")}
-              className={`flex-shrink-0 px-3 py-1.5 min-h-[32px] rounded-full text-xs font-medium transition-colors active:scale-95 ${
-                filterType === "all"
-                  ? "bg-zinc-600 text-white"
-                  : "bg-zinc-900 text-gray-400 border border-white/10 hover:text-gray-300"
-              }`}
-            >
-              {t("training.all")}
-            </button>
-            {/* Type pills */}
-            {pillTypes.map((tt) => (
+          <div className="overflow-x-auto scrollbar-hide mb-4 -mx-0.5 px-0.5">
+            <div className="flex items-center gap-2 min-w-max">
+              {/* Period select */}
+              <select
+                value={periodFilter}
+                onChange={(e) => setPeriodFilter(e.target.value as "all" | "month" | "week")}
+                className="flex-shrink-0 bg-zinc-900 text-xs text-gray-300 border border-white/10 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-white/30 cursor-pointer hover:border-white/20 transition-colors"
+                aria-label="Filter by period"
+              >
+                <option value="all">{t("training.periodAll")}</option>
+                <option value="month">{t("training.periodMonth")}</option>
+                <option value="week">{t("training.periodWeek")}</option>
+              </select>
+              {/* Divider */}
+              <div className="w-px h-4 bg-white/10 flex-shrink-0" />
+              {/* All pill */}
               <button
-                key={tt.value}
-                onClick={() => setFilterType(tt.value)}
+                onClick={() => setFilterType("all")}
                 className={`flex-shrink-0 px-3 py-1.5 min-h-[32px] rounded-full text-xs font-medium transition-colors active:scale-95 ${
-                  filterType === tt.value
+                  filterType === "all"
                     ? "bg-zinc-600 text-white"
                     : "bg-zinc-900 text-gray-400 border border-white/10 hover:text-gray-300"
                 }`}
               >
-                {tt.label}
+                {t("training.all")}
               </button>
-            ))}
-            {dropdownTypes.length > 0 && (
-              <select
-                value={dropdownTypes.some((tt) => tt.value === filterType) ? filterType : ""}
-                onChange={(e) => e.target.value && setFilterType(e.target.value as typeof filterType)}
-                className={`flex-shrink-0 text-xs rounded-full px-2 py-1 border transition-colors cursor-pointer bg-zinc-900 border-white/10 ${
-                  dropdownTypes.some((tt) => tt.value === filterType)
-                    ? "text-white bg-zinc-600"
-                    : "text-gray-400"
-                }`}
-              >
-                <option value="">{t("training.more")} ▾</option>
-                {dropdownTypes.map((tt) => (
-                  <option key={tt.value} value={tt.value}>{tt.label}</option>
-                ))}
-              </select>
-            )}
-            {/* Divider */}
-            <div className="w-px h-4 bg-white/10 flex-shrink-0" />
-            {/* Date filter: pill button when inactive, inline inputs when active */}
-            {!hasDateFilter ? (
-              <button
-                onClick={() => setDateFrom(today)}
-                className="flex-shrink-0 px-3 py-1.5 min-h-[32px] rounded-full text-xs font-medium transition-colors active:scale-95 text-gray-400 border border-white/10 hover:text-gray-300 hover:border-white/20"
-              >
-                <svg className="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-                </svg>
-                {t("training.filterByDate")}
-              </button>
-            ) : (
-              <>
-                <input
-                  type="date"
-                  value={dateFrom}
-                  max={dateTo || today}
-                  onChange={(e) => setDateFrom(e.target.value)}
-                  className="w-28 flex-shrink-0 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:border-white/30"
-                />
-                <span className="text-gray-500 text-xs flex-shrink-0">–</span>
-                <input
-                  type="date"
-                  value={dateTo}
-                  min={dateFrom}
-                  max={today}
-                  onChange={(e) => setDateTo(e.target.value)}
-                  className="w-28 flex-shrink-0 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:border-white/30"
-                />
+              {/* Type pills — all shown, no overflow dropdown */}
+              {usedTypes.map((tt) => (
                 <button
-                  onClick={() => { setDateFrom(""); setDateTo(""); }}
-                  className="flex-shrink-0 text-gray-500 hover:text-white text-xs px-1 transition-colors"
+                  key={tt.value}
+                  onClick={() => setFilterType(tt.value)}
+                  className={`flex-shrink-0 px-3 py-1.5 min-h-[32px] rounded-full text-xs font-medium transition-colors active:scale-95 ${
+                    filterType === tt.value
+                      ? "bg-zinc-600 text-white"
+                      : "bg-zinc-900 text-gray-400 border border-white/10 hover:text-gray-300"
+                  }`}
                 >
-                  ✕
+                  {tt.label}
                 </button>
-              </>
-            )}
+              ))}
+              {/* Divider */}
+              <div className="w-px h-4 bg-white/10 flex-shrink-0" />
+              {/* Date filter: pill when inactive, inline inputs when active */}
+              {!hasDateFilter ? (
+                <button
+                  onClick={() => setDateFrom(today)}
+                  className="flex-shrink-0 px-3 py-1.5 min-h-[32px] rounded-full text-xs font-medium transition-colors active:scale-95 text-gray-400 border border-white/10 hover:text-gray-300 hover:border-white/20"
+                >
+                  <svg className="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                  </svg>
+                  {t("training.filterByDate")}
+                </button>
+              ) : (
+                <>
+                  <input
+                    type="date"
+                    value={dateFrom}
+                    max={dateTo || today}
+                    onChange={(e) => setDateFrom(e.target.value)}
+                    className="w-28 flex-shrink-0 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:border-white/30"
+                  />
+                  <span className="text-gray-500 text-xs flex-shrink-0">–</span>
+                  <input
+                    type="date"
+                    value={dateTo}
+                    min={dateFrom}
+                    max={today}
+                    onChange={(e) => setDateTo(e.target.value)}
+                    className="w-28 flex-shrink-0 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:border-white/30"
+                  />
+                  <button
+                    onClick={() => { setDateFrom(""); setDateTo(""); }}
+                    className="flex-shrink-0 text-gray-500 hover:text-white text-xs px-1 transition-colors"
+                  >
+                    ✕
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         );
       })()}

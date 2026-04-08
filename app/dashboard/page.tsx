@@ -10,11 +10,9 @@ import WeeklyStrip from "@/components/WeeklyStrip";
 import GuestMigration from "@/components/GuestMigration";
 import StreakProtect from "@/components/StreakProtect";
 import StreakFreeze from "@/components/StreakFreeze";
-import StreakMilestoneShare from "@/components/StreakMilestoneShare";
 import AchievementBadge from "@/components/AchievementBadge";
 import InstallBanner from "@/components/InstallBanner";
 import InsightsBanner from "@/components/InsightsBanner";
-import CollapsibleSection from "@/components/CollapsibleSection";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
 import GymKickBanner from "@/components/GymKickBanner";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
@@ -34,7 +32,6 @@ import GuestDashboardClient from "@/components/GuestDashboardClient";
 // ─── Extracted sub-components ─────────────────────────────────────────────────
 import HeroCard from "@/components/dashboard/HeroCard";
 import BentoStatsGrid from "@/components/dashboard/BentoStatsGrid";
-import DashboardMotivation from "@/components/dashboard/DashboardMotivation";
 
 // perf: 条件表示コンポーネント（gym 所属者のみ / Pro のみ）を遅延読み込み
 // → 未所属ユーザーは GymRanking のコードを一切ダウンロードしない
@@ -49,10 +46,6 @@ const AICoachCard = dynamic(() => import("@/components/AICoachCard"), {
 // perf: 折り返し以下の重いチャート群を遅延読み込み（初期JSバンドルから除外）
 // CLS防御: loading skeleton の高さを実コンポーネントの内部 Skeleton と揃えて min-h で確保
 // TrainingBarChart / TrainingTypeChart は Profile > 統計タブへ移動（T-25）
-const CompetitionStats = dynamic(() => import("@/components/CompetitionStats"), {
-  loading: () => <div className="min-h-[100px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
-});
-
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -147,11 +140,10 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ welcome?: string; addLog?: string }>;
+  searchParams?: Promise<{ welcome?: string }>;
 }) {
   const resolvedParams = searchParams ? await searchParams : {};
   const isWelcomeRedirect = resolvedParams?.welcome === "1";
-  const addLogParam = resolvedParams?.addLog ?? null;
   const supabase = await createClient();
   const {
     data: { user },
@@ -332,15 +324,8 @@ export default async function DashboardPage({
     ? calcBjjDuration(profileData.start_date).totalMonths
     : 0;
 
-  // Days since last training log (for dynamic motivational message)
+  // Calculate streak (same algorithm as NavBar — uses logical training date)
   const todayStr = getLogicalTrainingDate();
-  const lastLogDate = recentLogs?.[0]?.date ?? null;
-  const daysSinceLastLog: number | null = lastLogDate
-    ? Math.round((new Date(todayStr).getTime() - new Date(lastLogDate).getTime()) / 86400000)
-    : null;
-
-  // Calculate streak + trainedToday (same algorithm as NavBar — uses logical training date)
-  const trainedToday = recentLogs?.some((l: { date: string }) => l.date === todayStr) ?? false;
   let streak = 0;
   if (recentLogs && recentLogs.length > 0) {
     const uniqueDates = [
@@ -379,7 +364,7 @@ export default async function DashboardPage({
         />
 
         {/* ═══════════════════════════════════════════
-            HERO CARD — greeting + avatar (row1) + Log CTA (row2, 未記録時のみ)
+            HERO CARD — greeting + avatar/belt pill
             ═══════════════════════════════════════════ */}
         <HeroCard
           displayName={displayName}
@@ -388,8 +373,6 @@ export default async function DashboardPage({
           stripeCount={stripeCount}
           streak={streak}
           hasFirstLog={hasFirstLog}
-          trainedToday={trainedToday}
-          todayStr={todayStr}
           t={t}
         />
 
@@ -399,7 +382,6 @@ export default async function DashboardPage({
             ═══════════════════════════════════════════ */}
         <section className="mb-7">
           <TrainingLog
-            key={addLogParam ?? "default"}
             userId={user.id}
             isPro={isPro}
             initialOpen={isWelcomeRedirect && (totalCount ?? 0) === 0}
@@ -487,63 +469,15 @@ export default async function DashboardPage({
         )}
 
         {/* ═══════════════════════════════════════════
-            SECTION 7 — ANALYTICS (collapsed by default)
-            Hidden for new users with no logs yet
+            SECTION 7 — AI MICRO-COACH
             ═══════════════════════════════════════════ */}
-        {hasFirstLog ? (
-          <>
-            {/* Streak milestone share (30/100/365日) */}
-            <StreakMilestoneShare streak={streak} />
-            {/* Dynamic motivational message — streak危機バナー表示中は非表示（メッセージ重複防止）*/}
-            {streak < 3 && <DashboardMotivation daysSince={daysSinceLastLog} t={t} />}
-            <CollapsibleSection
-              label={t("dashboard.analyticsLabel")}
-              defaultOpen={false}
-              contentHint={t("dashboard.analyticsHint")}
-              cardTrigger
-            >
-              <CompetitionStats userId={user.id} />
-              {/* TrainingChart (heatmap) moved to Profile → Analytics tab */}
-            </CollapsibleSection>
-
-            {/* AI Micro-Coach (Pro + all users see gate) */}
-            <AICoachCard
-              userId={user.id}
-              isPro={isPro}
-              initialCoaching={profileData?.ai_coach_cache ?? null}
-              initialGeneratedAt={profileData?.ai_coach_last_generated ?? null}
-            />
-          </>
-        ) : (
-          /* Empty state: Day 1 ユーザー向けCTA */
-          <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-8 text-center mb-7">
-            <div className="text-5xl mb-4">🔥</div>
-            <h2 className="text-white font-bold text-lg mb-2">
-              {t("dashboard.emptyStateTitle")}
-            </h2>
-            <p className="text-gray-400 text-sm mb-6 max-w-xs mx-auto">
-              {t("dashboard.emptyStateDesc")}
-            </p>
-            <a
-              href="#training-log-form"
-              className="inline-flex items-center gap-2 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-semibold px-6 py-3 rounded-xl transition-all shadow-lg shadow-[#10B981]/20"
-            >
-              <span>+</span> {t("dashboard.emptyStateCta")}
-            </a>
-            {/* Wiki 初心者リンク */}
-            <div className="mt-6 pt-5 border-t border-white/5">
-              <p className="text-zinc-400 text-xs mb-3">{t("dashboard.emptyStateNewToBjj")}</p>
-              <a
-                href="https://wiki.bjj-app.net/wiki/en/bjj-basics"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 border border-white/10 hover:border-white/20 text-gray-300 text-sm px-4 py-2.5 rounded-xl transition-all"
-              >
-                <span>📚</span>
-                <span>{t("dashboard.emptyStateWikiLink")}</span>
-              </a>
-            </div>
-          </div>
+        {hasFirstLog && (
+          <AICoachCard
+            userId={user.id}
+            isPro={isPro}
+            initialCoaching={profileData?.ai_coach_cache ?? null}
+            initialGeneratedAt={profileData?.ai_coach_last_generated ?? null}
+          />
         )}
 
         {/* ═══════════════════════════════════════════

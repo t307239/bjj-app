@@ -66,18 +66,6 @@ export default function HeroCard({
           </div>
         )}
       </div>
-      {/* Row 2: Log CTA — 未記録時のみ */}
-      {!trainedToday && (
-        <Link
-          href={`?addLog=${todayStr}`}
-          className="mt-3 flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-emerald-900/30"
-        >
-          <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-          </svg>
-          {t("training.logSession")}
-        </Link>
-      )}
     </div>
   );
 }
