@@ -165,6 +165,8 @@ function AccountSection({ userId, isPro, referralCode, referralCount }: { userId
 }
 
 type TabId = "stats" | "profile" | "body" | "account";
+type ActivityTab = "calendar" | "monthly" | "type";
+type BadgeTab = "milestones" | "badges";
 
 // perf: タブにホバー/フォーカスした時点でチャンクを先読みしておく
 // → クリック時には既にロード済みになりスケルトンが出ない
@@ -179,6 +181,8 @@ const VALID_TABS: TabId[] = ["stats", "profile", "body", "account"];
 export default function ProfileTabs({ userId, isPro = false, referralCode = null, referralCount = 0, totalCount = 0, belt = "white", stripeCount = 0, monthsAtBelt = 0 }: { userId: string; isPro?: boolean; referralCode?: string | null; referralCount?: number; totalCount?: number; belt?: string; stripeCount?: number; monthsAtBelt?: number }) {
   const { t } = useLocale();
   const [activeTab, setActiveTab] = useState<TabId>("stats");
+  const [activityTab, setActivityTab] = useState<ActivityTab>("calendar");
+  const [badgeTab, setBadgeTab] = useState<BadgeTab>("milestones");
 
   // URLパラメータ(?tab=body等)を初回マウント後に読んで初期化
   // useSearchParams は Suspense 必須で dynamic import と干渉するため
@@ -218,32 +222,70 @@ export default function ProfileTabs({ userId, isPro = false, referralCode = null
       </div>
       {activeTab === "stats"   && (
         <>
+          {/* S-1: 個人記録（コラプシブル） */}
           <PersonalBests userId={userId} />
-          {/* Training calendar heatmap (moved from Dashboard ✢-4) */}
-          <div className="mt-6">
-            <TrainingChart userId={userId} isPro={isPro} />
-          </div>
-          {/* B-24: Milestone Badge Grid */}
-          <MilestoneBadgeGrid totalCount={totalCount} />
-          {/* T-36: Achievement Badges — consistency, diversity, technique mastery */}
-          <ExtendedBadgeGrid userId={userId} />
-          {/* T-25: 長期分析チャート（棒グラフ＋タイプ別）— ダッシュボードから移動 */}
+
+          {/* S-2: アクティビティ — カレンダー/月別/タイプ をタブ切り替えで1セクションに統合 */}
           <div className="mt-4">
-            <TrainingBarChart userId={userId} isPro={isPro} />
+            <div className="flex bg-zinc-800/50 rounded-xl p-1 gap-1 mb-0">
+              {(
+                [
+                  { id: "calendar" as ActivityTab, label: t("chart.calendarTab") },
+                  { id: "monthly"  as ActivityTab, label: t("chart.monthly") },
+                  { id: "type"     as ActivityTab, label: t("chart.typeTab") },
+                ] as const
+              ).map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActivityTab(tab.id)}
+                  className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all active:scale-95 ${
+                    activityTab === tab.id
+                      ? "bg-zinc-700 text-white shadow-sm"
+                      : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700/40"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+            {activityTab === "calendar" && <TrainingChart userId={userId} isPro={isPro} />}
+            {activityTab === "monthly"  && <TrainingBarChart userId={userId} isPro={isPro} />}
+            {activityTab === "type"     && <TrainingTypeChart userId={userId} isPro={isPro} />}
           </div>
+
+          {/* S-3: 実績 — マイルストーン/バッジ をタブ切り替えで1セクションに統合 */}
           <div className="mt-4">
-            <TrainingTypeChart userId={userId} isPro={isPro} />
+            <div className="flex bg-zinc-800/50 rounded-xl p-1 gap-1 mb-0">
+              {(
+                [
+                  { id: "milestones" as BadgeTab, label: t("profile.tabs.milestones") },
+                  { id: "badges"     as BadgeTab, label: t("profile.tabs.achievementBadges") },
+                ] as const
+              ).map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setBadgeTab(tab.id)}
+                  className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all active:scale-95 ${
+                    badgeTab === tab.id
+                      ? "bg-zinc-700 text-white shadow-sm"
+                      : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700/40"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+            {badgeTab === "milestones" && <MilestoneBadgeGrid totalCount={totalCount} />}
+            {badgeTab === "badges"     && <ExtendedBadgeGrid userId={userId} />}
           </div>
-          {/* B-32 / B-13: Roll Analytics + Weakness Insights (Pro) */}
+
+          {/* S-4: 高度な分析 — ロール分析・パートナー統計を1 ProGate に統合 */}
           <div className="mt-4">
-            <ProGate isPro={isPro} feature="Roll Analytics & Pattern Insights" userId={userId}>
-              <RollAnalyticsCard userId={userId} />
-            </ProGate>
-          </div>
-          {/* T-35: Partner Stats (Pro) */}
-          <div className="mt-4">
-            <ProGate isPro={isPro} feature="Partner Stats & Analysis" userId={userId}>
-              <PartnerStatsCard userId={userId} />
+            <ProGate isPro={isPro} feature="ロール分析 & パートナー統計" userId={userId}>
+              <div className="space-y-4">
+                <RollAnalyticsCard userId={userId} />
+                <PartnerStatsCard userId={userId} />
+              </div>
             </ProGate>
           </div>
         </>

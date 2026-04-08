@@ -206,7 +206,11 @@
     "restoring": "Restaurando...",
     "restoreError": "Falha ao restaurar. Por favor, tente novamente.",
     "accountDeletedTitle": "Conta excluída",
-    "accountDeletedDesc": "Obrigado por usar o BJJ App. Esperamos vê-lo novamente."
+    "accountDeletedDesc": "Obrigado por usar o BJJ App. Esperamos vê-lo novamente.",
+    "tabs": {
+      "milestones": "Marcos",
+      "achievementBadges": "Conquistas"
+    }
   },
   "gym": {
     "inviteTitle": "ð Convidar Alunos",
@@ -461,7 +465,9 @@
   },
   "chart": {
     "days84": "3 meses",
-    "past84Days": "Ãltimos 3 meses: {n} sessÃµes"
+    "past84Days": "Ãltimos 3 meses: {n} sessÃµes",
+    "calendarTab": "Calendário",
+    "typeTab": "Tipo"
   },
   "injury": {
     "snooze7d": "Adiar por 7 dias",

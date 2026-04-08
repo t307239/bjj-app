@@ -392,7 +392,9 @@
       "stats": "Stats",
       "profile": "Profile",
       "body": "Body",
-      "settings": "Settings"
+      "settings": "Settings",
+      "milestones": "Milestones",
+      "achievementBadges": "Badges"
     },
     "ariaDisableSharing": "Disable data sharing",
     "ariaEnableSharing": "Enable data sharing",
@@ -638,7 +640,9 @@
     "avgLabel": "Avg: ",
     "emptyHeading": "Log your first roll to unlock insights",
     "emptySubtitle": "Your activity heatmap will appear here",
-    "emptyButton": "Log a Roll"
+    "emptyButton": "Log a Roll",
+    "calendarTab": "Calendar",
+    "typeTab": "Type"
   },
   "install": {
     "ios": "Add to Home Screen to use as app!",

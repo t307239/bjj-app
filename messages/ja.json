@@ -389,7 +389,9 @@
       "stats": "統計",
       "profile": "プロフィール",
       "settings": "設定",
-      "body": "ボディ"
+      "body": "ボディ",
+      "milestones": "マイルストーン",
+      "achievementBadges": "バッジ"
     },
     "ariaDeleteConfirm": "アカウント削除を確認",
     "ariaDeleteInput": "DELETEと入力してアカウント削除を確認",
@@ -639,7 +641,9 @@
     "avgLabel": "平均 ",
     "emptyHeading": "最初のロールを記録してインサイトを解放しよう",
     "emptySubtitle": "練習した日のヒートマップがここに表示されます",
-    "emptyButton": "練習を記録"
+    "emptyButton": "練習を記録",
+    "calendarTab": "カレンダー",
+    "typeTab": "タイプ"
   },
   "install": {
     "ios": "ホーム画面に追加して、アプリとして使えます！",
