@@ -2,7 +2,7 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
 import PersonalBests from "./PersonalBests";
 import ProfileForm from "./ProfileForm";
@@ -142,9 +142,15 @@ const PRELOAD_MAP: Partial<Record<TabId, () => void>> = {
   profile: () => { void import("./ProfileForm"); },
 };
 
+const VALID_TABS: TabId[] = ["stats", "profile", "body", "account"];
+
 export default function ProfileTabs({ userId, isPro = false, referralCode = null, referralCount = 0, totalCount = 0, belt = "white", stripeCount = 0, monthsAtBelt = 0 }: { userId: string; isPro?: boolean; referralCode?: string | null; referralCount?: number; totalCount?: number; belt?: string; stripeCount?: number; monthsAtBelt?: number }) {
   const { t } = useLocale();
-  const [activeTab, setActiveTab] = useState<TabId>("stats");
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab") as TabId | null;
+  const [activeTab, setActiveTab] = useState<TabId>(
+    VALID_TABS.includes(tabParam!) ? tabParam! : "stats"
+  );
   const TABS: { id: TabId; label: string }[] = [
     { id: "stats",   label: t("profile.tabs.stats") },
     { id: "profile", label: t("profile.tabs.profile") },
