@@ -34,9 +34,11 @@ export default function TimeGreeting({ displayName }: TimeGreetingProps) {
   }, []);
 
   // SSR / before hydration: use welcomeBack key
+  // suppressHydrationWarning: server uses ja locale, client initial render uses "en" default
+  // → intentional mismatch (useEffect will update to time-based greeting anyway)
   if (!greeting) {
     return (
-      <h2 className="text-xl font-bold tracking-tight">
+      <h2 className="text-xl font-bold tracking-tight" suppressHydrationWarning>
         {t("dashboard.welcomeBack", { name: displayName })}
       </h2>
     );
