@@ -57,13 +57,6 @@ const jsonLd = {
   url: "https://bjj-app.net/profile",
 };
 
-const BELT_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  white:  { bg: "bg-zinc-100",   text: "text-zinc-900",  border: "border-zinc-300" },
-  blue:   { bg: "bg-blue-600",   text: "text-white",      border: "border-blue-400" },
-  purple: { bg: "bg-purple-600", text: "text-white",      border: "border-purple-400" },
-  brown:  { bg: "bg-amber-800",  text: "text-white",      border: "border-amber-600" },
-  black:  { bg: "bg-zinc-900",   text: "text-white",      border: "border-zinc-600" },
-};
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -118,7 +111,6 @@ export default async function ProfilePage() {
   const isPro = profile?.is_pro ?? false;
   const gymName = profile?.gym_name ?? null;
   const referralCode = (profile as { referral_code?: string | null })?.referral_code ?? null;
-  const beltStyle = BELT_COLORS[belt] ?? BELT_COLORS.white;
 
   // Calculate streak (same algorithm as NavBar — uses logical training date)
   let streak = 0;
@@ -194,24 +186,6 @@ export default async function ProfilePage() {
                 </p>
               )}
 
-              {/* Belt badge */}
-              <div className="flex items-center gap-2 mt-3">
-                <div
-                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold ${beltStyle.bg} ${beltStyle.text} ${beltStyle.border}`}
-                >
-                  <span className="capitalize">{belt}</span>
-                  {stripeCount > 0 && (
-                    <div className="flex gap-0.5">
-                      {Array.from({ length: stripeCount }).map((_, i) => (
-                        <div
-                          key={i}
-                          className="w-1 h-3 bg-current opacity-70 rounded-full"
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
             </div>
           </div>
 
