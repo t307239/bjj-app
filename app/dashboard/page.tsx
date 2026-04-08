@@ -48,12 +48,7 @@ const AICoachCard = dynamic(() => import("@/components/AICoachCard"), {
 
 // perf: 折り返し以下の重いチャート群を遅延読み込み（初期JSバンドルから除外）
 // CLS防御: loading skeleton の高さを実コンポーネントの内部 Skeleton と揃えて min-h で確保
-const TrainingBarChart = dynamic(() => import("@/components/TrainingBarChart"), {
-  loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
-});
-const TrainingTypeChart = dynamic(() => import("@/components/TrainingTypeChart"), {
-  loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
-});
+// TrainingBarChart / TrainingTypeChart は Profile > 統計タブへ移動（T-25）
 const CompetitionStats = dynamic(() => import("@/components/CompetitionStats"), {
   loading: () => <div className="min-h-[100px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
@@ -505,8 +500,6 @@ export default async function DashboardPage({
               contentHint={t("dashboard.analyticsHint")}
               cardTrigger
             >
-              <TrainingBarChart userId={user.id} isPro={isPro} />
-              <TrainingTypeChart userId={user.id} isPro={isPro} />
               <CompetitionStats userId={user.id} />
               {/* TrainingChart (heatmap) moved to Profile → Analytics tab */}
             </CollapsibleSection>

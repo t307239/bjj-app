@@ -182,7 +182,7 @@ export default function BentoStatsGrid({
 
       {/* Avg session — col-span-2 */}
       {avgSessionMin > 0 && (
-        <div className="col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-white/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200">
+        <div className="col-span-1 md:col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-white/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 transition-all duration-200">
           <span className="text-xs font-semibold text-zinc-400 tracking-widest block mb-1">
             {t("dashboard.bentoAvgSession")}
           </span>
@@ -278,7 +278,7 @@ export default function BentoStatsGrid({
           {/* 12-Month Training Graph teaser */}
           <Link
             href="/profile#upgrade"
-            className="col-span-2 md:col-span-1 relative bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/5 hover:border-amber-400/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden group"
+            className="hidden md:block col-span-2 md:col-span-1 relative bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/5 hover:border-amber-400/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden group"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-amber-900/10 to-transparent pointer-events-none" />
             <div className="relative">
@@ -297,7 +297,7 @@ export default function BentoStatsGrid({
           {/* Body Management teaser */}
           <Link
             href="/profile"
-            className="col-span-2 md:col-span-1 relative bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/5 hover:border-rose-400/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden group"
+            className="hidden md:block col-span-2 md:col-span-1 relative bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/5 hover:border-rose-400/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden group"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-rose-900/10 to-transparent pointer-events-none" />
             <div className="relative">

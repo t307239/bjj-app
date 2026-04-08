@@ -38,6 +38,14 @@ const BodyManagementSection = dynamic(() => import("./BodyManagementSection"), {
   ssr: false,
   loading: () => <div className="h-48 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
+const TrainingBarChart = dynamic(() => import("./TrainingBarChart"), {
+  ssr: false,
+  loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
+const TrainingTypeChart = dynamic(() => import("./TrainingTypeChart"), {
+  ssr: false,
+  loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
 
 function AccountSection({ userId, isPro, referralCode, referralCount }: { userId: string; isPro: boolean; referralCode: string | null; referralCount: number }) {
   const { t } = useLocale();
@@ -137,7 +145,7 @@ type TabId = "stats" | "profile" | "body" | "account";
 // perf: タブにホバー/フォーカスした時点でチャンクを先読みしておく
 // → クリック時には既にロード済みになりスケルトンが出ない
 const PRELOAD_MAP: Partial<Record<TabId, () => void>> = {
-  stats:   () => { void import("./RollAnalyticsCard"); void import("./PartnerStatsCard"); void import("./ExtendedBadgeGrid"); void import("./BeltProgressCard"); },
+  stats:   () => { void import("./RollAnalyticsCard"); void import("./PartnerStatsCard"); void import("./ExtendedBadgeGrid"); void import("./BeltProgressCard"); void import("./TrainingBarChart"); void import("./TrainingTypeChart"); },
   body:    () => { void import("./BodyManagementSection"); },
   profile: () => { void import("./ProfileForm"); },
 };
@@ -197,6 +205,13 @@ export default function ProfileTabs({ userId, isPro = false, referralCode = null
           <MilestoneBadgeGrid totalCount={totalCount} />
           {/* T-36: Achievement Badges — consistency, diversity, technique mastery */}
           <ExtendedBadgeGrid userId={userId} />
+          {/* T-25: 長期分析チャート（棒グラフ + タイプ別）— ダッシュボードから移動 */}
+          <div className="mt-4">
+            <TrainingBarChart userId={userId} isPro={isPro} />
+          </div>
+          <div className="mt-4">
+            <TrainingTypeChart userId={userId} isPro={isPro} />
+          </div>
           {/* B-32 / B-13: Roll Analytics + Weakness Insights (Pro) */}
           <div className="mt-4">
             <ProGate isPro={isPro} feature="Roll Analytics & Pattern Insights" userId={userId}>
