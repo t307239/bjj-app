@@ -485,7 +485,7 @@ export default async function DashboardPage({
         )}
 
         {/* ═══════════════════════════════════════════
-            SECTION 9 — INVITE FRIENDS (referral system)
+            SECTION 8 — INVITE FRIENDS (referral system)
             ═══════════════════════════════════════════ */}
         {referralCode && hasFirstLog && (
           <section className="mb-7">

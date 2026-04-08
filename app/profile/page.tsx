@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import ProfileTabs from "@/components/ProfileTabs";
+import BeltProgressCard from "@/components/BeltProgressCard";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
 import { formatBjjDuration, calcBjjDuration } from "@/lib/bjjDuration";
@@ -244,6 +245,16 @@ export default async function ProfilePage() {
             )}
           </div>
         </div>
+
+        {/* ═══════════════════════════════════════════
+            BELT PROGRESS — always visible, outside tabs
+            ═══════════════════════════════════════════ */}
+        <BeltProgressCard
+          belt={belt}
+          stripes={stripeCount}
+          monthsAtBelt={monthsAtBelt}
+          className="mb-4"
+        />
 
         {/* ═══════════════════════════════════════════
             PROFILE TABS (stats / settings / account)
