@@ -200,6 +200,9 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   // T-29: position filter + edge notes
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [edgeNotes, setEdgeNotes] = useState<{ id: string; notes: string } | null>(null);
+  // Tag chip folding (案B): collapse when more than VISIBLE_TAG_COUNT tags
+  const [tagsExpanded, setTagsExpanded] = useState(false);
+  const VISIBLE_TAG_COUNT = 4;
 
   // Keep module-level refs up-to-date (used by TechniqueNodeComp to avoid stale closure)
   useEffect(() => { deleteNodeRef.current = handleDeleteNode; }, [handleDeleteNode]);
@@ -462,37 +465,58 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         </div>
       )}
 
-      {/* T-29: Position filter chips */}
-      <div
-        className="mb-2 flex items-center gap-1.5 overflow-x-auto pb-0.5"
-        style={{ scrollbarWidth: "none" }}
-      >
-        <button
-          onClick={() => setSelectedTag(null)}
-          className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95 ${
-            !selectedTag
-              ? "bg-indigo-600 border-indigo-500 text-white font-semibold"
-              : "bg-zinc-800 border-white/10 text-zinc-400 hover:border-white/30"
-          }`}
-        >
-          {t("skillmap.filterAll")}
-        </button>
-        {[...PRESET_POSITIONS.filter((tag) => usedTags.has(tag)), ...customTags].map((tag) => (
-          <button
-            key={tag}
-            onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-            className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95 ${
-              selectedTag === tag
-                ? "bg-indigo-600 border-indigo-500 text-white font-semibold"
-                : usedTags.has(tag)
-                  ? "bg-zinc-800 border-white/20 text-zinc-300 hover:border-white/40"
-                  : "bg-zinc-900 border-white/8 text-zinc-600"
-            }`}
+      {/* T-29: Position filter chips (案B: collapse when > VISIBLE_TAG_COUNT) */}
+      {(() => {
+        const allTags = [...PRESET_POSITIONS.filter((tag) => usedTags.has(tag)), ...customTags];
+        const hasMore = allTags.length > VISIBLE_TAG_COUNT;
+        const visibleTags = hasMore && !tagsExpanded ? allTags.slice(0, VISIBLE_TAG_COUNT) : allTags;
+        const hiddenCount = allTags.length - VISIBLE_TAG_COUNT;
+        const selectedInHidden = hasMore && !tagsExpanded && selectedTag !== null && !visibleTags.includes(selectedTag);
+        return (
+          <div
+            className="mb-2 flex items-center gap-1.5 overflow-x-auto pb-0.5"
+            style={{ scrollbarWidth: "none" }}
           >
-            {tag}
-          </button>
-        ))}
-      </div>
+            <button
+              onClick={() => setSelectedTag(null)}
+              className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95 ${
+                !selectedTag
+                  ? "bg-indigo-600 border-indigo-500 text-white font-semibold"
+                  : "bg-zinc-800 border-white/10 text-zinc-400 hover:border-white/30"
+              }`}
+            >
+              {t("skillmap.filterAll")}
+            </button>
+            {visibleTags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
+                className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95 ${
+                  selectedTag === tag
+                    ? "bg-indigo-600 border-indigo-500 text-white font-semibold"
+                    : usedTags.has(tag)
+                      ? "bg-zinc-800 border-white/20 text-zinc-300 hover:border-white/40"
+                      : "bg-zinc-900 border-white/8 text-zinc-600"
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+            {hasMore && (
+              <button
+                onClick={() => setTagsExpanded((v) => !v)}
+                className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95 ${
+                  selectedInHidden
+                    ? "bg-indigo-900/60 border-indigo-500/60 text-indigo-300 hover:border-indigo-400"
+                    : "bg-zinc-800 border-white/10 text-zinc-400 hover:border-white/30"
+                }`}
+              >
+                {tagsExpanded ? "▲" : `▼ +${hiddenCount}`}
+              </button>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Recent Focus bar — Pro only */}
       {isPro && (
