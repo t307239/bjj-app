@@ -42,6 +42,7 @@ function TechniqueNodeComp({
     mastery_level?: number;
     childCount?: number;
     isCollapsed?: boolean;
+    dimmed?: boolean;
   };
   selected: boolean;
 }) {
@@ -53,7 +54,7 @@ function TechniqueNodeComp({
     <div
       className={`relative border rounded-xl px-3 py-2.5 shadow-lg transition-all select-none backdrop-blur-sm ${masteryNodeClass(mastery)} ${
         selected ? masterySelectedRing(mastery) : "hover:brightness-110"
-      }`}
+      } ${data.dimmed ? "opacity-20 pointer-events-none" : ""}`}
       style={{ width: NODE_W, minHeight: NODE_H }}
     >
       <Handle

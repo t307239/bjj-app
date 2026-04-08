@@ -291,23 +291,35 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
     return set;
   }, [rfNodes]);
 
-  // T-29: filter nodes by selected tag
+  // Ghost filter: non-matching nodes get dimmed (opacity 20%) instead of hidden,
+  // so cross-position transitions remain visible as context.
   const filteredDisplayNodes = useMemo(() => {
     if (!selectedTag) return displayNodes;
     return displayNodes.map((n) => {
+      if (n.hidden) return n; // already hidden by collapse — preserve
       const tags = (n.data as { tags?: string[] }).tags ?? [];
-      return { ...n, hidden: n.hidden || !tags.includes(selectedTag) };
+      return {
+        ...n,
+        data: { ...(n.data as object), dimmed: !tags.includes(selectedTag) },
+      };
     });
   }, [displayNodes, selectedTag]);
 
-  // T-29: filter edges — hide if either endpoint is hidden by tag filter
+  // Ghost edges: cross-position edges become faint + dashed instead of hidden
   const filteredDisplayEdges = useMemo(() => {
     if (!selectedTag) return displayEdges;
-    const visibleIds = new Set(filteredDisplayNodes.filter((n) => !n.hidden).map((n) => n.id));
-    return displayEdges.map((e) => ({
-      ...e,
-      hidden: e.hidden || !visibleIds.has(e.source) || !visibleIds.has(e.target),
-    }));
+    const matchingIds = new Set(
+      filteredDisplayNodes
+        .filter((n) => !n.hidden && !(n.data as { dimmed?: boolean }).dimmed)
+        .map((n) => n.id)
+    );
+    return displayEdges.map((e) => {
+      if (e.hidden) return e;
+      const isCross = !matchingIds.has(e.source) || !matchingIds.has(e.target);
+      return isCross
+        ? { ...e, style: { ...(e.style ?? {}), opacity: 0.2, strokeDasharray: "4 4" } }
+        : e;
+    });
   }, [displayEdges, filteredDisplayNodes, selectedTag]);
 
   // Mobile detection
@@ -465,7 +477,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         >
           {t("skillmap.filterAll")}
         </button>
-        {[...PRESET_POSITIONS, ...customTags].map((tag) => (
+        {[...PRESET_POSITIONS.filter((tag) => usedTags.has(tag)), ...customTags].map((tag) => (
           <button
             key={tag}
             onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
