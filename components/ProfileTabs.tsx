@@ -8,6 +8,7 @@ import PersonalBests from "./PersonalBests";
 import ProfileForm from "./ProfileForm";
 import ReferralSection from "./ReferralSection";
 import PushNotificationSection from "./PushNotificationSection";
+import CsvExport from "./CsvExport";
 import ProGate from "./ProGate";
 import MilestoneBadgeGrid from "./MilestoneBadgeGrid";
 import { trackEvent } from "@/lib/analytics";
@@ -53,6 +54,7 @@ function AccountSection({ userId, isPro, referralCode, referralCount }: { userId
   const router = useRouter();
   const [confirm, setConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [deleteInput, setDeleteInput] = useState("");
 
   const handleDelete = async () => {
     setDeleting(true);
@@ -112,21 +114,38 @@ function AccountSection({ userId, isPro, referralCode, referralCount }: { userId
               </button>
             </div>
           ) : (
-            <div>
-              <p className="text-red-400 text-sm font-semibold mb-1">{t("profile.deleteConfirm")}</p>
-              <p className="text-zinc-400 text-xs mb-4">{t("profile.deleteWarning")}</p>
+            <div className="space-y-3">
+              {/* Title row + CSV export inline */}
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <p className="text-red-400 text-sm font-semibold">{t("profile.deleteTitle")}</p>
+                <CsvExport userId={userId} />
+              </div>
+              <p className="text-zinc-400 text-xs">{t("profile.deleteDesc")}</p>
+              {/* Type DELETE to confirm */}
+              <div>
+                <label className="block text-xs text-zinc-500 mb-1">{t("profile.deleteTypeLabel")}</label>
+                <input
+                  type="text"
+                  value={deleteInput}
+                  onChange={(e) => setDeleteInput(e.target.value)}
+                  placeholder={t("profile.deleteTypePlaceholder")}
+                  aria-label={t("profile.ariaDeleteInput")}
+                  className="w-full bg-zinc-800 border border-red-900/50 rounded-lg px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-red-500"
+                />
+              </div>
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={handleDelete}
-                  disabled={deleting}
-                  className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold py-2 rounded-lg text-sm transition-colors active:scale-95"
+                  disabled={deleting || deleteInput !== "DELETE"}
+                  aria-label={t("profile.ariaDeleteConfirm")}
+                  className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-40 text-white font-bold py-2 rounded-lg text-sm transition-colors active:scale-95"
                 >
-                  {deleting ? t("profile.deleting") : t("profile.deleteConfirmYes")}
+                  {deleting ? t("profile.deleting") : t("profile.deleteAccountPermanently")}
                 </button>
                 <button
                   type="button"
-                  onClick={() => setConfirm(false)}
+                  onClick={() => { setConfirm(false); setDeleteInput(""); }}
                   className="flex-1 bg-white/10 hover:bg-white/15 text-zinc-300 font-bold py-2 rounded-lg text-sm transition-colors active:scale-95"
                 >
                   {t("training.cancel")}

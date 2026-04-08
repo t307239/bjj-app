@@ -187,7 +187,19 @@
     "timezoneEurope": "Europe/London",
     "deleteTitle": "⚠️ Excluir Conta (Irreversível)",
     "deleteDesc": "Todos os seus dados serão excluídos permanentemente e não poderão ser recuperados.",
-    "deleteTypeLabel": "Digite DELETE para confirmar"
+    "deleteTypeLabel": "Digite DELETE para confirmar",
+    "deleteTypePlaceholder": "DELETE",
+    "deleteTypeToConfirm": "para confirmar",
+    "deleteAccountPermanently": "Excluir minha conta permanentemente",
+    "deleteError": "Falha ao excluir conta. Tente novamente.",
+    "deleteNetworkError": "Erro de rede. Tente novamente.",
+    "ariaDownloadCSV": "Baixar dados de treino em CSV",
+    "ariaDeleteInput": "Digite DELETE para confirmar a exclusão da conta",
+    "ariaDeleteConfirm": "Confirmar exclusão da conta",
+    "exportDesc": "Baixe todos os seus registros de treino como arquivo CSV.",
+    "dangerZone": "Zona de Perigo",
+    "deleteWarning": "Seus registros de treino, notas de técnica e perfil serão todos excluídos. Isso não pode ser desfeito.",
+    "deleteConfirmYes": "Sim, excluir minha conta"
   },
   "gym": {
     "inviteTitle": "📎 Convidar Alunos",
