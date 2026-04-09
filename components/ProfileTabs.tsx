@@ -203,22 +203,25 @@ export default function ProfileTabs({ userId, isPro = false, referralCode = null
 
   return (
     <div>
-      <div className="flex bg-zinc-900/80 p-1 rounded-lg mb-6">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => { setActiveTab(tab.id); trackEvent("tab_viewed", { tab: tab.id }); }}
-            onMouseEnter={() => PRELOAD_MAP[tab.id]?.()}
-            onFocus={() => PRELOAD_MAP[tab.id]?.()}
-            className={`flex-1 py-2 rounded-md text-xs font-semibold transition-all active:scale-95 ${
-              activeTab === tab.id
-                ? "bg-zinc-700 text-white shadow-sm font-medium"
-                : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+      {/* sticky tab bar — stays below NavBar (top-[52px]) while scrolling */}
+      <div className="sticky top-[52px] z-40 -mx-4 sm:mx-0 px-4 sm:px-0 pt-2 pb-2 mb-4 bg-zinc-950/95 backdrop-blur-xl border-b border-white/[0.05]">
+        <div className="flex bg-zinc-900/80 p-1 rounded-lg">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => { setActiveTab(tab.id); trackEvent("tab_viewed", { tab: tab.id }); }}
+              onMouseEnter={() => PRELOAD_MAP[tab.id]?.()}
+              onFocus={() => PRELOAD_MAP[tab.id]?.()}
+              className={`flex-1 py-2 rounded-md text-xs font-semibold transition-all active:scale-95 ${
+                activeTab === tab.id
+                  ? "bg-zinc-700 text-white shadow-sm font-medium"
+                  : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
       {activeTab === "stats"   && (
         <>
