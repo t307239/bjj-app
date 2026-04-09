@@ -478,5 +478,19 @@
   "injury": {
     "snooze7d": "Adiar por 7 dias",
     "hide7d": "Ocultar por 7 dias"
+  },
+  "techniquesPage": {
+    "safetyTitle": "Nota de Segurança para Iniciantes",
+    "safetyDesc": "Algumas técnicas (heel hooks, kneebars, cranks cervicais) oferecem risco sério de lesão. Pratique sempre sob supervisão de um instrutor qualificado e sinalize imediatamente quando quiser desistir (tap).",
+    "statsSolid": "sólido",
+    "statsLogged": "total",
+    "statsMastered": "dominado",
+    "title": "Diário de Técnicas",
+    "subtitle": "Rastreie e visualize seu progresso no jiu-jitsu",
+    "skillMap": "Mapa de Habilidades",
+    "freeLimit": "Grátis: até 20 técnicas",
+    "techniqueLog": "Registro de Técnicas",
+    "learnWiki": "Aprender no Wiki",
+    "wikiDesc": "Guias detalhados do BJJ Wiki — leituras rápidas entre sessões de treino."
   }
 }

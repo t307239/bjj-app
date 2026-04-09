@@ -1,24 +1,15 @@
 BJJ App Hidden Bug Detector Report
-TSX Scanned: 120 files
-CRITICAL: 2
-WARNING: 3
+TSX Scanned: 139 files
+CRITICAL: 1
+WARNING: 1
 INFO: 0
-Total: 5
+Total: 2
 
-[CRITICAL] [I18N_COVERAGE] messages/ja.json: カバレッジ 89% (1142/1289 キー) — 149 キー欠損
-  FIX: 欠損例: body.bodyMap, body.logWeight, body.note, body.notePlaceholder, body.offlineError
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 23% (297/1289 キー) — 1023 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 30% (426/1399 キー) — 1004 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
-[WARNING] [HARDCODED_MIXED] app/dashboard/page.tsx: 多言語混在（JAの中に英語）: '>
-        ) : (
-          /* Empty state: Day 1 ユーザー向けCTA */'
-  FIX: t() / serverT() 経由に修正
 [WARNING] [HARDCODED_MIXED] app/wiki/[lang]/[slug]/page.tsx: 多言語混在（JAの中に英語）: '>
           );
         })()
       ) : (
         /* ── UGC フォ'
-  FIX: t() / serverT() 経由に修正
-[WARNING] [HARDCODED_MIXED] components/ProStatusBanner.tsx: 多言語混在（JAの中に英語）: '>
-            カードの有効期限切れまたは残高不足です。Proアクセスを維持するには決済情報を更新してくださ'
   FIX: t() / serverT() 経由に修正
