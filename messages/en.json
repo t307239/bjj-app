@@ -449,7 +449,11 @@
     "restoring": "Restoring...",
     "restoreError": "Restore failed. Please try again.",
     "accountDeletedTitle": "Account deleted",
-    "accountDeletedDesc": "Thank you for using BJJ App. We hope to see you again."
+    "accountDeletedDesc": "Thank you for using BJJ App. We hope to see you again.",
+    "showDetailCharts": "Show detail charts",
+    "hideDetailCharts": "Hide detail charts",
+    "showExtendedBadges": "Show more badges",
+    "hideExtendedBadges": "Hide badges"
   },
   "competition": {
     "title": "Match Record",

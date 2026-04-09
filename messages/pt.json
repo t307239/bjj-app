@@ -212,7 +212,11 @@
     "tabs": {
       "milestones": "Marcos",
       "achievementBadges": "Conquistas"
-    }
+    },
+    "showDetailCharts": "Ver gráficos detalhados",
+    "hideDetailCharts": "Ocultar gráficos detalhados",
+    "showExtendedBadges": "Ver mais medalhas",
+    "hideExtendedBadges": "Ocultar medalhas"
   },
   "gym": {
     "inviteTitle": "ð Convidar Alunos",

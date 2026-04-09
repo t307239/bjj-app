@@ -450,7 +450,11 @@
     "restoring": "復元中...",
     "restoreError": "復元に失敗しました。もう一度お試しください。",
     "accountDeletedTitle": "アカウントが削除されました",
-    "accountDeletedDesc": "ご利用ありがとうございました。またのご利用をお待ちしております。"
+    "accountDeletedDesc": "ご利用ありがとうございました。またのご利用をお待ちしております。",
+    "showDetailCharts": "詳細チャートを表示",
+    "hideDetailCharts": "詳細チャートを隠す",
+    "showExtendedBadges": "バッジをもっと見る",
+    "hideExtendedBadges": "バッジを隠す"
   },
   "competition": {
     "title": "試合戦績",

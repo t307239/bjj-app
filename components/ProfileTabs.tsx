@@ -165,8 +165,6 @@ function AccountSection({ userId, isPro, referralCode, referralCount }: { userId
 }
 
 type TabId = "stats" | "profile" | "body" | "account";
-type ActivityTab = "calendar" | "monthly" | "type";
-type BadgeTab = "milestones" | "badges";
 
 // perf: タブにホバー/フォーカスした時点でチャンクを先読みしておく
 // → クリック時には既にロード済みになりスケルトンが出ない
@@ -181,8 +179,8 @@ const VALID_TABS: TabId[] = ["stats", "profile", "body", "account"];
 export default function ProfileTabs({ userId, isPro = false, referralCode = null, referralCount = 0, totalCount = 0, belt = "white", stripeCount = 0, monthsAtBelt = 0 }: { userId: string; isPro?: boolean; referralCode?: string | null; referralCount?: number; totalCount?: number; belt?: string; stripeCount?: number; monthsAtBelt?: number }) {
   const { t } = useLocale();
   const [activeTab, setActiveTab] = useState<TabId>("stats");
-  const [activityTab, setActivityTab] = useState<ActivityTab>("calendar");
-  const [badgeTab, setBadgeTab] = useState<BadgeTab>("milestones");
+  const [showDetailCharts, setShowDetailCharts] = useState(false);
+  const [showExtendedBadges, setShowExtendedBadges] = useState(false);
 
   // URLパラメータ(?tab=body等)を初回マウント後に読んで初期化
   // useSearchParams は Suspense 必須で dynamic import と干渉するため
