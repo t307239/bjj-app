@@ -14,7 +14,8 @@ interface SafetyBannerProps {
  * Once dismissed, stays hidden via localStorage.
  */
 export default function SafetyBanner({ title, description }: SafetyBannerProps) {
-  const [dismissed, setDismissed] = useState(true); // default hidden to avoid flash
+  // null = not yet checked localStorage (hydration phase — render nothing to avoid flash)
+  const [dismissed, setDismissed] = useState<boolean | null>(null);
 
   useEffect(() => {
     try {
@@ -25,7 +26,8 @@ export default function SafetyBanner({ title, description }: SafetyBannerProps) 
     }
   }, []);
 
-  if (dismissed) return null;
+  // During hydration or if dismissed, render nothing
+  if (dismissed === null || dismissed) return null;
 
   const handleDismiss = () => {
     setDismissed(true);
