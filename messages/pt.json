@@ -126,7 +126,9 @@
     "deleteCancelBtn": "Cancelar",
     "deleteConfirmBtn": "Sim, excluir",
     "continuousInput": "Manter campos (data, tipo, duraÃ§Ã£o) para prÃ³xima entrada",
-    "yesterday": "Ontem"
+    "yesterday": "Ontem",
+    "showHistory": "Mostrar registros",
+    "hideHistory": "Ocultar registros"
   },
   "trainingLog": {
     "totalLabel": "total",

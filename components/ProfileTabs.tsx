@@ -228,59 +228,43 @@ export default function ProfileTabs({ userId, isPro = false, referralCode = null
           {/* S-1: 個人記録（コラプシブル） */}
           <PersonalBests userId={userId} />
 
-          {/* S-2: アクティビティ — カレンダー/月別/タイプ をタブ切り替えで1セクションに統合 */}
+          {/* S-2: アクティビティ — カレンダーヒートマップを直接表示 */}
           <div className="mt-4">
-            <div className="flex bg-zinc-800/50 rounded-xl p-1 gap-1 mb-0">
-              {(
-                [
-                  { id: "calendar" as ActivityTab, label: t("chart.calendarTab") },
-                  { id: "monthly"  as ActivityTab, label: t("chart.monthly") },
-                  { id: "type"     as ActivityTab, label: t("chart.typeTab") },
-                ] as const
-              ).map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActivityTab(tab.id)}
-                  className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all active:scale-95 ${
-                    activityTab === tab.id
-                      ? "bg-zinc-700 text-white shadow-sm"
-                      : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700/40"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-            {activityTab === "calendar" && <TrainingChart userId={userId} isPro={isPro} />}
-            {activityTab === "monthly"  && <TrainingBarChart userId={userId} isPro={isPro} />}
-            {activityTab === "type"     && <TrainingTypeChart userId={userId} isPro={isPro} />}
+            <TrainingChart userId={userId} isPro={isPro} />
+            {/* 詳細チャート（月別/タイプ）は折りたたみ */}
+            {showDetailCharts && (
+              <div className="mt-3 space-y-3">
+                <TrainingBarChart userId={userId} isPro={isPro} />
+                <TrainingTypeChart userId={userId} isPro={isPro} />
+              </div>
+            )}
+            <button
+              onClick={() => setShowDetailCharts((v) => !v)}
+              className="w-full flex items-center justify-center gap-1.5 py-2 mt-2 text-xs font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
+            >
+              <span>{showDetailCharts ? t("profile.hideDetailCharts") : t("profile.showDetailCharts")}</span>
+              <svg className={`w-3.5 h-3.5 transition-transform ${showDetailCharts ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
           </div>
 
-          {/* S-3: 実績 — マイルストーン/バッジ をタブ切り替えで1セクションに統合 */}
-          <div className="mt-4">
-            <div className="flex bg-zinc-800/50 rounded-xl p-1 gap-1 mb-0">
-              {(
-                [
-                  { id: "milestones" as BadgeTab, label: t("profile.tabs.milestones") },
-                  { id: "badges"     as BadgeTab, label: t("profile.tabs.achievementBadges") },
-                ] as const
-              ).map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setBadgeTab(tab.id)}
-                  className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all active:scale-95 ${
-                    badgeTab === tab.id
-                      ? "bg-zinc-700 text-white shadow-sm"
-                      : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700/40"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+          {/* S-3: 実績 — マイルストーンを直接表示 */}
+          <MilestoneBadgeGrid totalCount={totalCount} />
+          {showExtendedBadges && (
+            <div className="mt-3">
+              <ExtendedBadgeGrid userId={userId} />
             </div>
-            {badgeTab === "milestones" && <MilestoneBadgeGrid totalCount={totalCount} />}
-            {badgeTab === "badges"     && <ExtendedBadgeGrid userId={userId} />}
-          </div>
+          )}
+          <button
+            onClick={() => setShowExtendedBadges((v) => !v)}
+            className="w-full flex items-center justify-center gap-1.5 py-2 mt-1 text-xs font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
+          >
+            <span>{showExtendedBadges ? t("profile.hideExtendedBadges") : t("profile.showExtendedBadges")}</span>
+            <svg className={`w-3.5 h-3.5 transition-transform ${showExtendedBadges ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
 
           {/* S-4: 高度な分析 — ロール分析・パートナー統計を1 ProGate に統合 */}
           <div className="mt-4">

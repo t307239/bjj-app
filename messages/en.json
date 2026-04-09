@@ -213,7 +213,9 @@
     "freePlanNotice": "ð Free plan: showing last 30 days",
     "upgradeFullHistory": "Upgrade for full history â",
     "continuousInput": "Keep fields (date, type, duration) for next entry",
-    "yesterday": "Yesterday"
+    "yesterday": "Yesterday",
+    "showHistory": "Show training log",
+    "hideHistory": "Hide training log"
   },
   "techniques": {
     "mastery1": "Know it",

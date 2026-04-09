@@ -30,7 +30,7 @@ export function GoalWeekDayGrid({
             <div
               className={`w-full h-5 rounded flex items-center justify-center text-xs font-bold transition-colors ${
                 trained
-                  ? "bg-green-500/30 border border-green-500/50 text-green-300"
+                  ? "bg-emerald-500/30 border border-emerald-500/50 text-emerald-300"
                   : isToday
                   ? "bg-blue-500/20 border border-blue-500/50 text-blue-300"
                   : isPast
@@ -68,7 +68,7 @@ export function GoalDaysLeftText({
   const needed = Math.max(0, weeklyGoal - weekCount);
 
   if (needed === 0) return (
-    <p className="text-xs text-green-400 mt-1.5">
+    <p className="text-xs text-emerald-400 mt-1.5">
       {weekCount > weeklyGoal
         ? t("goal.extraWeek", { n: weekCount - weeklyGoal })
         : t("goal.weeklyClear")}
@@ -107,10 +107,10 @@ export function GoalWeekHeatmap({
               className={`w-full h-6 rounded flex items-center justify-center text-xs font-bold transition-colors ${
                 w.isCurrent
                   ? w.achieved
-                    ? "bg-green-500/30 border border-green-500/50 text-green-300"
+                    ? "bg-emerald-500/30 border border-emerald-500/50 text-emerald-300"
                     : "bg-blue-500/20 border border-blue-500/40 text-blue-300"
                   : w.achieved
-                  ? "bg-green-500/25 text-green-400"
+                  ? "bg-emerald-500/25 text-emerald-400"
                   : "bg-transparent border border-dashed border-white/20 text-gray-500"
               }`}
             >
@@ -128,7 +128,7 @@ export function GoalWeekHeatmap({
       </div>
       {consecutiveAchievedWeeks >= 2 && (
         <div className="mt-1.5 flex justify-center">
-          <span className="inline-flex items-center gap-1 text-xs font-semibold bg-green-500/15 border border-green-500/30 text-green-300 px-2 py-0.5 rounded-full">
+          <span className="inline-flex items-center gap-1 text-xs font-semibold bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 px-2 py-0.5 rounded-full">
             {t("goal.weeksInRow", { n: consecutiveAchievedWeeks })}
           </span>
         </div>
@@ -157,13 +157,13 @@ export function GoalMonthHistoryBadges({
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
                 m.achieved
-                  ? "bg-green-500 text-white shadow-sm shadow-green-500/40"
+                  ? "bg-emerald-500 text-white shadow-sm shadow-emerald-500/40"
                   : "border border-dashed border-white/20 text-gray-500"
               }`}
             >
               {m.achieved ? "✓" : m.count}
             </div>
-            <span className={`text-xs ${m.achieved ? "text-green-400" : "text-gray-500"}`}>
+            <span className={`text-xs ${m.achieved ? "text-emerald-400" : "text-gray-500"}`}>
               {m.label}
             </span>
           </div>

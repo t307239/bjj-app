@@ -231,6 +231,8 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     monthDelta,
   } = useTrainingLog({ userId, isPro, initialOpen, t });
 
+  const [listOpen, setListOpen] = useState(false);
+
   // Suppress unused-var TS warnings for stats used in Bento/Analytics (kept for future use)
   void monthHoursDisplay;
   void monthProjected;
@@ -254,45 +256,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         />
       )}
 
-      {/* Stats (weekly summary) */}
-      <TrainingLogStats entries={entries} totalPages={totalPages} page={page} />
-
-      {/* Monthly Bento Grid section */}
-      {!initialLoading && monthEntries.length > 0 && (
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="bg-zinc-900 rounded-xl p-3 border border-white/10 flex items-center gap-3">
-            <MiniTypeDonut entries={monthEntries} />
-            <div>
-              <p className="text-xs text-gray-500 tracking-wide">{t("training.monthCount")}</p>
-              <p className="text-lg font-bold text-white">{monthEntries.length}</p>
-              <p className="text-xs text-gray-400">{t("training.bentoSessions")}</p>
-            </div>
-          </div>
-          <div className="bg-zinc-900 rounded-xl p-3 border border-white/10">
-            <p className="text-xs text-gray-500 tracking-wide mb-1.5">{t("training.bentoTypeMix")}</p>
-            <MonthTypeStackBar entries={monthEntries} />
-            <div className="flex flex-wrap gap-x-2 gap-y-0.5 mt-1.5">
-              {TRAINING_TYPES.filter((t) => monthEntries.some((e) => e.type === t.value)).map((t) => (
-                <span key={t.value} className="text-xs text-gray-500">
-                  {t.icon} {t.label}: {monthEntries.filter((e) => e.type === t.value).length}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Free plan: 30-day history limit notice */}
-      {!isPro && !initialLoading && (
-        <div className="mb-3 px-4 py-2.5 rounded-xl border border-amber-500/20 bg-amber-500/8 flex items-center justify-between gap-3">
-          <span className="text-xs text-amber-300/80">
-            {t("training.freePlanNotice")}
-          </span>
-          <span className="text-xs font-medium text-blue-400 whitespace-nowrap">{t("training.upgradeFullHistory")}</span>
-        </div>
-      )}
-
-      {/* Header row — title + Export ▼ dropdown + Add CTA (item 2: de-cluttered) */}
+      {/* Header row — title + Export ▼ dropdown + Add CTA */}
       <div className="flex flex-wrap items-center justify-between mb-3 gap-x-2 gap-y-1">
         <h3 className="text-lg font-semibold whitespace-nowrap">
           {t("training.title")}
@@ -327,8 +291,64 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         partnerSuggestions={partnerSuggestions}
       />
 
-      {/* Keyword search */}
-      {!initialLoading && entries.length > 0 && (
+      {/* Collapsible log list toggle */}
+      {!initialLoading && entries.length > 0 && !showForm && (
+        <button
+          onClick={() => setListOpen((v) => !v)}
+          className="w-full flex items-center justify-center gap-1.5 py-2 text-xs font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
+        >
+          <span>{listOpen ? t("training.hideHistory") : t("training.showHistory")}</span>
+          <svg className={`w-3.5 h-3.5 transition-transform ${listOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      )}
+
+      {/* --- Collapsible section: stats, search, filters, list --- */}
+      {listOpen && !initialLoading && entries.length > 0 && (
+        <>
+          {/* Stats (weekly summary) */}
+          <TrainingLogStats entries={entries} totalPages={totalPages} page={page} />
+
+          {/* Monthly Bento Grid section */}
+          {monthEntries.length > 0 && (
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="bg-zinc-900 rounded-xl p-3 border border-white/10 flex items-center gap-3">
+                <MiniTypeDonut entries={monthEntries} />
+                <div>
+                  <p className="text-xs text-gray-500 tracking-wide">{t("training.monthCount")}</p>
+                  <p className="text-lg font-bold text-white">{monthEntries.length}</p>
+                  <p className="text-xs text-gray-400">{t("training.bentoSessions")}</p>
+                </div>
+              </div>
+              <div className="bg-zinc-900 rounded-xl p-3 border border-white/10">
+                <p className="text-xs text-gray-500 tracking-wide mb-1.5">{t("training.bentoTypeMix")}</p>
+                <MonthTypeStackBar entries={monthEntries} />
+                <div className="flex flex-wrap gap-x-2 gap-y-0.5 mt-1.5">
+                  {TRAINING_TYPES.filter((t) => monthEntries.some((e) => e.type === t.value)).map((t) => (
+                    <span key={t.value} className="text-xs text-gray-500">
+                      {t.icon} {t.label}: {monthEntries.filter((e) => e.type === t.value).length}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Free plan: 30-day history limit notice */}
+          {!isPro && (
+            <div className="mb-3 px-4 py-2.5 rounded-xl border border-amber-500/20 bg-amber-500/8 flex items-center justify-between gap-3">
+              <span className="text-xs text-amber-300/80">
+                {t("training.freePlanNotice")}
+              </span>
+              <span className="text-xs font-medium text-blue-400 whitespace-nowrap">{t("training.upgradeFullHistory")}</span>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Keyword search — always inside collapsible */}
+      {listOpen && !initialLoading && entries.length > 0 && (
         <div className="relative mb-2">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -354,7 +374,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       )}
 
       {/* Unified filter row: horizontal scroll chip bar — Period + Type pills + Date */}
-      {!initialLoading && entries.length > 0 && (() => {
+      {listOpen && !initialLoading && entries.length > 0 && (() => {
         const usedTypes = TRAINING_TYPES.filter((tt) => entries.some((e) => e.type === tt.value));
         const hasDateFilter = !!(dateFrom || dateTo);
         return (
@@ -442,8 +462,8 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         );
       })()}
 
-      {/* Entry list */}
-      <TrainingLogList
+      {/* Entry list — only when list is open */}
+      {listOpen && <TrainingLogList
         initialLoading={initialLoading}
         entries={entries}
         filtered={filtered}
@@ -466,7 +486,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         setEditCompForm={setEditCompForm}
         today={today}
         onShowForm={() => setShowForm(true)}
-      />
+      />}
 
       {/* FAB: Mobile only */}
       <button

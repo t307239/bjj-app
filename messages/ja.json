@@ -214,7 +214,9 @@
     "freePlanNotice": "🗓 無料プラン: 直近30日を表示",
     "upgradeFullHistory": "全履歴を見る →",
     "continuousInput": "連続入力（日付・タイプ・時間を保持）",
-    "yesterday": "昨日"
+    "yesterday": "昨日",
+    "showHistory": "ログ一覧を表示",
+    "hideHistory": "ログ一覧を閉じる"
   },
   "techniques": {
     "mastery1": "入門",
