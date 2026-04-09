@@ -6,6 +6,7 @@ import TechniqueLog from "@/components/TechniqueLog";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import { Suspense } from "react";
 import Link from "next/link";
+import SafetyBanner from "@/components/SafetyBanner";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
@@ -213,19 +214,10 @@ export default async function TechniquesPage() {
             SAFETY NOTE — dangerous technique warning for white/blue belts
             ═══════════════════════════════════════════ */}
         {(userBelt === "white" || userBelt === "blue") && (
-          <div className="mb-5 p-3.5 rounded-xl bg-amber-950/40 border border-amber-500/30">
-            <div className="flex items-start gap-2.5">
-              <span className="text-amber-400 text-base mt-0.5 flex-shrink-0">⚠️</span>
-              <div>
-                <p className="text-sm font-semibold text-amber-300 mb-1">
-                  {t("techniquesPage.safetyTitle")}
-                </p>
-                <p className="text-xs text-amber-200/80 leading-relaxed">
-                  {t("techniquesPage.safetyDesc")}
-                </p>
-              </div>
-            </div>
-          </div>
+          <SafetyBanner
+            title={t("techniquesPage.safetyTitle")}
+            description={t("techniquesPage.safetyDesc")}
+          />
         )}
 
         {/* ═══════════════════════════════════════════
