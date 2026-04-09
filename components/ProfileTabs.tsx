@@ -99,6 +99,18 @@ function AccountSection({ userId, isPro, referralCode, referralCount }: { userId
 
       {/* ⚙ App Settings — Push Notifications */}
       <PushNotificationSection />
+
+      {/* 📦 Data Export — always visible, NOT buried in delete flow */}
+      <div className="bg-zinc-900/60 border border-white/8 rounded-xl px-4 py-3 flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-white">{t("profile.exportDataTitle")}</p>
+          <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">{t("profile.exportDataHint")}</p>
+        </div>
+        <div className="flex-shrink-0">
+          <CsvExport userId={userId} />
+        </div>
+      </div>
+
       <div className="rounded-xl border border-red-900/50 overflow-hidden">
         <div className="bg-red-950/30 px-5 py-3 border-b border-red-900/30">
           <h3 className="text-red-500 text-sm font-semibold">{t("profile.dangerZone")}</h3>

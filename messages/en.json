@@ -453,7 +453,9 @@
     "showDetailCharts": "Show detail charts",
     "hideDetailCharts": "Hide detail charts",
     "showExtendedBadges": "Show more badges",
-    "hideExtendedBadges": "Hide badges"
+    "hideExtendedBadges": "Hide badges",
+    "exportDataTitle": "Export Your Data",
+    "exportDataHint": "Download all your training records as CSV — your data, always yours."
   },
   "competition": {
     "title": "Match Record",
@@ -1235,7 +1237,8 @@
     "statsSolid": "solid",
     "statsMastered": "mastered",
     "safetyTitle": "Safety Note for Beginners",
-    "safetyDesc": "Some techniques (heel hooks, kneebars, neck cranks) carry a high risk of injury. Always practice under qualified instructor supervision and tap early. This app is a training log, not a substitute for proper coaching."
+    "safetyDesc": "Some techniques (heel hooks, kneebars, neck cranks) carry a high risk of injury. Always practice under qualified instructor supervision and tap early. This app is a training log, not a substitute for proper coaching.",
+    "safetyWikiLink": "Learn about dangerous techniques on BJJ Wiki →"
   },
   "skillMapPage": {
     "title": "Skill Map",

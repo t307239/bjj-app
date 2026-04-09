@@ -1,19 +1,30 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 const STORAGE_KEY = "bjj_safety_banner_dismissed";
 
 interface SafetyBannerProps {
   title: string;
   description: string;
+  /** Optional wiki URL for "Learn more" link (e.g. /wiki/en/heel-hook). */
+  wikiHref?: string;
+  /** Label for the wiki link. Defaults to "Learn more →" */
+  wikiLabel?: string;
 }
 
 /**
  * SafetyBanner — dismissable safety warning for white/blue belts.
  * Once dismissed, stays hidden via localStorage.
+ * Fires "safety_banner_dismissed" and "safety_banner_wiki_click" for KPI tracking.
  */
-export default function SafetyBanner({ title, description }: SafetyBannerProps) {
+export default function SafetyBanner({
+  title,
+  description,
+  wikiHref,
+  wikiLabel = "Learn more →",
+}: SafetyBannerProps) {
   // null = not yet checked localStorage (hydration phase — render nothing to avoid flash)
   const [dismissed, setDismissed] = useState<boolean | null>(null);
 
@@ -31,6 +42,7 @@ export default function SafetyBanner({ title, description }: SafetyBannerProps) 
 
   const handleDismiss = () => {
     setDismissed(true);
+    trackEvent("safety_banner_dismissed");
     try {
       localStorage.setItem(STORAGE_KEY, "true");
     } catch {
@@ -58,6 +70,17 @@ export default function SafetyBanner({ title, description }: SafetyBannerProps) 
           <p className="text-xs text-amber-200/80 leading-relaxed">
             {description}
           </p>
+          {wikiHref && (
+            <a
+              href={wikiHref}
+              onClick={() => trackEvent("safety_banner_wiki_click")}
+              className="inline-block mt-1.5 text-xs text-amber-400 hover:text-amber-300 underline underline-offset-2 transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {wikiLabel}
+            </a>
+          )}
         </div>
       </div>
     </div>

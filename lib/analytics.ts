@@ -1,19 +1,21 @@
 /**
  * Actionable KPI event tracking via Vercel Analytics.
  *
- * Only 5 events are tracked — all directly tied to retention,
- * conversion, or viral metrics. No noise. (AUDIT_FRAMEWORK §6)
+ * Events are directly tied to retention, conversion, viral, or legal metrics.
+ * No noise. (AUDIT_FRAMEWORK §6)
  */
 
 type KpiEvent =
-  | "training_logged"      // DAU / retention
-  | "pro_upgrade_click"    // conversion
-  | "referral_shared"      // viral coefficient
-  | "technique_added"      // engagement
-  | "gym_lead_click"       // B2B pipeline
-  | "ai_coach_generated"   // AI coach usage (cache_hit | fresh)
-  | "milestone_share"      // viral share on achievement
-  | "tab_viewed";          // profile tab engagement
+  | "training_logged"          // DAU / retention
+  | "pro_upgrade_click"        // conversion
+  | "referral_shared"          // viral coefficient
+  | "technique_added"          // engagement
+  | "gym_lead_click"           // B2B pipeline
+  | "ai_coach_generated"       // AI coach usage (cache_hit | fresh)
+  | "milestone_share"          // viral share on achievement
+  | "tab_viewed"               // profile tab engagement
+  | "safety_banner_dismissed"  // legal/UX: user acknowledged danger-technique warning
+  | "safety_banner_wiki_click";// content funnel: wiki link from safety banner → Axis 6
 
 /**
  * Fire a KPI event. Safe to call on the server (no-op).

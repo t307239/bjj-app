@@ -8,6 +8,7 @@ import GoalTracker from "@/components/GoalTracker";
 import GuestMigration from "@/components/GuestMigration";
 import StreakProtect from "@/components/StreakProtect";
 import StreakFreeze from "@/components/StreakFreeze";
+import StreakMilestoneShare from "@/components/StreakMilestoneShare";
 import AchievementBadge from "@/components/AchievementBadge";
 import InstallBanner from "@/components/InstallBanner";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
@@ -437,6 +438,8 @@ export default async function DashboardPage({
             ═══════════════════════════════════════════ */}
         {streak >= 3 && (
           <section className="space-y-3 mb-7">
+            {/* Milestone share banner — shown once per milestone (30/100/365), localStorage dedup */}
+            <StreakMilestoneShare streak={streak} />
             <StreakProtect userId={user.id} streak={streak} />
             <StreakFreeze userId={user.id} streak={streak} />
           </section>

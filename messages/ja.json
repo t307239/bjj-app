@@ -454,7 +454,9 @@
     "showDetailCharts": "詳細チャートを表示",
     "hideDetailCharts": "詳細チャートを隠す",
     "showExtendedBadges": "バッジをもっと見る",
-    "hideExtendedBadges": "バッジを隠す"
+    "hideExtendedBadges": "バッジを隠す",
+    "exportDataTitle": "データエクスポート",
+    "exportDataHint": "トレーニング記録をCSVでいつでもダウンロードできます。データはあなたのものです。"
   },
   "competition": {
     "title": "試合戦績",
@@ -1227,7 +1229,8 @@
     "statsSolid": "定着",
     "statsMastered": "マスター",
     "safetyTitle": "初心者への安全注意",
-    "safetyDesc": "一部のテクニック（ヒールフック、膝十字、首関節技等）は重大な怪我のリスクがあります。必ず有資格の指導者の監督下で練習し、早めにタップしてください。このアプリはトレーニング記録ツールであり、指導の代替ではありません。"
+    "safetyDesc": "一部のテクニック（ヒールフック、膝十字、首関節技等）は重大な怪我のリスクがあります。必ず有資格の指導者の監督下で練習し、早めにタップしてください。このアプリはトレーニング記録ツールであり、指導の代替ではありません。",
+    "safetyWikiLink": "BJJ Wikiで危険テクニックを詳しく確認 →"
   },
   "skillMapPage": {
     "title": "スキルマップ",
