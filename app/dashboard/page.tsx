@@ -15,6 +15,7 @@ import OnboardingChecklist from "@/components/OnboardingChecklist";
 import GymKickBanner from "@/components/GymKickBanner";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
 import WeightGoalWidget from "@/components/WeightGoalWidget";
+import MonthlyShareCard from "@/components/MonthlyShareCard";
 import {
   getWeekStartDate,
   getMonthStartDate,
@@ -373,6 +374,19 @@ export default async function DashboardPage({
           recentTechniques={recentTechniques as { name: string }[] | null}
           isPro={isPro}
           t={t}
+        />
+
+        {/* ═══════════════════════════════════════════
+            SECTION 2.1 — MONTHLY SHARE CARD (viral loop)
+            ═══════════════════════════════════════════ */}
+        <MonthlyShareCard
+          monthCount={monthCount}
+          monthHoursStr={monthHoursStr}
+          streak={streak}
+          belt={belt}
+          techniqueCount={techniqueCount ?? 0}
+          year={year}
+          month={month}
         />
 
         {/* ═══════════════════════════════════════════

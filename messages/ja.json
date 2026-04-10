@@ -1542,5 +1542,13 @@
     "title": "404 — ページが見つかりません",
     "description": "このページは存在しないか、移動された可能性があります。",
     "backHome": "ホームへ戻る"
+  },
+  "monthlyShare": {
+    "sectionLabel": "今月のまとめ",
+    "shareText": "🥋 今月の柔術トレーニング: {sessions}回 / {hours}！BJJ Appで記録中 →",
+    "previewAlt": "月次トレーニングまとめカード",
+    "cta": "仲間に進捗をシェアしよう",
+    "shareButton": "シェア 📊",
+    "copied": "コピー済み ✅"
   }
 }

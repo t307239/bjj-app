@@ -13,6 +13,7 @@ type KpiEvent =
   | "gym_lead_click"           // B2B pipeline
   | "ai_coach_generated"       // AI coach usage (cache_hit | fresh)
   | "milestone_share"          // viral share on achievement
+  | "monthly_share"            // viral share on monthly summary
   | "tab_viewed"               // profile tab engagement
   | "safety_banner_dismissed"  // legal/UX: user acknowledged danger-technique warning
   | "safety_banner_wiki_click";// content funnel: wiki link from safety banner → Axis 6

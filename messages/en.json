@@ -1540,5 +1540,13 @@
     "title": "404 — Page Not Found",
     "description": "This page doesn't exist or has been moved.",
     "backHome": "Back to Home"
+  },
+  "monthlyShare": {
+    "sectionLabel": "Monthly Summary",
+    "shareText": "🥋 This month's BJJ training: {sessions} sessions / {hours}! Tracking every roll with BJJ App →",
+    "previewAlt": "Monthly training summary card",
+    "cta": "Share your progress with friends",
+    "shareButton": "Share 📊",
+    "copied": "Copied! ✅"
   }
 }
