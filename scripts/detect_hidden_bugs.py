@@ -244,6 +244,10 @@ def check_console_logs(filepath: Path, content: str, report: BugReport):
     """console.log残存検出"""
     rel = filepath.relative_to(APP_ROOT)
 
+    # ロガーモジュール自体は正当な console.log 使用
+    if filepath.name in ("logger.ts", "logger.tsx"):
+        return
+
     logs = re.findall(r'console\.log\(', content)
     if logs:
         report.add(
@@ -378,13 +382,16 @@ def check_unused_imports(filepath: Path, content: str, report: BugReport):
         m = import_re.match(line)
         if not m:
             continue
-        # import type { ... } は型のみ — tscが検出するので低優先
+        # import type { ... } は型のみ — tscが検出するので低優先度スキップ
         if re.match(r'^\s*import\s+type\s+', line):
             continue
         symbols_raw = m.group(1).split(",")
         for sym_raw in symbols_raw:
             sym_raw = sym_raw.strip()
             if not sym_raw:
+                continue
+            # 'type Foo' インラインtype修飾子は除外（tscが検出する）
+            if sym_raw.startswith("type "):
                 continue
             # 'Name as Alias' → Alias を使用名とする
             parts = sym_raw.split(" as ")
@@ -453,39 +460,59 @@ def check_accessibility(filepath: Path, content: str, report: BugReport):
     """アイコンonlyボタン/リンクのaria-label欠損、img alt欠損（カテゴリ12）"""
     rel = filepath.relative_to(APP_ROOT)
 
-    # <img> without alt
-    img_no_alt = re.findall(r'<img\b[^>]*?(?<!alt=)[^>]*/?\s*>', content)
-    for m in img_no_alt:
-        if 'alt=' not in m and 'alt =' not in m:
+    # <img> without alt — マルチラインの <img ... /> に対応
+    # コメント・docstring内のタグは除外
+    content_no_comments = re.sub(r'/\*\*?.*?\*/', '', content, flags=re.DOTALL)
+    content_no_comments = re.sub(r'//.*$', '', content_no_comments, flags=re.MULTILINE)
+    img_blocks = re.finditer(r'<img\b', content_no_comments)
+    for m_img in img_blocks:
+        start = m_img.start()
+        # 閉じ > or /> を探す（最大500文字先まで）
+        chunk = content_no_comments[start:start + 500]
+        close = re.search(r'/?\s*>', chunk)
+        if not close:
+            continue
+        tag_text = chunk[:close.end()]
+        if 'alt=' not in tag_text and 'alt =' not in tag_text:
             report.add(
                 "WARNING", "A11Y_IMG_NO_ALT",
                 str(rel),
-                f"<img> に alt 属性がない: '{m[:80]}'",
+                f"<img> に alt 属性がない: '{tag_text[:80]}'",
                 'alt="" (装飾) または alt="説明" を追加',
             )
 
     # アイコンonlyボタン: <button> の中身がテキストを含まず、aria-labelもない
-    # パターン: <button ...> の後に直接 <svg> や <span className="sr-only"> がなく、
-    # テキストノードもない場合
+    # ボタンの開始から </button> までの全体を確認し、テキストノードやsr-onlyが
+    # 含まれていなければ報告する
     icon_btn_re = re.compile(
         r'<button\b([^>]*)>'       # <button ...>
         r'\s*'
-        r'(<(?:svg|img|span)[^<]*)'  # 直後が svg/img/span
+        r'(<(?:svg|img)\b)'        # 直後が svg/img
     , re.DOTALL)
     for m in icon_btn_re.finditer(content):
         attrs = m.group(1)
-        inner = m.group(2)
-        if 'aria-label' not in attrs and 'aria-labelledby' not in attrs:
-            if 'sr-only' not in inner and not re.search(r'>[A-Za-z\u3040-\u9FFF]', inner):
-                # ボタン全体のコンテキスト確認（30文字先までにテキストがなければ報告）
-                after = content[m.end():m.end()+100]
-                if not re.search(r'>[A-Za-z\u3040-\u9FFF]', after.split('</button>')[0] if '</button>' in after else after):
-                    report.add(
-                        "WARNING", "A11Y_ICON_BUTTON",
-                        str(rel),
-                        f"アイコンのみのbuttonにaria-label欠損: '{m.group(0)[:80]}'",
-                        'aria-label="操作名" を追加',
-                    )
+        if 'aria-label' in attrs or 'aria-labelledby' in attrs:
+            continue
+        # ボタンの終了タグまでの全内容を取得（最大500文字先まで）
+        btn_body = content[m.start():m.start()+500]
+        close_idx = btn_body.find('</button>')
+        if close_idx < 0:
+            continue
+        btn_inner = btn_body[btn_body.index('>') + 1:close_idx]
+        # sr-only span があればスクリーンリーダーに読まれる → OK
+        if 'sr-only' in btn_inner:
+            continue
+        # テキストノード（英語・日本語・{t(...)})があれば OK
+        # SVG内部のタグテキストを除外するため、SVGブロックを除去してからチェック
+        no_svg = re.sub(r'<svg\b[^>]*>.*?</svg>', '', btn_inner, flags=re.DOTALL)
+        if re.search(r'>[A-Za-z\u3040-\u9FFF]', no_svg) or re.search(r'\{t\(', no_svg):
+            continue
+        report.add(
+            "WARNING", "A11Y_ICON_BUTTON",
+            str(rel),
+            f"アイコンのみのbuttonにaria-label欠損: '{m.group(0)[:80]}'",
+            'aria-label="操作名" を追加',
+        )
 
 
 # ─────────────────────────────────────────────────────
@@ -531,8 +558,10 @@ def check_secret_env_in_client(filepath: Path, content: str, report: BugReport):
         if stripped.startswith("//") or stripped.startswith("*"):
             continue
         env_refs = re.findall(r'process\.env\.([A-Z_]+)', line)
+        # Next.js / Vercel が自動的にインライン化する安全な変数
+        SAFE_CLIENT_ENV = {"NODE_ENV", "VERCEL_ENV", "VERCEL_URL", "VERCEL"}
         for env_name in env_refs:
-            if env_name == "NODE_ENV":
+            if env_name in SAFE_CLIENT_ENV:
                 continue
             if env_name.startswith("NEXT_PUBLIC_"):
                 continue

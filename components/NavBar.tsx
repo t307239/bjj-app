@@ -7,7 +7,7 @@ import LogoutButton from "./LogoutButton";
 import OfflineBanner from "./OfflineBanner";
 import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
-import { getLocalDateString } from "@/lib/timezone";
+
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
 
 const STRIPE_PAYMENT_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || null;
