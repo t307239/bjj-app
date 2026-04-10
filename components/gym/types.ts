@@ -32,12 +32,3 @@ export function beltColor(belt: string): string {
   }
 }
 
-// ─── Churn risk helper ────────────────────────────────────────────────────────
-
-export function churnRisk(lastDate: string | null, sessions30d: number): RiskLevel {
-  if (!lastDate) return "red";
-  const diffDays = Math.floor((Date.now() - new Date(lastDate).getTime()) / 86400000);
-  if (diffDays > 21 || sessions30d === 0) return "red";
-  if (diffDays > 10 || sessions30d <= 1) return "yellow";
-  return "green";
-}

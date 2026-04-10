@@ -32,14 +32,3 @@ export default function Skeleton({
     />
   );
 }
-
-/** 複数のSkeletonをまとめたカードスケルトン */
-export function SkeletonCard({ className = "" }: { className?: string }) {
-  return (
-    <div className={`bg-zinc-900/50 rounded-2xl p-4 border border-white/10 ${className}`} aria-hidden="true">
-      <Skeleton height={12} width="40%" rounded="md" className="mb-3" />
-      <Skeleton height={48} width="60%" rounded="lg" className="mb-2" />
-      <Skeleton height={10} width="30%" rounded="md" />
-    </div>
-  );
-}

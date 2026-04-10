@@ -2,8 +2,8 @@ BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 184 files
 CRITICAL: 1
 WARNING: 0
-INFO: 17
-Total: 18
+INFO: 10
+Total: 11
 
 [CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 32% (453/1424 キー) — 1001 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
@@ -27,17 +27,3 @@ Total: 18
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L793: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [UNUSED_EXPORT] components/CollapsibleSection.tsx: export 'CollapsibleSection' がどこからもimportされていない — デッドコードの可能性
-  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
-[INFO] [UNUSED_EXPORT] components/CompetitionStats.tsx: export 'CompetitionStats' がどこからもimportされていない — デッドコードの可能性
-  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
-[INFO] [UNUSED_EXPORT] components/WeeklyStrip.tsx: export 'WeeklyStrip' がどこからもimportされていない — デッドコードの可能性
-  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
-[INFO] [UNUSED_EXPORT] components/WikiQuickLinks.tsx: export 'WikiQuickLinks' がどこからもimportされていない — デッドコードの可能性
-  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
-[INFO] [UNUSED_EXPORT] components/dashboard/DashboardMotivation.tsx: export 'DashboardMotivation' がどこからもimportされていない — デッドコードの可能性
-  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
-[INFO] [UNUSED_EXPORT] components/gym/types.ts: export 'churnRisk' がどこからもimportされていない — デッドコードの可能性
-  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
-[INFO] [UNUSED_EXPORT] components/ui/Skeleton.tsx: export 'SkeletonCard' がどこからもimportされていない — デッドコードの可能性
-  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
