@@ -863,7 +863,8 @@
   "error": {
     "title": "Something went wrong",
     "description": "An error occurred while loading the page.",
-    "retry": "Try Again"
+    "retry": "Try Again",
+    "goHome": "Back to Home"
   },
   "goal": {
     "title": "ð¯ Training Goals",
@@ -1517,5 +1518,10 @@
   "injury": {
     "snooze7d": "Snooze for 7 days",
     "hide7d": "Hide for 7 days"
+  },
+  "notFound": {
+    "title": "404 — Page Not Found",
+    "description": "This page doesn't exist or has been moved.",
+    "backHome": "Back to Home"
   }
 }

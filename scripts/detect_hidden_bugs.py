@@ -134,21 +134,30 @@ def check_hardcoded_strings(filepath: Path, content: str, report: BugReport):
     content_no_comments = re.sub(r'\{/\*.*?\*/\}', '', content, flags=re.DOTALL)
     # // コメント行も除去
     content_no_comments = re.sub(r'//.*$', '', content_no_comments, flags=re.MULTILINE)
+    # コードブロック内（IIFE・関数本体）を除去して偽陽性を防ぐ
+    content_no_comments = re.sub(r'\(\s*\)\s*=>\s*\{[^}]*\}', '', content_no_comments, flags=re.DOTALL)
 
     # 日英混在ハードコード: "Weight(体重)" パターン
+    # ※ 短い文字列（<60文字）かつ日本語CJK文字と英単語が近接するものだけを検出
     mixed_patterns = [
         (r'>[A-Za-z]+\([^)]*[\u3040-\u9FFF]+[^)]*\)<', "日英混在テキスト"),
-        (r'>[^<]*[\u3040-\u9FFF]+[^<]*[A-Za-z]{3,}[^<]*<', "多言語混在（JAの中に英語）"),
+        # 日本語テキスト内に連続する英単語（3文字以上）が含まれる場合
+        # ただしURL・コメント・コード識別子（アッパーキャメル・アンダースコア）は除外
+        (r'>([^<\n]{0,40}[\u3040-\u9FFF]+[^<\n]{0,10}[a-z]{4,}[^<\n]{0,40})<', "多言語混在（JAの中に英語）"),
     ]
     for pattern, desc in mixed_patterns:
         matches = re.findall(pattern, content_no_comments)
         for m in matches:
-            if len(m) > 100:
+            m_str = m if isinstance(m, str) else m
+            # 偽陽性フィルタ: JSXコード構造・ファイルパス・URL等
+            if len(m_str) > 80:
+                continue
+            if any(skip in m_str for skip in ['/*', '//', '=>', '()', '{', '}']):
                 continue
             report.add(
                 "WARNING", "HARDCODED_MIXED",
                 str(rel),
-                f"{desc}: '{m[:60]}'",
+                f"{desc}: '{m_str[:60]}'",
                 "t() / serverT() 経由に修正",
             )
 

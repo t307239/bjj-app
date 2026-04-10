@@ -390,7 +390,9 @@
   "error": {
     "title": "Algo deu errado",
     "tryAgain": "Tentar novamente",
-    "goHome": "Voltar ao início"
+    "goHome": "Voltar ao início",
+    "description": "Ocorreu um erro ao carregar a página.",
+    "retry": "Tentar novamente"
   },
   "landing": {
     "hero": "Seu treinamento de BJJ, elevado",
@@ -498,5 +500,10 @@
   },
   "techniques": {
     "freePlanLimit": "Limite do plano gratuito: {n} técnicas. Faça upgrade para Pro para ilimitado."
+  },
+  "notFound": {
+    "title": "404 — Página não encontrada",
+    "description": "Esta página não existe ou foi movida.",
+    "backHome": "Voltar ao início"
   }
 }
