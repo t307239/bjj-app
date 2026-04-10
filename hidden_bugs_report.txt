@@ -1,24 +1,16 @@
 BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 179 files
 CRITICAL: 1
-WARNING: 11
+WARNING: 0
 INFO: 26
-Total: 38
+Total: 27
 
 [CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 32% (453/1424 キー) — 1001 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
-[WARNING] [SILENT_CATCH] app/api/gym/curriculum/route.ts: L36: .catch() がエラーを握りつぶしている — デバッグ不能
-  FIX: .catch((err) => console.error('context:', err)) に変更
-[WARNING] [SILENT_CATCH] app/api/gym/kick/route.ts: L55: .catch() がエラーを握りつぶしている — デバッグ不能
-  FIX: .catch((err) => console.error('context:', err)) に変更
 [INFO] [DANGEROUS_HTML] app/gym/page.tsx: L41: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/layout.tsx: L92: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [SILENT_CATCH] app/layout.tsx: L93: .catch() がエラーを握りつぶしている — デバッグ不能
-  FIX: .catch((err) => console.error('context:', err)) に変更
-[WARNING] [PROMISE_NO_CATCH] app/login/LoginClient.tsx: L48: .then() に .catch() がない — エラー時サイレント失敗
-  FIX: .catch((err) => console.error(err)) を追加、または async/await + try-catch に変更
 [INFO] [DANGEROUS_HTML] app/login/layout.tsx: L49: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/login/page.tsx: L41: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
@@ -29,26 +21,12 @@ Total: 38
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L139: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [SILENT_CATCH] app/wiki/[lang]/[slug]/WikiContentEnhancer.tsx: L80: .catch() がエラーを握りつぶしている — デバッグ不能
-  FIX: .catch((err) => console.error('context:', err)) に変更
 [INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L675: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L679: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L793: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [PROMISE_NO_CATCH] components/GymCurriculumCard.tsx: L37: .then() に .catch() がない — エラー時サイレント失敗
-  FIX: .catch((err) => console.error(err)) を追加、または async/await + try-catch に変更
-[WARNING] [SILENT_CATCH] components/GymDashboard.tsx: L139: .catch() がエラーを握りつぶしている — デバッグ不能
-  FIX: .catch((err) => console.error('context:', err)) に変更
-[WARNING] [SILENT_CATCH] components/MilestoneBadgeGrid.tsx: L89: .catch() がエラーを握りつぶしている — デバッグ不能
-  FIX: .catch((err) => console.error('context:', err)) に変更
-[WARNING] [PROMISE_NO_CATCH] components/ProfileForm.tsx: L673: .then() に .catch() がない — エラー時サイレント失敗
-  FIX: .catch((err) => console.error(err)) を追加、または async/await + try-catch に変更
-[WARNING] [SILENT_CATCH] components/StreakMilestoneShare.tsx: L64: .catch() がエラーを握りつぶしている — デバッグ不能
-  FIX: .catch((err) => console.error('context:', err)) に変更
-[WARNING] [PROMISE_NO_CATCH] components/gym/MemberCard.tsx: L29: .then() に .catch() がない — エラー時サイレント失敗
-  FIX: .catch((err) => console.error(err)) を追加、または async/await + try-catch に変更
 [INFO] [MISSING_ERROR_BOUNDARY] app/account-deleted: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック
   FIX: app/account-deleted/error.tsx を作成。最低限 'use client' + エラーメッセージ + リトライボタン
 [INFO] [MISSING_ERROR_BOUNDARY] app/privacy: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック

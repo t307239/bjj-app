@@ -29,21 +29,19 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
   useEffect(() => {
     // Check if user has already marked this curriculum dispatch as practiced
     const supabase = createClient();
-    supabase
-      .from("profiles")
-      .select("curriculum_completed_at")
-      .eq("id", userId)
-      .single()
-      .then(({ data }) => {
-        if (!data?.curriculum_completed_at) return;
-        // If completed_at is AFTER curriculum_set_at, it counts as practiced for this dispatch
-        const completedAt = new Date(data.curriculum_completed_at).getTime();
-        const setAt = new Date(curriculumSetAt).getTime();
-        if (completedAt >= setAt) {
-          setPracticed(true);
-        }
-      })
-      .catch((err) => console.error("curriculum check failed:", err));
+    const fetchPracticed = async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("curriculum_completed_at")
+        .eq("id", userId)
+        .single();
+      if (error) { console.error("curriculum check failed:", error); return; }
+      if (!data?.curriculum_completed_at) return;
+      const completedAt = new Date(data.curriculum_completed_at).getTime();
+      const setAt = new Date(curriculumSetAt).getTime();
+      if (completedAt >= setAt) setPracticed(true);
+    };
+    fetchPracticed();
   }, [userId, curriculumSetAt]);
 
   const handlePracticed = async (e: React.MouseEvent) => {

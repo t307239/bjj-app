@@ -666,14 +666,15 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
 
   // Fetch all gym names for autocomplete + gym_id auto-linking (T-30)
   useEffect(() => {
-    supabase
-      .from("gyms")
-      .select("id, name")
-      .order("name", { ascending: true })
-      .then(({ data }) => {
-        if (data) setGymSuggestions(data as { id: string; name: string }[]);
-      })
-      .catch((err) => console.error("gym list fetch failed:", err));
+    const fetchGyms = async () => {
+      const { data, error } = await supabase
+        .from("gyms")
+        .select("id, name")
+        .order("name", { ascending: true });
+      if (error) { console.error("gym list fetch failed:", error); return; }
+      if (data) setGymSuggestions(data as { id: string; name: string }[]);
+    };
+    fetchGyms();
   }, [supabase]);
 
   const handleSave = async (e: React.FormEvent) => {

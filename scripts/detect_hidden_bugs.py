@@ -788,12 +788,18 @@ def check_silent_catch(filepath: Path, content: str, report: BugReport):
     # 例: .catch(() => {/* clipboard not available */})
     comment_in_catch = re.compile(r'\.catch\s*\(\s*\(\s*\w*\s*\)\s*=>\s*\{\s*/\*.*?\*/\s*\}\s*\)')
 
+    # req.json().catch(() => null) は API route の意図的パターン（不正body → null → validation → 400）
+    req_json_catch = re.compile(r'req(?:uest)?\.json\(\)\.catch\s*\(')
+
     for line_no, line in enumerate(content.split("\n"), 1):
         stripped = line.strip()
         if stripped.startswith("//") or stripped.startswith("*"):
             continue
         # コメント付き catch は意図的と判断しスキップ
         if comment_in_catch.search(line):
+            continue
+        # req.json().catch は意図的パターン → スキップ
+        if req_json_catch.search(line):
             continue
         for pattern in patterns:
             if re.search(pattern, line):
