@@ -10,7 +10,9 @@
     "streakDaysStraight": "{n}日連続練習中",
     "proManage": "Pro · 管理",
     "proLabel": "Pro",
-    "upgradeToPro": "Proにアップグレード"
+    "upgradeToPro": "Proにアップグレード",
+    "records": "記録",
+    "mypage": "マイページ"
   },
   "dashboard": {
     "welcomeBack": "おかえり、{name} 👋",
@@ -1551,5 +1553,18 @@
     "cta": "仲間に進捗をシェアしよう",
     "shareButton": "シェア 📊",
     "copied": "コピー済み ✅"
+  },
+  "home": {
+    "weekSessions": "今週 {n}回",
+    "monthSessions": "今月 {n}回",
+    "streakDays": "🔥{n}日",
+    "streakZero": "🔥0日",
+    "recentTitle": "最近の練習",
+    "viewAllRecords": "すべての記録を見る",
+    "emptyTitle": "まだ練習記録がありません",
+    "emptyDesc": "最初のトレーニングを記録して始めよう",
+    "emptyCtaRecord": "練習を記録する",
+    "proInsightTeaser": "📈 練習傾向を分析",
+    "proInsightDesc": "Proで詳細なトレーニング分析を見る →"
   }
 }

@@ -1,19 +1,11 @@
 import type { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
-import dynamic from "next/dynamic";
 import NavBar from "@/components/NavBar";
-import TrainingLog from "@/components/TrainingLog";
-import GoalTracker from "@/components/GoalTracker";
 import GuestMigration from "@/components/GuestMigration";
-import StreakProtect from "@/components/StreakProtect";
-import StreakFreeze from "@/components/StreakFreeze";
 import AchievementBadge from "@/components/AchievementBadge";
 import InstallBanner from "@/components/InstallBanner";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
-import GymKickBanner from "@/components/GymKickBanner";
-import GymCurriculumCard from "@/components/GymCurriculumCard";
-import WeightGoalWidget from "@/components/WeightGoalWidget";
 import {
   getWeekStartDate,
   getMonthStartDate,
@@ -24,24 +16,12 @@ import { serverT, makeT, type Locale } from "@/lib/i18n";
 import { calcBjjDuration, formatBjjDuration } from "@/lib/bjjDuration";
 import ProStatusBanner from "@/components/ProStatusBanner";
 import GuestDashboardClient from "@/components/GuestDashboardClient";
+import Link from "next/link";
 
-// ─── Extracted sub-components ─────────────────────────────────────────────────
-import HeroCard from "@/components/dashboard/HeroCard";
-import BentoStatsGrid from "@/components/dashboard/BentoStatsGrid";
+// ─── New simplified home components ──────────────────────────────────────────
+import StatusBar from "@/components/dashboard/StatusBar";
+import RecentLogs from "@/components/dashboard/RecentLogs";
 
-// perf: 条件表示コンポーネント（gym 所属者のみ / Pro のみ）を遅延読み込み
-// → 未所属ユーザーは GymRanking のコードを一切ダウンロードしない
-const GymRanking = dynamic(() => import("@/components/GymRanking"), {
-  loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
-});
-// perf: AI Coach は Pro ユーザー向けかつ折り返し以下 → 遅延読み込み
-const AICoachCard = dynamic(() => import("@/components/AICoachCard"), {
-  loading: () => <div className="min-h-[128px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
-});
-
-// perf: 折り返し以下の重いチャート群を遅延読み込み（初期JSバンドルから除外）
-// CLS防御: loading skeleton の高さを実コンポーネントの内部 Skeleton と揃えて min-h で確保
-// TrainingBarChart / TrainingTypeChart は Profile > 統計タブへ移動（T-25）
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -157,25 +137,22 @@ export default async function DashboardPage({
 
   const firstDayOfMonth = getMonthStartDate();
   const firstDayOfWeek = getWeekStartDate();
-  const { year, month, day: dayOfMonth } = getLocalDateParts();
-  const daysInMonth = new Date(year, month, 0).getDate();
-  const remainingDays = daysInMonth - dayOfMonth;
+  const { year, month } = getLocalDateParts();
   const prevMonth = month === 1 ? 12 : month - 1;
   const prevYear = month === 1 ? year - 1 : year;
   const firstDayOfPrevMonth = `${prevYear}-${String(prevMonth).padStart(2, "0")}-01`;
 
-  // ── 全データを並列フェッチ（profile + RPC metrics + logs を1ウェーブで取得）──
-  // perf: profileData を単独 await から Promise.all に移動して waterfall を解消
+  // ── 全データを並列フェッチ ──
   const [
     { data: profileData },
     rpcRes,
     { data: recentLogs },
-    { data: recentTechniques },
+    { data: recentLogsFull },
   ] = await Promise.all([
     supabase
       .from("profiles")
       .select(
-        "belt, stripe, start_date, is_pro, subscription_status, gym_name, weekly_goal, gym_id, gym_kick_notified, share_data_with_gym, ai_coach_cache, ai_coach_last_generated, locale, target_weight, target_weight_date"
+        "belt, stripe, start_date, is_pro, subscription_status, locale"
       )
       .eq("id", user.id)
       .single(),
@@ -191,48 +168,33 @@ export default async function DashboardPage({
       .eq("user_id", user.id)
       .order("date", { ascending: false })
       .limit(60),
+    // Fetch recent 3 full entries for the compact home view
     supabase
-      .from("techniques")
-      .select("name")
+      .from("training_logs")
+      .select("id, date, type, duration_min, notes")
       .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
+      .order("date", { ascending: false })
       .limit(3),
   ]);
 
-  // Use RPC result if available; otherwise fall back to direct count queries
   let metrics = rpcRes.data;
   if (!metrics || (Array.isArray(metrics) && metrics.length === 0)) {
-    const [mRes, pmRes, wRes, tRes, totRes, mMinsRes] = await Promise.all([
+    const [mRes, wRes, totRes] = await Promise.all([
       supabase.from("training_logs").select("*", { count: "exact", head: true }).eq("user_id", user.id).gte("date", firstDayOfMonth),
-      supabase.from("training_logs").select("*", { count: "exact", head: true }).eq("user_id", user.id).gte("date", firstDayOfPrevMonth).lt("date", firstDayOfMonth),
       supabase.from("training_logs").select("*", { count: "exact", head: true }).eq("user_id", user.id).gte("date", firstDayOfWeek),
-      supabase.from("techniques").select("*", { count: "exact", head: true }).eq("user_id", user.id),
       supabase.from("training_logs").select("*", { count: "exact", head: true }).eq("user_id", user.id),
-      supabase.from("training_logs").select("duration_min").eq("user_id", user.id).gte("date", firstDayOfMonth),
     ]);
     metrics = [{
       month_count: mRes.count ?? 0,
-      prev_month_count: pmRes.count ?? 0,
       week_count: wRes.count ?? 0,
-      technique_count: tRes.count ?? 0,
       total_count: totRes.count ?? 0,
-      month_total_mins: (mMinsRes.data ?? []).reduce((s: number, r: { duration_min: number }) => s + (r.duration_min || 0), 0),
     }];
   }
 
   const m = Array.isArray(metrics) ? metrics[0] : metrics;
   const monthCount = Number(m?.month_count ?? 0);
-  const prevMonthCount = Number(m?.prev_month_count ?? 0);
   const weekCount = Number(m?.week_count ?? 0);
-  const techniqueCount = Number(m?.technique_count ?? 0);
   const totalCount = Number(m?.total_count ?? 0);
-  const monthTotalMins = Number(m?.month_total_mins ?? 0);
-  const monthHoursStr =
-    monthTotalMins >= 60
-      ? `${Math.floor(monthTotalMins / 60)}h${monthTotalMins % 60 > 0 ? `${monthTotalMins % 60}m` : ""}`
-      : monthTotalMins > 0
-        ? `${monthTotalMins}m`
-        : null;
 
   // ── Locale-aware translation for page body (metadata stays EN for SEO) ──
   // Priority: bjj_locale cookie → profile.locale (ja only) → Accept-Language → "en"
@@ -256,42 +218,7 @@ export default async function DashboardPage({
 
   const isPro = profileData?.is_pro ?? false;
   const subscriptionStatus = profileData?.subscription_status ?? "active";
-  const gymName = profileData?.gym_name ?? null;
-  const belt = profileData?.belt ?? "white";
-  const stripeCount = profileData?.stripe ?? 0;
-  const weeklyGoal = profileData?.weekly_goal ?? 0;
-  const showKickBanner =
-    profileData?.gym_kick_notified === false && !profileData?.gym_id;
-  const gymId = profileData?.gym_id ?? null;
-  const shareDataWithGym = profileData?.share_data_with_gym ?? false;
-  const targetWeight = profileData?.target_weight != null ? Number(profileData.target_weight) : null;
-  const targetWeightDate = (profileData as { target_weight_date?: string | null })?.target_weight_date ?? null;
-
-  let gymCurriculum: {
-    curriculum_url: string;
-    curriculum_set_at: string;
-  } | null = null;
-  if (gymId && shareDataWithGym) {
-    const sevenDaysAgo = new Date(Date.now() - 7 * 86400000).toISOString();
-    const { data: gymData , error } = await supabase
-      .from("gyms")
-      .select("curriculum_url, curriculum_set_at")
-      .eq("id", gymId)
-      .not("curriculum_url", "is", null)
-      .gte("curriculum_set_at", sevenDaysAgo)
-      .single();
-    if (error) console.error("page.tsx:query", error);
-    if (gymData?.curriculum_url && gymData?.curriculum_set_at) {
-      gymCurriculum = {
-        curriculum_url: gymData.curriculum_url,
-        curriculum_set_at: gymData.curriculum_set_at,
-      };
-    }
-  }
-
-  const hasFirstLog = (totalCount ?? 0) > 0;
-  const hasGoal = (weeklyGoal ?? 0) > 0;
-  const hasTechnique = (techniqueCount ?? 0) > 0;
+  const hasFirstLog = totalCount > 0;
 
   // Calculate streak (same algorithm as NavBar — uses logical training date)
   const todayStr = getLogicalTrainingDate();
@@ -312,6 +239,15 @@ export default async function DashboardPage({
     }
   }
 
+  // Typed recent logs for compact home view
+  const typedRecentLogs = (recentLogsFull ?? []) as {
+    id: string;
+    date: string;
+    type: string;
+    duration_min: number;
+    notes: string | null;
+  }[];
+
   return (
     <div className="min-h-[100dvh] bg-zinc-950 pb-20 sm:pb-0">
       <InstallBanner />
@@ -322,126 +258,66 @@ export default async function DashboardPage({
 
       <main className="max-w-4xl mx-auto px-4 py-5">
 
-        {/* ── Gym kick notification ── */}
-        {showKickBanner && <GymKickBanner userId={user.id} />}
-
         {/* ── Onboarding checklist (new users) ── */}
-        <OnboardingChecklist
-          hasFirstLog={hasFirstLog}
-          hasGoal={hasGoal}
-          hasTechnique={hasTechnique}
-        />
-
-        {/* ═══════════════════════════════════════════
-            HERO CARD — greeting + avatar/belt pill
-            ═══════════════════════════════════════════ */}
-        <HeroCard
-          displayName={displayName}
-          avatarUrl={avatarUrl}
-          belt={belt}
-          stripeCount={stripeCount}
-          t={t}
-        />
-
-        {/* ═══════════════════════════════════════════
-            SECTION 1 — PRIMARY ACTION: Log a Session
-            (プライマリアクション・ダッシュボード最上部)
-            ═══════════════════════════════════════════ */}
-        <section className="mb-7">
-          <TrainingLog
-            userId={user.id}
-            isPro={isPro}
-            initialOpen={isWelcomeRedirect && (totalCount ?? 0) === 0}
+        {!hasFirstLog && (
+          <OnboardingChecklist
+            hasFirstLog={false}
+            hasGoal={false}
+            hasTechnique={false}
           />
-        </section>
+        )}
 
         {/* ═══════════════════════════════════════════
-            SECTION 2 — COMPACT BENTO STATS
+            STATUS BAR — compact 1-line stats overview
+            Replaces HeroCard + BentoStatsGrid
             ═══════════════════════════════════════════ */}
-        <BentoStatsGrid
-          streak={streak}
+        <StatusBar
+          weekCount={weekCount}
           monthCount={monthCount}
-          prevMonthCount={prevMonthCount}
-          monthHoursStr={monthHoursStr}
-          remainingDays={remainingDays}
-          dayOfMonth={dayOfMonth}
-          daysInMonth={daysInMonth}
-          techniqueCount={techniqueCount}
-          recentTechniques={recentTechniques as { name: string }[] | null}
-          isPro={isPro}
+          streak={streak}
           t={t}
         />
 
         {/* ═══════════════════════════════════════════
-            SECTION 2.5 — AI MICRO-COACH (≥10 logs only)
+            RECENT LOGS — last 3 entries, compact
             ═══════════════════════════════════════════ */}
-        {totalCount >= 10 && (
-          <AICoachCard
-            userId={user.id}
-            isPro={isPro}
-            initialCoaching={profileData?.ai_coach_cache ?? null}
-            initialGeneratedAt={profileData?.ai_coach_last_generated ?? null}
-          />
-        )}
+        <RecentLogs logs={typedRecentLogs} t={t} />
 
         {/* ═══════════════════════════════════════════
-            SECTION 3 — THIS WEEK (GoalTracker + Weight)
+            PRO INSIGHT TEASER (free users only)
             ═══════════════════════════════════════════ */}
-        {hasFirstLog && (
-          <section className="mb-7">
-            <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
-              {t("dashboard.weekTraining")}
-            </p>
-            <div className="space-y-3">
-              <GoalTracker userId={user.id} />
-              {targetWeight != null && isPro && (
-                <WeightGoalWidget targetWeight={targetWeight} targetDate={targetWeightDate} />
-              )}
+        {!isPro && hasFirstLog && (
+          <Link
+            href="/profile#upgrade"
+            className="block bg-zinc-900/40 border border-amber-500/10 hover:border-amber-500/30 rounded-2xl px-4 py-3.5 mb-5 transition-colors group"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-zinc-300">
+                  {t("home.proInsightTeaser")}
+                </p>
+                <p className="text-xs text-amber-500/70 mt-0.5 group-hover:text-amber-400 transition-colors">
+                  {t("home.proInsightDesc")}
+                </p>
+              </div>
+              <svg className="w-4 h-4 text-amber-500/50 group-hover:text-amber-400 transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
             </div>
-          </section>
+          </Link>
         )}
 
         {/* ═══════════════════════════════════════════
-            SECTION 4 — GYM CURRICULUM (members only)
+            RECORD FAB — always visible on mobile
             ═══════════════════════════════════════════ */}
-        {gymCurriculum && (
-          <section className="mb-7">
-            <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
-              {t("dashboard.sectionToday")}
-            </p>
-            <GymCurriculumCard
-              curriculumUrl={gymCurriculum.curriculum_url}
-              curriculumSetAt={gymCurriculum.curriculum_set_at}
-              gymName={gymName}
-              userId={user.id}
-            />
-          </section>
-        )}
+        <Link
+          href="/records"
+          className="md:hidden fixed bottom-20 right-4 z-40 w-14 h-14 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-2xl font-bold rounded-full shadow-lg shadow-[#10B981]/40 transition-all flex items-center justify-center"
+          aria-label={t("training.add")}
+        >
+          +
+        </Link>
 
-        {/* ═══════════════════════════════════════════
-            SECTION 5 — GYM LEADERBOARD (opt-in only)
-            ═══════════════════════════════════════════ */}
-        {gymId && shareDataWithGym && (
-          <section className="mb-7">
-            <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
-              {t("dashboard.sectionYourGym")}
-            </p>
-            <GymRanking userId={user.id} gymId={gymId} />
-          </section>
-        )}
-
-        {/* ═══════════════════════════════════════════
-            SECTION 6 — STREAK NUDGE (streak ≥ 3 only)
-            ProUpgradeBanner removed — no upsell on home screen
-            ═══════════════════════════════════════════ */}
-        {streak >= 3 && (
-          <section className="space-y-3 mb-7">
-            <StreakProtect userId={user.id} streak={streak} />
-            <StreakFreeze userId={user.id} streak={streak} />
-          </section>
-        )}
-
-        {/* InsightsBanner / InviteCard removed — data redundant with BentoStatsGrid */}
       </main>
     </div>
   );

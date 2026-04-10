@@ -10,7 +10,9 @@
     "streakDaysStraight": "{n}-day streak",
     "proManage": "Pro · Manage",
     "proLabel": "Pro",
-    "upgradeToPro": "Upgrade to Pro"
+    "upgradeToPro": "Upgrade to Pro",
+    "records": "Records",
+    "mypage": "My Page"
   },
   "dashboard": {
     "welcomeBack": "Welcome back, {name} ð",
@@ -1549,5 +1551,18 @@
     "cta": "Share your progress with friends",
     "shareButton": "Share 📊",
     "copied": "Copied! ✅"
+  },
+  "home": {
+    "weekSessions": "This week: {n}",
+    "monthSessions": "This month: {n}",
+    "streakDays": "🔥{n}d",
+    "streakZero": "🔥0d",
+    "recentTitle": "Recent Training",
+    "viewAllRecords": "View all records",
+    "emptyTitle": "No training records yet",
+    "emptyDesc": "Record your first session to get started",
+    "emptyCtaRecord": "Record a session",
+    "proInsightTeaser": "📈 Training trend analysis",
+    "proInsightDesc": "See detailed training analytics with Pro →"
   }
 }

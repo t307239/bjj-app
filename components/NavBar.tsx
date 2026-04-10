@@ -86,6 +86,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
 
   const NAV_ITEMS = [
     { href: "/dashboard", label: t("nav.home"), icon: "🏠" },
+    { href: "/records", label: t("nav.records"), icon: "📋" },
     { href: "/techniques", label: t("nav.techniques"), icon: "📚" },
     { href: "/profile", label: t("nav.profile"), icon: "🏅" },
   ];
@@ -222,7 +223,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
             <span className="text-xs text-orange-400">⚡ {t("nav.streakDays", { n: currentStreak })}</span>
           </div>
         ) : null}
-        <div className="grid grid-cols-3 pb-safe">
+        <div className="grid grid-cols-4 pb-safe">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}

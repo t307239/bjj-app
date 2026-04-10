@@ -1,0 +1,123 @@
+/**
+ * RecentLogs — compact list of 3 most recent training entries for home screen.
+ * Shows date, type badge, duration, and notes preview in a single line per entry.
+ */
+import Link from "next/link";
+import { TRAINING_TYPES } from "@/lib/trainingTypes";
+
+type LogEntry = {
+  id: string;
+  date: string;
+  type: string;
+  duration_min: number;
+  notes: string | null;
+};
+
+type Props = {
+  logs: LogEntry[];
+  t: (key: string, vars?: Record<string, string | number>) => string;
+};
+
+const TYPE_COLORS: Record<string, string> = {
+  gi: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  nogi: "bg-orange-500/20 text-orange-400 border-orange-500/30",
+  drilling: "bg-violet-500/20 text-violet-400 border-violet-500/30",
+  competition: "bg-red-500/20 text-red-400 border-red-500/30",
+  open_mat: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+};
+
+function formatDuration(mins: number): string {
+  if (mins >= 60) {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return m > 0 ? `${h}h${m}m` : `${h}h`;
+  }
+  return `${mins}m`;
+}
+
+function formatDate(dateStr: string): string {
+  const d = new Date(dateStr + "T00:00:00");
+  const month = d.getMonth() + 1;
+  const day = d.getDate();
+  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  return `${month}/${day} ${weekdays[d.getDay()]}`;
+}
+
+function getTypeLabel(type: string): string {
+  const found = TRAINING_TYPES.find((t) => t.value === type);
+  return found ? found.label : type;
+}
+
+/** Extract user-facing notes, stripping competition metadata */
+function cleanNotes(raw: string | null): string {
+  if (!raw) return "";
+  // Strip [COMP:{...}] metadata prefix
+  const cleaned = raw.replace(/^\[COMP:\{[^}]*\}\]\s*/i, "");
+  return cleaned.trim();
+}
+
+export default function RecentLogs({ logs, t }: Props) {
+  if (logs.length === 0) {
+    return (
+      <div className="bg-zinc-900/40 border border-white/[0.06] rounded-2xl p-6 mb-5 text-center">
+        <p className="text-zinc-400 text-sm font-medium mb-1">
+          {t("home.emptyTitle")}
+        </p>
+        <p className="text-zinc-500 text-xs">
+          {t("home.emptyDesc")}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-5">
+      <div className="space-y-2">
+        {logs.slice(0, 3).map((log) => {
+          const typeColor = TYPE_COLORS[log.type] ?? "bg-zinc-700/50 text-zinc-400 border-zinc-600/30";
+          const notes = cleanNotes(log.notes);
+
+          return (
+            <div
+              key={log.id}
+              className="bg-zinc-900/40 border border-white/[0.06] rounded-xl px-3.5 py-3 flex items-center gap-3 hover:border-white/10 transition-colors"
+            >
+              {/* Date */}
+              <span className="text-xs text-zinc-500 font-medium tabular-nums whitespace-nowrap w-[72px] flex-shrink-0">
+                {formatDate(log.date)}
+              </span>
+
+              {/* Type badge */}
+              <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border flex-shrink-0 ${typeColor}`}>
+                {getTypeLabel(log.type)}
+              </span>
+
+              {/* Duration */}
+              <span className="text-xs text-zinc-400 font-medium tabular-nums whitespace-nowrap flex-shrink-0">
+                {formatDuration(log.duration_min)}
+              </span>
+
+              {/* Notes preview */}
+              {notes && (
+                <span className="text-xs text-zinc-500 truncate min-w-0 flex-1">
+                  {notes}
+                </span>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* View all link */}
+      <Link
+        href="/records"
+        className="flex items-center justify-center gap-1 mt-3 py-2 text-xs font-medium text-zinc-400 hover:text-emerald-400 transition-colors"
+      >
+        <span>{t("home.viewAllRecords")}</span>
+        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </Link>
+    </div>
+  );
+}
