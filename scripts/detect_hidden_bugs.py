@@ -13,6 +13,8 @@ AUDIT_FRAMEWORK.md の20軸スコアリングでは見逃される、
   5. コメントアウト残骸（{false && ...}）
   6. 技術的内部値UI露出（"84 days" 等）
   7. console.log 残存
+  8. JSONファイル文字化け（Â·, Â©等のダブルエンコード）
+  9. TypeScript関数内ハードコードUI文字列（JSX外の "Today"/"Yesterday" 等）
 
 使い方:
     python3 scripts/detect_hidden_bugs.py              # 全チェック
@@ -255,6 +257,90 @@ def check_technical_leakage(filepath: Path, content: str, report: BugReport):
             )
 
 
+def check_hardcoded_ui_return_strings(filepath: Path, content: str, report: BugReport):
+    """TypeScript関数内ハードコードUI文字列検出（JSX外の英語返り値）
+
+    JSX スキャナでは検出できない純粋なTS関数内の英語リテラルを捕捉する。
+    例: fmtAge() が return "Today" / "Yesterday" / "X days ago" を返すケース。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+
+    # return文内の英語UIリテラル
+    return_patterns = [
+        (r'return\s+"Today"', '"Today" を直接 return'),
+        (r'return\s+"Yesterday"', '"Yesterday" を直接 return'),
+        (r'return\s+`[^`]*\bdays? ago`', '"`X days ago`" を直接 return'),
+        (r'return\s+"[^"]*\bdays? ago"', '"X days ago" を直接 return'),
+        (r'return\s+"Loading\.\.\."', '"Loading..." を直接 return'),
+    ]
+    for pattern, desc in return_patterns:
+        if re.search(pattern, content):
+            report.add(
+                "WARNING", "HARDCODED_UI_STRING",
+                str(rel),
+                f"{desc} — Intl.RelativeTimeFormat または t() キーに変更すべき",
+                "Intl.RelativeTimeFormat(locale, { numeric: 'auto' }) を使用",
+            )
+
+    # JSX内の直接英語ローディング文言
+    jsx_loading_patterns = [
+        (r'>\s*Loading Skill Map[^<]*<', "JSX内ハードコード 'Loading Skill Map'"),
+        (r'>\s*Loading\.\.\.[^<]*<', "JSX内ハードコード 'Loading...'"),
+    ]
+    for pattern, desc in jsx_loading_patterns:
+        if re.search(pattern, content):
+            report.add(
+                "WARNING", "HARDCODED_UI_STRING",
+                str(rel),
+                desc,
+                "t() キーを追加して多言語対応",
+            )
+
+
+def check_json_mojibake(report: BugReport):
+    """JSONファイルの文字化け検出（UTF-8バイトがLatin-1として再解釈されたパターン）
+
+    GitHub Contents API 経由での base64 push 等で発生するダブルエンコードを検出する。
+    例: U+00B7 (·) → UTF-8 C2 B7 → Latin-1 Â· として保存
+    """
+    # (mojibake_bytes, 正しい文字, 説明)
+    mojibake_patterns = [
+        ("\u00c2\u00b7", "\u00b7", "Â· → · (中点 U+00B7)"),
+        ("\u00c2\u00a9", "\u00a9", "Â© → © (著作権 U+00A9)"),
+        ("\u00e2\u0097\u008f", "\u25cf", "â●→ ● (黒丸 U+25CF)"),
+        ("\u00c3\u00a9", "é",          "Ã© → é (U+00E9)"),
+        ("\u00c3\u00a0", "à",          "Ã  → à (U+00E0)"),
+        ("\u00c3\u00b5", "õ",          "Ãµ → õ (U+00F5)"),
+        ("\u00c3\u00a3", "ã",          "Ã£ → ã (U+00E3)"),
+        ("\u00c3\u00a7", "ç",          "Ã§ → ç (U+00E7)"),
+    ]
+
+    for locale in ["en", "ja", "pt"]:
+        path = MESSAGES_DIR / f"{locale}.json"
+        if not path.exists():
+            continue
+        try:
+            content = path.read_text(encoding="utf-8")
+        except Exception:
+            report.add(
+                "CRITICAL", "JSON_MOJIBAKE",
+                f"messages/{locale}.json",
+                "UTF-8での読み込みに失敗（ファイルエンコーディングが不正）",
+                "ファイルをUTF-8で再保存",
+            )
+            continue
+
+        for mojibake, correct, desc in mojibake_patterns:
+            count = content.count(mojibake)
+            if count > 0:
+                report.add(
+                    "CRITICAL", "JSON_MOJIBAKE",
+                    f"messages/{locale}.json",
+                    f"{desc} が {count} 箇所 — ダブルエンコード文字化け",
+                    f"Python: content = content.replace('{mojibake}', '{correct}') で修正後 Write tool で再保存",
+                )
+
+
 # ─────────────────────────────────────────────────────
 # メインスキャナ
 # ─────────────────────────────────────────────────────
@@ -264,6 +350,9 @@ def scan_all() -> BugReport:
 
     # i18n チェック
     check_i18n_coverage(report)
+
+    # JSONファイル文字化けチェック（カテゴリ8）
+    check_json_mojibake(report)
 
     # TSX スキャン
     tsx_files = find_tsx_files()
@@ -279,6 +368,7 @@ def scan_all() -> BugReport:
         check_layout_fragility(fpath, content, report)
         check_console_logs(fpath, content, report)
         check_technical_leakage(fpath, content, report)
+        check_hardcoded_ui_return_strings(fpath, content, report)  # カテゴリ9
 
     return report, len(tsx_files)
 
