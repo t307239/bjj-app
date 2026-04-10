@@ -20,6 +20,9 @@ AUDIT_FRAMEWORK.md の20軸スコアリングでは見逃される、
  12. アクセシビリティ欠損（アイコンonly button/link にaria-label無し、img alt無し）
  13. dangerouslySetInnerHTML 使用箇所の列挙
  14. クライアントコードからの秘密env直参照（NEXT_PUBLIC_ 以外の process.env）
+ 15. TODO/FIXME/HACK コメント残存
+ 16. 未使用exportコンポーネント（デッドコード）
+ 17. Supabase query の error 未ハンドリング
 
 使い方:
     python3 scripts/detect_hidden_bugs.py              # 全チェック
@@ -571,6 +574,112 @@ def check_secret_env_in_client(filepath: Path, content: str, report: BugReport):
                 f"L{line_no}: クライアントコードから process.env.{env_name} を参照 — ビルド時にundefinedになるか秘密漏洩のリスク",
                 f"NEXT_PUBLIC_ プレフィックスを付けるか、サーバーAPI経由に変更",
             )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 15: TODO/FIXME/HACK コメント残存
+# ─────────────────────────────────────────────────────
+
+def check_todo_comments(filepath: Path, content: str, report: BugReport):
+    """TODO/FIXME/HACK コメントの残存検出（カテゴリ15）"""
+    rel = filepath.relative_to(APP_ROOT)
+
+    # 自動生成ファイルは除外
+    if filepath.name in ("database.types.ts",) or filepath.name.endswith(".d.ts"):
+        return
+
+    for line_no, line in enumerate(content.split("\n"), 1):
+        m = re.search(r'\b(TODO|FIXME|HACK|XXX)\b[:\s]*(.*)', line)
+        if m:
+            tag = m.group(1)
+            desc = m.group(2).strip()[:60]
+            severity = "WARNING" if tag in ("FIXME", "HACK", "XXX") else "INFO"
+            report.add(
+                severity, "TODO_COMMENT",
+                str(rel),
+                f"L{line_no}: {tag}: {desc}",
+                "修正済みなら削除、未着手ならBACKLOGへ移動",
+            )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 16: 未使用exportコンポーネント（デッドコード）
+# ─────────────────────────────────────────────────────
+
+def check_unused_exports(all_files: list[Path], report: BugReport):
+    """exportされたコンポーネント/関数がどこからもimportされていないかチェック（カテゴリ16）
+
+    components/ 配下のファイルが対象。app/ や lib/ はページルートや
+    ユーティリティなので除外。
+    """
+    # 全ファイルの内容を読み込み
+    contents: dict[str, str] = {}
+    for f in all_files:
+        try:
+            contents[str(f)] = f.read_text("utf-8")
+        except Exception:
+            continue
+
+    # components/ のexportを収集
+    comp_dir = str(APP_ROOT / "components")
+    exports: list[tuple[str, str, str]] = []  # (name, filepath, rel)
+    for fpath_str, content in contents.items():
+        if not fpath_str.startswith(comp_dir):
+            continue
+        fpath = Path(fpath_str)
+        rel = str(fpath.relative_to(APP_ROOT))
+        for m in re.finditer(r'export\s+(?:default\s+)?(?:function|const|class)\s+(\w+)', content):
+            exports.append((m.group(1), fpath_str, rel))
+
+    for name, source, rel in exports:
+        found = False
+        for fpath_str, content in contents.items():
+            if fpath_str == source:
+                continue
+            if re.search(r'\b' + re.escape(name) + r'\b', content):
+                found = True
+                break
+        if not found:
+            report.add(
+                "INFO", "UNUSED_EXPORT",
+                rel,
+                f"export '{name}' がどこからもimportされていない — デッドコードの可能性",
+                f"使用予定がなければファイルごと削除。将来用ならBACKLOG記載",
+            )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 17: Supabase query の error 未ハンドリング
+# ─────────────────────────────────────────────────────
+
+def check_supabase_error_handling(filepath: Path, content: str, report: BugReport):
+    """Supabase queryの戻り値で error を destructure していないケースを検出（カテゴリ17）"""
+    rel = filepath.relative_to(APP_ROOT)
+
+    lines = content.split("\n")
+    for i, line in enumerate(lines):
+        # supabase.from( を含む行を検出
+        if "supabase" not in line:
+            continue
+        if not re.search(r'\.from\s*\(', line):
+            continue
+
+        # この行の前後30行で { data } or { data, error } のdestructを探す
+        context_start = max(0, i - 5)
+        context_end = min(len(lines), i + 10)
+        context = "\n".join(lines[context_start:context_end])
+
+        # const { data } = await ... パターンを探す
+        destruct = re.search(r'(?:const|let)\s*\{([^}]*)\}\s*=', context)
+        if destruct:
+            destructured = destruct.group(1)
+            if "error" not in destructured and "data" in destructured:
+                report.add(
+                    "INFO", "SUPABASE_NO_ERROR",
+                    str(rel),
+                    f"L{i+1}: Supabase query の戻り値で error を無視 — サイレント失敗リスク",
+                    "const { data, error } = ... に変更し、error 時のフォールバックを追加",
+                )
 
 
 # ─────────────────────────────────────────────────────
