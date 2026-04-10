@@ -233,7 +233,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     monthDelta,
   } = useTrainingLog({ userId, isPro, initialOpen, t });
 
-  const [listOpen, setListOpen] = useState(false);
+  const [listOpen, setListOpen] = useState(true);
 
   // Suppress unused-var TS warnings for stats used in Bento/Analytics (kept for future use)
   void monthHoursDisplay;

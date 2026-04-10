@@ -8,14 +8,12 @@ import GoalTracker from "@/components/GoalTracker";
 import GuestMigration from "@/components/GuestMigration";
 import StreakProtect from "@/components/StreakProtect";
 import StreakFreeze from "@/components/StreakFreeze";
-import StreakMilestoneShare from "@/components/StreakMilestoneShare";
 import AchievementBadge from "@/components/AchievementBadge";
 import InstallBanner from "@/components/InstallBanner";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
 import GymKickBanner from "@/components/GymKickBanner";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
 import WeightGoalWidget from "@/components/WeightGoalWidget";
-import MonthlyShareCard from "@/components/MonthlyShareCard";
 import {
   getWeekStartDate,
   getMonthStartDate,
@@ -342,8 +340,6 @@ export default async function DashboardPage({
           avatarUrl={avatarUrl}
           belt={belt}
           stripeCount={stripeCount}
-          streak={streak}
-          hasFirstLog={hasFirstLog}
           t={t}
         />
 
@@ -374,19 +370,6 @@ export default async function DashboardPage({
           recentTechniques={recentTechniques as { name: string }[] | null}
           isPro={isPro}
           t={t}
-        />
-
-        {/* ═══════════════════════════════════════════
-            SECTION 2.1 — MONTHLY SHARE CARD (viral loop)
-            ═══════════════════════════════════════════ */}
-        <MonthlyShareCard
-          monthCount={monthCount}
-          monthHoursStr={monthHoursStr}
-          streak={streak}
-          belt={belt}
-          techniqueCount={techniqueCount ?? 0}
-          year={year}
-          month={month}
         />
 
         {/* ═══════════════════════════════════════════
@@ -453,8 +436,6 @@ export default async function DashboardPage({
             ═══════════════════════════════════════════ */}
         {streak >= 3 && (
           <section className="space-y-3 mb-7">
-            {/* Milestone share banner — shown once per milestone (30/100/365), localStorage dedup */}
-            <StreakMilestoneShare streak={streak} />
             <StreakProtect userId={user.id} streak={streak} />
             <StreakFreeze userId={user.id} streak={streak} />
           </section>

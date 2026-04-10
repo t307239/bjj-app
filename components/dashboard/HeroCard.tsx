@@ -6,8 +6,6 @@ type Props = {
   avatarUrl: string | null;
   belt: string;
   stripeCount: number;
-  streak: number;
-  hasFirstLog: boolean;
   t: (key: string, vars?: Record<string, string | number>) => string;
 };
 
@@ -16,13 +14,10 @@ export default function HeroCard({
   avatarUrl,
   belt,
   stripeCount,
-  streak,
-  hasFirstLog,
   t,
 }: Props) {
   return (
     <div className="bg-zinc-900/50 border border-white/10 rounded-2xl px-4 py-4 mb-5">
-      {/* Row 1: identity + avatar/belt pill */}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white shrink-0">
@@ -31,19 +26,10 @@ export default function HeroCard({
           <div className="min-w-0">
             <TimeGreeting displayName={displayName} />
             <p className="text-gray-400 text-xs mt-0.5 break-words leading-tight">
-              {streak >= 7
-                ? `🔥 ${t("dashboard.streakDaysStraight", { n: streak })}`
-                : streak >= 3
-                  ? `🎯 ${t("dashboard.streakDaysStraight", { n: streak })}`
-                  : streak >= 1
-                    ? t("dashboard.streakCardLogToday")
-                    : hasFirstLog
-                      ? t("dashboard.streakCardKeepRolling")
-                      : t("dashboard.streakCardStartFresh")}
+              {t("dashboard.streakCardKeepRolling")}
             </p>
           </div>
         </div>
-        {/* Avatar or belt pill — always visible */}
         {avatarUrl ? (
           <AvatarImage
             src={avatarUrl}
