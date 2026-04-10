@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 179 files
+TS/TSX Scanned: 195 files
 CRITICAL: 1
 WARNING: 0
-INFO: 26
-Total: 27
+INFO: 10
+Total: 11
 
 [CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 32% (453/1424 キー) — 1001 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
@@ -27,35 +27,3 @@ Total: 27
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L793: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [MISSING_ERROR_BOUNDARY] app/account-deleted: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック
-  FIX: app/account-deleted/error.tsx を作成。最低限 'use client' + エラーメッセージ + リトライボタン
-[INFO] [MISSING_ERROR_BOUNDARY] app/privacy: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック
-  FIX: app/privacy/error.tsx を作成。最低限 'use client' + エラーメッセージ + リトライボタン
-[INFO] [MISSING_ERROR_BOUNDARY] app/terms: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック
-  FIX: app/terms/error.tsx を作成。最低限 'use client' + エラーメッセージ + リトライボタン
-[INFO] [MISSING_ERROR_BOUNDARY] app/admin: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック
-  FIX: app/admin/error.tsx を作成。最低限 'use client' + エラーメッセージ + リトライボタン
-[INFO] [MISSING_ERROR_BOUNDARY] app/wiki/[lang]: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック
-  FIX: app/wiki/[lang]/error.tsx を作成。最低限 'use client' + エラーメッセージ + リトライボタン
-[INFO] [MISSING_ERROR_BOUNDARY] app/wiki/[lang]/tags/[tag]: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック
-  FIX: app/wiki/[lang]/tags/[tag]/error.tsx を作成。最低限 'use client' + エラーメッセージ + リトライボタン
-[INFO] [MISSING_ERROR_BOUNDARY] app/invite/[code]: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック
-  FIX: app/invite/[code]/error.tsx を作成。最低限 'use client' + エラーメッセージ + リトライボタン
-[INFO] [MISSING_ERROR_BOUNDARY] app/legal/tokushoho: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック
-  FIX: app/legal/tokushoho/error.tsx を作成。最低限 'use client' + エラーメッセージ + リトライボタン
-[INFO] [MISSING_ERROR_BOUNDARY] app/help: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック
-  FIX: app/help/error.tsx を作成。最低限 'use client' + エラーメッセージ + リトライボタン
-[INFO] [MISSING_LOADING] app/admin: loading.tsx が存在しない — ページ遷移時にローディングUIなし
-  FIX: app/admin/loading.tsx を作成。Skeleton or スピナーで CLS を防止
-[INFO] [MISSING_LOADING] app/wiki/[lang]: loading.tsx が存在しない — ページ遷移時にローディングUIなし
-  FIX: app/wiki/[lang]/loading.tsx を作成。Skeleton or スピナーで CLS を防止
-[INFO] [MISSING_LOADING] app/wiki/[lang]/tags/[tag]: loading.tsx が存在しない — ページ遷移時にローディングUIなし
-  FIX: app/wiki/[lang]/tags/[tag]/loading.tsx を作成。Skeleton or スピナーで CLS を防止
-[INFO] [MISSING_LOADING] app/invite/[code]: loading.tsx が存在しない — ページ遷移時にローディングUIなし
-  FIX: app/invite/[code]/loading.tsx を作成。Skeleton or スピナーで CLS を防止
-[INFO] [MISSING_LOADING] app/gym: loading.tsx が存在しない — ページ遷移時にローディングUIなし
-  FIX: app/gym/loading.tsx を作成。Skeleton or スピナーで CLS を防止
-[INFO] [MISSING_LOADING] app/gym/join/[invite_code]: loading.tsx が存在しない — ページ遷移時にローディングUIなし
-  FIX: app/gym/join/[invite_code]/loading.tsx を作成。Skeleton or スピナーで CLS を防止
-[INFO] [MISSING_LOADING] app/gym/dashboard: loading.tsx が存在しない — ページ遷移時にローディングUIなし
-  FIX: app/gym/dashboard/loading.tsx を作成。Skeleton or スピナーで CLS を防止
