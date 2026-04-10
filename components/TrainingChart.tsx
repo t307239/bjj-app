@@ -50,12 +50,13 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
         monthSince.setDate(1);
         const monthSinceStr = toLocalStr(monthSince);
 
-        const { data: logs } = await supabase
+        const { data: logs , error } = await supabase
           .from("training_logs")
           .select("date, duration_min")
           .eq("user_id", userId)
           .gte("date", monthSinceStr)
           .order("date", { ascending: true });
+        if (error) console.error("TrainingChart.tsx:query", error);
 
         if (logs) {
           // --- ヒートマップ用 ---

@@ -51,11 +51,15 @@ export async function POST(req: NextRequest) {
   }
 
   // Verify caller is a gym owner
-  const { data: ownerProfile } = await supabase
+  const { data: ownerProfile , error } = await supabase
     .from("profiles")
     .select("gym_id, is_gym_owner")
     .eq("id", user.id)
     .single();
+  if (error) {
+    console.error("route.ts:query", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 
   if (!ownerProfile?.is_gym_owner || !ownerProfile.gym_id) {
     return NextResponse.json({ error: "Forbidden: not a gym owner" }, { status: 403 });
@@ -66,7 +70,7 @@ export async function POST(req: NextRequest) {
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 
-  const { data: updatedGym, error } = await supabase
+  const { data: updatedGym, error: updateError } = await supabase
     .from("gyms")
     .update({ invite_code: newCode })
     .eq("id", ownerProfile.gym_id)
@@ -74,8 +78,8 @@ export async function POST(req: NextRequest) {
     .select("invite_code")
     .single();
 
-  if (error || !updatedGym) {
-    logger.error("gym.regenerate_invite_error", { gymId: ownerProfile.gym_id, userId: user.id }, error as Error);
+  if (updateError || !updatedGym) {
+    logger.error("gym.regenerate_invite_error", { gymId: ownerProfile.gym_id, userId: user.id }, updateError as Error);
     return NextResponse.json({ error: "Failed to regenerate invite code" }, { status: 500 });
   }
 

@@ -118,8 +118,9 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
   const exportTraining = async () => {
     setLoadingLogs(true); setOpen(false);
     try {
-      const { data: logs } = await supabase
+      const { data: logs , error } = await supabase
         .from("training_logs").select("date,type,duration_min,notes").eq("user_id", userId).order("date", { ascending: false });
+      if (error) console.error("TrainingLog.tsx:query", error);
       if (!logs) return;
       const headers = ["Date","Type","Duration(min)","Result","Opponent","Finish","Event","Notes"];
       const rows = (logs as { date: string; type: string; duration_min: number; notes: string }[]).map((l) => {
@@ -134,8 +135,9 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
   const exportTechniques = async () => {
     setLoadingTech(true); setOpen(false);
     try {
-      const { data: techs } = await supabase
+      const { data: techs , error } = await supabase
         .from("techniques").select("name,category,mastery_level,notes").eq("user_id", userId).order("name");
+      if (error) console.error("TrainingLog.tsx:query", error);
       if (!techs) return;
       const headers = ["Technique","Category","Mastery","Notes"];
       const rows = (techs as { name: string; category: string; mastery_level: number; notes: string }[]).map((t) =>

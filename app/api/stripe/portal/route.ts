@@ -53,11 +53,15 @@ export async function POST(req: NextRequest) {
   }
 
   // Get stripe_customer_id from profiles
-  const { data: profile } = await supabase
+  const { data: profile , error } = await supabase
     .from("profiles")
     .select("stripe_customer_id")
     .eq("id", user.id)
     .single();
+  if (error) {
+    console.error("route.ts:query", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 
   if (!profile?.stripe_customer_id) {
     return NextResponse.json(

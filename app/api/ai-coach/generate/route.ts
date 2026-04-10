@@ -172,11 +172,15 @@ export async function POST(req: NextRequest) {
   }
 
   // Fetch profile — check Pro status and cached coaching
-  const { data: profile } = await supabase
+  const { data: profile , error: profileError } = await supabase
     .from("profiles")
     .select("is_pro, belt, stripe, ai_coach_cache, ai_coach_last_generated")
     .eq("id", user.id)
     .single();
+  if (profileError) {
+    console.error("route.ts:query", profileError);
+    return NextResponse.json({ error: profileError.message }, { status: 500 });
+  }
 
   if (!profile?.is_pro) {
     return NextResponse.json({ error: "Pro subscription required" }, { status: 403 });
@@ -201,11 +205,15 @@ export async function POST(req: NextRequest) {
     .toISOString()
     .split("T")[0];
 
-  const { data: logs } = await supabase
+  const { data: logs , error: logsError } = await supabase
     .from("training_logs")
     .select("type, date, duration_min")
     .eq("user_id", user.id)
     .gte("date", thirtyDaysAgo);
+  if (logsError) {
+    console.error("route.ts:query", logsError);
+    return NextResponse.json({ error: logsError.message }, { status: 500 });
+  }
 
   const sessions = logs ?? [];
 

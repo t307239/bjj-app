@@ -47,23 +47,31 @@ export async function POST(req: NextRequest) {
   }
 
   // Verify caller is a gym owner
-  const { data: ownerProfile } = await supabase
+  const { data: ownerProfile , error } = await supabase
     .from("profiles")
     .select("gym_id, is_gym_owner")
     .eq("id", user.id)
     .single();
+  if (error) {
+    console.error("route.ts:query", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 
   if (!ownerProfile?.is_gym_owner || !ownerProfile.gym_id) {
     return NextResponse.json({ error: "Forbidden: not a gym owner" }, { status: 403 });
   }
 
   // Verify gym is_active (Pro subscription required) + 1-per-day rate limit
-  const { data: gym } = await supabase
+  const { data: gym , error: gymError } = await supabase
     .from("gyms")
     .select("id, is_active, curriculum_set_at")
     .eq("id", ownerProfile.gym_id)
     .eq("owner_id", user.id)
     .single();
+  if (gymError) {
+    console.error("route.ts:query", gymError);
+    return NextResponse.json({ error: gymError.message }, { status: 500 });
+  }
 
   if (!gym?.is_active) {
     return NextResponse.json(
@@ -86,7 +94,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Dispatch: update curriculum_url and curriculum_set_at
-  const { error } = await supabase
+  const { error: dispatchError } = await supabase
     .from("gyms")
     .update({
       curriculum_url: curriculumUrl,
@@ -95,8 +103,8 @@ export async function POST(req: NextRequest) {
     .eq("id", ownerProfile.gym_id)
     .eq("owner_id", user.id);
 
-  if (error) {
-    logger.error("gym.curriculum_dispatch_error", { gymId: ownerProfile.gym_id, userId: user.id }, error as Error);
+  if (dispatchError) {
+    logger.error("gym.curriculum_dispatch_error", { gymId: ownerProfile.gym_id, userId: user.id }, dispatchError as Error);
     return NextResponse.json({ error: "Failed to dispatch curriculum" }, { status: 500 });
   }
 

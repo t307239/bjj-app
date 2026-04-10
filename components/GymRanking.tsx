@@ -73,11 +73,12 @@ export default function GymRanking({ userId, gymId }: Props) {
 
     async function load() {
       // 0. Fetch current user's opt-in status
-      const { data: myProfile } = await supabase
+      const { data: myProfile , error } = await supabase
         .from("profiles")
         .select("share_data_with_gym")
         .eq("id", userId)
         .single();
+      if (error) console.error("GymRanking.tsx:query", error);
 
       if (!cancelled) {
         setIsOptedIn(myProfile?.share_data_with_gym ?? false);
@@ -101,12 +102,13 @@ export default function GymRanking({ userId, gymId }: Props) {
       const oneYearAgo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
         .toISOString()
         .slice(0, 10);
-      const { data: logs } = await supabase
+      const { data: logs , error: logsError } = await supabase
         .from("training_logs")
         .select("user_id, date")
         .in("user_id", memberIds)
         .gte("date", oneYearAgo)
         .order("date", { ascending: false });
+      if (logsError) console.error("GymRanking.tsx:query", logsError);
 
       // 3. Build per-member log maps
       const logsByMember: Record<string, string[]> = {};

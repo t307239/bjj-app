@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Fix all 33 Supabase queries to properly handle errors.
-Converts: const { data } = await supabase...
-To: const { data, error } = await supabase... + error check
+Fix all Supabase queries to properly handle errors.
+Converts: const { data: ... } = await supabase...
+To: const { data: ..., error } = await supabase... + error check
 """
 
 import re
 import os
 from pathlib import Path
 
-# File list with line numbers from the issue
+# File list with line numbers from detect_hidden_bugs.py
 FILES_TO_FIX = {
     # API routes (server-side)
     "app/api/ai-coach/generate/route.ts": [175, 204],
@@ -52,55 +52,54 @@ def fix_supabase_query(content, filepath, line_number):
     """
     lines = content.split('\n')
     if line_number < 1 or line_number > len(lines):
-        print(f"  ⚠️  Line {line_number} out of range")
         return content, False
 
     # Working with 0-indexed array
     idx = line_number - 1
 
     # Look for the pattern starting from this line
-    # We need to handle multi-line queries like:
-    # const { data } = await supabase
-    #   .from("table")
-    #   .select(...)
-
+    # Pattern: const { data[: varname] } = await supabase...
     line = lines[idx]
 
-    # Check if this line has "const { data }" pattern
-    if "const { data }" not in line and "const {data}" not in line:
-        # Might be on a previous line, let's search nearby
+    # Check if this line has the Supabase pattern
+    if "const {" not in line or "await supabase" not in line:
+        # Try searching nearby lines (within -3 to +3 range)
         found = False
-        for search_offset in range(-2, 3):
+        for search_offset in range(-3, 4):
             search_idx = idx + search_offset
             if 0 <= search_idx < len(lines):
-                if "const { data }" in lines[search_idx] or "const {data}" in lines[search_idx]:
+                if "const {" in lines[search_idx] and "await supabase" in lines[search_idx]:
                     idx = search_idx
                     found = True
                     break
         if not found:
-            print(f"  ⚠️  Could not find 'const {{ data }}' near line {line_number}")
             return content, False
 
     line = lines[idx]
 
-    # Check if error is already handled
-    if "error" in line and "{" in line and "data" in line:
-        print(f"  ℹ️  Line {line_number}: Already has error handling")
+    # Check if error is already in the destructuring
+    if ", error" in line or ",error" in line:
         return content, False
 
-    # Replace { data } with { data, error }
-    modified_line = line.replace("const { data }", "const { data, error }")
-    modified_line = modified_line.replace("const {data}", "const { data, error }")
+    # Pattern: const { data: varname } = or const { data } =
+    # Need to add ", error" before the closing }
 
-    if modified_line == line:
-        print(f"  ⚠️  Could not modify line {line_number}")
+    # Find the destructuring pattern
+    match = re.search(r'const\s*{\s*data\s*(?::\s*\w+)?\s*}', line)
+    if not match:
         return content, False
+
+    # Extract the matched pattern and modify it
+    old_pattern = match.group(0)
+    # Replace } with , error }
+    new_pattern = old_pattern.rstrip('}') + ', error }'
+    modified_line = line[:match.start()] + new_pattern + line[match.end():]
 
     lines[idx] = modified_line
 
     # Find the end of the query (looking for the line ending with ;)
     query_end_idx = idx
-    for i in range(idx + 1, min(idx + 20, len(lines))):
+    for i in range(idx + 1, min(idx + 30, len(lines))):
         if ";" in lines[i] and not lines[i].strip().startswith("//"):
             query_end_idx = i
             break
@@ -114,7 +113,10 @@ def fix_supabase_query(content, filepath, line_number):
 
     if is_api_route(filepath):
         # For API routes, add error check with return
-        error_check = f'{indent}if (error) {{\n{indent}  console.error("{filename}:query", error);\n{indent}  return NextResponse.json({{ error: error.message }}, {{ status: 500 }});\n{indent}}}'
+        error_check = (f'{indent}if (error) {{\n'
+                      f'{indent}  console.error("{filename}:query", error);\n'
+                      f'{indent}  return NextResponse.json({{ error: error.message }}, {{ status: 500 }});\n'
+                      f'{indent}}}')
     else:
         # For client/SSR pages, just log the error
         error_check = f'{indent}if (error) console.error("{filename}:query", error);'
@@ -133,10 +135,9 @@ def main():
     for filepath, line_numbers in FILES_TO_FIX.items():
         full_path = Path(filepath)
         if not full_path.exists():
-            print(f"❌ {filepath}: File not found")
             continue
 
-        print(f"\n📄 {filepath}")
+        print(f"📄 {filepath}")
         total_files += 1
 
         # Read file with UTF-8
@@ -166,8 +167,6 @@ def main():
                 print(f"  💾 Written back ({files_fixed_count} fixes)")
             except Exception as e:
                 print(f"  ❌ Error writing file: {e}")
-        else:
-            print(f"  ℹ️  No changes needed")
 
     print(f"\n{'='*60}")
     print(f"✅ Total: {total_fixed} fixes across {total_files} files")

@@ -274,13 +274,14 @@ export default async function DashboardPage({
   } | null = null;
   if (gymId && shareDataWithGym) {
     const sevenDaysAgo = new Date(Date.now() - 7 * 86400000).toISOString();
-    const { data: gymData } = await supabase
+    const { data: gymData , error } = await supabase
       .from("gyms")
       .select("curriculum_url, curriculum_set_at")
       .eq("id", gymId)
       .not("curriculum_url", "is", null)
       .gte("curriculum_set_at", sevenDaysAgo)
       .single();
+    if (error) console.error("page.tsx:query", error);
     if (gymData?.curriculum_url && gymData?.curriculum_set_at) {
       gymCurriculum = {
         curriculum_url: gymData.curriculum_url,

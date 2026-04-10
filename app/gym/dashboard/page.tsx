@@ -60,11 +60,12 @@ export default async function GymDashboardPage({
   let avgSessionsPerMember = 0;
   if (gym?.id) {
     // Get member IDs (opt-in) + count
-    const { data: members, count } = await supabase
+    const { data: members, count, error } = await supabase
       .from("profiles")
       .select("id", { count: "exact" })
       .eq("gym_id", gym.id)
       .eq("share_data_with_gym", true);
+    if (error) console.error("page.tsx:query", error);
     memberCount = count ?? 0;
 
     // Aggregate training sessions in last 30 days for these members

@@ -104,11 +104,12 @@ export default function GoalTracker({ userId }: Props) {
           const fw = new Date(fourWeeksAgoMs);
           const fourWeeksAgoStr = `${fw.getUTCFullYear()}-${String(fw.getUTCMonth() + 1).padStart(2, "0")}-${String(fw.getUTCDate()).padStart(2, "0")}`;
 
-          const { data: wLogs } = await supabase
+          const { data: wLogs , error } = await supabase
             .from("training_logs")
             .select("date")
             .eq("user_id", userId)
             .gte("date", fourWeeksAgoStr);
+          if (error) console.error("GoalTracker.tsx:query", error);
 
           // 今週の曜日別達成グリッド（月=0...日=6）
           const dayGrid: boolean[] = Array(7).fill(false);
@@ -147,11 +148,12 @@ export default function GoalTracker({ userId }: Props) {
           const { year: nowYear, month: nowMonth } = getLocalDateParts();
           const sixMonthsAgo = new Date(Date.UTC(nowYear, nowMonth - 1 - 5, 1));
           const sixMonthsAgoStr = `${sixMonthsAgo.getUTCFullYear()}-${String(sixMonthsAgo.getUTCMonth() + 1).padStart(2, "0")}-01`;
-          const { data: mLogs } = await supabase
+          const { data: mLogs , error } = await supabase
             .from("training_logs")
             .select("date")
             .eq("user_id", userId)
             .gte("date", sixMonthsAgoStr);
+          if (error) console.error("GoalTracker.tsx:query", error);
           const history: MonthHistory[] = [];
           for (let i = 5; i >= 0; i--) {
             const d = new Date(Date.UTC(nowYear, nowMonth - 1 - i, 1));

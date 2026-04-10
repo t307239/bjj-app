@@ -83,11 +83,12 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         since.setDate(1);
         const sinceStr = `${since.getFullYear()}-${String(since.getMonth() + 1).padStart(2, "0")}-01`;
 
-        const { data: logs } = await supabase
+        const { data: logs , error } = await supabase
           .from("training_logs")
           .select("date, duration_min, type")
           .eq("user_id", userId)
           .gte("date", sinceStr);
+        if (error) console.error("TrainingBarChart.tsx:query", error);
 
         if (logs) {
           const buildBuckets = (months: number): MonthData[] => {

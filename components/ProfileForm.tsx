@@ -84,11 +84,12 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
       setGymId(data.gym_id);
       setSharing(data.share_data_with_gym ?? false);
       // Fetch gym name
-      const { data: gym } = await supabase
+      const { data: gym , error: gymError } = await supabase
         .from("gyms")
         .select("name")
         .eq("id", data.gym_id)
         .single();
+      if (gymError) console.error("ProfileForm.tsx:query", gymError);
       setGymName(gym?.name ?? null);
       setLoading(false);
     };
@@ -684,11 +685,12 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
     setLoading(true);
     // Check if disclaimer has already been recorded; if not, record it now.
     // (Migration: supabase/migrations/20260322_add_disclaimer_agreed.sql)
-    const { data: existingProfile } = await supabase
+    const { data: existingProfile , error: disclaimerError } = await supabase
       .from("profiles")
       .select("training_disclaimer_agreed_at")
       .eq("id", userId)
       .single();
+    if (disclaimerError) console.error("ProfileForm.tsx:query", disclaimerError);
     const disclaimerAlreadyRecorded = !!existingProfile?.training_disclaimer_agreed_at;
 
     // Auto-link gym_id when user's typed gym name exactly matches a known gym (T-30)
@@ -696,7 +698,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
       (g) => g.name.trim().toLowerCase() === form.gym.trim().toLowerCase()
     )?.id ?? null;
 
-    const { error } = await supabase.from("profiles").upsert(
+    const { error: upsertError } = await supabase.from("profiles").upsert(
       {
         id: userId,
         belt: form.belt,
@@ -715,7 +717,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
       },
       { onConflict: "id" }
     );
-    if (!error) {
+    if (!upsertError) {
       // Detect belt promotion (viral celebration moment)
       if (isBeltPromotion(profile.belt, form.belt)) {
         setPromotionFrom(profile.belt);
@@ -723,7 +725,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
       setToast({ message: t("profile.saved"), type: "success" });
       setTimeout(() => { setToast(null); onSave(form); }, 1200);
     } else {
-      setToast({ message: t("profile.saveFailed") + ": " + (error.message || error.code || t("profile.saveFailedUnknown")), type: "error" });
+      setToast({ message: t("profile.saveFailed") + ": " + (upsertError.message || upsertError.code || t("profile.saveFailedUnknown")), type: "error" });
     }
     setLoading(false);
   };

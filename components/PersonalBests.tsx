@@ -85,11 +85,12 @@ export default function PersonalBests({ userId }: Props) {
 
   useEffect(() => {
     const load = async () => {
-      const { data: logs } = await supabase
+      const { data: logs , error } = await supabase
         .from("training_logs")
         .select("date, duration_min")
         .eq("user_id", userId)
         .order("date", { ascending: true });
+      if (error) console.error("PersonalBests.tsx:query", error);
 
       setLoaded(true);
       if (!logs || logs.length === 0) return;

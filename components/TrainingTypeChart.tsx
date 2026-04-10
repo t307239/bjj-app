@@ -270,10 +270,11 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
   useEffect(() => {
     const load = async () => {
       try {
-        const { data: logs } = await supabase
+        const { data: logs , error } = await supabase
           .from("training_logs")
           .select("date, type, duration_min")
           .eq("user_id", userId);
+        if (error) console.error("TrainingTypeChart.tsx:query", error);
 
         if (logs) {
           setAllLogs(logs as { date: string; type: string; duration_min: number | null }[]);

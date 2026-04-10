@@ -81,11 +81,12 @@ export default async function GymJoinPage({ params }: Props) {
   }
 
   // Check if student is already in a gym
-  const { data: currentProfile } = await supabase
+  const { data: currentProfile , error } = await supabase
     .from("profiles")
     .select("gym_id")
     .eq("id", user.id)
     .single();
+  if (error) console.error("page.tsx:query", error);
 
   const currentGymId = currentProfile?.gym_id ?? null;
 

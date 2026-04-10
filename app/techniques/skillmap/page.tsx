@@ -41,11 +41,12 @@ export default async function SkillMapPage() {
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
 
-  const { data: profile } = await supabase
+  const { data: profile , error } = await supabase
     .from("profiles")
     .select("is_pro")
     .eq("id", user.id)
     .single();
+  if (error) console.error("page.tsx:query", error);
 
   const isPro = profile?.is_pro ?? false;
   const stripePaymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || null;

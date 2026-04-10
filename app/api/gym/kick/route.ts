@@ -59,29 +59,37 @@ export async function POST(req: NextRequest) {
   }
 
   // Verify caller is a gym owner
-  const { data: ownerProfile } = await supabase
+  const { data: ownerProfile , error } = await supabase
     .from("profiles")
     .select("gym_id, is_gym_owner")
     .eq("id", user.id)
     .single();
+  if (error) {
+    console.error("route.ts:query", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 
   if (!ownerProfile?.is_gym_owner || !ownerProfile.gym_id) {
     return NextResponse.json({ error: "Forbidden: not a gym owner" }, { status: 403 });
   }
 
   // Verify the target member belongs to the same gym
-  const { data: memberProfile } = await supabase
+  const { data: memberProfile , error: memberError } = await supabase
     .from("profiles")
     .select("id, gym_id")
     .eq("id", memberId)
     .single();
+  if (memberError) {
+    console.error("route.ts:query", memberError);
+    return NextResponse.json({ error: memberError.message }, { status: 500 });
+  }
 
   if (!memberProfile || memberProfile.gym_id !== ownerProfile.gym_id) {
     return NextResponse.json({ error: "Member not found in your gym" }, { status: 404 });
   }
 
   // Kick: clear gym_id and share flag, set notification flag
-  const { error } = await supabase
+  const { error: kickError } = await supabase
     .from("profiles")
     .update({
       gym_id: null,
@@ -90,8 +98,8 @@ export async function POST(req: NextRequest) {
     })
     .eq("id", memberId);
 
-  if (error) {
-    logger.error("gym.kick_error", { memberId, gymId: ownerProfile.gym_id }, error as Error);
+  if (kickError) {
+    logger.error("gym.kick_error", { memberId, gymId: ownerProfile.gym_id }, kickError as Error);
     return NextResponse.json({ error: "Failed to kick member" }, { status: 500 });
   }
 

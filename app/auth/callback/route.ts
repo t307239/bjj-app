@@ -42,11 +42,15 @@ export async function GET(request: Request) {
         if (isUserReferralCode(refParam)) {
           // ── User referral: record in referrals table ──────────────
           // Find the referrer by their referral_code
-          const { data: referrer } = await supabase
+          const { data: referrer , error } = await supabase
             .from("profiles")
             .select("id")
             .eq("referral_code", refParam)
             .single();
+          if (error) {
+            console.error("route.ts:query", error);
+            return NextResponse.json({ error: error.message }, { status: 500 });
+          }
 
           if (referrer && referrer.id !== user.id) {
             // Insert referral (ignore duplicate — referred_id is UNIQUE)

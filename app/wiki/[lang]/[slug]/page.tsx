@@ -181,11 +181,12 @@ async function getWikiPage(lang: string, slug: string) {
   // Supabase migration 未実行時はカラムが存在せずエラーになるが、
   // supabase-js は {data: null, error} を返すだけなので安全にフォールバック可能。
   // migration 実行済み後は正常に取得できる。
-  const { data: videoData } = await supabase
+  const { data: videoData , error: videoError } = await supabase
     .from("wiki_pages")
     .select("video_url")
     .eq("id", pageData.id)
     .single();
+  if (videoError) console.error("page.tsx:query", videoError);
   const videoUrl = (videoData as { video_url?: string | null } | null)?.video_url ?? null;
 
   return { ...data, video_url: videoUrl };
@@ -200,14 +201,14 @@ async function getRelatedPages(
   if (!contentType) return [];
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  const { data, error: relatedError } = await supabase
     .from("wiki_translations")
     .select("title, wiki_pages!inner(slug)")
     .eq("language_code", lang)
     .eq("content_type", contentType)
     .limit(5);
 
-  if (error || !data) return [];
+  if (relatedError || !data) return [];
 
   return data
     .map((row) => {
