@@ -88,7 +88,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
     { href: "/dashboard", label: t("nav.home"), icon: "🏠" },
     { href: "/records", label: t("nav.records"), icon: "📋" },
     { href: "/techniques", label: t("nav.techniques"), icon: "📚" },
-    { href: "/profile", label: t("nav.profile"), icon: "🏅" },
+    { href: "/profile", label: t("nav.mypage"), icon: "🏅" },
   ];
 
   return (
