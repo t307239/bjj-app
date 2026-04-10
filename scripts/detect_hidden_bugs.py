@@ -653,33 +653,30 @@ def check_unused_exports(all_files: list[Path], report: BugReport):
 # ─────────────────────────────────────────────────────
 
 def check_supabase_error_handling(filepath: Path, content: str, report: BugReport):
-    """Supabase queryの戻り値で error を destructure していないケースを検出（カテゴリ17）"""
+    """Supabase queryの戻り値で error を destructure していないケースを検出（カテゴリ17）
+
+    パターン:
+      const { data } = await supabase     ← destructで error がない
+        .from("table")                     ← .from は次の行
+        .select(...)
+    """
     rel = filepath.relative_to(APP_ROOT)
 
-    lines = content.split("\n")
-    for i, line in enumerate(lines):
-        # supabase.from( を含む行を検出
-        if "supabase" not in line:
-            continue
-        if not re.search(r'\.from\s*\(', line):
-            continue
-
-        # この行の前後30行で { data } or { data, error } のdestructを探す
-        context_start = max(0, i - 5)
-        context_end = min(len(lines), i + 10)
-        context = "\n".join(lines[context_start:context_end])
-
-        # const { data } = await ... パターンを探す
-        destruct = re.search(r'(?:const|let)\s*\{([^}]*)\}\s*=', context)
-        if destruct:
-            destructured = destruct.group(1)
-            if "error" not in destructured and "data" in destructured:
-                report.add(
-                    "INFO", "SUPABASE_NO_ERROR",
-                    str(rel),
-                    f"L{i+1}: Supabase query の戻り値で error を無視 — サイレント失敗リスク",
-                    "const { data, error } = ... に変更し、error 時のフォールバックを追加",
-                )
+    # supabase の .from() 呼び出しを検出（複数行にまたがるケース対応）
+    # const { data } = await supabase\n  .from(...) パターン
+    for m in re.finditer(
+        r'(?:const|let)\s*\{([^}]*)\}\s*=\s*await\s+\w*supabase\w*[\s\S]*?\.from\s*\(',
+        content,
+    ):
+        destructured = m.group(1)
+        if "data" in destructured and "error" not in destructured:
+            line_no = content[:m.start()].count("\n") + 1
+            report.add(
+                "INFO", "SUPABASE_NO_ERROR",
+                str(rel),
+                f"L{line_no}: Supabase query の戻り値で error を無視 — サイレント失敗リスク",
+                "const { data, error } = ... に変更し、error 時のフォールバックを追加",
+            )
 
 
 # ─────────────────────────────────────────────────────
@@ -717,11 +714,16 @@ def scan_all() -> BugReport:
             check_accessibility(fpath, content, report)       # カテゴリ12
             check_dangerous_html(fpath, content, report)      # カテゴリ13
 
-        # TS/TSX共通チェック（カテゴリ 7, 10-11, 14）
+        # TS/TSX共通チェック（カテゴリ 7, 10-11, 14-15, 17）
         check_console_logs(fpath, content, report)
         check_unused_imports(fpath, content, report)          # カテゴリ10
         check_any_type(fpath, content, report)                # カテゴリ11
         check_secret_env_in_client(fpath, content, report)    # カテゴリ14
+        check_todo_comments(fpath, content, report)           # カテゴリ15
+        check_supabase_error_handling(fpath, content, report) # カテゴリ17
+
+    # ファイル横断チェック（カテゴリ16）
+    check_unused_exports(source_files, report)
 
     return report, len(source_files)
 

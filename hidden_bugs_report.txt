@@ -2,11 +2,35 @@ BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 184 files
 CRITICAL: 1
 WARNING: 0
-INFO: 10
-Total: 11
+INFO: 50
+Total: 51
 
 [CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 32% (453/1424 キー) — 1001 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
+[INFO] [SUPABASE_NO_ERROR] app/api/ai-coach/generate/route.ts: L175: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] app/api/ai-coach/generate/route.ts: L204: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] app/api/gym/curriculum/route.ts: L50: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] app/api/gym/curriculum/route.ts: L61: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] app/api/gym/kick/route.ts: L62: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] app/api/gym/kick/route.ts: L73: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] app/api/gym/regenerate-invite/route.ts: L54: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] app/api/stripe/portal/route.ts: L56: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] app/auth/callback/route.ts: L45: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] app/dashboard/page.tsx: L277: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] app/gym/dashboard/page.tsx: L63: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] app/gym/join/[invite_code]/page.tsx: L84: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [DANGEROUS_HTML] app/gym/page.tsx: L41: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/layout.tsx: L92: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
@@ -21,9 +45,65 @@ Total: 11
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L139: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
+[INFO] [SUPABASE_NO_ERROR] app/techniques/skillmap/page.tsx: L44: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L674: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L678: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L792: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
+[INFO] [SUPABASE_NO_ERROR] app/wiki/[lang]/[slug]/page.tsx: L184: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/BodyManagementSection.tsx: L38: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/CompetitionStats.tsx: L98: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/GoalTracker.tsx: L107: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/GoalTracker.tsx: L150: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/GymRanking.tsx: L76: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/GymRanking.tsx: L104: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/PartnerStatsCard.tsx: L58: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/PersonalBests.tsx: L88: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/ProfileForm.tsx: L77: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/ProfileForm.tsx: L86: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/ProfileForm.tsx: L686: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/RollAnalyticsCard.tsx: L168: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/StreakFreeze.tsx: L150: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/TrainingBarChart.tsx: L86: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/TrainingBarChart.tsx: L143: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/TrainingChart.tsx: L53: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/TrainingLog.tsx: L121: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/TrainingLog.tsx: L137: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] components/TrainingTypeChart.tsx: L273: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [UNUSED_EXPORT] components/CollapsibleSection.tsx: export 'CollapsibleSection' がどこからもimportされていない — デッドコードの可能性
+  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
+[INFO] [UNUSED_EXPORT] components/CompetitionStats.tsx: export 'CompetitionStats' がどこからもimportされていない — デッドコードの可能性
+  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
+[INFO] [UNUSED_EXPORT] components/WeeklyStrip.tsx: export 'WeeklyStrip' がどこからもimportされていない — デッドコードの可能性
+  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
+[INFO] [UNUSED_EXPORT] components/WikiQuickLinks.tsx: export 'WikiQuickLinks' がどこからもimportされていない — デッドコードの可能性
+  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
+[INFO] [UNUSED_EXPORT] components/dashboard/DashboardMotivation.tsx: export 'DashboardMotivation' がどこからもimportされていない — デッドコードの可能性
+  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
+[INFO] [UNUSED_EXPORT] components/gym/types.ts: export 'churnRisk' がどこからもimportされていない — デッドコードの可能性
+  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
+[INFO] [UNUSED_EXPORT] components/ui/Skeleton.tsx: export 'SkeletonCard' がどこからもimportされていない — デッドコードの可能性
+  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
