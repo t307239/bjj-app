@@ -1,13 +1,27 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import dynamic from "next/dynamic";
 import NavBar from "@/components/NavBar";
-import ProfileTabs from "@/components/ProfileTabs";
 import BeltProgressCard from "@/components/BeltProgressCard";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
 import { formatBjjDuration, calcBjjDuration } from "@/lib/bjjDuration";
 import AvatarImage from "@/components/AvatarImage";
+
+// ─── Lazy-loaded sections (keep initial bundle light) ───
+const ProfileForm = dynamic(() => import("@/components/ProfileForm"), {
+  ssr: false,
+  loading: () => <div className="h-48 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
+const BodyManagementSection = dynamic(() => import("@/components/BodyManagementSection"), {
+  ssr: false,
+  loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
+const SettingsSection = dynamic(() => import("@/components/profile/SettingsSection"), {
+  ssr: false,
+  loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
@@ -231,9 +245,28 @@ export default async function ProfilePage() {
         />
 
         {/* ═══════════════════════════════════════════
-            PROFILE TABS (stats / settings / account)
+            PROFILE FORM (belt, gym, bio, start_date)
             ═══════════════════════════════════════════ */}
-        <ProfileTabs userId={user.id} isPro={isPro} referralCode={referralCode} referralCount={referralCount ?? 0} totalCount={totalCount ?? 0} belt={belt} stripeCount={stripeCount} monthsAtBelt={monthsAtBelt} />
+        <ProfileForm userId={user.id} hideAccount />
+
+        {/* ═══════════════════════════════════════════
+            BODY MANAGEMENT (Pro: weight, injury, heatmap)
+            ═══════════════════════════════════════════ */}
+        <div className="mt-6">
+          <BodyManagementSection userId={user.id} isPro={isPro} />
+        </div>
+
+        {/* ═══════════════════════════════════════════
+            SETTINGS (notifications, export, referral, account)
+            ═══════════════════════════════════════════ */}
+        <div className="mt-6">
+          <SettingsSection
+            userId={user.id}
+            isPro={isPro}
+            referralCode={referralCode}
+            referralCount={referralCount ?? 0}
+          />
+        </div>
       </main>
     </div>
   );
