@@ -55,12 +55,13 @@ export default function PartnerStatsCard({ userId }: { userId: string }) {
     const supabase = createClient();
     const load = async () => {
       setLoading(true);
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("training_logs")
         .select("partner_username")
         .eq("user_id", userId)
         .not("partner_username", "is", null)
         .neq("partner_username", "");
+      if (error) console.error("PartnerStatsCard.tsx:query", error);
 
       if (!data) { setLoading(false); return; }
 

@@ -165,13 +165,14 @@ export default function RollAnalyticsCard({ userId }: { userId: string }) {
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("training_logs")
         .select("id, type, date, notes, partner_username")
         .eq("user_id", userId)
         .in("type", ["gi", "nogi"])
         .order("date", { ascending: false })
         .limit(500);
+      if (error) console.error("RollAnalyticsCard.tsx:query", error);
 
       if (data) {
         setRecords(

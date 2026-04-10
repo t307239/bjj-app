@@ -74,11 +74,12 @@ function GymMembershipSection({ userId, supabase }: { userId: string; supabase: 
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .select("gym_id, share_data_with_gym")
         .eq("id", userId)
         .single();
+      if (error) console.error("ProfileForm.tsx:query", error);
       if (!data?.gym_id) { setLoading(false); return; }
       setGymId(data.gym_id);
       setSharing(data.share_data_with_gym ?? false);

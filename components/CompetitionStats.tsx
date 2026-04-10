@@ -95,12 +95,13 @@ export default function CompetitionStats({ userId }: Props) {
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("training_logs")
         .select("notes, date")
         .eq("user_id", userId)
         .eq("type", "competition")
         .order("date", { ascending: true });
+      if (error) console.error("CompetitionStats.tsx:query", error);
 
       if (data) {
         const rec: CompRecord = { win: 0, loss: 0, draw: 0, total: 0, winBySub: 0, lossBySub: 0, currentWinStreak: 0, bestWinStreak: 0, gi_count: 0, nogi_count: 0 };

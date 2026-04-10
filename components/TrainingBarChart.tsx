@@ -140,13 +140,14 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         ? `${year + 1}-01-01`
         : `${year}-${String(month + 1).padStart(2, "0")}-01`;
 
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("training_logs")
         .select("date, type, duration_min")
         .eq("user_id", userId)
         .gte("date", from)
         .lt("date", nextMonth)
         .order("date", { ascending: false });
+      if (error) console.error("TrainingBarChart.tsx:query", error);
 
       setSelectedLogs(data ?? []);
       setSelectedLoading(false);

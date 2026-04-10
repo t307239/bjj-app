@@ -35,11 +35,12 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
 
   const loadProfile = useCallback(async () => {
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .select("is_pro, body_status, body_status_dates, target_weight, target_weight_date")
         .eq("id", userId)
         .single();
+      if (error) console.error("BodyManagementSection.tsx:query", error);
 
       if (data) {
         setIsPro(data.is_pro ?? isProProp);

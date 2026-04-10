@@ -147,11 +147,12 @@ export default function StreakFreeze({ userId, streak }: Props) {
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .select("streak_freeze_count, streak_freeze_last_used, is_pro")
         .eq("id", userId)
         .single();
+      if (error) console.error("StreakFreeze.tsx:query", error);
       setFreezeCount(data?.streak_freeze_count ?? 0);
       setHistoryDates(parseHistory(data?.streak_freeze_last_used ?? null));
       setIsPro(data?.is_pro ?? false);
