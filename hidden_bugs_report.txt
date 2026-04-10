@@ -5,5 +5,5 @@ WARNING: 0
 INFO: 0
 Total: 1
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 31% (435/1407 キー) — 1002 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 32% (453/1424 キー) — 1001 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext

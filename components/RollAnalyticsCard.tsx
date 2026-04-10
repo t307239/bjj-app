@@ -41,7 +41,7 @@ const SIZE_COLOR: Record<SizeKey, string> = {
 };
 
 /** Build label maps using i18n t() — must be called inside the component */
-function buildLabels(t: (key: string, vars?: Record<string, unknown>) => string) {
+function buildLabels(t: (key: string, vars?: Record<string, string | number>) => string) {
   const beltLabel: Record<BeltKey, string> = {
     white: t("rollAnalytics.beltWhite"), blue: t("rollAnalytics.beltBlue"),
     purple: t("rollAnalytics.beltPurple"), brown: t("rollAnalytics.beltBrown"),
@@ -94,7 +94,11 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 
 // ── Weakness insight generator ─────────────────────────────────────────────────
 
-function generateInsights(records: RollRecord[]): string[] {
+function generateInsights(
+  records: RollRecord[],
+  t: (key: string, vars?: Record<string, string | number>) => string,
+  beltLabel: Record<BeltKey, string>,
+): string[] {
   const insights: string[] = [];
   const withMeta = records.filter((r) => r.roll !== null);
   if (withMeta.length < UNLOCK_AT) return insights;
@@ -114,15 +118,15 @@ function generateInsights(records: RollRecord[]): string[] {
   if (highSurvival.length > 0) {
     const [belt, data] = highSurvival[0];
     const pct = Math.round((data.survival / data.total) * 100);
-    const label = BELT_LABEL[belt as BeltKey] ?? belt;
-    insights.push(`⚠️ Survival mode in ${pct}% of rolls vs ${label} belts — a likely growth edge.`);
+    const label = beltLabel[belt as BeltKey] ?? belt;
+    insights.push(`⚠️ ${t("rollAnalytics.insightSurvival", { pct, label })}`);
   }
 
   // ② Size disadvantage
   const heavierCount = withMeta.filter((r) => r.roll?.size_diff === "heavier").length;
   const heavierPct = Math.round((heavierCount / withMeta.length) * 100);
   if (heavierPct >= 50) {
-    insights.push(`💪 ${heavierPct}% of your rolls are against heavier partners — your guard game is getting tested.`);
+    insights.push(`💪 ${t("rollAnalytics.insightHeavier", { pct: heavierPct })}`);
   }
 
   // ③ Flow vs Hard imbalance
@@ -131,9 +135,9 @@ function generateInsights(records: RollRecord[]): string[] {
   const total = withMeta.length;
   if (total >= 10) {
     if (flowCount / total > 0.6) {
-      insights.push(`🌊 60%+ Flow rolls — consider mixing in more Positional work to sharpen specific chains.`);
+      insights.push(`🌊 ${t("rollAnalytics.insightFlow")}`);
     } else if (hardCount / total > 0.5) {
-      insights.push(`🔥 50%+ Hard Rolls — recovery and technique-focused rounds may reduce injury risk.`);
+      insights.push(`🔥 ${t("rollAnalytics.insightHard")}`);
     }
   }
 
@@ -141,10 +145,10 @@ function generateInsights(records: RollRecord[]): string[] {
   const mostRolled = Object.entries(survivalByBelt)
     .sort(([, a], [, b]) => b.total - a.total)[0];
   if (mostRolled && mostRolled[1].total >= 5) {
-    const label = BELT_LABEL[mostRolled[0] as BeltKey] ?? mostRolled[0];
+    const label = beltLabel[mostRolled[0] as BeltKey] ?? mostRolled[0];
     const nonSurvivalPct = Math.round(((mostRolled[1].total - mostRolled[1].survival) / mostRolled[1].total) * 100);
     if (nonSurvivalPct >= 70) {
-      insights.push(`✅ Strong vs ${label} belts — ${nonSurvivalPct}% of those rolls were flow/positional/hard.`);
+      insights.push(`✅ ${t("rollAnalytics.insightStrong", { label, pct: nonSurvivalPct })}`);
     }
   }
 
@@ -185,6 +189,8 @@ export default function RollAnalyticsCard({ userId }: { userId: string }) {
     load();
   }, [userId]);
 
+  const { beltLabel, focusLabel, sizeLabel } = buildLabels(t);
+
   const withMeta = records.filter((r) => r.roll !== null);
   const rollCount = withMeta.length;
   const remaining = Math.max(0, UNLOCK_AT - rollCount);
@@ -207,7 +213,7 @@ export default function RollAnalyticsCard({ userId }: { userId: string }) {
     }
   }
 
-  const insights = generateInsights(records);
+  const insights = generateInsights(records, t, beltLabel);
 
   // ── Loading ───────────────────────────────────────────────────────────────────
   if (loading) {
@@ -271,7 +277,7 @@ export default function RollAnalyticsCard({ userId }: { userId: string }) {
           {BELT_ORDER.map((belt) => (
             <BarRow
               key={belt}
-              label={BELT_LABEL[belt]}
+              label={beltLabel[belt]}
               count={beltCounts[belt]}
               total={rollCount}
               color={BELT_COLOR[belt]}
@@ -287,7 +293,7 @@ export default function RollAnalyticsCard({ userId }: { userId: string }) {
           {FOCUS_ORDER.map((focus) => (
             <BarRow
               key={focus}
-              label={FOCUS_LABEL[focus]}
+              label={focusLabel[focus]}
               count={focusCounts[focus]}
               total={rollCount}
               color={FOCUS_COLOR[focus]}
@@ -304,7 +310,7 @@ export default function RollAnalyticsCard({ userId }: { userId: string }) {
           {SIZE_ORDER.map((size) => (
             <BarRow
               key={size}
-              label={SIZE_LABEL[size]}
+              label={sizeLabel[size]}
               count={sizeCounts[size]}
               total={rollCount}
               color={SIZE_COLOR[size]}
