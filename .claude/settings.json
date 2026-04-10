@@ -3,15 +3,23 @@
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
-        "description": "ファイル保存後に tsc + detect_hidden_bugs.py を自動実行",
-        "command": "cd ~/Claude/bjj-app && ./node_modules/.bin/tsc --noEmit 2>&1 | tail -5; python3 scripts/detect_hidden_bugs.py --ci 2>&1 | grep -E '(CRITICAL|WARNING|合計)'"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd ~/Claude/bjj-app && ./node_modules/.bin/tsc --noEmit 2>&1 | tail -5; python3 scripts/detect_hidden_bugs.py --ci 2>&1 | grep -E '(CRITICAL|WARNING|合計)'"
+          }
+        ]
       }
     ],
     "PreToolUse": [
       {
         "matcher": "Bash",
-        "description": "git add/commit/push コマンドをブロック（autopush daemon使用のため）",
-        "command": "if echo \"$TOOL_INPUT\" | grep -qE '\\bgit\\s+(add|commit|push|reset)\\b'; then echo 'BLOCKED: git コマンドは禁止。CLAUDE_COMMIT_MSG に書いてください。' && exit 1; fi"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$TOOL_INPUT\" | grep -qE '\\bgit\\s+(add|commit|push|reset)\\b'; then echo 'BLOCKED: git コマンドは禁止。CLAUDE_COMMIT_MSG に書いてください。' && exit 2; fi"
+          }
+        ]
       }
     ]
   }
