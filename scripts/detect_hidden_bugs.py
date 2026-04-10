@@ -23,6 +23,11 @@ AUDIT_FRAMEWORK.md の20軸スコアリングでは見逃される、
  15. TODO/FIXME/HACK コメント残存
  16. 未使用exportコンポーネント（デッドコード）
  17. Supabase query の error 未ハンドリング
+ 18. Promise .then() without .catch()（サイレント失敗）
+ 19. ゾンビファイル（空・DEPRECATED のみ・export なし）
+ 20. .catch(() => {}) サイレントエラー握りつぶし
+ 21. Missing error.tsx（Error Boundary 欠落）
+ 22. Missing loading.tsx（Suspense 欠落）
 
 使い方:
     python3 scripts/detect_hidden_bugs.py              # 全チェック
@@ -680,6 +685,223 @@ def check_supabase_error_handling(filepath: Path, content: str, report: BugRepor
 
 
 # ─────────────────────────────────────────────────────
+# カテゴリ 18: Promise .then() without .catch()
+# ─────────────────────────────────────────────────────
+
+def check_promise_no_catch(filepath: Path, content: str, report: BugReport):
+    """Promise .then() が .catch() なしで使われているケースを検出（カテゴリ18）
+
+    `.then(` を見つけたら、同一チェーン内（10行先まで）に `.catch(` があるか確認。
+    await 式は対象外（try-catch で囲まれるべきだが別カテゴリ）。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+    lines = content.split("\n")
+
+    for line_no, line in enumerate(lines, 1):
+        stripped = line.strip()
+        # コメント行は除外
+        if stripped.startswith("//") or stripped.startswith("*") or stripped.startswith("/*"):
+            continue
+        if ".then(" not in line:
+            continue
+        # await と組み合わせてる場合は対象外
+        if "await " in line:
+            continue
+
+        # 同一チェーン内（現在行〜10行先）に .catch( があるか探索
+        chain_window = "\n".join(lines[line_no - 1:line_no + 9])
+        if ".catch(" in chain_window:
+            continue
+
+        # テストファイルは除外
+        if "__tests__" in str(filepath) or ".test." in filepath.name or ".spec." in filepath.name:
+            continue
+
+        report.add(
+            "WARNING", "PROMISE_NO_CATCH",
+            str(rel),
+            f"L{line_no}: .then() に .catch() がない — エラー時サイレント失敗",
+            ".catch((err) => console.error(err)) を追加、または async/await + try-catch に変更",
+        )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 19: ゾンビファイル（空・DEPRECATED）
+# ─────────────────────────────────────────────────────
+
+def check_zombie_files(all_files: list[Path], report: BugReport):
+    """components/ 配下で中身が空または DEPRECATED コメントのみのファイルを検出（カテゴリ19）"""
+    comp_dir = str(APP_ROOT / "components")
+
+    for fpath in all_files:
+        if not str(fpath).startswith(comp_dir):
+            continue
+        try:
+            content = fpath.read_text("utf-8")
+        except Exception:
+            continue
+
+        # 実質的なコード行数（空行・コメント行を除く）
+        code_lines = [
+            l for l in content.split("\n")
+            if l.strip() and not l.strip().startswith("//") and not l.strip().startswith("/*") and not l.strip().startswith("*")
+        ]
+
+        if len(code_lines) <= 1:
+            rel = str(fpath.relative_to(APP_ROOT))
+            report.add(
+                "WARNING", "ZOMBIE_FILE",
+                rel,
+                f"実質コード {len(code_lines)} 行 — 空ファイルまたは DEPRECATED コメントのみ",
+                "git rm で完全削除。再発防止は Q-1 カテゴリ19 で自動検知",
+            )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 20: .catch(() => {}) サイレントエラー握りつぶし
+# ─────────────────────────────────────────────────────
+
+def check_silent_catch(filepath: Path, content: str, report: BugReport):
+    """空の .catch() ハンドラを検出（カテゴリ20）
+
+    .catch(() => {}) / .catch(() => null) / .catch(()=>{}) のパターン。
+    エラーを完全に握りつぶしてデバッグ不能になるリスク。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+
+    # テストファイルは除外
+    if "__tests__" in str(filepath) or ".test." in filepath.name or ".spec." in filepath.name:
+        return
+
+    # 空catch パターン: .catch(() => {}) / .catch(() => null) / .catch(e => {})
+    patterns = [
+        r'\.catch\s*\(\s*\(\s*\w*\s*\)\s*=>\s*\{\s*\}\s*\)',    # .catch(() => {})
+        r'\.catch\s*\(\s*\(\s*\w*\s*\)\s*=>\s*null\s*\)',        # .catch(() => null)
+        r'\.catch\s*\(\s*\(\s*\)\s*=>\s*\{\s*\}\s*\)',           # .catch(() => {})
+        r'\.catch\s*\(\s*\(\s*\)\s*=>\s*undefined\s*\)',          # .catch(() => undefined)
+    ]
+
+    for line_no, line in enumerate(content.split("\n"), 1):
+        stripped = line.strip()
+        if stripped.startswith("//") or stripped.startswith("*"):
+            continue
+        for pattern in patterns:
+            if re.search(pattern, line):
+                report.add(
+                    "WARNING", "SILENT_CATCH",
+                    str(rel),
+                    f"L{line_no}: .catch() がエラーを握りつぶしている — デバッグ不能",
+                    ".catch((err) => console.error('context:', err)) に変更",
+                )
+                break  # 1行で複数マッチしても1件だけ報告
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 21: Missing error.tsx（Error Boundary）
+# ─────────────────────────────────────────────────────
+
+def check_missing_error_boundary(report: BugReport):
+    """app/ 配下で page.tsx があるが error.tsx がないルートを検出（カテゴリ21）
+
+    Next.js の Error Boundary はバブリングするため、
+    親ディレクトリに error.tsx があれば子ルートはスキップする。
+    """
+    if not APP_DIR.exists():
+        return
+
+    # app/ 配下の全 page.tsx を探索
+    for page_file in APP_DIR.rglob("page.tsx"):
+        route_dir = page_file.parent
+
+        # 自分自身のディレクトリに error.tsx があるか
+        if (route_dir / "error.tsx").exists():
+            continue
+
+        # 親ディレクトリをたどって error.tsx があるかチェック（バブリング）
+        found_parent_error = False
+        check_dir = route_dir.parent
+        while check_dir != APP_ROOT and str(check_dir).startswith(str(APP_DIR)):
+            if (check_dir / "error.tsx").exists():
+                found_parent_error = True
+                break
+            check_dir = check_dir.parent
+
+        if found_parent_error:
+            continue
+
+        # global-error.tsx は別枠（root layout のエラー用）
+        if (APP_DIR / "global-error.tsx").exists() and route_dir == APP_DIR:
+            continue
+
+        rel = str(route_dir.relative_to(APP_ROOT))
+        # 静的ページ（SSG系）は低リスクだが報告はする
+        report.add(
+            "INFO", "MISSING_ERROR_BOUNDARY",
+            rel,
+            "error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック",
+            f"{rel}/error.tsx を作成。最低限 'use client' + エラーメッセージ + リトライボタン",
+        )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 22: Missing loading.tsx（Suspense）
+# ─────────────────────────────────────────────────────
+
+# データフェッチがないstatic routeは除外（偽陽性抑制）
+STATIC_ROUTES = {
+    "account-deleted", "privacy", "terms", "legal", "help",
+}
+
+def check_missing_loading(report: BugReport):
+    """app/ 配下で page.tsx があるが loading.tsx がないルートを検出（カテゴリ22）
+
+    静的ページ（STATIC_ROUTES）は除外。
+    親ディレクトリに loading.tsx があれば子ルートもスキップ。
+    """
+    if not APP_DIR.exists():
+        return
+
+    for page_file in APP_DIR.rglob("page.tsx"):
+        route_dir = page_file.parent
+
+        # 静的ルート除外
+        route_name = route_dir.name
+        if route_name in STATIC_ROUTES:
+            continue
+        # legal/tokushoho 等の子ルートも除外
+        if any(part in STATIC_ROUTES for part in route_dir.relative_to(APP_DIR).parts):
+            continue
+
+        # 自分自身のディレクトリに loading.tsx があるか
+        if (route_dir / "loading.tsx").exists():
+            continue
+
+        # 親ディレクトリのバブリングチェック
+        found_parent_loading = False
+        check_dir = route_dir.parent
+        while check_dir != APP_ROOT and str(check_dir).startswith(str(APP_DIR)):
+            if (check_dir / "loading.tsx").exists():
+                found_parent_loading = True
+                break
+            check_dir = check_dir.parent
+
+        if found_parent_loading:
+            continue
+
+        # root (app/) 自体は layout.tsx にローディングがあるかもしれないのでスキップ
+        if route_dir == APP_DIR:
+            continue
+
+        rel = str(route_dir.relative_to(APP_ROOT))
+        report.add(
+            "INFO", "MISSING_LOADING",
+            rel,
+            "loading.tsx が存在しない — ページ遷移時にローディングUIなし",
+            f"{rel}/loading.tsx を作成。Skeleton or スピナーで CLS を防止",
+        )
+
+
+# ─────────────────────────────────────────────────────
 # メインスキャナ
 # ─────────────────────────────────────────────────────
 
@@ -714,16 +936,23 @@ def scan_all() -> BugReport:
             check_accessibility(fpath, content, report)       # カテゴリ12
             check_dangerous_html(fpath, content, report)      # カテゴリ13
 
-        # TS/TSX共通チェック（カテゴリ 7, 10-11, 14-15, 17）
+        # TS/TSX共通チェック（カテゴリ 7, 10-11, 14-15, 17-18, 20）
         check_console_logs(fpath, content, report)
         check_unused_imports(fpath, content, report)          # カテゴリ10
         check_any_type(fpath, content, report)                # カテゴリ11
         check_secret_env_in_client(fpath, content, report)    # カテゴリ14
         check_todo_comments(fpath, content, report)           # カテゴリ15
         check_supabase_error_handling(fpath, content, report) # カテゴリ17
+        check_promise_no_catch(fpath, content, report)        # カテゴリ18
+        check_silent_catch(fpath, content, report)            # カテゴリ20
 
-    # ファイル横断チェック（カテゴリ16）
+    # ファイル横断チェック（カテゴリ16, 19）
     check_unused_exports(source_files, report)
+    check_zombie_files(source_files, report)                  # カテゴリ19
+
+    # app/ 構造チェック（カテゴリ21-22）
+    check_missing_error_boundary(report)                      # カテゴリ21
+    check_missing_loading(report)                             # カテゴリ22
 
     return report, len(source_files)
 
