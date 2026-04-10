@@ -88,7 +88,8 @@
     "weeklyMoreSessionsPlural": "あと{n}回で週間目標達成",
     "weeklyOnPace": " ✓ 順調",
     "weeklyPickUpPace": " ⚠ ペースアップ必要",
-    "weeklyProgressLabel": "{done}/{goal}達成 · 残り{days}日"
+    "weeklyProgressLabel": "{done}/{goal}達成 · 残り{days}日",
+    "streakMilestoneShareText": "🔥 {n}日連続でBJJトレーニング！🥋 BJJ Appで毎日のロールを記録中 → https://bjj-app.net"
   },
   "trainingLog": {
     "totalLabel": "合計",

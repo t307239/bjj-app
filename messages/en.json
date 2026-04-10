@@ -87,7 +87,8 @@
     "weeklyMoreSessionsPlural": "{n} more sessions to hit your weekly goal",
     "weeklyProgressLabel": "{done}/{goal} done · {days}d left",
     "weeklyOnPace": " â on pace",
-    "weeklyPickUpPace": " â  pick up the pace"
+    "weeklyPickUpPace": " â  pick up the pace",
+    "streakMilestoneShareText": "🔥 {n}-day BJJ training streak! 🥋 Tracking every roll with BJJ App → https://bjj-app.net"
   },
   "trainingLog": {
     "totalLabel": "total",

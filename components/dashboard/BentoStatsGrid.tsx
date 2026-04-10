@@ -1,4 +1,6 @@
 import Link from "next/link";
+import MonthShareButton from "./MonthShareButton";
+import StreakMilestoneBadge from "./StreakMilestoneBadge";
 
 type Props = {
   streak: number;
@@ -67,6 +69,7 @@ export default function BentoStatsGrid({
                     </span>
                   )}
         </span>
+        <StreakMilestoneBadge streak={streak} />
       </Link>
 
       {/* This month */}
@@ -131,6 +134,7 @@ export default function BentoStatsGrid({
               )}
             </span>
           )}
+          <MonthShareButton monthCount={monthCount} monthHoursStr={monthHoursStr} />
         </div>
       </div>
 

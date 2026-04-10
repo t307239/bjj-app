@@ -96,7 +96,8 @@
     "bentoDaysLeft": "dias restantes",
     "logTraining": "Registrar Treino",
     "noLogs": "Nenhum treino ainda",
-    "proFeature": "Recurso Pro"
+    "proFeature": "Recurso Pro",
+    "streakMilestoneShareText": "🔥 {n} dias seguidos de treino de BJJ! 🥋 Registrando cada rola com BJJ App → https://bjj-app.net"
   },
   "training": {
     "logTitle": "Registrar Treino",
