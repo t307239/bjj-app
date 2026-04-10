@@ -24,6 +24,34 @@ const AICoachCard = dynamic(() => import("@/components/AICoachCard"), {
   loading: () => <div className="min-h-[128px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 
+// ─── Stats & analytics (moved from ProfileTabs Phase 3) ───
+const PersonalBests = dynamic(() => import("@/components/PersonalBests"), {
+  ssr: false,
+  loading: () => <div className="min-h-[100px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
+const TrainingChart = dynamic(() => import("@/components/TrainingChart"), {
+  ssr: false,
+  loading: () => <div className="min-h-[180px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
+const MilestoneBadgeGrid = dynamic(() => import("@/components/MilestoneBadgeGrid"), {
+  ssr: false,
+  loading: () => <div className="min-h-[100px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
+const StatsAccordion = dynamic(() => import("@/components/records/StatsAccordion"), {
+  ssr: false,
+});
+const ProGate = dynamic(() => import("@/components/ProGate"), {
+  ssr: false,
+});
+const RollAnalyticsCard = dynamic(() => import("@/components/RollAnalyticsCard"), {
+  ssr: false,
+  loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
+const PartnerStatsCard = dynamic(() => import("@/components/PartnerStatsCard"), {
+  ssr: false,
+  loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
+
 export const metadata: Metadata = {
   title: "Records | BJJ App",
 };
@@ -195,6 +223,37 @@ export default async function RecordsPage() {
             </p>
             <GymRanking userId={user.id} gymId={gymId} />
           </section>
+        )}
+
+        {/* ═══════════════════════════════════════════
+            STATS & ANALYTICS (moved from ProfileTabs)
+            ═══════════════════════════════════════════ */}
+        {hasFirstLog && (
+          <>
+            <section className="mb-7">
+              <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
+                {t("profile.tabs.stats")}
+              </p>
+              <PersonalBests userId={user.id} />
+              <div className="mt-4">
+                <TrainingChart userId={user.id} isPro={isPro} />
+              </div>
+              <StatsAccordion userId={user.id} isPro={isPro} />
+            </section>
+
+            <section className="mb-7">
+              <MilestoneBadgeGrid totalCount={totalCount} />
+            </section>
+
+            <section className="mb-7">
+              <ProGate isPro={isPro} feature="ロール分析 & パートナー統計" userId={user.id}>
+                <div className="space-y-4">
+                  <RollAnalyticsCard userId={user.id} />
+                  <PartnerStatsCard userId={user.id} />
+                </div>
+              </ProGate>
+            </section>
+          </>
         )}
       </main>
     </div>

@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 204 files
+TS/TSX Scanned: 195 files
 CRITICAL: 1
 WARNING: 0
-INFO: 15
-Total: 16
+INFO: 10
+Total: 11
 
 [CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 32% (460/1444 キー) — 1014 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
@@ -17,7 +17,7 @@ Total: 16
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/page.tsx: L138: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L141: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L155: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L139: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
@@ -27,13 +27,3 @@ Total: 16
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L793: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [UNUSED_EXPORT] components/InsightsBanner.tsx: export 'InsightsBanner' がどこからもimportされていない — デッドコードの可能性
-  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
-[INFO] [UNUSED_EXPORT] components/InviteCard.tsx: export 'InviteCard' がどこからもimportされていない — デッドコードの可能性
-  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
-[INFO] [UNUSED_EXPORT] components/MonthlyShareCard.tsx: export 'MonthlyShareCard' がどこからもimportされていない — デッドコードの可能性
-  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
-[INFO] [UNUSED_EXPORT] components/StreakFreeze.tsx: export 'StreakFreeze' がどこからもimportされていない — デッドコードの可能性
-  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
-[INFO] [UNUSED_EXPORT] components/StreakMilestoneShare.tsx: export 'StreakMilestoneShare' がどこからもimportされていない — デッドコードの可能性
-  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
