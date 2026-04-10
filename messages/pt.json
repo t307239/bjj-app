@@ -385,7 +385,24 @@
     "partnerBelt": "Faixa do Parceiro",
     "rollFocus": "Foco do Roll",
     "sizeDiff": "Diferença de Tamanho",
-    "weaknessTitle": "Insights de Padrão"
+    "weaknessTitle": "Insights de Padrão",
+    "beltWhite": "Branca",
+    "beltBlue": "Azul",
+    "beltPurple": "Roxa",
+    "beltBrown": "Marrom",
+    "beltBlack": "Preta",
+    "focusFlow": "Flow",
+    "focusPositional": "Posicional",
+    "focusHard": "Rola Forte",
+    "focusSurvival": "Sobrevivência",
+    "sizeHeavier": "Mais pesado ↑",
+    "sizeSimilar": "Similar —",
+    "sizeLighter": "Mais leve ↓",
+    "insightSurvival": "⚠️ Modo sobrevivência em {pct}% dos rolls contra faixas {label} — oportunidade de crescimento.",
+    "insightHeavier": "💪 {pct}% dos seus rolls são contra parceiros mais pesados — seu jogo de guarda está sendo testado.",
+    "insightFlowHigh": "🌊 60%+ rolls em Flow — considere incluir mais Posicional para refinar cadeias específicas.",
+    "insightHardHigh": "🔥 50%+ Rolls Fortes — rounds focados em recuperação e técnica podem reduzir o risco de lesão.",
+    "insightStrong": "✅ Forte contra faixas {label} — {pct}% desses rolls foram flow/posicional/forte."
   },
   "error": {
     "title": "Algo deu errado",
@@ -505,5 +522,8 @@
     "title": "404 — Página não encontrada",
     "description": "Esta página não existe ou foi movida.",
     "backHome": "Voltar ao início"
+  },
+  "skillMapPage": {
+    "back": "Técnicas"
   }
 }

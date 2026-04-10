@@ -30,24 +30,33 @@ const BELT_COLOR: Record<BeltKey, string> = {
   brown:  "bg-amber-700",
   black:  "bg-zinc-100",
 };
-const BELT_LABEL: Record<BeltKey, string> = {
-  white: "White", blue: "Blue", purple: "Purple", brown: "Brown", black: "Black",
-};
 const FOCUS_EMOJI: Record<FocusKey, string> = {
   flow: "🌊", positional: "🎯", hard: "🔥", survival: "🛡️",
-};
-const FOCUS_LABEL: Record<FocusKey, string> = {
-  flow: "Flow", positional: "Positional", hard: "Hard Roll", survival: "Survival",
 };
 const FOCUS_COLOR: Record<FocusKey, string> = {
   flow: "bg-sky-500", positional: "bg-emerald-500", hard: "bg-orange-500", survival: "bg-rose-500",
 };
-const SIZE_LABEL: Record<SizeKey, string> = {
-  heavier: "Heavier ↑", similar: "Similar —", lighter: "Lighter ↓",
-};
 const SIZE_COLOR: Record<SizeKey, string> = {
   heavier: "bg-red-500", similar: "bg-zinc-400", lighter: "bg-blue-400",
 };
+
+/** Build label maps using i18n t() — must be called inside the component */
+function buildLabels(t: (key: string, vars?: Record<string, unknown>) => string) {
+  const beltLabel: Record<BeltKey, string> = {
+    white: t("rollAnalytics.beltWhite"), blue: t("rollAnalytics.beltBlue"),
+    purple: t("rollAnalytics.beltPurple"), brown: t("rollAnalytics.beltBrown"),
+    black: t("rollAnalytics.beltBlack"),
+  };
+  const focusLabel: Record<FocusKey, string> = {
+    flow: t("rollAnalytics.focusFlow"), positional: t("rollAnalytics.focusPositional"),
+    hard: t("rollAnalytics.focusHard"), survival: t("rollAnalytics.focusSurvival"),
+  };
+  const sizeLabel: Record<SizeKey, string> = {
+    heavier: t("rollAnalytics.sizeHeavier"), similar: t("rollAnalytics.sizeSimilar"),
+    lighter: t("rollAnalytics.sizeLighter"),
+  };
+  return { beltLabel, focusLabel, sizeLabel };
+}
 
 // ── Sub components ─────────────────────────────────────────────────────────────
 
