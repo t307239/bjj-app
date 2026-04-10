@@ -29,14 +29,11 @@ export default function MonthlyShareCard({
   const [copied, setCopied] = useState(false);
   const [shared, setShared] = useState(false);
 
-  // Don't render if no sessions this month
   if (monthCount < 1) return null;
 
   const hoursNum = monthHoursStr
     ? monthHoursStr.replace(/h.*/, "").replace("m", "")
     : "0";
-
-  const ogUrl = `${APP_URL}/api/og/monthly?sessions=${monthCount}&hours=${encodeURIComponent(hoursNum)}&streak=${streak}&belt=${encodeURIComponent(belt)}&month=${month}&year=${year}&techniques=${techniqueCount}`;
 
   const shareText = t("monthlyShare.shareText")
     .replace("{sessions}", String(monthCount))
@@ -65,36 +62,31 @@ export default function MonthlyShareCard({
 
   if (shared) return null;
 
-  return (
-    <section className="mb-7">
-      <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
-        {t("monthlyShare.sectionLabel")}
-      </p>
-      <div className="bg-zinc-900 rounded-xl border border-white/10 overflow-hidden">
-        {/* OGP Preview */}
-        <div className="relative aspect-[1200/630] w-full bg-[#0f172a]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={ogUrl}
-            alt={t("monthlyShare.previewAlt")}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
-        </div>
+  /* Compact stat pills — no OGP image inline (image used via og:meta for social previews only) */
+  const stats = [
+    { value: monthCount, label: "🥋", color: "text-emerald-400" },
+    { value: hoursNum + "h", label: "⏱", color: "text-blue-400" },
+    ...(streak > 0 ? [{ value: streak, label: "🔥", color: "text-yellow-400" }] : []),
+    ...(techniqueCount > 0 ? [{ value: techniqueCount, label: "💡", color: "text-purple-400" }] : []),
+  ];
 
-        {/* Action area */}
-        <div className="px-4 py-3 flex items-center justify-between">
-          <p className="text-sm text-gray-400">
-            {t("monthlyShare.cta")}
-          </p>
-          <button
-            onClick={handleShare}
-            className="min-h-[44px] px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-full transition-colors flex items-center gap-2"
-          >
-            {copied ? t("monthlyShare.copied") : t("monthlyShare.shareButton")}
-          </button>
-        </div>
+  return (
+    <div className="bg-zinc-900 rounded-xl border border-white/10 px-4 py-3 flex items-center gap-3">
+      <div className="flex items-center gap-3 flex-1 min-w-0 overflow-x-auto">
+        {stats.map((s, i) => (
+          <span key={i} className="flex items-center gap-1 whitespace-nowrap">
+            <span className="text-sm">{s.label}</span>
+            <span className={`text-sm font-bold ${s.color}`}>{s.value}</span>
+          </span>
+        ))}
+        <span className="text-xs text-zinc-500 whitespace-nowrap">{t("monthlyShare.cta")}</span>
       </div>
-    </section>
+      <button
+        onClick={handleShare}
+        className="min-h-[36px] px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-full transition-colors whitespace-nowrap shrink-0"
+      >
+        {copied ? t("monthlyShare.copied") : t("monthlyShare.shareButton")}
+      </button>
+    </div>
   );
 }
