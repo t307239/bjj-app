@@ -707,6 +707,9 @@ def check_promise_no_catch(filepath: Path, content: str, report: BugReport):
         # await と組み合わせてる場合は対象外
         if "await " in line:
             continue
+        # req.json().catch(() => null) は API route の意図的パターン → 除外
+        if "req.json()" in line or "request.json()" in line:
+            continue
 
         # 同一チェーン内（現在行〜10行先）に .catch( があるか探索
         chain_window = "\n".join(lines[line_no - 1:line_no + 9])
@@ -781,9 +784,16 @@ def check_silent_catch(filepath: Path, content: str, report: BugReport):
         r'\.catch\s*\(\s*\(\s*\)\s*=>\s*undefined\s*\)',          # .catch(() => undefined)
     ]
 
+    # コメント付き catch は意図的 → 除外パターン
+    # 例: .catch(() => {/* clipboard not available */})
+    comment_in_catch = re.compile(r'\.catch\s*\(\s*\(\s*\w*\s*\)\s*=>\s*\{\s*/\*.*?\*/\s*\}\s*\)')
+
     for line_no, line in enumerate(content.split("\n"), 1):
         stripped = line.strip()
         if stripped.startswith("//") or stripped.startswith("*"):
+            continue
+        # コメント付き catch は意図的と判断しスキップ
+        if comment_in_catch.search(line):
             continue
         for pattern in patterns:
             if re.search(pattern, line):

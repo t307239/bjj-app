@@ -61,7 +61,7 @@ export default function StreakMilestoneShare({ streak }: Props) {
     if (navigator.share) {
       try { await navigator.share({ text }); } catch { /* cancelled */ }
     } else {
-      await navigator.clipboard.writeText(text).catch(() => {});
+      await navigator.clipboard.writeText(text).catch(() => {/* clipboard not available */});
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }

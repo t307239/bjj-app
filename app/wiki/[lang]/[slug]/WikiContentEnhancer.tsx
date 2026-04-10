@@ -77,7 +77,7 @@ export default function WikiContentEnhancer() {
       const onClick = (e: MouseEvent) => {
         e.stopPropagation();
         const url = `${window.location.origin}${window.location.pathname}#${id}`;
-        navigator.clipboard.writeText(url).then(() => showToast("🔗 Copied!")).catch(() => {});
+        navigator.clipboard.writeText(url).then(() => showToast("🔗 Copied!")).catch(() => {/* clipboard not available */});
       };
       const onBtnEnter = () => { btn.style.opacity = "1"; btn.style.color = "rgb(244,114,182)"; };
       const onBtnLeave = () => { btn.style.opacity = "0"; btn.style.color = "rgb(148,163,184)"; };

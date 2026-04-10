@@ -29,7 +29,7 @@ export default function MemberCard({
     navigator.clipboard.writeText(msg).then(() => {
       setNudgeCopied(true);
       setTimeout(() => setNudgeCopied(false), 2000);
-    });
+    }).catch((err) => console.error("nudge clipboard copy failed:", err));
   };
   const lastSeenText = member.last_training_date
     ? (() => {

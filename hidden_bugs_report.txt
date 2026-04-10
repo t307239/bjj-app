@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 184 files
+TS/TSX Scanned: 179 files
 CRITICAL: 1
-WARNING: 16
+WARNING: 11
 INFO: 26
-Total: 43
+Total: 38
 
 [CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 32% (453/1424 キー) — 1001 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
@@ -49,16 +49,6 @@ Total: 43
   FIX: .catch((err) => console.error('context:', err)) に変更
 [WARNING] [PROMISE_NO_CATCH] components/gym/MemberCard.tsx: L29: .then() に .catch() がない — エラー時サイレント失敗
   FIX: .catch((err) => console.error(err)) を追加、または async/await + try-catch に変更
-[WARNING] [ZOMBIE_FILE] components/CollapsibleSection.tsx: 実質コード 0 行 — 空ファイルまたは DEPRECATED コメントのみ
-  FIX: git rm で完全削除。再発防止は Q-1 カテゴリ19 で自動検知
-[WARNING] [ZOMBIE_FILE] components/CompetitionStats.tsx: 実質コード 0 行 — 空ファイルまたは DEPRECATED コメントのみ
-  FIX: git rm で完全削除。再発防止は Q-1 カテゴリ19 で自動検知
-[WARNING] [ZOMBIE_FILE] components/WeeklyStrip.tsx: 実質コード 0 行 — 空ファイルまたは DEPRECATED コメントのみ
-  FIX: git rm で完全削除。再発防止は Q-1 カテゴリ19 で自動検知
-[WARNING] [ZOMBIE_FILE] components/WikiQuickLinks.tsx: 実質コード 0 行 — 空ファイルまたは DEPRECATED コメントのみ
-  FIX: git rm で完全削除。再発防止は Q-1 カテゴリ19 で自動検知
-[WARNING] [ZOMBIE_FILE] components/dashboard/DashboardMotivation.tsx: 実質コード 0 行 — 空ファイルまたは DEPRECATED コメントのみ
-  FIX: git rm で完全削除。再発防止は Q-1 カテゴリ19 で自動検知
 [INFO] [MISSING_ERROR_BOUNDARY] app/account-deleted: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック
   FIX: app/account-deleted/error.tsx を作成。最低限 'use client' + エラーメッセージ + リトライボタン
 [INFO] [MISSING_ERROR_BOUNDARY] app/privacy: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック

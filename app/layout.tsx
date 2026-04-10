@@ -90,7 +90,7 @@ export default async function RootLayout({
         </LocaleProvider>
         <script
           dangerouslySetInnerHTML={{
-            __html: `if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{})}`,
+            __html: `if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{/* SW registration optional */})}`,
           }}
         />
       </body>

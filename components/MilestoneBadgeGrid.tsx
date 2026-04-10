@@ -86,7 +86,7 @@ export default function MilestoneBadgeGrid({ totalCount }: Props) {
         // User cancelled — still mark as seen
       }
     } else {
-      await navigator.clipboard.writeText(text).catch(() => {});
+      await navigator.clipboard.writeText(text).catch(() => {/* clipboard not available */});
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }

@@ -42,7 +42,8 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
         if (completedAt >= setAt) {
           setPracticed(true);
         }
-      });
+      })
+      .catch((err) => console.error("curriculum check failed:", err));
   }, [userId, curriculumSetAt]);
 
   const handlePracticed = async (e: React.MouseEvent) => {

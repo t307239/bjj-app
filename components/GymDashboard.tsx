@@ -136,7 +136,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
         <button
           onClick={() => {
             if (navigator.share) {
-              navigator.share({ title: gym.name, text: `Join ${gym.name} on BJJ App!`, url: inviteUrl }).catch(() => {});
+              navigator.share({ title: gym.name, text: `Join ${gym.name} on BJJ App!`, url: inviteUrl }).catch(() => {/* user cancelled share */});
             } else {
               copy();
             }

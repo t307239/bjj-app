@@ -672,7 +672,8 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
       .order("name", { ascending: true })
       .then(({ data }) => {
         if (data) setGymSuggestions(data as { id: string; name: string }[]);
-      });
+      })
+      .catch((err) => console.error("gym list fetch failed:", err));
   }, [supabase]);
 
   const handleSave = async (e: React.FormEvent) => {
