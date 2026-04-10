@@ -311,7 +311,8 @@
     "dangerTooltip": "この技は怪我のリスクが高いです。有資格の指導者の下でのみ練習してください。",
     "dangerConfirm": "⚠️ これは上級技で怪我のリスクが高い技術です（ヒールフック、膝十字、首関節技など）。追加しますか？必ず有資格のインストラクターの直接指導の下で練習してください。",
     "allDuplicates": "すべてのテクニックは既に登録済みです — 新規追加はありません",
-    "bulkTooMany": "テクニックが多すぎます — 一度に100件以下で入力してください"
+    "bulkTooMany": "テクニックが多すぎます — 一度に100件以下で入力してください",
+    "freePlanLimit": "無料プランの上限（{n}件）に達しました。Proにアップグレードすると無制限になります。"
   },
   "profile": {
     "title": "プロフィール",
@@ -1060,7 +1061,7 @@
     "csvNote": "全生徒が同じ招待リンクを使用します。招待コードにより確実にあなたの道場に参加できます。",
     "printLeaderboard": "リーダーボードを印刷",
     "printLeaderboardTitle": "月間ランキング",
-    "printLeaderboardGenerated": "BJJ App Â· bjj-app.net",
+    "printLeaderboardGenerated": "BJJ App · bjj-app.net",
     "printLeaderboardRank": "順位",
     "printLeaderboardAthlete": "選手",
     "printLeaderboardBelt": "帯",
@@ -1409,7 +1410,7 @@
     "finalCtaTitle": "今日からスマートにトレーニング",
     "finalCtaSubtitle": "クレジットカード不要。GitHub/Googleで数秒でサインアップ。",
     "finalCtaButton": "無料でトラッキング開始",
-    "footerCopyright": "Â© 2026 BJJ App. All rights reserved.",
+    "footerCopyright": "© 2026 BJJ App. All rights reserved.",
     "footerTerms": "利用規約",
     "footerPrivacy": "プライバシーポリシー",
     "footerTokushoho": "特定商取引法に基づく表記",

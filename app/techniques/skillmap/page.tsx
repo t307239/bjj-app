@@ -11,10 +11,7 @@ import Link from "next/link";
 const SkillMap = dynamic(() => import("@/components/SkillMap"), {
   loading: () => (
     <div className="w-full h-full flex items-center justify-center bg-zinc-950">
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-10 h-10 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
-        <p className="text-xs text-zinc-500">Loading Skill Map…</p>
-      </div>
+      <div className="w-10 h-10 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
     </div>
   ),
 });

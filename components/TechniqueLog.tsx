@@ -158,7 +158,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
     const duplicate = techniques.find((t) => t.name.trim().toLowerCase() === nameNorm);
     if (duplicate) { setFormError(t("techniques.duplicate", { name: duplicate.name })); return; }
     if (!isPro && techniques.length >= TECHNIQUE_FREE_LIMIT) {
-      setFormError(`Free plan limit: ${TECHNIQUE_FREE_LIMIT} techniques. Upgrade to Pro for unlimited.`);
+      setFormError(t("techniques.freePlanLimit", { n: TECHNIQUE_FREE_LIMIT }));
       return;
     }
     // Belt-based safety gate: show confirmation for dangerous techniques
@@ -181,7 +181,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
     if (newNames.length === 0) { setFormError(t("techniques.allDuplicates")); return; }
     const remaining = isPro ? Infinity : Math.max(0, TECHNIQUE_FREE_LIMIT - techniques.length);
     if (!isPro && remaining === 0) {
-      setFormError(`Free plan limit: ${TECHNIQUE_FREE_LIMIT} techniques. Upgrade to Pro for unlimited.`);
+      setFormError(t("techniques.freePlanLimit", { n: TECHNIQUE_FREE_LIMIT }));
       return;
     }
     const allowedNames = remaining === Infinity ? newNames : newNames.slice(0, remaining);

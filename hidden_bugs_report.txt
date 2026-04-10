@@ -1,11 +1,11 @@
 BJJ App Hidden Bug Detector Report
-TSX Scanned: 139 files
+TSX Scanned: 140 files
 CRITICAL: 1
 WARNING: 1
 INFO: 0
 Total: 2
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 31% (429/1402 キー) — 1004 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 31% (430/1403 キー) — 1004 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [WARNING] [HARDCODED_MIXED] app/wiki/[lang]/[slug]/page.tsx: 多言語混在（JAの中に英語）: '>
           );
