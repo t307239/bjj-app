@@ -15,6 +15,11 @@ AUDIT_FRAMEWORK.md の20軸スコアリングでは見逃される、
   7. console.log 残存
   8. JSONファイル文字化け（Â·, Â©等のダブルエンコード）
   9. TypeScript関数内ハードコードUI文字列（JSX外の "Today"/"Yesterday" 等）
+ 10. 未使用import検出（import後に参照がないシンボル）
+ 11. `as any` / `: any` 型エスケープ検出
+ 12. アクセシビリティ欠損（アイコンonly button/link にaria-label無し、img alt無し）
+ 13. dangerouslySetInnerHTML 使用箇所の列挙
+ 14. クライアントコードからの秘密env直参照（NEXT_PUBLIC_ 以外の process.env）
 
 使い方:
     python3 scripts/detect_hidden_bugs.py              # 全チェック
@@ -40,7 +45,8 @@ APP_ROOT = Path(__file__).parent.parent
 MESSAGES_DIR = APP_ROOT / "messages"
 APP_DIR = APP_ROOT / "app"
 COMPONENTS_DIR = APP_ROOT / "components"
-TSX_DIRS = [APP_DIR, COMPONENTS_DIR]
+LIB_DIR = APP_ROOT / "lib"
+SCAN_DIRS = [APP_DIR, COMPONENTS_DIR, LIB_DIR]
 
 
 # ─────────────────────────────────────────────────────
@@ -117,13 +123,14 @@ def check_i18n_coverage(report: BugReport):
 # TSX スキャナー
 # ─────────────────────────────────────────────────────
 
-def find_tsx_files() -> list[Path]:
-    """app/ と components/ 配下の全TSXファイルを取得"""
+def find_source_files() -> list[Path]:
+    """app/ components/ lib/ 配下の全 .tsx / .ts ファイルを取得"""
     files = []
-    for d in TSX_DIRS:
+    for d in SCAN_DIRS:
         if d.exists():
             files.extend(d.rglob("*.tsx"))
-    return sorted(files)
+            files.extend(d.rglob("*.ts"))
+    return sorted(set(files))
 
 
 def check_hardcoded_strings(filepath: Path, content: str, report: BugReport):
@@ -351,6 +358,193 @@ def check_json_mojibake(report: BugReport):
 
 
 # ─────────────────────────────────────────────────────
+# カテゴリ 10: 未使用 import
+# ─────────────────────────────────────────────────────
+
+# importの構文をパースしてシンボルを抽出し、ファイル本文で使われていなければ報告
+
+def check_unused_imports(filepath: Path, content: str, report: BugReport):
+    """未使用importの検出（カテゴリ10）"""
+    rel = filepath.relative_to(APP_ROOT)
+    lines = content.split("\n")
+
+    # import行を収集（1行にまとめたものだけ、type-onlyは除外）
+    import_re = re.compile(
+        r'^\s*import\s+(?:type\s+)?'  # 'import' or 'import type'
+        r'\{([^}]+)\}'               # { Name1, Name2 as Alias }
+        r'\s+from\s+'
+    )
+    for line_no, line in enumerate(lines, 1):
+        m = import_re.match(line)
+        if not m:
+            continue
+        # import type { ... } は型のみ — tscが検出するので低優先
+        if re.match(r'^\s*import\s+type\s+', line):
+            continue
+        symbols_raw = m.group(1).split(",")
+        for sym_raw in symbols_raw:
+            sym_raw = sym_raw.strip()
+            if not sym_raw:
+                continue
+            # 'Name as Alias' → Alias を使用名とする
+            parts = sym_raw.split(" as ")
+            used_name = parts[-1].strip()
+            if not used_name or not re.match(r'^[A-Za-z_$]', used_name):
+                continue
+            # import行自体を除いた残りで使用されているか検索
+            rest = "\n".join(lines[:line_no - 1]) + "\n".join(lines[line_no:])
+            # 単語境界つきで検索（識別子として使用されているか）
+            if not re.search(r'\b' + re.escape(used_name) + r'\b', rest):
+                report.add(
+                    "WARNING", "UNUSED_IMPORT",
+                    str(rel),
+                    f"L{line_no}: '{used_name}' がimport後に使用されていない",
+                    f"import文から '{used_name}' を削除",
+                )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 11: any 型エスケープ
+# ─────────────────────────────────────────────────────
+
+def check_any_type(filepath: Path, content: str, report: BugReport):
+    """`: any` / `as any` の検出（カテゴリ11）"""
+    rel = filepath.relative_to(APP_ROOT)
+
+    # database.types.ts は自動生成なので除外
+    if filepath.name == "database.types.ts":
+        return
+    # *.d.ts 型定義ファイルも除外
+    if filepath.name.endswith(".d.ts"):
+        return
+
+    for line_no, line in enumerate(content.split("\n"), 1):
+        stripped = line.strip()
+        # コメント行は除外
+        if stripped.startswith("//") or stripped.startswith("*") or stripped.startswith("/*"):
+            continue
+        # 'as any' パターン
+        as_any = re.findall(r'\bas\s+any\b', line)
+        for _ in as_any:
+            report.add(
+                "INFO", "ANY_TYPE_ESCAPE",
+                str(rel),
+                f"L{line_no}: `as any` 型アサーション — 適切な型に置換推奨",
+                "具体的な型を定義するか、unknown + 型ガードを使用",
+            )
+        # ': any' パターン（関数引数・変数宣言）
+        colon_any = re.findall(r':\s*any\b(?!\s*\[)', line)
+        for _ in colon_any:
+            # 'as any' と重複カウントしない
+            if 'as any' not in line or ': any' in line.replace('as any', ''):
+                report.add(
+                    "INFO", "ANY_TYPE_ESCAPE",
+                    str(rel),
+                    f"L{line_no}: `: any` 型注釈 — 具体的な型に置換推奨",
+                    "Record<string, unknown> や具体的な型を使用",
+                )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 12: アクセシビリティ欠損
+# ─────────────────────────────────────────────────────
+
+def check_accessibility(filepath: Path, content: str, report: BugReport):
+    """アイコンonlyボタン/リンクのaria-label欠損、img alt欠損（カテゴリ12）"""
+    rel = filepath.relative_to(APP_ROOT)
+
+    # <img> without alt
+    img_no_alt = re.findall(r'<img\b[^>]*?(?<!alt=)[^>]*/?\s*>', content)
+    for m in img_no_alt:
+        if 'alt=' not in m and 'alt =' not in m:
+            report.add(
+                "WARNING", "A11Y_IMG_NO_ALT",
+                str(rel),
+                f"<img> に alt 属性がない: '{m[:80]}'",
+                'alt="" (装飾) または alt="説明" を追加',
+            )
+
+    # アイコンonlyボタン: <button> の中身がテキストを含まず、aria-labelもない
+    # パターン: <button ...> の後に直接 <svg> や <span className="sr-only"> がなく、
+    # テキストノードもない場合
+    icon_btn_re = re.compile(
+        r'<button\b([^>]*)>'       # <button ...>
+        r'\s*'
+        r'(<(?:svg|img|span)[^<]*)'  # 直後が svg/img/span
+    , re.DOTALL)
+    for m in icon_btn_re.finditer(content):
+        attrs = m.group(1)
+        inner = m.group(2)
+        if 'aria-label' not in attrs and 'aria-labelledby' not in attrs:
+            if 'sr-only' not in inner and not re.search(r'>[A-Za-z\u3040-\u9FFF]', inner):
+                # ボタン全体のコンテキスト確認（30文字先までにテキストがなければ報告）
+                after = content[m.end():m.end()+100]
+                if not re.search(r'>[A-Za-z\u3040-\u9FFF]', after.split('</button>')[0] if '</button>' in after else after):
+                    report.add(
+                        "WARNING", "A11Y_ICON_BUTTON",
+                        str(rel),
+                        f"アイコンのみのbuttonにaria-label欠損: '{m.group(0)[:80]}'",
+                        'aria-label="操作名" を追加',
+                    )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 13: dangerouslySetInnerHTML
+# ─────────────────────────────────────────────────────
+
+def check_dangerous_html(filepath: Path, content: str, report: BugReport):
+    """dangerouslySetInnerHTML の使用を検出（カテゴリ13）"""
+    rel = filepath.relative_to(APP_ROOT)
+
+    for line_no, line in enumerate(content.split("\n"), 1):
+        if "dangerouslySetInnerHTML" in line:
+            report.add(
+                "INFO", "DANGEROUS_HTML",
+                str(rel),
+                f"L{line_no}: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック",
+                "DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証",
+            )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 14: クライアントコードの秘密env直参照
+# ─────────────────────────────────────────────────────
+
+def check_secret_env_in_client(filepath: Path, content: str, report: BugReport):
+    """クライアントコンポーネントからの秘密env直参照を検出（カテゴリ14）
+
+    "use client" ディレクティブがあるファイルで、
+    NEXT_PUBLIC_ プレフィックスのない process.env.XXX を参照していたら警告。
+    サーバー専用ファイル（api/, middleware, server component）は除外。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+
+    # "use client" がないファイルはサーバーコンポーネント → 正当な参照
+    if '"use client"' not in content and "'use client'" not in content:
+        return
+    # API routeは除外
+    if "/api/" in str(filepath):
+        return
+
+    for line_no, line in enumerate(content.split("\n"), 1):
+        stripped = line.strip()
+        if stripped.startswith("//") or stripped.startswith("*"):
+            continue
+        env_refs = re.findall(r'process\.env\.([A-Z_]+)', line)
+        for env_name in env_refs:
+            if env_name == "NODE_ENV":
+                continue
+            if env_name.startswith("NEXT_PUBLIC_"):
+                continue
+            report.add(
+                "CRITICAL", "SECRET_ENV_CLIENT",
+                str(rel),
+                f"L{line_no}: クライアントコードから process.env.{env_name} を参照 — ビルド時にundefinedになるか秘密漏洩のリスク",
+                f"NEXT_PUBLIC_ プレフィックスを付けるか、サーバーAPI経由に変更",
+            )
+
+
+# ─────────────────────────────────────────────────────
 # メインスキャナ
 # ─────────────────────────────────────────────────────
 
@@ -363,23 +557,35 @@ def scan_all() -> BugReport:
     # JSONファイル文字化けチェック（カテゴリ8）
     check_json_mojibake(report)
 
-    # TSX スキャン
-    tsx_files = find_tsx_files()
-    for fpath in tsx_files:
+    # TS/TSX スキャン
+    source_files = find_source_files()
+    tsx_files = [f for f in source_files if f.suffix == ".tsx"]
+    for fpath in source_files:
         try:
             content = fpath.read_text(encoding="utf-8")
         except Exception:
             continue
 
-        check_hardcoded_strings(fpath, content, report)
-        check_mock_data(fpath, content, report)
-        check_comment_out_remnants(fpath, content, report)
-        check_layout_fragility(fpath, content, report)
-        check_console_logs(fpath, content, report)
-        check_technical_leakage(fpath, content, report)
-        check_hardcoded_ui_return_strings(fpath, content, report)  # カテゴリ9
+        is_tsx = fpath.suffix == ".tsx"
 
-    return report, len(tsx_files)
+        # TSX専用チェック（カテゴリ 2-6, 9）
+        if is_tsx:
+            check_hardcoded_strings(fpath, content, report)
+            check_mock_data(fpath, content, report)
+            check_comment_out_remnants(fpath, content, report)
+            check_layout_fragility(fpath, content, report)
+            check_technical_leakage(fpath, content, report)
+            check_hardcoded_ui_return_strings(fpath, content, report)
+            check_accessibility(fpath, content, report)       # カテゴリ12
+            check_dangerous_html(fpath, content, report)      # カテゴリ13
+
+        # TS/TSX共通チェック（カテゴリ 7, 10-11, 14）
+        check_console_logs(fpath, content, report)
+        check_unused_imports(fpath, content, report)          # カテゴリ10
+        check_any_type(fpath, content, report)                # カテゴリ11
+        check_secret_env_in_client(fpath, content, report)    # カテゴリ14
+
+    return report, len(source_files)
 
 
 # ─────────────────────────────────────────────────────
@@ -403,7 +609,7 @@ def print_report(report: BugReport, total_files: int, fix_hint: bool = False):
     print(f"\n{'='*60}")
     print(f"🔍 BJJ App Hidden Bug Detector — スキャン結果")
     print(f"{'='*60}")
-    print(f"  TSXスキャン対象: {total_files} ファイル")
+    print(f"  TS/TSXスキャン対象: {total_files} ファイル")
     print(f"  🔴 CRITICAL: {crit}")
     print(f"  🟡 WARNING:  {warn}")
     print(f"  🔵 INFO:     {info}")
@@ -438,7 +644,7 @@ def write_report_file(report: BugReport, total_files: int):
     report_path = APP_ROOT / "hidden_bugs_report.txt"
     lines = [
         "BJJ App Hidden Bug Detector Report",
-        f"TSX Scanned: {total_files} files",
+        f"TS/TSX Scanned: {total_files} files",
         f"CRITICAL: {report.count('CRITICAL')}",
         f"WARNING: {report.count('WARNING')}",
         f"INFO: {report.count('INFO')}",
