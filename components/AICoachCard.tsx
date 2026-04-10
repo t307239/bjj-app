@@ -61,16 +61,24 @@ function parseCoaching(text: string): {
   return { insight, tips, challenge };
 }
 
-function fmtAge(isoDate: string | null | undefined): string {
+function fmtAge(isoDate: string | null | undefined, locale: string): string {
   if (!isoDate) return "";
-  const days = Math.floor((Date.now() - new Date(isoDate).getTime()) / 86400000);
-  if (days === 0) return "Today";
-  if (days === 1) return "Yesterday";
-  return `${days} days ago`;
+  const diffMs = new Date(isoDate).getTime() - Date.now();
+  const diffDays = Math.round(diffMs / 86400000); // negative = past
+  try {
+    // Intl.RelativeTimeFormat is locale-aware: "今日", "Yesterday", "Hoje", etc.
+    const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+    if (Math.abs(diffDays) < 1) return rtf.format(0, "day");
+    return rtf.format(diffDays, "day");
+  } catch {
+    // Fallback for unsupported locales
+    const days = Math.abs(diffDays);
+    return days === 0 ? "Today" : days === 1 ? "Yesterday" : `${days} days ago`;
+  }
 }
 
 export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt }: Props) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [coaching, setCoaching] = useState<string | null>(initialCoaching ?? null);
   const [generatedAt, setGeneratedAt] = useState<string | null>(initialGeneratedAt ?? null);
   const [loading, setLoading] = useState(false);
@@ -82,7 +90,11 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/ai-coach/generate", { method: "POST" });
+      const res = await fetch("/api/ai-coach/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ locale }),
+      });
       const data = await res.json() as { coaching?: string; generated_at?: string; cached?: boolean; error?: string };
       if (!res.ok || data.error) {
         setError(data.error ?? t("aiCoach.error"));
@@ -156,7 +168,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
         </div>
         <div className="flex items-center gap-2">
           {generatedAt && (
-            <span className="text-xs text-gray-600">{fmtAge(generatedAt)}</span>
+            <span className="text-xs text-gray-600">{fmtAge(generatedAt, locale)}</span>
           )}
           {isStale && (
             <button

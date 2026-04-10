@@ -67,6 +67,12 @@ async function callAnthropicAPI(prompt: string): Promise<string | null> {
   }
 }
 
+const LOCALE_INSTRUCTIONS: Record<string, string> = {
+  ja: "Respond entirely in Japanese (日本語で返答してください).",
+  pt: "Respond entirely in Brazilian Portuguese (Responda completamente em português brasileiro).",
+  en: "",
+};
+
 function buildCoachingPrompt(stats: {
   totalSessions: number;
   weeklyAvg: number;
@@ -78,10 +84,12 @@ function buildCoachingPrompt(stats: {
   streakDays: number;
   belt: string;
   stripes: number;
+  locale?: string;
 }): string {
   const beltLabel = `${stats.belt} belt${stats.stripes > 0 ? ` (${stats.stripes} stripe${stats.stripes > 1 ? "s" : ""})` : ""}`;
+  const localeInstruction = LOCALE_INSTRUCTIONS[stats.locale ?? "en"] ?? "";
 
-  return `You are a concise, encouraging BJJ coach. Analyze this student's training data and give them personalized coaching.
+  return `You are a concise, encouraging BJJ coach. Analyze this student's training data and give them personalized coaching.${localeInstruction ? ` ${localeInstruction}` : ""}
 
 Student: ${beltLabel}
 Last 30 days of training:
@@ -112,7 +120,31 @@ function buildFallbackCoaching(stats: {
   totalSessions: number;
   weeklyAvg: number;
   belt: string;
+  locale?: string;
 }): string {
+  const loc = stats.locale ?? "en";
+
+  if (loc === "ja") {
+    if (stats.totalSessions === 0) {
+      return `INSIGHT: 道場への第一歩が全ての始まり。世界のトップ選手も、かつてあなたと同じ場所にいました。\n\nTIPS:\n• まずは今週2回の練習を目標に設定しましょう\n• 1回の練習で1つのポジションに集中することが上達の近道です\n• 毎回の練習をアプリに記録して成長を可視化しましょう\n\nCHALLENGE: 今週、最初のスパーリングセッションに参加してアプリに記録してください。`;
+    }
+    if (stats.weeklyAvg >= 3) {
+      return `INSIGHT: 週${stats.weeklyAvg.toFixed(1)}回の練習頻度は上位の継続力です。一貫性があなたの最大の武器です。\n\nTIPS:\n• この頻度では回復も練習と同じくらい重要。睡眠とモビリティを優先してください\n• 今月マスターしたい特定のポジションを1つ決めましょう\n• スパーリングに加え、ドリルセッションの追加を検討してください\n\nCHALLENGE: 今週の毎練習開始時に、1つのサブミッションまたはポジションを10分間ドリルしてください。`;
+    }
+    return `INSIGHT: 今月${stats.totalSessions}回練習しました。道場での1回1回が積み重なって確実な成長になります。\n\nTIPS:\n• 来月は${Math.min(stats.totalSessions + 2, 12)}回を目標に一貫性を高めましょう\n• フル練習に参加できない日でも、20分のドリルだけでも価値があります\n• 各セッション後に技術メモを見直し、学びを定着させましょう\n\nCHALLENGE: 今すぐ次の3回の練習をカレンダーに入れて、絶対に外せない予定として扱ってください。`;
+  }
+
+  if (loc === "pt") {
+    if (stats.totalSessions === 0) {
+      return `INSIGHT: Sua jornada no tatame começa com um único passo — todo competidor de elite um dia esteve exatamente onde você está agora.\n\nTIPS:\n• Estabeleça uma meta de 2 treinos esta semana para criar o hábito\n• Foque em uma posição por treino em vez de tentar aprender tudo de uma vez\n• Registre cada sessão no app para acompanhar seu progresso\n\nCHALLENGE: Vá ao tatame para seu primeiro treino esta semana e registre no app.`;
+    }
+    if (stats.weeklyAvg >= 3) {
+      return `INSIGHT: Treinar ${stats.weeklyAvg.toFixed(1)}x por semana coloca você entre os praticantes mais dedicados — consistência é seu superpoder.\n\nTIPS:\n• Nessa frequência, a recuperação é tão importante quanto o treino — priorize sono e mobilidade\n• Identifique uma posição específica que quer dominar este mês\n• Considere adicionar sessões de drilling para complementar o sparring\n\nCHALLENGE: Esta semana, escolha uma finalização ou posição para drillar 10 minutos no início de cada treino.`;
+    }
+    return `INSIGHT: Você registrou ${stats.totalSessions} sessões este mês — cada treino no tatame multiplica seu progresso.\n\nTIPS:\n• Mire em ${Math.min(stats.totalSessions + 2, 12)} sessões no próximo mês para aumentar a consistência\n• Nos dias que não der para treinar, até 20 minutos de drilling já vale\n• Revise suas anotações técnicas após cada treino para reforçar o aprendizado\n\nCHALLENGE: Agende seus próximos 3 treinos no calendário agora mesmo — trate-os como compromissos inadiáveis.`;
+  }
+
+  // English (default)
   if (stats.totalSessions === 0) {
     return `INSIGHT: Your mat journey starts with a single step — every elite competitor was once exactly where you are.\n\nTIPS:\n• Set a target of 2 sessions this week to build the habit\n• Focus on one position per session rather than trying to learn everything\n• Log each session to track your progress over time\n\nCHALLENGE: Get to the mat for your first training session this week and log it in the app.`;
   }
@@ -127,6 +159,10 @@ export async function POST(req: NextRequest) {
   if (!checkAIRateLimit(ip)) {
     return NextResponse.json({ error: "Too many requests. Try again later." }, { status: 429 });
   }
+
+  // Accept locale from client for language-aware generation
+  const body = await req.json().catch(() => ({})) as { locale?: string };
+  const locale = (["en", "ja", "pt"].includes(body.locale ?? "")) ? (body.locale ?? "en") : "en";
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -189,6 +225,7 @@ export async function POST(req: NextRequest) {
     streakDays: 0, // simplified — streak computed client-side
     belt: profile.belt ?? "white",
     stripes: profile.stripe ?? 0,
+    locale,
   };
 
   // Try Anthropic API first, fall back to rule-based
