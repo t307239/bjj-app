@@ -1048,6 +1048,11 @@ def check_jsx_hardcoded_english(filepath: Path, content: str, report: BugReport)
     if filepath.suffix != ".tsx":
         return
 
+    # 管理画面・法務ページは英語のみ許容（i18n不要）
+    skip_paths = ["/admin/", "/privacy/", "/terms/", "/legal/", "/account-deleted/"]
+    if any(p in str(filepath) for p in skip_paths):
+        return
+
     # コメント除去
     clean = re.sub(r'\{/\*.*?\*/\}', '', content, flags=re.DOTALL)
     clean = re.sub(r'//.*$', '', clean, flags=re.MULTILINE)
@@ -1200,6 +1205,9 @@ def check_conditional_hooks(filepath: Path, content: str, report: BugReport):
 
     React Hooks は条件分岐・早期returnの後に呼んではならない。
     呼び出し順序が変わるとレンダリング間で状態が壊れる。
+
+    注意: ネストされた関数（useEffect callback, event handler）内の
+    return は除外。コンポーネント本体のトップレベルreturnのみ対象。
     """
     rel = filepath.relative_to(APP_ROOT)
 
@@ -1210,12 +1218,12 @@ def check_conditional_hooks(filepath: Path, content: str, report: BugReport):
     in_component = False
     found_early_return = False
     component_name = ""
+    brace_depth = 0  # コンポーネント本体のブレース深度
 
     for line_no, line in enumerate(lines, 1):
         stripped = line.strip()
 
         # 関数コンポーネントの開始を検出
-        # export default function Foo() { / const Foo = () => {
         comp_start = re.match(
             r'(?:export\s+(?:default\s+)?)?(?:function|const)\s+([A-Z]\w*)\s*(?:=\s*(?:\([^)]*\)|)\s*=>)?\s*[\({]',
             stripped,
@@ -1224,18 +1232,27 @@ def check_conditional_hooks(filepath: Path, content: str, report: BugReport):
             in_component = True
             found_early_return = False
             component_name = comp_start.group(1)
+            brace_depth = 1  # コンポーネント本体開始
             continue
 
         if not in_component:
             continue
 
-        # 早期return を検出: if (...) return / return null / return <...>
-        if re.match(r'if\s*\(.*\)\s*return\b', stripped) or re.match(r'return\s+(?:null|<)', stripped):
-            found_early_return = True
+        # ブレース深度を追跡（ネストされた関数を区別するため）
+        brace_depth += line.count("{") - line.count("}")
+        if brace_depth <= 0:
+            in_component = False
             continue
 
-        # 早期return後にHooksが呼ばれていないかチェック
-        if found_early_return:
+        # トップレベル（depth=1）の早期returnのみ検出
+        # depth>1 はネストされた関数（useEffect callback等）の中
+        if brace_depth == 1:
+            if re.match(r'if\s*\(.*\)\s*return\b', stripped) or re.match(r'return\s+(?:null|<)', stripped):
+                found_early_return = True
+                continue
+
+        # 早期return後にトップレベルでHooksが呼ばれていないかチェック
+        if found_early_return and brace_depth == 1:
             for hook in HOOK_NAMES:
                 if re.search(rf'\b{hook}\s*\(', stripped):
                     report.add(
@@ -1255,10 +1272,18 @@ def check_inline_styles(filepath: Path, content: str, report: BugReport):
     """JSX内の style={{...}} を検出（カテゴリ28）
 
     Tailwindクラスで統一すべき。SVG属性やCSSカスタムプロパティは除外。
+    OG画像生成ルート・グローバルエラーページは除外（Tailwind使用不可）。
     """
     rel = filepath.relative_to(APP_ROOT)
 
     if filepath.suffix != ".tsx":
+        return
+
+    # OG画像生成（JSX-to-Image — Tailwind使用不可）
+    if "/api/og/" in str(filepath) or "opengraph-image" in filepath.name:
+        return
+    # グローバルエラーページ（最小限フォールバック）
+    if filepath.name == "global-error.tsx":
         return
 
     # style={{ パターン

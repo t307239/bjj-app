@@ -1,137 +1,15 @@
 BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 196 files
-CRITICAL: 31
-WARNING: 90
-INFO: 145
-Total: 266
+CRITICAL: 1
+WARNING: 45
+INFO: 76
+Total: 122
 
 [CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 36% (534/1489 キー) — 985 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
-[WARNING] [JSX_HARDCODED_ENGLISH] app/admin/AdminPanel.tsx: L97: JSX内に英語テキスト直書き: "🛡️ Admin Panel"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/admin/AdminPanel.tsx: L112: JSX内に英語テキスト直書き: "Total Users"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/admin/AdminPanel.tsx: L116: JSX内に英語テキスト直書き: "Pro (this page)"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/admin/AdminPanel.tsx: L120: JSX内に英語テキスト直書き: "Gym Members"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/admin/AdminPanel.tsx: L124: JSX内に英語テキスト直書き: "Active (30d)"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/admin/AdminPanel.tsx: L149: JSX内に英語テキスト直書き: "Loading…"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/admin/AdminPanel.tsx: L190: JSX内に英語テキスト直書き: "User ID"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/admin/AdminPanel.tsx: L194: JSX内に英語テキスト直書き: "Signed up"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/admin/AdminPanel.tsx: L198: JSX内に英語テキスト直書き: "Last login"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/admin/AdminPanel.tsx: L202: JSX内に英語テキスト直書き: "Total sessions"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/admin/AdminPanel.tsx: L243: JSX内に英語テキスト直書き: "Refreshing…"
-  FIX: t() キーを追加して多言語対応
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L34: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L46: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L47: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L48: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L49: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L54: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L69: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L70: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L73: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L79: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L82: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L93: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L96: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L103: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L114: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L117: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L124: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L135: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L138: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L145: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L156: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L159: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L166: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L167: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/monthly/route.tsx: L170: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L27: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L39: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L40: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L41: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L46: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L62: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L65: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L76: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L79: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L86: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L97: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L100: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L107: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L118: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L121: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L128: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L129: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/api/og/route.tsx: L132: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L125: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/global-error.tsx: L29: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/global-error.tsx: L31: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/global-error.tsx: L42: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/global-error.tsx: L43: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/global-error.tsx: L46: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/global-error.tsx: L49: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/global-error.tsx: L56: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/join/[invite_code]/GymJoinClient.tsx: L142: JSX内に英語テキスト直書き: "13 years of age or older."
   FIX: t() キーを追加して多言語対応
@@ -145,30 +23,10 @@ Total: 266
   FIX: t() キーを追加して多言語対応
 [INFO] [DANGEROUS_HTML] app/layout.tsx: L92: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [JSX_HARDCODED_ENGLISH] app/legal/tokushoho/page.tsx: L112: JSX内に英語テキスト直書き: "Last updated: March 2026"
-  FIX: t() キーを追加して多言語対応
 [INFO] [DANGEROUS_HTML] app/login/layout.tsx: L49: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/login/page.tsx: L41: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [INLINE_STYLE_OBJECT] app/opengraph-image.tsx: L16: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/opengraph-image.tsx: L29: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/opengraph-image.tsx: L36: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/opengraph-image.tsx: L38: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/opengraph-image.tsx: L51: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/opengraph-image.tsx: L65: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/opengraph-image.tsx: L75: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/opengraph-image.tsx: L93: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/opengraph-image.tsx: L104: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [DANGEROUS_HTML] app/page.tsx: L138: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L145: JSX内に英語テキスト直書き: "BJJ App"
@@ -215,54 +73,6 @@ Total: 266
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L432: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L32: JSX内に英語テキスト直書き: "Privacy Policy"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L33: JSX内に英語テキスト直書き: "Last updated: March 2026"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L37: JSX内に英語テキスト直書き: "Contents"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L57: JSX内に英語テキスト直書き: "We collect the following information when you use "
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L60: JSX内に英語テキスト直書き: "Account information"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L64: JSX内に英語テキスト直書き: "Training data"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L68: JSX内に英語テキスト直書き: "Profile data"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L72: JSX内に英語テキスト直書き: "Usage data"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L83: JSX内に英語テキスト直書き: "To provide and improve the Service"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L84: JSX内に英語テキスト直書き: "To display your training data back to you in the d"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L85: JSX内に英語テキスト直書き: "To process subscription payments (via Stripe)"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L86: JSX内に英語テキスト直書き: "To send product updates if you opt in to email not"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L87: JSX内に英語テキスト直書き: "To analyze aggregate usage patterns and improve fe"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L106: JSX内に英語テキスト直書き: "We use the following third-party services:"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L108: JSX内に英語テキスト直書き: "— database and authentication"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L109: JSX内に英語テキスト直書き: "— hosting and deployment"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L110: JSX内に英語テキスト直書き: "— payment processing (Pro subscriptions)"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L111: JSX内に英語テキスト直書き: "Vercel Analytics"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L111: JSX内に英語テキスト直書き: "— anonymized page-level analytics"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L144: JSX内に英語テキスト直書き: "You have the right to:"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L147: JSX内に英語テキスト直書き: "Correct inaccurate data (editable in your profile)"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L200: JSX内に英語テキスト直書き: "Terms of Service"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L201: JSX内に英語テキスト直書き: "Specified Commercial Transactions Act"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/privacy/page.tsx: L202: JSX内に英語テキスト直書き: "← Home"
-  FIX: t() キーを追加して多言語対応
 [INFO] [DANGEROUS_HTML] app/profile/page.tsx: L153: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [WARNING] [JSX_HARDCODED_ENGLISH] app/records/error.tsx: L13: JSX内に英語テキスト直書き: "Something went wrong"
@@ -271,40 +81,10 @@ Total: 266
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [WARNING] [JSX_HARDCODED_ENGLISH] app/techniques/skillmap/loading.tsx: L22: JSX内に英語テキスト直書き: "Loading skill map…"
   FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/terms/page.tsx: L33: JSX内に英語テキスト直書き: "Terms of Service"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/terms/page.tsx: L34: JSX内に英語テキスト直書き: "Last updated: March 2026"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/terms/page.tsx: L38: JSX内に英語テキスト直書き: "Contents"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/terms/page.tsx: L134: JSX内に英語テキスト直書き: "You agree not to:"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/terms/page.tsx: L136: JSX内に英語テキスト直書き: "Use the Service for any unlawful purpose"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/terms/page.tsx: L138: JSX内に英語テキスト直書き: "Reverse-engineer or scrape the Service at scale"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/terms/page.tsx: L215: JSX内に英語テキスト直書き: "Privacy Policy"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/terms/page.tsx: L216: JSX内に英語テキスト直書き: "Specified Commercial Transactions Act"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/terms/page.tsx: L217: JSX内に英語テキスト直書き: "← Home"
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/ConfettiEffect.tsx: L41: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[CRITICAL] [CONDITIONAL_HOOK_RISK] app/wiki/[lang]/[slug]/ReadPersistence.tsx: L81: ReadPersistence で早期return後に useCallback() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useCallback() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] app/wiki/[lang]/[slug]/ReadPersistence.tsx: L86: ReadPersistence で早期return後に useCallback() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useCallback() を早期returnの前に移動
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/ScrollProgressBar.tsx: L28: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[CRITICAL] [CONDITIONAL_HOOK_RISK] app/wiki/[lang]/[slug]/WikiContentEnhancer.tsx: L39: WikiContentEnhancer で早期return後に useCallback() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useCallback() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] app/wiki/[lang]/[slug]/WikiContentEnhancer.tsx: L44: WikiContentEnhancer で早期return後に useEffect() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useEffect() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] app/wiki/[lang]/[slug]/WikiContentEnhancer.tsx: L103: WikiContentEnhancer で早期return後に useEffect() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useEffect() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] app/wiki/[lang]/[slug]/WikiContentEnhancer.tsx: L121: WikiContentEnhancer で早期return後に useEffect() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useEffect() を早期returnの前に移動
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/YouTubeLiteEmbed.tsx: L31: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/YouTubeLiteEmbed.tsx: L38: style={{...}} — Tailwindクラスで統一推奨
@@ -319,26 +99,6 @@ Total: 266
   FIX: 対応するTailwindユーティリティクラスに変換
 [WARNING] [JSX_HARDCODED_ENGLISH] app/wiki/[lang]/[slug]/opengraph-image.tsx: L115: JSX内に英語テキスト直書き: "Free forever"
   FIX: t() キーを追加して多言語対応
-[INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/opengraph-image.tsx: L30: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/opengraph-image.tsx: L44: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/opengraph-image.tsx: L51: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/opengraph-image.tsx: L53: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/opengraph-image.tsx: L64: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/opengraph-image.tsx: L80: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/opengraph-image.tsx: L94: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/opengraph-image.tsx: L105: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/opengraph-image.tsx: L114: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/opengraph-image.tsx: L120: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L675: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L679: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
@@ -399,14 +159,6 @@ Total: 266
   FIX: 対応するTailwindユーティリティクラスに変換
 [WARNING] [JSX_HARDCODED_ENGLISH] components/NavBar.tsx: L103: JSX内に英語テキスト直書き: "BJJ App"
   FIX: t() キーを追加して多言語対応
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/NavBar.tsx: L77: NavBar で早期return後に useEffect() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useEffect() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/OnboardingChecklist.tsx: L32: OnboardingChecklist で早期return後に useState() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useState() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/OnboardingChecklist.tsx: L39: OnboardingChecklist で早期return後に useRef() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useRef() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/OnboardingChecklist.tsx: L81: OnboardingChecklist で早期return後に useEffect() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useEffect() を早期returnの前に移動
 [INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L123: style={{...}} — Tailwindクラスで統一推奨
@@ -425,38 +177,10 @@ Total: 266
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/RollAnalyticsCard.tsx: L249: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/SkillMapV2.tsx: L240: SkillMapInner で早期return後に useMemo() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useMemo() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/SkillMapV2.tsx: L249: SkillMapInner で早期return後に useMemo() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useMemo() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/SkillMapV2.tsx: L264: SkillMapInner で早期return後に useMemo() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useMemo() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/SkillMapV2.tsx: L276: SkillMapInner で早期return後に useMemo() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useMemo() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/SkillMapV2.tsx: L287: SkillMapInner で早期return後に useMemo() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useMemo() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/SkillMapV2.tsx: L299: SkillMapInner で早期return後に useMemo() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useMemo() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/SkillMapV2.tsx: L312: SkillMapInner で早期return後に useMemo() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useMemo() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/SkillMapV2.tsx: L329: SkillMapInner で早期return後に useEffect() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useEffect() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/SkillMapV2.tsx: L337: SkillMapInner で早期return後に useEffect() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useEffect() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/SkillMapV2.tsx: L344: SkillMapInner で早期return後に useCallback() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useCallback() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/SkillMapV2.tsx: L356: SkillMapInner で早期return後に useCallback() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useCallback() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/SkillMapV2.tsx: L367: SkillMapInner で早期return後に useCallback() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useCallback() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/SkillMapV2.tsx: L373: SkillMapInner で早期return後に useCallback() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useCallback() を早期returnの前に移動
 [INFO] [INLINE_STYLE_OBJECT] components/SkillMapV2.tsx: L637: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/SkillMapV2.tsx: L649: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/SwipeableCard.tsx: L56: SwipeableCard で早期return後に useCallback() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useCallback() を早期returnの前に移動
 [INFO] [INLINE_STYLE_OBJECT] components/SwipeableCard.tsx: L99: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/SwipeableCard.tsx: L115: style={{...}} — Tailwindクラスで統一推奨
@@ -517,18 +241,6 @@ Total: 266
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/TechniqueNode.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/ui/BottomSheet.tsx: L52: BottomSheet で早期return後に useCallback() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useCallback() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/ui/BottomSheet.tsx: L70: BottomSheet で早期return後に useCallback() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useCallback() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/ui/BottomSheet.tsx: L82: BottomSheet で早期return後に useEffect() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useEffect() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/ui/BottomSheet.tsx: L90: BottomSheet で早期return後に useEffect() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useEffect() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/ui/BottomSheet.tsx: L103: BottomSheet で早期return後に useEffect() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useEffect() を早期returnの前に移動
-[CRITICAL] [CONDITIONAL_HOOK_RISK] components/ui/BottomSheet.tsx: L113: BottomSheet で早期return後に useEffect() が呼ばれている — React Hooks規約違反（呼び出し順序が変わる）
-  FIX: useEffect() を早期returnの前に移動
 [INFO] [INLINE_STYLE_OBJECT] components/ui/BottomSheet.tsx: L151: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/ui/BottomSheet.tsx: L173: style={{...}} — Tailwindクラスで統一推奨
