@@ -1572,6 +1572,26 @@
     "proInsightTeaser": "📈 練習傾向を分析",
     "proInsightDesc": "Proで詳細なトレーニング分析を見る →"
   },
+  "report": {
+    "title": "パフォーマンスレポート",
+    "tabWeek": "週間",
+    "tabMonth": "月間",
+    "sessions": "練習回数",
+    "totalTime": "合計時間",
+    "avgTime": "平均/回",
+    "minUnit": "分",
+    "maxStreak": "最長連続",
+    "streakValue": "{n}日",
+    "typeDistribution": "練習タイプ内訳",
+    "weeklyTrend": "週別トレンド",
+    "emptyState": "レポートを生成するには、もう少し練習を記録しましょう（最低2週間分）",
+    "upgradeCta": "Proでレポートを見る",
+    "insightWeekUp": "先週より{n}回多く練習しています！",
+    "insightWeekDown": "先週より{n}回少ないです。ペースを取り戻しましょう！",
+    "insightConsecutiveUp": "3週連続で練習頻度が上がっています。素晴らしい継続力です！",
+    "insightLowDrilling": "今週はドリリングの割合が低いです。技術練習を意識してみましょう。",
+    "insightStreak": "最長{n}日連続練習 — 素晴らしい継続力です！"
+  },
   "pricing": {
     "title": "シンプルな料金体系",
     "subtitle": "基本機能はすべて無料でずっと使えます。",

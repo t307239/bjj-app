@@ -21,6 +21,7 @@ import Link from "next/link";
 // ─── New simplified home components ──────────────────────────────────────────
 import StatusBar from "@/components/dashboard/StatusBar";
 import RecentLogs from "@/components/dashboard/RecentLogs";
+import WeeklyReportCard from "@/components/WeeklyReportCard";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
@@ -277,6 +278,13 @@ export default async function DashboardPage({
           streak={streak}
           t={t}
         />
+
+        {/* ═══════════════════════════════════════════
+            WEEKLY REPORT — Pro auto-generated performance report
+            ═══════════════════════════════════════════ */}
+        {hasFirstLog && (
+          <WeeklyReportCard userId={user.id} isPro={isPro} />
+        )}
 
         {/* ═══════════════════════════════════════════
             RECENT LOGS — last 3 entries, compact

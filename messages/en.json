@@ -1570,6 +1570,26 @@
     "proInsightTeaser": "📈 Training trend analysis",
     "proInsightDesc": "See detailed training analytics with Pro →"
   },
+  "report": {
+    "title": "Performance Report",
+    "tabWeek": "Week",
+    "tabMonth": "Month",
+    "sessions": "Sessions",
+    "totalTime": "Total Time",
+    "avgTime": "Avg/Session",
+    "minUnit": "min",
+    "maxStreak": "Best Streak",
+    "streakValue": "{n} days",
+    "typeDistribution": "Training Type Breakdown",
+    "weeklyTrend": "Weekly Trend",
+    "emptyState": "Record at least 2 weeks of training to generate your report",
+    "upgradeCta": "Unlock Report with Pro",
+    "insightWeekUp": "You trained {n} more time(s) than last week!",
+    "insightWeekDown": "You trained {n} fewer time(s) than last week. Keep it up!",
+    "insightConsecutiveUp": "3 weeks of increasing frequency — great momentum!",
+    "insightLowDrilling": "Your drilling ratio is low this week. Consider adding technique-focused sessions.",
+    "insightStreak": "Your best streak is {n} consecutive days — impressive consistency!"
+  },
   "pricing": {
     "title": "Simple Pricing",
     "subtitle": "All core features are free forever.",
