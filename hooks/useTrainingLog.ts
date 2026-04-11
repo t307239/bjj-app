@@ -175,7 +175,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         setTrainedToday(false);
       }
       if (techData) {
-        const names = [...new Set(techData.map((t: { name: string }) => t.name).filter(Boolean))];
+        const names = [...new Set(techData.map((t: { name: string }) => t.name).filter(Boolean))].sort((a, b) => a.localeCompare(b, "ja"));
         setTechniqueSuggestions(names);
       }
       if (partnerData) {
