@@ -1,11 +1,11 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 197 files
+TS/TSX Scanned: 198 files
 CRITICAL: 1
-WARNING: 48
-INFO: 78
-Total: 127
+WARNING: 49
+INFO: 80
+Total: 130
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 35% (534/1515 キー) — 1011 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 35% (534/1538 キー) — 1034 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -109,12 +109,6 @@ Total: 127
   FIX: t() キーを追加して多言語対応
 [WARNING] [JSX_HARDCODED_ENGLISH] app/wiki/[lang]/page.tsx: L227: JSX内に英語テキスト直書き: "BJJ Wiki"
   FIX: t() キーを追加して多言語対応
-[WARNING] [SILENT_CATCH] components/AICoachCard.tsx: L158: .catch() がエラーを握りつぶしている — デバッグ不能
-  FIX: .catch((err) => console.error('context:', err)) に変更
-[WARNING] [SILENT_CATCH] components/AICoachCard.tsx: L221: .catch() がエラーを握りつぶしている — デバッグ不能
-  FIX: .catch((err) => console.error('context:', err)) に変更
-[WARNING] [SILENT_CATCH] components/AICoachCard.tsx: L267: .catch() がエラーを握りつぶしている — デバッグ不能
-  FIX: .catch((err) => console.error('context:', err)) に変更
 [INFO] [INLINE_STYLE_OBJECT] components/AchievementBadge.tsx: L82: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [WARNING] [JSX_HARDCODED_ENGLISH] components/AgeGate.tsx: L38: JSX内に英語テキスト直書き: "Age Restriction"
@@ -152,6 +146,16 @@ Total: 127
 [INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L283: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L288: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
+[WARNING] [JSX_HARDCODED_ENGLISH] components/CompetitionSummaryCard.tsx: L334: JSX内に英語テキスト直書き: "Top Finishes"
+  FIX: t() キーを追加して多言語対応
+[WARNING] [JSX_HARDCODED_ENGLISH] components/CompetitionSummaryCard.tsx: L341: JSX内に英語テキスト直書き: "Win Rate by Belt"
+  FIX: t() キーを追加して多言語対応
+[WARNING] [JSX_HARDCODED_ENGLISH] components/CompetitionSummaryCard.tsx: L343: JSX内に英語テキスト直書き: "White: 80%"
+  FIX: t() キーを追加して多言語対応
+[WARNING] [JSX_HARDCODED_ENGLISH] components/CompetitionSummaryCard.tsx: L344: JSX内に英語テキスト直書き: "Blue: 60%"
+  FIX: t() キーを追加して多言語対応
+[INFO] [INLINE_STYLE_OBJECT] components/CompetitionSummaryCard.tsx: L296: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/ExtendedBadgeGrid.tsx: L89: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -232,6 +236,8 @@ Total: 127
 [INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L216: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L254: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [INLINE_STYLE_OBJECT] components/WeightCutPlanner.tsx: L190: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/gym/BeltDistributionChart.tsx: L43: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
