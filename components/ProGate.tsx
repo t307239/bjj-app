@@ -59,7 +59,7 @@ export default function ProGate({
 
           {/* Monthly / Annual toggle */}
           <div className="flex items-center justify-center gap-2 mb-3">
-            <span className={`text-xs ${!isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>Monthly</span>
+            <span className={`text-xs whitespace-nowrap ${!isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>{t("pro.monthly")}</span>
             <button
               onClick={() => setIsAnnual((v) => !v)}
               aria-label="Toggle billing period"
@@ -73,10 +73,10 @@ export default function ProGate({
                 }`}
               />
             </button>
-            <span className={`text-xs ${isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>Annual</span>
+            <span className={`text-xs whitespace-nowrap ${isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>{t("pro.annual")}</span>
             {isAnnual && (
-              <span className="bg-emerald-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-                Save 33%
+              <span className="bg-emerald-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                {t("pro.savePct")}
               </span>
             )}
           </div>

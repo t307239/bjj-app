@@ -2,16 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useLocale } from "@/lib/i18n";
+import { trackEvent } from "@/lib/analytics";
 
 const STRIPE_MONTHLY_LINK = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || null;
 const STRIPE_ANNUAL_LINK = process.env.NEXT_PUBLIC_STRIPE_ANNUAL_LINK || null;
 
 export default function PricingSection({ userId }: { userId?: string | null }) {
+  const { t } = useLocale();
   const [isAnnual, setIsAnnual] = useState(false);
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
 
-  // userId がない（未ログイン）場合は /login に誘導する。
-  // Stripe に直接飛ばすと client_reference_id が渡らず is_pro が立たない。
   const monthlyUrl = userId && STRIPE_MONTHLY_LINK
     ? `${STRIPE_MONTHLY_LINK}?client_reference_id=${userId}`
     : "/login";
@@ -22,15 +23,44 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
 
   const upgradeUrl = isAnnual ? annualUrl : monthlyUrl;
 
+  const freeFeatures = [
+    t("pricing.freeF1"),
+    t("pricing.freeF2"),
+    t("pricing.freeF3"),
+    t("pricing.freeF4"),
+    t("pricing.freeF5"),
+    t("pricing.freeF6"),
+    t("pricing.freeF7"),
+    t("pricing.freeF8"),
+  ];
+
+  const proFeatures = [
+    { text: t("pricing.proF1"), icon: "✓" },
+    { text: t("pricing.proF2"), icon: "★" },
+    { text: t("pricing.proF3"), icon: "★" },
+    { text: t("pricing.proF4"), icon: "★" },
+    { text: t("pricing.proF5"), icon: "★" },
+    { text: t("pricing.proF6"), icon: "★" },
+    { text: t("pricing.proF7"), icon: "★" },
+    { text: t("pricing.proF8"), icon: "★" },
+    { text: t("pricing.proF9"), icon: "★" },
+  ];
+
   return (
     <section id="pricing" className="px-4 py-16 bg-zinc-900/50">
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-2xl font-bold text-center mb-3 text-white">Simple Pricing</h2>
-        <p className="text-gray-500 text-center text-sm mb-8">All core features are free forever.</p>
+        <h2 className="text-2xl font-bold text-center mb-3 text-white">
+          {t("pricing.title")}
+        </h2>
+        <p className="text-gray-500 text-center text-sm mb-8">
+          {t("pricing.subtitle")}
+        </p>
 
         {/* Monthly / Annual toggle */}
         <div className="flex items-center justify-center gap-3 mb-10">
-          <span className={`text-sm font-medium ${!isAnnual ? "text-white" : "text-gray-500"}`}>Monthly</span>
+          <span className={`text-sm font-medium whitespace-nowrap ${!isAnnual ? "text-white" : "text-gray-500"}`}>
+            {t("pricing.monthly")}
+          </span>
           <button
             onClick={() => setIsAnnual((v) => !v)}
             aria-label="Toggle billing period"
@@ -44,12 +74,12 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
               }`}
             />
           </button>
-          <span className={`text-sm font-medium ${isAnnual ? "text-white" : "text-gray-500"}`}>
-            Annually
+          <span className={`text-sm font-medium whitespace-nowrap ${isAnnual ? "text-white" : "text-gray-500"}`}>
+            {t("pricing.annually")}
           </span>
           {isAnnual && (
-            <span className="bg-emerald-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-              Save 16%
+            <span className="bg-emerald-600 text-white text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+              {t("pricing.savePctAnnual")}
             </span>
           )}
         </div>
@@ -57,61 +87,64 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Free */}
           <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10">
-            <div className="text-lg font-bold mb-1">Free</div>
-            <div className="text-3xl font-bold text-white mb-1">$0</div>
-            <div className="text-gray-500 text-xs mb-6">Free forever</div>
+            <div className="text-lg font-bold mb-1">{t("pricing.freePlan")}</div>
+            <div className="text-3xl font-bold text-white mb-1">{t("pricing.freePrice")}</div>
+            <div className="text-gray-500 text-xs mb-6">{t("pricing.freeForever")}</div>
             <ul className="space-y-3 text-sm text-gray-400">
-              <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Training log (unlimited)</li>
-              <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Technique journal</li>
-              <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Goal tracker</li>
-              <li className="flex items-center gap-2"><span className="text-green-400">✓</span> 30-day history &amp; graphs</li>
-              <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Day streak tracking</li>
-              <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Competition records</li>
-              <li className="flex items-center gap-2"><span className="text-green-400">✓</span> CSV export</li>
-              <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Basic Skill Map (up to 10 nodes)</li>
+              {freeFeatures.map((feat, i) => (
+                <li key={i} className="flex items-center gap-2">
+                  <span className="text-green-400 flex-shrink-0">✓</span> {feat}
+                </li>
+              ))}
             </ul>
             <Link
               href="/login"
               className="mt-8 block text-center bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-3 rounded-full transition-all"
             >
-              Get Started Free
+              {t("pricing.getStarted")}
             </Link>
           </div>
 
           {/* Pro */}
           <div className="bg-zinc-900 rounded-2xl p-8 border border-yellow-500/50 relative">
             <div className="absolute -top-3 right-6 bg-yellow-500 text-black text-xs px-3 py-1 rounded-full font-bold">
-              Most Popular
+              {t("pricing.mostPopular")}
             </div>
-            <div className="text-lg font-bold mb-1">Pro</div>
+            <div className="text-lg font-bold mb-1">{t("pricing.proPlan")}</div>
 
             {/* Price display toggles */}
             {isAnnual ? (
               <>
-                <div className="flex items-baseline gap-2">
-                  <div className="text-3xl font-bold text-white">$79.99</div>
-                  <span className="text-sm font-normal text-gray-500">/ year</span>
-                  <span className="bg-emerald-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                    Save 33%
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <div className="text-3xl font-bold text-white whitespace-nowrap">{t("pricing.proAnnual")}</div>
+                  <span className="text-sm font-normal text-gray-500 whitespace-nowrap">{t("pricing.proAnnualUnit")}</span>
+                  <span className="bg-emerald-600 text-white text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+                    {t("pricing.savePct")}
                   </span>
                 </div>
-                <div className="text-gray-500 text-xs mb-6">≈ $6.67/mo · Billed annually</div>
+                <div className="text-gray-500 text-xs mb-6">
+                  {t("pricing.proAnnualApprox")} · {t("pricing.proAnnualBilled")}
+                </div>
               </>
             ) : (
               <>
                 <div className="text-3xl font-bold text-white mb-1">
-                  $9.99<span className="text-sm font-normal text-gray-500">/mo (tax incl.)</span>
+                  {t("pricing.proMonthly")}
+                  <span className="text-sm font-normal text-gray-500">{t("pricing.proMonthlyUnit")}</span>
                 </div>
-                <div className="text-gray-500 text-xs mb-6">Billed monthly</div>
+                <div className="text-gray-500 text-xs mb-6">{t("pricing.proMonthlyBilled")}</div>
               </>
             )}
 
             <ul className="space-y-3 text-sm text-gray-400">
-              <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Everything in Free</li>
-              <li className="flex items-center gap-2"><span className="text-yellow-400">★</span> Unlimited Skill Map</li>
-              <li className="flex items-center gap-2"><span className="text-yellow-400">★</span> 12-month graphs</li>
-              <li className="flex items-center gap-2"><span className="text-yellow-400">★</span> Streak freeze</li>
-              <li className="flex items-center gap-2"><span className="text-yellow-400">★</span> Priority support</li>
+              {proFeatures.map((feat, i) => (
+                <li key={i} className="flex items-center gap-2">
+                  <span className={`flex-shrink-0 ${feat.icon === "★" ? "text-yellow-400" : "text-green-400"}`}>
+                    {feat.icon}
+                  </span>
+                  {feat.text}
+                </li>
+              ))}
             </ul>
 
             {/* Stripe pre-checkout disclaimer */}
@@ -121,11 +154,12 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
                 checked={disclaimerAccepted}
                 onChange={(e) => setDisclaimerAccepted(e.target.checked)}
                 className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-yellow-500 flex-shrink-0 cursor-pointer"
-                aria-label="Subscription disclaimer acknowledgement"
+                aria-label={t("pro.disclaimerAria")}
               />
               <span className="text-xs text-gray-400 leading-relaxed">
-                I understand this is a digital subscription service. I agree to the{" "}
-                <Link href="/terms" className="text-emerald-400 hover:underline">Terms of Service</Link>.
+                {t("pricing.disclaimerText").split("{terms}")[0]}
+                <Link href="/terms" className="text-emerald-400 hover:underline">{t("pricing.termsLink")}</Link>
+                {t("pricing.disclaimerText").split("{terms}")[1] || ""}
               </span>
             </label>
 
@@ -137,11 +171,15 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
                   : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
               }`}
               onClick={(e) => {
-                if (!disclaimerAccepted) e.preventDefault();
+                if (!disclaimerAccepted) {
+                  e.preventDefault();
+                  return;
+                }
+                trackEvent("pricing_upgrade_click", { plan: isAnnual ? "annual" : "monthly" });
               }}
               aria-disabled={!disclaimerAccepted}
             >
-              Upgrade to Pro
+              {t("pricing.upgradeToPro")}
             </a>
           </div>
         </div>
