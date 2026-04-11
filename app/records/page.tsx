@@ -42,6 +42,9 @@ const RollAnalyticsCard = dynamic(() => import("@/components/RollAnalyticsCard")
 const PartnerStatsCard = dynamic(() => import("@/components/PartnerStatsCard"), {
   loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
+const CompetitionSummaryCard = dynamic(() => import("@/components/CompetitionSummaryCard"), {
+  loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+});
 
 export const metadata: Metadata = {
   title: "Records | BJJ App",
@@ -159,6 +162,13 @@ export default async function RecordsPage() {
             ═══════════════════════════════════════════ */}
         <section className="mb-7">
           <TrainingLog userId={user.id} isPro={isPro} />
+        </section>
+
+        {/* ═══════════════════════════════════════════
+            Competition Summary
+            ═══════════════════════════════════════════ */}
+        <section className="mb-7">
+          <CompetitionSummaryCard userId={user.id} />
         </section>
 
         {/* ═══════════════════════════════════════════

@@ -16,7 +16,8 @@ type KpiEvent =
   | "monthly_share"            // viral share on monthly summary
   | "tab_viewed"               // profile tab engagement
   | "safety_banner_dismissed"  // legal/UX: user acknowledged danger-technique warning
-  | "safety_banner_wiki_click";// content funnel: wiki link from safety banner → Axis 6
+  | "safety_banner_wiki_click" // content funnel: wiki link from safety banner → Axis 6
+  | "pricing_upgrade_click";   // conversion: pricing page CTA click
 
 /**
  * Fire a KPI event. Safe to call on the server (no-op).

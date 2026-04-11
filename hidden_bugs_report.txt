@@ -1,11 +1,11 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 195 files
+TS/TSX Scanned: 196 files
 CRITICAL: 1
 WARNING: 0
 INFO: 10
 Total: 11
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 32% (460/1444 キー) — 1014 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 36% (534/1487 キー) — 983 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [DANGEROUS_HTML] app/gym/page.tsx: L41: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
