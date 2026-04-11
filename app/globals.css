@@ -71,13 +71,15 @@ button, a, [role="button"], [role="tab"], nav, .select-none {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* #38: ページ遷移 fade-in アニメーション（template.tsx で使用） */
+/* #38: ページ遷移 fade-in アニメーション（template.tsx で使用）
+   ⚠ transform を使うと animation-fill-mode:both が identity matrix を保持し、
+   子孫の position:fixed が壊れる（BottomSheet等）。opacity のみアニメーション。 */
 @keyframes page-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 .animate-page-in {
-  animation: page-in 0.2s ease-out both;
+  animation: page-in 0.15s ease-out both;
 }
 
 /* #121: Focus ring — now handled by tailwind.config.ts plugin (emerald brand) */
