@@ -1,4 +1,4 @@
-// Phase 3+4: Flat layout (ProfileTabs removed) — Day 5_205
+// Phase 3+4: Flat layout (ProfileTabs removed) — Day 5_205 / deploy-fix
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
