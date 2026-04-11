@@ -164,6 +164,8 @@
     "export": "エクスポート",
     "rollDetailsTitle": "ロール詳細",
     "rollDetailsOptional": "任意",
+    "optionalToggle": "詳細オプション",
+    "optionalHint": "（指導者・パートナー・体重）",
     "rollFocusLabel": "フォーカス",
     "partnerBeltLabel": "相手の帯",
     "partnerSizeLabel": "相手の体格",

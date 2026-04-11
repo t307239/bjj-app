@@ -267,7 +267,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
                     : "bg-zinc-800/60 border-white/10 text-gray-400 hover:border-white/20 hover:text-white"
                 }`}
               >
-                <span className="leading-none text-xs">{tt.label}</span>
+                <span className="leading-none text-xs">{t(`training.${tt.value}`)}</span>
               </button>
             );
           })}
@@ -390,8 +390,8 @@ const TrainingLogForm = memo(function TrainingLogForm({
         >
           <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-        <span className="group-hover:text-zinc-300">Optional details</span>
-        <span className="text-zinc-500 ml-1 font-normal">(instructor · partner · weight)</span>
+        <span className="group-hover:text-zinc-300">{t("training.optionalToggle")}</span>
+        <span className="text-zinc-500 ml-1 font-normal">{t("training.optionalHint")}</span>
       </button>
 
       {showOptional && (

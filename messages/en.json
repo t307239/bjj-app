@@ -191,6 +191,8 @@
     "export": "Export",
     "rollDetailsTitle": "Roll Details",
     "rollDetailsOptional": "optional",
+    "optionalToggle": "Optional details",
+    "optionalHint": "(instructor · partner · weight)",
     "rollFocusLabel": "Focus",
     "partnerBeltLabel": "Partner Belt",
     "partnerSizeLabel": "Partner Size",
