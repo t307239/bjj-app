@@ -26,29 +26,20 @@ const AICoachCard = dynamic(() => import("@/components/AICoachCard"), {
 
 // ─── Stats & analytics (moved from ProfileTabs Phase 3) ───
 const PersonalBests = dynamic(() => import("@/components/PersonalBests"), {
-  ssr: false,
   loading: () => <div className="min-h-[100px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 const TrainingChart = dynamic(() => import("@/components/TrainingChart"), {
-  ssr: false,
   loading: () => <div className="min-h-[180px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 const MilestoneBadgeGrid = dynamic(() => import("@/components/MilestoneBadgeGrid"), {
-  ssr: false,
   loading: () => <div className="min-h-[100px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
-const StatsAccordion = dynamic(() => import("@/components/records/StatsAccordion"), {
-  ssr: false,
-});
-const ProGate = dynamic(() => import("@/components/ProGate"), {
-  ssr: false,
-});
+const StatsAccordion = dynamic(() => import("@/components/records/StatsAccordion"));
+const ProGate = dynamic(() => import("@/components/ProGate"));
 const RollAnalyticsCard = dynamic(() => import("@/components/RollAnalyticsCard"), {
-  ssr: false,
   loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 const PartnerStatsCard = dynamic(() => import("@/components/PartnerStatsCard"), {
-  ssr: false,
   loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 

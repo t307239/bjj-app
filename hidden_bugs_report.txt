@@ -17,7 +17,7 @@ Total: 11
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/page.tsx: L138: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L155: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L153: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L139: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証

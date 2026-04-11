@@ -12,15 +12,12 @@ import AvatarImage from "@/components/AvatarImage";
 
 // ─── Lazy-loaded sections (keep initial bundle light) ───
 const ProfileForm = dynamic(() => import("@/components/ProfileForm"), {
-  ssr: false,
   loading: () => <div className="h-48 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 const BodyManagementSection = dynamic(() => import("@/components/BodyManagementSection"), {
-  ssr: false,
   loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 const SettingsSection = dynamic(() => import("@/components/profile/SettingsSection"), {
-  ssr: false,
   loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 
