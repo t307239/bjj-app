@@ -1,11 +1,11 @@
 BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 197 files
 CRITICAL: 1
-WARNING: 45
+WARNING: 48
 INFO: 78
-Total: 124
+Total: 127
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 35% (534/1507 キー) — 1003 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 35% (534/1515 キー) — 1011 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -109,6 +109,12 @@ Total: 124
   FIX: t() キーを追加して多言語対応
 [WARNING] [JSX_HARDCODED_ENGLISH] app/wiki/[lang]/page.tsx: L227: JSX内に英語テキスト直書き: "BJJ Wiki"
   FIX: t() キーを追加して多言語対応
+[WARNING] [SILENT_CATCH] components/AICoachCard.tsx: L158: .catch() がエラーを握りつぶしている — デバッグ不能
+  FIX: .catch((err) => console.error('context:', err)) に変更
+[WARNING] [SILENT_CATCH] components/AICoachCard.tsx: L221: .catch() がエラーを握りつぶしている — デバッグ不能
+  FIX: .catch((err) => console.error('context:', err)) に変更
+[WARNING] [SILENT_CATCH] components/AICoachCard.tsx: L267: .catch() がエラーを握りつぶしている — デバッグ不能
+  FIX: .catch((err) => console.error('context:', err)) に変更
 [INFO] [INLINE_STYLE_OBJECT] components/AchievementBadge.tsx: L82: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [WARNING] [JSX_HARDCODED_ENGLISH] components/AgeGate.tsx: L38: JSX内に英語テキスト直書き: "Age Restriction"

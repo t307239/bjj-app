@@ -770,15 +770,23 @@
     "cookieConsent": "Cookie同意"
   },
   "aiCoach": {
-    "title": "🤖 AIマイクロコーチ",
-    "proDesc": "練習データに基づいた週次コーチングインサイトを解放します。",
-    "generateDesc": "過去30日間の練習データを元にパーソナライズされたコーチングを取得します。",
+    "title": "AIコーチ",
+    "proDesc": "弱点分析・練習プラン・試合前アドバイスなど、パーソナライズされたコーチングを利用できます。",
+    "generateDesc": "練習データを元にパーソナライズされたコーチングを取得します。",
     "generateBtn": "コーチングを生成する",
     "generating": "練習データを分析中…",
     "refresh": "更新",
     "challenge": "今週のチャレンジ",
     "error": "コーチングの生成に失敗しました。もう一度お試しください。",
-    "poweredBy": "Claude AIによる提供"
+    "poweredBy": "Claude AIによる提供",
+    "modeGeneral": "週間",
+    "modeWeakness": "弱点分析",
+    "modeNextSession": "次の練習",
+    "modeCompPrep": "試合準備",
+    "section_challenge": "今週のチャレンジ",
+    "section_plan": "アクションプラン",
+    "section_sparring": "スパーリングプラン",
+    "section_week_before": "大会前の過ごし方"
   },
   "skillmap": {
     "tabRoots": "入口技術",

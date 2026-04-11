@@ -4,6 +4,8 @@ import React, { useState, useCallback } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { useLocale } from "@/lib/i18n";
 
+type CoachMode = "general" | "weakness" | "next_session" | "comp_prep";
+
 type Props = {
   userId: string;
   isPro: boolean;
@@ -14,64 +16,74 @@ type Props = {
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
-function parseCoaching(text: string): {
-  insight: string;
-  tips: string[];
-  challenge: string;
+const MODE_ICONS: Record<CoachMode, string> = {
+  general: "🤖",
+  weakness: "🔍",
+  next_session: "📋",
+  comp_prep: "🏆",
+};
+
+function parseCoaching(text: string, mode: CoachMode): {
+  sections: { label: string; content: string; items?: string[]; highlight?: boolean }[];
 } {
   const lines = text.split("\n");
+  const sections: { label: string; content: string; items?: string[]; highlight?: boolean }[] = [];
 
-  // Extract INSIGHT block
-  const insightIdx = lines.findIndex((l) => l.startsWith("INSIGHT:"));
-  const tipsIdx = lines.findIndex((l) => l.startsWith("TIPS:"));
-  const challengeIdx = lines.findIndex((l) => l.startsWith("CHALLENGE:"));
+  // Detect section headers based on mode
+  const sectionKeys = mode === "general"
+    ? ["INSIGHT", "TIPS", "CHALLENGE"]
+    : mode === "weakness"
+      ? ["ANALYSIS", "WEAKNESSES", "PLAN"]
+      : mode === "next_session"
+        ? ["FOCUS", "WARMUP", "DRILL", "SPARRING"]
+        : ["ASSESSMENT", "GAMEPLAN", "WEEK_BEFORE"];
 
-  let insight = "";
-  if (insightIdx >= 0) {
-    const end = tipsIdx > insightIdx ? tipsIdx : lines.length;
-    insight = lines
-      .slice(insightIdx, end)
-      .join(" ")
-      .replace(/^INSIGHT:\s*/, "")
-      .trim();
-  } else {
-    insight = text.slice(0, 200);
-  }
+  for (const key of sectionKeys) {
+    const idx = lines.findIndex((l) => l.startsWith(key + ":"));
+    if (idx < 0) continue;
 
-  // Extract TIPS block
-  const tips: string[] = [];
-  if (tipsIdx >= 0) {
-    const end = challengeIdx > tipsIdx ? challengeIdx : lines.length;
-    for (let i = tipsIdx + 1; i < end; i++) {
-      const l = lines[i].trim();
-      if (l.startsWith("•")) tips.push(l.replace(/^•\s*/, "").trim());
+    // Find end: next section header or end of text
+    const nextIdx = sectionKeys
+      .map((k) => lines.findIndex((l, i) => i > idx && l.startsWith(k + ":")))
+      .filter((i) => i > idx);
+    const end = nextIdx.length > 0 ? Math.min(...nextIdx) : lines.length;
+
+    const block = lines.slice(idx, end);
+    const firstLine = block[0].replace(new RegExp(`^${key}:\\s*`), "").trim();
+
+    // Check for bullet items
+    const items: string[] = [];
+    for (let i = 1; i < block.length; i++) {
+      const l = block[i].trim();
+      if (l.startsWith("•")) items.push(l.replace(/^•\s*/, "").trim());
+    }
+
+    if (items.length > 0) {
+      sections.push({ label: key, content: firstLine, items });
+    } else {
+      const content = firstLine || block.slice(1).map(l => l.trim()).filter(Boolean).join(" ");
+      const isHighlight = key === "CHALLENGE" || key === "PLAN" || key === "SPARRING" || key === "WEEK_BEFORE";
+      sections.push({ label: key, content, highlight: isHighlight });
     }
   }
 
-  // Extract CHALLENGE block
-  let challenge = "";
-  if (challengeIdx >= 0) {
-    challenge = lines
-      .slice(challengeIdx)
-      .join(" ")
-      .replace(/^CHALLENGE:\s*/, "")
-      .trim();
+  // Fallback if no sections parsed
+  if (sections.length === 0) {
+    sections.push({ label: "INSIGHT", content: text.slice(0, 300) });
   }
 
-  return { insight, tips, challenge };
+  return { sections };
 }
 
 function fmtAge(isoDate: string | null | undefined, locale: string): string {
   if (!isoDate) return "";
   const diffMs = new Date(isoDate).getTime() - Date.now();
-  const diffDays = Math.round(diffMs / 86400000); // negative = past
+  const diffDays = Math.round(diffMs / 86400000);
   try {
-    // Intl.RelativeTimeFormat is locale-aware: "今日", "Yesterday", "Hoje", etc.
     const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
     if (Math.abs(diffDays) < 1) return rtf.format(0, "day");
     return rtf.format(diffDays, "day");
   } catch {
-    // Fallback for unsupported locales
     const days = Math.abs(diffDays);
     return days === 0 ? "Today" : days === 1 ? "Yesterday" : `${days} days ago`;
   }
@@ -79,38 +91,75 @@ function fmtAge(isoDate: string | null | undefined, locale: string): string {
 
 export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt }: Props) {
   const { t, locale } = useLocale();
-  const [coaching, setCoaching] = useState<string | null>(initialCoaching ?? null);
-  const [generatedAt, setGeneratedAt] = useState<string | null>(initialGeneratedAt ?? null);
+  const [mode, setMode] = useState<CoachMode>("general");
+  const [coachingMap, setCoachingMap] = useState<Partial<Record<CoachMode, string>>>(() => {
+    if (!initialCoaching) return {};
+    // Try parsing multi-mode cache
+    try {
+      const parsed = JSON.parse(initialCoaching);
+      if (typeof parsed === "string") return { general: parsed };
+      const map: Partial<Record<CoachMode, string>> = {};
+      for (const [k, v] of Object.entries(parsed)) {
+        if (v && typeof v === "object" && "text" in (v as Record<string, unknown>)) {
+          map[k as CoachMode] = (v as { text: string }).text;
+        }
+      }
+      return map;
+    } catch {
+      return { general: initialCoaching };
+    }
+  });
+  const [generatedAtMap, setGeneratedAtMap] = useState<Partial<Record<CoachMode, string>>>(() => {
+    if (!initialGeneratedAt) return {};
+    return { general: initialGeneratedAt };
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const coaching = coachingMap[mode] ?? null;
+  const generatedAt = generatedAtMap[mode] ?? null;
   const isStale = !generatedAt || Date.now() - new Date(generatedAt).getTime() > SEVEN_DAYS_MS;
 
-  const generate = useCallback(async () => {
+  const generate = useCallback(async (targetMode: CoachMode) => {
     setLoading(true);
     setError(null);
     try {
       const res = await fetch("/api/ai-coach/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locale }),
+        body: JSON.stringify({ locale, mode: targetMode }),
       });
-      const data = await res.json() as { coaching?: string; generated_at?: string; cached?: boolean; error?: string };
+      const data = await res.json() as {
+        coaching?: string;
+        generated_at?: string;
+        cached?: boolean;
+        error?: string;
+        mode?: string;
+      };
       if (!res.ok || data.error) {
         setError(data.error ?? t("aiCoach.error"));
         return;
       }
-      trackEvent("ai_coach_generated", { source: data.cached ? "cache_hit" : "fresh" });
-      setCoaching(data.coaching ?? null);
-      setGeneratedAt(data.generated_at ?? null);
+      trackEvent("ai_coach_generated", { source: data.cached ? "cache_hit" : "fresh", mode: targetMode });
+      setCoachingMap((prev) => ({ ...prev, [targetMode]: data.coaching ?? null }));
+      setGeneratedAtMap((prev) => ({ ...prev, [targetMode]: data.generated_at ?? null }));
     } catch {
       setError(t("aiCoach.error"));
     } finally {
       setLoading(false);
     }
-  }, [t]);
+  }, [locale, t]);
 
-  // Pro gate
+  const handleModeChange = useCallback((newMode: CoachMode) => {
+    setMode(newMode);
+    setError(null);
+    // Auto-generate if no cached content for this mode
+    if (!coachingMap[newMode]) {
+      generate(newMode).catch((err) => console.error("ai_coach:auto_generate", err));
+    }
+  }, [coachingMap, generate]);
+
+  // ── Pro gate ──
   if (!isPro) {
     return (
       <div className="bg-zinc-900 border border-white/10 rounded-2xl p-5 mb-6">
@@ -132,8 +181,16 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
     );
   }
 
-  // Empty state — not generated yet
-  if (!coaching) {
+  // ── Mode selector chips ──
+  const modes: { key: CoachMode; labelKey: string }[] = [
+    { key: "general", labelKey: "aiCoach.modeGeneral" },
+    { key: "weakness", labelKey: "aiCoach.modeWeakness" },
+    { key: "next_session", labelKey: "aiCoach.modeNextSession" },
+    { key: "comp_prep", labelKey: "aiCoach.modeCompPrep" },
+  ];
+
+  // ── Empty state — not generated yet ──
+  if (!coaching && !loading) {
     return (
       <div className="bg-zinc-900 border border-white/10 rounded-2xl p-5 mb-6">
         <div className="flex items-start gap-3 mb-4">
@@ -143,8 +200,25 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
             <p className="text-xs text-gray-500 mt-0.5">{t("aiCoach.generateDesc")}</p>
           </div>
         </div>
+        {/* Mode chips */}
+        <div className="flex flex-wrap gap-1.5 mb-4">
+          {modes.map((m) => (
+            <button
+              key={m.key}
+              onClick={() => handleModeChange(m.key)}
+              className={`text-xs px-2.5 py-1.5 rounded-lg transition-colors flex items-center gap-1 ${
+                mode === m.key
+                  ? "bg-zinc-700 text-white font-medium"
+                  : "bg-zinc-800 text-zinc-500 hover:text-zinc-300"
+              }`}
+            >
+              <span>{MODE_ICONS[m.key]}</span>
+              <span className="whitespace-nowrap">{t(m.labelKey)}</span>
+            </button>
+          ))}
+        </div>
         <button
-          onClick={generate}
+          onClick={() => generate(mode).catch((err) => console.error("ai_coach:generate", err))}
           disabled={loading}
           className="w-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors"
         >
@@ -155,15 +229,33 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
     );
   }
 
-  // Show coaching
-  const parsed = parseCoaching(coaching);
+  // ── Loading state ──
+  if (loading && !coaching) {
+    return (
+      <div className="bg-zinc-900 border border-white/10 rounded-2xl p-5 mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-xl">{MODE_ICONS[mode]}</span>
+          <h3 className="text-sm font-semibold text-white">{t("aiCoach.title")}</h3>
+        </div>
+        <div className="animate-pulse space-y-2">
+          <div className="h-4 bg-zinc-800 rounded w-3/4" />
+          <div className="h-4 bg-zinc-800 rounded w-1/2" />
+          <div className="h-4 bg-zinc-800 rounded w-2/3" />
+        </div>
+        <p className="text-xs text-zinc-500 mt-3 text-center">{t("aiCoach.generating")}</p>
+      </div>
+    );
+  }
+
+  // ── Show coaching ──
+  const parsed = parseCoaching(coaching ?? "", mode);
 
   return (
     <div className="bg-zinc-900 border border-white/10 rounded-2xl p-5 mb-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-xl">🤖</span>
+          <span className="text-xl">{MODE_ICONS[mode]}</span>
           <h3 className="text-sm font-semibold text-white">{t("aiCoach.title")}</h3>
         </div>
         <div className="flex items-center gap-2">
@@ -172,7 +264,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
           )}
           {isStale && (
             <button
-              onClick={generate}
+              onClick={() => generate(mode).catch((err) => console.error("ai_coach:generate", err))}
               disabled={loading}
               className="text-xs text-[#10B981] hover:text-[#0d9668] disabled:opacity-40 transition-colors"
             >
@@ -182,30 +274,63 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
         </div>
       </div>
 
-      {/* Insight */}
-      <div className="bg-zinc-800/60 rounded-xl p-3.5 mb-3">
-        <p className="text-sm text-gray-200 leading-relaxed">{parsed.insight}</p>
+      {/* Mode chips */}
+      <div className="flex flex-wrap gap-1.5 mb-4">
+        {modes.map((m) => (
+          <button
+            key={m.key}
+            onClick={() => handleModeChange(m.key)}
+            disabled={loading}
+            className={`text-xs px-2.5 py-1.5 rounded-lg transition-colors flex items-center gap-1 disabled:opacity-40 ${
+              mode === m.key
+                ? "bg-[#10B981]/20 text-[#10B981] font-medium border border-[#10B981]/30"
+                : "bg-zinc-800 text-zinc-500 hover:text-zinc-300"
+            }`}
+          >
+            <span>{MODE_ICONS[m.key]}</span>
+            <span className="whitespace-nowrap">{t(m.labelKey)}</span>
+          </button>
+        ))}
       </div>
 
-      {/* Tips */}
-      {parsed.tips.length > 0 && (
-        <div className="space-y-2 mb-3">
-          {parsed.tips.map((tip, i) => (
-            <div key={i} className="flex items-start gap-2">
-              <span className="text-[#10B981] text-sm font-bold flex-shrink-0 mt-0.5">•</span>
-              <p className="text-xs text-gray-300 leading-relaxed">{tip}</p>
+      {/* Sections */}
+      {parsed.sections.map((section, i) => {
+        if (section.items) {
+          return (
+            <div key={i} className="mb-3">
+              {section.content && (
+                <div className="bg-zinc-800/60 rounded-xl p-3.5 mb-2">
+                  <p className="text-sm text-gray-200 leading-relaxed">{section.content}</p>
+                </div>
+              )}
+              <div className="space-y-2">
+                {section.items.map((item, j) => (
+                  <div key={j} className="flex items-start gap-2">
+                    <span className="text-[#10B981] text-sm font-bold flex-shrink-0 mt-0.5">•</span>
+                    <p className="text-xs text-gray-300 leading-relaxed">{item}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
-      )}
-
-      {/* Challenge */}
-      {parsed.challenge && (
-        <div className="bg-[#10B981]/10 border border-[#10B981]/20 rounded-xl p-3 mt-3">
-          <p className="text-xs font-semibold text-[#10B981] mb-1">🎯 {t("aiCoach.challenge")}</p>
-          <p className="text-xs text-gray-300 leading-relaxed">{parsed.challenge}</p>
-        </div>
-      )}
+          );
+        }
+        if (section.highlight) {
+          return (
+            <div key={i} className="bg-[#10B981]/10 border border-[#10B981]/20 rounded-xl p-3 mt-3">
+              <p className="text-xs font-semibold text-[#10B981] mb-1">
+                {section.label === "CHALLENGE" ? "🎯" : section.label === "PLAN" ? "📝" : section.label === "SPARRING" ? "🥊" : "📅"}{" "}
+                {t(`aiCoach.section_${section.label.toLowerCase()}`)}
+              </p>
+              <p className="text-xs text-gray-300 leading-relaxed">{section.content}</p>
+            </div>
+          );
+        }
+        return (
+          <div key={i} className="bg-zinc-800/60 rounded-xl p-3.5 mb-3">
+            <p className="text-sm text-gray-200 leading-relaxed">{section.content}</p>
+          </div>
+        );
+      })}
 
       {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
     </div>

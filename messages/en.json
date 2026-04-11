@@ -779,15 +779,23 @@
     "cookieConsent": "Cookie consent"
   },
   "aiCoach": {
-    "title": "ð¤ AI Micro-Coach",
-    "proDesc": "Unlock personalized weekly coaching insights based on your training data.",
-    "generateDesc": "Get a personalized coaching insight based on your last 30 days of training.",
-    "generateBtn": "Generate my coaching",
-    "generating": "Analyzing your trainingâ¦",
+    "title": "AI Coach",
+    "proDesc": "Unlock personalized coaching with weakness analysis, session planning, and competition prep.",
+    "generateDesc": "Get personalized coaching based on your training data.",
+    "generateBtn": "Generate coaching",
+    "generating": "Analyzing your training…",
     "refresh": "Refresh",
     "challenge": "This week's challenge",
     "error": "Failed to generate coaching. Please try again.",
-    "poweredBy": "Powered by Claude AI"
+    "poweredBy": "Powered by Claude AI",
+    "modeGeneral": "Weekly",
+    "modeWeakness": "Weaknesses",
+    "modeNextSession": "Next Session",
+    "modeCompPrep": "Comp Prep",
+    "section_challenge": "This Week's Challenge",
+    "section_plan": "Action Plan",
+    "section_sparring": "Sparring Plan",
+    "section_week_before": "Week Before Competition"
   },
   "skillmap": {
     "tabRoots": "Entry Points",
