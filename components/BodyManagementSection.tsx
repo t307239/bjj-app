@@ -37,10 +37,17 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
 
   const loadProfile = useCallback(async () => {
     try {
-      const [profileRes, weightRes] = await Promise.all([
+      const [coreRes, bodyRes, weightRes] = await Promise.all([
+        // Core profile fields (guaranteed columns)
         supabase
           .from("profiles")
-          .select("is_pro, body_status, body_status_dates, target_weight, target_weight_date")
+          .select("is_pro, target_weight, target_weight_date")
+          .eq("id", userId)
+          .single(),
+        // Body status fields (JSONB — may not exist on older schemas)
+        supabase
+          .from("profiles")
+          .select("body_status, body_status_dates")
           .eq("id", userId)
           .single(),
         supabase
@@ -50,24 +57,31 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
           .order("measured_at", { ascending: false })
           .limit(1),
       ]);
-      const { data, error } = profileRes;
-      if (error) console.error("BodyManagementSection.tsx:query", error);
+
+      if (coreRes.error) console.error("BodyManagementSection:core", coreRes.error);
+      if (bodyRes.error) console.error("BodyManagementSection:body", bodyRes.error);
+
       if (weightRes.data && weightRes.data.length > 0) {
         setLatestWeight(Number(weightRes.data[0].weight));
       }
 
-      if (data) {
-        setIsPro(data.is_pro ?? isProProp);
-        setBodyStatus(data?.body_status ?? null);
-        setBodyStatusDates((data?.body_status_dates as Record<string, string>) ?? {});
-        if (data.target_weight != null) {
-          setTargetWeight(Number(data.target_weight));
-          setTargetWeightInput(String(data.target_weight));
+      // Core fields (isPro, target weight)
+      if (coreRes.data) {
+        setIsPro(coreRes.data.is_pro ?? isProProp);
+        if (coreRes.data.target_weight != null) {
+          setTargetWeight(Number(coreRes.data.target_weight));
+          setTargetWeightInput(String(coreRes.data.target_weight));
         }
-        if (data.target_weight_date) {
-          setTargetDate(data.target_weight_date as string);
-          setTargetDateInput(data.target_weight_date as string);
+        if (coreRes.data.target_weight_date) {
+          setTargetDate(coreRes.data.target_weight_date as string);
+          setTargetDateInput(coreRes.data.target_weight_date as string);
         }
+      }
+
+      // Body status fields (independent — failure doesn't block core)
+      if (bodyRes.data) {
+        setBodyStatus(bodyRes.data?.body_status ?? null);
+        setBodyStatusDates((bodyRes.data?.body_status_dates as Record<string, string>) ?? {});
       }
     } catch {
       // Network/auth error — show free tier gracefully
