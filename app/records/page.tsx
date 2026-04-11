@@ -168,7 +168,7 @@ export default async function RecordsPage() {
             Competition Summary
             ═══════════════════════════════════════════ */}
         <section className="mb-7">
-          <CompetitionSummaryCard userId={user.id} />
+          <CompetitionSummaryCard userId={user.id} isPro={isPro} />
         </section>
 
         {/* ═══════════════════════════════════════════

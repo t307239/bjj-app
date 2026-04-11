@@ -7,6 +7,7 @@ import QuickWeightLog from "@/components/QuickWeightLog";
 import WeightChart from "@/components/WeightChart";
 import BodyHeatmap from "@/components/BodyHeatmap";
 import InjuryCareAlert from "@/components/InjuryCareAlert";
+import WeightCutPlanner from "@/components/WeightCutPlanner";
 
 interface Props {
   userId: string;
@@ -32,15 +33,28 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
   const [targetSaving, setTargetSaving] = useState(false);
   const [targetSaved, setTargetSaved] = useState(false);
   const [showTargetForm, setShowTargetForm] = useState(false);
+  const [latestWeight, setLatestWeight] = useState<number | null>(null);
 
   const loadProfile = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("is_pro, body_status, body_status_dates, target_weight, target_weight_date")
-        .eq("id", userId)
-        .single();
+      const [profileRes, weightRes] = await Promise.all([
+        supabase
+          .from("profiles")
+          .select("is_pro, body_status, body_status_dates, target_weight, target_weight_date")
+          .eq("id", userId)
+          .single(),
+        supabase
+          .from("weight_logs")
+          .select("weight")
+          .eq("user_id", userId)
+          .order("measured_at", { ascending: false })
+          .limit(1),
+      ]);
+      const { data, error } = profileRes;
       if (error) console.error("BodyManagementSection.tsx:query", error);
+      if (weightRes.data && weightRes.data.length > 0) {
+        setLatestWeight(Number(weightRes.data[0].weight));
+      }
 
       if (data) {
         setIsPro(data.is_pro ?? isProProp);
@@ -251,6 +265,15 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
               </div>
             )}
           </div>
+        )}
+
+        {/* Weight Cut Planner — Pro only, shown when target + date are set */}
+        {isPro && targetWeight != null && targetDate && latestWeight != null && (
+          <WeightCutPlanner
+            currentWeight={latestWeight}
+            targetWeight={targetWeight}
+            targetDate={targetDate}
+          />
         )}
 
         {/* Chart — blurred behind paywall */}

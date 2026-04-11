@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { decodeCompNotes, type CompData } from "@/lib/trainingLogHelpers";
+import Link from "next/link";
+import { trackEvent } from "@/lib/analytics";
 
 type MatchEntry = {
   id: string;
@@ -26,11 +28,20 @@ const BELT_COLORS: Record<string, string> = {
   black: "bg-black text-white border border-white/20",
 };
 
-const BELT_LABELS: Record<string, string> = {
-  white: "White", blue: "Blue", purple: "Purple", brown: "Brown", black: "Black",
+const BELT_BG: Record<string, string> = {
+  white: "bg-gray-100",
+  blue: "bg-blue-500",
+  purple: "bg-purple-500",
+  brown: "bg-amber-700",
+  black: "bg-gray-800",
 };
 
-export default function CompetitionSummaryCard({ userId }: { userId: string }) {
+type Props = {
+  userId: string;
+  isPro?: boolean;
+};
+
+export default function CompetitionSummaryCard({ userId, isPro = false }: Props) {
   const { t } = useLocale();
   const [matches, setMatches] = useState<DecodedMatch[]>([]);
   const [loading, setLoading] = useState(true);
@@ -69,6 +80,93 @@ export default function CompetitionSummaryCard({ userId }: { userId: string }) {
     return () => { cancelled = true; };
   }, [userId]);
 
+  // Computed analytics
+  const analytics = useMemo(() => {
+    const wins = matches.filter((m) => m.comp.result === "win");
+    const losses = matches.filter((m) => m.comp.result === "loss");
+    const draws = matches.filter((m) => m.comp.result === "draw");
+    const total = matches.length;
+    const winRate = total > 0 ? Math.round((wins.length / total) * 100) : 0;
+
+    // Sub/decision breakdown
+    const subWins = wins.filter((m) => m.comp.finish.trim() !== "");
+    const decisionWins = wins.length - subWins.length;
+
+    // Winning technique frequency
+    const finishMap = new Map<string, number>();
+    for (const m of subWins) {
+      const finish = m.comp.finish.trim();
+      if (finish) finishMap.set(finish, (finishMap.get(finish) ?? 0) + 1);
+    }
+    const topFinishes = [...finishMap.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+
+    // Win rate by opponent belt
+    const beltStats = new Map<string, { wins: number; total: number }>();
+    for (const m of matches) {
+      const belt = m.comp.opponent_rank?.trim();
+      if (!belt || !BELT_COLORS[belt]) continue;
+      if (!beltStats.has(belt)) beltStats.set(belt, { wins: 0, total: 0 });
+      const entry = beltStats.get(belt)!;
+      entry.total++;
+      if (m.comp.result === "win") entry.wins++;
+    }
+    const beltWinRates = [...beltStats.entries()]
+      .map(([belt, { wins: bwins, total: btotal }]) => ({
+        belt,
+        wins: bwins,
+        total: btotal,
+        rate: btotal > 0 ? Math.round((bwins / btotal) * 100) : 0,
+      }))
+      .sort((a, b) => {
+        const order = ["white", "blue", "purple", "brown", "black"];
+        return order.indexOf(a.belt) - order.indexOf(b.belt);
+      });
+
+    // Current & best streak
+    let currentStreak = 0;
+    for (const m of matches) {
+      if (m.comp.result === "win") currentStreak++;
+      else break;
+    }
+    let bestStreak = 0;
+    let tempStreak = 0;
+    for (const m of matches) {
+      if (m.comp.result === "win") {
+        tempStreak++;
+        if (tempStreak > bestStreak) bestStreak = tempStreak;
+      } else {
+        tempStreak = 0;
+      }
+    }
+
+    // Gi vs NoGi split
+    const giMatches = matches.filter((m) => m.comp.gi_type === "gi");
+    const nogiMatches = matches.filter((m) => m.comp.gi_type === "nogi");
+    const giWins = giMatches.filter((m) => m.comp.result === "win").length;
+    const nogiWins = nogiMatches.filter((m) => m.comp.result === "win").length;
+
+    return {
+      wins: wins.length,
+      losses: losses.length,
+      draws: draws.length,
+      total,
+      winRate,
+      subWins: subWins.length,
+      decisionWins,
+      topFinishes,
+      beltWinRates,
+      currentStreak,
+      bestStreak,
+      giMatches: giMatches.length,
+      giWins,
+      nogiMatches: nogiMatches.length,
+      nogiWins,
+      recent: matches.slice(0, 5),
+    };
+  }, [matches]);
+
   if (loading) {
     return <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />;
   }
@@ -83,39 +181,6 @@ export default function CompetitionSummaryCard({ userId }: { userId: string }) {
       </div>
     );
   }
-
-  // Stats
-  const wins = matches.filter((m) => m.comp.result === "win").length;
-  const losses = matches.filter((m) => m.comp.result === "loss").length;
-  const draws = matches.filter((m) => m.comp.result === "draw").length;
-  const total = matches.length;
-  const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
-
-  // Submission stats
-  const subWins = matches.filter((m) => m.comp.result === "win" && m.comp.finish.trim() !== "").length;
-  const decisionWins = wins - subWins;
-
-  // Current win streak
-  let currentStreak = 0;
-  for (const m of matches) {
-    if (m.comp.result === "win") currentStreak++;
-    else break;
-  }
-
-  // Best streak
-  let bestStreak = 0;
-  let tempStreak = 0;
-  for (const m of matches) {
-    if (m.comp.result === "win") {
-      tempStreak++;
-      if (tempStreak > bestStreak) bestStreak = tempStreak;
-    } else {
-      tempStreak = 0;
-    }
-  }
-
-  // Recent 5 matches
-  const recent = matches.slice(0, 5);
 
   const resultStyle: Record<string, string> = {
     win: "text-green-400",
@@ -138,62 +203,171 @@ export default function CompetitionSummaryCard({ userId }: { userId: string }) {
       {/* Record bar: W-L-D */}
       <div className="flex items-center gap-4 mb-4">
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-bold text-green-400">{wins}</span>
+          <span className="text-2xl font-bold text-green-400">{analytics.wins}</span>
           <span className="text-xs text-gray-500">{t("competition.wins")}</span>
         </div>
         <span className="text-gray-600">-</span>
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-bold text-red-400">{losses}</span>
+          <span className="text-2xl font-bold text-red-400">{analytics.losses}</span>
           <span className="text-xs text-gray-500">{t("competition.losses")}</span>
         </div>
         <span className="text-gray-600">-</span>
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-bold text-yellow-400">{draws}</span>
+          <span className="text-2xl font-bold text-yellow-400">{analytics.draws}</span>
           <span className="text-xs text-gray-500">{t("competition.draws")}</span>
         </div>
         <div className="ml-auto text-right">
-          <span className="text-lg font-bold text-white whitespace-nowrap">{winRate}%</span>
+          <span className="text-lg font-bold text-white whitespace-nowrap">{analytics.winRate}%</span>
           <span className="text-xs text-gray-500 ml-1 whitespace-nowrap">{t("competition.winRate")}</span>
         </div>
       </div>
 
       {/* Mini stat chips */}
       <div className="flex flex-wrap gap-2 mb-4">
-        {subWins > 0 && (
+        {analytics.subWins > 0 && (
           <span className="text-xs bg-zinc-800 text-gray-300 px-2 py-1 rounded-full whitespace-nowrap">
-            {t("competition.bySubmission")}: {subWins}
+            {t("competition.bySubmission")}: {analytics.subWins}
           </span>
         )}
-        {decisionWins > 0 && (
+        {analytics.decisionWins > 0 && (
           <span className="text-xs bg-zinc-800 text-gray-300 px-2 py-1 rounded-full whitespace-nowrap">
-            {t("competition.byDecision")}: {decisionWins}
+            {t("competition.byDecision")}: {analytics.decisionWins}
           </span>
         )}
-        {currentStreak >= 2 && (
+        {analytics.currentStreak >= 2 && (
           <span className="text-xs bg-green-900/60 text-green-300 px-2 py-1 rounded-full whitespace-nowrap">
-            🔥 {t("competition.currentStreak").replace("{n}", String(currentStreak))}
+            🔥 {t("competition.currentStreak", { n: analytics.currentStreak })}
           </span>
         )}
-        {bestStreak >= 2 && currentStreak < bestStreak && (
+        {analytics.bestStreak >= 2 && analytics.currentStreak < analytics.bestStreak && (
           <span className="text-xs bg-zinc-800 text-gray-300 px-2 py-1 rounded-full whitespace-nowrap">
-            {t("competition.bestStreak").replace("{n}", String(bestStreak))}
+            {t("competition.bestStreak", { n: analytics.bestStreak })}
           </span>
         )}
       </div>
 
+      {/* ═══ PRO SECTION: Enhanced analytics ═══ */}
+      {isPro ? (
+        <>
+          {/* Gi vs NoGi split */}
+          {(analytics.giMatches > 0 || analytics.nogiMatches > 0) && (
+            <div className="mb-4">
+              <p className="text-xs text-zinc-500 mb-1.5">{t("competition.giNogiSplit")}</p>
+              <div className="flex gap-2">
+                {analytics.giMatches > 0 && (
+                  <div className="flex-1 bg-zinc-800/50 rounded-lg px-3 py-2">
+                    <p className="text-xs text-blue-400 font-medium whitespace-nowrap">Gi</p>
+                    <p className="text-sm text-white font-bold whitespace-nowrap">
+                      {analytics.giWins}W / {analytics.giMatches}
+                      <span className="text-xs text-zinc-500 ml-1 font-normal">
+                        ({analytics.giMatches > 0 ? Math.round((analytics.giWins / analytics.giMatches) * 100) : 0}%)
+                      </span>
+                    </p>
+                  </div>
+                )}
+                {analytics.nogiMatches > 0 && (
+                  <div className="flex-1 bg-zinc-800/50 rounded-lg px-3 py-2">
+                    <p className="text-xs text-orange-400 font-medium whitespace-nowrap">No-Gi</p>
+                    <p className="text-sm text-white font-bold whitespace-nowrap">
+                      {analytics.nogiWins}W / {analytics.nogiMatches}
+                      <span className="text-xs text-zinc-500 ml-1 font-normal">
+                        ({analytics.nogiMatches > 0 ? Math.round((analytics.nogiWins / analytics.nogiMatches) * 100) : 0}%)
+                      </span>
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Top winning techniques */}
+          {analytics.topFinishes.length > 0 && (
+            <div className="mb-4">
+              <p className="text-xs text-zinc-500 mb-1.5">{t("competition.topFinishes")}</p>
+              <div className="space-y-1.5">
+                {analytics.topFinishes.map(([finish, count]) => {
+                  const pct = analytics.subWins > 0 ? Math.round((count / analytics.subWins) * 100) : 0;
+                  return (
+                    <div key={finish} className="flex items-center gap-2">
+                      <span className="text-xs text-gray-300 flex-1 truncate">{finish}</span>
+                      <div className="w-20 h-2 bg-zinc-800 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-green-500/70 rounded-full"
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                      <span className="text-xs text-zinc-500 tabular-nums whitespace-nowrap w-8 text-right">{count}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Win rate by opponent belt */}
+          {analytics.beltWinRates.length > 0 && (
+            <div className="mb-4">
+              <p className="text-xs text-zinc-500 mb-1.5">{t("competition.winRateByBelt")}</p>
+              <div className="flex gap-2 flex-wrap">
+                {analytics.beltWinRates.map(({ belt, wins: bwins, total: btotal, rate }) => (
+                  <div key={belt} className="bg-zinc-800/50 rounded-lg px-3 py-2 min-w-[64px]">
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <span className={`w-2.5 h-2.5 rounded-full ${BELT_BG[belt] ?? "bg-gray-500"}`} />
+                      <span className="text-xs text-zinc-400 capitalize whitespace-nowrap">{belt}</span>
+                    </div>
+                    <p className="text-sm font-bold text-white whitespace-nowrap">
+                      {rate}%
+                      <span className="text-[10px] text-zinc-500 font-normal ml-0.5">({bwins}/{btotal})</span>
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        /* Free user: blur teaser for enhanced analytics */
+        matches.length >= 3 && (
+          <div className="relative mb-4 overflow-hidden rounded-xl">
+            <div className="blur-sm pointer-events-none select-none" aria-hidden="true">
+              <div className="bg-zinc-800/50 rounded-lg px-3 py-2 mb-2">
+                <p className="text-xs text-zinc-500">Top Finishes</p>
+                <div className="flex gap-2 mt-1">
+                  <span className="text-xs text-gray-300">Armbar: 3</span>
+                  <span className="text-xs text-gray-300">Triangle: 2</span>
+                </div>
+              </div>
+              <div className="bg-zinc-800/50 rounded-lg px-3 py-2">
+                <p className="text-xs text-zinc-500">Win Rate by Belt</p>
+                <div className="flex gap-2 mt-1">
+                  <span className="text-xs text-gray-300">White: 80%</span>
+                  <span className="text-xs text-gray-300">Blue: 60%</span>
+                </div>
+              </div>
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center bg-zinc-950/30">
+              <Link
+                href="/profile#upgrade"
+                className="bg-amber-500 hover:bg-amber-400 active:scale-95 text-black text-xs font-semibold px-4 py-2 rounded-xl transition-all shadow-lg shadow-amber-500/20"
+                onClick={() => trackEvent("pricing_upgrade_click", { feature: "competition_analytics" })}
+              >
+                {t("competition.upgradeAnalytics")}
+              </Link>
+            </div>
+          </div>
+        )
+      )}
+
       {/* Recent matches */}
       <div className="space-y-2">
-        {recent.map((m) => (
+        {analytics.recent.map((m) => (
           <div
             key={m.id}
             className="flex items-center gap-3 bg-zinc-800/60 rounded-xl px-3 py-2"
           >
-            {/* Result badge */}
             <span className={`text-xs font-bold w-5 text-center ${resultStyle[m.comp.result] ?? "text-gray-400"}`}>
               {resultLabel[m.comp.result] ?? "?"}
             </span>
-
-            {/* Opponent + belt dot */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1.5">
                 {m.comp.opponent_rank && BELT_COLORS[m.comp.opponent_rank] && (
@@ -209,15 +383,11 @@ export default function CompetitionSummaryCard({ userId }: { userId: string }) {
                 </p>
               )}
             </div>
-
-            {/* Gi/NoGi badge */}
             {m.comp.gi_type && (
               <span className="text-xs text-gray-500 whitespace-nowrap">
                 {m.comp.gi_type === "gi" ? "Gi" : m.comp.gi_type === "nogi" ? "No-Gi" : m.comp.gi_type}
               </span>
             )}
-
-            {/* Date */}
             <span className="text-xs text-gray-600 whitespace-nowrap">{m.date}</span>
           </div>
         ))}

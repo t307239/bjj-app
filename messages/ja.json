@@ -495,7 +495,11 @@
     "opponentShortPlaceholder": "対戦相手",
     "quickTechniqueTag": "テクニックタグ",
     "searchTechniquesPlaceholder": "テクニックを検索…",
-    "techAppendNote": "テクニックを選択してメモに追加"
+    "techAppendNote": "テクニックを選択してメモに追加",
+    "giNogiSplit": "道衣 / ノーギ 内訳",
+    "topFinishes": "勝ち技ランキング",
+    "winRateByBelt": "相手帯別勝率",
+    "upgradeAnalytics": "試合分析を解放"
   },
   "guest": {
     "banner": "ゲストモードで体験中",
@@ -1641,5 +1645,26 @@
     "upgradeToPro": "Proにアップグレード",
     "disclaimerText": "デジタルサブスクリプションであることを理解し、{terms}に同意します。",
     "termsLink": "利用規約"
+  },
+  "weightCut": {
+    "title": "減量プランナー",
+    "tolose": "減量幅",
+    "daysLeft": "残り日数",
+    "daysUnit": "日",
+    "weeklyRate": "週間ペース",
+    "weekUnit": "週",
+    "aggressiveWarning": "この減量ペースは安全基準を超えています（>1kg/週または体重の10%以上）。スケジュール延長またはスポーツ栄養士への相談を検討してください。",
+    "phases": "減量フェーズ",
+    "phaseNormal": "通常トレーニング期",
+    "phaseNormalAdvice": "通常通り練習。クリーンな食事で緩やかなカロリー制限。持続可能な減量を目指す。",
+    "phaseWaterLoad": "ウォーターローディング",
+    "phaseWaterLoadAdvice": "水分摂取を6〜8L/日に増量。体が効率的に水分を排出する準備をする。",
+    "phaseWaterCut": "ウォーターカット",
+    "phaseWaterCutAdvice": "水分摂取を段階的に減らす。軽い練習のみ。体調を注意深く観察すること。",
+    "phaseWeighIn": "計量日",
+    "phaseWeighInAdvice": "計量後すぐに電解質と軽い炭水化物でリハイドレーション。",
+    "milestones": "週間目標",
+    "week": "第",
+    "alreadyAtTarget": "すでに目標体重に到達しています！"
   }
 }

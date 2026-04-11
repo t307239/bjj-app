@@ -494,7 +494,11 @@
     "finishPlaceholder": "E.g.: Heel Hook",
     "finishShortPlaceholder": "Finish technique",
     "eventPlaceholder": "E.g.: Tokyo Open",
-    "eventShortPlaceholder": "Event name"
+    "eventShortPlaceholder": "Event name",
+    "giNogiSplit": "Gi / No-Gi Split",
+    "topFinishes": "Top Winning Techniques",
+    "winRateByBelt": "Win Rate by Opponent Belt",
+    "upgradeAnalytics": "Unlock Match Analytics"
   },
   "guest": {
     "banner": "Guest Mode",
@@ -1639,5 +1643,26 @@
     "upgradeToPro": "Upgrade to Pro",
     "disclaimerText": "I understand this is a digital subscription service. I agree to the {terms}.",
     "termsLink": "Terms of Service"
+  },
+  "weightCut": {
+    "title": "Weight Cut Planner",
+    "tolose": "To Lose",
+    "daysLeft": "Days Left",
+    "daysUnit": "d",
+    "weeklyRate": "Weekly Rate",
+    "weekUnit": "wk",
+    "aggressiveWarning": "This cut rate exceeds safe limits (>1kg/week or >10% body weight). Consider extending your timeline or consulting a sports nutritionist.",
+    "phases": "Cut Phases",
+    "phaseNormal": "Training Phase",
+    "phaseNormalAdvice": "Train normally. Clean diet, slight caloric deficit. Focus on sustainable weight loss.",
+    "phaseWaterLoad": "Water Loading",
+    "phaseWaterLoadAdvice": "Increase water intake to 6-8L/day. This primes your body to flush water efficiently later.",
+    "phaseWaterCut": "Water Cut",
+    "phaseWaterCutAdvice": "Gradually reduce water intake. Light training only. Monitor how you feel closely.",
+    "phaseWeighIn": "Weigh-In Day",
+    "phaseWeighInAdvice": "Weigh in, then immediately rehydrate with electrolytes and light carbs.",
+    "milestones": "Weekly Targets",
+    "week": "Wk",
+    "alreadyAtTarget": "You're already at or below your target weight!"
   }
 }
