@@ -28,6 +28,12 @@ AUDIT_FRAMEWORK.md の20軸スコアリングでは見逃される、
  20. .catch(() => {}) サイレントエラー握りつぶし
  21. Missing error.tsx（Error Boundary 欠落）
  22. Missing loading.tsx（Suspense 欠落）
+ 23. CSS containing block × position:fixed 衝突（transform/filter/will-change）
+ 24. JSX ハードコード英語テキスト（t()未使用の英語直書き）
+ 25. アニメーション パフォーマンス リスク（reflow/repaint プロパティ）
+ 26. Form onSubmit で preventDefault 欠落
+ 27. 条件付き Hooks 呼び出し（React規約違反）
+ 28. インラインスタイルオブジェクト（Tailwind統一推奨）
 
 使い方:
     python3 scripts/detect_hidden_bugs.py              # 全チェック
@@ -918,6 +924,374 @@ def check_missing_loading(report: BugReport):
 
 
 # ─────────────────────────────────────────────────────
+# カテゴリ 23: CSS containing block × position:fixed 衝突
+# ─────────────────────────────────────────────────────
+
+# CSSプロパティのうち、子孫の position:fixed を壊す（containing block を生成する）もの
+CONTAINING_BLOCK_PROPS = [
+    "transform",
+    "filter",
+    "will-change",
+    "perspective",
+    "backdrop-filter",
+]
+
+def check_containing_block_fixed(report: BugReport):
+    """@keyframes内のcontaining block生成プロパティがページラッパーで使われ、
+    子孫に position:fixed コンポーネントがある場合に警告（カテゴリ23）
+
+    animation-fill-mode: both/forwards + transform → アニメ終了後も
+    identity matrix が残り、fixed子孫の位置計算がビューポート基準でなくなる。
+    """
+    css_path = APP_ROOT / "app" / "globals.css"
+    if not css_path.exists():
+        return
+
+    css_content = css_path.read_text(encoding="utf-8")
+
+    # Step 1: @keyframes 内に containing block 生成プロパティがあるか
+    keyframe_re = re.compile(
+        r'@keyframes\s+(\S+)\s*\{(.*?)\}(?:\s*\.\S+\s*\{[^}]*\})?',
+        re.DOTALL,
+    )
+    dangerous_anims: list[tuple[str, str]] = []  # (animation_name, property)
+    for m in keyframe_re.finditer(css_content):
+        name = m.group(1)
+        body = m.group(2)
+        for prop in CONTAINING_BLOCK_PROPS:
+            # transform: ... / filter: ... / will-change: transform 等
+            if re.search(rf'\b{re.escape(prop)}\s*:', body):
+                # "transform: none" のみの場合でも animation-fill-mode:both が
+                # identity matrix を保持する場合がある → 警告対象
+                dangerous_anims.append((name, prop))
+
+    if not dangerous_anims:
+        return
+
+    # Step 2: template.tsx / layout.tsx でそのアニメーションクラスが使われているか
+    wrapper_files = [
+        APP_ROOT / "app" / "template.tsx",
+        APP_ROOT / "app" / "layout.tsx",
+    ]
+    used_in_wrapper: list[tuple[str, str, str]] = []  # (anim_name, prop, wrapper_file)
+    for wf in wrapper_files:
+        if not wf.exists():
+            continue
+        wf_content = wf.read_text(encoding="utf-8")
+        for anim_name, prop in dangerous_anims:
+            # animate-XXX クラスまたは animation: ... XXX を探す
+            if anim_name in wf_content:
+                used_in_wrapper.append((anim_name, prop, str(wf.relative_to(APP_ROOT))))
+
+    if not used_in_wrapper:
+        return
+
+    # Step 3: components/ 内に fixed ポジションを使うコンポーネントがあるか確認
+    has_fixed = False
+    comp_dir = APP_ROOT / "components"
+    if comp_dir.exists():
+        for tsx_file in comp_dir.rglob("*.tsx"):
+            try:
+                c = tsx_file.read_text(encoding="utf-8")
+            except Exception:
+                continue
+            if re.search(r'\bfixed\b', c) and re.search(r'className=', c):
+                has_fixed = True
+                break
+
+    if not has_fixed:
+        return
+
+    for anim_name, prop, wrapper in used_in_wrapper:
+        report.add(
+            "CRITICAL", "CSS_CONTAINING_BLOCK_FIXED",
+            wrapper,
+            f"@keyframes '{anim_name}' が '{prop}' を使用 → ページラッパーで適用されると "
+            f"子孫の position:fixed が壊れる（BottomSheet/NavBar/Toast等が画面外に飛ぶ）",
+            f"@keyframes から '{prop}' を除去し opacity のみアニメーション、"
+            f"または animation-fill-mode を削除して transform が残らないようにする",
+        )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 24: JSX ハードコード英語テキスト（強化版）
+# ─────────────────────────────────────────────────────
+
+# BJJ Layer 1 専門用語 — これらはi18n不要（柔術コミュニティで定着）
+BJJ_TERMS_WHITELIST = {
+    "gi", "no-gi", "nogi", "bjj", "mma", "ufc", "ibjjf", "adcc",
+    "guard", "mount", "sweep", "pass", "submission", "takedown",
+    "armbar", "triangle", "kimura", "omoplata", "guillotine",
+    "choke", "collar", "sleeve", "lapel", "half guard",
+    "side control", "back control", "closed guard", "open guard",
+    "de la riva", "berimbolo", "x-guard", "butterfly",
+    "drilling", "competition", "open mat", "recovery",
+    "flow", "positional", "hard roll",
+    # ブランド・固有名詞
+    "bjj app", "vercel", "supabase", "stripe", "pro", "beta",
+    # HTML/CSS/コード関連（偽陽性防止）
+    "null", "undefined", "true", "false", "none", "auto",
+    "flex", "grid", "block", "inline", "hidden", "relative", "absolute",
+    "svg", "div", "span", "button", "input", "select", "option",
+    "type", "value", "key", "ref", "src", "alt", "href", "id",
+}
+
+def check_jsx_hardcoded_english(filepath: Path, content: str, report: BugReport):
+    """JSX内の英語テキスト直書きを検出（カテゴリ24）
+
+    >テキスト< パターンで、3文字以上の英語テキストがi18n関数を通さず
+    直接記述されている箇所を検出する。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+
+    # JSXファイル以外はスキップ
+    if filepath.suffix != ".tsx":
+        return
+
+    # コメント除去
+    clean = re.sub(r'\{/\*.*?\*/\}', '', content, flags=re.DOTALL)
+    clean = re.sub(r'//.*$', '', clean, flags=re.MULTILINE)
+
+    # JSXテキストノードを抽出: >テキスト< パターン
+    # className=, aria-label=, placeholder= 等の属性値は除外
+    jsx_text_re = re.compile(r'>([^<>{}\n]{3,60})</')
+    for m in jsx_text_re.finditer(clean):
+        text = m.group(1).strip()
+        if not text:
+            continue
+
+        # 英語テキスト判定: アルファベット3文字以上の単語を含む
+        english_words = re.findall(r'[A-Za-z]{3,}', text)
+        if not english_words:
+            continue
+
+        # 全ての英語単語がホワイトリストに含まれるかチェック
+        non_whitelisted = [
+            w for w in english_words
+            if w.lower() not in BJJ_TERMS_WHITELIST
+        ]
+        if not non_whitelisted:
+            continue
+
+        # 偽陽性フィルタ
+        # コード識別子（キャメルケース: useState, handleClick）
+        if re.match(r'^[a-z]+[A-Z]', text):
+            continue
+        # 全てが大文字+アンダースコア（定数名: TRAINING_TYPES）
+        if re.match(r'^[A-Z_]+$', text):
+            continue
+        # 数字のみ or 数字+単位
+        if re.match(r'^[\d.]+\s*[a-zA-Z]{0,3}$', text):
+            continue
+        # URL
+        if re.match(r'https?://', text):
+            continue
+        # ファイルパス
+        if '/' in text and '.' in text:
+            continue
+        # {t("...")} で囲まれている場合は除外（正規表現の限界で拾ってしまうケース）
+        context_start = max(0, m.start() - 30)
+        before = clean[context_start:m.start()]
+        if 't(' in before or 'serverT(' in before:
+            continue
+        # プレースホルダー属性値（placeholder="..."）
+        if 'placeholder=' in before[-40:]:
+            continue
+
+        line_no = clean[:m.start()].count('\n') + 1
+        report.add(
+            "WARNING", "JSX_HARDCODED_ENGLISH",
+            str(rel),
+            f"L{line_no}: JSX内に英語テキスト直書き: \"{text[:50]}\"",
+            "t() キーを追加して多言語対応",
+        )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 25: アニメーション パフォーマンス リスク
+# ─────────────────────────────────────────────────────
+
+# GPU composite layer 外のプロパティ — アニメーションすると reflow/repaint を引き起こす
+NON_COMPOSITE_PROPS = ["width", "height", "top", "left", "right", "bottom", "margin", "padding"]
+
+def check_animation_perf(report: BugReport):
+    """@keyframes内でreflow/repaintを引き起こすプロパティのアニメーションを検出（カテゴリ25）"""
+    css_path = APP_ROOT / "app" / "globals.css"
+    if not css_path.exists():
+        return
+
+    css_content = css_path.read_text(encoding="utf-8")
+
+    keyframe_re = re.compile(r'@keyframes\s+(\S+)\s*\{(.*?)\n\}', re.DOTALL)
+    for m in keyframe_re.finditer(css_content):
+        name = m.group(1)
+        body = m.group(2)
+        for prop in NON_COMPOSITE_PROPS:
+            # プロパティ名の前後に境界を確認（margin-top のような接頭辞もキャッチ）
+            if re.search(rf'(?:^|\s|;){re.escape(prop)}(?:-\w+)?\s*:', body, re.MULTILINE):
+                line_no = css_content[:m.start()].count('\n') + 1
+                report.add(
+                    "INFO", "ANIMATION_PERF_RISK",
+                    "app/globals.css",
+                    f"L{line_no}: @keyframes '{name}' が '{prop}' をアニメーション — "
+                    f"reflow/repaint を引き起こす。transform/opacity のみ推奨",
+                    f"'{prop}' の代わりに transform: translate() を使用",
+                )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 26: Form onSubmit で preventDefault 欠落
+# ─────────────────────────────────────────────────────
+
+def check_form_prevent_default(filepath: Path, content: str, report: BugReport):
+    """onSubmit ハンドラで e.preventDefault() が呼ばれていないケースを検出（カテゴリ26）
+
+    <form onSubmit={handleSubmit}> の handleSubmit 関数内に
+    preventDefault がないとページリロードが発生する。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+
+    # onSubmit={...} を含むJSXを検索
+    on_submit_re = re.compile(r'onSubmit=\{(\w+)\}')
+    for m in on_submit_re.finditer(content):
+        handler_name = m.group(1)
+
+        # ハンドラ関数の定義を探す
+        # const handleSubmit = (e: ...) => { ... }
+        # function handleSubmit(e: ...) { ... }
+        handler_def_re = re.compile(
+            rf'(?:const|let|function)\s+{re.escape(handler_name)}\s*=?\s*'
+            rf'(?:async\s+)?\(?\s*\w*\s*(?::\s*\w+[^)]*)?'
+            rf'\)?\s*(?::\s*\w+)?\s*=>\s*\{{(.*?)\n\s*\}};?',
+            re.DOTALL,
+        )
+        handler_match = handler_def_re.search(content)
+        if not handler_match:
+            # アロー関数の別パターンや function 宣言をもう1パターン試す
+            handler_def_re2 = re.compile(
+                rf'function\s+{re.escape(handler_name)}\s*\([^)]*\)\s*\{{(.*?)\n\}};?',
+                re.DOTALL,
+            )
+            handler_match = handler_def_re2.search(content)
+
+        if not handler_match:
+            continue
+
+        handler_body = handler_match.group(1)
+        if "preventDefault" not in handler_body:
+            line_no = content[:m.start()].count('\n') + 1
+            report.add(
+                "WARNING", "FORM_MISSING_PREVENT_DEFAULT",
+                str(rel),
+                f"L{line_no}: onSubmit={{{handler_name}}} だが、ハンドラ内に "
+                f"e.preventDefault() がない — ページリロードの可能性",
+                f"{handler_name} の冒頭に e.preventDefault() を追加",
+            )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 27: 条件付き Hooks 呼び出し（React規約違反）
+# ─────────────────────────────────────────────────────
+
+HOOK_NAMES = ["useState", "useEffect", "useRef", "useMemo", "useCallback", "useReducer", "useContext"]
+
+def check_conditional_hooks(filepath: Path, content: str, report: BugReport):
+    """早期returnの後にReact Hooksが呼ばれているケースを検出（カテゴリ27）
+
+    React Hooks は条件分岐・早期returnの後に呼んではならない。
+    呼び出し順序が変わるとレンダリング間で状態が壊れる。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+
+    if filepath.suffix != ".tsx":
+        return
+
+    lines = content.split("\n")
+    in_component = False
+    found_early_return = False
+    component_name = ""
+
+    for line_no, line in enumerate(lines, 1):
+        stripped = line.strip()
+
+        # 関数コンポーネントの開始を検出
+        # export default function Foo() { / const Foo = () => {
+        comp_start = re.match(
+            r'(?:export\s+(?:default\s+)?)?(?:function|const)\s+([A-Z]\w*)\s*(?:=\s*(?:\([^)]*\)|)\s*=>)?\s*[\({]',
+            stripped,
+        )
+        if comp_start:
+            in_component = True
+            found_early_return = False
+            component_name = comp_start.group(1)
+            continue
+
+        if not in_component:
+            continue
+
+        # 早期return を検出: if (...) return / return null / return <...>
+        if re.match(r'if\s*\(.*\)\s*return\b', stripped) or re.match(r'return\s+(?:null|<)', stripped):
+            found_early_return = True
+            continue
+
+        # 早期return後にHooksが呼ばれていないかチェック
+        if found_early_return:
+            for hook in HOOK_NAMES:
+                if re.search(rf'\b{hook}\s*\(', stripped):
+                    report.add(
+                        "CRITICAL", "CONDITIONAL_HOOK_RISK",
+                        str(rel),
+                        f"L{line_no}: {component_name} で早期return後に {hook}() が呼ばれている"
+                        f" — React Hooks規約違反（呼び出し順序が変わる）",
+                        f"{hook}() を早期returnの前に移動",
+                    )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 28: インラインスタイルオブジェクト
+# ─────────────────────────────────────────────────────
+
+def check_inline_styles(filepath: Path, content: str, report: BugReport):
+    """JSX内の style={{...}} を検出（カテゴリ28）
+
+    Tailwindクラスで統一すべき。SVG属性やCSSカスタムプロパティは除外。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+
+    if filepath.suffix != ".tsx":
+        return
+
+    # style={{ パターン
+    for line_no, line in enumerate(content.split("\n"), 1):
+        stripped = line.strip()
+        if stripped.startswith("//") or stripped.startswith("*"):
+            continue
+        if "style={{" in line or "style = {{" in line:
+            # SVG要素内のstyleは許容（fill, stroke等はTailwindでカバーしにくい）
+            # 前後50文字にSVG関連タグがあればスキップ
+            context_start = max(0, line_no - 5)
+            context = "\n".join(content.split("\n")[context_start:line_no + 2])
+            if re.search(r'<(?:svg|path|circle|rect|line|polyline|polygon|g)\b', context, re.IGNORECASE):
+                continue
+            # CSS変数（--custom-prop）の設定は許容
+            if re.search(r"'--\w+", line) or re.search(r'"--\w+', line):
+                continue
+            # touch-action, scrollbar等、Tailwindでカバーできないプロパティは許容
+            uncoverable = ["touchAction", "scrollBehavior", "WebkitOverflowScrolling",
+                          "scrollbarWidth", "msOverflowStyle", "willChange",
+                          "clipPath", "userSelect"]
+            if any(prop in line for prop in uncoverable):
+                continue
+
+            report.add(
+                "INFO", "INLINE_STYLE_OBJECT",
+                str(rel),
+                f"L{line_no}: style={{{{...}}}} — Tailwindクラスで統一推奨",
+                "対応するTailwindユーティリティクラスに変換",
+            )
+
+
+# ─────────────────────────────────────────────────────
 # メインスキャナ
 # ─────────────────────────────────────────────────────
 
@@ -951,6 +1325,10 @@ def scan_all() -> BugReport:
             check_hardcoded_ui_return_strings(fpath, content, report)
             check_accessibility(fpath, content, report)       # カテゴリ12
             check_dangerous_html(fpath, content, report)      # カテゴリ13
+            check_jsx_hardcoded_english(fpath, content, report) # カテゴリ24
+            check_form_prevent_default(fpath, content, report)  # カテゴリ26
+            check_conditional_hooks(fpath, content, report)     # カテゴリ27
+            check_inline_styles(fpath, content, report)         # カテゴリ28
 
         # TS/TSX共通チェック（カテゴリ 7, 10-11, 14-15, 17-18, 20）
         check_console_logs(fpath, content, report)
@@ -969,6 +1347,10 @@ def scan_all() -> BugReport:
     # app/ 構造チェック（カテゴリ21-22）
     check_missing_error_boundary(report)                      # カテゴリ21
     check_missing_loading(report)                             # カテゴリ22
+
+    # CSS/レイアウト構造チェック（カテゴリ23, 25）
+    check_containing_block_fixed(report)                      # カテゴリ23
+    check_animation_perf(report)                              # カテゴリ25
 
     return report, len(source_files)
 
