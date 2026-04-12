@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 
@@ -103,7 +103,9 @@ const PHASE_BG: Record<string, string> = {
 
 export default function CompetitionCountdown({ userId, isPro = false }: Props) {
   const { t } = useLocale();
-  const supabase = createClient();
+  // useMemo to keep a stable reference — createClient() returns a new object each call,
+  // which would cause infinite re-renders if used in useCallback deps
+  const supabase = useMemo(() => createClient(), []);
 
   const [goals, setGoals] = useState<CompGoal[]>([]);
   const [loading, setLoading] = useState(true);
