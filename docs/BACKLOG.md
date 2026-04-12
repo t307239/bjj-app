@@ -4,7 +4,27 @@
 
 ## 🔴 アクティブタスク
 
-なし（全クリア）
+### [IA-1] BJJ App IA リデザイン — タブベース情報整理
+- **背景**: 全画面が縦スクロール一本で関心事が混在。退会ボタンが4.5画面分下に埋没、Records にCRUDと統計が混在等
+- **参考**: Strava "You"タブ、JEFIT Logs/Stats分離、Strong 設定分離、Nike TC アクションファースト
+- **プロトタイプ**: `~/Claude/bjj-app-redesign.jsx` に Before/After 5画面分を作成済み
+- **実装計画**:
+  1. **Profile → 3タブ化** (プロフィール/ボディ管理/実績) + Settings分離画面
+  2. **Records → 2タブ化** (ログ/統計)
+  3. **Techniques → 3タブ化** (ジャーナル/スキルマップ/Wiki)
+  4. **Dashboard → 情報密度最適化** (挨拶+CTA→KPI 1行→最近ログ→大会)
+  5. **Settings新設** — iOS風リスト、退会をDanger Zoneに隔離
+- **優先度**: Profile(最重症) → Records → Techniques → Dashboard → Settings
+
+### [IA-2] BJJ Wiki IA リデザイン — コンバージョン最適化
+- **背景**: CTA が30秒後の float のみ（多くのユーザーが見ない）、TOC が `display:none` で無効、選手ページにCTAなし
+- **参考**: Stripe Docs（sticky header）、Investopedia（above-fold CTA）、MDN（accordion TOC）、BJJ Heroes（選手カード）
+- **プロトタイプ**: `~/Claude/bjj-wiki-redesign.jsx` に Before/After 3ページタイプ分を作成済み
+- **実装計画**:
+  1. **テクニックページ**: above-fold CTA、accordion TOC復活、番号付きH2、リッチ関連カード
+  2. **選手ページ**: ヒーローカード(メダル/finish率)、文脈的CTA、得意技リンクカード
+  3. **インデックスページ**: sticky header + 検索、カテゴリ横スクロール、人気テクニックリスト
+  4. **共通**: sticky header、コンテンツ統計表示(1,500+ techniques)
 
 ---
 
