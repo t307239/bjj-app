@@ -62,8 +62,8 @@ export default defineConfig({
         ...devices["Desktop Chrome"],
         storageState: "e2e/auth/free.json",
       },
-      // roles-matrix.spec.ts の認証済みセクションのみ実行
-      testMatch: /roles-matrix\.spec\.ts/,
+      // 認証済みテストファイルのみ実行
+      testMatch: /roles-matrix\.spec\.ts|dashboard-auth\.spec\.ts|records-auth\.spec\.ts|profile-auth\.spec\.ts|pro-features\.spec\.ts/,
     },
     {
       name: "pro-user",
@@ -71,7 +71,7 @@ export default defineConfig({
         ...devices["Desktop Chrome"],
         storageState: "e2e/auth/pro.json",
       },
-      testMatch: /roles-matrix\.spec\.ts/,
+      testMatch: /roles-matrix\.spec\.ts|dashboard-auth\.spec\.ts|records-auth\.spec\.ts|profile-auth\.spec\.ts|pro-features\.spec\.ts/,
     },
     {
       name: "gym-owner",
@@ -79,7 +79,7 @@ export default defineConfig({
         ...devices["Desktop Chrome"],
         storageState: "e2e/auth/gym-owner.json",
       },
-      testMatch: /roles-matrix\.spec\.ts/,
+      testMatch: /roles-matrix\.spec\.ts|pro-features\.spec\.ts/,
     },
     {
       name: "gym-member",
@@ -87,7 +87,7 @@ export default defineConfig({
         ...devices["Desktop Chrome"],
         storageState: "e2e/auth/gym-member.json",
       },
-      testMatch: /roles-matrix\.spec\.ts/,
+      testMatch: /roles-matrix\.spec\.ts|pro-features\.spec\.ts/,
     },
   ],
 
