@@ -1,10 +1,11 @@
-// Phase 3+4: Flat layout (ProfileTabs removed) — Day 5_205 / deploy-fix
+// Phase 5: Tab-based IA redesign — Profile(3 tabs) + Settings separated
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import dynamic from "next/dynamic";
 import NavBar from "@/components/NavBar";
 import BeltProgressCard from "@/components/BeltProgressCard";
+import ProfileTabsLayout from "@/components/profile/ProfileTabsLayout";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
 import { formatBjjDuration, calcBjjDuration } from "@/lib/bjjDuration";
@@ -17,7 +18,7 @@ const ProfileForm = dynamic(() => import("@/components/ProfileForm"), {
 const BodyManagementSection = dynamic(() => import("@/components/BodyManagementSection"), {
   loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
-const SettingsSection = dynamic(() => import("@/components/profile/SettingsSection"), {
+const MilestoneBadgeGrid = dynamic(() => import("@/components/MilestoneBadgeGrid"), {
   loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 
@@ -243,28 +244,14 @@ export default async function ProfilePage() {
         />
 
         {/* ═══════════════════════════════════════════
-            PROFILE FORM (belt, gym, bio, start_date)
+            TAB LAYOUT: プロフィール / ボディ管理 / 実績
+            Settings → separate /settings page (gear icon)
             ═══════════════════════════════════════════ */}
-        <ProfileForm userId={user.id} hideAccount />
-
-        {/* ═══════════════════════════════════════════
-            BODY MANAGEMENT (Pro: weight, injury, heatmap)
-            ═══════════════════════════════════════════ */}
-        <div className="mt-6">
-          <BodyManagementSection userId={user.id} isPro={isPro} />
-        </div>
-
-        {/* ═══════════════════════════════════════════
-            SETTINGS (notifications, export, referral, account)
-            ═══════════════════════════════════════════ */}
-        <div className="mt-6">
-          <SettingsSection
-            userId={user.id}
-            isPro={isPro}
-            referralCode={referralCode}
-            referralCount={referralCount ?? 0}
-          />
-        </div>
+        <ProfileTabsLayout
+          profileSlot={<ProfileForm userId={user.id} hideAccount />}
+          bodySlot={<BodyManagementSection userId={user.id} isPro={isPro} />}
+          milestonesSlot={<MilestoneBadgeGrid totalCount={totalCount ?? 0} />}
+        />
       </main>
     </div>
   );

@@ -1,8 +1,10 @@
+// Phase 5: Tab-based IA redesign — Techniques (3 tabs: ジャーナル / スキルマップ / Wiki)
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import TechniqueLog from "@/components/TechniqueLog";
+import TechniquesTabsLayout from "@/components/techniques/TechniquesTabsLayout";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import { Suspense } from "react";
 import Link from "next/link";
@@ -223,82 +225,73 @@ export default async function TechniquesPage() {
         )}
 
         {/* ═══════════════════════════════════════════
-            SECTION 1 — SKILL MAP (link to full-screen)
+            TAB LAYOUT: ジャーナル / スキルマップ / Wiki
             ═══════════════════════════════════════════ */}
-        <section className="mb-7">
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold text-zinc-400 tracking-widest uppercase">
-              {t("techniquesPage.skillMap")}
-            </p>
-            {!isPro && (
-              <span className="text-xs text-zinc-400">
-                {t("techniquesPage.freeLimit")}
-              </span>
-            )}
-          </div>
-          <Link
-            href="/techniques/skillmap"
-            className="group block bg-zinc-900/40 border border-white/8 hover:border-emerald-400/30 rounded-2xl p-5 transition-all active:scale-[0.98]"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
-                  {t("skillMapPage.cardTitle")}
-                </p>
-                <p className="text-sm text-zinc-400 mt-0.5">
-                  {t("skillMapPage.cardDesc")}
+        <TechniquesTabsLayout
+          journalSlot={
+            <section className="mb-7">
+              <Suspense>
+                <TechniqueLog userId={user.id} isPro={isPro} userBelt={userBelt} />
+              </Suspense>
+            </section>
+          }
+          skillMapSlot={
+            <section className="mb-7">
+              <div className="flex items-center justify-between mb-3">
+                {!isPro && (
+                  <span className="text-xs text-zinc-400">
+                    {t("techniquesPage.freeLimit")}
+                  </span>
+                )}
+              </div>
+              <Link
+                href="/techniques/skillmap"
+                className="group block bg-zinc-900/40 border border-white/8 hover:border-emerald-400/30 rounded-2xl p-5 transition-all active:scale-[0.98]"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
+                      {t("skillMapPage.cardTitle")}
+                    </p>
+                    <p className="text-sm text-zinc-400 mt-0.5">
+                      {t("skillMapPage.cardDesc")}
+                    </p>
+                  </div>
+                  <div className="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center shrink-0 ml-4 group-hover:bg-emerald-400/20 transition-colors">
+                    <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
+            </section>
+          }
+          wikiSlot={
+            <section className="mb-7">
+              <div className="bg-zinc-900/40 border border-white/8 rounded-2xl p-4">
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {WIKI_LINKS.map((link) => (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs bg-zinc-800/60 hover:bg-zinc-700/60 text-gray-400 hover:text-white px-3 py-1.5 rounded-full border border-white/8 hover:border-white/20 transition-all active:scale-95"
+                    >
+                      {link.label}
+                      <svg className="w-3 h-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                  ))}
+                </div>
+                <p className="text-xs text-zinc-400">
+                  {t("techniquesPage.wikiDesc")}
                 </p>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center shrink-0 ml-4 group-hover:bg-emerald-400/20 transition-colors">
-                <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </div>
-            </div>
-          </Link>
-        </section>
-
-        {/* ═══════════════════════════════════════════
-            SECTION 2 — TECHNIQUE LOG
-            ═══════════════════════════════════════════ */}
-        <section className="mb-7">
-          <p className="text-xs font-semibold text-zinc-400 tracking-widest uppercase mb-3">
-            {t("techniquesPage.techniqueLog")}
-          </p>
-          <Suspense>
-            <TechniqueLog userId={user.id} isPro={isPro} userBelt={userBelt} />
-          </Suspense>
-        </section>
-
-        {/* ═══════════════════════════════════════════
-            SECTION 3 — LEARN: WIKI LINKS
-            ═══════════════════════════════════════════ */}
-        <section className="mb-7">
-          <p className="text-xs font-semibold text-zinc-400 tracking-widest uppercase mb-3">
-            {t("techniquesPage.learnWiki")}
-          </p>
-          <div className="bg-zinc-900/40 border border-white/8 rounded-2xl p-4">
-            <div className="flex flex-wrap gap-2 mb-3">
-              {WIKI_LINKS.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs bg-zinc-800/60 hover:bg-zinc-700/60 text-gray-400 hover:text-white px-3 py-1.5 rounded-full border border-white/8 hover:border-white/20 transition-all active:scale-95"
-                >
-                  {link.label}
-                  <svg className="w-3 h-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-              ))}
-            </div>
-            <p className="text-xs text-zinc-400">
-              {t("techniquesPage.wikiDesc")}
-            </p>
-          </div>
-        </section>
+            </section>
+          }
+        />
 
       </main>
     </div>

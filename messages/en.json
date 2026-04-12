@@ -336,7 +336,10 @@
     "dangerBadge": "Advanced",
     "dangerTooltip": "This technique carries higher injury risk. Practice only under qualified supervision.",
     "dangerConfirm": "â ï¸ This is an advanced technique with higher injury risk (heel hooks, knee bars, neck cranks, etc.). Are you sure you want to add it? Always train these under direct supervision of a qualified instructor.",
-    "freePlanLimit": "Free plan limit: {n} techniques. Upgrade to Pro for unlimited."
+    "freePlanLimit": "Free plan limit: {n} techniques. Upgrade to Pro for unlimited.",
+    "tabJournal": "Journal",
+    "tabSkillMap": "Skill Map",
+    "tabWiki": "Wiki"
   },
   "profile": {
     "title": "Profile",
@@ -1723,7 +1726,10 @@
     "duplicateError": "A goal with the same name and date already exists"
   },
   "records": {
-    "errorTitle": "Something went wrong"
+    "errorTitle": "Something went wrong",
+    "tabLog": "Log",
+    "tabStats": "Stats",
+    "noStatsYet": "Log your first training to see stats"
   },
   "milestone": {
     "shareText": "Share this milestone with your training crew."

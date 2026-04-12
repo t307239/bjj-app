@@ -1,3 +1,4 @@
+// Phase 5: Tab-based IA redesign — Records (2 tabs: ログ / 統計)
 import type { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
@@ -8,6 +9,7 @@ import GoalTracker from "@/components/GoalTracker";
 import WeightGoalWidget from "@/components/WeightGoalWidget";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
 import GymKickBanner from "@/components/GymKickBanner";
+import RecordsTabsLayout from "@/components/records/RecordsTabsLayout";
 import {
   getWeekStartDate,
   getMonthStartDate,
@@ -24,15 +26,12 @@ const AICoachCard = dynamic(() => import("@/components/AICoachCard"), {
   loading: () => <div className="min-h-[128px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 
-// ─── Stats & analytics (moved from ProfileTabs Phase 3) ───
+// ─── Stats & analytics ───
 const PersonalBests = dynamic(() => import("@/components/PersonalBests"), {
   loading: () => <div className="min-h-[100px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 const TrainingChart = dynamic(() => import("@/components/TrainingChart"), {
   loading: () => <div className="min-h-[180px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
-});
-const MilestoneBadgeGrid = dynamic(() => import("@/components/MilestoneBadgeGrid"), {
-  loading: () => <div className="min-h-[100px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
 });
 const StatsAccordion = dynamic(() => import("@/components/records/StatsAccordion"));
 const ProGate = dynamic(() => import("@/components/ProGate"));
@@ -158,104 +157,98 @@ export default async function RecordsPage() {
         {showKickBanner && <GymKickBanner userId={user.id} />}
 
         {/* ═══════════════════════════════════════════
-            PRIMARY: Training Log (full list, search, filters)
+            TAB LAYOUT: ログ / 統計
             ═══════════════════════════════════════════ */}
-        <section className="mb-7">
-          <TrainingLog userId={user.id} isPro={isPro} />
-        </section>
+        <RecordsTabsLayout
+          logSlot={
+            <>
+              {/* Training Log (full list, search, filters) */}
+              <section className="mb-7">
+                <TrainingLog userId={user.id} isPro={isPro} />
+              </section>
 
-        {/* ═══════════════════════════════════════════
-            Competition Summary
-            ═══════════════════════════════════════════ */}
-        <section className="mb-7">
-          <CompetitionSummaryCard userId={user.id} isPro={isPro} />
-        </section>
+              {/* Competition Summary */}
+              <section className="mb-7">
+                <CompetitionSummaryCard userId={user.id} isPro={isPro} />
+              </section>
 
-        {/* ═══════════════════════════════════════════
-            AI Coach (≥10 logs, Pro)
-            ═══════════════════════════════════════════ */}
-        {totalCount >= 10 && (
-          <AICoachCard
-            userId={user.id}
-            isPro={isPro}
-            initialCoaching={profileData?.ai_coach_cache ?? null}
-            initialGeneratedAt={profileData?.ai_coach_last_generated ?? null}
-          />
-        )}
-
-        {/* ═══════════════════════════════════════════
-            Goals & Weight Tracking
-            ═══════════════════════════════════════════ */}
-        {hasFirstLog && (
-          <section className="mb-7">
-            <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
-              {t("dashboard.weekTraining")}
-            </p>
-            <div className="space-y-3">
-              <GoalTracker userId={user.id} />
-              {targetWeight != null && isPro && (
-                <WeightGoalWidget targetWeight={targetWeight} targetDate={targetWeightDate} />
+              {/* AI Coach (≥10 logs, Pro) */}
+              {totalCount >= 10 && (
+                <AICoachCard
+                  userId={user.id}
+                  isPro={isPro}
+                  initialCoaching={profileData?.ai_coach_cache ?? null}
+                  initialGeneratedAt={profileData?.ai_coach_last_generated ?? null}
+                />
               )}
-            </div>
-          </section>
-        )}
 
-        {/* ═══════════════════════════════════════════
-            Gym Features (members only)
-            ═══════════════════════════════════════════ */}
-        {gymCurriculum && (
-          <section className="mb-7">
-            <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
-              {t("dashboard.sectionToday")}
-            </p>
-            <GymCurriculumCard
-              curriculumUrl={gymCurriculum.curriculum_url}
-              curriculumSetAt={gymCurriculum.curriculum_set_at}
-              gymName={gymName}
-              userId={user.id}
-            />
-          </section>
-        )}
+              {/* Goals & Weight Tracking */}
+              {hasFirstLog && (
+                <section className="mb-7">
+                  <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
+                    {t("dashboard.weekTraining")}
+                  </p>
+                  <div className="space-y-3">
+                    <GoalTracker userId={user.id} />
+                    {targetWeight != null && isPro && (
+                      <WeightGoalWidget targetWeight={targetWeight} targetDate={targetWeightDate} />
+                    )}
+                  </div>
+                </section>
+              )}
 
-        {gymId && shareDataWithGym && (
-          <section className="mb-7">
-            <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
-              {t("dashboard.sectionYourGym")}
-            </p>
-            <GymRanking userId={user.id} gymId={gymId} />
-          </section>
-        )}
+              {/* Gym Features (members only) */}
+              {gymCurriculum && (
+                <section className="mb-7">
+                  <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
+                    {t("dashboard.sectionToday")}
+                  </p>
+                  <GymCurriculumCard
+                    curriculumUrl={gymCurriculum.curriculum_url}
+                    curriculumSetAt={gymCurriculum.curriculum_set_at}
+                    gymName={gymName}
+                    userId={user.id}
+                  />
+                </section>
+              )}
 
-        {/* ═══════════════════════════════════════════
-            STATS & ANALYTICS (moved from ProfileTabs)
-            ═══════════════════════════════════════════ */}
-        {hasFirstLog && (
-          <>
-            <section className="mb-7">
-              <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
-                {t("profile.tabs.stats")}
-              </p>
-              <PersonalBests userId={user.id} />
-              <div className="mt-4">
-                <TrainingChart userId={user.id} isPro={isPro} />
+              {gymId && shareDataWithGym && (
+                <section className="mb-7">
+                  <p className="text-xs font-semibold text-zinc-400 tracking-widest px-0.5 mb-3 uppercase">
+                    {t("dashboard.sectionYourGym")}
+                  </p>
+                  <GymRanking userId={user.id} gymId={gymId} />
+                </section>
+              )}
+            </>
+          }
+          statsSlot={
+            hasFirstLog ? (
+              <>
+                <section className="mb-7">
+                  <PersonalBests userId={user.id} />
+                  <div className="mt-4">
+                    <TrainingChart userId={user.id} isPro={isPro} />
+                  </div>
+                  <StatsAccordion userId={user.id} isPro={isPro} />
+                </section>
+
+                <section className="mb-7">
+                  <ProGate isPro={isPro} feature="ロール分析 & パートナー統計" userId={user.id}>
+                    <div className="space-y-4">
+                      <RollAnalyticsCard userId={user.id} />
+                      <PartnerStatsCard userId={user.id} />
+                    </div>
+                  </ProGate>
+                </section>
+              </>
+            ) : (
+              <div className="text-center py-12 text-zinc-500 text-sm">
+                {t("records.noStatsYet")}
               </div>
-              <StatsAccordion userId={user.id} isPro={isPro} />
-            </section>
-
-            <section className="mb-7">
-              <MilestoneBadgeGrid totalCount={totalCount} />
-            </section>
-
-            <section className="mb-7">
-              <ProGate isPro={isPro} feature="ロール分析 & パートナー統計" userId={user.id}>
-                <div className="space-y-4">
-                  <RollAnalyticsCard userId={user.id} />
-                  <PartnerStatsCard userId={user.id} />
-                </div>
-              </ProGate>
-            </section>
-          </>
-        )}
+            )
+          }
+        />
       </main>
     </div>
   );
