@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 204 files
+TS/TSX Scanned: 206 files
 CRITICAL: 1
 WARNING: 10
-INFO: 82
-Total: 93
+INFO: 80
+Total: 91
 
 [CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (599/1605 キー) — 1036 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
@@ -35,7 +35,7 @@ Total: 93
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L432: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L154: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L148: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L141: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
@@ -187,7 +187,3 @@ Total: 93
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/ui/Skeleton.tsx: L30: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [MISSING_ERROR_BOUNDARY] app/settings: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック
-  FIX: app/settings/error.tsx を作成。最低限 'use client' + エラーメッセージ + リトライボタン
-[INFO] [MISSING_LOADING] app/settings: loading.tsx が存在しない — ページ遷移時にローディングUIなし
-  FIX: app/settings/loading.tsx を作成。Skeleton or スピナーで CLS を防止

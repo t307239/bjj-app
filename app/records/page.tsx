@@ -129,7 +129,6 @@ export default async function RecordsPage() {
   const targetWeight = profileData?.target_weight != null ? Number(profileData.target_weight) : null;
   const targetWeightDate = (profileData as { target_weight_date?: string | null })?.target_weight_date ?? null;
   const hasFirstLog = totalCount > 0;
-  const hasGoal = (weeklyGoal ?? 0) > 0;
 
   // Gym curriculum
   let gymCurriculum: { curriculum_url: string; curriculum_set_at: string } | null = null;
