@@ -1,21 +1,20 @@
 /**
  * e2e/records-auth.spec.ts
  *
- * 認証済みユーザーの練習記録ページ（/techniques）E2Eテスト
+ * 認証済みユーザーの練習記録ページ（/techniques）「操作」E2Eテスト
+ *
+ * 責務: フィルタ切替、ログ展開折りたたみ、検索、フォーム操作の動作検証。
+ * ※ Free 30日制限 / Pro full history のゲーティングは pro-features.spec.ts に委譲。
  *
  * テスト対象:
  *   - Gi/NoGi/All フィルタ切替
  *   - ログの展開・折りたたみ
  *   - 検索フィルタ
  *   - 期間フィルタ（All Time / This Month / This Week）
- *   - CSV エクスポート（Pro のみ）
- *   - Free プランの 30日制限表示
  *   - Load More ページネーション
- *   - カレンダービュー
- *
- * storageState:
- *   - free-user: e2e/auth/free.json
- *   - pro-user:  e2e/auth/pro.json
+ *   - Training Log Form（Records ページからの開閉）
+ *   - Empty State 表示
+ *   - レスポンシブ
  *
  * Run:
  *   npx playwright test e2e/records-auth.spec.ts --project=free-user
@@ -23,248 +22,195 @@
  */
 
 import { test, expect } from "@playwright/test";
-import { existsSync } from "fs";
-
-function skipIfNoAuth(filePath: string) {
-  if (!existsSync(filePath)) {
-    test.skip(true, `storageState not found: ${filePath}`);
-  }
-}
+import {
+  AUTH_FILES,
+  VRT_OPTIONS,
+  skipIfNoAuth,
+  gotoAndWait,
+  expectNoHorizontalOverflow,
+} from "./helpers";
 
 // =============================================================================
-// 1. Free ユーザーの Records ページ
+// 1. Free ユーザーの Records 操作
 // =============================================================================
 
-test.describe("Records — Free User", () => {
-  test.use({ storageState: "e2e/auth/free.json" });
+test.describe("Records Ops — Free User", () => {
+  test.use({ storageState: AUTH_FILES.free });
 
   test.beforeEach(async ({ page }) => {
-    skipIfNoAuth("e2e/auth/free.json");
-    await page.goto("/techniques", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
+    skipIfNoAuth(AUTH_FILES.free);
+    await gotoAndWait(page, "/techniques");
   });
 
   // ── ページロード ──
 
-  test("records page loads without crash", async ({ page }) => {
-    await expect(page.locator("body")).toBeVisible();
-    const url = new URL(page.url());
-    // Should not redirect away from /techniques
-    expect(url.pathname).toBe("/techniques");
+  test("records page loads without redirect", async ({ page }) => {
+    expect(new URL(page.url()).pathname).toBe("/techniques");
   });
 
-  test("page shows training log header or content", async ({ page }) => {
+  test("page shows training log content or empty state", async ({ page }) => {
     const body = await page.textContent("body");
-    const hasContent = /Training Log|練習ログ|session|セッション|record|記録|empty|mat/i.test(body!);
-    expect(hasContent).toBe(true);
+    const hasContent = /Training Log|練習ログ|session|セッション|record|記録|empty|mat|champion/i.test(body!);
+    expect(hasContent, "Records page should show log content or empty state").toBe(true);
   });
 
   // ── Gi/NoGi フィルタ ──
 
-  test("Gi/NoGi/All filter buttons exist and are clickable", async ({ page }) => {
+  test("Gi/NoGi/All filter buttons exist and are interactive", async ({ page }) => {
     const allBtn = page.getByRole("button", { name: /^All$/i });
     const giBtn = page.getByRole("button", { name: /^Gi$/i });
+
+    if (await allBtn.count() === 0) return test.skip(true, "Filter buttons not found");
+
+    await expect(allBtn.first()).toBeVisible();
+    await expect(giBtn.first()).toBeVisible();
+
+    // Click Gi filter
+    await giBtn.first().click();
+    await page.waitForTimeout(500);
+
+    // Click NoGi
     const nogiBtn = page.getByRole("button", { name: /No-?Gi/i });
-
-    if (await allBtn.count() > 0) {
-      await expect(allBtn.first()).toBeVisible();
-      await expect(giBtn.first()).toBeVisible();
-
-      // Click Gi filter
-      await giBtn.first().click();
-      await page.waitForTimeout(500);
-
-      // Click NoGi filter
-      if (await nogiBtn.count() > 0) {
-        await nogiBtn.first().click();
-        await page.waitForTimeout(500);
-      }
-
-      // Switch back to All
-      await allBtn.first().click();
+    if (await nogiBtn.count() > 0) {
+      await nogiBtn.first().click();
       await page.waitForTimeout(500);
     }
+
+    // Switch back to All
+    await allBtn.first().click();
+    await page.waitForTimeout(500);
+
+    // No crash
+    await expect(page.locator("body")).toBeVisible();
   });
 
   // ── ログ展開・折りたたみ ──
 
-  test("training log entries can be expanded and collapsed", async ({ page }) => {
-    // Look for expandable entries (they show date and basic info)
+  test("training log entries expand and collapse", async ({ page }) => {
     const showMoreBtn = page.getByText(/Show More|もっと見る|↓/i);
+    if (await showMoreBtn.count() === 0) return test.skip(true, "No expandable entries (user may have no logs)");
+
+    await showMoreBtn.first().click();
+    await page.waitForTimeout(500);
+
     const collapseBtn = page.getByText(/Collapse|折りたたむ|↑/i);
-
-    if (await showMoreBtn.count() > 0) {
-      await showMoreBtn.first().click();
-      await page.waitForTimeout(500);
-
-      // After expanding, collapse button should appear
-      if (await collapseBtn.count() > 0) {
-        await expect(collapseBtn.first()).toBeVisible();
-        await collapseBtn.first().click();
-        await page.waitForTimeout(300);
-      }
+    if (await collapseBtn.count() > 0) {
+      await expect(collapseBtn.first()).toBeVisible();
+      await collapseBtn.first().click();
+      await page.waitForTimeout(300);
     }
   });
 
   // ── 検索 ──
 
-  test("search input exists and accepts text", async ({ page }) => {
+  test("search input accepts text and filters", async ({ page }) => {
     const searchInput = page.getByPlaceholder(/Search|検索|notes|technique/i);
-    if (await searchInput.count() > 0) {
-      await expect(searchInput.first()).toBeVisible();
-      await searchInput.first().fill("guard");
-      await page.waitForTimeout(500);
-      // Clear search
-      await searchInput.first().fill("");
-    }
+    if (await searchInput.count() === 0) return test.skip(true, "Search input not found");
+
+    await expect(searchInput.first()).toBeVisible();
+    await searchInput.first().fill("guard");
+    await page.waitForTimeout(500);
+    // Clear
+    await searchInput.first().fill("");
+    await page.waitForTimeout(300);
   });
 
   // ── 期間フィルタ ──
 
-  test("period filter buttons exist", async ({ page }) => {
+  test("period filter buttons (All Time / This Month / This Week) are interactive", async ({ page }) => {
     const allTimeBtn = page.getByText(/All Time|全期間/i);
-    const thisMonthBtn = page.getByText(/This Month|今月/i);
+    if (await allTimeBtn.count() === 0) return test.skip(true, "Period filter not found");
+
+    await expect(allTimeBtn.first()).toBeVisible();
+
     const thisWeekBtn = page.getByText(/This Week|今週/i);
-
-    if (await allTimeBtn.count() > 0) {
-      await expect(allTimeBtn.first()).toBeVisible();
-
-      // Click This Week
-      if (await thisWeekBtn.count() > 0) {
-        await thisWeekBtn.first().click();
-        await page.waitForTimeout(500);
-      }
-
-      // Click back to All Time
-      await allTimeBtn.first().click();
+    if (await thisWeekBtn.count() > 0) {
+      await thisWeekBtn.first().click();
       await page.waitForTimeout(500);
     }
-  });
 
-  // ── Free プラン制限 ──
-
-  test("Free user sees 30-day limit notice", async ({ page }) => {
-    const freeNotice = page.getByText(/Free plan|last 30 days|無料プラン|30日/i);
-    // This appears when user has logs older than 30 days
-    // If the user is new, it might not appear, so just check it doesn't crash
-  });
-
-  // ── カレンダービュー ──
-
-  test("calendar view shows training indicators", async ({ page }) => {
-    // Calendar should show colored dots for Gi/NoGi days
-    const calendarSection = page.locator('[class*="calendar"], [class*="Calendar"]');
-    // Calendar may or may not be visible depending on viewport
-  });
-
-  // ── Empty State ──
-
-  test("empty state shows encouraging message when no logs", async ({ page }) => {
-    const body = await page.textContent("body");
-    // Either shows logs or empty state — both are valid
-    const hasValidState =
-      /session|セッション|empty|mat|champion|first|最初|始め/i.test(body!) ||
-      body!.length > 200; // Has some content
-    expect(hasValidState).toBe(true);
+    // Switch back
+    await allTimeBtn.first().click();
+    await page.waitForTimeout(500);
   });
 
   // ── Responsive ──
 
-  test("records page mobile viewport no overflow", async ({ page }) => {
-    await page.setViewportSize({ width: 375, height: 812 });
-    await page.waitForLoadState("networkidle").catch(() => {});
-    const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
-    const viewportWidth = await page.evaluate(() => window.innerWidth);
-    expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 10);
+  test("records page mobile 375px no overflow", async ({ page }) => {
+    await expectNoHorizontalOverflow(page);
   });
 });
 
 // =============================================================================
-// 2. Pro ユーザーの Records ページ
+// 2. Pro ユーザーの Records 操作
 // =============================================================================
 
-test.describe("Records — Pro User", () => {
-  test.use({ storageState: "e2e/auth/pro.json" });
+test.describe("Records Ops — Pro User", () => {
+  test.use({ storageState: AUTH_FILES.pro });
 
   test.beforeEach(async ({ page }) => {
-    skipIfNoAuth("e2e/auth/pro.json");
-    await page.goto("/techniques", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
+    skipIfNoAuth(AUTH_FILES.pro);
+    await gotoAndWait(page, "/techniques");
   });
 
-  // ── Full History ──
+  // ── Gi フィルタ ──
 
-  test("Pro user does NOT see 30-day limit notice", async ({ page }) => {
-    const freeNotice = page.getByText(/Free plan: showing last 30 days/i);
-    const count = await freeNotice.count();
-    expect(count).toBe(0);
-  });
-
-  // ── フィルタ操作 ──
-
-  test("Gi filter shows only Gi sessions", async ({ page }) => {
+  test("Gi filter shows only Gi sessions or appropriate message", async ({ page }) => {
     const giBtn = page.getByRole("button", { name: /^Gi$/i });
-    if (await giBtn.count() > 0) {
-      await giBtn.first().click();
-      await page.waitForTimeout(500);
-      // After filtering, either Gi entries appear or "no sessions of this type"
-      const body = await page.textContent("body");
-      const validResult =
-        /Gi|no.*session|No.*type|該当.*なし|フィルタ/i.test(body!) || true;
-      expect(validResult).toBe(true);
-    }
+    if (await giBtn.count() === 0) return test.skip(true, "Gi filter not found");
+
+    await giBtn.first().click();
+    await page.waitForTimeout(500);
+
+    // After filtering: Gi entries or "no sessions of this type"
+    const body = await page.textContent("body");
+    expect(body!.length, "Page should still have content after filter").toBeGreaterThan(100);
   });
 
   // ── Load More ──
 
-  test("Load More button works when many entries exist", async ({ page }) => {
+  test("Load More button triggers pagination", async ({ page }) => {
     const loadMoreBtn = page.getByText(/Load More|もっと読み込む/i);
-    if (await loadMoreBtn.count() > 0) {
-      const initialEntries = await page.locator('[class*="session"], [class*="log"], [class*="entry"]').count();
-      await loadMoreBtn.first().click();
-      await page.waitForTimeout(1000);
-      // After loading more, content should increase
-    }
+    if (await loadMoreBtn.count() === 0) return test.skip(true, "Load More not visible (not enough entries)");
+
+    await loadMoreBtn.first().click();
+    await page.waitForTimeout(1000);
+    // No crash
+    await expect(page.locator("body")).toBeVisible();
   });
 
   // ── Export ──
 
-  test("Pro user sees Export/CSV button", async ({ page }) => {
+  test("Export/CSV button is visible for Pro user", async ({ page }) => {
     const exportBtn = page.getByText(/Export|CSV|エクスポート|📥/i);
-    // Pro users have access to data export
     if (await exportBtn.count() > 0) {
       await expect(exportBtn.first()).toBeVisible();
     }
   });
 
-  // ── Training Log Form from Records page ──
+  // ── Training Log Form from Records ──
 
-  test("can open training log form from records page", async ({ page }) => {
-    const addBtn = page.getByText(/Add Session|\+ Add|セッションを追加/i);
-    if (await addBtn.count() > 0) {
-      await addBtn.first().click();
-      await page.waitForTimeout(500);
+  test("training log form opens and has save/cancel buttons", async ({ page }) => {
+    const addBtn = page.getByText(/\+ Add Session|Add Session|セッションを追加/i);
+    if (await addBtn.count() === 0) return test.skip(true, "Add session button not found");
 
-      // Form should have Log Roll / save button
-      const saveBtn = page.getByRole("button", { name: /Log Roll|保存|Save/i });
-      if (await saveBtn.count() > 0) {
-        await expect(saveBtn.first()).toBeVisible();
-      }
+    await addBtn.first().click();
+    await page.waitForTimeout(500);
 
-      // Cancel
-      const cancelBtn = page.getByRole("button", { name: /Cancel|キャンセル/i });
-      if (await cancelBtn.count() > 0) {
-        await cancelBtn.first().click();
-      }
+    const saveBtn = page.getByRole("button", { name: /Log Roll|保存|Save/i });
+    if (await saveBtn.count() > 0) {
+      await expect(saveBtn.first()).toBeVisible();
+    }
+
+    const cancelBtn = page.getByRole("button", { name: /Cancel|キャンセル/i });
+    if (await cancelBtn.count() > 0) {
+      await cancelBtn.first().click();
     }
   });
 
   // ── VRT ──
 
   test("records Pro visual snapshot", async ({ page }) => {
-    await expect(page).toHaveScreenshot("records-pro.png", {
-      fullPage: true,
-      maxDiffPixelRatio: 0.02,
-    });
+    await expect(page).toHaveScreenshot("records-pro.png", VRT_OPTIONS);
   });
 });

@@ -1,384 +1,217 @@
 /**
  * e2e/pro-features.spec.ts
  *
- * Pro 限定機能の E2E テスト（Free vs Pro 差分検証）
+ * Free vs Pro ゲーティング「横断」検証
+ *
+ * 目的:
+ *   各ページの個別操作テストは dashboard-auth / records-auth / profile-auth に任せ、
+ *   このファイルでは「Free ↔ Pro 間で paywall の出し分けが全ページ一貫しているか」を
+ *   横断的にチェックする。重複テストは排除し、差分専用に特化する。
  *
  * テスト対象:
- *   - WeeklyReportCard: Free blur vs Pro 全表示
- *   - AICoachCard: Free paywall vs Pro 4モード生成
- *   - CompetitionSummaryCard: Free 基本 vs Pro Gi/NoGi分析
- *   - WeightCutPlanner: Pro only
- *   - BodyHeatmap / WeightChart: Pro only
- *   - SkillMap: Free 制限（10 nodes / 15 edges）vs Pro 無制限
- *
- * 目的: Pro 課金のゲーティングが正しく機能していることを保証する。
- *       Free ユーザーにはアップグレード導線が表示され、
- *       Pro ユーザーには全機能がアンロックされていること。
+ *   - Free: 全ページの Paywall マーカー一括検証（$9.99 / 🔒 / Upgrade to Pro）
+ *   - Pro:  全ページで Paywall マーカーが消滅していること
+ *   - Gym Owner / Member: アクセス権限の差分
  *
  * Run:
  *   npx playwright test e2e/pro-features.spec.ts --project=free-user
  *   npx playwright test e2e/pro-features.spec.ts --project=pro-user
+ *   npx playwright test e2e/pro-features.spec.ts --project=gym-owner
+ *   npx playwright test e2e/pro-features.spec.ts --project=gym-member
  */
 
 import { test, expect } from "@playwright/test";
-import { existsSync } from "fs";
-
-function skipIfNoAuth(filePath: string) {
-  if (!existsSync(filePath)) {
-    test.skip(true, `storageState not found: ${filePath}`);
-  }
-}
+import {
+  AUTH_FILES,
+  skipIfNoAuth,
+  gotoAndWait,
+  expectNotPresent,
+} from "./helpers";
 
 // =============================================================================
-// 1. Free ユーザー — Paywall ゲーティング検証
+// 1. Free ユーザー — 全ページ Paywall マーカー一括検証
 // =============================================================================
 
-test.describe("Pro Features — Free User (Paywall)", () => {
-  test.use({ storageState: "e2e/auth/free.json" });
+test.describe("Paywall Gate — Free User (cross-page)", () => {
+  test.use({ storageState: AUTH_FILES.free });
 
-  test.beforeEach(async ({ page }) => {
-    skipIfNoAuth("e2e/auth/free.json");
+  test.beforeEach(() => {
+    skipIfNoAuth(AUTH_FILES.free);
   });
 
-  // ── Dashboard: Pro Upsell Sections ──
-
-  test("Dashboard: 12-Month Graph shows upgrade CTA", async ({ page }) => {
-    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    const graphUpsell = page.getByText(/12-Month.*Graph|Upgrade.*Pro|12ヶ月.*グラフ/i);
-    if (await graphUpsell.count() > 0) {
-      await expect(graphUpsell.first()).toBeVisible();
-    }
+  test("Free: /dashboard に 'Upgrade to Pro' が1つ以上存在する", async ({ page }) => {
+    await gotoAndWait(page, "/dashboard");
+    const ctas = page.getByText(/Upgrade to Pro/i);
+    const count = await ctas.count();
+    expect(count, "Free dashboard should show at least 1 upgrade CTA").toBeGreaterThanOrEqual(1);
   });
 
-  test("Dashboard: Body Management shows upgrade CTA", async ({ page }) => {
-    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    const bodyUpsell = page.getByText(/Body Management|Upgrade.*Pro|ボディ管理/i);
-    if (await bodyUpsell.count() > 0) {
-      // At least one upsell for body should be visible
-    }
-  });
-
-  test("Dashboard: AI Coach shows paywall (not generate button)", async ({ page }) => {
-    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    const aiSection = page.getByText(/AI Coach/i);
-    if (await aiSection.count() > 0) {
-      // Free should NOT see "Generate coaching" button
-      const generateBtn = page.getByRole("button", { name: /Generate coaching|コーチング生成/i });
-      const genCount = await generateBtn.count();
-      // Free users see upgrade CTA instead
-      const upgradeCta = page.getByText(/Upgrade to Pro|Proにアップグレード/i);
-      const upgradeCount = await upgradeCta.count();
-      expect(upgradeCount).toBeGreaterThanOrEqual(1);
-    }
-  });
-
-  test("Dashboard: WeeklyReport has blur overlay for Free", async ({ page }) => {
-    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    // Check for blur-sm class or unlock CTA
-    const unlockCta = page.getByText(/Unlock Report|レポートをアンロック/i);
-    if (await unlockCta.count() > 0) {
-      await expect(unlockCta.first()).toBeVisible();
-    }
-  });
-
-  // ── Profile Stats: Lock Icons ──
-
-  test("Profile Stats: shows 🔒 lock icons for Free user", async ({ page }) => {
-    await page.goto("/profile", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
+  test("Free: /profile Stats タブに 🔒 が1つ以上存在する", async ({ page }) => {
+    await gotoAndWait(page, "/profile");
     const statsTab = page.getByRole("button", { name: /Stats|統計/i });
-    if (await statsTab.count() > 0) {
-      await statsTab.first().click();
-      await page.waitForTimeout(500);
+    if (await statsTab.count() === 0) return test.skip(true, "Stats tab not found");
+    await statsTab.first().click();
+    await page.waitForTimeout(500);
 
-      const locks = page.getByText("🔒");
-      const count = await locks.count();
-      // MCP検証済み: Free user sees multiple 🔒 on Stats tab
-      expect(count).toBeGreaterThanOrEqual(1);
-    }
+    const locks = page.getByText("🔒");
+    const count = await locks.count();
+    expect(count, "Free Stats tab should show 🔒 locks").toBeGreaterThanOrEqual(1);
   });
 
-  // ── Profile Body: Paywall ──
-
-  test("Profile Body tab: shows paywall for Free user", async ({ page }) => {
-    await page.goto("/profile", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
+  test("Free: /profile Body タブに Pro paywall が存在する", async ({ page }) => {
+    await gotoAndWait(page, "/profile");
     const bodyTab = page.getByRole("button", { name: /Body|ボディ/i });
-    if (await bodyTab.count() > 0) {
-      await bodyTab.first().click();
-      await page.waitForTimeout(500);
-
-      const paywallText = page.getByText(/Track your weight.*Pro|体重.*Pro|Upgrade to Pro/i);
-      if (await paywallText.count() > 0) {
-        await expect(paywallText.first()).toBeVisible();
-      }
-    }
-  });
-
-  // ── SkillMap: Free Limit ──
-
-  test("SkillMap shows free plan limit message", async ({ page }) => {
-    await page.goto("/techniques", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    // SkillMap might be on techniques or dashboard
-    const freeLimitText = page.getByText(/Free.*up to.*nodes|Free.*10 nodes|無料.*ノード/i);
-    // This may not appear if user hasn't created nodes yet
-  });
-
-  // ── Records: 30-day limit ──
-
-  test("Records shows 30-day limit for Free", async ({ page }) => {
-    await page.goto("/techniques", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    const freePlanNotice = page.getByText(/Free plan.*30 days|無料プラン.*30日/i);
-    // Only shows if user has data older than 30 days
-  });
-});
-
-// =============================================================================
-// 2. Pro ユーザー — 全機能アンロック検証
-// =============================================================================
-
-test.describe("Pro Features — Pro User (Unlocked)", () => {
-  test.use({ storageState: "e2e/auth/pro.json" });
-
-  test.beforeEach(async ({ page }) => {
-    skipIfNoAuth("e2e/auth/pro.json");
-  });
-
-  // ── Dashboard: No Paywall ──
-
-  test("Dashboard: no $9.99 or $79.99 visible for Pro", async ({ page }) => {
-    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    const price999 = page.getByText("$9.99");
-    const price7999 = page.getByText("$79.99");
-    expect(await price999.count()).toBe(0);
-    expect(await price7999.count()).toBe(0);
-  });
-
-  test("Dashboard: no 'Upgrade to Pro' visible", async ({ page }) => {
-    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    // "Upgrade to Pro" should not appear anywhere for Pro users
-    const upgradeCtas = page.getByText(/Upgrade to Pro/i);
-    const count = await upgradeCtas.count();
-    expect(count).toBe(0);
-  });
-
-  // ── AI Coach: 4 Modes ──
-
-  test("AI Coach: all 4 mode chips visible for Pro", async ({ page }) => {
-    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    const modes = [
-      /Weekly|週次/i,
-      /Weakness|弱点/i,
-      /Next Session|次のセッション/i,
-      /Comp Prep|試合準備/i,
-    ];
-
-    for (const mode of modes) {
-      const chip = page.getByText(mode);
-      if (await chip.count() > 0) {
-        await expect(chip.first()).toBeVisible();
-      }
-    }
-  });
-
-  test("AI Coach: Generate button visible and clickable", async ({ page }) => {
-    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    const generateBtn = page.getByText(/Generate coaching|コーチング生成/i);
-    if (await generateBtn.count() > 0) {
-      await expect(generateBtn.first()).toBeVisible();
-      // Don't actually click generate (would hit API), just verify it exists
-    }
-  });
-
-  // ── WeeklyReport: Full Data ──
-
-  test("WeeklyReport: tab switching works for Pro", async ({ page }) => {
-    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    const weekTab = page.getByRole("button", { name: /^Week$|^週$/ });
-    const monthTab = page.getByRole("button", { name: /^Month$|^月$/ });
-
-    if (await weekTab.count() > 0) {
-      await monthTab.first().click();
-      await page.waitForTimeout(500);
-
-      // Verify Month content loads (no crash)
-      await expect(page.locator("body")).toBeVisible();
-
-      await weekTab.first().click();
-      await page.waitForTimeout(500);
-    }
-  });
-
-  // ── Competition Summary (Pro) ──
-
-  test("Competition summary shows advanced analytics for Pro", async ({ page }) => {
-    await page.goto("/profile", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    const statsTab = page.getByRole("button", { name: /Stats|統計/i });
-    if (await statsTab.count() > 0) {
-      await statsTab.first().click();
-      await page.waitForTimeout(500);
-
-      // Pro should see advanced competition analytics
-      const compStats = page.getByText(/Gi.*No-?Gi Split|Top.*Techniques|Win Rate.*Belt|勝率/i);
-      // May not appear if user has no competition data
-    }
-  });
-
-  // ── Body Management (Pro) ──
-
-  test("Body Management: full feature set available for Pro", async ({ page }) => {
-    await page.goto("/profile", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    const bodyTab = page.getByRole("button", { name: /Body|ボディ/i });
-    if (await bodyTab.count() > 0) {
-      await bodyTab.first().click();
-      await page.waitForTimeout(500);
-
-      // Pro should NOT see paywall
-      const paywallCta = page.getByText(/Track your weight.*Pro 🎯/i);
-      const paywallCount = await paywallCta.count();
-      expect(paywallCount).toBe(0);
-
-      // Should see actual body management components
-      const bodyContent = await page.textContent("body");
-      const hasBodyFeatures = /Weight|Body Map|Quick|体重|ボディマップ/i.test(bodyContent!);
-      expect(hasBodyFeatures).toBe(true);
-    }
-  });
-
-  // ── Profile Stats: No Locks ──
-
-  test("Profile Stats: no 🔒 for Pro user", async ({ page }) => {
-    await page.goto("/profile", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    const statsTab = page.getByRole("button", { name: /Stats|統計/i });
-    if (await statsTab.count() > 0) {
-      await statsTab.first().click();
-      await page.waitForTimeout(500);
-
-      const locks = page.getByText("🔒");
-      const count = await locks.count();
-      expect(count).toBe(0);
-    }
-  });
-
-  // ── Records: No 30-day Limit ──
-
-  test("Records: no 30-day limit for Pro", async ({ page }) => {
-    await page.goto("/techniques", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    const freePlanNotice = page.getByText(/Free plan: showing last 30 days/i);
-    const count = await freePlanNotice.count();
-    expect(count).toBe(0);
-  });
-
-  // ── Manage Subscription ──
-
-  test("Pro user sees Manage Subscription in Settings", async ({ page }) => {
-    await page.goto("/profile", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
-
-    const settingsTab = page.getByRole("button", { name: /Settings|設定/i });
-    if (await settingsTab.count() > 0) {
-      await settingsTab.first().click();
-      await page.waitForTimeout(500);
-
-      const manageSub = page.getByText(/Manage Subscription|サブスクリプション管理/i);
-      if (await manageSub.count() > 0) {
-        await expect(manageSub.first()).toBeVisible();
-      }
-    }
-  });
-});
-
-// =============================================================================
-// 3. Gym Owner — ジム管理機能
-// =============================================================================
-
-test.describe("Pro Features — Gym Owner", () => {
-  test.use({ storageState: "e2e/auth/gym-owner.json" });
-
-  test.beforeEach(async ({ page }) => {
-    skipIfNoAuth("e2e/auth/gym-owner.json");
-  });
-
-  test("Gym dashboard is accessible for gym owner", async ({ page }) => {
-    await page.goto("/gym/dashboard", { waitUntil: "domcontentloaded" });
-    const url = new URL(page.url());
-    // Gym owner should NOT be redirected to /login
-    expect(url.pathname).not.toBe("/login");
-  });
-
-  test("Gym dashboard shows gym management content", async ({ page }) => {
-    await page.goto("/gym/dashboard", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
+    if (await bodyTab.count() === 0) return test.skip(true, "Body tab not found");
+    await bodyTab.first().click();
+    await page.waitForTimeout(500);
 
     const body = await page.textContent("body");
-    const hasGymContent = /gym|dojo|道場|member|メンバー|invite|招待|QR/i.test(body!);
-    expect(hasGymContent).toBe(true);
+    const hasPaywall = /Upgrade to Pro|Track your weight.*Pro|体重.*Pro/i.test(body!);
+    expect(hasPaywall, "Free Body tab should show Pro paywall").toBe(true);
+  });
+
+  test("Free: /techniques に 30日制限 or 'Upgrade for full history' が表示される", async ({ page }) => {
+    await gotoAndWait(page, "/techniques");
+    const body = await page.textContent("body");
+    // Free user with data sees limit; new user may see empty state — both OK
+    // This test just confirms the page loads without error
+    expect(body!.length).toBeGreaterThan(100);
   });
 });
 
 // =============================================================================
-// 4. Gym Member — ジムメンバー機能
+// 2. Pro ユーザー — 全ページ Paywall 完全消滅検証
 // =============================================================================
 
-test.describe("Pro Features — Gym Member", () => {
-  test.use({ storageState: "e2e/auth/gym-member.json" });
+test.describe("Paywall Gone — Pro User (cross-page)", () => {
+  test.use({ storageState: AUTH_FILES.pro });
 
-  test.beforeEach(async ({ page }) => {
-    skipIfNoAuth("e2e/auth/gym-member.json");
+  test.beforeEach(() => {
+    skipIfNoAuth(AUTH_FILES.pro);
   });
 
-  test("Gym member can access dashboard", async ({ page }) => {
-    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
+  test("Pro: /dashboard に '$9.99' が存在しない", async ({ page }) => {
+    await gotoAndWait(page, "/dashboard");
+    await expectNotPresent(page, page.getByText("$9.99"), "Pro dashboard should not show $9.99");
+  });
+
+  test("Pro: /dashboard に '$79.99' が存在しない", async ({ page }) => {
+    await gotoAndWait(page, "/dashboard");
+    await expectNotPresent(page, page.getByText("$79.99"), "Pro dashboard should not show $79.99");
+  });
+
+  test("Pro: /dashboard に 'Upgrade to Pro' が存在しない", async ({ page }) => {
+    await gotoAndWait(page, "/dashboard");
+    await expectNotPresent(page, page.getByText(/Upgrade to Pro/i), "Pro dashboard should not show upgrade CTA");
+  });
+
+  test("Pro: /profile Stats タブに 🔒 が存在しない", async ({ page }) => {
+    await gotoAndWait(page, "/profile");
+    const statsTab = page.getByRole("button", { name: /Stats|統計/i });
+    if (await statsTab.count() === 0) return test.skip(true, "Stats tab not found");
+    await statsTab.first().click();
+    await page.waitForTimeout(500);
+
+    await expectNotPresent(page, page.getByText("🔒"), "Pro Stats tab should not show 🔒");
+  });
+
+  test("Pro: /profile Body タブに paywall が存在しない", async ({ page }) => {
+    await gotoAndWait(page, "/profile");
+    const bodyTab = page.getByRole("button", { name: /Body|ボディ/i });
+    if (await bodyTab.count() === 0) return test.skip(true, "Body tab not found");
+    await bodyTab.first().click();
+    await page.waitForTimeout(500);
+
+    await expectNotPresent(
+      page,
+      page.getByText(/Track your weight.*Pro 🎯/i),
+      "Pro Body tab should not show paywall"
+    );
+  });
+
+  test("Pro: /profile に '$9.99' が存在しない", async ({ page }) => {
+    await gotoAndWait(page, "/profile");
+    await expectNotPresent(page, page.getByText("$9.99"), "Pro profile should not show $9.99");
+  });
+
+  test("Pro: /techniques に '30 days' 制限が存在しない", async ({ page }) => {
+    await gotoAndWait(page, "/techniques");
+    await expectNotPresent(
+      page,
+      page.getByText(/Free plan: showing last 30 days/i),
+      "Pro records should not show 30-day limit"
+    );
+  });
+
+  test("Pro: /profile Settings に 'Manage Subscription' が存在する", async ({ page }) => {
+    await gotoAndWait(page, "/profile");
+    const settingsTab = page.getByRole("button", { name: /Settings|設定/i });
+    if (await settingsTab.count() === 0) return test.skip(true, "Settings tab not found");
+    await settingsTab.first().click();
+    await page.waitForTimeout(500);
+
+    const manageSub = page.getByText(/Manage Subscription|サブスクリプション管理/i);
+    const count = await manageSub.count();
+    expect(count, "Pro should see Manage Subscription in Settings").toBeGreaterThanOrEqual(1);
+  });
+});
+
+// =============================================================================
+// 3. Gym Owner — /gym/dashboard アクセス権限
+// =============================================================================
+
+test.describe("Gym Access — Gym Owner", () => {
+  test.use({ storageState: AUTH_FILES.gymOwner });
+
+  test.beforeEach(() => {
+    skipIfNoAuth(AUTH_FILES.gymOwner);
+  });
+
+  test("Gym Owner: /gym/dashboard にアクセスできる", async ({ page }) => {
+    await page.goto("/gym/dashboard", { waitUntil: "domcontentloaded" });
     const url = new URL(page.url());
-    expect(url.pathname).toBe("/dashboard");
+    expect(url.pathname, "Gym owner should access /gym/dashboard").not.toBe("/login");
   });
 
-  test("Gym member sees gym affiliation on profile", async ({ page }) => {
-    await page.goto("/profile", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle").catch(() => {});
+  test("Gym Owner: 道場管理コンテンツが表示される", async ({ page }) => {
+    await gotoAndWait(page, "/gym/dashboard");
+    const body = await page.textContent("body");
+    const hasGymContent = /gym|dojo|道場|member|メンバー|invite|招待|QR|ACTIVE/i.test(body!);
+    expect(hasGymContent, "Gym dashboard should show gym management content").toBe(true);
+  });
+});
 
+// =============================================================================
+// 4. Gym Member — /gym/dashboard アクセス不可
+// =============================================================================
+
+test.describe("Gym Access — Gym Member", () => {
+  test.use({ storageState: AUTH_FILES.gymMember });
+
+  test.beforeEach(() => {
+    skipIfNoAuth(AUTH_FILES.gymMember);
+  });
+
+  test("Gym Member: /gym/dashboard にアクセスできない", async ({ page }) => {
+    await page.goto("/gym/dashboard", { waitUntil: "commit" });
+    const pathname = new URL(page.url()).pathname;
+    expect(pathname, "Gym member should NOT access /gym/dashboard").not.toBe("/gym/dashboard");
+  });
+
+  test("Gym Member: /dashboard にはアクセスできる", async ({ page }) => {
+    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
+    expect(new URL(page.url()).pathname).toBe("/dashboard");
+  });
+
+  test("Gym Member: /profile でジム所属情報が表示される", async ({ page }) => {
+    await gotoAndWait(page, "/profile");
     const profileTab = page.getByRole("button", { name: /Profile|プロフィール/i });
-    if (await profileTab.count() > 0) {
-      await profileTab.first().click();
-      await page.waitForTimeout(500);
+    if (await profileTab.count() === 0) return test.skip(true, "Profile tab not found");
+    await profileTab.first().click();
+    await page.waitForTimeout(500);
 
-      // Should show gym name or gym section
-      const gymText = page.getByText(/Gym|Academy|道場|ジム|E2E Test Dojo/i);
-      if (await gymText.count() > 0) {
-        await expect(gymText.first()).toBeVisible();
-      }
-    }
+    const body = await page.textContent("body");
+    const hasGymInfo = /Gym|Academy|道場|ジム|E2E Test Dojo|Linked to gym/i.test(body!);
+    expect(hasGymInfo, "Gym member should see gym affiliation on profile").toBe(true);
   });
 });
