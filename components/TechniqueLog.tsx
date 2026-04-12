@@ -335,7 +335,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
               : `📝 ${techniques.length}/${TECHNIQUE_FREE_LIMIT} techniques (free plan)`}
           </span>
           {techniques.length >= Math.floor(TECHNIQUE_FREE_LIMIT * 0.75) && (
-            <span className="text-xs font-medium text-blue-400 whitespace-nowrap">Upgrade for unlimited →</span>
+            <span className="text-xs font-medium text-blue-400 whitespace-nowrap">{t("skillmap.upgradeText")}</span>
           )}
         </div>
       )}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n";
+
 export default function RecordsError({
   error,
   reset,
@@ -7,10 +9,11 @@ export default function RecordsError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const { t } = useLocale();
   return (
     <div className="min-h-[100dvh] bg-zinc-950 flex items-center justify-center p-4">
       <div className="text-center">
-        <h2 className="text-lg font-bold text-white mb-2">Something went wrong</h2>
+        <h2 className="text-lg font-bold text-white mb-2">{t("records.errorTitle")}</h2>
         <p className="text-sm text-zinc-400 mb-4">{error.message}</p>
         <button
           onClick={() => reset()}

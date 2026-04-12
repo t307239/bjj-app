@@ -91,12 +91,30 @@
     "weeklyOnPace": " ✓ 順調",
     "weeklyPickUpPace": " ⚠ ペースアップ必要",
     "weeklyProgressLabel": "{done}/{goal}達成 · 残り{days}日",
-    "streakMilestoneShareText": "🔥 {n}日連続でBJJトレーニング！🥋 BJJ Appで毎日のロールを記録中 → https://bjj-app.net"
+    "streakMilestoneShareText": "🔥 {n}日連続でBJJトレーニング！🥋 BJJ Appで毎日のロールを記録中 → https://bjj-app.net",
+    "mockDashboardLog": "ログ",
+    "mockDashboardTech": "技術",
+    "mockDashboardProfile": "プロフィール",
+    "mockDashboardWelcome": "おかえりなさい、グラップラー",
+    "mockDashboardDate": "火曜日、2026年3月17日",
+    "mockDashboardMonth": "今月",
+    "mockDashboardWeek": "今週",
+    "mockDashboardTechniques": "テクニック",
+    "mockDashboardStreak": "日連続",
+    "mockDashboardGoals": "トレーニング目標",
+    "mockDashboardWeeklyGoal": "週間目標",
+    "mockDashboardWeeklySessions": "3 / 4 セッション",
+    "mockDashboardMonthlyGoal": "月間目標",
+    "mockDashboardMonthlyDone": "✓ 完了！",
+    "mockDashboardMonthlySessions": "12 / 12 セッション",
+    "mockDashboardRecentSessions": "最近のセッション"
   },
   "trainingLog": {
     "totalLabel": "合計",
     "perSession": "回",
-    "paginationNote": "表示中のページの統計のみです。全セッションを見るにはページを移動してください。"
+    "paginationNote": "表示中のページの統計のみです。全セッションを見るにはページを移動してください。",
+    "minUnit": "分",
+    "competitionDetailsLabel": "🏆 大会の詳細"
   },
   "beltProgress": {
     "title": "帯の進捗",
@@ -221,7 +239,9 @@
     "continuousInput": "連続入力（日付・タイプ・時間を保持）",
     "yesterday": "昨日",
     "showHistory": "ログ一覧を表示",
-    "hideHistory": "ログ一覧を閉じる"
+    "hideHistory": "ログ一覧を閉じる",
+    "threeMonths": "3か月",
+    "monthly": "月次"
   },
   "techniques": {
     "mastery1": "入門",
@@ -497,9 +517,11 @@
     "searchTechniquesPlaceholder": "テクニックを検索…",
     "techAppendNote": "テクニックを選択してメモに追加",
     "giNogiSplit": "道衣 / ノーギ 内訳",
-    "topFinishes": "勝ち技ランキング",
-    "winRateByBelt": "相手帯別勝率",
-    "upgradeAnalytics": "試合分析を解放"
+    "topFinishes": "トップフィニッシュ",
+    "winRateByBelt": "帯別勝率",
+    "upgradeAnalytics": "試合分析を解放",
+    "whiteBelt": "白帯：80%",
+    "blueBelt": "青帯：60%"
   },
   "guest": {
     "banner": "ゲストモードで体験中",
@@ -862,7 +884,9 @@
     "drawerEditTagsHint": "このテクニックのポジションをタグ付けする",
     "tagCustomPlaceholder": "カスタムタグ...",
     "edgeNotesTitle": "接続メモ",
-    "edgeNotesPlaceholder": "この接続についてのメモを追加..."
+    "edgeNotesPlaceholder": "この接続についてのメモを追加...",
+    "loadingTitle": "スキルマップを読み込み中…",
+    "upgradeText": "無制限にアップグレード →"
   },
   "wiki": {
     "dailyTip": "今日のBJJ知識",
@@ -1113,7 +1137,9 @@
     "transferYes": "{name} に移籍する",
     "ariaAgeConfirm": "年齢確認: 13歳以上であることを確認します",
     "ariaJoinNoShare": "データを共有せずにジムに参加",
-    "ariaJoinShare": "トレーニングデータを共有してジムに参加"
+    "ariaJoinShare": "トレーニングデータを共有してジムに参加",
+    "ageRequirement": "13歳以上",
+    "ageRequirementLegal": "（米国法で必須）"
   },
   "help": {
     "title": "ヘルプ・よくある質問",
@@ -1414,7 +1440,7 @@
     "featureSkillMapTitle": "ビジュアルスキルマップ",
     "featureSkillMapDesc": "テクニックのマインドマップを構築。ポジションとサブミッションの繋がりを可視化。",
     "featureStartCta": "データの記録を始める",
-    "coreTitle": "基本機能、ずっと無料",
+    "coreTitle": "コア機能",
     "coreLogTitle": "トレーニングログ",
     "coreLogDesc": "日付・時間・種類・メモを記録。月間セッション数とトレーニング時間を自動集計。",
     "coreTechTitle": "テクニックジャーナル",
@@ -1470,7 +1496,8 @@
     "socialProofAvgStreak": "25+",
     "socialProofAvgStreakLabel": "平均ストリーク（日数）",
     "socialProofProSubscribers": "300+",
-    "socialProofProSubscribersLabel": "Pro会員"
+    "socialProofProSubscribersLabel": "Pro会員",
+    "proFeatures": "プロ機能"
   },
   "body": {
     "injuryAlert": {
@@ -1538,14 +1565,17 @@
     "weightKg": "体重 (kg)"
   },
   "ageGate": {
-    "title": "年齢確認",
+    "title": "年齢制限",
     "body": "BJJ Appはトレーニングデータを収集します。米国法（COPPA）により、ご利用には13歳以上であることの確認が必要です。",
     "confirm": "✓ 13歳以上です",
     "deny": "13歳未満です",
     "footer": "米国連邦法により必須 · bjj-app.net",
     "blockedTitle": "年齢制限",
     "blockedBody": "BJJ Appは13歳以上のユーザー向けに設計されています。13歳未満の方はご利用いただけません（COPPA準拠）。",
-    "blockedContact": "誤りと思われる場合は、保護者の方が 307239t777@gmail.com までご連絡ください。"
+    "blockedContact": "誤りと思われる場合は、保護者の方が 307239t777@gmail.com までご連絡ください。",
+    "ageRequirement": "13歳以上",
+    "ageVerificationTitle": "年齢確認",
+    "ageVerificationDesc": "13歳以上"
   },
   "offline": {
     "banner": "オフラインです。再接続するまで一部の機能が無効になります。"
@@ -1693,5 +1723,17 @@
     "tipBase": "基礎固め。テクニック習得、フィジカル強化、新ポジションの探索。",
     "proTeaser": "Proにアップグレードで練習量AIレコメンドを解放",
     "duplicateError": "同じ名前・日付の大会目標がすでに存在します"
+  },
+  "records": {
+    "errorTitle": "何かが間違っています"
+  },
+  "milestone": {
+    "shareText": "このマイルストーンをあなたのトレーニングクルーと共有してください。"
+  },
+  "proModal": {
+    "monthly": "月次",
+    "annual": "年次",
+    "save33": "33%セーブ",
+    "trialText": "✓ 14日間の無料トライアル"
   }
 }

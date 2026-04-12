@@ -1,20 +1,16 @@
 BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 199 files
 CRITICAL: 1
-WARNING: 49
+WARNING: 10
 INFO: 80
-Total: 130
+Total: 91
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 36% (559/1563 キー) — 1034 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (599/1599 キー) — 1030 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L125: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/join/[invite_code]/GymJoinClient.tsx: L142: JSX内に英語テキスト直書き: "13 years of age or older."
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/join/[invite_code]/GymJoinClient.tsx: L143: JSX内に英語テキスト直書き: "(required by US law)"
-  FIX: t() キーを追加して多言語対応
 [INFO] [DANGEROUS_HTML] app/gym/page.tsx: L41: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/page.tsx: L48: JSX内に英語テキスト直書き: "BJJ App"
@@ -33,40 +29,6 @@ Total: 130
   FIX: t() キーを追加して多言語対応
 [WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L376: JSX内に英語テキスト直書き: "BJJ App"
   FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L379: JSX内に英語テキスト直書き: "Log"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L380: JSX内に英語テキスト直書き: "Tech"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L381: JSX内に英語テキスト直書き: "Profile"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L387: JSX内に英語テキスト直書き: "Welcome back, grappler"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L388: JSX内に英語テキスト直書き: "Tuesday, March 17, 2026"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L394: JSX内に英語テキスト直書き: "This month"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L398: JSX内に英語テキスト直書き: "This week"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L402: JSX内に英語テキスト直書き: "Techniques"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L407: JSX内に英語テキスト直書き: "Day streak"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L413: JSX内に英語テキスト直書き: "Training goals"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L418: JSX内に英語テキスト直書き: "Weekly goal"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L424: JSX内に英語テキスト直書き: "3 / 4 sessions"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L428: JSX内に英語テキスト直書き: "Monthly goal"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L429: JSX内に英語テキスト直書き: "✓ Done!"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L434: JSX内に英語テキスト直書き: "12 / 12 sessions"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L440: JSX内に英語テキスト直書き: "Recent sessions"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L638: JSX内に英語テキスト直書き: "Pro Features"
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L215: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L422: style={{...}} — Tailwindクラスで統一推奨
@@ -75,12 +37,8 @@ Total: 130
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [DANGEROUS_HTML] app/profile/page.tsx: L153: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [JSX_HARDCODED_ENGLISH] app/records/error.tsx: L13: JSX内に英語テキスト直書き: "Something went wrong"
-  FIX: t() キーを追加して多言語対応
 [INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L139: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [JSX_HARDCODED_ENGLISH] app/techniques/skillmap/loading.tsx: L22: JSX内に英語テキスト直書き: "Loading skill map…"
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/ConfettiEffect.tsx: L41: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/ScrollProgressBar.tsx: L28: style={{...}} — Tailwindクラスで統一推奨
@@ -111,15 +69,7 @@ Total: 130
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/AchievementBadge.tsx: L82: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] components/AgeGate.tsx: L38: JSX内に英語テキスト直書き: "Age Restriction"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] components/AgeGate.tsx: L40: JSX内に英語テキスト直書き: "13 years of age or older"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] components/AgeGate.tsx: L45: JSX内に英語テキスト直書き: "307239t777@gmail.com"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] components/AgeGate.tsx: L56: JSX内に英語テキスト直書き: "Age Verification"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] components/AgeGate.tsx: L59: JSX内に英語テキスト直書き: "13 years of age or older"
+[WARNING] [JSX_HARDCODED_ENGLISH] components/AgeGate.tsx: L47: JSX内に英語テキスト直書き: "307239t777@gmail.com"
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/BeltProgressCard.tsx: L114: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -147,14 +97,6 @@ Total: 130
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L288: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] components/CompetitionSummaryCard.tsx: L334: JSX内に英語テキスト直書き: "Top Finishes"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] components/CompetitionSummaryCard.tsx: L341: JSX内に英語テキスト直書き: "Win Rate by Belt"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] components/CompetitionSummaryCard.tsx: L343: JSX内に英語テキスト直書き: "White: 80%"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] components/CompetitionSummaryCard.tsx: L344: JSX内に英語テキスト直書き: "Blue: 60%"
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/CompetitionSummaryCard.tsx: L296: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/ExtendedBadgeGrid.tsx: L89: style={{...}} — Tailwindクラスで統一推奨
@@ -163,8 +105,6 @@ Total: 130
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/GoalTrackerEditor.tsx: L57: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] components/MilestoneBadgeGrid.tsx: L123: JSX内に英語テキスト直書き: "Share this milestone with your training crew."
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/MilestoneBadgeGrid.tsx: L162: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [WARNING] [JSX_HARDCODED_ENGLISH] components/NavBar.tsx: L103: JSX内に英語テキスト直書き: "BJJ App"
@@ -197,8 +137,6 @@ Total: 130
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/SwipeableCard.tsx: L131: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] components/TechniqueLog.tsx: L338: JSX内に英語テキスト直書き: "Upgrade for unlimited →"
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L278: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L289: style={{...}} — Tailwindクラスで統一推奨
@@ -217,18 +155,10 @@ Total: 130
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L416: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] components/TrainingChart.tsx: L167: JSX内に英語テキスト直書き: "3 months"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] components/TrainingChart.tsx: L168: JSX内に英語テキスト直書き: "Monthly"
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingChart.tsx: L355: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingLog.tsx: L83: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] components/TrainingLogList.tsx: L88: JSX内に英語テキスト直書き: "min"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] components/TrainingLogList.tsx: L250: JSX内に英語テキスト直書き: "🏆 Competition Details"
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingTypeChart.tsx: L225: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingTypeChart.tsx: L238: style={{...}} — Tailwindクラスで統一推奨
@@ -243,14 +173,6 @@ Total: 130
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/AddNodePopup.tsx: L20: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] components/skillmap/ProModal.tsx: L48: JSX内に英語テキスト直書き: "Monthly"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] components/skillmap/ProModal.tsx: L55: JSX内に英語テキスト直書き: "Annual"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] components/skillmap/ProModal.tsx: L56: JSX内に英語テキスト直書き: "Save 33%"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] components/skillmap/ProModal.tsx: L63: JSX内に英語テキスト直書き: "✓ 14-day free trial"
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/TechniqueNode.tsx: L58: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/TechniqueNode.tsx: L63: style={{...}} — Tailwindクラスで統一推奨

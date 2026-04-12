@@ -139,8 +139,8 @@ export default function GymJoinClient({
             aria-label={t("gymJoin.ariaAgeConfirm")}
           />
           <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
-            I am <span className="text-white font-medium">13 years of age or older.</span>{" "}
-            <span className="text-gray-400">(required by US law)</span>
+            I am <span className="text-white font-medium">{t("gymJoin.ageRequirement")}</span>{" "}
+            <span className="text-gray-400">{t("gymJoin.ageRequirementLegal")}</span>
           </span>
         </label>
 

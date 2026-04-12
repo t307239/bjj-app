@@ -85,7 +85,7 @@ function DurationPicker({
             isPreset ? "border-white/10" : "border-white/30"
           }`}
         />
-        <span className="text-gray-500 text-xs flex-shrink-0">min</span>
+        <span className="text-gray-500 text-xs flex-shrink-0">{t("trainingLog.minUnit")}</span>
       </div>
     </div>
   );
@@ -247,7 +247,7 @@ const TrainingLogList = memo(function TrainingLogList({
                 </select>
                 {editForm.type === "competition" && (
                   <div className="mb-2 bg-red-500/5 border border-red-500/20 rounded-xl p-2 space-y-1.5">
-                    <p className="text-xs text-red-400 font-semibold">🏆 Competition Details</p>
+                    <p className="text-xs text-red-400 font-semibold">{t("trainingLog.competitionDetailsLabel")}</p>
                     <div className="grid grid-cols-2 gap-1.5">
                       <select
                         value={editCompForm.result}

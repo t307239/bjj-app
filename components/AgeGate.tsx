@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLocale } from "@/lib/i18n";
 
 const STORAGE_KEY = "bjj_age_verified";
 
@@ -11,6 +12,7 @@ const STORAGE_KEY = "bjj_age_verified";
  * Stores result in localStorage; verified users never see it again.
  */
 export default function AgeGate() {
+  const { t } = useLocale();
   const [status, setStatus] = useState<"loading" | "show" | "blocked" | "ok">("loading");
 
   useEffect(() => {
@@ -35,9 +37,9 @@ export default function AgeGate() {
     return (
       <div className="fixed inset-0 z-[9999] bg-zinc-950 flex flex-col items-center justify-center px-6 text-center">
         <span className="text-5xl mb-6">🔒</span>
-        <h1 className="text-xl font-black text-white mb-3">Age Restriction</h1>
+        <h1 className="text-xl font-black text-white mb-3">{t("ageGate.title")}</h1>
         <p className="text-zinc-400 text-sm max-w-xs leading-relaxed">
-          BJJ App is designed for users <span className="text-white font-semibold">13 years of age or older</span>.
+          BJJ App is designed for users <span className="text-white font-semibold">{t("ageGate.ageRequirement")}</span>.
           We cannot allow access for users under 13 (COPPA compliance).
         </p>
         <p className="text-zinc-600 text-xs mt-8">
@@ -53,10 +55,10 @@ export default function AgeGate() {
     <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center px-4">
       <div className="w-full max-w-sm bg-zinc-900 border border-white/10 rounded-3xl p-7 shadow-2xl text-center">
         <span className="text-4xl mb-4 block">🥋</span>
-        <h2 className="text-lg font-black text-white mb-2">Age Verification</h2>
+        <h2 className="text-lg font-black text-white mb-2">{t("ageGate.ageVerificationTitle")}</h2>
         <p className="text-zinc-400 text-sm leading-relaxed mb-7">
           BJJ App collects training data. By US law (COPPA), we must verify you are{" "}
-          <span className="text-white font-semibold">13 years of age or older</span> before continuing.
+          <span className="text-white font-semibold">{t("ageGate.ageVerificationDesc")}</span> before continuing.
         </p>
 
         <div className="space-y-3">

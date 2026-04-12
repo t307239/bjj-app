@@ -331,17 +331,17 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
           <div className="relative mb-4 overflow-hidden rounded-xl">
             <div className="blur-sm pointer-events-none select-none" aria-hidden="true">
               <div className="bg-zinc-800/50 rounded-lg px-3 py-2 mb-2">
-                <p className="text-xs text-zinc-500">Top Finishes</p>
+                <p className="text-xs text-zinc-500">{t("competition.topFinishes")}</p>
                 <div className="flex gap-2 mt-1">
                   <span className="text-xs text-gray-300">Armbar: 3</span>
                   <span className="text-xs text-gray-300">Triangle: 2</span>
                 </div>
               </div>
               <div className="bg-zinc-800/50 rounded-lg px-3 py-2">
-                <p className="text-xs text-zinc-500">Win Rate by Belt</p>
+                <p className="text-xs text-zinc-500">{t("competition.winRateByBelt")}</p>
                 <div className="flex gap-2 mt-1">
-                  <span className="text-xs text-gray-300">White: 80%</span>
-                  <span className="text-xs text-gray-300">Blue: 60%</span>
+                  <span className="text-xs text-gray-300">{t("competition.whiteBelt")}</span>
+                  <span className="text-xs text-gray-300">{t("competition.blueBelt")}</span>
                 </div>
               </div>
             </div>

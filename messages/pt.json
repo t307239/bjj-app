@@ -97,7 +97,23 @@
     "logTraining": "Registrar Treino",
     "noLogs": "Nenhum treino ainda",
     "proFeature": "Recurso Pro",
-    "streakMilestoneShareText": "🔥 {n} dias seguidos de treino de BJJ! 🥋 Registrando cada rola com BJJ App → https://bjj-app.net"
+    "streakMilestoneShareText": "🔥 {n} dias seguidos de treino de BJJ! 🥋 Registrando cada rola com BJJ App → https://bjj-app.net",
+    "mockDashboardLog": "Log",
+    "mockDashboardTech": "Técnica",
+    "mockDashboardProfile": "Perfil",
+    "mockDashboardWelcome": "Bem-vindo de volta, grappler",
+    "mockDashboardDate": "Terça-feira, 17 de março de 2026",
+    "mockDashboardMonth": "Este mês",
+    "mockDashboardWeek": "Esta semana",
+    "mockDashboardTechniques": "Técnicas",
+    "mockDashboardStreak": "Dias seguidos",
+    "mockDashboardGoals": "Objetivos de Treinamento",
+    "mockDashboardWeeklyGoal": "Objetivo Semanal",
+    "mockDashboardWeeklySessions": "3 / 4 sessões",
+    "mockDashboardMonthlyGoal": "Objetivo Mensal",
+    "mockDashboardMonthlyDone": "✓ Pronto!",
+    "mockDashboardMonthlySessions": "12 / 12 sessões",
+    "mockDashboardRecentSessions": "Sessões Recentes"
   },
   "training": {
     "logTitle": "Registrar Treino",
@@ -129,12 +145,16 @@
     "continuousInput": "Manter campos (data, tipo, duração) para próxima entrada",
     "yesterday": "Ontem",
     "showHistory": "Mostrar registros",
-    "hideHistory": "Ocultar registros"
+    "hideHistory": "Ocultar registros",
+    "threeMonths": "3 meses",
+    "monthly": "Mensal"
   },
   "trainingLog": {
     "totalLabel": "total",
     "perSession": "sessão",
-    "paginationNote": "Estatísticas refletem apenas a página atual. Navegue entre as páginas para ver todas as sessões."
+    "paginationNote": "Estatísticas refletem apenas a página atual. Navegue entre as páginas para ver todas as sessões.",
+    "minUnit": "min",
+    "competitionDetailsLabel": "🏆 Detalhes da Competição"
   },
   "beltProgress": {
     "title": "Progresso da Faixa",
@@ -435,7 +455,9 @@
     "socialProofAvgStreak": "25+",
     "socialProofAvgStreakLabel": "Sequência média (dias)",
     "socialProofProSubscribers": "300+",
-    "socialProofProSubscribersLabel": "Membros Pro"
+    "socialProofProSubscribersLabel": "Membros Pro",
+    "coreTitle": "Recursos Principais",
+    "proFeatures": "Recursos Pro"
   },
   "body": {
     "injuryAlert": {
@@ -489,7 +511,9 @@
     "drawerEditTagsHint": "Adicione uma posição a esta técnica",
     "tagCustomPlaceholder": "Tag personalizada...",
     "edgeNotesTitle": "Notas da Conexão",
-    "edgeNotesPlaceholder": "Adicione notas sobre esta conexão..."
+    "edgeNotesPlaceholder": "Adicione notas sobre esta conexão...",
+    "loadingTitle": "Carregando mapa de habilidades…",
+    "upgradeText": "Atualize para ilimitado →"
   },
   "chart": {
     "days84": "3 meses",
@@ -613,7 +637,11 @@
     "finishPlaceholder": "Ex: Heel Hook",
     "finishShortPlaceholder": "Técnica de finalização",
     "eventPlaceholder": "Ex: Tokyo Open",
-    "eventShortPlaceholder": "Nome do evento"
+    "eventShortPlaceholder": "Nome do evento",
+    "topFinishes": "Melhores Finalizações",
+    "winRateByBelt": "Taxa de Vitória por Faixa",
+    "whiteBelt": "Branca: 80%",
+    "blueBelt": "Azul: 60%"
   },
   "compGoal": {
     "title": "Contagem Regressiva",
@@ -641,5 +669,27 @@
     "tipBase": "Construa sua base. Desenvolvimento técnico, condicionamento e exploração.",
     "proTeaser": "Atualize para Pro para recomendações de treino com IA",
     "duplicateError": "Já existe uma meta com o mesmo nome e data"
+  },
+  "ageGate": {
+    "title": "Restrição de Idade",
+    "ageRequirement": "13 anos ou mais",
+    "ageVerificationTitle": "Verificação de Idade",
+    "ageVerificationDesc": "13 anos ou mais"
+  },
+  "gymJoin": {
+    "ageRequirement": "13 anos ou mais",
+    "ageRequirementLegal": "(obrigatório por lei dos EUA)"
+  },
+  "records": {
+    "errorTitle": "Algo deu errado"
+  },
+  "milestone": {
+    "shareText": "Compartilhe este marco com sua equipe de treinamento."
+  },
+  "proModal": {
+    "monthly": "Mensal",
+    "annual": "Anual",
+    "save33": "Economize 33%",
+    "trialText": "✓ Avaliação gratuita de 14 dias"
   }
 }

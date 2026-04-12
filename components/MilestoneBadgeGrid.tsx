@@ -120,7 +120,7 @@ export default function MilestoneBadgeGrid({ totalCount }: Props) {
             <p className="text-sm font-semibold text-violet-200 leading-tight">
               {sharePrompt} sessions reached!
             </p>
-            <p className="text-xs text-violet-300/70">Share this milestone with your training crew.</p>
+            <p className="text-xs text-violet-300/70">{t("milestone.shareText")}</p>
           </div>
           <div className="flex gap-2 flex-shrink-0">
             <button

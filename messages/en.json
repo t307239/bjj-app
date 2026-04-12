@@ -90,12 +90,30 @@
     "weeklyProgressLabel": "{done}/{goal} done · {days}d left",
     "weeklyOnPace": " â on pace",
     "weeklyPickUpPace": " â  pick up the pace",
-    "streakMilestoneShareText": "🔥 {n}-day BJJ training streak! 🥋 Tracking every roll with BJJ App → https://bjj-app.net"
+    "streakMilestoneShareText": "🔥 {n}-day BJJ training streak! 🥋 Tracking every roll with BJJ App → https://bjj-app.net",
+    "mockDashboardLog": "Log",
+    "mockDashboardTech": "Tech",
+    "mockDashboardProfile": "Profile",
+    "mockDashboardWelcome": "Welcome back, grappler",
+    "mockDashboardDate": "Tuesday, March 17, 2026",
+    "mockDashboardMonth": "This month",
+    "mockDashboardWeek": "This week",
+    "mockDashboardTechniques": "Techniques",
+    "mockDashboardStreak": "Day streak",
+    "mockDashboardGoals": "Training goals",
+    "mockDashboardWeeklyGoal": "Weekly goal",
+    "mockDashboardWeeklySessions": "3 / 4 sessions",
+    "mockDashboardMonthlyGoal": "Monthly goal",
+    "mockDashboardMonthlyDone": "✓ Done!",
+    "mockDashboardMonthlySessions": "12 / 12 sessions",
+    "mockDashboardRecentSessions": "Recent sessions"
   },
   "trainingLog": {
     "totalLabel": "total",
     "perSession": "session",
-    "paginationNote": "Stats reflect current page only. Navigate pages to see all sessions."
+    "paginationNote": "Stats reflect current page only. Navigate pages to see all sessions.",
+    "minUnit": "min",
+    "competitionDetailsLabel": "🏆 Competition Details"
   },
   "beltProgress": {
     "title": "Belt Progress",
@@ -220,7 +238,9 @@
     "continuousInput": "Keep fields (date, type, duration) for next entry",
     "yesterday": "Yesterday",
     "showHistory": "Show training log",
-    "hideHistory": "Hide training log"
+    "hideHistory": "Hide training log",
+    "threeMonths": "3 months",
+    "monthly": "Monthly"
   },
   "techniques": {
     "mastery1": "Know it",
@@ -496,9 +516,11 @@
     "eventPlaceholder": "E.g.: Tokyo Open",
     "eventShortPlaceholder": "Event name",
     "giNogiSplit": "Gi / No-Gi Split",
-    "topFinishes": "Top Winning Techniques",
-    "winRateByBelt": "Win Rate by Opponent Belt",
-    "upgradeAnalytics": "Unlock Match Analytics"
+    "topFinishes": "Top Finishes",
+    "winRateByBelt": "Win Rate by Belt",
+    "upgradeAnalytics": "Unlock Match Analytics",
+    "whiteBelt": "White: 80%",
+    "blueBelt": "Blue: 60%"
   },
   "guest": {
     "banner": "Guest Mode",
@@ -870,7 +892,9 @@
     "drawerEditTagsHint": "Tag this technique with its position",
     "tagCustomPlaceholder": "Custom tag...",
     "edgeNotesTitle": "Connection Notes",
-    "edgeNotesPlaceholder": "Add notes about this connection..."
+    "edgeNotesPlaceholder": "Add notes about this connection...",
+    "loadingTitle": "Loading skill map…",
+    "upgradeText": "Upgrade for unlimited →"
   },
   "wiki": {
     "dailyTip": "Today's BJJ Knowledge",
@@ -1121,7 +1145,9 @@
     "transferYes": "Yes, transfer to {name}",
     "ariaAgeConfirm": "Age confirmation: I am 13 years of age or older",
     "ariaJoinShare": "Join gym and share training data",
-    "ariaJoinNoShare": "Join gym without sharing data"
+    "ariaJoinNoShare": "Join gym without sharing data",
+    "ageRequirement": "13 years of age or older",
+    "ageRequirementLegal": "(required by US law)"
   },
   "help": {
     "title": "Help & FAQ",
@@ -1484,7 +1510,7 @@
     "featureSkillMapTitle": "Visual Skill Map",
     "featureSkillMapDesc": "Build a mind map of your techniques. See the connections between positions and submissions.",
     "featureStartCta": "Start logging your data",
-    "coreTitle": "Core features, always free",
+    "coreTitle": "Core Features",
     "coreLogTitle": "Training Log",
     "coreLogDesc": "Log date, duration, type, and notes. Auto-totals your monthly sessions and training time.",
     "coreTechTitle": "Technique Journal",
@@ -1540,17 +1566,21 @@
     "socialProofAvgStreak": "25+",
     "socialProofAvgStreakLabel": "Average streak (days)",
     "socialProofProSubscribers": "300+",
-    "socialProofProSubscribersLabel": "Pro members"
+    "socialProofProSubscribersLabel": "Pro members",
+    "proFeatures": "Pro Features"
   },
   "ageGate": {
-    "title": "Age Verification",
+    "title": "Age Restriction",
     "body": "BJJ App collects training data. By US law (COPPA), we must verify you are 13 years of age or older before continuing.",
     "confirm": "â I am 13 or older",
     "deny": "I am under 13",
     "footer": "Required by US federal law · bjj-app.net",
     "blockedTitle": "Age Restriction",
     "blockedBody": "BJJ App is designed for users 13 years of age or older. We cannot allow access for users under 13 (COPPA compliance).",
-    "blockedContact": "If you believe this is an error, please have a parent or guardian contact us at 307239t777@gmail.com"
+    "blockedContact": "If you believe this is an error, please have a parent or guardian contact us at 307239t777@gmail.com",
+    "ageRequirement": "13 years of age or older",
+    "ageVerificationTitle": "Age Verification",
+    "ageVerificationDesc": "13 years of age or older"
   },
   "injury": {
     "snooze7d": "Snooze for 7 days",
@@ -1691,5 +1721,17 @@
     "tipBase": "Build your base. Technique development, conditioning, and exploring new positions.",
     "proTeaser": "Upgrade to Pro for AI training recommendations",
     "duplicateError": "A goal with the same name and date already exists"
+  },
+  "records": {
+    "errorTitle": "Something went wrong"
+  },
+  "milestone": {
+    "shareText": "Share this milestone with your training crew."
+  },
+  "proModal": {
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "save33": "Save 33%",
+    "trialText": "✓ 14-day free trial"
   }
 }

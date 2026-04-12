@@ -1,4 +1,9 @@
+"use client";
+
+import { useLocale } from "@/lib/i18n";
+
 export default function SkillMapLoading() {
+  const { t } = useLocale();
   return (
     <div className="h-screen flex flex-col bg-zinc-950">
       {/* NavBar skeleton */}
@@ -19,7 +24,7 @@ export default function SkillMapLoading() {
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-sm text-zinc-400 animate-pulse">Loading skill map…</p>
+          <p className="text-sm text-zinc-400 animate-pulse">{t("skillmap.loadingTitle")}</p>
         </div>
       </div>
     </div>
