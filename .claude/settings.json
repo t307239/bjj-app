@@ -18,6 +18,20 @@
           {
             "type": "command",
             "command": "if echo \"$TOOL_INPUT\" | grep -qE '\\bgit\\s+(add|commit|push|reset)\\b'; then echo 'BLOCKED: git コマンドは禁止。CLAUDE_COMMIT_MSG に書いてください。' && exit 2; fi"
+          },
+          {
+            "type": "command",
+            "command": "if echo \"$TOOL_INPUT\" | grep -qE '\\bsed\\s+-i\\b|\\bawk\\b.*>.*\\.(ts|tsx|json|md|html)'; then echo 'BLOCKED: sed -i / awk によるファイル編集は文字化けの原因。Python/Node.js + UTF-8 を使ってください。' && exit 2; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd ~/Claude/bjj-app && if [ -n \"$(find . -name '*.ts' -o -name '*.tsx' -o -name '*.json' -newer .git/HEAD -not -path './node_modules/*' -not -path './.next/*' 2>/dev/null | head -1)\" ] && [ ! -f .git/CLAUDE_COMMIT_MSG ]; then echo '⚠️ 未コミットの変更があります。CLAUDE_COMMIT_MSG への書き込みを忘れていませんか？'; fi"
           }
         ]
       }
