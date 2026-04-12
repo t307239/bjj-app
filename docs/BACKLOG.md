@@ -4,17 +4,10 @@
 
 ## 🔴 アクティブタスク
 
-### [IA-1] BJJ App IA リデザイン — タブベース情報整理
-- **背景**: 全画面が縦スクロール一本で関心事が混在。退会ボタンが4.5画面分下に埋没、Records にCRUDと統計が混在等
-- **参考**: Strava "You"タブ、JEFIT Logs/Stats分離、Strong 設定分離、Nike TC アクションファースト
-- **プロトタイプ**: `~/Claude/bjj-app-redesign.jsx` に Before/After 5画面分を作成済み
-- **実装計画**:
-  1. **Profile → 3タブ化** (プロフィール/ボディ管理/実績) + Settings分離画面
-  2. **Records → 2タブ化** (ログ/統計)
-  3. **Techniques → 3タブ化** (ジャーナル/スキルマップ/Wiki)
-  4. **Dashboard → 情報密度最適化** (挨拶+CTA→KPI 1行→最近ログ→大会)
-  5. **Settings新設** — iOS風リスト、退会をDanger Zoneに隔離
-- **優先度**: Profile(最重症) → Records → Techniques → Dashboard → Settings
+### [IA-1] BJJ App IA リデザイン — タブベース情報整理 ✅ Phase 1完了
+- **完了**: Profile 3タブ化、Records 2タブ化、Techniques 3タブ化、Settings分離
+- **残**: Dashboard情報密度最適化（現状でも良好、優先度低）
+- **MCP視覚検証**: デプロイ後に実施予定
 
 ### [IA-2] BJJ Wiki IA リデザイン — コンバージョン最適化
 - **背景**: CTA が30秒後の float のみ（多くのユーザーが見ない）、TOC が `display:none` で無効、選手ページにCTAなし
