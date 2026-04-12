@@ -113,6 +113,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
   const [dateInput, setDateInput] = useState("");
   const [saving, setSaving] = useState(false);
   const [weeklySessionCount, setWeeklySessionCount] = useState(0);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const loadGoals = useCallback(async () => {
     try {
@@ -133,18 +134,23 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
           ),
       ]);
 
-      if (goalsRes.data) {
-        setGoals(goalsRes.data as CompGoal[]);
+      if (goalsRes.error) {
+        console.error("[CompGoal] loadGoals error:", goalsRes.error.message);
+        setErrorMsg(goalsRes.error.message);
+        return;
       }
-      // Weekly average = total in 4 weeks / 4
+      setGoals((goalsRes.data ?? []) as CompGoal[]);
+
+      // Weekly average = total in 4 weeks / 4, minimum 2 for new users
       const totalSessions = weekRes.count ?? 0;
-      setWeeklySessionCount(Math.round(totalSessions / 4));
-    } catch {
-      // Network error — show empty
+      setWeeklySessionCount(Math.max(Math.round(totalSessions / 4), 2));
+    } catch (err) {
+      console.error("[CompGoal] loadGoals network error:", err);
+      setErrorMsg("Failed to load data");
     } finally {
       setLoading(false);
     }
-  }, [userId]);
+  }, [userId, supabase]);
 
   useEffect(() => {
     loadGoals();
@@ -152,36 +158,71 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
 
   const handleSave = async () => {
     if (!nameInput.trim() || !dateInput) return;
+    setErrorMsg(null);
+
+    // Duplicate check: same name + same date (excluding current edit target)
+    const isDuplicate = goals.some(
+      (g) =>
+        g.name === nameInput.trim() &&
+        g.date === dateInput &&
+        g.id !== editingId
+    );
+    if (isDuplicate) {
+      setErrorMsg(t("compGoal.duplicateError"));
+      return;
+    }
+
     setSaving(true);
     try {
       if (editingId) {
-        await supabase
+        const { error } = await supabase
           .from("competition_goals")
           .update({ name: nameInput.trim(), date: dateInput })
           .eq("id", editingId);
+        if (error) {
+          console.error("[CompGoal] update error:", error.message);
+          setErrorMsg(error.message);
+          return;
+        }
       } else {
-        await supabase
+        const { error } = await supabase
           .from("competition_goals")
           .insert({ user_id: userId, name: nameInput.trim(), date: dateInput });
+        if (error) {
+          console.error("[CompGoal] insert error:", error.message);
+          setErrorMsg(error.message);
+          return;
+        }
       }
       setNameInput("");
       setDateInput("");
       setShowForm(false);
       setEditingId(null);
       await loadGoals();
-    } catch {
-      // ignore
+    } catch (err) {
+      console.error("[CompGoal] handleSave network error:", err);
+      setErrorMsg("Failed to save");
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id: string) => {
+    setErrorMsg(null);
     try {
-      await supabase.from("competition_goals").delete().eq("id", id);
+      const { error } = await supabase
+        .from("competition_goals")
+        .delete()
+        .eq("id", id);
+      if (error) {
+        console.error("[CompGoal] delete error:", error.message);
+        setErrorMsg(error.message);
+        return;
+      }
       setGoals((prev) => prev.filter((g) => g.id !== id));
-    } catch {
-      // ignore
+    } catch (err) {
+      console.error("[CompGoal] handleDelete network error:", err);
+      setErrorMsg("Failed to delete");
     }
   };
 
@@ -205,7 +246,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
   const now = Date.now();
   const activeGoals = goals.filter((g) => {
     const diff = Math.ceil(
-      (new Date(g.date + "T00:00:00").getTime() - now) / 86400000
+      (new Date(g.date + "T12:00:00").getTime() - now) / 86400000
     );
     return diff >= -7;
   });
@@ -250,10 +291,14 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
                 type="date"
                 value={dateInput}
                 onChange={(e) => setDateInput(e.target.value)}
+                min={new Date().toISOString().slice(0, 10)}
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400/50"
               />
             </div>
           </div>
+          {errorMsg && (
+            <p className="text-xs text-red-400 mb-2">{errorMsg}</p>
+          )}
           <div className="flex gap-2">
             <button
               onClick={handleSave}
@@ -289,7 +334,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
         <div className="divide-y divide-white/5">
           {activeGoals.map((goal) => {
             const daysLeft = Math.ceil(
-              (new Date(goal.date + "T00:00:00").getTime() - now) / 86400000
+              (new Date(goal.date + "T12:00:00").getTime() - now) / 86400000
             );
             const rec = getTrainingRecommendation(daysLeft, weeklySessionCount, t);
             const isPast = daysLeft < 0;
@@ -349,7 +394,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
 
                 {/* Row 2: Date */}
                 <p className="text-xs text-zinc-500 mb-2">
-                  {new Date(goal.date + "T00:00:00").toLocaleDateString(undefined, {
+                  {new Date(goal.date + "T12:00:00").toLocaleDateString(undefined, {
                     year: "numeric",
                     month: "short",
                     day: "numeric",

@@ -639,6 +639,7 @@
     "tipRampUp": "Aumente a intensidade das sessões. Refine seu jogo A e cenários de competição.",
     "tipBuild": "Treino consistente com sparring posicional. Comece a refinar seu game plan.",
     "tipBase": "Construa sua base. Desenvolvimento técnico, condicionamento e exploração.",
-    "proTeaser": "Atualize para Pro para recomendações de treino com IA"
+    "proTeaser": "Atualize para Pro para recomendações de treino com IA",
+    "duplicateError": "Já existe uma meta com o mesmo nome e data"
   }
 }
