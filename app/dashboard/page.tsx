@@ -22,6 +22,7 @@ import Link from "next/link";
 import StatusBar from "@/components/dashboard/StatusBar";
 import RecentLogs from "@/components/dashboard/RecentLogs";
 import WeeklyReportCard from "@/components/WeeklyReportCard";
+import CompetitionCountdown from "@/components/CompetitionCountdown";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
@@ -278,6 +279,11 @@ export default async function DashboardPage({
           streak={streak}
           t={t}
         />
+
+        {/* ═══════════════════════════════════════════
+            COMPETITION COUNTDOWN — upcoming competitions + AI training recs
+            ═══════════════════════════════════════════ */}
+        <CompetitionCountdown userId={user.id} isPro={isPro} />
 
         {/* ═══════════════════════════════════════════
             WEEKLY REPORT — Pro auto-generated performance report

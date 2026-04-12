@@ -1664,5 +1664,31 @@
     "milestones": "Weekly Targets",
     "week": "Wk",
     "alreadyAtTarget": "You're already at or below your target weight!"
+  },
+  "compGoal": {
+    "title": "Competition Countdown",
+    "add": "+ Add",
+    "save": "Save",
+    "update": "Update",
+    "namePlaceholder": "E.g.: Tokyo Open 2026",
+    "daysUnit": "days",
+    "today": "TODAY",
+    "passed": "Finished",
+    "empty": "No upcoming competitions",
+    "emptyHint": "Add a competition to start your countdown",
+    "recommendedHours": "{hours}h/week",
+    "phaseEvent": "Competition Day",
+    "phaseTaper": "Taper Week",
+    "phasePeak": "Peak Phase",
+    "phaseRampUp": "Ramp-Up",
+    "phaseBuild": "Build Phase",
+    "phaseBase": "Base Training",
+    "tipEvent": "Trust your training. Light warm-up, stay calm, and compete.",
+    "tipTaper": "Reduce volume. Light drilling and flow rolls. Focus on recovery and weight management.",
+    "tipPeak": "High intensity. Competition-pace sparring, game plan drilling, and mental preparation.",
+    "tipRampUp": "Increase session intensity. Focus on sharpening your A-game and competition scenarios.",
+    "tipBuild": "Consistent training with positional sparring. Start refining your competition game plan.",
+    "tipBase": "Build your base. Technique development, conditioning, and exploring new positions.",
+    "proTeaser": "Upgrade to Pro for AI training recommendations"
   }
 }

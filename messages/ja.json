@@ -1666,5 +1666,31 @@
     "milestones": "週間目標",
     "week": "第",
     "alreadyAtTarget": "すでに目標体重に到達しています！"
+  },
+  "compGoal": {
+    "title": "大会カウントダウン",
+    "add": "+ 追加",
+    "save": "保存",
+    "update": "更新",
+    "namePlaceholder": "例: 東京オープン 2026",
+    "daysUnit": "日",
+    "today": "本日",
+    "passed": "終了",
+    "empty": "登録された大会はありません",
+    "emptyHint": "大会を追加してカウントダウンを始めましょう",
+    "recommendedHours": "{hours}時間/週",
+    "phaseEvent": "大会当日",
+    "phaseTaper": "テーパリング週",
+    "phasePeak": "ピークフェーズ",
+    "phaseRampUp": "ランプアップ",
+    "phaseBuild": "ビルドフェーズ",
+    "phaseBase": "ベーストレーニング",
+    "tipEvent": "練習を信じよう。軽いウォームアップで心を落ち着けて試合へ。",
+    "tipTaper": "練習量を減らす。軽いドリルとフロースパーのみ。回復と減量に集中。",
+    "tipPeak": "高強度。試合ペースのスパーリング、ゲームプランの確認、メンタル準備。",
+    "tipRampUp": "セッション強度を上げる。得意技の精度向上と試合シナリオの練習。",
+    "tipBuild": "ポジショナルスパーリング中心の安定した練習。試合ゲームプランの構築開始。",
+    "tipBase": "基礎固め。テクニック習得、フィジカル強化、新ポジションの探索。",
+    "proTeaser": "Proにアップグレードで練習量AIレコメンドを解放"
   }
 }

@@ -91,6 +91,16 @@ export type DbTechnique = {
   created_at: string;
 };
 
+// ─── competition_goals ───────────────────────────────────────────────────────
+export type DbCompetitionGoal = {
+  id: string;
+  user_id: string;
+  name: string;
+  date: string;
+  notes: string;
+  created_at: string;
+};
+
 // ─── ugc_video_submissions ────────────────────────────────────────────────────
 export type DbUgcVideoSubmission = {
   id: string;

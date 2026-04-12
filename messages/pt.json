@@ -614,5 +614,31 @@
     "finishShortPlaceholder": "Técnica de finalização",
     "eventPlaceholder": "Ex: Tokyo Open",
     "eventShortPlaceholder": "Nome do evento"
+  },
+  "compGoal": {
+    "title": "Contagem Regressiva",
+    "add": "+ Adicionar",
+    "save": "Salvar",
+    "update": "Atualizar",
+    "namePlaceholder": "Ex: Tokyo Open 2026",
+    "daysUnit": "dias",
+    "today": "HOJE",
+    "passed": "Encerrado",
+    "empty": "Nenhuma competição registrada",
+    "emptyHint": "Adicione uma competição para iniciar a contagem regressiva",
+    "recommendedHours": "{hours}h/semana",
+    "phaseEvent": "Dia da Competição",
+    "phaseTaper": "Semana de Taper",
+    "phasePeak": "Fase de Pico",
+    "phaseRampUp": "Fase de Intensificação",
+    "phaseBuild": "Fase de Construção",
+    "phaseBase": "Treino Base",
+    "tipEvent": "Confie no seu treino. Aquecimento leve, mantenha a calma e compete.",
+    "tipTaper": "Reduza o volume. Drills leves e rolls suaves. Foco em recuperação.",
+    "tipPeak": "Alta intensidade. Sparring no ritmo de competição e preparação mental.",
+    "tipRampUp": "Aumente a intensidade das sessões. Refine seu jogo A e cenários de competição.",
+    "tipBuild": "Treino consistente com sparring posicional. Comece a refinar seu game plan.",
+    "tipBase": "Construa sua base. Desenvolvimento técnico, condicionamento e exploração.",
+    "proTeaser": "Atualize para Pro para recomendações de treino com IA"
   }
 }
