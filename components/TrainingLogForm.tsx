@@ -6,6 +6,7 @@ import { useOnlineStatus } from "@/lib/useOnlineStatus";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type CompData, BELT_RANKS } from "@/lib/trainingLogHelpers";
 import BottomSheet from "@/components/ui/BottomSheet";
+import DraftNumberInput from "@/components/ui/DraftNumberInput";
 import { getYesterdayDateString } from "@/lib/timezone";
 
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
@@ -61,24 +62,6 @@ function DurationPicker({
   const { t } = useLocale();
   const isPreset = (DURATION_PRESETS as number[]).includes(value);
   const [showCustom, setShowCustom] = useState(!isPreset);
-  // ローカルstring stateで入力中の値を管理（入力中に60に戻るバグ防止）
-  const [draft, setDraft] = useState(String(value));
-  // 親のvalueが変わったらdraftも同期（プリセット選択時など）
-  const prevValue = useRef(value);
-  if (prevValue.current !== value) {
-    prevValue.current = value;
-    setDraft(String(value));
-  }
-
-  const commitDraft = () => {
-    const n = parseInt(draft, 10);
-    if (!isNaN(n) && n >= 1 && n <= 480) {
-      onChange(n);
-    } else {
-      // 不正値 → 現在値に戻す
-      setDraft(String(value));
-    }
-  };
 
   return (
     <div>
@@ -113,15 +96,11 @@ function DurationPicker({
       </div>
       {/* Custom number input — only shown when Custom is active */}
       {(showCustom || !isPreset) && (
-        <input
-          type="number"
-          inputMode="numeric"
-          value={draft}
+        <DraftNumberInput
+          value={value}
+          onChange={onChange}
           min={1}
           max={480}
-          onChange={(e) => setDraft(e.target.value)}
-          onBlur={commitDraft}
-          onKeyDown={(e) => { if (e.key === "Enter") commitDraft(); }}
           className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30"
           placeholder={t("training.customMinutes")}
         />

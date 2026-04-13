@@ -1,8 +1,9 @@
 "use client";
 
-import { memo, useState, useRef } from "react";
+import { memo } from "react";
 import { useLocale } from "@/lib/i18n";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
+import DraftNumberInput from "@/components/ui/DraftNumberInput";
 import ShareButton from "@/components/ShareButton";
 import SwipeableCard from "@/components/SwipeableCard";
 import {
@@ -53,23 +54,6 @@ function DurationPicker({
 }) {
   const { t } = useLocale();
   const isPreset = DURATION_PRESETS.includes(value);
-  // ローカルstring stateで入力中の値を管理（入力中に値が飛ぶバグ防止）
-  const [draft, setDraft] = useState(String(value));
-  const prevValue = useRef(value);
-  if (prevValue.current !== value) {
-    prevValue.current = value;
-    setDraft(String(value));
-  }
-
-  const commitDraft = () => {
-    const n = parseInt(draft, 10);
-    if (!isNaN(n) && n >= 1 && n <= 480) {
-      onChange(n);
-    } else {
-      setDraft(String(value));
-    }
-  };
-
   return (
     <div>
       <label className="block text-gray-400 text-xs mb-1">{t("training.duration")}</label>
@@ -90,16 +74,11 @@ function DurationPicker({
         ))}
       </div>
       <div className="flex items-center gap-2">
-        <input
-          type="number"
-          inputMode="numeric"
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onBlur={commitDraft}
-          onKeyDown={(e) => { if (e.key === "Enter") commitDraft(); }}
+        <DraftNumberInput
+          value={value}
+          onChange={onChange}
           min={1}
           max={480}
-          step={1}
           className={`w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border focus:outline-none focus:border-white/30 ${
             isPreset ? "border-white/10" : "border-white/30"
           }`}
