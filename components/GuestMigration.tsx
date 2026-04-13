@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 
@@ -19,6 +19,13 @@ export default function GuestMigration({ userId }: { userId: string }) {
   const [migrated, setMigrated] = useState(0);
   const [show, setShow] = useState(false);
   const { t } = useLocale();
+  const showTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => {
+    return () => {
+      if (showTimerRef.current) clearTimeout(showTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const migrate = async () => {
@@ -46,7 +53,7 @@ export default function GuestMigration({ userId }: { userId: string }) {
         localStorage.removeItem(STORAGE_KEY);
         setMigrated(guestLogs.length);
         setShow(true);
-        setTimeout(() => setShow(false), 5000);
+        showTimerRef.current = setTimeout(() => setShow(false), 5000);
       }
     };
 

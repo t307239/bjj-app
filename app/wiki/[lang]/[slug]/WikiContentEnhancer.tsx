@@ -14,7 +14,7 @@ export default function WikiContentEnhancer() {
   const router = useRouter();
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
-  const toastTimerRef = useRef<NodeJS.Timeout>();
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     return () => {

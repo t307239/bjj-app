@@ -34,7 +34,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
   const [targetSaved, setTargetSaved] = useState(false);
   const [showTargetForm, setShowTargetForm] = useState(false);
   const [latestWeight, setLatestWeight] = useState<number | null>(null);
-  const targetSavedTimerRef = useRef<NodeJS.Timeout>();
+  const targetSavedTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     return () => {

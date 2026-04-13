@@ -81,7 +81,7 @@ export default function PersonalBests({ userId }: Props) {
   const [loaded, setLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
-  const copiedTimerRef = useRef<NodeJS.Timeout>();
+  const copiedTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const supabase = createClient();
 
   useEffect(() => {

@@ -19,7 +19,7 @@ export default function QuickWeightLog({ userId, onLogged }: Props) {
   const [note, setNote] = useState("");
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-  const toastTimerRef = useRef<NodeJS.Timeout>();
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     return () => {

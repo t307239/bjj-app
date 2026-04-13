@@ -43,7 +43,7 @@ function ErrorBanner() {
 function IABWarning() {
   const { t } = useLocale();
   const [copied, setCopied] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     return () => {
@@ -111,7 +111,7 @@ function LoginForm() {
   // Highlight checkboxes when user tries to proceed without checking them
   const [nudge, setNudge] = useState(false);
   const checkboxRef = useRef<HTMLDivElement>(null);
-  const nudgeTimerRef = useRef<NodeJS.Timeout>();
+  const nudgeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     return () => {

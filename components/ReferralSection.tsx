@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocale } from "@/lib/i18n";
 import { trackEvent } from "@/lib/analytics";
 
@@ -22,14 +22,21 @@ export default function ReferralSection({
 }) {
   const { t } = useLocale();
   const [copied, setCopied] = useState(false);
+  const copiedTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const referralLink = `${APP_URL}/login?ref=${referralCode}`;
+
+  useEffect(() => {
+    return () => {
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    };
+  }, []);
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(referralLink);
       trackEvent("referral_shared", { method: "copy" });
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      copiedTimerRef.current = setTimeout(() => setCopied(false), 2000);
     } catch {
       const input = document.createElement("input");
       input.value = referralLink;
@@ -38,7 +45,7 @@ export default function ReferralSection({
       document.execCommand("copy");
       document.body.removeChild(input);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      copiedTimerRef.current = setTimeout(() => setCopied(false), 2000);
     }
   };
 

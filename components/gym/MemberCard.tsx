@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocale } from "@/lib/i18n";
 import { type MemberRow, type RiskLevel, beltColor } from "./types";
 
@@ -23,12 +23,19 @@ export default function MemberCard({
 }: Props) {
   const { t } = useLocale();
   const [nudgeCopied, setNudgeCopied] = useState(false);
+  const nudgeCopiedTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => {
+    return () => {
+      if (nudgeCopiedTimerRef.current) clearTimeout(nudgeCopiedTimerRef.current);
+    };
+  }, []);
 
   const handleNudge = () => {
     const msg = t("gym.nudgeTemplate");
     navigator.clipboard.writeText(msg).then(() => {
       setNudgeCopied(true);
-      setTimeout(() => setNudgeCopied(false), 2000);
+      nudgeCopiedTimerRef.current = setTimeout(() => setNudgeCopied(false), 2000);
     }).catch((err) => console.error("nudge clipboard copy failed:", err));
   };
   const lastSeenText = member.last_training_date

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocale } from "@/lib/i18n";
 import { type Gym } from "./types";
 
@@ -19,6 +19,15 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
   const [parsed, setParsed] = useState(false);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
+  const copiedIdxTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const copiedAllTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => {
+    return () => {
+      if (copiedIdxTimerRef.current) clearTimeout(copiedIdxTimerRef.current);
+      if (copiedAllTimerRef.current) clearTimeout(copiedAllTimerRef.current);
+    };
+  }, []);
 
   const inviteBase =
     typeof window !== "undefined"
@@ -64,7 +73,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
     try {
       await navigator.clipboard.writeText(inviteBase);
       setCopiedIdx(idx);
-      setTimeout(() => setCopiedIdx(null), 2000);
+      copiedIdxTimerRef.current = setTimeout(() => setCopiedIdx(null), 2000);
     } catch {/* ignore */}
   };
 
@@ -77,7 +86,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
     try {
       await navigator.clipboard.writeText(text);
       setCopiedAll(true);
-      setTimeout(() => setCopiedAll(false), 2000);
+      copiedAllTimerRef.current = setTimeout(() => setCopiedAll(false), 2000);
     } catch {/* ignore */}
   };
 

@@ -16,7 +16,7 @@ interface ShareButtonProps {
 export default function ShareButton({ title, url, lang }: ShareButtonProps) {
   const [canShare, setCanShare] = useState(false);
   const [copied, setCopied] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     setCanShare(typeof navigator !== "undefined" && !!navigator.share);

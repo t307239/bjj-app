@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 207 files
 CRITICAL: 1
-WARNING: 28
+WARNING: 10
 INFO: 80
-Total: 109
+Total: 91
 
 [CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (599/1605 キー) — 1036 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
@@ -19,10 +19,6 @@ Total: 109
   FIX: t() キーを追加して多言語対応
 [INFO] [DANGEROUS_HTML] app/layout.tsx: L92: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [SETTIMEOUT_NO_CLEANUP] app/login/LoginClient.tsx: L50: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
-[WARNING] [SETTIMEOUT_NO_CLEANUP] app/login/LoginClient.tsx: L110: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
 [INFO] [DANGEROUS_HTML] app/login/layout.tsx: L49: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/login/page.tsx: L41: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
@@ -45,14 +41,8 @@ Total: 109
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/ConfettiEffect.tsx: L41: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [SETTIMEOUT_NO_CLEANUP] app/wiki/[lang]/[slug]/EasterEgg.tsx: L37: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/ScrollProgressBar.tsx: L28: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [SETTIMEOUT_NO_CLEANUP] app/wiki/[lang]/[slug]/ShareButton.tsx: L56: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
-[WARNING] [SETTIMEOUT_NO_CLEANUP] app/wiki/[lang]/[slug]/WikiContentEnhancer.tsx: L41: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/YouTubeLiteEmbed.tsx: L31: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/YouTubeLiteEmbed.tsx: L38: style={{...}} — Tailwindクラスで統一推奨
@@ -107,8 +97,6 @@ Total: 109
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L288: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [SETTIMEOUT_NO_CLEANUP] components/BodyManagementSection.tsx: L111: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
 [INFO] [INLINE_STYLE_OBJECT] components/CompetitionSummaryCard.tsx: L296: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/ExtendedBadgeGrid.tsx: L89: style={{...}} — Tailwindクラスで統一推奨
@@ -117,14 +105,8 @@ Total: 109
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/GoalTrackerEditor.tsx: L57: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [SETTIMEOUT_NO_CLEANUP] components/GymDashboard.tsx: L86: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
-[WARNING] [SETTIMEOUT_NO_CLEANUP] components/InstallBanner.tsx: L50: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
-[INFO] [INLINE_STYLE_OBJECT] components/MilestoneBadgeGrid.tsx: L162: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/MilestoneBadgeGrid.tsx: L169: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [SETTIMEOUT_NO_CLEANUP] components/MilestoneBadgeGrid.tsx: L91: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
 [WARNING] [JSX_HARDCODED_ENGLISH] components/NavBar.tsx: L103: JSX内に英語テキスト直書き: "BJJ App"
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
@@ -137,20 +119,10 @@ Total: 109
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/PartnerStatsCard.tsx: L39: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/PersonalBests.tsx: L354: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/PersonalBests.tsx: L361: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [SETTIMEOUT_NO_CLEANUP] components/PersonalBests.tsx: L239: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
-[WARNING] [SETTIMEOUT_NO_CLEANUP] components/ProfileForm.tsx: L728: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
-[WARNING] [SETTIMEOUT_NO_CLEANUP] components/QuickWeightLog.tsx: L46: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
-[INFO] [INLINE_STYLE_OBJECT] components/ReferralSection.tsx: L121: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/ReferralSection.tsx: L128: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [SETTIMEOUT_NO_CLEANUP] components/ReferralSection.tsx: L32: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
-[WARNING] [SETTIMEOUT_NO_CLEANUP] components/ReferralSection.tsx: L41: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
 [INFO] [INLINE_STYLE_OBJECT] components/RollAnalyticsCard.tsx: L81: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/RollAnalyticsCard.tsx: L249: style={{...}} — Tailwindクラスで統一推奨
@@ -159,14 +131,12 @@ Total: 109
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/SkillMapV2.tsx: L649: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/SwipeableCard.tsx: L99: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/SwipeableCard.tsx: L106: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/SwipeableCard.tsx: L115: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/SwipeableCard.tsx: L122: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/SwipeableCard.tsx: L131: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/SwipeableCard.tsx: L138: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [SETTIMEOUT_NO_CLEANUP] components/SwipeableCard.tsx: L82: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L278: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L289: style={{...}} — Tailwindクラスで統一推奨
@@ -201,12 +171,6 @@ Total: 109
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/gym/BeltDistributionChart.tsx: L43: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [SETTIMEOUT_NO_CLEANUP] components/gym/CsvBulkInvite.tsx: L67: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
-[WARNING] [SETTIMEOUT_NO_CLEANUP] components/gym/CsvBulkInvite.tsx: L80: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
-[WARNING] [SETTIMEOUT_NO_CLEANUP] components/gym/MemberCard.tsx: L31: setTimeout(() => setState) without clearTimeout — メモリリーク
-  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/AddNodePopup.tsx: L20: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/TechniqueNode.tsx: L58: style={{...}} — Tailwindクラスで統一推奨

@@ -5,7 +5,7 @@
  * 左スワイプ → 削除エリア (赤) / 右スワイプ → 編集エリア (緑)
  * threshold 60px でアクション確定。
  */
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 
 type Props = {
   onDelete: () => void;
@@ -23,6 +23,13 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
   const isHorizontal = useRef<boolean | null>(null); // determined on first meaningful move
   const [offsetX, setOffsetX] = useState(0);
   const [animating, setAnimating] = useState(false);
+  const animationTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => {
+    return () => {
+      if (animationTimerRef.current) clearTimeout(animationTimerRef.current);
+    };
+  }, []);
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     const x = e.touches[0].clientX;
@@ -61,7 +68,7 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
       // Committed left swipe → delete
       setAnimating(true);
       setOffsetX(-MAX_DRAG);
-      setTimeout(() => {
+      animationTimerRef.current = setTimeout(() => {
         onDelete();
         setOffsetX(0);
         setAnimating(false);
@@ -70,7 +77,7 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
       // Committed right swipe → edit
       setAnimating(true);
       setOffsetX(MAX_DRAG);
-      setTimeout(() => {
+      animationTimerRef.current = setTimeout(() => {
         onEdit();
         setOffsetX(0);
         setAnimating(false);
@@ -79,7 +86,7 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
       // Snap back
       setAnimating(true);
       setOffsetX(0);
-      setTimeout(() => setAnimating(false), 200);
+      animationTimerRef.current = setTimeout(() => setAnimating(false), 200);
     }
     touchStartX.current = null;
     touchStartY.current = null;

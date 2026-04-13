@@ -62,7 +62,7 @@ export default function MilestoneBadgeGrid({ totalCount }: Props) {
   const { t } = useLocale();
   const [sharePrompt, setSharePrompt] = useState<Milestone | null>(null);
   const [copied, setCopied] = useState(false);
-  const copiedTimerRef = useRef<NodeJS.Timeout>();
+  const copiedTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     return () => {

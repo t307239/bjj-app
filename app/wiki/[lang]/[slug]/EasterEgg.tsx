@@ -23,7 +23,7 @@ const KONAMI_CODE = [
 export default function EasterEgg() {
   const [show, setShow] = useState(false);
   const [progress, setProgress] = useState(0);
-  const timerRef = useRef<NodeJS.Timeout>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     return () => {

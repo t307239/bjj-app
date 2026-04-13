@@ -77,7 +77,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
   const [regenerating, setRegenerating] = useState(false);
   const [confirmRegen, setConfirmRegen] = useState(false);
   const [currentCode, setCurrentCode] = useState(gym.invite_code);
-  const copiedTimerRef = useRef<NodeJS.Timeout>();
+  const copiedTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const inviteUrl = `${typeof window !== "undefined" ? window.location.origin : "https://bjj-app.net"}/gym/join/${currentCode}`;
 
   useEffect(() => {

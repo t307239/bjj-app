@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { formatBjjDuration } from "@/lib/bjjDuration";
 import { getLocalDateString } from "@/lib/timezone";
 import { useProfile } from "@/hooks/useProfile";
@@ -660,9 +660,16 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [promotionFrom, setPromotionFrom] = useState<string | null>(null);
   const [gymSuggestions, setGymSuggestions] = useState<{ id: string; name: string }[]>([]);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const today = getLocalDateString();
   const belts = BELTS({ t });
   const currentBelt = belts.find((b) => b.value === form.belt);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    };
+  }, []);
 
   // Fetch all gym names for autocomplete + gym_id auto-linking (T-30)
   useEffect(() => {
@@ -725,7 +732,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
         setPromotionFrom(profile.belt);
       }
       setToast({ message: t("profile.saved"), type: "success" });
-      setTimeout(() => { setToast(null); onSave(form); }, 1200);
+      toastTimerRef.current = setTimeout(() => { setToast(null); onSave(form); }, 1200);
     } else {
       setToast({ message: t("profile.saveFailed") + ": " + (upsertError.message || upsertError.code || t("profile.saveFailedUnknown")), type: "error" });
     }
