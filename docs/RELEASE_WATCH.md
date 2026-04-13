@@ -1,38 +1,43 @@
-# Anthropic Release Watch
-
-リリース情報を自動追跡するログファイル。毎日チェック実施。
+# Anthropic リリース監視ログ
 
 ---
 
-## 2026/04/09 チェック
+## 2026/04/13 チェック
 
-### 新着リリース（2026/04/07-04/08）
+### 新着リリース
 
-#### API・プロダクト
-- 🤖 **Claude Managed Agents** (2026/04/08): 完全マネージド・エージェント実行基盤。セキュアサンドボックス、ビルトインツール、SSE ストリーミング対応。`managed-agents-2026-04-01` beta ヘッダ必須
-- 🛠️ **ant CLI** (2026/04/08): Claude API コマンドラインクライアント。Claude Code ネイティブ統合、YAML リソースバージョニング対応
-- 🧠 **Claude Mythos Preview** (2026/04/07): 防御的サイバーセキュリティ特化モデル（Project Glasswing）。招待制リサーチプレビュー
-- 📡 **Messages API on Amazon Bedrock** (2026/04/07): AWS マネージド・エージェント対応。`/anthropic/v1/messages` エンドポイント。us-east-1 利用可能
+#### 🧠 新モデル
+- **Claude Mythos Preview**（2026/04/07）: 汎用モデルとして公開。コンピュータセキュリティタスクで突出した性能。Project Glasswing（防御的サイバーセキュリティ用）として招待制の研究プレビュー提供中。API文字列未公開（招待制）
+- **Claude Opus 4.6**（2026/02/05）: コーディング・エージェント・エンタープライズワークフロー向け最上位モデル。API: `claude-opus-4-6`
+- **Claude Sonnet 4.6**（2026/02/17）: 速度と性能を両立したバランス型。エージェント検索性能向上・トークン消費削減。1Mトークンコンテキスト（beta）。API: `claude-sonnet-4-6`
 
-#### 既知情報（前月以前）
-- 🧠 Claude Opus 4.6 (2026/02/05)
-- 🧠 Claude Sonnet 4.6 (2026/02/17)
-- 🛠️ 1M token context window GA (2026/03/13、Opus/Sonnet 4.6)
-- 🛠️ Code execution free with web search (2026/02/17)
-- 🛠️ Fine-grained tool streaming GA (2026/02/05)
-- 🛠️ Structured outputs GA (2026/01/29)
+#### 🛠️ Claude Code
+- `/team-onboarding` コマンド追加（チームメンバー向けオンボーディングガイド生成）
+- `/ultraplan` コマンド追加（自動環境作成付き）
+- Linuxでのサブプロセスサンドボックス（PID名前空間分離）追加
+- gitワークツリーのステータスライン対応
+- コマンドインジェクション脆弱性修正・長時間セッションでのメモリリーク修正
+- Homebrewインストールアップデート通知、ctrl+e動作修正
 
-### 💡 BJJ App への影響
+#### 📡 API変更
+- **Claude Managed Agents**（公開beta）: ベータヘッダー `managed-agents-2026-04-01` 必須。セキュアサンドボックス付き自律エージェントハーネス。サーバー送信イベントストリーミング対応
+- **ant CLI** 新登場: Claude API 用コマンドラインクライアント。Claude Codeとのネイティブ統合、YAMLでAPIリソースのバージョン管理
+- **データレジデンシーコントロール**: `inference_geo` パラメータで推論リージョン指定可能。US限定推論は2026/02/01以降モデルで1.1倍価格
+- **Message Batches API**: Opus 4.6/Sonnet 4.6 で `max_tokens` 上限を300kに拡張
+- **Webサーチ・プログラマティックツール呼び出し**: betaヘッダー不要でGA（一般提供）
+- **動的フィルタリング**: Web検索・Webフェッチでコード実行による事前フィルタリング対応、コンテキスト節約
+- **コード実行**: Webサーチ/Webフェッチ併用時は無料
 
-**現在のところ直接的な機能影響なし**
-- Managed Agents: B2B 大規模展開時の検討候補
-- ant CLI: Claude Code との連携強化（今後リリース予定の機能）
-- Mythos Preview: セキュリティ監査系ユースケースなら活用価値あり（現在非対象）
+#### 🖥️ プロダクト
+- **Vercept買収**（2026/02）: Claude のコンピュータユース能力強化へ
+- **Claude 新コンスティテューション**: Claude の振る舞いの原則を更新・公開
+
+### 💡 BJJ Appへの影響
+- **Managed Agents**: 将来の自動化（ランキング更新・Wiki生成）をサーバーサイドエージェントに移行する際に活用検討
+- **Message Batches 300k tokens**: Wiki大量生成バッチの出力上限撤廃。長文ページ生成が安定化
+- **Webサーチ GA**: betaヘッダー削除可能。既存コードの `anthropic-beta: web-search-*` ヘッダーがあれば除去推奨
+- **Claude Sonnet 4.6（現在使用中）**: 今回の確認で現行モデルが最新世代であることを確認済み
 
 ---
 
-## 2026/04/02 チェック
-
-checked, no new releases found in past week.
-
----
+*（このファイルはAnthropicリリース自動監視スクリプトにより管理）*
