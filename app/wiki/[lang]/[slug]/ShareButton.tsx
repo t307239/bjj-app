@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface ShareButtonProps {
   title: string;
@@ -16,9 +16,16 @@ interface ShareButtonProps {
 export default function ShareButton({ title, url, lang }: ShareButtonProps) {
   const [canShare, setCanShare] = useState(false);
   const [copied, setCopied] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     setCanShare(typeof navigator !== "undefined" && !!navigator.share);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, []);
 
   const labels = {
@@ -53,7 +60,7 @@ export default function ShareButton({ title, url, lang }: ShareButtonProps) {
       try {
         await navigator.clipboard.writeText(`${shareText}\n${url}`);
         setCopied(true);
-        setTimeout(() => setCopied(false), 2200);
+        timerRef.current = setTimeout(() => setCopied(false), 2200);
       } catch {}
     }
   };

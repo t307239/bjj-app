@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale } from "@/lib/i18n";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { trackEvent } from "@/lib/analytics";
 
 const MILESTONES = [1, 7, 10, 30, 50, 100, 200, 365, 500, 1000] as const;
@@ -62,6 +62,13 @@ export default function MilestoneBadgeGrid({ totalCount }: Props) {
   const { t } = useLocale();
   const [sharePrompt, setSharePrompt] = useState<Milestone | null>(null);
   const [copied, setCopied] = useState(false);
+  const copiedTimerRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    return () => {
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    };
+  }, []);
 
   // Check if we just hit a milestone (totalCount exactly equals one)
   useEffect(() => {
@@ -88,7 +95,7 @@ export default function MilestoneBadgeGrid({ totalCount }: Props) {
     } else {
       await navigator.clipboard.writeText(text).catch(() => {/* clipboard not available */});
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      copiedTimerRef.current = setTimeout(() => setCopied(false), 2000);
     }
     setSharePrompt(null);
   };

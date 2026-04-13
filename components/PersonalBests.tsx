@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Skeleton from "@/components/ui/Skeleton";
 import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
@@ -81,7 +81,14 @@ export default function PersonalBests({ userId }: Props) {
   const [loaded, setLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const copiedTimerRef = useRef<NodeJS.Timeout>();
   const supabase = createClient();
+
+  useEffect(() => {
+    return () => {
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const load = async () => {
@@ -236,7 +243,7 @@ export default function PersonalBests({ userId }: Props) {
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
     window.open(url, "_blank", "noopener,noreferrer");
     setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
+    copiedTimerRef.current = setTimeout(() => setIsCopied(false), 2000);
   };
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { useOnlineStatus } from "@/lib/useOnlineStatus";
@@ -19,6 +19,13 @@ export default function QuickWeightLog({ userId, onLogged }: Props) {
   const [note, setNote] = useState("");
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const toastTimerRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +50,7 @@ export default function QuickWeightLog({ userId, onLogged }: Props) {
       setToast(t("body.saved"));
       onLogged?.();
     }
-    setTimeout(() => setToast(null), 3000);
+    toastTimerRef.current = setTimeout(() => setToast(null), 3000);
   };
 
   return (

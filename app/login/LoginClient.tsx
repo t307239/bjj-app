@@ -43,11 +43,18 @@ function ErrorBanner() {
 function IABWarning() {
   const { t } = useLocale();
   const [copied, setCopied] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   const copyUrl = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      timerRef.current = setTimeout(() => setCopied(false), 2000);
     }).catch((err) => console.error("clipboard copy failed:", err));
   };
 
@@ -104,10 +111,18 @@ function LoginForm() {
   // Highlight checkboxes when user tries to proceed without checking them
   const [nudge, setNudge] = useState(false);
   const checkboxRef = useRef<HTMLDivElement>(null);
+  const nudgeTimerRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    return () => {
+      if (nudgeTimerRef.current) clearTimeout(nudgeTimerRef.current);
+    };
+  }, []);
+
   function nudgeCheckboxes() {
     setNudge(true);
     checkboxRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-    setTimeout(() => setNudge(false), 1500);
+    nudgeTimerRef.current = setTimeout(() => setNudge(false), 1500);
   }
 
   const callbackUrl = () => {

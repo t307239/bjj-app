@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 // Konami Code: ↑ ↑ ↓ ↓ ← → ← → B A
 const KONAMI_CODE = [
@@ -23,6 +23,13 @@ const KONAMI_CODE = [
 export default function EasterEgg() {
   const [show, setShow] = useState(false);
   const [progress, setProgress] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -34,7 +41,7 @@ export default function EasterEgg() {
         if (next === KONAMI_CODE.length) {
           setShow(true);
           setProgress(0);
-          setTimeout(() => setShow(false), 5000);
+          timerRef.current = setTimeout(() => setShow(false), 5000);
         } else {
           setProgress(next);
         }

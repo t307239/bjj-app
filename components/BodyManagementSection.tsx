@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import QuickWeightLog from "@/components/QuickWeightLog";
@@ -34,6 +34,13 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
   const [targetSaved, setTargetSaved] = useState(false);
   const [showTargetForm, setShowTargetForm] = useState(false);
   const [latestWeight, setLatestWeight] = useState<number | null>(null);
+  const targetSavedTimerRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    return () => {
+      if (targetSavedTimerRef.current) clearTimeout(targetSavedTimerRef.current);
+    };
+  }, []);
 
   const loadProfile = useCallback(async () => {
     try {
@@ -108,7 +115,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
       setTargetDate(targetDateInput);
       setTargetSaved(true);
       setShowTargetForm(false);
-      setTimeout(() => setTargetSaved(false), 2000);
+      targetSavedTimerRef.current = setTimeout(() => setTargetSaved(false), 2000);
     } catch {
       // ignore
     } finally {

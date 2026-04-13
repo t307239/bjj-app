@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocale } from "@/lib/i18n";
 import { logClientError } from "@/lib/logger";
 
@@ -16,6 +16,13 @@ export default function InstallBanner() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalling, setIsInstalling] = useState(false);
   const [installError, setInstallError] = useState(false);
+  const errorTimerRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    return () => {
+      if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const isDismissed = localStorage.getItem("bjj_install_dismissed") === "1";
@@ -47,7 +54,7 @@ export default function InstallBanner() {
     } catch (err) {
       logClientError("pwa.install_prompt_error", err);
       setInstallError(true);
-      setTimeout(() => setInstallError(false), 3000);
+      errorTimerRef.current = setTimeout(() => setInstallError(false), 3000);
     }
     finally { setIsInstalling(false); setDeferredPrompt(null); }
   };

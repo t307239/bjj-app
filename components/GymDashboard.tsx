@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Toast from "./Toast";
 import { useLocale } from "@/lib/i18n";
 import { useGymDashboard } from "@/hooks/useGymDashboard";
@@ -77,13 +77,20 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
   const [regenerating, setRegenerating] = useState(false);
   const [confirmRegen, setConfirmRegen] = useState(false);
   const [currentCode, setCurrentCode] = useState(gym.invite_code);
+  const copiedTimerRef = useRef<NodeJS.Timeout>();
   const inviteUrl = `${typeof window !== "undefined" ? window.location.origin : "https://bjj-app.net"}/gym/join/${currentCode}`;
+
+  useEffect(() => {
+    return () => {
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    };
+  }, []);
 
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(inviteUrl);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      copiedTimerRef.current = setTimeout(() => setCopied(false), 2000);
     } catch {
       // fallback: select text
     }

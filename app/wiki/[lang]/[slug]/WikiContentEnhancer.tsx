@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 /**
@@ -14,6 +14,13 @@ export default function WikiContentEnhancer() {
   const router = useRouter();
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const toastTimerRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    };
+  }, []);
 
   // ── #27: Intercept internal /wiki/ links for client-side navigation ──
   useEffect(() => {
@@ -38,7 +45,7 @@ export default function WikiContentEnhancer() {
   // ── #29: Heading anchor links ──
   const showToast = useCallback((msg: string) => {
     setToast(msg);
-    setTimeout(() => setToast(null), 2000);
+    toastTimerRef.current = setTimeout(() => setToast(null), 2000);
   }, []);
 
   useEffect(() => {
