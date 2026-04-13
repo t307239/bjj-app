@@ -34,6 +34,8 @@ AUDIT_FRAMEWORK.md の20軸スコアリングでは見逃される、
  26. Form onSubmit で preventDefault 欠落
  27. 条件付き Hooks 呼び出し（React規約違反）
  28. インラインスタイルオブジェクト（Tailwind統一推奨）
+ 29. Unsafe number input（parseInt||fallback / Number() on input[type=number]）
+ 30. setTimeout without cleanup（setState呼び出し + clearTimeout無し → メモリリーク）
 
 使い方:
     python3 scripts/detect_hidden_bugs.py              # 全チェック
@@ -1316,6 +1318,99 @@ def check_inline_styles(filepath: Path, content: str, report: BugReport):
             )
 
 
+def check_unsafe_number_input(filepath: Path, content: str, report: BugReport):
+    """type="number" の controlled input で parseInt||fallback / Number() を直接使用（カテゴリ29）
+
+    問題: <input type="number" value={num} onChange={e => setX(parseInt(e.target.value) || 60)} />
+    → ユーザーがフィールドをクリアした瞬間にfallback値に戻り、カスタム値を入力できない。
+    → DraftNumberInput コンポーネントを使うこと。
+    <select> は常に有効値が返るため除外。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+    if filepath.suffix != ".tsx":
+        return
+
+    lines = content.split("\n")
+    for line_no, line in enumerate(lines, 1):
+        stripped = line.strip()
+        if stripped.startswith("//") or stripped.startswith("*"):
+            continue
+
+        # parseInt(e.target.value) || fallback パターン
+        if re.search(r'parseInt\(e\.target\.value\)\s*\|\|', line):
+            # <select> 内かどうか前後20行で判定
+            context_start = max(0, line_no - 20)
+            context_end = min(len(lines), line_no + 5)
+            context = "\n".join(lines[context_start:context_end])
+            if "<select" in context and "</select" in context:
+                continue
+            report.add(
+                "WARNING", "UNSAFE_NUMBER_INPUT",
+                str(rel),
+                f"L{line_no}: parseInt(e.target.value)||fallback — クリア時にfallbackに戻るバグ",
+                "DraftNumberInput コンポーネントに置き換え",
+            )
+
+        # Number(e.target.value) on <input> (not <select>)
+        if re.search(r'Number\(e\.target\.value\)', line):
+            context_start = max(0, line_no - 20)
+            context_end = min(len(lines), line_no + 5)
+            context = "\n".join(lines[context_start:context_end])
+            if "<select" in context and "</select" in context:
+                continue
+            # input type="number" のコンテキストでのみ検出
+            if 'type="number"' in context or "type='number'" in context:
+                report.add(
+                    "WARNING", "UNSAFE_NUMBER_INPUT",
+                    str(rel),
+                    f"L{line_no}: Number(e.target.value) on <input type=\"number\"> — クリア時に0/NaNになる",
+                    "DraftNumberInput コンポーネントに置き換え",
+                )
+
+
+def check_settimeout_no_cleanup(filepath: Path, content: str, report: BugReport):
+    """コンポーネント内の setTimeout が clearTimeout されていない（カテゴリ30）
+
+    問題: setState を含む setTimeout がクリーンアップされないと、
+    コンポーネントのアンマウント後に setState が呼ばれてメモリリーク。
+    useEffect 内で return () => clearTimeout(timer) すること。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+    if filepath.suffix != ".tsx":
+        return
+
+    lines = content.split("\n")
+    # ファイル全体で clearTimeout が使われているかを先にチェック
+    has_clear = "clearTimeout" in content
+
+    for line_no, line in enumerate(lines, 1):
+        stripped = line.strip()
+        if stripped.startswith("//") or stripped.startswith("*"):
+            continue
+
+        # setTimeout(...set で始まるパターン（setState系）
+        if re.search(r'setTimeout\s*\(\s*\(\)\s*=>\s*\{?\s*set[A-Z]', line) or \
+           re.search(r'setTimeout\s*\(\s*\(\)\s*=>\s*set[A-Z]', line):
+            # 同じ関数スコープ内で clearTimeout があるかチェック
+            # 前後50行のコンテキストで clearTimeout を探す
+            context_start = max(0, line_no - 5)
+            context_end = min(len(lines), line_no + 10)
+            local_context = "\n".join(lines[context_start:context_end])
+
+            # clearTimeout が近くにあるか、timer変数に代入されているか
+            assign_match = re.search(r'(?:const|let|var)\s+\w+\s*=\s*setTimeout', line)
+            if assign_match:
+                continue  # timer変数に代入済み → cleanup可能
+            # 同一行で変数代入されていないsetTimeout + setState → 危険
+            if not has_clear:
+                report.add(
+                    "WARNING", "SETTIMEOUT_NO_CLEANUP",
+                    str(rel),
+                    f"L{line_no}: setTimeout(() => setState) without clearTimeout — メモリリーク",
+                    "const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)",
+                )
+
+
 # ─────────────────────────────────────────────────────
 # メインスキャナ
 # ─────────────────────────────────────────────────────
@@ -1354,6 +1449,8 @@ def scan_all() -> BugReport:
             check_form_prevent_default(fpath, content, report)  # カテゴリ26
             check_conditional_hooks(fpath, content, report)     # カテゴリ27
             check_inline_styles(fpath, content, report)         # カテゴリ28
+            check_unsafe_number_input(fpath, content, report)   # カテゴリ29
+            check_settimeout_no_cleanup(fpath, content, report) # カテゴリ30
 
         # TS/TSX共通チェック（カテゴリ 7, 10-11, 14-15, 17-18, 20）
         check_console_logs(fpath, content, report)
