@@ -22,6 +22,44 @@ import { trackEvent } from "@/lib/analytics";
 
 const PAGE_SIZE = 10;
 
+/** Generate a contextual one-liner insight after saving a training log */
+function generateInsight(
+  existingEntries: TrainingEntry[],
+  newEntry: TrainingEntry,
+  prevTotal: number | null,
+  t: (k: string, vars?: Record<string, string | number>) => string,
+): string {
+  const newTotal = (prevTotal ?? 0) + 1;
+
+  // Milestone check: 10, 25, 50, 100, 200, 500, 1000
+  const milestones = [10, 25, 50, 100, 200, 500, 1000];
+  if (milestones.includes(newTotal)) {
+    return t("insight.milestone", { n: newTotal });
+  }
+
+  // Week count (how many sessions this week including the new one)
+  const todayDate = new Date(newEntry.date + "T00:00:00Z");
+  const dayOfWeek = todayDate.getUTCDay();
+  const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  const mondayMs = todayDate.getTime() - mondayOffset * 86400000;
+  const mondayStr = new Date(mondayMs).toISOString().slice(0, 10);
+  const weekEntries = existingEntries.filter((e) => e.date >= mondayStr).length + 1;
+
+  if (weekEntries >= 5) return t("insight.weekFive");
+  if (weekEntries >= 3) return t("insight.weekThree", { n: weekEntries });
+
+  // Type variety check
+  const recentTypes = new Set(existingEntries.slice(0, 5).map((e) => e.type));
+  recentTypes.add(newEntry.type);
+  if (recentTypes.size >= 3) return t("insight.variety");
+
+  // Duration check
+  if (newEntry.duration_min >= 120) return t("insight.longSession");
+
+  // Default
+  return t("training.saved");
+}
+
 type UseTrainingLogProps = {
   userId: string;
   isPro: boolean;
@@ -52,6 +90,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
   const [totalCount, setTotalCount] = useState<number | null>(null);
   const [trainedToday, setTrainedToday] = useState<boolean | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [lastInsight, setLastInsight] = useState<string | null>(null);
   const [pdfLoading, setPdfLoading] = useState(false);
 
   // ── Form state ────────────────────────────────────────────────────────────
@@ -263,7 +302,11 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         localStorage.setItem("bjj_log_count", String(prev + 1));
       }
       trackEvent("training_logged", { type: form.type });
-      setToast({ message: t("training.saved"), type: "success" });
+
+      // ── Post-training insight (one-liner feedback) ─────────────────
+      const insight = generateInsight(entries, data, totalCount, tRef.current);
+      setLastInsight(insight);
+      setToast({ message: insight, type: "success" });
       idempotencyKey.current = typeof crypto !== "undefined"
         ? crypto.randomUUID()
         : `${Date.now()}-${Math.random()}`;
@@ -551,6 +594,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     totalCount, setTotalCount,
     trainedToday, setTrainedToday,
     showCelebration, setShowCelebration,
+    lastInsight,
     pdfLoading,
     showForm, setShowForm,
     form, setForm,

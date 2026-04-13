@@ -1615,7 +1615,16 @@
     "emptyDesc": "最初のトレーニングを記録して始めよう",
     "emptyCtaRecord": "練習を記録する",
     "proInsightTeaser": "📈 練習傾向を分析",
-    "proInsightDesc": "Proで詳細なトレーニング分析を見る →"
+    "proInsightDesc": "Proで詳細なトレーニング分析を見る →",
+    "heatmapTitle": "練習アクティビティ",
+    "heatmapDays": "{n}日練習",
+    "heatmapLess": "少ない",
+    "heatmapMore": "多い",
+    "emptyMotivationTitle": "ここから始まる柔術の旅",
+    "emptyMotivationDesc": "すべての黒帯はかつて白帯だった。最初のセッションを記録して、成長を追跡しよう。",
+    "emptyTip": "ヒント: 練習の記録は10秒で完了します",
+    "quickActionTitle": "練習を記録する",
+    "quickActionDesc": "最新のセッションを記録"
   },
   "report": {
     "title": "パフォーマンスレポート",
@@ -1741,5 +1750,12 @@
     "annual": "年次",
     "save33": "33%セーブ",
     "trialText": "✓ 14日間の無料トライアル"
+  },
+  "insight": {
+    "milestone": "🎉 累計{n}回達成！素晴らしい継続力。",
+    "weekFive": "🔥 今週5回以上！驚異的な練習量！",
+    "weekThree": "💪 今週{n}回 — いい調子！",
+    "variety": "🎯 バランスの良い練習メニュー！",
+    "longSession": "⏱️ ロングセッション！持久力トレーニングに最適。"
   }
 }

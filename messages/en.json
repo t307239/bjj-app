@@ -1613,7 +1613,16 @@
     "emptyDesc": "Record your first session to get started",
     "emptyCtaRecord": "Record a session",
     "proInsightTeaser": "📈 Training trend analysis",
-    "proInsightDesc": "See detailed training analytics with Pro →"
+    "proInsightDesc": "See detailed training analytics with Pro →",
+    "heatmapTitle": "Training Activity",
+    "heatmapDays": "{n} days trained",
+    "heatmapLess": "Less",
+    "heatmapMore": "More",
+    "emptyMotivationTitle": "Your journey starts here",
+    "emptyMotivationDesc": "Every black belt was once a white belt. Record your first session and start tracking your progress.",
+    "emptyTip": "Tip: It takes less than 10 seconds to log a session",
+    "quickActionTitle": "Record Training",
+    "quickActionDesc": "Log your latest session"
   },
   "report": {
     "title": "Performance Report",
@@ -1739,5 +1748,12 @@
     "annual": "Annual",
     "save33": "Save 33%",
     "trialText": "✓ 14-day free trial"
+  },
+  "insight": {
+    "milestone": "🎉 {n} sessions total! Amazing dedication.",
+    "weekFive": "🔥 5+ sessions this week — incredible intensity!",
+    "weekThree": "💪 {n} sessions this week — great consistency!",
+    "variety": "🎯 Nice variety in your training mix!",
+    "longSession": "⏱️ Long session! Great endurance work."
   }
 }

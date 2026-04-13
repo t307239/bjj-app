@@ -59,12 +59,26 @@ function cleanNotes(raw: string | null): string {
 export default function RecentLogs({ logs, t }: Props) {
   if (logs.length === 0) {
     return (
-      <div className="bg-zinc-900/40 border border-white/[0.06] rounded-2xl p-6 mb-5 text-center">
-        <p className="text-zinc-400 text-sm font-medium mb-1">
-          {t("home.emptyTitle")}
+      <div className="bg-zinc-900/40 border border-white/[0.06] rounded-2xl p-8 mb-5 text-center">
+        {/* Motivational empty state */}
+        <div className="text-5xl mb-4">🥋</div>
+        <p className="text-white text-base font-bold mb-1.5">
+          {t("home.emptyMotivationTitle")}
         </p>
-        <p className="text-zinc-500 text-xs">
-          {t("home.emptyDesc")}
+        <p className="text-zinc-400 text-sm mb-5 max-w-[260px] mx-auto leading-relaxed">
+          {t("home.emptyMotivationDesc")}
+        </p>
+        <Link
+          href="/records"
+          className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-sm font-bold px-6 py-3 rounded-xl shadow-lg shadow-emerald-500/20 transition-all min-h-[48px]"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          {t("home.emptyCtaRecord")}
+        </Link>
+        <p className="text-zinc-500 text-xs mt-4">
+          {t("home.emptyTip")}
         </p>
       </div>
     );

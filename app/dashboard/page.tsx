@@ -21,6 +21,7 @@ import Link from "next/link";
 // ─── New simplified home components ──────────────────────────────────────────
 import StatusBar from "@/components/dashboard/StatusBar";
 import RecentLogs from "@/components/dashboard/RecentLogs";
+import HeatmapCalendar from "@/components/dashboard/HeatmapCalendar";
 import WeeklyReportCard from "@/components/WeeklyReportCard";
 import CompetitionCountdown from "@/components/CompetitionCountdown";
 
@@ -145,11 +146,19 @@ export default async function DashboardPage({
   const firstDayOfPrevMonth = `${prevYear}-${String(prevMonth).padStart(2, "0")}-01`;
 
   // ── 全データを並列フェッチ ──
+  // Heatmap needs 112 days (16 weeks) of training dates
+  const heatmapStartDate = (() => {
+    const d = new Date(Date.now() + 9 * 60 * 60 * 1000);
+    d.setDate(d.getDate() - 112);
+    return d.toISOString().slice(0, 10);
+  })();
+
   const [
     { data: profileData },
     rpcRes,
     { data: recentLogs },
     { data: recentLogsFull },
+    { data: heatmapLogs },
   ] = await Promise.all([
     supabase
       .from("profiles")
@@ -177,6 +186,13 @@ export default async function DashboardPage({
       .eq("user_id", user.id)
       .order("date", { ascending: false })
       .limit(3),
+    // Heatmap: all dates in last 112 days
+    supabase
+      .from("training_logs")
+      .select("date")
+      .eq("user_id", user.id)
+      .gte("date", heatmapStartDate)
+      .order("date", { ascending: false }),
   ]);
 
   let metrics = rpcRes.data;
@@ -250,6 +266,9 @@ export default async function DashboardPage({
     notes: string | null;
   }[];
 
+  // Heatmap training dates (array of date strings)
+  const heatmapDates = (heatmapLogs ?? []).map((l: { date: string }) => l.date);
+
   return (
     <div className="min-h-[100dvh] bg-zinc-950 pb-20 sm:pb-0">
       <InstallBanner />
@@ -279,6 +298,38 @@ export default async function DashboardPage({
           streak={streak}
           t={t}
         />
+
+        {/* ═══════════════════════════════════════════
+            QUICK ACTION — prominent record CTA (desktop)
+            ═══════════════════════════════════════════ */}
+        <Link
+          href="/records"
+          className="hidden md:flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 hover:border-emerald-500/40 rounded-2xl px-5 py-4 mb-5 transition-all group active:scale-[0.98]"
+        >
+          <div className="w-11 h-11 rounded-xl bg-[#10B981] flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/30 transition-shadow">
+            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">
+              {t("home.quickActionTitle")}
+            </p>
+            <p className="text-xs text-zinc-400">
+              {t("home.quickActionDesc")}
+            </p>
+          </div>
+          <svg className="w-5 h-5 text-zinc-500 group-hover:text-emerald-400 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+
+        {/* ═══════════════════════════════════════════
+            HEATMAP CALENDAR — GitHub-style training activity
+            ═══════════════════════════════════════════ */}
+        {hasFirstLog && (
+          <HeatmapCalendar trainingDates={heatmapDates} t={t} />
+        )}
 
         {/* ═══════════════════════════════════════════
             COMPETITION COUNTDOWN — upcoming competitions + AI training recs
