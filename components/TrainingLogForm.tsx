@@ -59,9 +59,26 @@ function DurationPicker({
   onChange: (v: number) => void;
 }) {
   const { t } = useLocale();
-  // Show custom input if value doesn't match any preset, or user clicked Custom pill
   const isPreset = (DURATION_PRESETS as number[]).includes(value);
   const [showCustom, setShowCustom] = useState(!isPreset);
+  // ローカルstring stateで入力中の値を管理（入力中に60に戻るバグ防止）
+  const [draft, setDraft] = useState(String(value));
+  // 親のvalueが変わったらdraftも同期（プリセット選択時など）
+  const prevValue = useRef(value);
+  if (prevValue.current !== value) {
+    prevValue.current = value;
+    setDraft(String(value));
+  }
+
+  const commitDraft = () => {
+    const n = parseInt(draft, 10);
+    if (!isNaN(n) && n >= 1 && n <= 480) {
+      onChange(n);
+    } else {
+      // 不正値 → 現在値に戻す
+      setDraft(String(value));
+    }
+  };
 
   return (
     <div>
@@ -99,10 +116,12 @@ function DurationPicker({
         <input
           type="number"
           inputMode="numeric"
-          value={value}
+          value={draft}
           min={1}
           max={480}
-          onChange={(e) => onChange(parseInt(e.target.value) || 60)}
+          onChange={(e) => setDraft(e.target.value)}
+          onBlur={commitDraft}
+          onKeyDown={(e) => { if (e.key === "Enter") commitDraft(); }}
           className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30"
           placeholder={t("training.customMinutes")}
         />

@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState, useRef } from "react";
 import { useLocale } from "@/lib/i18n";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import ShareButton from "@/components/ShareButton";
@@ -53,6 +53,23 @@ function DurationPicker({
 }) {
   const { t } = useLocale();
   const isPreset = DURATION_PRESETS.includes(value);
+  // ローカルstring stateで入力中の値を管理（入力中に値が飛ぶバグ防止）
+  const [draft, setDraft] = useState(String(value));
+  const prevValue = useRef(value);
+  if (prevValue.current !== value) {
+    prevValue.current = value;
+    setDraft(String(value));
+  }
+
+  const commitDraft = () => {
+    const n = parseInt(draft, 10);
+    if (!isNaN(n) && n >= 1 && n <= 480) {
+      onChange(n);
+    } else {
+      setDraft(String(value));
+    }
+  };
+
   return (
     <div>
       <label className="block text-gray-400 text-xs mb-1">{t("training.duration")}</label>
@@ -76,8 +93,10 @@ function DurationPicker({
         <input
           type="number"
           inputMode="numeric"
-          value={value}
-          onChange={(e) => onChange(Number(e.target.value))}
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onBlur={commitDraft}
+          onKeyDown={(e) => { if (e.key === "Enter") commitDraft(); }}
           min={1}
           max={480}
           step={1}
