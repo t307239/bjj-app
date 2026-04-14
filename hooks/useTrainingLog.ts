@@ -601,6 +601,23 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     };
   }, [entries]);
 
+  // ── OP2: Quick-add technique from training form ──────────────────────────
+  const handleQuickAddTechnique = useCallback(async (name: string): Promise<boolean> => {
+    if (!name.trim()) return false;
+    // Avoid duplicates
+    if (techniqueSuggestions.includes(name.trim())) return true;
+    const { data, error } = await supabase
+      .from("technique_nodes")
+      .insert({ user_id: userId, name: name.trim(), pos_x: 100 + Math.random() * 200, pos_y: 100 + Math.random() * 200 })
+      .select("name")
+      .single();
+    if (!error && data) {
+      setTechniqueSuggestions((prev) => [...prev, data.name].sort((a, b) => a.localeCompare(b, "ja")));
+      return true;
+    }
+    return false;
+  }, [userId, supabase, techniqueSuggestions]);
+
   return {
     today,
     entries, setEntries,
@@ -638,6 +655,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     startEdit,
     handleUpdate,
     handlePageChange,
+    handleQuickAddTechnique,
     totalPages,
     filtered,
     monthEntries,

@@ -241,7 +241,9 @@
     "showHistory": "ログ一覧を表示",
     "hideHistory": "ログ一覧を閉じる",
     "threeMonths": "3か月",
-    "monthly": "月次"
+    "monthly": "月次",
+    "quickAddTechnique": "テクニック作成＆タグ",
+    "addShort": "追加"
   },
   "techniques": {
     "mastery1": "入門",

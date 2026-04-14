@@ -224,6 +224,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     startEdit,
     handleUpdate,
     handlePageChange,
+    handleQuickAddTechnique,
     totalPages,
     filtered,
     monthEntries,
@@ -291,6 +292,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         setCompForm={setCompForm}
         techniqueSuggestions={techniqueSuggestions}
         partnerSuggestions={partnerSuggestions}
+        onQuickAddTechnique={handleQuickAddTechnique}
       />
 
       {/* Collapsible log list toggle */}

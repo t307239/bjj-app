@@ -123,6 +123,8 @@ type Props = {
   setCompForm: (f: CompData) => void;
   techniqueSuggestions?: string[];
   partnerSuggestions?: string[];
+  /** OP2: Quick-add a new technique from within the training form */
+  onQuickAddTechnique?: (name: string) => Promise<boolean>;
 };
 
 // ── Component ────────────────────────────────────────────────────────────────
@@ -140,6 +142,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
   setCompForm,
   techniqueSuggestions = [],
   partnerSuggestions = [],
+  onQuickAddTechnique,
 }: Props) {
   const { t } = useLocale();
   const isOnline = useOnlineStatus();
@@ -351,10 +354,10 @@ const TrainingLogForm = memo(function TrainingLogForm({
         </div>
       )}
 
-      {/* Technique autocomplete (Phase 2.5 minimum: datalist from technique_nodes) */}
-      {techniqueSuggestions.length > 0 && (
-        <div className="mb-3">
-          <label className="block text-gray-400 text-xs mb-1">{t("competition.quickTechniqueTag")}</label>
+      {/* Technique autocomplete + quick-add (OP2: inline technique creation) */}
+      <div className="mb-3">
+        <label className="block text-gray-400 text-xs mb-1">{t("competition.quickTechniqueTag")}</label>
+        <div className="flex gap-1.5">
           <input
             ref={techniqueInputRef}
             type="text"
@@ -366,16 +369,40 @@ const TrainingLogForm = memo(function TrainingLogForm({
               const val = e.target.value;
               if (techniqueSuggestions.includes(val)) handleTechniqueSelect(val);
             }}
-            className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
+            className="flex-1 bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
           />
+          {/* OP2: Quick-add button — creates technique_node inline */}
+          {onQuickAddTechnique && (
+            <button
+              type="button"
+              onClick={async () => {
+                const val = techniqueInputRef.current?.value?.trim();
+                if (!val) return;
+                if (techniqueSuggestions.includes(val)) {
+                  handleTechniqueSelect(val);
+                  return;
+                }
+                const ok = await onQuickAddTechnique(val);
+                if (ok) {
+                  handleTechniqueSelect(val);
+                }
+              }}
+              className="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white rounded-lg text-sm font-semibold transition-all whitespace-nowrap min-h-[36px]"
+              title={t("training.quickAddTechnique")}
+            >
+              + {t("training.addShort")}
+            </button>
+          )}
+        </div>
+        {techniqueSuggestions.length > 0 && (
           <datalist id="technique-autocomplete-list">
             {techniqueSuggestions.map((name) => (
               <option key={name} value={name} />
             ))}
           </datalist>
-          <p className="text-xs text-gray-500 mt-0.5">{t("competition.techAppendNote")}</p>
-        </div>
-      )}
+        )}
+        <p className="text-xs text-gray-500 mt-0.5">{t("competition.techAppendNote")}</p>
+      </div>
 
       {/* ── Optional details toggle (Instructor, Partner, Weight) ─────────── */}
       <button

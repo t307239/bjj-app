@@ -147,7 +147,9 @@
     "showHistory": "Mostrar registros",
     "hideHistory": "Ocultar registros",
     "threeMonths": "3 meses",
-    "monthly": "Mensal"
+    "monthly": "Mensal",
+    "quickAddTechnique": "Criar e marcar técnica",
+    "addShort": "Add"
   },
   "trainingLog": {
     "totalLabel": "total",

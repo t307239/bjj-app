@@ -240,7 +240,9 @@
     "showHistory": "Show training log",
     "hideHistory": "Hide training log",
     "threeMonths": "3 months",
-    "monthly": "Monthly"
+    "monthly": "Monthly",
+    "quickAddTechnique": "Create & tag technique",
+    "addShort": "Add"
   },
   "techniques": {
     "mastery1": "Know it",
