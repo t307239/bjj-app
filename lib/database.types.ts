@@ -88,6 +88,7 @@ export type DbTechnique = {
   mastery_level: number;
   notes: string | null;
   video_url: string | null;
+  is_pinned: boolean;
   created_at: string;
 };
 

@@ -339,7 +339,10 @@
     "freePlanLimit": "Free plan limit: {n} techniques. Upgrade to Pro for unlimited.",
     "tabJournal": "Journal",
     "tabSkillMap": "Skill Map",
-    "tabWiki": "Wiki"
+    "tabWiki": "Wiki",
+    "pin": "Pin to top",
+    "unpin": "Unpin",
+    "pinned": "Pinned"
   },
   "profile": {
     "title": "Profile",

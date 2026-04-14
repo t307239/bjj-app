@@ -1,11 +1,11 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 207 files
+TS/TSX Scanned: 208 files
 CRITICAL: 1
 WARNING: 10
-INFO: 80
-Total: 91
+INFO: 81
+Total: 92
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (599/1605 キー) — 1036 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (599/1622 キー) — 1053 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -168,6 +168,8 @@ Total: 91
 [INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L254: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeightCutPlanner.tsx: L190: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [INLINE_STYLE_OBJECT] components/dashboard/HeatmapCalendar.tsx: L111: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/gym/BeltDistributionChart.tsx: L43: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換

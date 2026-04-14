@@ -333,6 +333,10 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
     )
     .slice()
     .sort((a, b) => {
+      // Pinned items always come first
+      const aPinned = a.is_pinned ? 1 : 0;
+      const bPinned = b.is_pinned ? 1 : 0;
+      if (bPinned !== aPinned) return bPinned - aPinned;
       if (sortBy === "mastery_desc") return (b.mastery_level ?? 0) - (a.mastery_level ?? 0);
       if (sortBy === "mastery_asc") return (a.mastery_level ?? 0) - (b.mastery_level ?? 0);
       if (sortBy === "name") return a.name.localeCompare(b.name, "ja");
@@ -445,6 +449,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
         updating={updating}
         onDelete={handleDelete}
         onQuickMastery={handleQuickMastery}
+        onTogglePin={handleTogglePin}
         onShowForm={(bulk = false) => {
           setBulkMode(bulk);
           setShowForm(!showForm || bulk !== bulkMode);

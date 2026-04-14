@@ -43,6 +43,7 @@ type Props = {
   updating: boolean;
   onDelete: (id: string) => void;
   onQuickMastery: (id: string, level: number) => void;
+  onTogglePin?: (id: string) => void;
   onShowForm: (bulk?: boolean) => void;
   userBelt?: string;
 };
@@ -73,6 +74,7 @@ export default function TechniqueLogList({
   updating,
   onDelete,
   onQuickMastery,
+  onTogglePin,
   onShowForm,
   userBelt = "white",
 }: Props) {
@@ -283,6 +285,9 @@ export default function TechniqueLogList({
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
+                      {technique.is_pinned && (
+                        <span className="text-amber-400 text-xs flex-shrink-0" title={t("techniques.pinned")}>📌</span>
+                      )}
                       <span className="font-semibold text-sm truncate">
                         {technique.name}
                       </span>
@@ -364,6 +369,22 @@ export default function TechniqueLogList({
                     <TechniqueVideoButton techniqueId={technique.id} />
                   </div>
                   <div className="flex gap-1 ml-3 flex-shrink-0">
+                    {onTogglePin && (
+                      <button
+                        onClick={() => onTogglePin(technique.id)}
+                        className={`transition-colors p-2 flex items-center justify-center min-w-[44px] min-h-[44px] ${
+                          technique.is_pinned
+                            ? "text-amber-400 hover:text-amber-300"
+                            : "text-zinc-600 hover:text-zinc-400"
+                        }`}
+                        title={technique.is_pinned ? t("techniques.unpin") : t("techniques.pin")}
+                        aria-label={technique.is_pinned ? t("techniques.unpin") : t("techniques.pin")}
+                      >
+                        <svg className="w-4 h-4" fill={technique.is_pinned ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                        </svg>
+                      </button>
+                    )}
                     <button
                       onClick={() => onStartEdit(technique)}
                       className="text-gray-500 hover:text-[#10B981] transition-colors p-2 flex items-center justify-center min-w-[44px] min-h-[44px]"

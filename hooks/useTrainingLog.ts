@@ -27,14 +27,14 @@ function generateInsight(
   existingEntries: TrainingEntry[],
   newEntry: TrainingEntry,
   prevTotal: number | null,
-  t: (k: string, vars?: Record<string, string | number>) => string,
+  t: (k: string, vars?: Record<string, string>) => string,
 ): string {
   const newTotal = (prevTotal ?? 0) + 1;
 
   // Milestone check: 10, 25, 50, 100, 200, 500, 1000
   const milestones = [10, 25, 50, 100, 200, 500, 1000];
   if (milestones.includes(newTotal)) {
-    return t("insight.milestone", { n: newTotal });
+    return t("insight.milestone", { n: String(newTotal) });
   }
 
   // Week count (how many sessions this week including the new one)
@@ -46,7 +46,7 @@ function generateInsight(
   const weekEntries = existingEntries.filter((e) => e.date >= mondayStr).length + 1;
 
   if (weekEntries >= 5) return t("insight.weekFive");
-  if (weekEntries >= 3) return t("insight.weekThree", { n: weekEntries });
+  if (weekEntries >= 3) return t("insight.weekThree", { n: String(weekEntries) });
 
   // Type variety check
   const recentTypes = new Set(existingEntries.slice(0, 5).map((e) => e.type));

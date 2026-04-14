@@ -340,7 +340,10 @@
     "freePlanLimit": "無料プランの上限（{n}件）に達しました。Proにアップグレードすると無制限になります。",
     "tabJournal": "ジャーナル",
     "tabSkillMap": "スキルマップ",
-    "tabWiki": "Wiki"
+    "tabWiki": "Wiki",
+    "pin": "ピン留め",
+    "unpin": "ピン解除",
+    "pinned": "ピン留め中"
   },
   "profile": {
     "title": "プロフィール",
