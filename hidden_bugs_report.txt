@@ -27,13 +27,13 @@ Total: 93
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L146: JSX内に英語テキスト直書き: "BJJ App"
   FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L377: JSX内に英語テキスト直書き: "BJJ App"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L376: JSX内に英語テキスト直書き: "BJJ App"
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L216: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L423: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L422: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L433: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L432: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [DANGEROUS_HTML] app/profile/page.tsx: L148: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証

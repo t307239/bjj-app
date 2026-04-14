@@ -189,14 +189,14 @@ export default async function Home() {
             {/* Fix 15: CTA copy | UX3: IAB-safe link */}
             <IABSafeLink
               href="/login"
-              className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-4 px-8 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#10B981]/20"
+              className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-bold py-4 px-8 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#10B981]/20"
             >
               {t("landing.heroCta")}
               <IconArrowRight className="w-5 h-5" />
             </IABSafeLink>
             <a
               href="#preview"
-              className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-white/5 text-gray-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-white/10"
+              className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-white/5 active:scale-95 text-gray-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-white/10"
             >
               {t("landing.heroSeeApp")}
             </a>
@@ -270,19 +270,18 @@ export default async function Home() {
             {/* Fix 15: CTA copy | UX3: IAB-safe link */}
             <IABSafeLink
               href="/login"
-              className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-4 px-8 rounded-full text-base transition-all hover:scale-105 shadow-lg shadow-[#10B981]/25"
+              className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-bold py-4 px-8 rounded-full text-base transition-all hover:scale-105 shadow-lg shadow-[#10B981]/25"
             >
               {t("landing.engCta")}
               <IconArrowRight className="w-4 h-4" />
             </IABSafeLink>
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-white/5 text-gray-300 font-medium py-4 px-8 rounded-full text-base transition-all border border-white/10"
-            >
-              {t("landing.engGuest")}
-            </Link>
           </div>
           <p className="text-gray-500 text-xs mt-4">{t("landing.engSubtext")}</p>
+          <p className="text-gray-500 text-xs mt-2">
+            <Link href="/dashboard" className="hover:text-gray-300 underline transition-colors">
+              {t("landing.engGuest")}
+            </Link>
+          </p>
         </div>
       </section>
 
@@ -526,7 +525,7 @@ export default async function Home() {
               <div className="pt-4">
                 <Link
                   href="/login"
-                  className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-3 px-8 rounded-full transition-all hover:scale-105 w-full text-center"
+                  className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all hover:scale-105 w-full text-center"
                 >
                   {t("landing.featureStartCta")}
                   <IconArrowRight className="w-4 h-4" />
@@ -695,7 +694,7 @@ export default async function Home() {
         <p className="text-gray-500 text-sm mb-8">{t("landing.finalCtaSubtitle")}</p>
         <Link
           href="/login"
-          className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#10B981]/20"
+          className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#10B981]/20"
         >
           {t("landing.finalCtaButton")}
           <IconArrowRight className="w-5 h-5" />

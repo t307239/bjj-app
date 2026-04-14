@@ -166,31 +166,31 @@ export default async function TechniquesPage() {
 
           {/* Stats strip — only shown when techniques exist */}
           {totalTechniques > 0 && (
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
               {/* Total */}
-              <div className="bg-zinc-900/50 border border-white/8 rounded-xl p-3 text-center">
-                <p className="text-2xl font-black text-white tabular-nums">
+              <div className="bg-zinc-900/50 border border-white/8 rounded-xl px-2 py-2.5 sm:p-3 text-center">
+                <p className="text-xl sm:text-2xl font-black text-white tabular-nums">
                   {totalTechniques}
                 </p>
-                <p className="text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
+                <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
                   {t("techniquesPage.statsLogged")}
                 </p>
               </div>
               {/* Solid+ */}
-              <div className="bg-zinc-900/50 border border-white/8 rounded-xl p-3 text-center">
-                <p className="text-2xl font-black text-yellow-400 tabular-nums">
+              <div className="bg-zinc-900/50 border border-white/8 rounded-xl px-2 py-2.5 sm:p-3 text-center">
+                <p className="text-xl sm:text-2xl font-black text-yellow-400 tabular-nums">
                   {learned + mastered}
                 </p>
-                <p className="text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
+                <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
                   {t("techniquesPage.statsSolid")}
                 </p>
               </div>
               {/* Mastered */}
-              <div className="bg-zinc-900/50 border border-white/8 rounded-xl p-3 text-center">
-                <p className="text-2xl font-black text-green-400 tabular-nums">
+              <div className="bg-zinc-900/50 border border-white/8 rounded-xl px-2 py-2.5 sm:p-3 text-center">
+                <p className="text-xl sm:text-2xl font-black text-green-400 tabular-nums">
                   {mastered}
                 </p>
-                <p className="text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
+                <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
                   {t("techniquesPage.statsMastered")}
                 </p>
               </div>

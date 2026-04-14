@@ -197,7 +197,7 @@ export default async function ProfilePage() {
           </div>
 
           {/* Stats row */}
-          <div className="grid grid-cols-3 gap-3 mt-5 pt-4 border-t border-zinc-800/80">
+          <div className={`grid ${bjjDurationLabel ? "grid-cols-3" : "grid-cols-2"} gap-3 mt-5 pt-4 border-t border-zinc-800/80`}>
             <div className="text-center">
               <p className="text-2xl font-black text-white tabular-nums">
                 {totalCount ?? 0}
