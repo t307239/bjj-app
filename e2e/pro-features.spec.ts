@@ -168,7 +168,7 @@ test.describe("Gym Access — Gym Owner", () => {
   });
 
   test("Gym Owner: /gym/dashboard にアクセスできる", async ({ page }) => {
-    await page.goto("/gym/dashboard", { waitUntil: "domcontentloaded" });
+    await gotoAndWait(page, "/gym/dashboard");
     const url = new URL(page.url());
     expect(url.pathname, "Gym owner should access /gym/dashboard").not.toBe("/login");
   });
@@ -193,13 +193,13 @@ test.describe("Gym Access — Gym Member", () => {
   });
 
   test("Gym Member: /gym/dashboard にアクセスできない", async ({ page }) => {
-    await page.goto("/gym/dashboard", { waitUntil: "commit" });
+    await gotoAndWait(page, "/gym/dashboard");
     const pathname = new URL(page.url()).pathname;
     expect(pathname, "Gym member should NOT access /gym/dashboard").not.toBe("/gym/dashboard");
   });
 
   test("Gym Member: /dashboard にはアクセスできる", async ({ page }) => {
-    await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
+    await gotoAndWait(page, "/dashboard");
     expect(new URL(page.url()).pathname).toBe("/dashboard");
   });
 

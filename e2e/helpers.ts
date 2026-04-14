@@ -37,9 +37,34 @@ export function skipIfNoAuth(filePath: string) {
 }
 
 /**
+ * AgeGate / CookieConsent オーバーレイを事前消去する。
+ *
+ * `addInitScript` は page の全ナビゲーションの前に実行されるため、
+ * テスト開始時に一度呼ぶだけでOK。`gotoAndWait` 内にも組み込み済みだが、
+ * 直接 `page.goto` を使うテスト向けにスタンドアロンでも提供する。
+ */
+export async function dismissOverlays(page: Page) {
+  await page.addInitScript(() => {
+    localStorage.setItem("bjj_age_verified", "true");
+    localStorage.setItem("bjj_cookie_consent", "accepted");
+  });
+}
+
+/**
  * ページを読み込み、networkidle まで待機（タイムアウト許容）。
+ *
+ * AgeGate / CookieConsent オーバーレイを事前に消去する:
+ *   - AgeGate: localStorage "bjj_age_verified" = "true"
+ *   - CookieConsent: localStorage "bjj_cookie_consent" = "accepted"
+ * これにより z-[9999] オーバーレイがクリックを遮断する問題を回避。
  */
 export async function gotoAndWait(page: Page, path: string) {
+  // 1. 空ページで localStorage を事前セット（初回のみ必要）
+  await page.addInitScript(() => {
+    localStorage.setItem("bjj_age_verified", "true");
+    localStorage.setItem("bjj_cookie_consent", "accepted");
+  });
+  // 2. ナビゲーション
   await page.goto(path, { waitUntil: "domcontentloaded" });
   await page.waitForLoadState("networkidle").catch(() => {});
 }
