@@ -6,6 +6,7 @@ import { useOnlineStatus } from "@/lib/useOnlineStatus";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type CompData, BELT_RANKS } from "@/lib/trainingLogHelpers";
 import BottomSheet from "@/components/ui/BottomSheet";
+import AnimatedAccordion from "@/components/ui/AnimatedAccordion";
 import DraftNumberInput from "@/components/ui/DraftNumberInput";
 import { getYesterdayDateString } from "@/lib/timezone";
 
@@ -422,7 +423,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
         <span className="text-zinc-500 ml-1 font-normal">{t("training.optionalHint")}</span>
       </button>
 
-      {showOptional && (
+      <AnimatedAccordion open={showOptional}>
         <div className="mb-3 space-y-3">
           {/* Instructor (B-04: optional, for BJJ Wrapped year-end stats) */}
           <div>
@@ -480,7 +481,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
             </div>
           </div>
         </div>
-      )}
+      </AnimatedAccordion>
 
       {/* ── Roll Details: toggle for Gi / No-Gi sparring sessions ─────── */}
       {(form.type === "gi" || form.type === "nogi") && (
@@ -508,7 +509,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
               </span>
             )}
           </button>
-          {showRollDetails && (
+          <AnimatedAccordion open={showRollDetails}>
             <div className="mb-3 bg-zinc-800/40 border border-white/8 rounded-xl p-3 space-y-3">
               {/* Focus theme */}
               <div>
