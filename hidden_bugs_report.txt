@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 210 files
 CRITICAL: 1
-WARNING: 11
+WARNING: 10
 INFO: 82
-Total: 94
+Total: 93
 
 [CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (603/1635 キー) — 1062 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
@@ -105,8 +105,6 @@ Total: 94
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/GoalTrackerEditor.tsx: L57: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [SILENT_CATCH] components/IABSafeLink.tsx: L47: .catch() がエラーを握りつぶしている — デバッグ不能
-  FIX: .catch((err) => console.error('context:', err)) に変更
 [INFO] [INLINE_STYLE_OBJECT] components/MilestoneBadgeGrid.tsx: L169: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [WARNING] [JSX_HARDCODED_ENGLISH] components/NavBar.tsx: L103: JSX内に英語テキスト直書き: "BJJ App"
