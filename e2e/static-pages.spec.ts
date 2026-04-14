@@ -113,6 +113,34 @@ test.describe("PWA Manifest", () => {
   });
 });
 
+test.describe("Help Page", () => {
+  test("renders help page with FAQ items", async ({ page }) => {
+    await page.goto("/help", { waitUntil: "domcontentloaded" });
+    await expect(page.locator("body")).toBeVisible();
+    const body = await page.textContent("body");
+    expect(body).toMatch(/help|FAQ|ヘルプ|よくある質問/i);
+  });
+
+  test("help page has FAQ accordion items", async ({ page }) => {
+    await page.goto("/help", { waitUntil: "domcontentloaded" });
+    const details = page.locator("details");
+    const count = await details.count();
+    expect(count, "Help page should have FAQ accordion items").toBeGreaterThanOrEqual(1);
+  });
+
+  test("help page has contact section with email link", async ({ page }) => {
+    await page.goto("/help", { waitUntil: "domcontentloaded" });
+    const mailLink = page.locator('a[href*="mailto:"]');
+    await expect(mailLink).toBeVisible();
+  });
+
+  test("help page has back link to dashboard", async ({ page }) => {
+    await page.goto("/help", { waitUntil: "domcontentloaded" });
+    const backLink = page.locator('a[href="/dashboard"]');
+    await expect(backLink).toBeVisible();
+  });
+});
+
 test.describe("API Health", () => {
   test("OG image API returns image", async ({ page }) => {
     test.setTimeout(60000); // OG image generation can be slow locally
