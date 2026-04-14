@@ -24,6 +24,7 @@ import RecentLogs from "@/components/dashboard/RecentLogs";
 import HeatmapCalendar from "@/components/dashboard/HeatmapCalendar";
 import WeeklyReportCard from "@/components/WeeklyReportCard";
 import CompetitionCountdown from "@/components/CompetitionCountdown";
+import TechniqueFocusCard from "@/components/dashboard/TechniqueFocusCard";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
@@ -159,11 +160,13 @@ export default async function DashboardPage({
     { data: recentLogs },
     { data: recentLogsFull },
     { data: heatmapLogs },
+    { count: techniqueCount },
+    { data: pinnedTechniques },
   ] = await Promise.all([
     supabase
       .from("profiles")
       .select(
-        "belt, stripe, start_date, is_pro, subscription_status, locale"
+        "belt, stripe, start_date, is_pro, subscription_status, locale, weekly_goal, monthly_goal, technique_goal"
       )
       .eq("id", user.id)
       .single(),
@@ -193,6 +196,19 @@ export default async function DashboardPage({
       .eq("user_id", user.id)
       .gte("date", heatmapStartDate)
       .order("date", { ascending: false }),
+    // Technique count for onboarding checklist
+    supabase
+      .from("techniques")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id),
+    // Pinned techniques for focus card
+    supabase
+      .from("techniques")
+      .select("id, name, category, mastery_level")
+      .eq("user_id", user.id)
+      .eq("is_pinned", true)
+      .order("created_at", { ascending: false })
+      .limit(5),
   ]);
 
   let metrics = rpcRes.data;
@@ -238,6 +254,13 @@ export default async function DashboardPage({
   const subscriptionStatus = profileData?.subscription_status ?? "active";
   const hasFirstLog = totalCount > 0;
 
+  // ── Onboarding state ──
+  const hasGoal = ((profileData as { weekly_goal?: number } | null)?.weekly_goal ?? 0) > 0
+    || ((profileData as { monthly_goal?: number } | null)?.monthly_goal ?? 0) > 0
+    || ((profileData as { technique_goal?: number } | null)?.technique_goal ?? 0) > 0;
+  const hasTechnique = (techniqueCount ?? 0) > 0;
+  const onboardingComplete = hasFirstLog && hasGoal && hasTechnique;
+
   // Calculate streak (same algorithm as NavBar — uses logical training date)
   const todayStr = getLogicalTrainingDate();
   let streak = 0;
@@ -256,6 +279,22 @@ export default async function DashboardPage({
       }
     }
   }
+
+  // ── Focus techniques (pinned) ──
+  const focusTechniques = (pinnedTechniques ?? []) as {
+    id: string;
+    name: string;
+    category: string | null;
+    mastery_level: number;
+  }[];
+  // Count this week's sessions that mention focus technique names in notes
+  const focusWeekPractice = focusTechniques.length > 0
+    ? (recentLogsFull ?? []).filter((log: { date: string; notes: string | null }) => {
+        if (!log.notes || log.date < firstDayOfWeek) return false;
+        const lower = log.notes.toLowerCase();
+        return focusTechniques.some((ft) => lower.includes(ft.name.toLowerCase()));
+      }).length
+    : 0;
 
   // Typed recent logs for compact home view
   const typedRecentLogs = (recentLogsFull ?? []) as {
@@ -279,12 +318,12 @@ export default async function DashboardPage({
 
       <main className="max-w-4xl mx-auto px-4 py-5">
 
-        {/* ── Onboarding checklist (new users) ── */}
-        {!hasFirstLog && (
+        {/* ── Onboarding checklist (until all steps complete) ── */}
+        {!onboardingComplete && (
           <OnboardingChecklist
-            hasFirstLog={false}
-            hasGoal={false}
-            hasTechnique={false}
+            hasFirstLog={hasFirstLog}
+            hasGoal={hasGoal}
+            hasTechnique={hasTechnique}
           />
         )}
 
@@ -332,6 +371,15 @@ export default async function DashboardPage({
         {hasFirstLog && (
           <HeatmapCalendar trainingDates={heatmapDates} />
         )}
+
+        {/* ═══════════════════════════════════════════
+            TECHNIQUE FOCUS — pinned techniques as weekly focus
+            ═══════════════════════════════════════════ */}
+        <TechniqueFocusCard
+          techniques={focusTechniques}
+          weekPracticeCount={focusWeekPractice}
+          t={t}
+        />
 
         {/* ═══════════════════════════════════════════
             COMPETITION COUNTDOWN — upcoming competitions + AI training recs

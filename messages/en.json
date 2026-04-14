@@ -1771,5 +1771,16 @@
     "weekThree": "💪 {n} sessions this week — great consistency!",
     "variety": "🎯 Nice variety in your training mix!",
     "longSession": "⏱️ Long session! Great endurance work."
+  },
+  "focus": {
+    "title": "Technique Focus",
+    "manage": "Edit →",
+    "mastery0": "Learning",
+    "mastery1": "Drilling",
+    "mastery2": "Sparring",
+    "mastery3": "Mastered",
+    "more": "+{n} more",
+    "weekCount": "Practiced {n} time(s) this week",
+    "weekNone": "Practice your focus technique this week!"
   }
 }
