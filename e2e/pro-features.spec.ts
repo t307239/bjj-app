@@ -192,10 +192,14 @@ test.describe("Gym Access — Gym Member", () => {
     skipIfNoAuth(AUTH_FILES.gymMember);
   });
 
-  test("Gym Member: /gym/dashboard にアクセスできない", async ({ page }) => {
+  test("Gym Member: /gym/dashboard でオーナーパネルが表示されない", async ({ page }) => {
+    // gym/dashboard はリダイレクトしない（未登録ユーザーは登録フォームを表示）
+    // gym-member は gym を所有していないため、owner ダッシュボードではなく登録フォームが表示される
     await gotoAndWait(page, "/gym/dashboard");
-    const pathname = new URL(page.url()).pathname;
-    expect(pathname, "Gym member should NOT access /gym/dashboard").not.toBe("/gym/dashboard");
+    const body = await page.textContent("body");
+    // Owner dashboard shows "ACTIVE" badge or member list — member should NOT see these
+    const hasOwnerPanel = /ACTIVE.*members?|invite_code|QR.*Code.*Share/i.test(body!);
+    expect(hasOwnerPanel, "Gym member should not see owner dashboard panel").toBe(false);
   });
 
   test("Gym Member: /dashboard にはアクセスできる", async ({ page }) => {

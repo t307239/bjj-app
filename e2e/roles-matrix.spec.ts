@@ -422,11 +422,14 @@ test.describe("認証済み権限マトリックス", () => {
       expect(new URL(page.url()).pathname).toBe("/techniques");
     });
 
-    test("/gym/dashboard はアクセス不可（道場長でない）", async ({ page }) => {
-      await page.goto("/gym/dashboard", { waitUntil: "commit" });
-      // 道場未所属なら /dashboard or /login へリダイレクト
-      const pathname = new URL(page.url()).pathname;
-      expect(pathname).not.toBe("/gym/dashboard");
+    test("/gym/dashboard でオーナーパネルが表示されない（道場長でない）", async ({ page }) => {
+      await page.goto("/gym/dashboard", { waitUntil: "domcontentloaded" });
+      await page.waitForLoadState("networkidle").catch(() => {});
+      // gym/dashboard はリダイレクトしない（登録フォームを表示する仕様）
+      // 道場長でないユーザーにはオーナーパネルが表示されないことを確認
+      const body = await page.textContent("body");
+      const hasOwnerPanel = /ACTIVE.*members?|invite_code|QR.*Code.*Share/i.test(body!);
+      expect(hasOwnerPanel).toBe(false);
     });
 
     test("Pro機能エリアに ProGate ロックが表示される", async ({ page }) => {
@@ -547,10 +550,12 @@ test.describe("認証済み権限マトリックス", () => {
     skipIfNoSession("gym-member");
     skipIfWrongProject("gym-member");
 
-    test("/gym/dashboard はアクセス不可（メンバーは道場長ではない）", async ({ page }) => {
-      await page.goto("/gym/dashboard", { waitUntil: "commit" });
-      const pathname = new URL(page.url()).pathname;
-      expect(pathname).not.toBe("/gym/dashboard");
+    test("/gym/dashboard でオーナーパネルが表示されない（メンバーは道場長ではない）", async ({ page }) => {
+      await page.goto("/gym/dashboard", { waitUntil: "domcontentloaded" });
+      await page.waitForLoadState("networkidle").catch(() => {});
+      const body = await page.textContent("body");
+      const hasOwnerPanel = /ACTIVE.*members?|invite_code|QR.*Code.*Share/i.test(body!);
+      expect(hasOwnerPanel).toBe(false);
     });
 
     test("/dashboard アクセス可能", async ({ page }) => {
