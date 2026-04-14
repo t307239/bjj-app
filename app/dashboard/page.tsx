@@ -328,7 +328,7 @@ export default async function DashboardPage({
             HEATMAP CALENDAR — GitHub-style training activity
             ═══════════════════════════════════════════ */}
         {hasFirstLog && (
-          <HeatmapCalendar trainingDates={heatmapDates} t={t} />
+          <HeatmapCalendar trainingDates={heatmapDates} />
         )}
 
         {/* ═══════════════════════════════════════════

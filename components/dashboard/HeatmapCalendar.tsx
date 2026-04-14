@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useLocale } from "@/lib/i18n";
 
 /**
  * HeatmapCalendar — GitHub-style contribution calendar for training activity.
@@ -11,7 +12,6 @@ import { useMemo } from "react";
 type Props = {
   /** Array of date strings (YYYY-MM-DD) for all training logs in the period */
   trainingDates: string[];
-  t: (key: string, vars?: Record<string, string | number>) => string;
 };
 
 /** Build a map of date → count from training dates */
@@ -54,7 +54,8 @@ function getIntensityClass(count: number): string {
 const MONTH_LABELS_EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const MONTH_LABELS_JA = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
 
-export default function HeatmapCalendar({ trainingDates, t }: Props) {
+export default function HeatmapCalendar({ trainingDates }: Props) {
+  const { t, locale } = useLocale();
   const WEEKS = 16;
   const countMap = useMemo(() => buildCountMap(trainingDates), [trainingDates]);
   const dateGrid = useMemo(() => generateDateGrid(WEEKS), []);
@@ -70,7 +71,7 @@ export default function HeatmapCalendar({ trainingDates, t }: Props) {
 
   // Month labels: detect which columns start a new month
   const monthMarkers: { col: number; label: string }[] = [];
-  const isJa = t("nav.home") === "ホーム";
+  const isJa = locale === "ja";
   const labels = isJa ? MONTH_LABELS_JA : MONTH_LABELS_EN;
   let lastMonth = -1;
   for (let col = 0; col < WEEKS; col++) {
