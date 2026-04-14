@@ -345,7 +345,12 @@
     "tabWiki": "Wiki",
     "pin": "ピン留め",
     "unpin": "ピン解除",
-    "pinned": "ピン留め中"
+    "pinned": "ピン留め中",
+    "rustyTitle": "錆びてるテクニック",
+    "rustyCount": "{n}件が要復習",
+    "rustyDesc": "30日以上前に追加されて、まだマスタリーが低いテクニックです。ドリルしよう！",
+    "rustyDays": "{n}日前",
+    "rustyReview": "ジャーナルで確認"
   },
   "profile": {
     "title": "プロフィール",

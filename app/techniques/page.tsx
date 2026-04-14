@@ -9,6 +9,7 @@ import { detectServerLocale, makeT } from "@/lib/i18n";
 import { Suspense } from "react";
 import Link from "next/link";
 import SafetyBanner from "@/components/SafetyBanner";
+import RustyTechniquesBanner from "@/components/techniques/RustyTechniquesBanner";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
@@ -111,7 +112,7 @@ export default async function TechniquesPage() {
     supabase.from("profiles").select("is_pro, belt").eq("id", user.id).single(),
     supabase
       .from("techniques")
-      .select("mastery_level, category")
+      .select("name, mastery_level, category, created_at")
       .eq("user_id", user.id),
   ]);
 
@@ -133,6 +134,25 @@ export default async function TechniquesPage() {
   const topCategories = Object.entries(categoryMap)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 4);
+
+  // B1: Rusty techniques — low mastery (0-2) + 30+ days since added
+  const nowMs = Date.now() + 9 * 60 * 60 * 1000; // JST
+  const RUSTY_THRESHOLD_DAYS = 30;
+  const rustyTechniques = (techniques ?? [])
+    .filter((tc) => {
+      const mastery = tc.mastery_level ?? 0;
+      if (mastery >= 3) return false; // already solid
+      const createdMs = new Date(tc.created_at).getTime();
+      const daysSince = Math.floor((nowMs - createdMs) / 86400000);
+      return daysSince >= RUSTY_THRESHOLD_DAYS;
+    })
+    .map((tc) => ({
+      name: tc.name ?? "",
+      category: tc.category ?? null,
+      mastery_level: tc.mastery_level ?? 0,
+      daysSinceCreated: Math.floor((nowMs - new Date(tc.created_at).getTime()) / 86400000),
+    }))
+    .sort((a, b) => b.daysSinceCreated - a.daysSinceCreated);
 
   return (
     <div className="min-h-[100dvh] bg-zinc-950 pb-20 sm:pb-0">
@@ -222,6 +242,13 @@ export default async function TechniquesPage() {
             wikiHref="https://wiki.bjj-app.net/en/heel-hook"
             wikiLabel={t("techniquesPage.safetyWikiLink")}
           />
+        )}
+
+        {/* ═══════════════════════════════════════════
+            RUSTY TECHNIQUES — B1: highlight techniques needing review
+            ═══════════════════════════════════════════ */}
+        {rustyTechniques.length > 0 && (
+          <RustyTechniquesBanner techniques={rustyTechniques} />
         )}
 
         {/* ═══════════════════════════════════════════

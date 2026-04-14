@@ -344,7 +344,12 @@
     "tabWiki": "Wiki",
     "pin": "Pin to top",
     "unpin": "Unpin",
-    "pinned": "Pinned"
+    "pinned": "Pinned",
+    "rustyTitle": "Rusty Techniques",
+    "rustyCount": "{n} need review",
+    "rustyDesc": "These techniques were added 30+ days ago and still have low mastery. Time to drill!",
+    "rustyDays": "{n}d ago",
+    "rustyReview": "Review in Journal"
   },
   "profile": {
     "title": "Profile",
