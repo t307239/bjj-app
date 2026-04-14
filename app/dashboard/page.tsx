@@ -25,6 +25,7 @@ import HeatmapCalendar from "@/components/dashboard/HeatmapCalendar";
 import WeeklyReportCard from "@/components/WeeklyReportCard";
 import CompetitionCountdown from "@/components/CompetitionCountdown";
 import TechniqueFocusCard from "@/components/dashboard/TechniqueFocusCard";
+import MatTimeTracker from "@/components/dashboard/MatTimeTracker";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
@@ -307,6 +308,19 @@ export default async function DashboardPage({
     (sum: number, row: { duration_min: number }) => sum + (row.duration_min ?? 0),
     0
   );
+  // Weekly average: total minutes / weeks since start_date (or total count / 4 as fallback)
+  const startDate = profileData?.start_date;
+  const weeklyAvgMinutes = (() => {
+    if (totalMinutes <= 0) return 0;
+    if (startDate) {
+      const startMs = new Date(startDate + "T00:00:00Z").getTime();
+      const nowMs = Date.now() + 9 * 60 * 60 * 1000; // JST
+      const weeksElapsed = Math.max(1, (nowMs - startMs) / (7 * 86400000));
+      return totalMinutes / weeksElapsed;
+    }
+    // Fallback: assume ~4 weeks of data
+    return totalMinutes / 4;
+  })();
 
   // Typed recent logs for compact home view
   const typedRecentLogs = (recentLogsFull ?? []) as {
@@ -382,6 +396,17 @@ export default async function DashboardPage({
             ═══════════════════════════════════════════ */}
         {hasFirstLog && (
           <HeatmapCalendar trainingDates={heatmapDates} />
+        )}
+
+        {/* ═══════════════════════════════════════════
+            MAT TIME TRACKER — 10,000 hour progress
+            ═══════════════════════════════════════════ */}
+        {hasFirstLog && (
+          <MatTimeTracker
+            totalMinutes={totalMinutes}
+            weeklyAvgMinutes={weeklyAvgMinutes}
+            t={t}
+          />
         )}
 
         {/* ═══════════════════════════════════════════

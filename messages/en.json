@@ -1782,5 +1782,12 @@
     "more": "+{n} more",
     "weekCount": "Practiced {n} time(s) this week",
     "weekNone": "Practice your focus technique this week!"
+  },
+  "matTime": {
+    "title": "Mat Time",
+    "hoursUnit": "hours on the mat",
+    "reached": "Mastery milestone reached!",
+    "etaYears": "~{n} years to 10,000h at current pace",
+    "etaMonths": "~{n} months to 10,000h at current pace"
   }
 }
