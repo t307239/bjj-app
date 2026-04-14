@@ -47,8 +47,8 @@ test.describe("SkillMap — Free User", () => {
   });
 
   test("toolbar: back link points to /techniques", async ({ page }) => {
-    // NavBar にも a[href="/techniques"] があるため、toolbar 内にスコープ
-    const backLink = page.locator('.border-b a[href="/techniques"]');
+    // NavBar にも a[href="/techniques"] があるため、backdrop-blur toolbar にスコープ
+    const backLink = page.locator('.backdrop-blur-sm a[href="/techniques"]');
     await expect(backLink).toBeVisible({ timeout: 5000 });
     const text = await backLink.textContent();
     expect(text).toMatch(RE_BACK);
@@ -86,7 +86,7 @@ test.describe("SkillMap — Free User", () => {
   });
 
   test("back link navigates to /techniques", async ({ page }) => {
-    const backLink = page.locator('.border-b a[href="/techniques"]');
+    const backLink = page.locator('.backdrop-blur-sm a[href="/techniques"]');
     await expect(backLink).toBeVisible({ timeout: 5000 });
     await backLink.click();
     await page.waitForURL("**/techniques", { timeout: 10000 });
