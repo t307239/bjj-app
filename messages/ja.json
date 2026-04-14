@@ -1627,7 +1627,14 @@
     "emptyMotivationDesc": "すべての黒帯はかつて白帯だった。最初のセッションを記録して、成長を追跡しよう。",
     "emptyTip": "ヒント: 練習の記録は10秒で完了します",
     "quickActionTitle": "練習を記録する",
-    "quickActionDesc": "最新のセッションを記録"
+    "quickActionDesc": "最新のセッションを記録",
+    "weekdaySun": "日",
+    "weekdayMon": "月",
+    "weekdayTue": "火",
+    "weekdayWed": "水",
+    "weekdayThu": "木",
+    "weekdayFri": "金",
+    "weekdaySat": "土"
   },
   "report": {
     "title": "パフォーマンスレポート",

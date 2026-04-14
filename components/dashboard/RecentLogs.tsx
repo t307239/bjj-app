@@ -35,17 +35,34 @@ function formatDuration(mins: number): string {
   return `${mins}m`;
 }
 
-function formatDate(dateStr: string): string {
+const WEEKDAY_KEYS = [
+  "home.weekdaySun", "home.weekdayMon", "home.weekdayTue",
+  "home.weekdayWed", "home.weekdayThu", "home.weekdayFri", "home.weekdaySat",
+];
+
+function formatDate(
+  dateStr: string,
+  t: (key: string, vars?: Record<string, string | number>) => string,
+): string {
   const d = new Date(dateStr + "T00:00:00");
   const month = d.getMonth() + 1;
   const day = d.getDate();
-  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  return `${month}/${day} ${weekdays[d.getDay()]}`;
+  const weekday = t(WEEKDAY_KEYS[d.getDay()]);
+  return `${month}/${day} ${weekday}`;
 }
 
-function getTypeLabel(type: string): string {
-  const found = TRAINING_TYPES.find((t) => t.value === type);
-  return found ? found.label : type;
+function getTypeLabel(
+  type: string,
+  t: (key: string, vars?: Record<string, string | number>) => string,
+): string {
+  const key = `training.${type}`;
+  const translated = t(key);
+  // Fallback: if t() returns the key itself (untranslated), use TRAINING_TYPES label
+  if (translated === key) {
+    const found = TRAINING_TYPES.find((tt) => tt.value === type);
+    return found ? found.label : type;
+  }
+  return translated;
 }
 
 /** Extract user-facing notes, stripping competition metadata */
@@ -98,12 +115,12 @@ export default function RecentLogs({ logs, t }: Props) {
             >
               {/* Date */}
               <span className="text-xs text-zinc-500 font-medium tabular-nums whitespace-nowrap w-[72px] flex-shrink-0">
-                {formatDate(log.date)}
+                {formatDate(log.date, t)}
               </span>
 
               {/* Type badge */}
               <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border flex-shrink-0 ${typeColor}`}>
-                {getTypeLabel(log.type)}
+                {getTypeLabel(log.type, t)}
               </span>
 
               {/* Duration */}

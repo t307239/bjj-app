@@ -100,34 +100,32 @@ export default function HeatmapCalendar({ trainingDates }: Props) {
         </span>
       </div>
 
-      {/* Month labels row */}
-      <div className="flex gap-[3px] mb-1 ml-0">
-        {monthMarkers.map((m, i) => {
-          const nextCol = monthMarkers[i + 1]?.col ?? WEEKS;
-          const span = nextCol - m.col;
+      {/* Month labels row — each cell matches a grid column via flex-1 */}
+      <div className="flex gap-1 mb-1">
+        {Array.from({ length: WEEKS }).map((_, col) => {
+          const marker = monthMarkers.find((m) => m.col === col);
           return (
             <span
-              key={`${m.col}-${m.label}`}
-              className="text-[10px] text-zinc-500 leading-none"
-              style={{ width: `${span * 13 + (span - 1) * 3}px`, flexShrink: 0 }}
+              key={col}
+              className="flex-1 text-[10px] text-zinc-500 leading-none truncate"
             >
-              {m.label}
+              {marker ? marker.label : ""}
             </span>
           );
         })}
       </div>
 
-      {/* Grid: 7 rows (Mon-Sun) × WEEKS cols */}
-      <div className="flex flex-col gap-[3px]">
+      {/* Grid: 7 rows (Sun-Sat) × WEEKS cols — responsive full-width */}
+      <div className="flex flex-col gap-1">
         {grid.map((row, rowIdx) => (
-          <div key={rowIdx} className="flex gap-[3px]">
+          <div key={rowIdx} className="flex gap-1">
             {row.map((dateStr) => {
-              if (!dateStr) return <div key={`empty-${rowIdx}`} className="w-[13px] h-[13px]" />;
+              if (!dateStr) return <div key={`empty-${rowIdx}`} className="flex-1 aspect-square" />;
               const count = countMap.get(dateStr) ?? 0;
               return (
                 <div
                   key={dateStr}
-                  className={`w-[13px] h-[13px] rounded-[3px] ${getIntensityClass(count)} transition-colors`}
+                  className={`flex-1 aspect-square rounded-[3px] sm:rounded ${getIntensityClass(count)} transition-colors`}
                   title={`${dateStr}: ${count} ${count === 1 ? "session" : "sessions"}`}
                 />
               );
@@ -139,10 +137,10 @@ export default function HeatmapCalendar({ trainingDates }: Props) {
       {/* Legend */}
       <div className="flex items-center justify-end gap-1.5 mt-2.5">
         <span className="text-[10px] text-zinc-500">{t("home.heatmapLess")}</span>
-        <div className="w-[10px] h-[10px] rounded-[2px] bg-zinc-800/60" />
-        <div className="w-[10px] h-[10px] rounded-[2px] bg-emerald-900/80" />
-        <div className="w-[10px] h-[10px] rounded-[2px] bg-emerald-700/80" />
-        <div className="w-[10px] h-[10px] rounded-[2px] bg-emerald-500/80" />
+        <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[2px] bg-zinc-800/60" />
+        <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[2px] bg-emerald-900/80" />
+        <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[2px] bg-emerald-700/80" />
+        <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[2px] bg-emerald-500/80" />
         <span className="text-[10px] text-zinc-500">{t("home.heatmapMore")}</span>
       </div>
     </div>

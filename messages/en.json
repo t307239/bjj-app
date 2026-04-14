@@ -1625,7 +1625,14 @@
     "emptyMotivationDesc": "Every black belt was once a white belt. Record your first session and start tracking your progress.",
     "emptyTip": "Tip: It takes less than 10 seconds to log a session",
     "quickActionTitle": "Record Training",
-    "quickActionDesc": "Log your latest session"
+    "quickActionDesc": "Log your latest session",
+    "weekdaySun": "Sun",
+    "weekdayMon": "Mon",
+    "weekdayTue": "Tue",
+    "weekdayWed": "Wed",
+    "weekdayThu": "Thu",
+    "weekdayFri": "Fri",
+    "weekdaySat": "Sat"
   },
   "report": {
     "title": "Performance Report",
