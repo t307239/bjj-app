@@ -108,12 +108,25 @@ const PART_I18N: Record<string, string> = {
   right_ankle: "body.parts.rightAnkle",
 };
 
+// F5: Load injury history from localStorage for recurrence detection
+type InjuryHistoryEntry = { part: string; status: string; startDate: string; endDate: string };
+
+function loadInjuryHistory(): InjuryHistoryEntry[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem("bjj_injury_history");
+    return raw ? (JSON.parse(raw) as InjuryHistoryEntry[]) : [];
+  } catch {
+    return [];
+  }
+}
+
 // ─── Main component ────────────────────────────────────────────────────────────
 
 export default function InjuryCareAlert({ bodyStatus, bodyStatusDates }: Props) {
   const { t } = useLocale();
   const [alerts, setAlerts] = useState<
-    { partKey: string; status: string; daysElapsed: number; config: AlertConfig }[]
+    { partKey: string; status: string; daysElapsed: number; config: AlertConfig; recurring: boolean }[]
   >([]);
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
 
@@ -122,6 +135,9 @@ export default function InjuryCareAlert({ bodyStatus, bodyStatusDates }: Props) 
 
     const today = toDateStr(new Date());
     const snooze = loadSnooze();
+    const history = loadInjuryHistory();
+    // F5: Build set of parts that were previously injured (for recurrence detection)
+    const previouslyInjuredParts = new Set(history.map((h) => h.part));
 
     const injuredParts = Object.entries(bodyStatus).filter(
       ([, v]) => v === "sore" || v === "injured"
@@ -139,9 +155,11 @@ export default function InjuryCareAlert({ bodyStatus, bodyStatusDates }: Props) 
 
         const daysElapsed = daysBetween(firstSeen, today);
         const config = getAlertConfig(daysElapsed, status);
-        return { partKey, status, daysElapsed, config };
+        // F5: Detect recurrence — this part was injured before and is injured again
+        const recurring = previouslyInjuredParts.has(partKey);
+        return { partKey, status, daysElapsed, config, recurring };
       })
-      .filter(Boolean) as { partKey: string; status: string; daysElapsed: number; config: AlertConfig }[];
+      .filter(Boolean) as { partKey: string; status: string; daysElapsed: number; config: AlertConfig; recurring: boolean }[];
 
     // Sort: most severe first (injured > sore), then oldest first
     activeAlerts.sort((a, b) => {
@@ -167,15 +185,20 @@ export default function InjuryCareAlert({ bodyStatus, bodyStatusDates }: Props) 
 
   return (
     <div className="space-y-2 mb-4">
-      {visibleAlerts.map(({ partKey, daysElapsed, config }) => (
+      {visibleAlerts.map(({ partKey, daysElapsed, config, recurring }) => (
         <div
           key={partKey}
           className={`flex items-start gap-3 ${config.bg} border ${config.border} rounded-xl px-4 py-3`}
         >
           <span className="flex-shrink-0 text-base mt-0.5">{config.emoji}</span>
           <div className="flex-1 min-w-0">
-            <p className={`text-xs font-semibold ${config.text} mb-0.5`}>
-              {t(PART_I18N[partKey] ?? partKey)} — {t("body.injuryAlert.dayCount", { n: daysElapsed + 1 })}
+            <p className={`text-xs font-semibold ${config.text} mb-0.5 flex items-center gap-1.5 flex-wrap`}>
+              <span>{t(PART_I18N[partKey] ?? partKey)} — {t("body.injuryAlert.dayCount", { n: daysElapsed + 1 })}</span>
+              {recurring && (
+                <span className="inline-block px-1.5 py-0.5 bg-orange-900/50 border border-orange-500/30 rounded text-orange-300 text-[10px] font-bold whitespace-nowrap">
+                  🔁 {t("body.injuryAlert.recurring")}
+                </span>
+              )}
             </p>
             <p className="text-xs text-zinc-400 leading-relaxed">{t(config.messageKey)}</p>
           </div>
