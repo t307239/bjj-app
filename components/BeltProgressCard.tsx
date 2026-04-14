@@ -122,7 +122,7 @@ export default function BeltProgressCard({
             {/* Stitching lines (top + bottom seams) */}
             <div className="absolute top-1 left-0 right-0 h-px bg-white/15" />
             <div className="absolute bottom-1 left-0 right-0 h-px bg-black/25" />
-            {/* White-tape stripe markers */}
+            {/* White-tape stripe markers — solid color for cross-browser consistency */}
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
@@ -130,9 +130,7 @@ export default function BeltProgressCard({
                 style={{
                   width: 7,
                   right: (i + 1) * 11,
-                  background: i < stripes
-                    ? "linear-gradient(180deg,rgba(255,255,255,1.0) 0%,rgba(255,255,255,1.0) 50%,rgba(255,255,255,1.0) 100%)"
-                    : "rgba(255,255,255,0.20)",
+                  backgroundColor: i < stripes ? "#ffffff" : "rgba(255,255,255,0.20)",
                   boxShadow: i < stripes ? "0 0 4px rgba(255,255,255,0.4)" : "none",
                 }}
               />
