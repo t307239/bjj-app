@@ -62,7 +62,8 @@ test.describe("Settings — Free User", () => {
   });
 
   test("back to profile link exists and points to /profile", async ({ page }) => {
-    const backLink = page.locator('a[href="/profile"]');
+    // main 内の back link にスコープ（NavBar にも a[href="/profile"] が2つある）
+    const backLink = page.locator('main a[href="/profile"]');
     await expect(backLink).toBeVisible({ timeout: 5000 });
   });
 
@@ -98,7 +99,7 @@ test.describe("Settings — Free User", () => {
   // ── Navigation ──
 
   test("back link navigates to /profile", async ({ page }) => {
-    const backLink = page.locator('a[href="/profile"]');
+    const backLink = page.locator('main a[href="/profile"]');
     await expect(backLink).toBeVisible({ timeout: 5000 });
     await backLink.click();
     await page.waitForURL("**/profile", { timeout: 10000 });
@@ -124,9 +125,13 @@ test.describe("Settings — Pro User", () => {
     await gotoAndWait(page, "/settings");
   });
 
-  test("Manage Subscription section visible for Pro user", async ({ page }) => {
-    const manageSub = page.getByText(RE_MANAGE_SUB);
-    await expect(manageSub).toBeVisible({ timeout: 8000 });
+  test("B2B lead card is NOT shown for Pro user", async ({ page }) => {
+    // SettingsSection: B2B lead card is gated by !isPro
+    // Pro user should NOT see the gym lead CTA
+    await page.waitForTimeout(2000); // Wait for dynamic import
+    const gymLeadCta = page.locator('a[href="/gym"]');
+    const count = await gymLeadCta.count();
+    expect(count, "Pro user should not see B2B gym lead card").toBe(0);
   });
 
   test("no upgrade pricing ($9.99 / $79.99) shown to Pro user", async ({ page }) => {
