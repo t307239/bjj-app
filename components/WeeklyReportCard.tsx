@@ -81,15 +81,42 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
 
   const report = useWeeklyReport(logs, t);
 
-  // ── Loading skeleton ──
+  // ── Loading skeleton — matches real content height to prevent layout shift ──
   if (loading) {
     return (
       <div className="bg-zinc-900/60 border border-white/[0.08] rounded-2xl px-4 py-4 mb-5 animate-pulse">
-        <div className="h-4 bg-zinc-800 rounded w-32 mb-3" />
-        <div className="flex gap-4">
-          <div className="h-10 bg-zinc-800 rounded flex-1" />
-          <div className="h-10 bg-zinc-800 rounded flex-1" />
-          <div className="h-10 bg-zinc-800 rounded flex-1" />
+        {/* Header row */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="h-4 bg-zinc-800 rounded w-32" />
+          <div className="h-6 bg-zinc-800 rounded w-24" />
+        </div>
+        {/* KPI row */}
+        <div className="flex gap-3 mb-4">
+          <div className="flex-1 bg-zinc-800/40 rounded-xl px-3 py-2">
+            <div className="h-2.5 bg-zinc-700 rounded w-12 mb-1.5" />
+            <div className="h-5 bg-zinc-700 rounded w-8" />
+          </div>
+          <div className="flex-1 bg-zinc-800/40 rounded-xl px-3 py-2">
+            <div className="h-2.5 bg-zinc-700 rounded w-12 mb-1.5" />
+            <div className="h-5 bg-zinc-700 rounded w-10" />
+          </div>
+          <div className="flex-1 bg-zinc-800/40 rounded-xl px-3 py-2">
+            <div className="h-2.5 bg-zinc-700 rounded w-12 mb-1.5" />
+            <div className="h-5 bg-zinc-700 rounded w-8" />
+          </div>
+        </div>
+        {/* Type distribution bar */}
+        <div className="h-2.5 bg-zinc-800 rounded w-24 mb-1.5" />
+        <div className="h-5 bg-zinc-800 rounded-lg mb-2" />
+        {/* Trend chart placeholder */}
+        <div className="h-2.5 bg-zinc-800 rounded w-20 mb-1.5" />
+        <div className="flex items-end gap-1 h-12">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
+              <div className="h-2 bg-zinc-700 rounded w-3" />
+              <div className="w-full bg-zinc-800 rounded-sm" style={{ height: `${20 + Math.random() * 60}%` }} />
+            </div>
+          ))}
         </div>
       </div>
     );

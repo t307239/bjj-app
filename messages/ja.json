@@ -1634,7 +1634,9 @@
     "weekdayWed": "水",
     "weekdayThu": "木",
     "weekdayFri": "金",
-    "weekdaySat": "土"
+    "weekdaySat": "土",
+    "totalSessions": "全 {n}回",
+    "bjjDuration": "柔術歴 {duration}"
   },
   "report": {
     "title": "パフォーマンスレポート",

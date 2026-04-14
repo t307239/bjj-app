@@ -296,6 +296,8 @@ export default async function DashboardPage({
           weekCount={weekCount}
           monthCount={monthCount}
           streak={streak}
+          totalCount={totalCount}
+          bjjDuration={profileData?.start_date ? formatBjjDuration(profileData.start_date, t) : null}
           t={t}
         />
 

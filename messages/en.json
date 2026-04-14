@@ -1632,7 +1632,9 @@
     "weekdayWed": "Wed",
     "weekdayThu": "Thu",
     "weekdayFri": "Fri",
-    "weekdaySat": "Sat"
+    "weekdaySat": "Sat",
+    "totalSessions": "{n} total",
+    "bjjDuration": "Training for {duration}"
   },
   "report": {
     "title": "Performance Report",
