@@ -15,6 +15,8 @@ type LogEntry = {
 
 type Props = {
   logs: LogEntry[];
+  weekCount?: number;
+  streak?: number;
   t: (key: string, vars?: Record<string, string | number>) => string;
 };
 
@@ -73,17 +75,17 @@ function cleanNotes(raw: string | null): string {
   return cleaned.trim();
 }
 
-export default function RecentLogs({ logs, t }: Props) {
+export default function RecentLogs({ logs, weekCount = 0, streak = 0, t }: Props) {
   if (logs.length === 0) {
     return (
       <div className="bg-zinc-900/40 border border-white/[0.06] rounded-2xl p-8 mb-5 text-center">
-        {/* Motivational empty state */}
+        {/* Stat-integrated empty state */}
         <div className="text-5xl mb-4">🥋</div>
         <p className="text-white text-base font-bold mb-1.5">
           {t("home.emptyMotivationTitle")}
         </p>
         <p className="text-zinc-400 text-sm mb-5 max-w-[260px] mx-auto leading-relaxed">
-          {t("home.emptyMotivationDesc")}
+          {t("home.emptyWeekStat", { n: weekCount })}
         </p>
         <Link
           href="/records"

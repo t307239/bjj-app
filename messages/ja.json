@@ -1640,7 +1640,8 @@
     "totalSessions": "全 {n}回",
     "bjjDuration": "柔術歴 {duration}",
     "weekLabel": "今週",
-    "streakLabel": "ストリーク"
+    "streakLabel": "ストリーク",
+    "emptyWeekStat": "今週: {n}回。最初の練習を記録しよう！"
   },
   "report": {
     "title": "パフォーマンスレポート",

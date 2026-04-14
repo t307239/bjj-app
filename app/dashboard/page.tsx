@@ -433,7 +433,7 @@ export default async function DashboardPage({
         {/* ═══════════════════════════════════════════
             RECENT LOGS — last 3 entries, compact
             ═══════════════════════════════════════════ */}
-        <RecentLogs logs={typedRecentLogs} t={t} />
+        <RecentLogs logs={typedRecentLogs} weekCount={weekCount} streak={streak} t={t} />
 
         {/* ═══════════════════════════════════════════
             PRO INSIGHT TEASER (free users only)

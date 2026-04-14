@@ -1638,7 +1638,8 @@
     "totalSessions": "{n} total",
     "bjjDuration": "Training for {duration}",
     "weekLabel": "This Week",
-    "streakLabel": "Streak"
+    "streakLabel": "Streak",
+    "emptyWeekStat": "This week: {n} sessions. Start your first one!"
   },
   "report": {
     "title": "Performance Report",
