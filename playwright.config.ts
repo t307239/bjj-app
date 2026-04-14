@@ -22,8 +22,9 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 1 : 3,
   reporter: "html",
+  timeout: 60_000,
 
   /* auth.setup.ts で storageState JSON を自動生成 */
   globalSetup: "./e2e/auth.setup.ts",
@@ -42,6 +43,8 @@ export default defineConfig({
         ...devices["Desktop Chrome"],
         storageState: { cookies: [], origins: [] },
       },
+      // 認証必須のspecはゲストで実行しない
+      testIgnore: /dashboard-auth|records-auth|profile-auth|pro-features|techniques-auth|skillmap|settings\.spec/,
     },
     {
       name: "mobile",
@@ -51,6 +54,7 @@ export default defineConfig({
         isMobile: true,
         storageState: { cookies: [], origins: [] },
       },
+      testIgnore: /dashboard-auth|records-auth|profile-auth|pro-features|techniques-auth|skillmap|settings\.spec/,
     },
 
     // ── 認証済み権限マトリックス用プロジェクト ──────────────────────────────
@@ -63,7 +67,7 @@ export default defineConfig({
         storageState: "e2e/auth/free.json",
       },
       // 認証済みテストファイルのみ実行
-      testMatch: /roles-matrix\.spec\.ts|dashboard-auth\.spec\.ts|records-auth\.spec\.ts|profile-auth\.spec\.ts|pro-features\.spec\.ts/,
+      testMatch: /roles-matrix\.spec\.ts|dashboard-auth\.spec\.ts|records-auth\.spec\.ts|profile-auth\.spec\.ts|pro-features\.spec\.ts|techniques-auth\.spec\.ts|skillmap\.spec\.ts|settings\.spec\.ts/,
     },
     {
       name: "pro-user",
@@ -71,7 +75,7 @@ export default defineConfig({
         ...devices["Desktop Chrome"],
         storageState: "e2e/auth/pro.json",
       },
-      testMatch: /roles-matrix\.spec\.ts|dashboard-auth\.spec\.ts|records-auth\.spec\.ts|profile-auth\.spec\.ts|pro-features\.spec\.ts/,
+      testMatch: /roles-matrix\.spec\.ts|dashboard-auth\.spec\.ts|records-auth\.spec\.ts|profile-auth\.spec\.ts|pro-features\.spec\.ts|techniques-auth\.spec\.ts|skillmap\.spec\.ts|settings\.spec\.ts/,
     },
     {
       name: "gym-owner",
