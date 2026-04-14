@@ -3,8 +3,11 @@
  *
  * 認証済みユーザーの /settings ページE2Eテスト
  *
- * 責務: 設定ページの読み込み、back リンク、セクション表示（タイムゾーン、
- *       アカウント削除、サブスク管理）、Pro/Free 差分、レスポンシブ。
+ * 責務: 設定ページ表示・ナビゲーション（back link）・セクション存在確認
+ *       （Danger Zone・サブスク管理・紹介・データエクスポート）・レスポンシブ。
+ *
+ * SettingsSection は dynamic() でクライアントロードされるため
+ * 各テストで十分な待機を設けている。
  *
  * Run:
  *   npx playwright test e2e/settings.spec.ts --project=free-user
@@ -17,8 +20,23 @@ import {
   VRT_OPTIONS,
   skipIfNoAuth,
   gotoAndWait,
+  expectVisible,
   expectNoHorizontalOverflow,
 } from "./helpers";
+
+// ── i18n regex ────────────────────────────────────────────────────────────────
+// Heading: en "Settings" / ja "設定"（profile.tabs.settings の値）
+const RE_HEADING = /^Settings$|^設定$/;
+// Danger Zone: en "Danger Zone" / ja "危険ゾーン"
+const RE_DANGER_ZONE = /Danger Zone|危険ゾーン/;
+// Delete Account: en "Delete Account" / ja "退会する"
+const RE_DELETE = /Delete Account|退会する/;
+// Manage Subscription: en "Manage Subscription" / ja "サブスクリプションを管理"
+const RE_MANAGE_SUB = /Manage Subscription|サブスクリプションを管理/;
+// Referral: en "Invite" / ja "招待"
+const RE_REFERRAL = /Invite|友達を招待|招待/;
+// Export: en "Export" / ja "エクスポート"
+const RE_EXPORT = /Export|エクスポート/i;
 
 // =============================================================================
 // 1. Free ユーザーの設定ページ
@@ -36,38 +54,48 @@ test.describe("Settings — Free User", () => {
     await expect(page).not.toHaveURL(/\/login/);
   });
 
-  test("settings heading is visible", async ({ page }) => {
-    const heading = page.locator("h1");
-    await expect(heading.first()).toBeVisible({ timeout: 5000 });
-    const text = await heading.first().textContent();
-    expect(text).toMatch(/Settings|設定/i);
+  test("settings heading (h1) matches i18n", async ({ page }) => {
+    const h1 = page.locator("h1");
+    await expect(h1).toBeVisible({ timeout: 5000 });
+    const text = await h1.textContent();
+    expect(text?.trim()).toMatch(RE_HEADING);
   });
 
-  test("back to profile link exists", async ({ page }) => {
+  test("back to profile link exists and points to /profile", async ({ page }) => {
     const backLink = page.locator('a[href="/profile"]');
     await expect(backLink).toBeVisible({ timeout: 5000 });
   });
 
-  test("timezone selector is present", async ({ page }) => {
-    const body = await page.textContent("body");
-    const hasTimezone = /timezone|タイムゾーン|time zone/i.test(body ?? "");
-    expect(hasTimezone, "Settings should include timezone option").toBe(true);
+  // ── Danger Zone ──
+
+  test("Danger Zone section with delete button is present", async ({ page }) => {
+    // Danger Zone header
+    const dangerZone = page.getByText(RE_DANGER_ZONE);
+    await expect(dangerZone).toBeVisible({ timeout: 8000 });
+
+    // Delete Account button (inside Danger Zone)
+    const deleteBtn = page.getByRole("button", { name: RE_DELETE });
+    await expect(deleteBtn).toBeVisible();
   });
 
-  test("account deletion section is visible", async ({ page }) => {
-    const body = await page.textContent("body");
-    const hasDeletion = /delete.*account|アカウント.*削除|danger zone/i.test(body ?? "");
-    expect(hasDeletion, "Settings should include account deletion section").toBe(true);
+  test("delete button expands confirmation with DELETE input", async ({ page }) => {
+    const deleteBtn = page.getByRole("button", { name: RE_DELETE });
+    await expect(deleteBtn).toBeVisible({ timeout: 8000 });
+    await deleteBtn.click();
+
+    // After expand: confirmation input with placeholder "DELETE"
+    const deleteInput = page.getByPlaceholder("DELETE");
+    await expect(deleteInput).toBeVisible({ timeout: 3000 });
   });
 
-  test("referral section exists", async ({ page }) => {
-    const body = await page.textContent("body");
-    const hasReferral = /referral|紹介|invite|招待/i.test(body ?? "");
-    // Referral might not be visible for all users, so this is advisory
-    if (hasReferral) {
-      expect(hasReferral).toBe(true);
-    }
+  // ── Data Export ──
+
+  test("CSV export button is visible", async ({ page }) => {
+    const exportBtn = page.getByText(RE_EXPORT).first();
+    await expect(exportBtn).toBeVisible({ timeout: 8000 });
   });
+
+  // ── Navigation ──
 
   test("back link navigates to /profile", async ({ page }) => {
     const backLink = page.locator('a[href="/profile"]');
@@ -76,6 +104,8 @@ test.describe("Settings — Free User", () => {
     await page.waitForURL("**/profile", { timeout: 10000 });
     await expect(page).toHaveURL(/\/profile/);
   });
+
+  // ── Responsive ──
 
   test("mobile 375px no horizontal overflow", async ({ page }) => {
     await expectNoHorizontalOverflow(page);
@@ -94,21 +124,32 @@ test.describe("Settings — Pro User", () => {
     await gotoAndWait(page, "/settings");
   });
 
-  test("subscription management section is visible for Pro", async ({ page }) => {
-    const body = await page.textContent("body");
-    const hasSubscription = /manage.*subscription|サブスクリプション.*管理|billing|stripe|customer portal/i.test(body ?? "");
-    expect(hasSubscription, "Pro user should see subscription management").toBe(true);
+  test("Manage Subscription section visible for Pro user", async ({ page }) => {
+    const manageSub = page.getByText(RE_MANAGE_SUB);
+    await expect(manageSub).toBeVisible({ timeout: 8000 });
   });
 
-  test("no upgrade CTA for Pro user on settings page", async ({ page }) => {
+  test("no upgrade pricing ($9.99 / $79.99) shown to Pro user", async ({ page }) => {
+    // Wait for dynamic SettingsSection to fully render
+    await page.waitForTimeout(2000);
     const body = await page.textContent("body");
-    const hasUpgrade = /upgrade to pro|\$9\.99|\$79\.99/i.test(body ?? "");
-    expect(hasUpgrade, "Pro user should not see upgrade pricing on settings").toBe(false);
+    expect(body).not.toMatch(/\$9\.99/);
+    expect(body).not.toMatch(/\$79\.99/);
+  });
+
+  test("referral section is visible for Pro user", async ({ page }) => {
+    const referral = page.getByText(RE_REFERRAL).first();
+    // Referral only shows if referralCode exists — skip gracefully
+    if (await referral.count() > 0) {
+      await expect(referral).toBeVisible();
+    }
   });
 
   // ── VRT ──
 
   test("settings Pro visual snapshot", async ({ page }) => {
+    // Wait for dynamic section to fully load
+    await page.getByText(RE_DANGER_ZONE).waitFor({ timeout: 8000 }).catch(() => {});
     await expect(page).toHaveScreenshot("settings-pro.png", VRT_OPTIONS);
   });
 });

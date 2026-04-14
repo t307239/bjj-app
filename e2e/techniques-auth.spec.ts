@@ -4,7 +4,8 @@
  * 認証済みユーザーの /techniques ページ「操作」E2Eテスト
  *
  * 責務: テクニックジャーナルのタブ切替、テクニック追加フォーム、
- *       統計ストリップ、RustyBanner、SafetyBanner、レスポンシブ。
+ *       統計ストリップ、JSON-LD、レスポンシブ。
+ * ※ Paywall / Pro制限は pro-features.spec.ts に委譲。
  *
  * Run:
  *   npx playwright test e2e/techniques-auth.spec.ts --project=free-user
@@ -21,6 +22,23 @@ import {
   expectNoHorizontalOverflow,
 } from "./helpers";
 
+// ── i18n-aware regex helpers ──────────────────────────────────────────────────
+// Tab labels: en "Journal" / ja "ジャーナル", en "Skill Map" / ja "スキルマップ", "Wiki"
+const RE_TAB_JOURNAL = /^Journal$|^ジャーナル$/;
+const RE_TAB_SKILLMAP = /^Skill Map$|^スキルマップ$/;
+const RE_TAB_WIKI = /^Wiki$/;
+
+// Technique form actions: en "+ Add" / ja "+ 追加"
+const RE_ADD_BTN = /\+ Add|\+ 追加/;
+const RE_SAVE = /^Save$|^保存$/;
+const RE_CANCEL = /^Cancel$|^キャンセル$/;
+
+// Empty state: en "No techniques yet" / ja "テクニックはまだありません"
+const RE_EMPTY = /No techniques yet|テクニックはまだありません/;
+
+// Search: en "Search techniques..." / ja "テクニックを検索..."
+const RE_SEARCH = /Search techniques|テクニックを検索/;
+
 // =============================================================================
 // 1. Free ユーザーのテクニック操作
 // =============================================================================
@@ -33,152 +51,126 @@ test.describe("Techniques — Free User", () => {
     await gotoAndWait(page, "/techniques");
   });
 
+  // ── 基本表示 ──
+
   test("page loads without redirect (authenticated)", async ({ page }) => {
     await expect(page).not.toHaveURL(/\/login/);
-    const body = await page.textContent("body");
-    expect(body).toBeTruthy();
   });
 
-  test("page title and subtitle are visible", async ({ page }) => {
-    // h1 title — matches both EN/JA via i18n
+  test("page heading is visible", async ({ page }) => {
     const heading = page.locator("h1");
-    await expect(heading.first()).toBeVisible({ timeout: 5000 });
+    await expect(heading).toBeVisible({ timeout: 5000 });
   });
 
-  // ── Tab Layout ──
+  // ── 3タブ ──
 
-  test("3-tab layout is present (Journal / Skill Map / Wiki)", async ({ page }) => {
-    // Tabs are rendered as buttons in TechniquesTabsLayout
-    const tabButtons = page.getByRole("button");
-    const allText = await page.textContent("body");
+  test("3 tab buttons are rendered (Journal / Skill Map / Wiki)", async ({ page }) => {
+    const journal = page.getByRole("button", { name: RE_TAB_JOURNAL });
+    const skillmap = page.getByRole("button", { name: RE_TAB_SKILLMAP });
+    const wiki = page.getByRole("button", { name: RE_TAB_WIKI });
 
-    // Should have journal-related, skill map, and wiki tab references
-    const hasJournal = /Journal|ジャーナル/i.test(allText ?? "");
-    const hasSkillMap = /Skill Map|スキルマップ/i.test(allText ?? "");
-    const hasWiki = /Wiki/i.test(allText ?? "");
-
-    expect(hasJournal || hasSkillMap || hasWiki, "At least one tab label should be visible").toBe(true);
+    await expect(journal).toBeVisible({ timeout: 5000 });
+    await expect(skillmap).toBeVisible();
+    await expect(wiki).toBeVisible();
   });
 
-  test("tab switching works without crash", async ({ page }) => {
-    // Find tab buttons — they use PageTabs component
-    const tabs = page.locator("[class*='sticky'] button");
-    const tabCount = await tabs.count();
+  test("tab switching renders different content", async ({ page }) => {
+    const journalTab = page.getByRole("button", { name: RE_TAB_JOURNAL });
+    const skillmapTab = page.getByRole("button", { name: RE_TAB_SKILLMAP });
+    const wikiTab = page.getByRole("button", { name: RE_TAB_WIKI });
 
-    if (tabCount >= 2) {
-      // Click second tab
-      await tabs.nth(1).click();
-      await page.waitForTimeout(500);
-      await expect(page.locator("body")).toBeVisible();
+    // Journal tab (default): add button or empty state or technique list
+    await expect(journalTab).toBeVisible({ timeout: 5000 });
 
-      // Click third tab if exists
-      if (tabCount >= 3) {
-        await tabs.nth(2).click();
-        await page.waitForTimeout(500);
-        await expect(page.locator("body")).toBeVisible();
-      }
+    // → Skill Map tab: should show link to /techniques/skillmap
+    await skillmapTab.click();
+    await page.waitForTimeout(400);
+    const skillmapLink = page.locator('a[href="/techniques/skillmap"]');
+    await expect(skillmapLink).toBeVisible({ timeout: 3000 });
 
-      // Return to first tab
-      await tabs.nth(0).click();
-      await page.waitForTimeout(500);
-      await expect(page.locator("body")).toBeVisible();
-    }
+    // → Wiki tab: should show wiki.bjj-app.net links
+    await wikiTab.click();
+    await page.waitForTimeout(400);
+    const wikiLink = page.locator('a[href*="wiki.bjj-app.net"]').first();
+    await expect(wikiLink).toBeVisible({ timeout: 3000 });
+
+    // → Back to Journal: page is still alive
+    await journalTab.click();
+    await page.waitForTimeout(400);
+    await expect(page.locator("body")).toBeVisible();
   });
 
-  // ── Technique CRUD ──
+  // ── テクニック追加フォーム ──
 
-  test("add technique button exists and opens form", async ({ page }) => {
-    const addBtn = page.getByText(/Add Technique|\+ Add|テクニック追加|追加/i).first();
-    if (await addBtn.count() === 0) {
-      // Try icon button
-      const iconBtn = page.getByRole("button", { name: /add|追加/i });
-      if (await iconBtn.count() === 0) return test.skip(true, "No add technique button found");
-      await iconBtn.first().click();
-    } else {
-      await addBtn.click();
-    }
+  test("add technique button opens form with Save/Cancel", async ({ page }) => {
+    const addBtn = page.getByRole("button", { name: RE_ADD_BTN });
+    await expect(addBtn).toBeVisible({ timeout: 5000 });
+    await addBtn.click();
 
-    await page.waitForTimeout(500);
+    // Form should appear — Name input + Save + Cancel
+    const nameInput = page.getByPlaceholder(/technique name|テクニック名/i);
+    await expect(nameInput).toBeVisible({ timeout: 3000 });
 
-    // Form should show name input or save/cancel buttons
-    const formIndicator = page.getByText(/Save|保存|Cancel|キャンセル|Name|名前/i);
-    await expect(formIndicator.first(), "Technique form should open").toBeVisible({ timeout: 5000 });
+    const saveBtn = page.getByRole("button", { name: RE_SAVE });
+    const cancelBtn = page.getByRole("button", { name: RE_CANCEL });
+    await expect(saveBtn).toBeVisible();
+    await expect(cancelBtn).toBeVisible();
+
+    // Close
+    await cancelBtn.click();
+    await expect(nameInput).not.toBeVisible({ timeout: 3000 });
+  });
+
+  test("search input is present on Journal tab", async ({ page }) => {
+    const search = page.getByPlaceholder(RE_SEARCH);
+    await expect(search).toBeVisible({ timeout: 5000 });
   });
 
   test("technique list or empty state is shown", async ({ page }) => {
-    const body = await page.textContent("body");
-    // Either has technique entries or shows empty state message
-    const hasTechniques = /mastery|category|guard|sweep|submission|テクニック/i.test(body ?? "");
-    const hasEmptyState = /no techniques|first technique|テクニックがありません|最初のテクニック/i.test(body ?? "");
-    const hasAnyContent = hasTechniques || hasEmptyState;
+    // Wait for initial load (TechniqueLog has initialLoading state)
+    await page.waitForTimeout(2000);
 
-    expect(hasAnyContent, "Should show technique list or empty state").toBe(true);
+    const empty = page.getByText(RE_EMPTY);
+    const listItems = page.locator("[data-technique-id], [data-testid='technique-item']");
+
+    // At least one of: empty state OR technique items
+    const emptyCount = await empty.count();
+    const listCount = await listItems.count();
+
+    if (emptyCount === 0 && listCount === 0) {
+      // Fallback: check body text for any technique-related content
+      const body = await page.textContent("body");
+      const hasContent = /guard|sweep|submission|pass|mount|mastery|テクニック/i.test(body ?? "");
+      expect(hasContent || emptyCount > 0, "Should show technique list or empty state").toBe(true);
+    }
   });
 
-  // ── Stats Strip ──
+  // ── 統計ストリップ ──
 
-  test("stats strip shows counts when techniques exist", async ({ page }) => {
-    // Stats strip uses grid-cols-3 with counters (Logged / Solid+ / Mastered)
+  test("stats strip shows numeric counts when techniques exist", async ({ page }) => {
     const statsGrid = page.locator(".grid.grid-cols-3");
-    if (await statsGrid.count() > 0) {
+    const count = await statsGrid.count();
+    if (count > 0) {
       await expect(statsGrid.first()).toBeVisible();
-      // Should contain at least one number
-      const statsText = await statsGrid.first().textContent();
-      expect(statsText).toMatch(/\d/);
+      // Each stat cell has a number in text-xl/text-2xl
+      const numbers = statsGrid.first().locator(".tabular-nums");
+      const numCount = await numbers.count();
+      expect(numCount, "Stats strip should have numeric counters").toBeGreaterThanOrEqual(1);
     }
-    // No stats is also valid (0 techniques)
+    // count === 0 is valid (user has 0 techniques → no stats)
   });
 
-  // ── Skill Map Link ──
+  // ── JSON-LD ──
 
-  test("Skill Map card links to /techniques/skillmap", async ({ page }) => {
-    // Switch to Skill Map tab first
-    const tabs = page.locator("[class*='sticky'] button");
-    const tabCount = await tabs.count();
-    if (tabCount >= 2) {
-      await tabs.nth(1).click();
-      await page.waitForTimeout(500);
-    }
-
-    const skillMapLink = page.locator('a[href="/techniques/skillmap"]');
-    if (await skillMapLink.count() > 0) {
-      await expect(skillMapLink.first()).toBeVisible();
-      // Verify href without navigating
-      const href = await skillMapLink.first().getAttribute("href");
-      expect(href).toBe("/techniques/skillmap");
-    }
+  test("JSON-LD structured data (ItemList) is present", async ({ page }) => {
+    const jsonLd = page.locator('script[type="application/ld+json"]');
+    await expect(jsonLd).toBeAttached();
+    const content = await jsonLd.textContent();
+    expect(content).toContain('"@type":"ItemList"');
+    expect(content).toContain("BJJ Technique Journal");
   });
 
-  // ── Wiki Tab ──
-
-  test("Wiki tab shows external links", async ({ page }) => {
-    // Switch to Wiki tab (usually 3rd)
-    const tabs = page.locator("[class*='sticky'] button");
-    const tabCount = await tabs.count();
-    if (tabCount >= 3) {
-      await tabs.nth(2).click();
-      await page.waitForTimeout(500);
-
-      const wikiLinks = page.locator('a[href*="wiki.bjj-app.net"]');
-      if (await wikiLinks.count() > 0) {
-        await expect(wikiLinks.first()).toBeVisible();
-      }
-    }
-  });
-
-  // ── Free Limit Label ──
-
-  test("free user sees free limit indicator", async ({ page }) => {
-    const body = await page.textContent("body");
-    // Free limit text rendered in both techniques page and skill map tab
-    const hasFreeLimit = /free limit|30-day|無料.*制限|最新30日/i.test(body ?? "");
-    // This is optional — some states might not show it
-    if (hasFreeLimit) {
-      expect(hasFreeLimit).toBe(true);
-    }
-  });
-
-  // ── Responsive ──
+  // ── レスポンシブ ──
 
   test("mobile 375px no horizontal overflow", async ({ page }) => {
     await expectNoHorizontalOverflow(page);
@@ -198,36 +190,33 @@ test.describe("Techniques — Pro User", () => {
   });
 
   test("Pro badge is displayed", async ({ page }) => {
-    const proBadge = page.getByText(/✦ PRO|PRO/);
-    if (await proBadge.count() > 0) {
-      await expect(proBadge.first()).toBeVisible();
-    }
+    const proBadge = page.getByText("✦ PRO");
+    await expectVisible(page, proBadge, "Pro user should see ✦ PRO badge");
   });
 
-  test("no free limit indicator for Pro user", async ({ page }) => {
-    const body = await page.textContent("body");
-    // Pro users should not see free limit text
-    const hasFreeLimit = /free limit|30-day limit|無料.*制限|最新30日のみ/i.test(body ?? "");
-    // Note: "freeLimit" i18n key might still render for skill map tab — check carefully
-    // This test is advisory rather than strict
-  });
-
-  test("category breakdown chips are visible (if techniques exist)", async ({ page }) => {
-    // Category chips rendered with capitalize class
+  test("category breakdown chips show 'name · count' format", async ({ page }) => {
+    // Category chips: e.g. "guard · 5", "submission · 3"
     const chips = page.locator(".capitalize");
-    if (await chips.count() > 0) {
-      await expect(chips.first()).toBeVisible();
-      const chipText = await chips.first().textContent();
-      expect(chipText).toMatch(/·\s*\d/); // "guard · 5" pattern
+    const count = await chips.count();
+    if (count > 0) {
+      const text = await chips.first().textContent();
+      expect(text, "Chip should have 'category · count' format").toMatch(/·\s*\d/);
     }
+    // count === 0 valid (Pro user may have 0 techniques)
   });
 
-  test("JSON-LD structured data is present", async ({ page }) => {
-    const jsonLd = page.locator('script[type="application/ld+json"]');
-    await expect(jsonLd).toBeAttached();
-    const content = await jsonLd.textContent();
-    expect(content).toContain("ItemList");
-    expect(content).toContain("BJJ Technique Journal");
+  test("Skill Map tab card is clickable and links correctly", async ({ page }) => {
+    const skillmapTab = page.getByRole("button", { name: RE_TAB_SKILLMAP });
+    await expect(skillmapTab).toBeVisible({ timeout: 5000 });
+    await skillmapTab.click();
+    await page.waitForTimeout(400);
+
+    const card = page.locator('a[href="/techniques/skillmap"]');
+    await expect(card).toBeVisible({ timeout: 3000 });
+
+    // Verify the card has title text
+    const cardText = await card.textContent();
+    expect(cardText).toMatch(/Skill Map|スキルマップ/);
   });
 
   // ── VRT ──
