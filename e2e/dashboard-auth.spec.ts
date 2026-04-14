@@ -52,18 +52,13 @@ test.describe("Dashboard Ops — Free User", () => {
     }
   });
 
-  // ── TrainingLogForm ──
+  // ── Record FAB (TrainingLog is on /records, not /dashboard) ──
 
-  test("training log form opens and closes", async ({ page }) => {
-    const addBtn = page.getByText(/\+ Add Session|Log your roll|Log Your First Roll/i).first();
-    await expect(addBtn, "Add Session button should exist").toBeVisible({ timeout: 5000 });
-    await addBtn.click();
-
-    const cancelBtn = page.getByRole("button", { name: /Cancel|キャンセル/i });
-    await expect(cancelBtn.first(), "Cancel button should appear after opening form").toBeVisible({ timeout: 5000 });
-
-    await cancelBtn.first().click();
-    await expect(cancelBtn.first()).not.toBeVisible({ timeout: 3000 });
+  test("record FAB links to /records", async ({ page }) => {
+    // Dashboard has a mobile FAB linking to /records (TrainingLog page)
+    // On desktop, check for the "Records" link or Recent Logs section
+    const recordsLink = page.locator('a[href="/records"]').first();
+    await expect(recordsLink).toBeAttached({ timeout: 5000 });
   });
 
   test("training log form has duration presets (30/60/90/120)", async ({ page }) => {
