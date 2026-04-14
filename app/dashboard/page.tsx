@@ -162,6 +162,7 @@ export default async function DashboardPage({
     { data: heatmapLogs },
     { count: techniqueCount },
     { data: pinnedTechniques },
+    { data: allDurations },
   ] = await Promise.all([
     supabase
       .from("profiles")
@@ -209,6 +210,11 @@ export default async function DashboardPage({
       .eq("is_pinned", true)
       .order("created_at", { ascending: false })
       .limit(5),
+    // All durations for 10K hour tracker (lightweight — just one int column)
+    supabase
+      .from("training_logs")
+      .select("duration_min")
+      .eq("user_id", user.id),
   ]);
 
   let metrics = rpcRes.data;
@@ -295,6 +301,12 @@ export default async function DashboardPage({
         return focusTechniques.some((ft) => lower.includes(ft.name.toLowerCase()));
       }).length
     : 0;
+
+  // ── 10,000 hour tracker ──
+  const totalMinutes = (allDurations ?? []).reduce(
+    (sum: number, row: { duration_min: number }) => sum + (row.duration_min ?? 0),
+    0
+  );
 
   // Typed recent logs for compact home view
   const typedRecentLogs = (recentLogsFull ?? []) as {

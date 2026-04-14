@@ -1,11 +1,11 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 210 files
+TS/TSX Scanned: 211 files
 CRITICAL: 1
 WARNING: 10
 INFO: 82
 Total: 93
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (603/1635 キー) — 1062 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (603/1644 キー) — 1071 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
