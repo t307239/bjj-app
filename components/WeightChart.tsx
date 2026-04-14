@@ -121,8 +121,25 @@ export default function WeightChart({ userId, refreshKey, targetWeight, targetDa
 
   if (loading) {
     return (
-      <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 flex items-center justify-center h-40">
-        <div className="w-5 h-5 border-2 border-[#10B981] border-t-transparent rounded-full animate-spin" />
+      <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
+        {/* Skeleton mimicking chart shape */}
+        <div className="h-3 w-24 bg-zinc-800 rounded animate-pulse mb-3" />
+        <div className="flex items-end gap-1 h-28">
+          <div className="w-6 flex flex-col justify-between h-full py-1">
+            <div className="h-2 w-full bg-zinc-800/60 rounded animate-pulse" />
+            <div className="h-2 w-full bg-zinc-800/60 rounded animate-pulse" />
+            <div className="h-2 w-full bg-zinc-800/60 rounded animate-pulse" />
+          </div>
+          <div className="flex-1 flex items-end gap-[3px]">
+            {[40, 55, 45, 65, 50, 70, 60, 55, 75, 50].map((h, i) => (
+              <div
+                key={i}
+                className="flex-1 bg-zinc-800/40 rounded-t animate-pulse"
+                style={{ height: `${h}%`, animationDelay: `${i * 80}ms` }}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }

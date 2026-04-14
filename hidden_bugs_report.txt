@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 213 files
+TS/TSX Scanned: 214 files
 CRITICAL: 1
 WARNING: 10
-INFO: 84
-Total: 95
+INFO: 86
+Total: 97
 
 [CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 36% (603/1662 キー) — 1089 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
@@ -169,6 +169,8 @@ Total: 95
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L281: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [INLINE_STYLE_OBJECT] components/WeightChart.tsx: L138: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeightCutPlanner.tsx: L190: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/dashboard/HeatmapCalendar.tsx: L91: style={{...}} — Tailwindクラスで統一推奨
@@ -186,6 +188,8 @@ Total: 95
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/TechniqueNode.tsx: L63: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/TechniqueNode.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [INLINE_STYLE_OBJECT] components/ui/AnimatedAccordion.tsx: L26: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/ui/BottomSheet.tsx: L151: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換

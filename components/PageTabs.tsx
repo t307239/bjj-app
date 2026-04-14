@@ -35,7 +35,7 @@ export default function PageTabs({ tabs, defaultTab, children, trailing }: Props
                 type="button"
                 onClick={() => setActive(tab.key)}
                 className={`
-                  flex items-center gap-1.5 px-3.5 py-2.5 text-sm font-semibold whitespace-nowrap transition-colors relative
+                  flex items-center gap-1.5 px-3.5 py-2.5 text-sm font-semibold whitespace-nowrap transition-all active:scale-95 relative
                   ${active === tab.key
                     ? "text-white"
                     : "text-zinc-500 hover:text-zinc-300"

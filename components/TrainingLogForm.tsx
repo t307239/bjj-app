@@ -75,7 +75,7 @@ function DurationPicker({
             key={p}
             type="button"
             onClick={() => { onChange(p); setShowCustom(false); }}
-            className={`px-2.5 py-2 min-h-[36px] rounded-lg text-xs font-medium border transition-colors ${
+            className={`px-2.5 py-2 min-h-[36px] rounded-lg text-xs font-medium border transition-all active:scale-95 ${
               value === p && !showCustom
                 ? "bg-[#10B981] border-[#10B981] text-white"
                 : "bg-zinc-800 border-white/10 text-gray-400 hover:border-white/20"
@@ -88,7 +88,7 @@ function DurationPicker({
         <button
           type="button"
           onClick={() => setShowCustom(true)}
-          className={`px-2.5 py-2 min-h-[36px] rounded-lg text-xs font-medium border transition-colors ${
+          className={`px-2.5 py-2 min-h-[36px] rounded-lg text-xs font-medium border transition-all active:scale-95 ${
             showCustom || !isPreset
               ? "bg-[#10B981] border-[#10B981] text-white"
               : "bg-zinc-800 border-white/10 text-gray-400 hover:border-white/20"
@@ -593,7 +593,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
                 </div>
               )}
             </div>
-          )}
+          </AnimatedAccordion>
         </>
       )}
 
