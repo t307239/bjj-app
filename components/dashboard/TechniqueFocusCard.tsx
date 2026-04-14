@@ -1,6 +1,5 @@
-"use client";
-
 import Link from "next/link";
+
 type FocusTechnique = {
   id: string;
   name: string;

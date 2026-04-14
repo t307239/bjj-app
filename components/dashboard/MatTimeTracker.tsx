@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * 10,000 Hour Mat Time Tracker
  * Shows cumulative training hours as a progress bar toward the 10,000-hour mastery milestone.
