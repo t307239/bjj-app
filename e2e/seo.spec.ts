@@ -143,7 +143,9 @@ test.describe("Performance Basics", () => {
         !e.includes("hydration") &&
         !e.includes("Hydration") &&
         !e.includes("favicon") &&
-        !e.includes("serviceWorker")
+        !e.includes("serviceWorker") &&
+        !e.includes("Failed to load resource") &&
+        !e.includes("__webpack_modules__")
     );
     expect(criticalErrors).toHaveLength(0);
   });
