@@ -1,5 +1,6 @@
 // Phase 5: Tab-based IA redesign — Profile(3 tabs) + Settings separated
 import type { Metadata } from "next";
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -24,23 +25,44 @@ const MilestoneBadgeGrid = dynamic(() => import("@/components/MilestoneBadgeGrid
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
-export async function generateMetadata(): Promise<Metadata> {
+// ─── React.cache: deduplicate DB queries between generateMetadata & Page ───
+// Supabase SDK calls are NOT deduped by Next.js fetch cache, so we use
+// React.cache() to ensure a single request per render cycle.
+const getProfileData = cache(async () => {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { title: "Profile" };
+  if (!user) return null;
 
-  const [{ data: profile }, { count: totalCount }] = await Promise.all([
-    supabase.from("profiles").select("belt, stripe").eq("id", user.id).single(),
-    supabase
-      .from("training_logs")
-      .select("*", { count: "exact", head: true })
-      .eq("user_id", user.id),
-  ]);
+  const [{ data: profile }, { count: totalCount }, { data: recentLogs }] =
+    await Promise.all([
+      supabase
+        .from("profiles")
+        .select("belt, stripe, start_date, is_pro, gym_name")
+        .eq("id", user.id)
+        .single(),
+      supabase
+        .from("training_logs")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id),
+      supabase
+        .from("training_logs")
+        .select("date")
+        .eq("user_id", user.id)
+        .order("date", { ascending: false })
+        .limit(60),
+    ]);
 
-  const belt = profile?.belt ?? "white";
-  const count = totalCount ?? 0;
+  return { user, profile, totalCount: totalCount ?? 0, recentLogs: recentLogs ?? [] };
+});
+
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await getProfileData();
+  if (!data) return { title: "Profile" };
+
+  const belt = data.profile?.belt ?? "white";
+  const count = data.totalCount;
   const ogImage = `${BASE_URL}/api/og?belt=${belt}&count=${count}&months=0&streak=0`;
   const title = `My BJJ Profile — ${count} Sessions | BJJ App`;
   const description = `${belt.charAt(0).toUpperCase() + belt.slice(1)} Belt · ${count} total sessions tracked on BJJ App.`;
@@ -72,12 +94,10 @@ const jsonLd = {
 
 
 export default async function ProfilePage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const data = await getProfileData();
+  if (!data) redirect("/login?next=/profile");
 
-  if (!user) redirect("/login?next=/profile");
+  const { user, profile, totalCount, recentLogs } = data;
 
   const locale = await detectServerLocale();
   const t = makeT(locale);
@@ -89,29 +109,6 @@ export default async function ProfilePage() {
     t("dashboard.defaultAthleteName");
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
-
-  // Fetch profile + stats for hero section (referral moved to /settings)
-  const [
-    { data: profile },
-    { count: totalCount },
-    { data: recentLogs },
-  ] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("belt, stripe, start_date, is_pro, gym_name")
-      .eq("id", user.id)
-      .single(),
-    supabase
-      .from("training_logs")
-      .select("*", { count: "exact", head: true })
-      .eq("user_id", user.id),
-    supabase
-      .from("training_logs")
-      .select("date")
-      .eq("user_id", user.id)
-      .order("date", { ascending: false })
-      .limit(60),
-  ]);
 
   const belt = profile?.belt ?? "white";
   const stripeCount = profile?.stripe ?? 0;
