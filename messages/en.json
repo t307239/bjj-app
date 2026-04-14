@@ -1634,7 +1634,9 @@
     "weekdayFri": "Fri",
     "weekdaySat": "Sat",
     "totalSessions": "{n} total",
-    "bjjDuration": "Training for {duration}"
+    "bjjDuration": "Training for {duration}",
+    "weekLabel": "This Week",
+    "streakLabel": "Streak"
   },
   "report": {
     "title": "Performance Report",

@@ -54,6 +54,52 @@ function getIntensityClass(count: number): string {
 const MONTH_LABELS_EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const MONTH_LABELS_JA = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
 
+/** Mobile: last 7 days bar chart view */
+function WeekBarChart({ countMap, locale }: { countMap: Map<string, number>; locale: string }) {
+  const now = new Date(Date.now() + 9 * 60 * 60 * 1000);
+  const todayStr = now.toISOString().slice(0, 10);
+  const todayMs = new Date(todayStr + "T00:00:00Z").getTime();
+
+  const days: { date: string; count: number; label: string }[] = [];
+  const dayLabelsEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const dayLabelsJa = ["日", "月", "火", "水", "木", "金", "土"];
+  const labels = locale === "ja" ? dayLabelsJa : dayLabelsEn;
+
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(todayMs - i * 86400000);
+    const dateStr = d.toISOString().slice(0, 10);
+    const dayIdx = d.getUTCDay();
+    days.push({ date: dateStr, count: countMap.get(dateStr) ?? 0, label: labels[dayIdx] });
+  }
+
+  const maxCount = Math.max(1, ...days.map((d) => d.count));
+
+  return (
+    <div className="flex items-end gap-2 h-16">
+      {days.map((d) => {
+        const height = d.count > 0 ? Math.max(20, (d.count / maxCount) * 100) : 8;
+        const isToday = d.date === todayStr;
+        return (
+          <div key={d.date} className="flex-1 flex flex-col items-center gap-1">
+            <span className={`text-[10px] tabular-nums ${d.count > 0 ? "text-emerald-400" : "text-zinc-600"}`}>
+              {d.count > 0 ? d.count : ""}
+            </span>
+            <div
+              className={`w-full rounded-t-sm transition-all ${
+                d.count === 0 ? "bg-zinc-800/60" : d.count >= 2 ? "bg-emerald-500/80" : "bg-emerald-700/80"
+              }`}
+              style={{ height: `${height}%` }}
+            />
+            <span className={`text-[10px] ${isToday ? "text-white font-semibold" : "text-zinc-500"}`}>
+              {d.label}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function HeatmapCalendar({ trainingDates }: Props) {
   const { t, locale } = useLocale();
   const WEEKS = 16;
@@ -100,10 +146,15 @@ export default function HeatmapCalendar({ trainingDates }: Props) {
         </span>
       </div>
 
-      {/* Centered grid container — caps cell size at ~26px on desktop */}
-      <div className="max-w-[480px] mx-auto sm:mx-0">
+      {/* Mobile: 7-day bar chart (< sm) */}
+      <div className="sm:hidden">
+        <WeekBarChart countMap={countMap} locale={locale} />
+      </div>
+
+      {/* Desktop: full 16-week heatmap grid (>= sm) */}
+      <div className="hidden sm:block max-w-[480px]">
         {/* Month labels row — each cell matches a grid column via flex-1 */}
-        <div className="flex gap-[3px] sm:gap-1 mb-1">
+        <div className="flex gap-1 mb-1">
           {Array.from({ length: WEEKS }).map((_, col) => {
             const marker = monthMarkers.find((m) => m.col === col);
             return (
@@ -117,10 +168,10 @@ export default function HeatmapCalendar({ trainingDates }: Props) {
           })}
         </div>
 
-        {/* Grid: 7 rows (Sun-Sat) × WEEKS cols — responsive */}
-        <div className="flex flex-col gap-[3px] sm:gap-1">
+        {/* Grid: 7 rows (Sun-Sat) × WEEKS cols */}
+        <div className="flex flex-col gap-1">
           {grid.map((row, rowIdx) => (
-            <div key={rowIdx} className="flex gap-[3px] sm:gap-1">
+            <div key={rowIdx} className="flex gap-1">
               {row.map((dateStr) => {
                 if (!dateStr) return <div key={`empty-${rowIdx}`} className="flex-1 aspect-square" />;
                 const count = countMap.get(dateStr) ?? 0;
@@ -135,16 +186,16 @@ export default function HeatmapCalendar({ trainingDates }: Props) {
             </div>
           ))}
         </div>
-      </div>
 
-      {/* Legend */}
-      <div className="flex items-center justify-end gap-1.5 mt-2.5 max-w-[480px] sm:mx-0 mx-auto">
-        <span className="text-[10px] text-zinc-500">{t("home.heatmapLess")}</span>
-        <div className="w-2.5 h-2.5 rounded-[2px] bg-zinc-800/60" />
-        <div className="w-2.5 h-2.5 rounded-[2px] bg-emerald-900/80" />
-        <div className="w-2.5 h-2.5 rounded-[2px] bg-emerald-700/80" />
-        <div className="w-2.5 h-2.5 rounded-[2px] bg-emerald-500/80" />
-        <span className="text-[10px] text-zinc-500">{t("home.heatmapMore")}</span>
+        {/* Legend */}
+        <div className="flex items-center justify-end gap-1.5 mt-2.5">
+          <span className="text-[10px] text-zinc-500">{t("home.heatmapLess")}</span>
+          <div className="w-2.5 h-2.5 rounded-[2px] bg-zinc-800/60" />
+          <div className="w-2.5 h-2.5 rounded-[2px] bg-emerald-900/80" />
+          <div className="w-2.5 h-2.5 rounded-[2px] bg-emerald-700/80" />
+          <div className="w-2.5 h-2.5 rounded-[2px] bg-emerald-500/80" />
+          <span className="text-[10px] text-zinc-500">{t("home.heatmapMore")}</span>
+        </div>
       </div>
     </div>
   );

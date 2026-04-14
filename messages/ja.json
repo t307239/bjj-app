@@ -1636,7 +1636,9 @@
     "weekdayFri": "金",
     "weekdaySat": "土",
     "totalSessions": "全 {n}回",
-    "bjjDuration": "柔術歴 {duration}"
+    "bjjDuration": "柔術歴 {duration}",
+    "weekLabel": "今週",
+    "streakLabel": "ストリーク"
   },
   "report": {
     "title": "パフォーマンスレポート",

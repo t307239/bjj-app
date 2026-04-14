@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import PricingSection from "@/components/PricingSection";
+import IABSafeLink from "@/components/IABSafeLink";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 
 export const metadata: Metadata = {
@@ -185,14 +186,14 @@ export default async function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
-            {/* Fix 15: CTA copy */}
-            <Link
+            {/* Fix 15: CTA copy | UX3: IAB-safe link */}
+            <IABSafeLink
               href="/login"
               className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-4 px-8 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#10B981]/20"
             >
               {t("landing.heroCta")}
               <IconArrowRight className="w-5 h-5" />
-            </Link>
+            </IABSafeLink>
             <a
               href="#preview"
               className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-white/5 text-gray-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-white/10"
@@ -266,14 +267,14 @@ export default async function Home() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            {/* Fix 15: CTA copy */}
-            <Link
+            {/* Fix 15: CTA copy | UX3: IAB-safe link */}
+            <IABSafeLink
               href="/login"
               className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-bold py-4 px-8 rounded-full text-base transition-all hover:scale-105 shadow-lg shadow-[#10B981]/25"
             >
               {t("landing.engCta")}
               <IconArrowRight className="w-4 h-4" />
-            </Link>
+            </IABSafeLink>
             <Link
               href="/dashboard"
               className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-white/5 text-gray-300 font-medium py-4 px-8 rounded-full text-base transition-all border border-white/10"

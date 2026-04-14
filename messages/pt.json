@@ -691,5 +691,9 @@
     "annual": "Anual",
     "save33": "Economize 33%",
     "trialText": "✓ Avaliação gratuita de 14 dias"
+  },
+  "home": {
+    "weekLabel": "Esta Semana",
+    "streakLabel": "Sequência"
   }
 }
