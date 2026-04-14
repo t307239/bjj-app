@@ -242,7 +242,9 @@
     "threeMonths": "3 months",
     "monthly": "Monthly",
     "quickAddTechnique": "Create & tag technique",
-    "addShort": "Add"
+    "addShort": "Add",
+    "giName": "Which Gi?",
+    "giNamePlaceholder": "e.g. Shoyoroll Comp Standard"
   },
   "techniques": {
     "mastery1": "Know it",
@@ -533,7 +535,11 @@
     "winRateByBelt": "Win Rate by Belt",
     "upgradeAnalytics": "Unlock Match Analytics",
     "whiteBelt": "White: 80%",
-    "blueBelt": "Blue: 60%"
+    "blueBelt": "Blue: 60%",
+    "viewAll": "View All Matches",
+    "hideAll": "Show Recent",
+    "matchHistory": "Match History",
+    "eventLabel": "Event"
   },
   "guest": {
     "banner": "Guest Mode",

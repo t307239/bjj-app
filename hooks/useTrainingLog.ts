@@ -120,6 +120,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       roll_focus: "",
       partner_belt: "",
       size_diff: "",
+      gi_name: "",
     };
   });
   const [compForm, setCompForm] = useState<CompData>({
@@ -273,7 +274,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     const finalNotes = form.type === "competition"
       ? encodeCompNotes(compForm, form.notes)
       : (form.type === "gi" || form.type === "nogi")
-        ? encodeRollNotes(form.roll_focus, form.partner_belt, form.size_diff, form.notes)
+        ? encodeRollNotes(form.roll_focus, form.partner_belt, form.size_diff, form.notes, form.gi_name)
         : form.notes;
 
     // Optimistic UI
@@ -295,7 +296,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     if (typeof localStorage !== "undefined") {
       try { localStorage.setItem("bjj_form_defaults", JSON.stringify({ duration_min: form.duration_min, type: form.type })); } catch { /* ignore */ }
     }
-    setForm({ date: getLocalDateString(), duration_min: form.duration_min, type: form.type, notes: "", instructor_name: "", partner_username: "", weight: "", roll_focus: "", partner_belt: "", size_diff: "" });
+    setForm({ date: getLocalDateString(), duration_min: form.duration_min, type: form.type, notes: "", instructor_name: "", partner_username: "", weight: "", roll_focus: "", partner_belt: "", size_diff: "", gi_name: "" });
     setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
 
     const weightNum = form.weight !== "" ? parseFloat(form.weight) : null;

@@ -45,6 +45,7 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
   const { t } = useLocale();
   const [matches, setMatches] = useState<DecodedMatch[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -358,39 +359,52 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
         )
       )}
 
-      {/* Recent matches */}
-      <div className="space-y-2">
-        {analytics.recent.map((m) => (
-          <div
-            key={m.id}
-            className="flex items-center gap-3 bg-zinc-800/60 rounded-xl px-3 py-2"
+      {/* Match history */}
+      <div>
+        {/* Header with View All toggle */}
+        {matches.length > 5 && (
+          <button
+            type="button"
+            onClick={() => setShowAll((v) => !v)}
+            className="text-xs text-emerald-400 hover:text-emerald-300 mb-2 transition-colors"
           >
-            <span className={`text-xs font-bold w-5 text-center ${resultStyle[m.comp.result] ?? "text-gray-400"}`}>
-              {resultLabel[m.comp.result] ?? "?"}
-            </span>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1.5">
-                {m.comp.opponent_rank && BELT_COLORS[m.comp.opponent_rank] && (
-                  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${BELT_COLORS[m.comp.opponent_rank]}`} />
-                )}
-                <span className="text-sm text-white truncate">
-                  {m.comp.opponent || "—"}
-                </span>
-              </div>
-              {(m.comp.finish || m.comp.event) && (
-                <p className="text-xs text-gray-500 truncate">
-                  {[m.comp.finish, m.comp.event].filter(Boolean).join(" · ")}
-                </p>
-              )}
-            </div>
-            {m.comp.gi_type && (
-              <span className="text-xs text-gray-500 whitespace-nowrap">
-                {m.comp.gi_type === "gi" ? "Gi" : m.comp.gi_type === "nogi" ? "No-Gi" : m.comp.gi_type}
+            {showAll ? t("competition.hideAll") : t("competition.viewAll")} ({matches.length})
+          </button>
+        )}
+
+        <div className="space-y-2">
+          {(showAll ? matches : analytics.recent).map((m) => (
+            <div
+              key={m.id}
+              className="flex items-center gap-3 bg-zinc-800/60 rounded-xl px-3 py-2"
+            >
+              <span className={`text-xs font-bold w-5 text-center ${resultStyle[m.comp.result] ?? "text-gray-400"}`}>
+                {resultLabel[m.comp.result] ?? "?"}
               </span>
-            )}
-            <span className="text-xs text-gray-600 whitespace-nowrap">{m.date}</span>
-          </div>
-        ))}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  {m.comp.opponent_rank && BELT_COLORS[m.comp.opponent_rank] && (
+                    <span className={`w-2 h-2 rounded-full flex-shrink-0 ${BELT_COLORS[m.comp.opponent_rank]}`} />
+                  )}
+                  <span className="text-sm text-white truncate">
+                    {m.comp.opponent || "—"}
+                  </span>
+                </div>
+                {(m.comp.finish || m.comp.event) && (
+                  <p className="text-xs text-gray-500 truncate">
+                    {[m.comp.finish, m.comp.event].filter(Boolean).join(" · ")}
+                  </p>
+                )}
+              </div>
+              {m.comp.gi_type && (
+                <span className="text-xs text-gray-500 whitespace-nowrap">
+                  {m.comp.gi_type === "gi" ? "Gi" : m.comp.gi_type === "nogi" ? "No-Gi" : m.comp.gi_type}
+                </span>
+              )}
+              <span className="text-xs text-gray-600 whitespace-nowrap">{m.date}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

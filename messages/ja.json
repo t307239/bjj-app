@@ -243,7 +243,9 @@
     "threeMonths": "3か月",
     "monthly": "月次",
     "quickAddTechnique": "テクニック作成＆タグ",
-    "addShort": "追加"
+    "addShort": "追加",
+    "giName": "どの道着？",
+    "giNamePlaceholder": "例: シュールロール コンプ"
   },
   "techniques": {
     "mastery1": "入門",
@@ -534,7 +536,11 @@
     "winRateByBelt": "帯別勝率",
     "upgradeAnalytics": "試合分析を解放",
     "whiteBelt": "白帯：80%",
-    "blueBelt": "青帯：60%"
+    "blueBelt": "青帯：60%",
+    "viewAll": "全試合を表示",
+    "hideAll": "最近のみ表示",
+    "matchHistory": "試合履歴",
+    "eventLabel": "大会"
   },
   "guest": {
     "banner": "ゲストモードで体験中",

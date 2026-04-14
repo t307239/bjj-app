@@ -49,6 +49,8 @@ type FormState = {
   roll_focus: string;
   partner_belt: string;
   size_diff: string;
+  /** F4: Which Gi was worn (only for type=gi, encoded into roll metadata) */
+  gi_name: string;
 };
 
 // ── DurationPicker (inline — extracted from TrainingLog) ─────────────────────
@@ -497,11 +499,12 @@ const TrainingLogForm = memo(function TrainingLogForm({
             <span className="group-hover:text-zinc-300">🤼 {t("training.rollDetailsTitle")}</span>
             <span className="text-zinc-500 ml-1 font-normal">({t("training.rollDetailsOptional")})</span>
             {/* Show summary badges when collapsed and has selections */}
-            {!showRollDetails && (form.roll_focus || form.partner_belt || form.size_diff) && (
+            {!showRollDetails && (form.roll_focus || form.partner_belt || form.size_diff || form.gi_name) && (
               <span className="ml-auto flex items-center gap-1">
                 {form.roll_focus && <span className="inline-block px-1.5 py-0.5 bg-emerald-900/30 border border-emerald-500/30 rounded text-emerald-400 text-xs">{ROLL_FOCUS_OPTIONS.find(o => o.value === form.roll_focus)?.emoji}</span>}
                 {form.partner_belt && <span className={`inline-block w-4 h-4 rounded-full ${PARTNER_BELT_OPTIONS.find(o => o.value === form.partner_belt)?.bg}`} />}
                 {form.size_diff && <span className="inline-block px-1.5 py-0.5 bg-zinc-700/60 border border-zinc-500/30 rounded text-zinc-300 text-xs">{SIZE_DIFF_OPTIONS.find(o => o.value === form.size_diff)?.icon}</span>}
+                {form.gi_name && <span className="inline-block px-1.5 py-0.5 bg-blue-900/30 border border-blue-500/30 rounded text-blue-300 text-xs truncate max-w-[80px]">🥋 {form.gi_name}</span>}
               </span>
             )}
           </button>
@@ -573,6 +576,21 @@ const TrainingLogForm = memo(function TrainingLogForm({
                   ))}
                 </div>
               </div>
+
+              {/* F4: Gi name (only for Gi sessions) */}
+              {form.type === "gi" && (
+                <div>
+                  <p className="text-xs text-zinc-500 mb-1.5">🥋 {t("training.giName")}</p>
+                  <input
+                    type="text"
+                    value={form.gi_name}
+                    onChange={(e) => setForm({ ...form, gi_name: e.target.value })}
+                    placeholder={t("training.giNamePlaceholder")}
+                    className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
+                    maxLength={50}
+                  />
+                </div>
+              )}
             </div>
           )}
         </>

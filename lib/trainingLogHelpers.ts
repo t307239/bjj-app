@@ -93,13 +93,15 @@ export type RollMeta = {
   focus: string;
   partner_belt: string;
   size_diff: string;
+  /** F4: Which Gi was worn during this session */
+  gi_name?: string;
 };
 
 /** Encodes roll details as a structured prefix to the notes field */
-export function encodeRollNotes(focus: string, partner_belt: string, size_diff: string, userNotes: string): string {
-  const hasMeta = focus || partner_belt || size_diff;
+export function encodeRollNotes(focus: string, partner_belt: string, size_diff: string, userNotes: string, gi_name?: string): string {
+  const hasMeta = focus || partner_belt || size_diff || gi_name;
   if (!hasMeta) return userNotes;
-  const meta: RollMeta = { focus, partner_belt, size_diff };
+  const meta: RollMeta = { focus, partner_belt, size_diff, ...(gi_name ? { gi_name } : {}) };
   const jsonStr = JSON.stringify(meta);
   return userNotes.trim()
     ? `${ROLL_PREFIX}${jsonStr}\n${userNotes}`
@@ -145,6 +147,7 @@ export function formatRollBadge(roll: RollMeta): string {
     roll.focus ? FOCUS_EMOJI[roll.focus] : null,
     roll.partner_belt ? BELT_LABEL[roll.partner_belt] : null,
     roll.size_diff ? SIZE_LABEL[roll.size_diff] : null,
+    roll.gi_name ? `🥋 ${roll.gi_name}` : null,
   ].filter(Boolean);
   return parts.length > 0 ? `[Roll: ${parts.join(" · ")}]` : "";
 }

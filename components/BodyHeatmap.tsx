@@ -133,6 +133,17 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
       next = "injured";
     } else {
       // injured → delete part (back to healthy default)
+      // F5: Save resolved injury to localStorage history for recurrence detection
+      try {
+        const histKey = "bjj_injury_history";
+        const raw = localStorage.getItem(histKey);
+        const history: { part: string; status: string; startDate: string; endDate: string }[] = raw ? JSON.parse(raw) : [];
+        const startDate = statusDates[part] ?? toDateStr(new Date());
+        history.unshift({ part, status: current, startDate, endDate: toDateStr(new Date()) });
+        // Keep max 50 entries
+        if (history.length > 50) history.length = 50;
+        localStorage.setItem(histKey, JSON.stringify(history));
+      } catch { /* ignore */ }
       const newStatusClean: BodyStatus = { ...status };
       delete newStatusClean[part];
       const newDatesClean = { ...statusDates };
