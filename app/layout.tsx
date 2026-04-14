@@ -15,7 +15,10 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: {
     default: "BJJ App - Brazilian Jiu-Jitsu Tracker",
     template: "%s | BJJ App",
@@ -25,17 +28,35 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   keywords: ["BJJ", "Brazilian Jiu-Jitsu", "training tracker", "technique log", "martial arts"],
   authors: [{ name: "BJJ App" }],
+  alternates: {
+    canonical: "/",
+    languages: {
+      "en": "/",
+      "ja": "/",
+      "pt": "/",
+    },
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
     title: "BJJ App - Brazilian Jiu-Jitsu Tracker",
     description: "Track your BJJ training — log sessions, record techniques, and grow.",
     siteName: "BJJ App",
+    url: BASE_URL,
+    images: [
+      {
+        url: "/api/og?belt=white&count=0&months=0&streak=0&mode=lp",
+        width: 1200,
+        height: 630,
+        alt: "BJJ App - Track Your Jiu-Jitsu Journey",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "BJJ App",
     description: "Track your BJJ training — log sessions, record techniques, and grow.",
+    images: ["/api/og?belt=white&count=0&months=0&streak=0&mode=lp"],
   },
   appleWebApp: {
     capable: true,
