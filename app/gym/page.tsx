@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     "student engagement tracking",
     "BJJ gym software",
   ],
+  alternates: {
+    canonical: "https://bjj-app.net/gym",
+  },
   openGraph: {
     type: "website",
     title: "BJJ App for Academies",

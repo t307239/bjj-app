@@ -11,29 +11,29 @@ Total: 97
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L125: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [DANGEROUS_HTML] app/gym/page.tsx: L41: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/gym/page.tsx: L44: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/page.tsx: L48: JSX内に英語テキスト直書き: "BJJ App"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/page.tsx: L51: JSX内に英語テキスト直書き: "BJJ App"
   FIX: t() キーを追加して多言語対応
 [WARNING] [JSX_HARDCODED_ENGLISH] app/invite/[code]/page.tsx: L51: JSX内に英語テキスト直書き: "BJJ App"
   FIX: t() キーを追加して多言語対応
-[INFO] [DANGEROUS_HTML] app/layout.tsx: L92: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/layout.tsx: L113: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/login/layout.tsx: L49: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/login/page.tsx: L41: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/login/page.tsx: L44: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/page.tsx: L139: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/page.tsx: L156: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L146: JSX内に英語テキスト直書き: "BJJ App"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L163: JSX内に英語テキスト直書き: "BJJ App"
   FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L376: JSX内に英語テキスト直書き: "BJJ App"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L393: JSX内に英語テキスト直書き: "BJJ App"
   FIX: t() キーを追加して多言語対応
-[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L216: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L233: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L422: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L439: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L432: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L449: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [DANGEROUS_HTML] app/profile/page.tsx: L148: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証

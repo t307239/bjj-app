@@ -7,6 +7,9 @@ const BASE_URL =
 export const metadata: Metadata = {
   title: "Sign In",
   description: "Sign in to BJJ App — your Brazilian Jiu-Jitsu training tracker. Log sessions, track techniques, and never miss a streak.",
+  alternates: {
+    canonical: `${BASE_URL}/login`,
+  },
   openGraph: {
     title: "Sign In",
     description: "Sign in to your BJJ training tracker",

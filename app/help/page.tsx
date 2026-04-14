@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "Help & FAQ",
   description:
     "Frequently asked questions about BJJ App — training logs, technique tracking, streaks, gym features, and more.",
+  alternates: {
+    canonical: "https://bjj-app.net/help",
+  },
 };
 
 type FaqItem = { q: string; a: string };
