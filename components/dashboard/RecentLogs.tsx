@@ -103,6 +103,16 @@ export default function RecentLogs({ logs, t }: Props) {
 
   return (
     <div className="mb-5">
+      {/* Section header */}
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-sm font-bold text-white tracking-wide">{t("home.recentTitle")}</h2>
+        <Link
+          href="/records"
+          className="text-xs font-medium text-zinc-500 hover:text-emerald-400 transition-colors"
+        >
+          {t("home.viewAllRecords")}
+        </Link>
+      </div>
       <div className="space-y-2">
         {logs.slice(0, 3).map((log) => {
           const typeColor = TYPE_COLORS[log.type] ?? "bg-zinc-700/50 text-zinc-400 border-zinc-600/30";
@@ -111,7 +121,7 @@ export default function RecentLogs({ logs, t }: Props) {
           return (
             <div
               key={log.id}
-              className="bg-zinc-900/40 border border-white/[0.06] rounded-xl px-3.5 py-3 flex items-center gap-3 hover:border-white/10 transition-colors"
+              className="bg-zinc-900/40 border border-white/[0.06] rounded-xl px-3.5 py-3 flex items-center gap-3 hover:border-white/10 active:scale-[0.98] transition-all"
             >
               {/* Date */}
               <span className="text-xs text-zinc-500 font-medium tabular-nums whitespace-nowrap w-[72px] flex-shrink-0">
@@ -139,10 +149,10 @@ export default function RecentLogs({ logs, t }: Props) {
         })}
       </div>
 
-      {/* View all link */}
+      {/* View all — mobile: bottom link, desktop: header only */}
       <Link
         href="/records"
-        className="flex items-center justify-center gap-1 mt-3 py-2 text-xs font-medium text-zinc-400 hover:text-emerald-400 transition-colors"
+        className="flex sm:hidden items-center justify-center gap-1 mt-3 py-2 text-xs font-medium text-zinc-400 hover:text-emerald-400 transition-colors"
       >
         <span>{t("home.viewAllRecords")}</span>
         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
