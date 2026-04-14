@@ -145,6 +145,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
   const isOnline = useOnlineStatus();
   const techniqueInputRef = useRef<HTMLInputElement>(null);
   const [showOptional, setShowOptional] = useState(false);
+  const [showRollDetails, setShowRollDetails] = useState(false);
 
   // Warn user if they try to leave with meaningful unsaved form data (notes only)
   const hasInput = form.notes.trim() !== "";
@@ -452,78 +453,102 @@ const TrainingLogForm = memo(function TrainingLogForm({
         </div>
       )}
 
-      {/* ── Roll Details: shown only for Gi / No-Gi sparring sessions ─────── */}
+      {/* ── Roll Details: toggle for Gi / No-Gi sparring sessions ─────── */}
       {(form.type === "gi" || form.type === "nogi") && (
-        <div className="mb-3 bg-zinc-800/40 border border-white/8 rounded-xl p-3 space-y-3">
-          <p className="text-xs font-semibold text-zinc-400 tracking-wide">🤼 {t("training.rollDetailsTitle")} <span className="font-normal text-zinc-500">({t("training.rollDetailsOptional")})</span></p>
+        <>
+          <button
+            type="button"
+            onClick={() => setShowRollDetails((v) => !v)}
+            className="flex items-center gap-1.5 w-full text-xs text-zinc-500 hover:text-zinc-300 transition-colors py-1 mb-2 group"
+          >
+            <svg
+              className={`w-3 h-3 flex-shrink-0 transition-transform duration-150 ${showRollDetails ? "rotate-90" : ""}`}
+              viewBox="0 0 24 24" fill="none"
+            >
+              <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span className="group-hover:text-zinc-300">🤼 {t("training.rollDetailsTitle")}</span>
+            <span className="text-zinc-500 ml-1 font-normal">({t("training.rollDetailsOptional")})</span>
+            {/* Show summary badges when collapsed and has selections */}
+            {!showRollDetails && (form.roll_focus || form.partner_belt || form.size_diff) && (
+              <span className="ml-auto flex items-center gap-1">
+                {form.roll_focus && <span className="inline-block px-1.5 py-0.5 bg-emerald-900/30 border border-emerald-500/30 rounded text-emerald-400 text-xs">{ROLL_FOCUS_OPTIONS.find(o => o.value === form.roll_focus)?.emoji}</span>}
+                {form.partner_belt && <span className={`inline-block w-4 h-4 rounded-full ${PARTNER_BELT_OPTIONS.find(o => o.value === form.partner_belt)?.bg}`} />}
+                {form.size_diff && <span className="inline-block px-1.5 py-0.5 bg-zinc-700/60 border border-zinc-500/30 rounded text-zinc-300 text-xs">{SIZE_DIFF_OPTIONS.find(o => o.value === form.size_diff)?.icon}</span>}
+              </span>
+            )}
+          </button>
+          {showRollDetails && (
+            <div className="mb-3 bg-zinc-800/40 border border-white/8 rounded-xl p-3 space-y-3">
+              {/* Focus theme */}
+              <div>
+                <p className="text-xs text-zinc-500 mb-1.5">{t("training.rollFocusLabel")}</p>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {ROLL_FOCUS_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setForm({ ...form, roll_focus: form.roll_focus === opt.value ? "" : opt.value })}
+                      className={`flex flex-col items-center gap-0.5 min-h-[52px] rounded-xl border text-xs font-semibold transition-all active:scale-95 ${
+                        form.roll_focus === opt.value
+                          ? "bg-emerald-900/30 border-emerald-500/50 text-emerald-300"
+                          : "bg-zinc-800/60 border-white/10 text-zinc-500 hover:border-white/20 hover:text-zinc-300"
+                      }`}
+                    >
+                      <span className="text-lg leading-none mt-2">{opt.emoji}</span>
+                      <span className="text-xs leading-tight">{t(opt.i18nKey)}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-          {/* Focus theme */}
-          <div>
-            <p className="text-xs text-zinc-500 mb-1.5">{t("training.rollFocusLabel")}</p>
-            <div className="grid grid-cols-4 gap-1.5">
-              {ROLL_FOCUS_OPTIONS.map((opt) => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => setForm({ ...form, roll_focus: form.roll_focus === opt.value ? "" : opt.value })}
-                  className={`flex flex-col items-center gap-0.5 min-h-[52px] rounded-xl border text-xs font-semibold transition-all active:scale-95 ${
-                    form.roll_focus === opt.value
-                      ? "bg-emerald-900/30 border-emerald-500/50 text-emerald-300"
-                      : "bg-zinc-800/60 border-white/10 text-zinc-500 hover:border-white/20 hover:text-zinc-300"
-                  }`}
-                >
-                  <span className="text-lg leading-none mt-2">{opt.emoji}</span>
-                  <span className="text-xs leading-tight">{t(opt.i18nKey)}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+              {/* Partner belt color */}
+              <div>
+                <p className="text-xs text-zinc-500 mb-1.5">{t("training.partnerBeltLabel")}</p>
+                <div className="flex gap-2">
+                  {PARTNER_BELT_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setForm({ ...form, partner_belt: form.partner_belt === opt.value ? "" : opt.value })}
+                      className={`relative flex-1 flex flex-col items-center gap-1 min-h-[52px] rounded-xl border transition-all active:scale-95 ${
+                        form.partner_belt === opt.value
+                          ? `border-white/40 ring-2 ${opt.ring} bg-zinc-800`
+                          : "border-white/10 bg-zinc-800/60 hover:border-white/20"
+                      }`}
+                      title={t(opt.i18nKey)}
+                    >
+                      <span className={`w-6 h-6 rounded-full ${opt.bg} inline-block mt-2.5`} />
+                      <span className="text-xs text-zinc-500 leading-none mb-1">{t(opt.i18nKey)}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-          {/* Partner belt color */}
-          <div>
-            <p className="text-xs text-zinc-500 mb-1.5">{t("training.partnerBeltLabel")}</p>
-            <div className="flex gap-2">
-              {PARTNER_BELT_OPTIONS.map((opt) => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => setForm({ ...form, partner_belt: form.partner_belt === opt.value ? "" : opt.value })}
-                  className={`relative flex-1 flex flex-col items-center gap-1 min-h-[52px] rounded-xl border transition-all active:scale-95 ${
-                    form.partner_belt === opt.value
-                      ? `border-white/40 ring-2 ${opt.ring} bg-zinc-800`
-                      : "border-white/10 bg-zinc-800/60 hover:border-white/20"
-                  }`}
-                  title={t(opt.i18nKey)}
-                >
-                  <span className={`w-6 h-6 rounded-full ${opt.bg} inline-block mt-2.5`} />
-                  <span className="text-xs text-zinc-500 leading-none mb-1">{t(opt.i18nKey)}</span>
-                </button>
-              ))}
+              {/* Size diff */}
+              <div>
+                <p className="text-xs text-zinc-500 mb-1.5">{t("training.partnerSizeLabel")}</p>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {SIZE_DIFF_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setForm({ ...form, size_diff: form.size_diff === opt.value ? "" : opt.value })}
+                      className={`flex flex-col items-center gap-0.5 min-h-[48px] rounded-xl border text-xs font-semibold transition-all active:scale-95 ${
+                        form.size_diff === opt.value
+                          ? "bg-zinc-700/60 border-zinc-400/50 text-zinc-200"
+                          : "bg-zinc-800/60 border-white/10 text-zinc-500 hover:border-white/20 hover:text-zinc-300"
+                      }`}
+                    >
+                      <span className="text-lg leading-none mt-2 font-bold">{opt.icon}</span>
+                      <span className="text-xs">{t(opt.i18nKey)}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-
-          {/* Size diff */}
-          <div>
-            <p className="text-xs text-zinc-500 mb-1.5">{t("training.partnerSizeLabel")}</p>
-            <div className="grid grid-cols-3 gap-1.5">
-              {SIZE_DIFF_OPTIONS.map((opt) => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => setForm({ ...form, size_diff: form.size_diff === opt.value ? "" : opt.value })}
-                  className={`flex flex-col items-center gap-0.5 min-h-[48px] rounded-xl border text-xs font-semibold transition-all active:scale-95 ${
-                    form.size_diff === opt.value
-                      ? "bg-zinc-700/60 border-zinc-400/50 text-zinc-200"
-                      : "bg-zinc-800/60 border-white/10 text-zinc-500 hover:border-white/20 hover:text-zinc-300"
-                  }`}
-                >
-                  <span className="text-lg leading-none mt-2 font-bold">{opt.icon}</span>
-                  <span className="text-xs">{t(opt.i18nKey)}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+          )}
+        </>
       )}
 
       {/* Notes */}

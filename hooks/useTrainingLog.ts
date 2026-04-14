@@ -95,17 +95,32 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
 
   // ── Form state ────────────────────────────────────────────────────────────
   const [showForm, setShowForm] = useState(initialOpen);
-  const [form, setForm] = useState({
-    date: getLogicalTrainingDate(),
-    duration_min: 60,
-    type: "gi",
-    notes: "",
-    instructor_name: "",
-    partner_username: "",
-    weight: "",
-    roll_focus: "",
-    partner_belt: "",
-    size_diff: "",
+  // OP1: Load last-used duration/type from localStorage for preset defaults
+  const [form, setForm] = useState(() => {
+    let lastDuration = 60;
+    let lastType = "gi";
+    if (typeof localStorage !== "undefined") {
+      try {
+        const saved = localStorage.getItem("bjj_form_defaults");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.duration_min && typeof parsed.duration_min === "number") lastDuration = parsed.duration_min;
+          if (parsed.type && typeof parsed.type === "string") lastType = parsed.type;
+        }
+      } catch { /* ignore */ }
+    }
+    return {
+      date: getLogicalTrainingDate(),
+      duration_min: lastDuration,
+      type: lastType,
+      notes: "",
+      instructor_name: "",
+      partner_username: "",
+      weight: "",
+      roll_focus: "",
+      partner_belt: "",
+      size_diff: "",
+    };
   });
   const [compForm, setCompForm] = useState<CompData>({
     result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi",
@@ -276,7 +291,11 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     setShowForm(false);
     // I-17: Restore scroll position to top after closing form (prevents snap to bottom)
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "instant" });
-    setForm({ date: getLocalDateString(), duration_min: 60, type: "gi", notes: "", instructor_name: "", partner_username: "", weight: "", roll_focus: "", partner_belt: "", size_diff: "" });
+    // OP1: Save last-used duration/type as defaults for next session
+    if (typeof localStorage !== "undefined") {
+      try { localStorage.setItem("bjj_form_defaults", JSON.stringify({ duration_min: form.duration_min, type: form.type })); } catch { /* ignore */ }
+    }
+    setForm({ date: getLocalDateString(), duration_min: form.duration_min, type: form.type, notes: "", instructor_name: "", partner_username: "", weight: "", roll_focus: "", partner_belt: "", size_diff: "" });
     setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
 
     const weightNum = form.weight !== "" ? parseFloat(form.weight) : null;

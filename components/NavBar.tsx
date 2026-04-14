@@ -224,22 +224,29 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
           </div>
         ) : null}
         <div className="grid grid-cols-4 pb-safe">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`relative flex flex-col items-center gap-0.5 py-3 text-xs transition-colors ${
-                pathname === item.href
-                  ? "text-white"
-                  : "text-gray-500 hover:text-gray-300"
-              }`}
-            >
-              <span className="relative text-xl leading-none">
-                {item.icon}
-              </span>
-              <span>{item.label}</span>
-            </Link>
-          ))}
+          {NAV_ITEMS.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`relative flex flex-col items-center gap-0.5 py-3 text-xs transition-colors ${
+                  isActive
+                    ? "text-white"
+                    : "text-gray-500 hover:text-gray-300"
+                }`}
+              >
+                {/* Active indicator bar */}
+                {isActive && (
+                  <span className="absolute top-0 left-3 right-3 h-0.5 bg-white rounded-b-full" />
+                )}
+                <span className={`relative text-xl leading-none ${isActive ? "drop-shadow-[0_0_6px_rgba(255,255,255,0.3)]" : ""}`}>
+                  {item.icon}
+                </span>
+                <span className={isActive ? "font-semibold" : ""}>{item.label}</span>
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </>

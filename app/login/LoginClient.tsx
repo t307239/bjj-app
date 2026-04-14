@@ -7,18 +7,7 @@ import { useLocale } from "@/lib/i18n";
 import { logClientError } from "@/lib/logger";
 import Link from "next/link";
 
-// ─── IAB (In-App Browser) detection ───────────────────────────────────────────
-// Instagram, Facebook, LINE, X/Twitter, TikTok, Snapchat, WeChat OAuth fails
-// because IABs block cookie-based redirects. Must open in real browser.
-function isInAppBrowser(): boolean {
-  if (typeof navigator === "undefined") return false;
-  const ua = navigator.userAgent;
-  // Named SNS apps with known IAB patterns
-  if (/Instagram|FBAN|FBAV|Twitter|Line\/|TikTok|Snapchat|MicroMessenger|WeChat/i.test(ua)) return true;
-  // iOS Reddit, Pinterest, etc.: WebKit process without Safari in UA
-  if (/iPhone|iPad|iPod/i.test(ua) && /WebKit/i.test(ua) && !/Safari/i.test(ua)) return true;
-  return false;
-}
+import { isInAppBrowser } from "@/lib/isInAppBrowser";
 
 // ─── Error banner (from OAuth callback) ───────────────────────────────────────
 function ErrorBanner() {
