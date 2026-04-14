@@ -9,6 +9,7 @@ export type Technique = {
   mastery_level: number;
   notes: string;
   created_at: string;
+  is_pinned?: boolean;
 };
 
 export type TechniqueFormState = {

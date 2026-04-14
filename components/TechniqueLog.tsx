@@ -96,7 +96,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
       setInitialLoading(true);
       const { data, error } = await supabase
         .from("techniques")
-        .select("id, name, category, mastery_level, notes, created_at")
+        .select("id, name, category, mastery_level, notes, created_at, is_pinned")
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
       if (!error && data) setTechniques(data);
@@ -292,6 +292,34 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
     } else {
       // Rollback
       setTechniques(snapshot);
+    }
+  };
+
+  /** Toggle pin/unpin on a technique */
+  const handleTogglePin = async (id: string) => {
+    const tech = techniques.find((t) => t.id === id);
+    if (!tech) return;
+    const newPinned = !(tech.is_pinned ?? false);
+
+    // Optimistic
+    const snapshot = techniques;
+    setTechniques((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, is_pinned: newPinned } : t)),
+    );
+    navigator.vibrate?.([20]);
+
+    const { data, error } = await supabase
+      .from("techniques")
+      .update({ is_pinned: newPinned })
+      .eq("id", id)
+      .eq("user_id", userId)
+      .select()
+      .single();
+    if (!error && data) {
+      setTechniques((prev) => prev.map((t) => (t.id === id ? data : t)));
+    } else {
+      setTechniques(snapshot);
+      setToast({ message: t("techniques.updateFailed"), type: "error" });
     }
   };
 
