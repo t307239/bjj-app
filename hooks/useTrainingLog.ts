@@ -146,6 +146,8 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [searchLoading, setSearchLoading] = useState(false);
   const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
 
   // ── UI feedback state ─────────────────────────────────────────────────────
@@ -181,6 +183,14 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       window.history.replaceState({}, "", url.toString());
     }
   }, []);
+
+  // ── Debounce search query (300ms) ──────────────────────────────────────────
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedSearch(searchQuery.trim());
+    }, 300);
+    return () => clearTimeout(timerId);
+  }, [searchQuery]);
 
   // ── Initial data load ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -262,6 +272,61 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     } catch { /* ignore */ }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
+
+  // ── Server-side search (triggered by debounced query) ─────────────────────
+  const isInitialMount = useRef(true);
+  useEffect(() => {
+    // Skip on initial mount — loadEntries handles first fetch
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    const searchEntries = async () => {
+      setSearchLoading(true);
+      const q = debouncedSearch;
+
+      let logsQuery = supabase
+        .from("training_logs")
+        .select("id, date, duration_min, type, notes, created_at, instructor_name, partner_username")
+        .eq("user_id", userId)
+        .order("date", { ascending: false });
+
+      let countQuery = supabase
+        .from("training_logs")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", userId);
+
+      if (!isPro) {
+        const d = new Date(Date.now() + 9 * 60 * 60 * 1000);
+        d.setMonth(d.getMonth() - 1);
+        const cutoff = d.toISOString().slice(0, 10);
+        logsQuery = logsQuery.gte("date", cutoff);
+        countQuery = countQuery.gte("date", cutoff);
+      }
+
+      if (q) {
+        const filter = `notes.ilike.%${q}%,instructor_name.ilike.%${q}%,partner_username.ilike.%${q}%`;
+        logsQuery = logsQuery.or(filter);
+        countQuery = countQuery.or(filter);
+      }
+
+      const [{ data, error }, { count }] = await Promise.all([
+        logsQuery.range(0, PAGE_SIZE - 1),
+        countQuery,
+      ]);
+
+      if (!error && data) {
+        setEntries(data);
+        setPage(1);
+      }
+      if (count !== null) setTotalCount(count);
+      setSearchLoading(false);
+    };
+
+    searchEntries();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch]);
 
   // ── Submit (add new log) ──────────────────────────────────────────────────
   const handleSubmit = async (e: React.FormEvent) => {
