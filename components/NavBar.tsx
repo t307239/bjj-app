@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import LogoutButton from "./LogoutButton";
@@ -170,10 +171,11 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
                 aria-label={t("common.userMenu")}
               >
                 {avatarUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <Image
                     src={avatarUrl}
                     alt={displayName}
+                    width={32}
+                    height={32}
                     className="w-8 h-8 rounded-full"
                     onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                   />

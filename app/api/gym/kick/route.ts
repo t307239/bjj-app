@@ -1,7 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { logger } from "@/lib/logger";
+
+const KickBodySchema = z.object({
+  member_id: z.string().uuid("Invalid member ID"),
+});
 
 export const dynamic = "force-dynamic";
 
@@ -52,11 +57,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await req.json().catch(() => null);
-  const memberId = body?.member_id as string | undefined;
-  if (!memberId) {
-    return NextResponse.json({ error: "member_id required" }, { status: 400 });
+  let rawBody: unknown;
+  try { rawBody = await req.json(); } catch { rawBody = null; }
+  const parsed = KickBodySchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Validation failed", issues: parsed.error.issues }, { status: 400 });
   }
+  const memberId = parsed.data.member_id;
 
   // Verify caller is a gym owner
   const { data: ownerProfile , error } = await supabase

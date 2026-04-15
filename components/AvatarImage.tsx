@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 interface AvatarImageProps {
   src: string;
@@ -13,15 +14,27 @@ interface AvatarImageProps {
   priority?: boolean;
   /** Fallback initials (e.g. "TT" from "Toshiki Terasawa"). Shown if image fails to load. */
   fallbackInitials?: string;
+  /** Width in pixels for next/image (default: 96) */
+  width?: number;
+  /** Height in pixels for next/image (default: 96) */
+  height?: number;
 }
 
 /**
- * AvatarImage — client component wrapper for avatar <img> with onError fallback
+ * AvatarImage — client component wrapper using next/image with onError fallback
  * and blur-up fade-in transition.
  * Shows fallback initials or default icon if image fails to load.
- * perf: priority prop で LCP スコアを最適化 (fetchpriority="high" / loading="lazy" の切り替え)
+ * Q-6: Migrated from raw <img> to next/image for AVIF/WebP optimization.
  */
-export default function AvatarImage({ src, alt, className, priority = false, fallbackInitials }: AvatarImageProps) {
+export default function AvatarImage({
+  src,
+  alt,
+  className,
+  priority = false,
+  fallbackInitials,
+  width = 96,
+  height = 96,
+}: AvatarImageProps) {
   const [errored, setErrored] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
@@ -48,17 +61,16 @@ export default function AvatarImage({ src, alt, className, priority = false, fal
       {!loaded && (
         <div className="absolute inset-0 animate-pulse bg-zinc-700/50" />
       )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={src}
         alt={alt}
+        width={width}
+        height={height}
         className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        fetchPriority={priority ? "high" : "auto"}
-        loading={priority ? "eager" : "lazy"}
-        decoding={priority ? "sync" : "async"}
+        priority={priority}
         onLoad={() => setLoaded(true)}
         onError={() => setErrored(true)}
+        unoptimized={src.startsWith("data:")}
       />
     </div>
   );

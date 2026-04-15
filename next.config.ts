@@ -8,6 +8,16 @@ const analyzer = withBundleAnalyzer({
 const nextConfig: NextConfig = {
   // #23: Vercelツールバーを本番環境で非表示（dev環境のみ有効）
   vercelToolbar: process.env.NODE_ENV === "development",
+  // Q-6: next/image remote patterns for avatars and YouTube thumbnails
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "*.supabase.co" },
+      { protocol: "https", hostname: "*.googleusercontent.com" },
+      { protocol: "https", hostname: "avatars.githubusercontent.com" },
+      { protocol: "https", hostname: "img.youtube.com" },
+      { protocol: "https", hostname: "i.ytimg.com" },
+    ],
+  },
   // cssnano がTailwindのスラッシュ構文(border-white/10等)でクラッシュする問題を回避
   experimental: {
     optimizeCss: false,
