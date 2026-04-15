@@ -8,9 +8,9 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
 import { useOnlineStatus } from "@/lib/useOnlineStatus";
 import Toast from "./Toast";
-import PushNotificationSection from "./PushNotificationSection";
-import CsvExport from "./CsvExport";
 import BeltPromotionCelebration, { isBeltPromotion } from "./BeltPromotionCelebration";
+import GymMembershipSection from "./profile/GymMembershipSection";
+import AccountSection from "./profile/AccountSection";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 type Profile = {
@@ -21,26 +21,6 @@ type Profile = {
   start_date: string;
   timezone?: string;  // IANA timezone (e.g. "Asia/Tokyo")
 };
-
-/*
- * B2B Trojan Horse — 将来の自動メール機能のための集計クエリ
- *
- * 同じジムのユーザーが10人以上集まったら、道場主に自動メールを送る:
- *
- * SELECT gym, COUNT(*) as user_count
- * FROM profiles
- * WHERE gym IS NOT NULL AND gym != ''
- * GROUP BY gym
- * HAVING COUNT(*) >= 10
- * ORDER BY user_count DESC;
- *
- * → 結果を `gym_owner_emails` テーブルと照合し、
- *   未送信の道場に Beehiiv / SendGrid 経由で自動メール送信:
- *   「あなたの道場の生徒が{N}人このアプリを使っています。
- *    月$99で全員の練習データを確認できます。14日無料試用どうぞ」
- *
- * Note: gym = gym_name フィールド。schemas では profiles.gym カラムを使用。
- */
 
 type Stats = {
   totalCount: number;
@@ -53,505 +33,7 @@ type Props = {
   hideAccount?: boolean;
 };
 
-// getLocalDateString() from lib/timezone replaces the old JST-hardcoded getJSTDateString()
-
-// formatBjjDuration moved to lib/bjjDuration.ts
-
-// Stripe Customer Portal URL — configure in .env.local (Stripe Dashboard > Customer Portal)
-const CUSTOMER_PORTAL_URL = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL ?? "";
-
-// ─── Gym Membership Section ───────────────────────────────────────────────────
-
-function GymMembershipSection({ userId, supabase }: { userId: string; supabase: SupabaseClient }) {
-  const { t } = useLocale();
-  const [gymName, setGymName] = useState<string | null>(null);
-  const [sharing, setSharing] = useState(false);
-  const [gymId, setGymId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [leaving, setLeaving] = useState(false);
-  const [confirmLeave, setConfirmLeave] = useState(false);
-  const [toggleLoading, setToggleLoading] = useState(false);
-
-  useEffect(() => {
-    const load = async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("gym_id, share_data_with_gym")
-        .eq("id", userId)
-        .single();
-      if (error) console.error("ProfileForm.tsx:query", error);
-      if (!data?.gym_id) { setLoading(false); return; }
-      setGymId(data.gym_id);
-      setSharing(data.share_data_with_gym ?? false);
-      // Fetch gym name
-      const { data: gym , error: gymError } = await supabase
-        .from("gyms")
-        .select("name")
-        .eq("id", data.gym_id)
-        .single();
-      if (gymError) console.error("ProfileForm.tsx:query", gymError);
-      setGymName(gym?.name ?? null);
-      setLoading(false);
-    };
-    load();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
-
-  const handleLeave = async () => {
-    setLeaving(true);
-    const { error } = await supabase
-      .from("profiles")
-      .update({ gym_id: null, share_data_with_gym: false })
-      .eq("id", userId);
-    if (!error) {
-      setGymId(null);
-      setGymName(null);
-      setSharing(false);
-      setConfirmLeave(false);
-    }
-    setLeaving(false);
-  };
-
-  const handleToggleSharing = async () => {
-    setToggleLoading(true);
-    const next = !sharing;
-    const { error } = await supabase
-      .from("profiles")
-      .update({ share_data_with_gym: next })
-      .eq("id", userId);
-    if (!error) {
-      setSharing(next);
-    }
-    setToggleLoading(false);
-  };
-
-  if (loading) return null;
-  if (!gymId) return null;
-
-  if (confirmLeave) {
-    return (
-      <div className="bg-zinc-900 border border-white/10 rounded-xl p-4">
-        <p className="text-sm text-white mb-1">{t("gym.leaveConfirmTitle", { name: gymName ?? t("gym.unknownGym") })}</p>
-        <p className="text-xs text-gray-400 mb-4">
-          {t("gym.leaveConfirmDesc")}
-        </p>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setConfirmLeave(false)}
-            className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 py-2 rounded-lg text-sm"
-            aria-label={t("profile.ariaLeaveGymCancel")}
-          >
-            {t("training.cancel")}
-          </button>
-          <button
-            onClick={handleLeave}
-            disabled={leaving}
-            className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white py-2 rounded-lg text-sm font-semibold"
-            aria-label={t("profile.ariaLeaveGymConfirm")}
-          >
-            {leaving ? t("gym.leaving") : t("gym.leaveGym")}
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="bg-zinc-900 border border-white/10 rounded-xl p-4">
-      <div className="flex items-center justify-between mb-3">
-        <div>
-          <p className="text-sm font-semibold text-white">{t("gym.currentGym")}</p>
-          <p className="flex items-center gap-1 text-xs text-gray-400 mt-0.5 max-w-[180px]">
-            <svg className="w-3 h-3 flex-shrink-0 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
-            </svg>
-            <span className="truncate">{gymName ?? t("gym.unknownGym")}</span>
-          </p>
-        </div>
-        <button
-          onClick={() => setConfirmLeave(true)}
-          className="text-xs text-gray-500 hover:text-red-400 transition-colors"
-          aria-label={t("profile.ariaLeaveGym")}
-        >
-          {t("gym.leaveGym")}
-        </button>
-      </div>
-      {/* Data sharing toggle */}
-      <div className="flex items-center justify-between pt-3 border-t border-white/10">
-        <div>
-          <p className="text-xs text-gray-300">{t("gym.shareData")}</p>
-          <p className="text-xs text-gray-500 mt-0.5">{t("gym.shareDataSub")}</p>
-        </div>
-        <button
-          onClick={handleToggleSharing}
-          disabled={toggleLoading}
-          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${sharing ? "bg-[#10B981]" : "bg-zinc-700"}`}
-          aria-label={sharing ? t("profile.ariaDisableSharing") : t("profile.ariaEnableSharing")}
-          role="switch"
-          aria-checked={sharing}
-        >
-          <span className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform ${sharing ? "translate-x-6" : "translate-x-1"}`} />
-        </button>
-      </div>
-      {/* Privacy Shield disclosure — B-33: shown when sharing is ON */}
-      {sharing && (
-        <div className="mt-2 bg-blue-950/20 border border-blue-500/10 rounded-lg p-2.5">
-          <p className="text-[10px] font-semibold text-blue-400 mb-1.5">
-            🔒 {t("gym.shareDataShieldTitle")}
-          </p>
-          <div className="grid grid-cols-2 gap-x-3">
-            <div>
-              <p className="text-[10px] text-zinc-500 mb-1 uppercase tracking-wide">{t("gym.shareDataShieldSees")}</p>
-              {([1, 2, 3] as const).map((i) => (
-                <p key={i} className="text-[10px] text-gray-300 leading-relaxed">✅ {t(`gym.shareDataShieldVisible${i}`)}</p>
-              ))}
-            </div>
-            <div>
-              <p className="text-[10px] text-zinc-500 mb-1 uppercase tracking-wide">{t("gym.shareDataShieldHides")}</p>
-              {([1, 2, 3] as const).map((i) => (
-                <p key={i} className="text-[10px] text-gray-500 leading-relaxed">🔒 {t(`gym.shareDataShieldHidden${i}`)}</p>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-
-function AccountSection({ userId, supabase }: { userId: string; supabase: SupabaseClient }) {
-  const { t } = useLocale();
-  const router = useRouter();
-  const [confirm, setConfirm] = useState(false);
-  const [deleteInput, setDeleteInput] = useState("");
-  const [deleting, setDeleting] = useState(false);
-  const [deleteError, setDeleteError] = useState<string | null>(null);
-  const [exporting, setExporting] = useState(false);
-  const [portalLoading, setPortalLoading] = useState(false);
-
-  // ── Email change (self-serve) ─────────────────────────────────────────────
-  const [emailEditing, setEmailEditing] = useState(false);
-  const [newEmail, setNewEmail] = useState("");
-  const [emailSaving, setEmailSaving] = useState(false);
-  const [emailMsg, setEmailMsg] = useState<string | null>(null);
-  const [emailError, setEmailError] = useState<string | null>(null);
-
-  // ── Display name change (self-serve) ────────────────────────────────────────
-  const [nameEditing, setNameEditing] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [nameSaving, setNameSaving] = useState(false);
-  const [nameMsg, setNameMsg] = useState<string | null>(null);
-
-  const handleNameChange = async () => {
-    if (!newName.trim()) return;
-    setNameSaving(true);
-    setNameMsg(null);
-    const { error } = await supabase.auth.updateUser({
-      data: { full_name: newName.trim() },
-    });
-    if (error) {
-      setNameMsg(error.message);
-    } else {
-      setNameMsg(t("profile.nameChanged"));
-      setNewName("");
-      setNameEditing(false);
-      router.refresh();
-    }
-    setNameSaving(false);
-  };
-
-  const handleEmailChange = async () => {
-    if (!newEmail || !newEmail.includes("@")) {
-      setEmailError(t("profile.emailInvalid"));
-      return;
-    }
-    setEmailSaving(true);
-    setEmailError(null);
-    setEmailMsg(null);
-    const { error } = await supabase.auth.updateUser({ email: newEmail });
-    if (error) {
-      setEmailError(error.message);
-    } else {
-      setEmailMsg(t("profile.emailConfirmSent"));
-      setNewEmail("");
-    }
-    setEmailSaving(false);
-  };
-
-  // ── CSV export (CCPA/GDPR Right to Data Portability) ────────────────────────
-  const handleExportCsv = async () => {
-    setExporting(true);
-    const { data } = await supabase
-      .from("training_logs")
-      .select("date, type, duration_min, notes, created_at")
-      .eq("user_id", userId)
-      .order("date", { ascending: false });
-    if (data) {
-      const csv = [
-        [t("profile.csvHeaderDate"), t("profile.csvHeaderType"), t("profile.csvHeaderDuration"), t("profile.csvHeaderNotes"), t("profile.csvHeaderCreatedAt")].join(","),
-        ...data.map((r: { date: string; type: string; duration_min: number; notes: string; created_at: string }) => [
-          r.date ?? "",
-          r.type ?? "",
-          r.duration_min ?? 0,
-          `"${(r.notes ?? "").replace(/"/g, '""')}"`,
-          r.created_at ?? "",
-        ].join(",")),
-      ].join("\n");
-      const blob = new Blob([csv], { type: "text/csv" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `bjjapp-logs-${new Date().toISOString().slice(0, 10)}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-    setExporting(false);
-  };
-
-  // ── Account deletion (GDPR/CCPA Right to Erasure) ────────────────────────────
-  const handleDelete = async () => {
-    if (deleteInput !== "DELETE") return;
-    setDeleting(true);
-    setDeleteError(null);
-    try {
-      const res = await fetch("/api/account/delete", { method: "POST" });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        setDeleteError(body.error ?? t("profile.deleteError"));
-        setDeleting(false);
-        return;
-      }
-      await supabase.auth.signOut();
-      router.push("/?deleted=1");
-    } catch {
-      setDeleteError(t("profile.deleteNetworkError"));
-      setDeleting(false);
-    }
-  };
-
-  return (
-    <div className="mt-10 border-t border-white/10 pt-6 space-y-4">
-      <h3 className="text-gray-500 text-xs tracking-wider">{t("profile.account")}</h3>
-
-      {/* Email change — self-serve (Axis 11 CS) */}
-      <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
-        {!emailEditing ? (
-          <div className="flex items-center justify-between">
-            <p className="text-gray-400 text-xs">{t("profile.emailChangeDesc")}</p>
-            <button
-              type="button"
-              onClick={() => { setEmailEditing(true); setEmailMsg(null); setEmailError(null); }}
-              className="text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
-            >
-              {t("profile.emailChangeBtn")}
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            <p className="text-gray-400 text-xs">{t("profile.emailChangeLabel")}</p>
-            <input
-              type="email"
-              value={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
-              placeholder="new@example.com"
-              className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-emerald-500"
-            />
-            {emailError && <p className="text-red-400 text-xs">{emailError}</p>}
-            {emailMsg && <p className="text-emerald-400 text-xs">{emailMsg}</p>}
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={handleEmailChange}
-                disabled={emailSaving || !newEmail}
-                className="text-xs bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white font-bold px-4 py-2 min-h-[36px] rounded-lg transition-colors"
-              >
-                {emailSaving ? "..." : t("profile.emailChangeSend")}
-              </button>
-              <button
-                type="button"
-                onClick={() => { setEmailEditing(false); setNewEmail(""); setEmailError(null); }}
-                className="text-xs text-gray-400 hover:text-white px-3 py-2 min-h-[36px]"
-              >
-                {t("training.cancel")}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Display name change — self-serve */}
-      <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
-        {!nameEditing ? (
-          <div className="flex items-center justify-between">
-            <p className="text-gray-400 text-xs">{t("profile.nameChangeDesc")}</p>
-            <button
-              type="button"
-              onClick={() => { setNameEditing(true); setNameMsg(null); }}
-              className="text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
-            >
-              {t("profile.nameChangeBtn")}
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            <p className="text-gray-400 text-xs">{t("profile.nameChangeLabel")}</p>
-            <input
-              type="text"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              placeholder={t("profile.namePlaceholder")}
-              maxLength={50}
-              className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-emerald-500"
-            />
-            {nameMsg && <p className="text-emerald-400 text-xs">{nameMsg}</p>}
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={handleNameChange}
-                disabled={nameSaving || !newName.trim()}
-                className="text-xs bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white font-bold px-4 py-2 min-h-[36px] rounded-lg transition-colors"
-              >
-                {nameSaving ? "..." : t("profile.nameChangeSave")}
-              </button>
-              <button
-                type="button"
-                onClick={() => { setNameEditing(false); setNewName(""); setNameMsg(null); }}
-                className="text-xs text-gray-400 hover:text-white px-3 py-2 min-h-[36px]"
-              >
-                {t("training.cancel")}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Stripe Customer Portal — cancel/downgrade without chargeback risk */}
-      <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
-        <p className="text-gray-400 text-xs mb-2">{t("profile.manageSubDesc")}</p>
-        {CUSTOMER_PORTAL_URL ? (
-          <a
-            href={CUSTOMER_PORTAL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={t("profile.ariaManageSub")}
-            className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
-          >
-            💳 {t("profile.manageSub")}
-          </a>
-        ) : (
-          <form method="POST" action="/api/stripe/portal" onSubmit={() => setPortalLoading(true)}>
-            <button
-              type="submit"
-              disabled={portalLoading}
-              aria-label={t("profile.ariaManageSub")}
-              className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors disabled:opacity-50 disabled:pointer-events-none"
-            >
-              {portalLoading ? "…" : <>💳 {t("profile.manageSub")}</>}
-            </button>
-          </form>
-        )}
-      </div>
-
-      {/* Push Notifications opt-in */}
-      <PushNotificationSection />
-
-      {/* Data export — CCPA/GDPR Right to Data Portability */}
-      <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
-        <p className="text-gray-400 text-xs mb-2">{t("profile.exportDesc")}</p>
-        <CsvExport userId={userId} />
-      </div>
-
-      {/* Help & Support links — Axis 11 CS self-serve */}
-      <div className="flex items-center gap-3 text-xs text-gray-400 flex-wrap">
-        <a
-          href="/help"
-          className="hover:text-white transition-colors underline underline-offset-2"
-        >
-          {t("profile.helpLink")}
-        </a>
-        <span className="text-zinc-700">|</span>
-        <a
-          href="mailto:307239t777@gmail.com?subject=BJJ%20App%20Support"
-          className="hover:text-white transition-colors underline underline-offset-2"
-        >
-          {t("profile.contactSupport")}
-        </a>
-        <span className="text-zinc-700">|</span>
-        <a
-          href="/terms"
-          className="hover:text-white transition-colors underline underline-offset-2"
-        >
-          {t("profile.termsLink")}
-        </a>
-        <span className="text-zinc-700">|</span>
-        <a
-          href="/privacy"
-          className="hover:text-white transition-colors underline underline-offset-2"
-        >
-          {t("profile.privacyLink")}
-        </a>
-      </div>
-
-      {/* Delete account — GDPR/CCPA Right to Erasure */}
-      {!confirm ? (
-        <button
-          type="button"
-          onClick={() => { setConfirm(true); setDeleteInput(""); setDeleteError(null); }}
-          className="text-red-500 hover:text-red-400 text-sm underline"
-        >
-          {t("profile.deleteAccount")}
-        </button>
-      ) : (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 space-y-3">
-          {/* Title + CSV export in one row */}
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-red-400 text-sm font-semibold">{t("profile.deleteTitle")}</p>
-            <button
-              type="button"
-              onClick={handleExportCsv}
-              disabled={exporting}
-              className="text-xs text-amber-400 underline underline-offset-2 hover:text-amber-300 flex-shrink-0 disabled:opacity-50 whitespace-nowrap"
-            >
-              💾 {exporting ? t("profile.exporting") : t("profile.exportBtn")}
-            </button>
-          </div>
-          <p className="text-gray-400 text-xs leading-relaxed">{t("profile.deleteDesc")}</p>
-          <div>
-            <label className="text-gray-500 text-xs mb-1 block">{t("profile.deleteTypeLabel")}</label>
-            <input
-              type="text"
-              value={deleteInput}
-              onChange={(e) => setDeleteInput(e.target.value)}
-              placeholder={t("profile.deleteTypePlaceholder")}
-              aria-label={t("profile.ariaDeleteInput")}
-              className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-red-500 font-mono"
-            />
-          </div>
-          {deleteError && <p className="text-red-400 text-xs">{deleteError}</p>}
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={handleDelete}
-              disabled={deleting || deleteInput !== "DELETE"}
-              aria-label={t("profile.ariaDeleteConfirm")}
-              className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-40 text-white font-bold py-2 rounded-lg text-sm transition-colors"
-            >
-              {deleting ? t("profile.deletingLabel") : t("profile.deleteAccountPermanently")}
-            </button>
-            <button
-              type="button"
-              onClick={() => { setConfirm(false); setDeleteInput(""); setDeleteError(null); }}
-              className="flex-1 bg-white/10 hover:bg-white/15 text-gray-300 font-bold py-2 rounded-lg text-sm"
-            >
-              {t("training.cancel")}
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function BELTS({ t }: { t: (key: string, obj?: Record<string, string | number>) => string }) {
   return [
@@ -562,6 +44,16 @@ function BELTS({ t }: { t: (key: string, obj?: Record<string, string | number>) 
     { value: "black", label: t("profile.belts.black"), color: "bg-zinc-950 text-white border border-white/10" },
   ];
 }
+
+const TIMEZONE_OPTIONS = [
+  { value: "Asia/Tokyo",        label: "Asia/Tokyo" },
+  { value: "America/New_York",  label: "America/New_York" },
+  { value: "America/Sao_Paulo", label: "America/Sao_Paulo" },
+  { value: "Europe/London",     label: "Europe/London" },
+  { value: "UTC",               label: "UTC" },
+] as const;
+
+// ─── ProfileViewCard ─────────────────────────────────────────────────────────
 
 function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: Stats | null; onEdit: () => void }) {
   const { t } = useLocale();
@@ -637,13 +129,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
   );
 }
 
-const TIMEZONE_OPTIONS = [
-  { value: "Asia/Tokyo",        label: "Asia/Tokyo" },
-  { value: "America/New_York",  label: "America/New_York" },
-  { value: "America/Sao_Paulo", label: "America/Sao_Paulo" },
-  { value: "Europe/London",     label: "Europe/London" },
-  { value: "UTC",               label: "UTC" },
-] as const;
+// ─── ProfileEditForm ─────────────────────────────────────────────────────────
 
 function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
   profile: Profile;
@@ -693,13 +179,12 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
     }
     setLoading(true);
     // Check if disclaimer has already been recorded; if not, record it now.
-    // (Migration: supabase/migrations/20260322_add_disclaimer_agreed.sql)
-    const { data: existingProfile , error: disclaimerError } = await supabase
+    const { data: existingProfile, error: disclaimerError } = await supabase
       .from("profiles")
       .select("training_disclaimer_agreed_at")
       .eq("id", userId)
       .single();
-    if (disclaimerError) console.error("ProfileForm.tsx:query", disclaimerError);
+    if (disclaimerError) console.error("ProfileEditForm:query", disclaimerError);
     const disclaimerAlreadyRecorded = !!existingProfile?.training_disclaimer_agreed_at;
 
     // Auto-link gym_id when user's typed gym name exactly matches a known gym (T-30)
@@ -849,6 +334,8 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
     </>
   );
 }
+
+// ─── Main Component ──────────────────────────────────────────────────────────
 
 export default function ProfileForm({ userId, hideAccount }: Props) {
   const { t } = useLocale();
