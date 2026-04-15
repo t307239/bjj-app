@@ -769,7 +769,20 @@
     "draw": "Draw",
     "button.training": "CSV",
     "button.techniques": "Technique CSV",
-    "locked": "CSV (Pro)"
+    "button.pdf": "PDF",
+    "locked": "CSV (Pro)",
+    "pdfTitle": "Training Records",
+    "pdfSubtitle": "BJJ App — Training Log",
+    "pdfGenerated": "Generated",
+    "pdfTotalSessions": "Total Sessions",
+    "pdfTotalHours": "Total Hours",
+    "pdfDateRange": "Date Range",
+    "pdfTo": "to",
+    "pdfHours": "hrs",
+    "pdfSessions": "sessions",
+    "pdfSummary": "Summary",
+    "pdfNoData": "No training records to export",
+    "pdfPrintHint": "Select \"Save as PDF\" to create a PDF file"
   },
   "pro": {
     "defaultFeature": "This feature",

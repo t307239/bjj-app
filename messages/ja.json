@@ -769,8 +769,21 @@
     "draw": "引き分け",
     "button.training": "CSV出力",
     "button.techniques": "技術CSV",
+    "button.pdf": "PDF出力",
     "locked": "CSV (Pro)",
-    "win": "勝ち"
+    "win": "勝ち",
+    "pdfTitle": "トレーニング記録",
+    "pdfSubtitle": "BJJ App — トレーニングログ",
+    "pdfGenerated": "出力日",
+    "pdfTotalSessions": "総セッション数",
+    "pdfTotalHours": "総練習時間",
+    "pdfDateRange": "期間",
+    "pdfTo": "〜",
+    "pdfHours": "時間",
+    "pdfSessions": "回",
+    "pdfSummary": "サマリー",
+    "pdfNoData": "エクスポートするトレーニング記録がありません",
+    "pdfPrintHint": "「PDFとして保存」を選択してPDFファイルを作成できます"
   },
   "pro": {
     "defaultFeature": "この機能",

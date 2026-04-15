@@ -42,9 +42,10 @@ function ExportBtn({
 }
 
 export default function CsvExport({ userId }: Props) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [loadingLogs, setLoadingLogs] = useState(false);
   const [loadingTech, setLoadingTech] = useState(false);
+  const [loadingPdf, setLoadingPdf] = useState(false);
   const supabase = createClient();
 
   const handleExport = async () => {
