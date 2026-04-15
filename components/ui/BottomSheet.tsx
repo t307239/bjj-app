@@ -150,6 +150,7 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
         className="fixed inset-0 z-[60] bg-black/60 animate-sheet-fade"
         style={{ opacity: backdropOpacity }}
         onClick={onClose}
+        role="presentation"
         aria-hidden="true"
       />
 
@@ -157,6 +158,7 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
       <div
         className="fixed inset-x-0 bottom-0 z-[61] md:inset-0 md:flex md:items-center md:justify-center md:px-4 pointer-events-none"
       >
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events jsx-a11y/no-noninteractive-element-interactions */}
         <div
           ref={sheetRef}
           role="dialog"

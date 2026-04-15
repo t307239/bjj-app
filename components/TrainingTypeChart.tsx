@@ -401,6 +401,14 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
                     }`}
                     onClick={() => setSelectedType(isSelected ? null : d.value)}
                     title={t("chart.clickForTrend")}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setSelectedType(isSelected ? null : d.value);
+                      }
+                    }}
                   >
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${d.bg}`} />
                     <span className={`text-xs flex-1 truncate ${isSelected ? "text-white font-medium" : "text-gray-400"}`}>{d.label}</span>

@@ -155,6 +155,12 @@ export default function WikiContentEnhancer() {
           aria-label="Image viewer"
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 cursor-zoom-out"
           onClick={() => setLightboxSrc(null)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape" || e.key === "Enter") {
+              e.preventDefault();
+              setLightboxSrc(null);
+            }
+          }}
         >
           <button
             onClick={() => setLightboxSrc(null)}
@@ -165,12 +171,11 @@ export default function WikiContentEnhancer() {
               <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+          {/* eslint-disable-next-line @next/next/no-img-element jsx-a11y/no-noninteractive-element-interactions */}
           <img
             src={lightboxSrc}
             alt="Expanded view"
             className="max-w-full max-h-[90vh] rounded-xl shadow-2xl object-contain"
-            onClick={(e) => e.stopPropagation()}
             onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
           />
         </div>

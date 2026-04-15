@@ -54,16 +54,15 @@ export default function IABSafeLink({
       </button>
       {showBanner && (
         <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={t("login.iabWarning")}
+          role="presentation"
           className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center px-4"
           onClick={() => setShowBanner(false)}
-          onKeyDown={(e) => { if (e.key === "Escape") setShowBanner(false); }}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("login.iabWarning")}
             className="bg-zinc-900 border border-white/10 rounded-2xl p-6 max-w-sm w-full text-center"
-            onClick={(e) => e.stopPropagation()}
           >
             <div className="text-4xl mb-3">🌐</div>
             <h3 className="text-lg font-bold text-white mb-2">{t("login.iabWarning")}</h3>

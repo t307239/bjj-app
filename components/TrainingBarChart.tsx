@@ -331,6 +331,14 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                   onClick={() => setSelectedMonth(isSelected ? null : d.month)}
                   onMouseEnter={() => val > 0 && setHoveredMonth(d.month)}
                   onMouseLeave={() => setHoveredMonth(null)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setSelectedMonth(isSelected ? null : d.month);
+                    }
+                  }}
                 >
                   {/* Hover tooltip */}
                   {hoveredMonth === d.month && val > 0 && (
