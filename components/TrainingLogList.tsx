@@ -173,7 +173,7 @@ const TrainingLogList = memo(function TrainingLogList({
   // When search is active and returns 0 results, show "no match" instead of new-user empty state
   if (entries.length === 0 && searchQuery) {
     return (
-      <div className="text-center py-8 text-gray-500 text-sm">
+      <div role="status" className="text-center py-8 text-gray-500 text-sm">
         {t("training.noMatchQuery", { query: searchQuery })}
       </div>
     );
@@ -208,7 +208,7 @@ const TrainingLogList = memo(function TrainingLogList({
   // ── Filter empty result ──────────────────────────────────────────────────
   if (filtered.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500 text-sm">
+      <div role="status" className="text-center py-8 text-gray-500 text-sm">
         {searchQuery ? t("training.noMatchQuery", { query: searchQuery }) : t("training.noMatch")}
       </div>
     );

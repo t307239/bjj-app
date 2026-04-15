@@ -2,11 +2,16 @@
  * Structured JSON logger — server-side only (Node.js / Edge runtime)
  * Zero new dependencies. Outputs newline-delimited JSON for log aggregators.
  *
+ * Q-25: Sentry integration — logger.error and logger.warn automatically
+ * forward to Sentry for real-time alerting in production.
+ *
  * Usage:
  *   import { logger } from "@/lib/logger";
  *   logger.info("user.login", { userId: "abc" });
  *   logger.error("api.delete", { userId: "abc" }, err);
  */
+
+import * as Sentry from "@sentry/nextjs";
 
 type LogLevel = "debug" | "info" | "warn" | "error";
 
@@ -39,6 +44,25 @@ function write(level: LogLevel, event: string, meta: Record<string, unknown>, er
   }
 
   const line = JSON.stringify(entry);
+
+  // Q-25: Forward errors/warnings to Sentry for real-time alerting
+  if (level === "error") {
+    if (err instanceof Error) {
+      Sentry.captureException(err, { tags: { event }, extra: meta });
+    } else {
+      Sentry.captureMessage(`[${event}] ${err ?? "unknown error"}`, {
+        level: "error",
+        tags: { event },
+        extra: meta,
+      });
+    }
+  } else if (level === "warn") {
+    Sentry.captureMessage(`[${event}] warning`, {
+      level: "warning",
+      tags: { event },
+      extra: meta,
+    });
+  }
 
   switch (level) {
     case "error":

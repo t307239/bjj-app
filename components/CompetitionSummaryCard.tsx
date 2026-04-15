@@ -6,6 +6,7 @@ import { useLocale } from "@/lib/i18n";
 import { decodeCompNotes, type CompData } from "@/lib/trainingLogHelpers";
 import Link from "next/link";
 import { trackEvent } from "@/lib/analytics";
+import EmptyState from "@/components/EmptyState";
 
 type MatchEntry = {
   id: string;
@@ -175,10 +176,13 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
   // Empty state
   if (matches.length === 0) {
     return (
-      <div className="bg-zinc-900/50 border border-white/8 rounded-2xl p-6 text-center">
-        <p className="text-2xl mb-2">🏆</p>
-        <p className="text-sm text-gray-400">{t("competition.noCompetitions")}</p>
-        <p className="text-xs text-gray-500 mt-1">{t("competition.noCompetitionsHint")}</p>
+      <div className="bg-zinc-900/50 border border-white/8 rounded-2xl p-6">
+        <EmptyState
+          emoji="🏆"
+          title={t("competition.noCompetitions")}
+          description={t("competition.noCompetitionsHint")}
+          compact
+        />
       </div>
     );
   }
