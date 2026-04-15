@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef, useLayoutEffect, useEffect, useCallback } from "react";
 import { type Node } from "@xyflow/react";
 import { PRESET_POSITIONS } from "./constants";
 
@@ -30,8 +30,35 @@ export default function BottomDrawer({
   const [customTagInput, setCustomTagInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const tagInputRef = useRef<HTMLInputElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => { if (mode === "addChild") inputRef.current?.focus(); }, [mode]);
   useLayoutEffect(() => { if (mode === "editTags") tagInputRef.current?.focus(); }, [mode]);
+
+  // Focus trap + ESC to close
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === "Escape") { onClose(); return; }
+    if (e.key !== "Tab" || !drawerRef.current) return;
+    const focusable = drawerRef.current.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }, [onClose]);
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    // Auto-focus drawer on mount
+    drawerRef.current?.focus();
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
 
   const currentTags: string[] = ((node.data as { tags?: string[] }).tags ?? []);
 
@@ -51,9 +78,14 @@ export default function BottomDrawer({
 
   return (
     <div className="fixed inset-0 z-50" onPointerDown={onClose}>
-      <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
       <div
-        className="absolute bottom-0 left-0 right-0 bg-zinc-900 border-t border-white/10 rounded-t-2xl p-5 pb-8"
+        ref={drawerRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={String(node.data.label)}
+        tabIndex={-1}
+        className="absolute bottom-0 left-0 right-0 bg-zinc-900 border-t border-white/10 rounded-t-2xl p-5 pb-8 outline-none"
         onPointerDown={(e) => e.stopPropagation()}
       >
         <div className="w-10 h-1 bg-zinc-600 rounded-full mx-auto mb-4" />

@@ -32,7 +32,9 @@ const eslintConfig = [
       "jsx-a11y/aria-props": "error",
       "jsx-a11y/aria-role": "error",
       "jsx-a11y/role-has-required-aria-props": "error",
-      "jsx-a11y/anchor-is-valid": "warn",
+      "jsx-a11y/anchor-is-valid": "error",
+      "jsx-a11y/click-events-have-key-events": "warn",
+      "jsx-a11y/no-noninteractive-element-interactions": "warn",
     },
   },
 ];
