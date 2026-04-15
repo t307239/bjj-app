@@ -106,49 +106,40 @@ export default function BeltProgressCard({
         </Link>
       </div>
 
-      {/* ── Item 4: Skeuomorphic belt (real layout: color + black bar with stripes) ── */}
+      {/* ── Item 4: Skeuomorphic belt (stripes on belt color) ── */}
       <div className="flex items-center gap-4">
         {/* Belt body */}
         <div
-          className="flex items-stretch rounded-md overflow-hidden flex-shrink-0"
+          className="relative rounded-md overflow-hidden flex-shrink-0"
           style={{
             height: 40,
-            width: 152,
+            width: 136,
+            background: bStyle.bar,
             boxShadow: "0 2px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
           }}
         >
-          {/* Main belt — gradient fakes woven fabric depth */}
-          <div className="flex-1 relative overflow-hidden" style={{ background: bStyle.bar }}>
-            {/* Stitching lines (top + bottom seams) */}
-            <div className="absolute top-1 left-0 right-0 h-px bg-white/15" />
-            <div className="absolute bottom-1 left-0 right-0 h-px bg-black/25" />
-          </div>
-          {/* Black promotion bar — stripes go here, just like a real belt */}
-          <div
-            className="flex-shrink-0 h-full relative"
-            style={{
-              width: 48,
-              background: "linear-gradient(180deg,#3f3f46 0%,#18181b 50%,#000000 100%)",
-              borderLeft: "1px solid rgba(255,255,255,0.08)",
-            }}
-          >
-            {/* White tape stripes on the black bar */}
-            {Array.from({ length: 4 }).map((_, i) => {
-              const isEarned = i < stripes;
-              return (
-                <div
-                  key={i}
-                  className="absolute top-0 h-full"
-                  style={{
-                    width: 6,
-                    left: 6 + i * 10,
-                    backgroundColor: isEarned ? "#ffffff" : "#27272a",
-                    boxShadow: isEarned ? "0 0 6px rgba(255,255,255,0.5)" : "none",
-                  }}
-                />
-              );
-            })}
-          </div>
+          {/* Stitching lines (top + bottom seams) */}
+          <div className="absolute top-1 left-0 right-0 h-px bg-white/15" />
+          <div className="absolute bottom-1 left-0 right-0 h-px bg-black/25" />
+          {/* Stripe tapes — white with outline for visibility on all belts */}
+          {Array.from({ length: 4 }).map((_, i) => {
+            const isEarned = i < stripes;
+            return (
+              <div
+                key={i}
+                className="absolute top-0 h-full"
+                style={{
+                  width: 5,
+                  right: 8 + i * 9,
+                  backgroundColor: isEarned ? "#ffffff" : "transparent",
+                  boxShadow: isEarned
+                    ? "0 0 4px rgba(0,0,0,0.6), 0 0 8px rgba(255,255,255,0.4)"
+                    : "none",
+                  border: isEarned ? "none" : "1px solid rgba(255,255,255,0.08)",
+                }}
+              />
+            );
+          })}
         </div>
 
         <div>
