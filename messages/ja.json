@@ -844,7 +844,11 @@
     "clearSearch": "検索をクリア",
     "clearFilter": "フィルターをクリア",
     "shareReferral": "紹介リンクを共有",
-    "printLeaderboard": "リーダーボードを印刷"
+    "printLeaderboard": "リーダーボードを印刷",
+    "cookieConsentMessage": "プライバシーに配慮した分析（トラッキングCookieなし）でアプリを改善しています。",
+    "cookieConsentPrivacy": "プライバシーポリシー",
+    "cookieConsentAccept": "承認",
+    "cookieConsentDecline": "拒否"
   },
   "aiCoach": {
     "title": "AIコーチ",

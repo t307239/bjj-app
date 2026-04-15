@@ -853,7 +853,11 @@
     "clearSearch": "Clear search",
     "clearFilter": "Clear filter",
     "shareReferral": "Share referral link",
-    "printLeaderboard": "Print leaderboard"
+    "printLeaderboard": "Print leaderboard",
+    "cookieConsentMessage": "We use privacy-friendly analytics (no tracking cookies) to improve the app.",
+    "cookieConsentPrivacy": "Privacy Policy",
+    "cookieConsentAccept": "Accept",
+    "cookieConsentDecline": "Decline"
   },
   "aiCoach": {
     "title": "AI Coach",

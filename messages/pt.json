@@ -34,7 +34,11 @@
     "clearSearch": "Limpar busca",
     "clearFilter": "Limpar filtro",
     "shareReferral": "Compartilhar link de indicação",
-    "printLeaderboard": "Imprimir ranking"
+    "printLeaderboard": "Imprimir ranking",
+    "cookieConsentMessage": "Usamos análise amigável à privacidade (sem cookies de rastreamento) para melhorar o aplicativo.",
+    "cookieConsentPrivacy": "Política de Privacidade",
+    "cookieConsentAccept": "Aceitar",
+    "cookieConsentDecline": "Recusar"
   },
   "login": {
     "title": "Entrar no BJJ App",

@@ -43,13 +43,12 @@ export default function CookieConsent() {
     >
       <div className="max-w-lg mx-auto bg-zinc-900 border border-white/10 rounded-2xl p-4 shadow-2xl">
         <p className="text-sm text-zinc-300 leading-relaxed">
-          We use privacy-friendly analytics (no tracking cookies) to improve the
-          app.{" "}
+          {t("common.cookieConsentMessage")}{" "}
           <a
             href="/privacy"
             className="text-emerald-400 underline underline-offset-2"
           >
-            Privacy Policy
+            {t("common.cookieConsentPrivacy")}
           </a>
         </p>
         <div className="flex items-center gap-2 mt-3">
@@ -57,13 +56,13 @@ export default function CookieConsent() {
             onClick={handleAccept}
             className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold py-2 rounded-xl transition-colors"
           >
-            Accept
+            {t("common.cookieConsentAccept")}
           </button>
           <button
             onClick={handleDecline}
             className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-sm font-semibold py-2 rounded-xl border border-white/10 transition-colors"
           >
-            Decline
+            {t("common.cookieConsentDecline")}
           </button>
         </div>
       </div>
