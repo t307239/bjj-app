@@ -171,7 +171,7 @@ export default function WikiContentEnhancer() {
               <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
-          {/* eslint-disable-next-line @next/next/no-img-element jsx-a11y/no-noninteractive-element-interactions */}
+          {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/no-noninteractive-element-interactions */}
           <img
             src={lightboxSrc}
             alt="Expanded view"

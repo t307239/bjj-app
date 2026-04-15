@@ -72,7 +72,7 @@ export default function YouTubeLiteEmbed({ videoId, title, isShorts = false }: P
         aria-label={`Play: ${title}`}
       >
         {/* サムネイル */}
-        {/* eslint-disable-next-line @next/next/no-img-element jsx-a11y/no-noninteractive-element-interactions */}
+        {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/no-noninteractive-element-interactions */}
         <img
           src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
           alt={title}
