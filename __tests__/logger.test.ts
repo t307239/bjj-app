@@ -101,4 +101,48 @@ describe("logger", () => {
     expect(parsed.error.message).toBe("boom");
     expect(parsed.error.name).toBe("Error");
   });
+
+  // Q-30: child logger tests
+  describe("logger.child", () => {
+    it("child logger inherits context fields", () => {
+      const log = logger.child({ requestId: "req-123", userId: "u-1" });
+      log.info("child.event", { extra: "data" });
+      const line = (console.log as ReturnType<typeof vi.fn>).mock.calls[0][0];
+      const parsed = JSON.parse(line);
+      expect(parsed.requestId).toBe("req-123");
+      expect(parsed.userId).toBe("u-1");
+      expect(parsed.extra).toBe("data");
+      expect(parsed.event).toBe("child.event");
+    });
+
+    it("child logger meta overrides context", () => {
+      const log = logger.child({ userId: "u-1" });
+      log.info("override", { userId: "u-2" });
+      const line = (console.log as ReturnType<typeof vi.fn>).mock.calls[0][0];
+      const parsed = JSON.parse(line);
+      expect(parsed.userId).toBe("u-2");
+    });
+
+    it("child logger.error forwards to Sentry with merged context", () => {
+      const log = logger.child({ requestId: "req-abc" });
+      log.error("child.fail", { route: "/x" }, "timeout");
+      expect(Sentry.captureMessage).toHaveBeenCalledWith(
+        "[child.fail] timeout",
+        expect.objectContaining({
+          extra: expect.objectContaining({ requestId: "req-abc", route: "/x" }),
+        })
+      );
+    });
+
+    it("child logger.warn also forwards to Sentry", () => {
+      const log = logger.child({ requestId: "req-w" });
+      log.warn("child.warn");
+      expect(Sentry.captureMessage).toHaveBeenCalledWith(
+        "[child.warn] warning",
+        expect.objectContaining({
+          extra: expect.objectContaining({ requestId: "req-w" }),
+        })
+      );
+    });
+  });
 });

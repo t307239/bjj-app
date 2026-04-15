@@ -84,6 +84,21 @@ export const logger = {
   info:  (event: string, meta: Record<string, unknown> = {}) => write("info",  event, meta),
   warn:  (event: string, meta: Record<string, unknown> = {}) => write("warn",  event, meta),
   error: (event: string, meta: Record<string, unknown> = {}, err?: unknown) => write("error", event, meta, err),
+  /**
+   * Q-30: Create a child logger with fixed context fields.
+   * Useful for API routes — attach requestId/userId once, all subsequent logs inherit them.
+   *
+   * Usage:
+   *   const log = logger.child({ requestId: crypto.randomUUID(), userId });
+   *   log.info("record.create", { count: 3 });
+   *   // → JSON includes requestId + userId automatically
+   */
+  child: (ctx: Record<string, unknown>) => ({
+    debug: (event: string, meta: Record<string, unknown> = {}) => write("debug", event, { ...ctx, ...meta }),
+    info:  (event: string, meta: Record<string, unknown> = {}) => write("info",  event, { ...ctx, ...meta }),
+    warn:  (event: string, meta: Record<string, unknown> = {}) => write("warn",  event, { ...ctx, ...meta }),
+    error: (event: string, meta: Record<string, unknown> = {}, err?: unknown) => write("error", event, { ...ctx, ...meta }, err),
+  }),
 };
 
 /**

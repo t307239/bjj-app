@@ -112,7 +112,7 @@ export default async function Image({
         >
           <span>bjj-app.net/wiki</span>
           <span style={{ color: "#334155" }}>·</span>
-          <span>Free forever</span>
+          <span>{lang === "ja" ? "ずっと無料" : lang === "pt" ? "Grátis para sempre" : "Free forever"}</span>
         </div>
 
         {/* Decorative gradient blob */}

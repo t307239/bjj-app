@@ -53,18 +53,29 @@ export default function IABSafeLink({
         {children}
       </button>
       {showBanner && (
-        <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center px-4" onClick={() => setShowBanner(false)}>
-          <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 max-w-sm w-full text-center" onClick={(e) => e.stopPropagation()}>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={t("login.iabWarning")}
+          className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center px-4"
+          onClick={() => setShowBanner(false)}
+          onKeyDown={(e) => { if (e.key === "Escape") setShowBanner(false); }}
+        >
+          <div
+            className="bg-zinc-900 border border-white/10 rounded-2xl p-6 max-w-sm w-full text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="text-4xl mb-3">🌐</div>
             <h3 className="text-lg font-bold text-white mb-2">{t("login.iabWarning")}</h3>
-            <p className="text-gray-400 text-sm mb-5">{t("login.iabDesc")}</p>
+            <p className="text-zinc-400 text-sm mb-5">{t("login.iabDesc")}</p>
             <button
               onClick={copyUrl}
+              autoFocus
               className="w-full bg-[#10B981] hover:bg-[#0d9668] text-white font-semibold py-3 px-4 rounded-xl transition-colors text-sm mb-3"
             >
               {copied ? t("login.iabCopied") : t("login.iabCopy")}
             </button>
-            <p className="text-gray-500 text-xs">{t("login.iabPaste")}</p>
+            <p className="text-zinc-500 text-xs">{t("login.iabPaste")}</p>
           </div>
         </div>
       )}
