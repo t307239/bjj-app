@@ -603,10 +603,14 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       d.setMonth(d.getMonth() - 1);
       query = query.gte("date", d.toISOString().slice(0, 10));
     }
+    // Apply server-side search filter when active
+    if (debouncedSearch) {
+      query = query.or(`notes.ilike.%${debouncedSearch}%,instructor_name.ilike.%${debouncedSearch}%,partner_username.ilike.%${debouncedSearch}%`);
+    }
     const { data, error } = await query.range(from, to);
     if (!error && data) { setEntries(data); setPage(newPage); }
     setPageLoading(false);
-  }, [userId, supabase, isPro]);
+  }, [userId, supabase, isPro, debouncedSearch]);
 
   // ── Memos ─────────────────────────────────────────────────────────────────
   const totalPages = useMemo(() => Math.ceil((totalCount ?? 0) / PAGE_SIZE), [totalCount]);
@@ -628,18 +632,8 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     .filter((e) => filterType === "all" || e.type === filterType)
     .filter((e) => !periodStart || e.date >= periodStart)
     .filter((e) => !dateFrom || e.date >= dateFrom)
-    .filter((e) => !dateTo || e.date <= dateTo)
-    .filter((e) => {
-      if (!searchQuery.trim()) return true;
-      const q = searchQuery.toLowerCase();
-      const { userNotes } = decodeCompNotes(e.notes);
-      const typeLabel = TRAINING_TYPES.find((tt) => tt.value === e.type)?.label ?? e.type;
-      return (
-        e.date.includes(q) ||
-        typeLabel.toLowerCase().includes(q) ||
-        userNotes.toLowerCase().includes(q)
-      );
-    }), [entries, filterType, periodStart, dateFrom, dateTo, searchQuery]);
+    .filter((e) => !dateTo || e.date <= dateTo),
+    [entries, filterType, periodStart, dateFrom, dateTo]);
 
   const { monthEntries, monthHoursDisplay, monthProjected, remainingDaysLog, monthDelta } = useMemo(() => {
     const thisMonth = getLocalDateString().slice(0, 7);
@@ -690,6 +684,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     loading,
     initialLoading,
     pageLoading,
+    searchLoading,
     page,
     techniqueSuggestions,
     partnerSuggestions,

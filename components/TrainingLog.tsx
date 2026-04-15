@@ -195,6 +195,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     loading,
     initialLoading,
     pageLoading,
+    searchLoading,
     page,
     techniqueSuggestions,
     partnerSuggestions,
@@ -351,12 +352,16 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         </>
       )}
 
-      {/* Keyword search — always inside collapsible */}
-      {listOpen && !initialLoading && entries.length > 0 && (
+      {/* Keyword search — shows when list open and has entries or active search */}
+      {listOpen && !initialLoading && (entries.length > 0 || searchQuery) && (
         <div className="relative mb-2">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+          {searchLoading ? (
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 border-2 border-gray-500 border-t-emerald-400 rounded-full animate-spin pointer-events-none" />
+          ) : (
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          )}
           <input
             type="text"
             value={searchQuery}
@@ -379,7 +384,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       )}
 
       {/* Unified filter row: horizontal scroll chip bar — Period + Type pills + Date */}
-      {listOpen && !initialLoading && entries.length > 0 && (() => {
+      {listOpen && !initialLoading && (entries.length > 0 || searchQuery) && (() => {
         const usedTypes = TRAINING_TYPES.filter((tt) => entries.some((e) => e.type === tt.value));
         const hasDateFilter = !!(dateFrom || dateTo);
         return (
@@ -490,6 +495,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         setExpandedNotes={setExpandedNotes}
         editCompForm={editCompForm}
         setEditCompForm={setEditCompForm}
+        totalCount={totalCount}
         today={today}
         onShowForm={() => setShowForm(true)}
       />}

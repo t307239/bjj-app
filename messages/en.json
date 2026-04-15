@@ -256,7 +256,8 @@
     "togglePersonalBests": "Toggle personal bests",
     "toggleGoalTracker": "Toggle goal tracker",
     "toggleDetailCharts": "Toggle detail charts",
-    "toggleBadges": "Toggle badges"
+    "toggleBadges": "Toggle badges",
+    "searchResultCount": "{count} results found"
   },
   "techniques": {
     "mastery1": "Know it",

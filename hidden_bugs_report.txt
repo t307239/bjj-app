@@ -5,7 +5,7 @@ WARNING: 11
 INFO: 89
 Total: 101
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (625/1705 キー) — 1110 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (626/1706 キー) — 1110 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換

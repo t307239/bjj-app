@@ -166,7 +166,8 @@
     "togglePersonalBests": "Alternar recordes pessoais",
     "toggleGoalTracker": "Alternar rastreador de metas",
     "toggleDetailCharts": "Alternar gráficos detalhados",
-    "toggleBadges": "Alternar medalhas"
+    "toggleBadges": "Alternar medalhas",
+    "searchResultCount": "{count} resultados encontrados"
   },
   "trainingLog": {
     "totalLabel": "total",

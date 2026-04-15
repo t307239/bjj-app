@@ -118,6 +118,7 @@ type Props = {
   setExpandedNotes: React.Dispatch<React.SetStateAction<Set<string>>>;
   editCompForm: CompData;
   setEditCompForm: (f: CompData) => void;
+  totalCount: number | null;
   today: string;
   onShowForm: () => void;
 };
@@ -144,6 +145,7 @@ const TrainingLogList = memo(function TrainingLogList({
   setExpandedNotes,
   editCompForm,
   setEditCompForm,
+  totalCount,
   today,
   onShowForm,
 }: Props) {
@@ -206,6 +208,11 @@ const TrainingLogList = memo(function TrainingLogList({
   // ── Entry list ───────────────────────────────────────────────────────────
   return (
     <>
+      {searchQuery && totalCount !== null && (
+        <div className="text-xs text-gray-400 mb-2">
+          {t("training.searchResultCount", { count: String(totalCount) })}
+        </div>
+      )}
       <div className="max-h-[520px] overflow-y-auto scrollbar-hide space-y-3 pr-0.5">
         {filtered.map((entry) => (
           // B-10: SwipeableCard — left swipe = delete, right swipe = edit

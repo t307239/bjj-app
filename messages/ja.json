@@ -257,7 +257,8 @@
     "togglePersonalBests": "自己ベストの表示切替",
     "toggleGoalTracker": "目標トラッカーの表示切替",
     "toggleDetailCharts": "詳細チャートの表示切替",
-    "toggleBadges": "バッジの表示切替"
+    "toggleBadges": "バッジの表示切替",
+    "searchResultCount": "{count}件の結果"
   },
   "techniques": {
     "mastery1": "入門",
