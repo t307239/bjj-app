@@ -115,13 +115,13 @@ Total: 101
   FIX: 対応するTailwindユーティリティクラスに変換
 [WARNING] [JSX_HARDCODED_ENGLISH] components/NavBar.tsx: L104: JSX内に英語テキスト直書き: "BJJ App"
   FIX: t() キーを追加して多言語対応
-[INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L112: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L113: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L125: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L126: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L141: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L142: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L176: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L177: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/PageTabs.tsx: L29: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換

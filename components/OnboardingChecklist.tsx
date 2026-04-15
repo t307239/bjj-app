@@ -97,6 +97,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
       return () => { clearTimeout(fadeTimer); clearTimeout(doneTimer); };
     }
     prevCompletedRef.current = completedCount;
+    return undefined;
   }, [allDone, completedCount, steps.length, celebState]);
 
   // Hide if dismissed or celebration finished
