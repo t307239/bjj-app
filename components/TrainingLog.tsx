@@ -382,7 +382,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         const usedTypes = TRAINING_TYPES.filter((tt) => entries.some((e) => e.type === tt.value));
         const hasDateFilter = !!(dateFrom || dateTo);
         return (
-          <div className="overflow-x-auto scrollbar-hide mb-4 -mx-0.5 px-0.5">
+          <div className="overflow-x-auto scrollbar-hide scroll-fade-x mb-4 -mx-0.5 px-0.5">
             <div className="flex items-center gap-2 min-w-max">
               {/* Period select */}
               <select

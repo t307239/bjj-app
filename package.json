@@ -16,7 +16,18 @@
     "check-links": "node scripts/check-links.mjs",
     "license:audit": "node scripts/license-audit.mjs",
     "license:audit:full": "node scripts/license-audit.mjs --full",
-    "license:audit:json": "node scripts/license-audit.mjs --json"
+    "license:audit:json": "node scripts/license-audit.mjs --json",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix --max-warnings 0"
+    ],
+    "*.{json,md,css}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
@@ -43,7 +54,9 @@
     "autoprefixer": "^10",
     "eslint": "^9",
     "eslint-config-next": "^15.2.3",
+    "lint-staged": "^16.4.0",
     "postcss": "^8",
+    "prettier": "^3.8.3",
     "tailwindcss": "^3.4.1",
     "typescript": "^6",
     "vitest": "^4.0.0"

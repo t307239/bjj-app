@@ -8,6 +8,7 @@
 :root {
   --background: #1a1a2e;
   --foreground: #f5f5f5;
+  --navbar-height: 56px;
 }
 
 html, body {
@@ -28,6 +29,13 @@ html, body {
 }
 .mb-safe {
   margin-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Horizontal scroll container with fade-edge hints */
+.scroll-fade-x {
+  position: relative;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 12px, black calc(100% - 24px), transparent);
+  mask-image: linear-gradient(to right, transparent, black 12px, black calc(100% - 24px), transparent);
 }
 
 /* #110: Ensure placeholder text meets WCAG AA contrast on dark backgrounds */
