@@ -1230,7 +1230,17 @@
     "faq8Q": "How do I export my data?",
     "faq8A": "Go to Profile > Account > Download my data (CSV). All your training logs will be exported as a CSV file you can open in any spreadsheet app.",
     "contactTitle": "Still need help?",
-    "contactBtn": "Email Support"
+    "contactBtn": "Email Support",
+    "faq9Q": "My training session didn't save?",
+    "faq9A": "Check your network connection. Sessions are saved to the server when online. If the problem persists, try refreshing the page.",
+    "faq10Q": "How do I cancel my Pro subscription?",
+    "faq10A": "Go to Profile > Account > Manage Subscription. You can cancel with one click. Pro features remain available until the end of the billing period.",
+    "faq11Q": "How do I export a PDF report?",
+    "faq11A": "On the Records page, click the Export button and select PDF. A report with your training summary and statistics will be generated.",
+    "faq12Q": "I'm not receiving notifications",
+    "faq12A": "Check your browser notification settings. On iOS Safari, you need to add the app to your Home Screen before enabling notifications.",
+    "troubleshootingTitle": "Troubleshooting",
+    "troubleshootingSubtitle": "Common issues and solutions"
   },
   "onboarding": {
     "title": "Getting Started",

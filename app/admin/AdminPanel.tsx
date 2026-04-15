@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import { formatDateShort } from "@/lib/formatDate";
 
 type AdminUser = {
   id: string;
@@ -31,7 +32,7 @@ const BELT_COLORS: Record<string, string> = {
 
 function fmtDate(iso: string | null): string {
   if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  return formatDateShort(iso, "en");
 }
 
 function fmtDaysAgo(iso: string | null): string {

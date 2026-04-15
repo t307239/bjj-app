@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
+import { formatDateShort } from "@/lib/formatDate";
 
 type CompGoal = {
   id: string;
@@ -102,7 +103,7 @@ const PHASE_BG: Record<string, string> = {
 };
 
 export default function CompetitionCountdown({ userId, isPro = false }: Props) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   // useMemo to keep a stable reference — createClient() returns a new object each call,
   // which would cause infinite re-renders if used in useCallback deps
   const supabase = useMemo(() => createClient(), []);
@@ -396,12 +397,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
 
                 {/* Row 2: Date */}
                 <p className="text-xs text-zinc-500 mb-2">
-                  {new Date(goal.date + "T12:00:00").toLocaleDateString(undefined, {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                    weekday: "short",
-                  })}
+                  {formatDateShort(goal.date + "T12:00:00", locale)}
                 </p>
 
                 {/* Row 3: AI Training Recommendation (only for future comps, Pro users) */}

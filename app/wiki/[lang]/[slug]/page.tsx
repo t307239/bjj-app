@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
+import { formatDateShort } from "@/lib/formatDate";
 import Link from "next/link";
 import ScrollProgressBar from "./ScrollProgressBar";
 import BackToTopButton from "./BackToTopButton";
@@ -612,10 +613,7 @@ export default async function WikiPage({
 
   // #24: 更新日フォーマット
   const updatedAt = page.updated_at
-    ? new Date(page.updated_at).toLocaleDateString(
-        lang === "ja" ? "ja-JP" : lang === "pt" ? "pt-BR" : "en-US",
-        { year: "numeric", month: "short", day: "numeric" }
-      )
+    ? formatDateShort(page.updated_at, (lang === "ja" || lang === "pt") ? lang : "en")
     : null;
 
   // CTA コンテンツ（MobileCtaBar 用）

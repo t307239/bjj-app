@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { utcIsoToLocalDateString } from "@/lib/timezone";
+import { formatDateShort } from "@/lib/formatDate";
 
 interface WeightPoint {
   isoDate: string;   // YYYY-MM-DD
@@ -19,10 +20,8 @@ interface Props {
   targetDate?: string | null; // YYYY-MM-DD
 }
 
-function formatDateLabel(iso: string): string {
-  const [y, m, d] = iso.split("-").map(Number);
-  const date = new Date(y, (m ?? 1) - 1, d ?? 1);
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+function formatDateLabel(iso: string, locale: "ja" | "en" | "pt" = "en"): string {
+  return formatDateShort(iso, locale);
 }
 
 const W = 300; // SVG width
