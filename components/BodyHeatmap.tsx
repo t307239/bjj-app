@@ -182,7 +182,7 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
       setStatusDates(statusDates);
       showToast(t("body.saveError"));
     }
-  }, [isOnline, status, userId, supabase, showToast, t]);
+  }, [isOnline, status, statusDates, userId, supabase, showToast, t]);
 
   const partColor = (key: PartKey) =>
     status[key] ? STATUS_COLOR[status[key]!] : DEFAULT_COLOR;
@@ -204,6 +204,24 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
         <LegendChip status="sore"    label={t("body.status.sore")}    />
         <LegendChip status="injured" label={t("body.status.injured")} />
         <span className="text-xs text-gray-500 italic">{t("body.status.tapToMark")}</span>
+      </div>
+
+      {/* Front / Back view toggle */}
+      <div className="flex justify-center gap-1 mb-3">
+        {(["front", "back"] as const).map((v) => (
+          <button
+            key={v}
+            type="button"
+            onClick={() => setView(v)}
+            className={`px-4 py-1.5 min-h-[44px] rounded-lg text-xs font-medium transition-all duration-200 ${
+              view === v
+                ? "bg-white/10 text-white border border-white/20"
+                : "text-gray-400 border border-transparent hover:bg-white/5"
+            }`}
+          >
+            {v === "front" ? t("body.viewFront") : t("body.viewBack")}
+          </button>
+        ))}
       </div>
 
       {/* SVG body map */}
@@ -237,8 +255,13 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
           <path d="M88,165 L92,200 L94,240 L86,255 L76,255 L72,240 L76,200 L78,165 Z"
             fill="#1c1c1e" stroke="#3f3f46" strokeWidth="1" />
 
-          {/* ── Interactive body part circles ── */}
-          {BODY_PARTS.map((part) => {
+          {/* Back view label (spine line hint) */}
+          {view === "back" && (
+            <line x1="60" y1="60" x2="60" y2="165" stroke="#3f3f46" strokeWidth="0.5" strokeDasharray="3,3" />
+          )}
+
+          {/* ── Interactive body part circles (filtered by current view) ── */}
+          {BODY_PARTS.filter((p) => p.view === view).map((part) => {
             const isSaving = savingPart === part.key;
             const color = partColor(part.key);
             return (
@@ -282,7 +305,7 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
         </svg>
       </div>
 
-      {/* Part status summary */}
+      {/* Part status summary — show all sore/injured regardless of current view */}
       <div className="mt-3 grid grid-cols-2 gap-1">
         {BODY_PARTS.filter((p) => status[p.key] && status[p.key] !== "ok").map((p) => (
           <div
