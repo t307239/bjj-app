@@ -35,7 +35,13 @@ export async function GET() {
     }
 
     return NextResponse.json(
-      { status: "ok", db: "ok", uptime: uptimeSeconds },
+      {
+        status: "ok",
+        db: "ok",
+        uptime: uptimeSeconds,
+        version: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? "dev",
+        region: process.env.VERCEL_REGION ?? "local",
+      },
       { status: 200, headers: { "Cache-Control": "no-store" } },
     );
   } catch (err) {
