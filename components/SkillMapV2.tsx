@@ -10,6 +10,8 @@
  *  - MiniMap + Controls (zoom/fit) from React Flow
  *  - Full Supabase persistence
  *  - Pro gating: 10 nodes / 15 edges for free users
+ *
+ * Refactored Day 5_236: 794→~420 lines. Sub-components in ./skillmap/.
  */
 
 import React, {
@@ -24,7 +26,6 @@ import {
   ReactFlowProvider,
   Background,
   BackgroundVariant,
-  Panel,
   MiniMap,
   useReactFlow,
   type Node,
@@ -40,10 +41,17 @@ import Toast from "./Toast";
 
 // ─── Extracted sub-components ─────────────────────────────────────────────────
 import { nodeTypes, deleteNodeRef, toggleCollapseRef, getDescendantIds } from "./skillmap/TechniqueNode";
+import { PRESET_POSITIONS } from "./skillmap/constants";
 import ProModal from "./skillmap/ProModal";
 import BottomDrawer from "./skillmap/BottomDrawer";
 import AddNodePopup from "./skillmap/AddNodePopup";
-import { PRESET_POSITIONS } from "./skillmap/constants";
+import SkillMapLegend from "./skillmap/SkillMapLegend";
+import CustomZoomControls from "./skillmap/CustomZoomControls";
+import RecentFocusBar from "./skillmap/RecentFocusBar";
+import SkillMapToolbar from "./skillmap/SkillMapToolbar";
+import PositionFilterChips from "./skillmap/PositionFilterChips";
+import EdgeNotesPanel from "./skillmap/EdgeNotesPanel";
+import SkillMapEmpty from "./skillmap/SkillMapEmpty";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -53,104 +61,6 @@ type Props = {
   stripePaymentLink: string | null;
   stripeAnnualLink: string | null;
 };
-
-// ─── Canvas Legend ─────────────────────────────────────────────────────────────
-
-function SkillMapLegend() {
-  return (
-    <Panel position="bottom-right">
-      <div className="flex items-center gap-2.5 bg-zinc-900/80 border border-white/10 backdrop-blur-sm rounded-lg px-3 py-1.5 pointer-events-none select-none">
-        {[
-          { label: "Locked",   cls: "border-zinc-600 bg-zinc-700/60" },
-          { label: "Learning", cls: "border-blue-500/70 bg-blue-900/40" },
-          { label: "Mastered", cls: "border-emerald-500/70 bg-emerald-900/40" },
-        ].map(({ label, cls }) => (
-          <span key={label} className="flex items-center gap-1.5">
-            <span className={`w-2.5 h-2.5 rounded-sm border ${cls} inline-block`} />
-            <span className="text-xs text-zinc-400">{label}</span>
-          </span>
-        ))}
-      </div>
-    </Panel>
-  );
-}
-
-// ─── Custom Zoom Controls ──────────────────────────────────────────────────────
-
-function CustomZoomControls() {
-  const { zoomIn, zoomOut, fitView } = useReactFlow();
-  return (
-    <Panel position="bottom-left">
-      <div className="flex flex-col gap-1 bg-zinc-900/80 border border-white/10 backdrop-blur-sm rounded-lg p-1">
-        <button
-          onClick={() => zoomIn({ duration: 200 })}
-          className="w-7 h-7 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/60 rounded-md transition-all text-base leading-none"
-          aria-label="Zoom in"
-          title="Zoom in"
-        >+</button>
-        <button
-          onClick={() => zoomOut({ duration: 200 })}
-          className="w-7 h-7 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/60 rounded-md transition-all text-base leading-none"
-          aria-label="Zoom out"
-          title="Zoom out"
-        >−</button>
-        <button
-          onClick={() => fitView({ padding: 0.15, duration: 400 })}
-          className="w-7 h-7 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-700/60 rounded-md transition-all"
-          aria-label="Fit view"
-          title="Fit view"
-        >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-          </svg>
-        </button>
-      </div>
-    </Panel>
-  );
-}
-
-// ─── Recent Focus Bar — Pro only ──────────────────────────────────────────────
-
-function RecentFocusBar({
-  nodes,
-  recentIds,
-  onFocus,
-  t,
-}: {
-  nodes: Node[];
-  recentIds: string[];
-  onFocus: (id: string) => void;
-  t: (k: string) => string;
-}) {
-  const visible = recentIds.filter((id) => nodes.some((n) => n.id === id));
-  if (visible.length === 0) return null;
-
-  return (
-    <div
-      className="mb-2 flex items-center gap-1.5 overflow-x-auto pb-0.5"
-      style={{ scrollbarWidth: "none" }}
-    >
-      <span className="flex-shrink-0 text-[10px] text-zinc-500 font-semibold uppercase tracking-wide">
-        {t("skillmap.recentFocus")}
-      </span>
-      {visible.map((id) => {
-        const node = nodes.find((n) => n.id === id);
-        if (!node) return null;
-        const label = String((node.data as { label?: unknown }).label ?? "");
-        return (
-          <button
-            key={id}
-            onClick={() => onFocus(id)}
-            className="flex-shrink-0 text-xs bg-zinc-800 hover:bg-zinc-700 border border-white/10 text-zinc-300 hover:text-white px-2.5 py-0.5 rounded-full transition-all active:scale-95 max-w-[140px] truncate"
-            title={label}
-          >
-            {label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
 
 // ─── Main inner component (must be inside ReactFlowProvider) ──────────────────
 
@@ -193,14 +103,11 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   const [drawerNode, setDrawerNode] = useState<Node | null>(null);
   const [addPopup, setAddPopup] = useState<{ screenX: number; screenY: number; flowX: number; flowY: number } | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [emptyAddName, setEmptyAddName] = useState("");
-  const emptyRef = useRef<HTMLInputElement>(null);
   const mobileAddRef = useRef<HTMLInputElement>(null);
 
   // T-29: position filter + edge notes
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [edgeNotes, setEdgeNotes] = useState<{ id: string; notes: string } | null>(null);
-  // Tag chip folding (案B): collapse when more than VISIBLE_TAG_COUNT tags
   const [tagsExpanded, setTagsExpanded] = useState(false);
   const VISIBLE_TAG_COUNT = 4;
 
@@ -222,7 +129,6 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   const handleFocusNode = useCallback((nodeId: string) => {
     const node = rfNodes.find((n) => n.id === nodeId);
     if (!node) return;
-    // Uncollapse any ancestor that is hiding this node
     setCollapsedIds((prev) => {
       const next = new Set(prev);
       for (const cid of prev) {
@@ -266,13 +172,12 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
       rfEdges.map((e) => ({
         ...e,
         hidden: hiddenIds.has(e.target) || hiddenIds.has(e.source),
-        // T-29: show 📝 label if edge has notes
         label: (e.data as { notes?: string })?.notes ? "📝" : (e.label ?? undefined),
       })),
     [rfEdges, hiddenIds]
   );
 
-  // T-29: unique non-preset tags from user's nodes (for custom tag chips)
+  // T-29: unique non-preset tags from user's nodes
   const customTags = useMemo(() => {
     const set = new Set<string>();
     for (const n of rfNodes) {
@@ -283,7 +188,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
     return [...set];
   }, [rfNodes]);
 
-  // T-29: tags that are actually used (for highlighting active chips)
+  // T-29: tags that are actually used
   const usedTags = useMemo(() => {
     const set = new Set<string>();
     for (const n of rfNodes) {
@@ -294,12 +199,11 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
     return set;
   }, [rfNodes]);
 
-  // Ghost filter: non-matching nodes get dimmed (opacity 20%) instead of hidden,
-  // so cross-position transitions remain visible as context.
+  // Ghost filter: non-matching nodes get dimmed instead of hidden
   const filteredDisplayNodes = useMemo(() => {
     if (!selectedTag) return displayNodes;
     return displayNodes.map((n) => {
-      if (n.hidden) return n; // already hidden by collapse — preserve
+      if (n.hidden) return n;
       const tags = (n.data as { tags?: string[] }).tags ?? [];
       return {
         ...n,
@@ -308,7 +212,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
     });
   }, [displayNodes, selectedTag]);
 
-  // Ghost edges: cross-position edges become faint + dashed instead of hidden
+  // Ghost edges: cross-position edges become faint + dashed
   const filteredDisplayEdges = useMemo(() => {
     if (!selectedTag) return displayEdges;
     const matchingIds = new Set(
@@ -345,7 +249,6 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
     (_, node) => {
       if (connectingFrom) { handleMobileConnect(node.id); return; }
       if (isMobile && editMode) { setDrawerNode(node); }
-      // Track recently focused nodes — Pro only, dedup, max 5
       if (isPro) {
         setRecentFocusIds((prev) => [node.id, ...prev.filter((id) => id !== node.id)].slice(0, 5));
       }
@@ -369,7 +272,6 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
     if (connectingFrom) setConnectingFrom(null);
   }, [connectingFrom, setConnectingFrom]);
 
-  // T-29: edge click → open notes panel
   const onEdgeClick: EdgeMouseHandler = useCallback(
     (_, edge: Edge) => {
       const notes = (edge.data as { notes?: string })?.notes ?? "";
@@ -393,50 +295,24 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   // ── Empty state ───────────────────────────────────────────────────────────
   if (rfNodes.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-56 text-center">
-        <div className="text-5xl mb-4">🗺️</div>
-        <p className="text-gray-300 font-medium mb-1">{t("skillmap.emptyTitle")}</p>
-        <p className="text-gray-500 text-sm mb-5">{isMobile ? t("skillmap.emptyBody") : t("skillmap.emptyBodyPC")}</p>
-        {!emptyAddName ? (
-          <button
-            onClick={() => {
-              if (!isPro && rfNodes.length >= 10) { setShowProModal(true); return; }
-              setEmptyAddName(" ");
-              setTimeout(() => emptyRef.current?.focus(), 50);
-            }}
-            className="bg-[#10B981] hover:bg-[#0d9668] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors active:scale-95"
-          >
-            + {t("skillmap.addFirstTechnique")}
-          </button>
-        ) : (
-          <div className="flex flex-col items-center gap-2 w-full max-w-xs">
-            <input
-              ref={emptyRef}
-              type="text"
-              placeholder={t("skillmap.namePlaceholder")}
-              value={emptyAddName.trim() ? emptyAddName : ""}
-              onChange={(e) => setEmptyAddName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && emptyAddName.trim()) { handleAddNode(emptyAddName.trim(), 200, 200); setEmptyAddName(""); }
-                if (e.key === "Escape") setEmptyAddName("");
-              }}
-              className="w-full bg-zinc-800 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/30"
-              maxLength={80}
-            />
-            <div className="flex gap-2 w-full">
-              <button onClick={() => setEmptyAddName("")} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 text-sm py-2 rounded-xl transition-colors">{t("common.cancel")}</button>
-              <button
-                onClick={() => { if (emptyAddName.trim()) { handleAddNode(emptyAddName.trim(), 200, 200); setEmptyAddName(""); } }}
-                disabled={!emptyAddName.trim()}
-                className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-white text-sm font-semibold py-2 rounded-xl transition-colors"
-              >{t("skillmap.addBtn")}</button>
-            </div>
-          </div>
-        )}
-        {showProModal && <ProModal onClose={() => setShowProModal(false)} stripePaymentLink={stripePaymentLink} stripeAnnualLink={stripeAnnualLink} t={t} />}
-      </div>
+      <SkillMapEmpty
+        isMobile={isMobile}
+        isPro={isPro}
+        nodeCount={rfNodes.length}
+        showProModal={showProModal}
+        onShowProModal={() => setShowProModal(true)}
+        onCloseProModal={() => setShowProModal(false)}
+        onAddNode={handleAddNode}
+        stripePaymentLink={stripePaymentLink}
+        stripeAnnualLink={stripeAnnualLink}
+        t={t}
+      />
     );
   }
+
+  // ── Derived values for toolbar ────────────────────────────────────────────
+  const lastNode = rfNodes[rfNodes.length - 1];
+  const lastNodePosition = lastNode ? { x: lastNode.position.x, y: lastNode.position.y } : null;
 
   // ── Canvas ────────────────────────────────────────────────────────────────
   return (
@@ -465,58 +341,17 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         </div>
       )}
 
-      {/* T-29: Position filter chips (案B: collapse when > VISIBLE_TAG_COUNT) */}
-      {(() => {
-        const allTags = [...PRESET_POSITIONS.filter((tag) => usedTags.has(tag)), ...customTags];
-        const hasMore = allTags.length > VISIBLE_TAG_COUNT;
-        const visibleTags = hasMore && !tagsExpanded ? allTags.slice(0, VISIBLE_TAG_COUNT) : allTags;
-        const hiddenCount = allTags.length - VISIBLE_TAG_COUNT;
-        const selectedInHidden = hasMore && !tagsExpanded && selectedTag !== null && !visibleTags.includes(selectedTag);
-        return (
-          <div
-            className="mb-2 flex items-center gap-1.5 overflow-x-auto pb-0.5"
-            style={{ scrollbarWidth: "none" }}
-          >
-            <button
-              onClick={() => setSelectedTag(null)}
-              className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95 ${
-                !selectedTag
-                  ? "bg-indigo-600 border-indigo-500 text-white font-semibold"
-                  : "bg-zinc-800 border-white/10 text-zinc-400 hover:border-white/30"
-              }`}
-            >
-              {t("skillmap.filterAll")}
-            </button>
-            {visibleTags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-                className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95 ${
-                  selectedTag === tag
-                    ? "bg-indigo-600 border-indigo-500 text-white font-semibold"
-                    : usedTags.has(tag)
-                      ? "bg-zinc-800 border-white/20 text-zinc-300 hover:border-white/40"
-                      : "bg-zinc-900 border-white/8 text-zinc-600"
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
-            {hasMore && (
-              <button
-                onClick={() => setTagsExpanded((v) => !v)}
-                className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95 ${
-                  selectedInHidden
-                    ? "bg-indigo-900/60 border-indigo-500/60 text-indigo-300 hover:border-indigo-400"
-                    : "bg-zinc-800 border-white/10 text-zinc-400 hover:border-white/30"
-                }`}
-              >
-                {tagsExpanded ? "▲" : `▼ +${hiddenCount}`}
-              </button>
-            )}
-          </div>
-        );
-      })()}
+      {/* T-29: Position filter chips */}
+      <PositionFilterChips
+        usedTags={usedTags}
+        customTags={customTags}
+        selectedTag={selectedTag}
+        setSelectedTag={setSelectedTag}
+        tagsExpanded={tagsExpanded}
+        setTagsExpanded={setTagsExpanded}
+        visibleTagCount={VISIBLE_TAG_COUNT}
+        t={t}
+      />
 
       {/* Recent Focus bar — Pro only */}
       {isPro && (
@@ -529,77 +364,22 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
       )}
 
       {/* Toolbar */}
-      <div className="flex items-center gap-2 mb-2 px-1 flex-wrap">
-        {isMobile && (
-          <div className="flex items-center gap-1.5 bg-zinc-800 rounded-lg p-1">
-            <button
-              onClick={() => setEditMode(false)}
-              className={`text-xs px-2.5 py-1 rounded-md transition-all ${!editMode ? "bg-zinc-600 text-white font-semibold" : "text-zinc-500 hover:text-zinc-300"}`}
-            >
-              {t("skillmap.viewMode")}
-            </button>
-            <button
-              onClick={() => setEditMode(true)}
-              className={`text-xs px-2.5 py-1 rounded-md transition-all ${editMode ? "bg-[#6366f1] text-white font-semibold" : "text-zinc-500 hover:text-zinc-300"}`}
-            >
-              ✏️ {t("skillmap.editMode")}
-            </button>
-          </div>
-        )}
-        {connectingFrom && (
-          <span className="text-xs text-yellow-400 animate-pulse">
-            {t("skillmap.connectMobileHint")}
-          </span>
-        )}
-        <button
-          onClick={handleMagicOrganize}
-          disabled={isOrganizing || rfNodes.length === 0 || !isOnline}
-          className="ml-auto flex items-center gap-1.5 text-xs bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition-all active:scale-95"
-          aria-label={t("skillmap.magicOrganize")}
-        >
-          {isOrganizing ? "⏳" : "✨"} {t("skillmap.magicOrganize")}
-        </button>
-        <button
-          onClick={() => {
-            if (!document.fullscreenElement) {
-              document.documentElement.requestFullscreen();
-            } else {
-              document.exitFullscreen();
-            }
-          }}
-          className="flex items-center gap-1 text-xs bg-zinc-800 hover:bg-zinc-700 text-white px-2.5 py-1.5 rounded-lg transition-all active:scale-95"
-          aria-label={isFullscreen ? t("skillmap.exitFullScreen") : t("skillmap.fullScreen")}
-          title={isFullscreen ? t("skillmap.exitFullScreen") : t("skillmap.fullScreen")}
-        >
-          {isFullscreen ? (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
-            </svg>
-          ) : (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-            </svg>
-          )}
-        </button>
-        {!isMobile && (
-          <span className="text-xs text-gray-500 ml-2 hidden sm:inline">{t("skillmap.pcHint")}</span>
-        )}
-        {isMobile && editMode && (
-          <button
-            disabled={!isOnline}
-            onClick={() => {
-              if (!isPro && rfNodes.length >= 10) { setShowProModal(true); return; }
-              const lastNode = rfNodes[rfNodes.length - 1];
-              const x = lastNode ? lastNode.position.x + 200 : 100;
-              const y = lastNode ? lastNode.position.y : 100;
-              setAddPopup({ screenX: 0, screenY: 0, flowX: x, flowY: y });
-            }}
-            className="text-xs bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition-all active:scale-95"
-          >
-            + {t("skillmap.addNodeMobile")}
-          </button>
-        )}
-      </div>
+      <SkillMapToolbar
+        isMobile={isMobile}
+        editMode={editMode}
+        setEditMode={setEditMode}
+        connectingFrom={connectingFrom}
+        isOrganizing={isOrganizing}
+        isOnline={isOnline}
+        isFullscreen={isFullscreen}
+        isPro={isPro}
+        nodeCount={rfNodes.length}
+        lastNodePosition={lastNodePosition}
+        onMagicOrganize={handleMagicOrganize}
+        onShowProModal={() => setShowProModal(true)}
+        onAddPopup={setAddPopup}
+        t={t}
+      />
 
       {/* React Flow canvas
           touch-action:none on the wrapper prevents iOS Safari from intercepting
@@ -659,9 +439,8 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           disabled={!isOnline}
           onClick={() => {
             if (!isPro && rfNodes.length >= 10) { setShowProModal(true); return; }
-            const lastNode = rfNodes[rfNodes.length - 1];
-            const x = lastNode ? lastNode.position.x + 200 : 100;
-            const y = lastNode ? lastNode.position.y : 100;
+            const x = lastNodePosition ? lastNodePosition.x + 200 : 100;
+            const y = lastNodePosition ? lastNodePosition.y : 100;
             setAddPopup({ screenX: 0, screenY: 0, flowX: x, flowY: y });
           }}
           aria-label={t("skillmap.addNodeMobile")}
@@ -674,41 +453,17 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
 
       {/* T-29: Edge notes panel */}
       {edgeNotes && (
-        <div className="mt-2 bg-zinc-900 border border-indigo-500/30 rounded-xl p-3 shadow-xl">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-semibold text-white">📝 {t("skillmap.edgeNotesTitle")}</span>
-            <button
-              onClick={() => setEdgeNotes(null)}
-              className="ml-auto text-zinc-500 hover:text-zinc-300 text-sm leading-none"
-              aria-label={t("common.cancel")}
-            >✕</button>
-          </div>
-          <textarea
-            value={edgeNotes.notes}
-            onChange={(e) => setEdgeNotes((prev) => prev ? { ...prev, notes: e.target.value } : null)}
-            placeholder={t("skillmap.edgeNotesPlaceholder")}
-            className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 resize-none"
-            rows={3}
-            autoFocus
-          />
-          <div className="flex gap-2 mt-2">
-            <button
-              onClick={() => setEdgeNotes(null)}
-              className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 text-sm py-2 rounded-lg transition-colors"
-            >
-              {t("common.cancel")}
-            </button>
-            <button
-              onClick={() => {
-                handleUpdateEdgeNotes(edgeNotes.id, edgeNotes.notes);
-                setEdgeNotes(null);
-              }}
-              className="flex-1 bg-emerald-700 hover:bg-emerald-600 text-white text-sm font-semibold py-2 rounded-lg transition-colors"
-            >
-              {t("common.save")}
-            </button>
-          </div>
-        </div>
+        <EdgeNotesPanel
+          edgeId={edgeNotes.id}
+          notes={edgeNotes.notes}
+          onChange={(notes) => setEdgeNotes((prev) => prev ? { ...prev, notes } : null)}
+          onSave={() => {
+            handleUpdateEdgeNotes(edgeNotes.id, edgeNotes.notes);
+            setEdgeNotes(null);
+          }}
+          onClose={() => setEdgeNotes(null)}
+          t={t}
+        />
       )}
 
       {/* Add node popup */}
