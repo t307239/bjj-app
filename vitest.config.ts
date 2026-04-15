@@ -11,9 +11,16 @@ export default defineConfig({
     include: ["__tests__/**/*.{test,spec}.{ts,tsx}"],
     coverage: {
       provider: "v8",
-      reporter: ["text", "html"],
+      reporter: ["text", "lcov", "html"],
       include: ["lib/**/*.ts", "app/api/**/*.ts", "components/**/*.{ts,tsx}"],
-      exclude: ["lib/supabase/**"],
+      exclude: ["lib/supabase/**", "lib/database.types.ts"],
+      thresholds: {
+        // Q-21: Start tracking — gradually raise as coverage improves
+        statements: 20,
+        branches: 15,
+        functions: 15,
+        lines: 20,
+      },
     },
   },
   resolve: {

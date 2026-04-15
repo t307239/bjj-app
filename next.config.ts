@@ -47,6 +47,16 @@ const nextConfig: NextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
           },
+          // Q-22: Referrer policy — send origin only for cross-origin requests
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          // Q-22: HSTS — enforce HTTPS for 1 year (Vercel already forces HTTPS but HSTS adds browser-side enforcement)
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains",
+          },
         ],
       },
     ];
