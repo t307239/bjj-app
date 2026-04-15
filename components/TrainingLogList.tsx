@@ -170,6 +170,15 @@ const TrainingLogList = memo(function TrainingLogList({
   }
 
   // ── Empty State ──────────────────────────────────────────────────────────
+  // When search is active and returns 0 results, show "no match" instead of new-user empty state
+  if (entries.length === 0 && searchQuery) {
+    return (
+      <div className="text-center py-8 text-gray-500 text-sm">
+        {t("training.noMatchQuery", { query: searchQuery })}
+      </div>
+    );
+  }
+
   if (entries.length === 0) {
     return (
       <div className="text-center py-12 px-4">
