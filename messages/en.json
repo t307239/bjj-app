@@ -250,7 +250,13 @@
     "quickAddTechnique": "Create & tag technique",
     "addShort": "Add",
     "giName": "Which Gi?",
-    "giNamePlaceholder": "e.g. Shoyoroll Comp Standard"
+    "giNamePlaceholder": "e.g. Shoyoroll Comp Standard",
+    "toggleMonthlyChart": "Toggle monthly chart",
+    "toggleTypeChart": "Toggle type distribution chart",
+    "togglePersonalBests": "Toggle personal bests",
+    "toggleGoalTracker": "Toggle goal tracker",
+    "toggleDetailCharts": "Toggle detail charts",
+    "toggleBadges": "Toggle badges"
   },
   "techniques": {
     "mastery1": "Know it",
@@ -840,7 +846,14 @@
     "understood": "I understand",
     "share": "Share",
     "upgradePro": "Upgrade to Pro",
-    "cookieConsent": "Cookie consent"
+    "cookieConsent": "Cookie consent",
+    "skipToContent": "Skip to main content",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "clearSearch": "Clear search",
+    "clearFilter": "Clear filter",
+    "shareReferral": "Share referral link",
+    "printLeaderboard": "Print leaderboard"
   },
   "aiCoach": {
     "title": "AI Coach",

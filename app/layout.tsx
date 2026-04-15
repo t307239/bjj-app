@@ -100,11 +100,20 @@ export default async function RootLayout({
       </head>
       {/* #41: font-sans → Inter variable font */}
       <body className={`${inter.className} min-h-screen bg-zinc-950 text-white antialiased overscroll-none`}>
+        {/* Q-2: Skip navigation for keyboard/screen reader users */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:bg-emerald-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-medium focus:shadow-lg"
+        >
+          Skip to main content
+        </a>
         {/* I-14: LocaleProvider aligns _clientLocale with server-detected locale
             before any children render → eliminates Hydration Error #418 */}
         <LocaleProvider locale={locale}>
           <AgeGate />
-          {children}
+          <main id="main-content">
+            {children}
+          </main>
           <CookieConsent />
           <Analytics />
           <SpeedInsights />

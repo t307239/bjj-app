@@ -251,6 +251,7 @@ export default function PersonalBests({ userId }: Props) {
       {/* アコーディオンヘッダー */}
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
         className="w-full flex items-center justify-between bg-zinc-900 hover:bg-white/5 rounded-xl px-4 py-3 border border-white/10 transition-colors active:scale-95 transform"
       >
         <div className="flex items-center gap-2">

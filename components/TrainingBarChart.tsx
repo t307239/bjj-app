@@ -201,6 +201,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
     <div className="bg-zinc-900 rounded-xl border border-white/10 mb-4 overflow-hidden">
       <button
         onClick={() => setIsOpen((v) => !v)}
+        aria-expanded={isOpen}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
       >
         <div>

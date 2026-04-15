@@ -27,7 +27,14 @@
     "understood": "Entendi",
     "share": "Compartilhar",
     "upgradePro": "Upgrade para Pro",
-    "cookieConsent": "Consentimento de cookies"
+    "cookieConsent": "Consentimento de cookies",
+    "skipToContent": "Pular para o conteúdo principal",
+    "expand": "Expandir",
+    "collapse": "Recolher",
+    "clearSearch": "Limpar busca",
+    "clearFilter": "Limpar filtro",
+    "shareReferral": "Compartilhar link de indicação",
+    "printLeaderboard": "Imprimir ranking"
   },
   "login": {
     "title": "Entrar no BJJ App",
@@ -149,7 +156,13 @@
     "threeMonths": "3 meses",
     "monthly": "Mensal",
     "quickAddTechnique": "Criar e marcar técnica",
-    "addShort": "Add"
+    "addShort": "Add",
+    "toggleMonthlyChart": "Alternar gráfico mensal",
+    "toggleTypeChart": "Alternar gráfico de tipos",
+    "togglePersonalBests": "Alternar recordes pessoais",
+    "toggleGoalTracker": "Alternar rastreador de metas",
+    "toggleDetailCharts": "Alternar gráficos detalhados",
+    "toggleBadges": "Alternar medalhas"
   },
   "trainingLog": {
     "totalLabel": "total",

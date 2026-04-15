@@ -251,7 +251,13 @@
     "quickAddTechnique": "テクニック作成＆タグ",
     "addShort": "追加",
     "giName": "どの道着？",
-    "giNamePlaceholder": "例: シュールロール コンプ"
+    "giNamePlaceholder": "例: シュールロール コンプ",
+    "toggleMonthlyChart": "月別チャートの表示切替",
+    "toggleTypeChart": "種別チャートの表示切替",
+    "togglePersonalBests": "自己ベストの表示切替",
+    "toggleGoalTracker": "目標トラッカーの表示切替",
+    "toggleDetailCharts": "詳細チャートの表示切替",
+    "toggleBadges": "バッジの表示切替"
   },
   "techniques": {
     "mastery1": "入門",
@@ -831,7 +837,14 @@
     "userMenu": "ユーザーメニュー",
     "zoomIn": "拡大",
     "zoomOut": "縮小",
-    "cookieConsent": "Cookie同意"
+    "cookieConsent": "Cookie同意",
+    "skipToContent": "メインコンテンツへスキップ",
+    "expand": "展開",
+    "collapse": "折りたたむ",
+    "clearSearch": "検索をクリア",
+    "clearFilter": "フィルターをクリア",
+    "shareReferral": "紹介リンクを共有",
+    "printLeaderboard": "リーダーボードを印刷"
   },
   "aiCoach": {
     "title": "AIコーチ",

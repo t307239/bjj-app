@@ -38,6 +38,7 @@ export default function StatsAccordion({ userId, isPro }: Props) {
       )}
       <button
         onClick={() => setShowDetailCharts((v) => !v)}
+        aria-expanded={showDetailCharts}
         className="w-full flex items-center justify-center gap-1.5 py-2 mt-2 text-xs font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
       >
         <span>
@@ -64,6 +65,7 @@ export default function StatsAccordion({ userId, isPro }: Props) {
       )}
       <button
         onClick={() => setShowExtendedBadges((v) => !v)}
+        aria-expanded={showExtendedBadges}
         className="w-full flex items-center justify-center gap-1.5 py-2 mt-1 text-xs font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
       >
         <span>

@@ -13,9 +13,9 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
-      // B-19: Prevent div-as-button anti-pattern (accessibility)
+      // Q-3: a11y rules at error level for CI enforcement
       "jsx-a11y/no-static-element-interactions": [
-        "warn",
+        "error",
         {
           handlers: [
             "onClick",
@@ -27,7 +27,12 @@ const eslintConfig = [
           ],
         },
       ],
-      "jsx-a11y/interactive-supports-focus": "warn",
+      "jsx-a11y/interactive-supports-focus": "error",
+      "jsx-a11y/alt-text": "error",
+      "jsx-a11y/aria-props": "error",
+      "jsx-a11y/aria-role": "error",
+      "jsx-a11y/role-has-required-aria-props": "error",
+      "jsx-a11y/anchor-is-valid": "warn",
     },
   },
 ];

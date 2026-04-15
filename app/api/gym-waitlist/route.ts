@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { logger } from "@/lib/logger";
+
+const WaitlistBodySchema = z.object({
+  email: z.string().email("Invalid email address").max(320),
+  gymName: z.string().max(200).optional(),
+});
 
 // ── Rate limit (in-memory, same pattern as submit-video) ─────────────────────
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -31,11 +37,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { email, gymName } = await req.json();
-
-    if (!email || typeof email !== "string") {
-      return NextResponse.json({ error: "Email is required" }, { status: 400 });
+    let rawBody: unknown;
+    try { rawBody = await req.json(); } catch { rawBody = {}; }
+    const parsed = WaitlistBodySchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Validation failed", issues: parsed.error.issues }, { status: 400 });
     }
+    const { email, gymName } = parsed.data;
 
     const pubId = process.env.BEEHIIV_PUBLICATION_ID;
     const apiKey = process.env.BEEHIIV_API_KEY;

@@ -367,6 +367,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
+              aria-label={t("common.clearSearch")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -455,6 +456,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
                   />
                   <button
                     onClick={() => { setDateFrom(""); setDateTo(""); }}
+                    aria-label={t("common.clearFilter")}
                     className="flex-shrink-0 text-gray-500 hover:text-white text-xs px-1 transition-colors"
                   >
                     ✕

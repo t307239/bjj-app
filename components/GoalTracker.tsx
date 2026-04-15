@@ -296,6 +296,7 @@ export default function GoalTracker({ userId }: Props) {
       <div id="goal-tracker" className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl border border-white/10 mb-4 overflow-hidden shadow-lg shadow-black/40">
         <button
           onClick={() => setIsOpen((v) => !v)}
+          aria-expanded={isOpen}
           className="w-full flex items-center justify-between px-4 py-3 border-b border-white/10 hover:bg-white/5 transition-colors text-left"
         >
           <h4 className="text-sm font-medium text-gray-300">{t("goal.title")}</h4>

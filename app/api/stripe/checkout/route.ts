@@ -2,7 +2,12 @@ import Stripe from "stripe";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { logger } from "@/lib/logger";
+
+const CheckoutBodySchema = z.object({
+  plan: z.enum(["monthly", "annual", "gym"]).default("monthly"),
+});
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -62,8 +67,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = (await req.json()) as { plan?: string };
-  const plan = body.plan ?? "monthly";
+  let rawBody: unknown;
+  try { rawBody = await req.json(); } catch { rawBody = {}; }
+  const parsed = CheckoutBodySchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid plan", issues: parsed.error.issues }, { status: 400 });
+  }
+  const plan = parsed.data.plan;
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://bjj-app.net";
 
   // ── B2B Gym plan ─────────────────────────────────────────────────────────────

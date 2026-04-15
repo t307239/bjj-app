@@ -29,8 +29,15 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import webpush from "web-push";
+import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { filterSendableSubscriptions } from "@/lib/notificationSafeHours";
+
+const SendBodySchema = z.object({
+  title: z.string().min(1).max(200),
+  body: z.string().min(1).max(1000),
+  url: z.string().max(2048).optional().default("/"),
+});
 import { logger } from "@/lib/logger";
 
 // ── VAPID setup ───────────────────────────────────────────────────────────────
@@ -85,18 +92,16 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // ── Parse body ─────────────────────────────────────────────────────────────
-  let body: { title?: string; body?: string; url?: string };
-  try {
-    body = await req.json();
-  } catch {
+  // ── Parse body (zod validation) ─────────────────────────────────────────────
+  let rawBody: unknown;
+  try { rawBody = await req.json(); } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
-
-  const { title, body: msgBody, url = "/" } = body;
-  if (!title || !msgBody) {
-    return NextResponse.json({ error: "title and body are required" }, { status: 400 });
+  const parsed = SendBodySchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Validation failed", issues: parsed.error.issues }, { status: 400 });
   }
+  const { title, body: msgBody, url } = parsed.data;
 
   // ── Fetch all subscriptions ────────────────────────────────────────────────
   const supabase = await createClient();

@@ -20,8 +20,18 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { logger } from "@/lib/logger";
+
+const SubscribeBodySchema = z.object({
+  endpoint: z.string().url().max(2048),
+  timezone: z.string().max(100).optional(),
+  keys: z.object({
+    p256dh: z.string().min(1),
+    auth: z.string().min(1),
+  }),
+});
 
 // ── Rate limit: push subscribe — max 20 per IP per 10 min ──
 const pushRateMap = new Map<string, { count: number; resetAt: number }>();
@@ -61,17 +71,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let body: { endpoint?: string; timezone?: string; keys?: { p256dh?: string; auth?: string } };
-  try {
-    body = await req.json();
-  } catch {
+  let rawBody: unknown;
+  try { rawBody = await req.json(); } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
-
-  const { endpoint, timezone, keys } = body;
-  if (!endpoint || !keys?.p256dh || !keys?.auth) {
-    return NextResponse.json({ error: "Missing endpoint or keys" }, { status: 400 });
+  const parsed = SubscribeBodySchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Validation failed", issues: parsed.error.issues }, { status: 400 });
   }
+  const { endpoint, timezone, keys } = parsed.data;
 
   // タイムゾーン検証: 不正な値は UTC にフォールバック（Notification Terrorism 防止）
   const safeTimezone =
