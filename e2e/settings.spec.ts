@@ -102,7 +102,7 @@ test.describe("Settings — Free User", () => {
     const backLink = page.locator('main a[href="/profile"]');
     await expect(backLink).toBeVisible({ timeout: 5000 });
     await backLink.click();
-    await page.waitForURL("**/profile", { timeout: 20000 });
+    await page.waitForURL("**/profile", { timeout: 15000 });
     await expect(page).toHaveURL(/\/profile/);
   });
 
