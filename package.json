@@ -19,7 +19,8 @@
     "license:audit:json": "node scripts/license-audit.mjs --json",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "ANALYZE=true next build",
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -58,6 +59,7 @@
     "autoprefixer": "^10",
     "eslint": "^9",
     "eslint-config-next": "^15.2.3",
+    "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "postcss": "^8",
     "prettier": "^3.8.3",

@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint / Type-check / Test / Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read .nvmrc
+        id: nvmrc
+        run: echo "node_version=$(cat .nvmrc | tr -d 'v')" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.nvmrc.outputs.node_version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-key-for-build-check
+          NEXT_PUBLIC_STRIPE_PAYMENT_LINK: https://placeholder
+          NEXT_PUBLIC_STRIPE_ANNUAL_LINK: https://placeholder
+
+  bug-scan:
+    name: Hidden Bug Detector
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run detect_hidden_bugs.py
+        run: |
+          output=$(python3 scripts/detect_hidden_bugs.py --fix-hint 2>&1) || true
+          echo "$output"
+          # Fail only on CRITICAL findings
+          if echo "$output" | grep -q "CRITICAL"; then
+            echo "::error::CRITICAL issues detected by detect_hidden_bugs.py"
+            exit 1
+          fi
