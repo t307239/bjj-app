@@ -1,5 +1,6 @@
 // Phase 5: Tab-based IA redesign — Techniques (3 tabs: ジャーナル / スキルマップ / Wiki)
 import type { Metadata } from "next";
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
@@ -13,19 +14,30 @@ import RustyTechniquesBanner from "@/components/techniques/RustyTechniquesBanner
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
-export async function generateMetadata(): Promise<Metadata> {
+// ─── React.cache: deduplicate auth + data queries between generateMetadata & Page ───
+const getTechniquesBaseData = cache(async () => {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { title: "Technique Journal" };
+  if (!user) return null;
 
-  const { count } = await supabase
-    .from("techniques")
-    .select("*", { count: "exact", head: true })
-    .eq("user_id", user.id);
+  const [{ data: profile }, { data: techniques }] = await Promise.all([
+    supabase.from("profiles").select("is_pro, belt").eq("id", user.id).single(),
+    supabase
+      .from("techniques")
+      .select("name, mastery_level, category, created_at")
+      .eq("user_id", user.id),
+  ]);
 
-  const n = count ?? 0;
+  return { user, profile, techniques: techniques ?? [] };
+});
+
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await getTechniquesBaseData();
+  if (!data) return { title: "Technique Journal" };
+
+  const n = data.techniques.length;
   const ogImage = `${BASE_URL}/api/og?belt=white&count=${n}&months=0&streak=0&mode=techniques`;
   const title = n > 0 ? `Technique Journal — ${n} Techniques | BJJ App` : "Technique Journal | BJJ App";
   const description = `${n} BJJ techniques logged. Track mastery levels, identify weak spots, and visualize your skill map.`;

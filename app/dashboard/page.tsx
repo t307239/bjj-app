@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { headers, cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import NavBar from "@/components/NavBar";
@@ -29,19 +30,23 @@ import MatTimeTracker from "@/components/dashboard/MatTimeTracker";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
-export async function generateMetadata(): Promise<Metadata> {
+// ─── React.cache: deduplicate auth + profile queries between generateMetadata & Page ───
+// Supabase SDK calls are NOT deduped by Next.js fetch cache, so we use
+// React.cache() to ensure a single DB round-trip per render cycle.
+const getDashboardBaseData = cache(async () => {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { title: "Dashboard" };
+  if (!user) return null;
 
-  // perf: profile を単独 await → Promise.all 化して waterfall を解消
-  const [{ data: profile }, { count: totalCount }, { data: recentLogsForStreak }] =
+  const [{ data: profile }, { count: totalCount }, { data: recentLogs }] =
     await Promise.all([
       supabase
         .from("profiles")
-        .select("belt, stripe, start_date")
+        .select(
+          "belt, stripe, start_date, is_pro, subscription_status, locale, weekly_goal, monthly_goal, technique_goal"
+        )
         .eq("id", user.id)
         .single(),
       supabase
@@ -56,8 +61,37 @@ export async function generateMetadata(): Promise<Metadata> {
         .limit(60),
     ]);
 
+  return { user, profile, totalCount: totalCount ?? 0, recentLogs: recentLogs ?? [] };
+});
+
+// Helper: calculate streak from recent logs
+function calcStreak(recentLogs: { date: string }[]): number {
+  if (recentLogs.length === 0) return 0;
+  const uniqueDates = [
+    ...new Set(recentLogs.map((l) => l.date)),
+  ].sort().reverse() as string[];
+  const today = getLogicalTrainingDate();
+  let checkDateMs = new Date(today + "T00:00:00Z").getTime();
+  let streak = 0;
+  for (const dateStr of uniqueDates) {
+    const check = new Date(checkDateMs).toISOString().slice(0, 10);
+    if (dateStr === check) {
+      streak++;
+      checkDateMs -= 86400000;
+    } else if (dateStr < check) {
+      break;
+    }
+  }
+  return streak;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await getDashboardBaseData();
+  if (!data) return { title: "Dashboard" };
+
+  const { profile, totalCount, recentLogs } = data;
   const belt = profile?.belt ?? "white";
-  const count = totalCount ?? 0;
+  const count = totalCount;
   const { totalMonths: months } = profile?.start_date
     ? calcBjjDuration(profile.start_date)
     : { totalMonths: 0 };
@@ -70,23 +104,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
   const beltLabel = BELT_LABELS[belt] ?? serverT("dashboard.beltWhite");
 
-  let metaStreak = 0;
-  const metaToday = getLogicalTrainingDate();
-  if (recentLogsForStreak && recentLogsForStreak.length > 0) {
-    const uniqueDates = [
-      ...new Set(recentLogsForStreak.map((l: { date: string }) => l.date)),
-    ].sort().reverse() as string[];
-    let checkDateMs = new Date(metaToday + "T00:00:00Z").getTime();
-    for (const dateStr of uniqueDates) {
-      const check = new Date(checkDateMs).toISOString().slice(0, 10);
-      if (dateStr === check) {
-        metaStreak++;
-        checkDateMs -= 86400000;
-      } else if (dateStr < check) {
-        break;
-      }
-    }
-  }
+  const metaStreak = calcStreak(recentLogs);
 
   const ogImageUrl = `${BASE_URL}/api/og?belt=${belt}&count=${count}&months=${months}&streak=${metaStreak}`;
   const title = `BJJ Training Log — ${count} Sessions! | BJJ App`;
@@ -124,13 +142,12 @@ export default async function DashboardPage({
   searchParams?: Promise<{ welcome?: string }>;
 }) {
   const resolvedParams = searchParams ? await searchParams : {};
-  const isWelcomeRedirect = resolvedParams?.welcome === "1";
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
-  if (!user) return <GuestDashboardClient />;
+  // Reuse cached auth + profile from generateMetadata (no extra DB calls)
+  const baseData = await getDashboardBaseData();
+  if (!baseData) return <GuestDashboardClient />;
+
+  const { user, profile: profileData, totalCount: baseTotalCount, recentLogs } = baseData;
 
   const displayName =
     user.user_metadata?.full_name ||
@@ -147,7 +164,7 @@ export default async function DashboardPage({
   const prevYear = month === 1 ? year - 1 : year;
   const firstDayOfPrevMonth = `${prevYear}-${String(prevMonth).padStart(2, "0")}-01`;
 
-  // ── 全データを並列フェッチ ──
+  // ── Page-specific queries (NOT in metadata) — run in parallel ──
   // Heatmap needs 112 days (16 weeks) of training dates
   const heatmapStartDate = (() => {
     const d = new Date(Date.now() + 9 * 60 * 60 * 1000);
@@ -155,35 +172,21 @@ export default async function DashboardPage({
     return d.toISOString().slice(0, 10);
   })();
 
+  const supabase = await createClient();
   const [
-    { data: profileData },
     rpcRes,
-    { data: recentLogs },
     { data: recentLogsFull },
     { data: heatmapLogs },
     { count: techniqueCount },
     { data: pinnedTechniques },
     { data: allDurations },
   ] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select(
-        "belt, stripe, start_date, is_pro, subscription_status, locale, weekly_goal, monthly_goal, technique_goal"
-      )
-      .eq("id", user.id)
-      .single(),
     supabase.rpc("get_dashboard_metrics", {
       p_user_id: user.id,
       p_month_start: firstDayOfMonth,
       p_prev_month_start: firstDayOfPrevMonth,
       p_week_start: firstDayOfWeek,
     }),
-    supabase
-      .from("training_logs")
-      .select("date")
-      .eq("user_id", user.id)
-      .order("date", { ascending: false })
-      .limit(60),
     // Fetch recent 3 full entries for the compact home view
     supabase
       .from("training_logs")
@@ -220,15 +223,15 @@ export default async function DashboardPage({
 
   let metrics = rpcRes.data;
   if (!metrics || (Array.isArray(metrics) && metrics.length === 0)) {
-    const [mRes, wRes, totRes] = await Promise.all([
+    // RPC failed — fallback to individual count queries (total_count reused from cache)
+    const [mRes, wRes] = await Promise.all([
       supabase.from("training_logs").select("*", { count: "exact", head: true }).eq("user_id", user.id).gte("date", firstDayOfMonth),
       supabase.from("training_logs").select("*", { count: "exact", head: true }).eq("user_id", user.id).gte("date", firstDayOfWeek),
-      supabase.from("training_logs").select("*", { count: "exact", head: true }).eq("user_id", user.id),
     ]);
     metrics = [{
       month_count: mRes.count ?? 0,
       week_count: wRes.count ?? 0,
-      total_count: totRes.count ?? 0,
+      total_count: baseTotalCount,
     }];
   }
 
@@ -268,24 +271,8 @@ export default async function DashboardPage({
   const hasTechnique = (techniqueCount ?? 0) > 0;
   const onboardingComplete = hasFirstLog && hasGoal && hasTechnique;
 
-  // Calculate streak (same algorithm as NavBar — uses logical training date)
-  const todayStr = getLogicalTrainingDate();
-  let streak = 0;
-  if (recentLogs && recentLogs.length > 0) {
-    const uniqueDates = [
-      ...new Set(recentLogs.map((l: { date: string }) => l.date)),
-    ].sort().reverse() as string[];
-    let checkDateMs = new Date(todayStr + "T00:00:00Z").getTime();
-    for (const dateStr of uniqueDates) {
-      const check = new Date(checkDateMs).toISOString().slice(0, 10);
-      if (dateStr === check) {
-        streak++;
-        checkDateMs -= 86400000;
-      } else if (dateStr < check) {
-        break;
-      }
-    }
-  }
+  // Calculate streak from cached recentLogs (shared with generateMetadata)
+  const streak = calcStreak(recentLogs);
 
   // ── Focus techniques (pinned) ──
   const focusTechniques = (pinnedTechniques ?? []) as {
