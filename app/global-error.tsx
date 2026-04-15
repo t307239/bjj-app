@@ -10,6 +10,7 @@
  * (AUDIT_FRAMEWORK §21 — Observability: prevents "白い画面" on catastrophic failure)
  */
 
+import * as Sentry from "@sentry/nextjs";
 import { useEffect } from "react";
 
 export default function GlobalError({
@@ -20,7 +21,8 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log to console for Vercel log drain / Sentry if configured
+    // Q-7: Report to Sentry + console
+    Sentry.captureException(error);
     console.error("[GlobalError]", error.digest ?? "", error.message);
   }, [error]);
 

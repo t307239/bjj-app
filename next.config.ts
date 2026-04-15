@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 import withBundleAnalyzer from "@next/bundle-analyzer";
 
 const analyzer = withBundleAnalyzer({
@@ -52,4 +53,18 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default analyzer(nextConfig);
+// Q-7: Sentry wraps the final config for source map upload & error tracking
+export default withSentryConfig(analyzer(nextConfig), {
+  // Suppresses source map uploading logs during build
+  silent: true,
+  // Upload source maps to Sentry for readable stack traces
+  widenClientFileUpload: true,
+  // Hides source maps from generated client bundles
+  hideSourceMaps: true,
+  // Automatically tree-shake Sentry logger statements to reduce bundle size
+  disableLogger: true,
+  // Only upload source maps when SENTRY_AUTH_TOKEN is set (production builds)
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+});
