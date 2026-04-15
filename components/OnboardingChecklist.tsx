@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
+import { hapticSuccess } from "@/lib/haptics";
 
 const DISMISS_KEY = "bjj_onboarding_dismissed";
 
@@ -86,6 +87,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
         return;
       }
       setCelebState("celebrating");
+      hapticSuccess();
       const fadeTimer = setTimeout(() => setCelebState("fading"), 2800);
       const doneTimer = setTimeout(() => {
         setCelebState("done");

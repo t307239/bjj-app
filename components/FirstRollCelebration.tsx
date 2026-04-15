@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useLocale } from "@/lib/i18n";
+import { hapticSuccess } from "@/lib/haptics";
 
 type Props = {
   onDismiss: () => void;
@@ -94,6 +95,7 @@ export default function FirstRollCelebration({ onDismiss }: Props) {
 
   // Auto-dismiss after 6s
   useEffect(() => {
+    hapticSuccess();
     const timer = setTimeout(onDismiss, 6000);
     return () => clearTimeout(timer);
   }, [onDismiss]);

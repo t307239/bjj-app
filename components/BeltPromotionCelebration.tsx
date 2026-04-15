@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/lib/i18n";
+import { hapticSuccess } from "@/lib/haptics";
 
 const BELT_ORDER = ["white", "blue", "purple", "brown", "black"];
 const BELT_COLORS: Record<string, { bg: string; text: string; emoji: string; glow: string }> = {
@@ -116,6 +117,9 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
   const { t } = useLocale();
   const pulsed = usePulse();
   useConfetti(canvasRef, true);
+
+  // Haptic burst on mount
+  useEffect(() => { hapticSuccess(); }, []);
 
   // ESC to dismiss
   useEffect(() => {

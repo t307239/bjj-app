@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
 import { useLocale } from "@/lib/i18n";
+import { hapticTap } from "@/lib/haptics";
 import Skeleton from "@/components/ui/Skeleton";
 import { getLocalDateParts, getWeekStartDate, getMonthStartDate } from "@/lib/timezone";
 import {
@@ -218,6 +219,7 @@ export default function GoalTracker({ userId }: Props) {
       .upsert({ id: userId, [col]: editValue }, { onConflict: "id" });
 
     if (!error) {
+      hapticTap();
       setData((prev) => ({
         ...prev,
         weeklyGoal: editing === "weekly" ? editValue : prev.weeklyGoal,
