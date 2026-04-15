@@ -106,14 +106,14 @@ export default function BeltProgressCard({
         </Link>
       </div>
 
-      {/* ── Item 4: Skeuomorphic belt ── */}
+      {/* ── Item 4: Skeuomorphic belt (real layout: color + black bar with stripes) ── */}
       <div className="flex items-center gap-4">
         {/* Belt body */}
         <div
           className="flex items-stretch rounded-md overflow-hidden flex-shrink-0"
           style={{
             height: 40,
-            width: 136,
+            width: 152,
             boxShadow: "0 2px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
           }}
         >
@@ -122,42 +122,33 @@ export default function BeltProgressCard({
             {/* Stitching lines (top + bottom seams) */}
             <div className="absolute top-1 left-0 right-0 h-px bg-white/15" />
             <div className="absolute bottom-1 left-0 right-0 h-px bg-black/25" />
-            {/* White-tape stripe markers — fully opaque for cross-browser (Brave/Safari) */}
+          </div>
+          {/* Black promotion bar — stripes go here, just like a real belt */}
+          <div
+            className="flex-shrink-0 h-full relative"
+            style={{
+              width: 48,
+              background: "linear-gradient(180deg,#3f3f46 0%,#18181b 50%,#000000 100%)",
+              borderLeft: "1px solid rgba(255,255,255,0.08)",
+            }}
+          >
+            {/* White tape stripes on the black bar */}
             {Array.from({ length: 4 }).map((_, i) => {
               const isEarned = i < stripes;
-              // Inactive slots: opaque muted tone that blends with each belt color
-              const inactiveColor: Record<string, string> = {
-                white: "#c8c8cc",
-                blue: "#3b5998",
-                purple: "#5a3080",
-                brown: "#5c3a1a",
-                black: "#2a2a2e",
-              };
               return (
                 <div
                   key={i}
                   className="absolute top-0 h-full"
                   style={{
-                    width: 7,
-                    right: (i + 1) * 11,
-                    backgroundColor: isEarned
-                      ? "#ffffff"
-                      : inactiveColor[beltKey] ?? inactiveColor.white,
+                    width: 6,
+                    left: 6 + i * 10,
+                    backgroundColor: isEarned ? "#ffffff" : "#27272a",
                     boxShadow: isEarned ? "0 0 6px rgba(255,255,255,0.5)" : "none",
                   }}
                 />
               );
             })}
           </div>
-          {/* Black promotion tip */}
-          <div
-            className="flex-shrink-0 h-full"
-            style={{
-              width: 22,
-              background: "linear-gradient(180deg,#3f3f46 0%,#000000 100%)",
-              borderLeft: "1px solid rgba(255,255,255,0.08)",
-            }}
-          />
         </div>
 
         <div>

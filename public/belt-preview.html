@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Belt Preview</title>
+<style>body{background:#09090b;color:#fff;font-family:system-ui;padding:40px;display:flex;flex-direction:column;gap:32px;}</style>
+</head><body>
+<h2>Belt Stripe Preview — New Layout (stripes on black bar)</h2>
+
+<script>
+const BELTS = {
+  white: "linear-gradient(180deg,#f4f4f5 0%,#d4d4d8 35%,#fafafa 55%,#e4e4e7 100%)",
+  blue: "linear-gradient(180deg,#60a5fa 0%,#1d4ed8 38%,#3b82f6 55%,#1e3a8a 100%)",
+  purple: "linear-gradient(180deg,#c084fc 0%,#6b21a8 38%,#9333ea 55%,#4a044e 100%)",
+  brown: "linear-gradient(180deg,#d97706 0%,#451a03 38%,#92400e 55%,#292524 100%)",
+  black: "linear-gradient(180deg,#52525b 0%,#09090b 38%,#27272a 55%,#000000 100%)",
+};
+
+[0,1,2,3,4].forEach(stripes => {
+  Object.entries(BELTS).forEach(([name, grad]) => {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;align-items:center;gap:16px;';
+
+    const label = document.createElement('span');
+    label.style.cssText = 'width:120px;font-size:14px;color:#a1a1aa;';
+    label.textContent = `${name} — ${stripes}/4`;
+
+    const belt = document.createElement('div');
+    belt.style.cssText = `display:flex;height:40px;width:152px;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.5);`;
+
+    // Colored part
+    const colored = document.createElement('div');
+    colored.style.cssText = `flex:1;position:relative;overflow:hidden;background:${grad};`;
+    // Stitching
+    const st1 = document.createElement('div');
+    st1.style.cssText = 'position:absolute;top:4px;left:0;right:0;height:1px;background:rgba(255,255,255,0.15);';
+    const st2 = document.createElement('div');
+    st2.style.cssText = 'position:absolute;bottom:4px;left:0;right:0;height:1px;background:rgba(0,0,0,0.25);';
+    colored.append(st1, st2);
+
+    // Black bar with stripes
+    const blackBar = document.createElement('div');
+    blackBar.style.cssText = 'flex-shrink:0;height:100%;width:48px;position:relative;background:linear-gradient(180deg,#3f3f46 0%,#18181b 50%,#000 100%);border-left:1px solid rgba(255,255,255,0.08);';
+
+    for (let i = 0; i < 4; i++) {
+      const s = document.createElement('div');
+      const earned = i < stripes;
+      s.style.cssText = `position:absolute;top:0;height:100%;width:6px;left:${6 + i*10}px;background:${earned ? '#ffffff' : '#27272a'};box-shadow:${earned ? '0 0 6px rgba(255,255,255,0.5)' : 'none'};`;
+      blackBar.appendChild(s);
+    }
+
+    belt.append(colored, blackBar);
+    wrap.append(label, belt);
+    document.body.appendChild(wrap);
+  });
+  // Spacer
+  const hr = document.createElement('hr');
+  hr.style.cssText = 'border-color:#27272a;margin:8px 0;';
+  document.body.appendChild(hr);
+});
+</script>
+</body></html>
