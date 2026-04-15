@@ -5,7 +5,7 @@ WARNING: 10
 INFO: 89
 Total: 100
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (629/1709 キー) — 1110 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (629/1719 キー) — 1120 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -57,13 +57,13 @@ Total: 100
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/loading.tsx: L98: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L675: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L673: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L679: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L677: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L793: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L791: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [JSX_HARDCODED_ENGLISH] app/wiki/[lang]/[slug]/page.tsx: L724: JSX内に英語テキスト直書き: "BJJ App Team"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/wiki/[lang]/[slug]/page.tsx: L722: JSX内に英語テキスト直書き: "BJJ App Team"
   FIX: t() キーを追加して多言語対応
 [WARNING] [JSX_HARDCODED_ENGLISH] app/wiki/[lang]/page.tsx: L227: JSX内に英語テキスト直書き: "BJJ Wiki"
   FIX: t() キーを追加して多言語対応
@@ -175,7 +175,7 @@ Total: 100
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L281: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/WeightChart.tsx: L138: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/WeightChart.tsx: L137: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeightCutPlanner.tsx: L190: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
