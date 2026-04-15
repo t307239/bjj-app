@@ -7,6 +7,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { fetchTrainingSummary } from "@/lib/api/training";
+import { countTechniques } from "@/lib/api/techniques";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -45,20 +47,14 @@ export function useProfile({ userId }: UseProfileProps) {
   useEffect(() => {
     const loadProfile = async () => {
       setInitialLoading(true);
-      const [profileRes, logsRes, techRes] = await Promise.all([
+      const [profileRes, summaryRes, techRes] = await Promise.all([
         supabase
           .from("profiles")
           .select("belt, stripe, gym, bio, start_date")
           .eq("id", userId)
           .single(),
-        supabase
-          .from("training_logs")
-          .select("duration_min")
-          .eq("user_id", userId),
-        supabase
-          .from("techniques")
-          .select("*", { count: "exact", head: true })
-          .eq("user_id", userId),
+        fetchTrainingSummary(supabase, userId),
+        countTechniques(supabase, userId),
       ]);
       if (profileRes.data) {
         setProfile({
@@ -71,14 +67,11 @@ export function useProfile({ userId }: UseProfileProps) {
       } else {
         setIsEditing(true);
       }
-      if (logsRes.data) {
+      if (!summaryRes.error) {
         setStats({
-          totalCount: logsRes.data.length,
-          totalMinutes: logsRes.data.reduce(
-            (s: number, l: { duration_min: number }) => s + (l.duration_min || 0),
-            0
-          ),
-          techniqueCount: techRes.count ?? 0,
+          totalCount: summaryRes.data.totalSessions,
+          totalMinutes: summaryRes.data.totalMinutes,
+          techniqueCount: techRes.count,
         });
       }
       setInitialLoading(false);
