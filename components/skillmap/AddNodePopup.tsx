@@ -17,6 +17,8 @@ export default function AddNodePopup({ screenX, screenY, onAdd, onCancel, t }: P
 
   return (
     <div
+      role="dialog"
+      aria-label={t("skillmap.addTechnique")}
       style={{ position: "fixed", left: screenX, top: screenY, zIndex: 30 }}
       className="bg-zinc-800 border border-white/20 rounded-xl shadow-2xl p-3 w-48"
       onMouseDown={(e) => e.stopPropagation()}

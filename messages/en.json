@@ -949,7 +949,8 @@
     "edgeNotesTitle": "Connection Notes",
     "edgeNotesPlaceholder": "Add notes about this connection...",
     "loadingTitle": "Loading skill map…",
-    "upgradeText": "Upgrade for unlimited →"
+    "upgradeText": "Upgrade for unlimited →",
+    "addTechnique": "Add technique"
   },
   "wiki": {
     "dailyTip": "Today's BJJ Knowledge",
