@@ -72,8 +72,10 @@ export default function AchievementBadge({
     <>
       {/* Overlay background */}
       <div
+        role="presentation"
         className="fixed inset-0 bg-black bg-opacity-50 z-40 animate-in fade-in duration-300"
         onClick={() => setShowBadge(false)}
+        aria-hidden="true"
       />
 
       {/* Badge card */}

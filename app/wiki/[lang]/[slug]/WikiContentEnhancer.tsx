@@ -149,6 +149,7 @@ export default function WikiContentEnhancer() {
 
       {/* #30: Lightbox overlay */}
       {lightboxSrc && (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
         <div
           role="dialog"
           aria-modal="true"
