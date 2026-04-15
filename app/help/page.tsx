@@ -35,8 +35,26 @@ export default async function HelpPage() {
     { q: t("help.faq12Q"), a: t("help.faq12A") },
   ];
 
+  const allFaqs = [...faqs, ...troubleshooting];
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: allFaqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.a,
+      },
+    })),
+  };
+
   return (
     <div className="min-h-[100dvh] bg-zinc-950 text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="max-w-2xl mx-auto px-4 py-12">
         {/* Back link */}
         <Link
