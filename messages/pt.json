@@ -501,8 +501,12 @@
       "leftKnee": "Joe. Esq.",
       "rightKnee": "Joe. Dir.",
       "leftAnkle": "Tor. Esq.",
-      "rightAnkle": "Tor. Dir."
-    }
+      "rightAnkle": "Tor. Dir.",
+      "chest": "Peito",
+      "upperBack": "Costas"
+    },
+    "viewFront": "Frente",
+    "viewBack": "Costas"
   },
   "skillmap": {
     "collapse": "Recolher filhos",

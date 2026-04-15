@@ -1400,8 +1400,12 @@
       "leftKnee": "L. Knee",
       "rightKnee": "R. Knee",
       "leftAnkle": "L. Ankle",
-      "rightAnkle": "R. Ankle"
-    }
+      "rightAnkle": "R. Ankle",
+      "chest": "Chest",
+      "upperBack": "Upper Back"
+    },
+    "viewFront": "Front",
+    "viewBack": "Back"
   },
   "gymLanding": {
     "navIndividuals": "For Individuals",

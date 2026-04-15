@@ -10,10 +10,11 @@ import { useOnlineStatus } from "@/lib/useOnlineStatus";
 type PartStatus = "ok" | "sore" | "injured";
 type PartKey =
   | "neck"
+  | "chest"
   | "left_shoulder" | "right_shoulder"
   | "left_elbow"   | "right_elbow"
   | "left_wrist"   | "right_wrist"
-  | "lower_back"
+  | "upper_back"   | "lower_back"
   | "left_hip"     | "right_hip"
   | "left_knee"    | "right_knee"
   | "left_ankle"   | "right_ankle";
@@ -33,39 +34,37 @@ const STATUS_COLOR: Record<PartStatus, string> = {
 // Item 18: Default state is "Healthy (Green)" — no ambiguous gray "untouched"
 const DEFAULT_COLOR = "#10B981"; // green (ok) — all parts start as healthy
 
+type BodyView = "front" | "back";
+
 // ─── SVG body part definitions (cx, cy in a 120×260 viewBox) ─────────────────
-// Front silhouette: head top ≈ y=5, ankles ≈ y=250
 interface BodyPart {
   key: PartKey;
   labelKey: string; // i18n key suffix
   cx: number;
   cy: number;
   r: number;
+  view: BodyView; // which silhouette this circle appears on
 }
 
 const BODY_PARTS: BodyPart[] = [
-  // Neck (between head and shoulders)
-  { key: "neck",           labelKey: "body.parts.neck",          cx: 60, cy: 55,  r: 7  },
-  // Shoulders
-  { key: "left_shoulder",  labelKey: "body.parts.leftShoulder",  cx: 28, cy: 72,  r: 10 },
-  { key: "right_shoulder", labelKey: "body.parts.rightShoulder", cx: 92, cy: 72,  r: 10 },
-  // Elbows
-  { key: "left_elbow",     labelKey: "body.parts.leftElbow",     cx: 17, cy: 110, r: 8  },
-  { key: "right_elbow",    labelKey: "body.parts.rightElbow",    cx: 103,cy: 110, r: 8  },
-  // Wrists
-  { key: "left_wrist",     labelKey: "body.parts.leftWrist",     cx: 12, cy: 145, r: 6  },
-  { key: "right_wrist",    labelKey: "body.parts.rightWrist",    cx: 108,cy: 145, r: 6  },
-  // Lower back (centre, shown on the torso lower area)
-  { key: "lower_back",     labelKey: "body.parts.lowerBack",     cx: 60, cy: 155, r: 9  },
-  // Hips
-  { key: "left_hip",       labelKey: "body.parts.leftHip",       cx: 40, cy: 175, r: 9  },
-  { key: "right_hip",      labelKey: "body.parts.rightHip",      cx: 80, cy: 175, r: 9  },
-  // Knees
-  { key: "left_knee",      labelKey: "body.parts.leftKnee",      cx: 38, cy: 212, r: 9  },
-  { key: "right_knee",     labelKey: "body.parts.rightKnee",     cx: 82, cy: 212, r: 9  },
-  // Ankles
-  { key: "left_ankle",     labelKey: "body.parts.leftAnkle",     cx: 37, cy: 245, r: 7  },
-  { key: "right_ankle",    labelKey: "body.parts.rightAnkle",    cx: 83, cy: 245, r: 7  },
+  // ── Front view ──
+  { key: "neck",           labelKey: "body.parts.neck",          cx: 60, cy: 55,  r: 7,  view: "front" },
+  { key: "chest",          labelKey: "body.parts.chest",         cx: 60, cy: 90,  r: 10, view: "front" },
+  { key: "left_shoulder",  labelKey: "body.parts.leftShoulder",  cx: 28, cy: 72,  r: 10, view: "front" },
+  { key: "right_shoulder", labelKey: "body.parts.rightShoulder", cx: 92, cy: 72,  r: 10, view: "front" },
+  { key: "left_elbow",     labelKey: "body.parts.leftElbow",     cx: 17, cy: 110, r: 8,  view: "front" },
+  { key: "right_elbow",    labelKey: "body.parts.rightElbow",    cx: 103,cy: 110, r: 8,  view: "front" },
+  { key: "left_wrist",     labelKey: "body.parts.leftWrist",     cx: 12, cy: 145, r: 6,  view: "front" },
+  { key: "right_wrist",    labelKey: "body.parts.rightWrist",    cx: 108,cy: 145, r: 6,  view: "front" },
+  { key: "left_hip",       labelKey: "body.parts.leftHip",       cx: 40, cy: 175, r: 9,  view: "front" },
+  { key: "right_hip",      labelKey: "body.parts.rightHip",      cx: 80, cy: 175, r: 9,  view: "front" },
+  { key: "left_knee",      labelKey: "body.parts.leftKnee",      cx: 38, cy: 212, r: 9,  view: "front" },
+  { key: "right_knee",     labelKey: "body.parts.rightKnee",     cx: 82, cy: 212, r: 9,  view: "front" },
+  { key: "left_ankle",     labelKey: "body.parts.leftAnkle",     cx: 37, cy: 245, r: 7,  view: "front" },
+  { key: "right_ankle",    labelKey: "body.parts.rightAnkle",    cx: 83, cy: 245, r: 7,  view: "front" },
+  // ── Back view ──
+  { key: "upper_back",     labelKey: "body.parts.upperBack",     cx: 60, cy: 90,  r: 10, view: "back" },
+  { key: "lower_back",     labelKey: "body.parts.lowerBack",     cx: 60, cy: 145, r: 9,  view: "back" },
 ];
 
 // ─── Legend chip ──────────────────────────────────────────────────────────────
@@ -103,6 +102,7 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
   const [statusDates, setStatusDates] = useState<Record<string, string>>(initialDates ?? {});
   const [savingPart, setSavingPart] = useState<PartKey | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [view, setView] = useState<BodyView>("front");
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Sync prop changes (e.g. parent reloads profile)

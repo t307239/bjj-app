@@ -1559,7 +1559,9 @@
       "leftKnee": "左膝",
       "rightKnee": "右膝",
       "leftAnkle": "左足首",
-      "rightAnkle": "右足首"
+      "rightAnkle": "右足首",
+      "chest": "胸",
+      "upperBack": "背中"
     },
     "bodyMap": "ボディマップ",
     "logWeight": "体重を記録",
@@ -1582,7 +1584,9 @@
     },
     "tapHint": "体の部位をタップ: OK → 痛み → 怪我",
     "title": "ボディ管理",
-    "weightKg": "体重 (kg)"
+    "weightKg": "体重 (kg)",
+    "viewFront": "前面",
+    "viewBack": "背面"
   },
   "ageGate": {
     "title": "年齢制限",
