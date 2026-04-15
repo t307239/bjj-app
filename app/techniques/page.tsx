@@ -101,12 +101,10 @@ const WIKI_LINKS = [
 
 
 export default async function TechniquesPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const data = await getTechniquesBaseData();
+  if (!data) redirect("/login?next=/techniques");
 
-  if (!user) redirect("/login?next=/techniques");
+  const { user, profile, techniques } = data;
 
   const locale = await detectServerLocale();
   const t = makeT(locale);
@@ -118,15 +116,6 @@ export default async function TechniquesPage() {
     t("dashboard.defaultAthleteName");
   const avatarUrl =
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
-
-  // Fetch Pro status + belt + technique stats in parallel
-  const [{ data: profile }, { data: techniques }] = await Promise.all([
-    supabase.from("profiles").select("is_pro, belt").eq("id", user.id).single(),
-    supabase
-      .from("techniques")
-      .select("name, mastery_level, category, created_at")
-      .eq("user_id", user.id),
-  ]);
 
   const isPro = profile?.is_pro ?? false;
   const userBelt = (profile?.belt as string) || "white";
