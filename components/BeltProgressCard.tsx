@@ -122,19 +122,32 @@ export default function BeltProgressCard({
             {/* Stitching lines (top + bottom seams) */}
             <div className="absolute top-1 left-0 right-0 h-px bg-white/15" />
             <div className="absolute bottom-1 left-0 right-0 h-px bg-black/25" />
-            {/* White-tape stripe markers — solid color for cross-browser consistency */}
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="absolute top-0 h-full"
-                style={{
-                  width: 7,
-                  right: (i + 1) * 11,
-                  backgroundColor: i < stripes ? "#ffffff" : "rgba(255,255,255,0.20)",
-                  boxShadow: i < stripes ? "0 0 4px rgba(255,255,255,0.4)" : "none",
-                }}
-              />
-            ))}
+            {/* White-tape stripe markers — fully opaque for cross-browser (Brave/Safari) */}
+            {Array.from({ length: 4 }).map((_, i) => {
+              const isEarned = i < stripes;
+              // Inactive slots: opaque muted tone that blends with each belt color
+              const inactiveColor: Record<string, string> = {
+                white: "#c8c8cc",
+                blue: "#3b5998",
+                purple: "#5a3080",
+                brown: "#5c3a1a",
+                black: "#2a2a2e",
+              };
+              return (
+                <div
+                  key={i}
+                  className="absolute top-0 h-full"
+                  style={{
+                    width: 7,
+                    right: (i + 1) * 11,
+                    backgroundColor: isEarned
+                      ? "#ffffff"
+                      : inactiveColor[beltKey] ?? inactiveColor.white,
+                    boxShadow: isEarned ? "0 0 6px rgba(255,255,255,0.5)" : "none",
+                  }}
+                />
+              );
+            })}
           </div>
           {/* Black promotion tip */}
           <div
