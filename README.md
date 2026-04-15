@@ -1,51 +1,79 @@
 # BJJ App 🥋
 
-Brazilian Jiu-Jitsu トレーニングトラッカー
+Brazilian Jiu-Jitsu トレーニングトラッカー — 練習記録・テクニック管理・スキルマップを一つのアプリで。
+
+**本番**: [bjj-app.net](https://bjj-app.net)
+**Wiki**: [wiki.bjj-app.net](https://wiki.bjj-app.net)
+
+## 主な機能
+
+- **練習記録** — 日付・時間・タイプ（Gi/No-Gi/Drilling/Open Mat）・メモ・指導者・パートナーを記録。フルテキスト検索・PDFエクスポート・ディープリンク対応
+- **テクニック帳** — カテゴリ別に技を管理。習熟度3段階（Locked/Learning/Mastered）、一括追加、ピン留め
+- **スキルマップ** — React Flow ベースの技術マップ。ノード接続・折りたたみ・自動レイアウト（dagre）・ポジションフィルター・エッジメモ
+- **ダッシュボード** — ヒートマップカレンダー・週次レポート・練習目標・帯進捗・ステータスバー・インサイト
+- **ボディヒートマップ** — 前面/背面ビューで怪我・疲労部位を記録
+- **大会管理** — 大会履歴・試合結果の記録
+- **怪我トラッキング** — Gi/No-Gi別の怪我記録・再発検知アラート
+- **10,000時間トラッカー** — 累計練習時間の可視化
+- **オンボーディング** — 初回ログイン時のステップバイステップガイド、フォーカスカード
+- **PWA** — スマホにインストール可能、オフライン対応準備済み
+- **多言語対応** — 日本語・英語・ポルトガル語（i18n）
+- **Pro/Free課金** — Stripe連携。Free: 基本機能 / Pro: 全機能解放
+
+## 技術スタック
+
+| カテゴリ | 技術 |
+|---|---|
+| フレームワーク | Next.js 15 (App Router) / React 19 / TypeScript 6 |
+| スタイリング | Tailwind CSS 3 |
+| DB / 認証 | Supabase (PostgreSQL + Auth + RLS) |
+| デプロイ | Vercel |
+| スキルマップ | @xyflow/react (React Flow) |
+| バリデーション | zod |
+| エラー監視 | Sentry |
+| 課金 | Stripe |
+| Linter | ESLint + Prettier + lint-staged |
 
 ## セットアップ
 
-### 1. 依存関係インストール
-
 ```bash
+# 依存関係インストール
 npm install
-```
 
-### 2. 環境変数
+# 環境変数（.env.local）
+NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-anon-key>
 
-`.env.local` にSupabase情報を設定（既に設定済み）:
-
-```
-NEXT_PUBLIC_SUPABASE_URL=https://ryevkjaoppsyibkjifjk.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_7c0qKKajk6pD2OpxRAU3LQ_-cFKZ_V3
-```
-
-### 3. Supabaseでテーブル作成
-
-Supabase Dashboard → SQL Editor で `supabase-schema.sql` を実行
-
-### 4. OAuth プロバイダー設定
-
-Supabase Dashboard → Authentication → Providers で設定:
-- **Google**: Google Cloud Console で OAuth 2.0 クライアントIDを作成
-- **GitHub**: GitHub Settings → Developer settings → OAuth Apps で作成
-- Callback URL: `https://ryevkjaoppsyibkjifjk.supabase.co/auth/v1/callback`
-
-### 5. 開発サーバー起動
-
-```bash
+# 開発サーバー起動
 npm run dev
 ```
 
-### 6. Vercelデプロイ
+## プロジェクト構成
 
-```bash
-# GitHubにpush後、Vercelでインポート
-# 環境変数をVercelダッシュボードで設定
+```
+bjj-app/
+├── app/              # Next.js App Router ページ
+├── components/       # UIコンポーネント
+│   └── skillmap/     # スキルマップ関連（TechniqueNode, BottomDrawer等）
+├── hooks/            # カスタムフック（useTrainingLog, useSkillMap等）
+├── lib/              # ユーティリティ（i18n, supabase client, validation等）
+│   └── api/          # Supabaseクエリ集約レイヤー
+├── messages/         # i18nファイル（en.json, ja.json, pt.json）
+├── public/           # 静的アセット・PWAマニフェスト
+├── scripts/          # 運用ツール（detect_hidden_bugs.py等）
+└── docs/             # 機能PRD
 ```
 
-## 機能
+## 品質管理
 
-- Google / GitHub ソーシャルログイン
-- 練習記録（日付・時間・タイプ・メモ）
-- テクニック帳（カテゴリ・習熟度管理）
-- PWA対応（スマホにインストール可能）
+```bash
+# 型チェック
+npx tsc --noEmit
+
+# 隠れバグ検出（i18n漏れ・セキュリティ・パフォーマンス）
+python3 scripts/detect_hidden_bugs.py --fix-hint
+```
+
+## ライセンス
+
+Private

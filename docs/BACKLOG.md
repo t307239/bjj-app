@@ -1,23 +1,6 @@
-# BJJ App — バックログ
+# BJJ App — 依存パッケージ管理・技術スタック更新
 
----
-
-## 🔴 アクティブタスク
-
-### [IA-1] BJJ App IA リデザイン — タブベース情報整理 ✅ Phase 1完了
-- **完了**: Profile 3タブ化、Records 2タブ化、Techniques 3タブ化、Settings分離
-- **残**: Dashboard情報密度最適化（現状でも良好、優先度低）
-- **MCP視覚検証**: デプロイ後に実施予定
-
-### [IA-2] BJJ Wiki IA リデザイン — コンバージョン最適化
-- **背景**: CTA が30秒後の float のみ（多くのユーザーが見ない）、TOC が `display:none` で無効、選手ページにCTAなし
-- **参考**: Stripe Docs（sticky header）、Investopedia（above-fold CTA）、MDN（accordion TOC）、BJJ Heroes（選手カード）
-- **プロトタイプ**: `~/Claude/bjj-wiki-redesign.jsx` に Before/After 3ページタイプ分を作成済み
-- **実装計画**:
-  1. **テクニックページ**: above-fold CTA、accordion TOC復活、番号付きH2、リッチ関連カード
-  2. **選手ページ**: ヒーローカード(メダル/finish率)、文脈的CTA、得意技リンクカード
-  3. **インデックスページ**: sticky header + 検索、カテゴリ横スクロール、人気テクニックリスト
-  4. **共通**: sticky header、コンテンツ統計表示(1,500+ techniques)
+> 機能バックログは `~/Claude/docs/BACKLOG.md` を参照。
 
 ---
 
