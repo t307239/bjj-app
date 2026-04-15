@@ -365,7 +365,7 @@ const TrainingLogList = memo(function TrainingLogList({
                     <ShareButton entry={entry} />
                     <button
                       onClick={() => onStartEdit(entry)}
-                      className="text-gray-500 hover:text-[#10B981] transition-colors p-1.5 sm:p-2.5 rounded-lg flex items-center justify-center min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px]"
+                      className="text-gray-500 hover:text-[#10B981] transition-colors p-2 rounded-lg flex items-center justify-center min-w-[44px] min-h-[44px]"
                       title={t("training.edit")}
                       aria-label={t("training.edit")}
                     >
@@ -381,7 +381,7 @@ const TrainingLogList = memo(function TrainingLogList({
                     <button
                       onClick={() => onDelete(entry.id)}
                       disabled={deletingId === entry.id}
-                      className="text-gray-500 hover:text-red-400 transition-colors p-1.5 sm:p-2.5 rounded-lg flex items-center justify-center min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] disabled:opacity-50"
+                      className="text-gray-500 hover:text-red-400 transition-colors p-2 rounded-lg flex items-center justify-center min-w-[44px] min-h-[44px] disabled:opacity-50"
                       title={t("training.delete")}
                       aria-label={t("training.delete")}
                     >

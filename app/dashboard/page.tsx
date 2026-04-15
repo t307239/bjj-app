@@ -451,7 +451,8 @@ export default async function DashboardPage({
             ═══════════════════════════════════════════ */}
         <Link
           href="/records"
-          className="md:hidden fixed bottom-20 right-4 z-40 w-14 h-14 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-2xl font-bold rounded-full shadow-lg shadow-[#10B981]/40 transition-all flex items-center justify-center"
+          className="md:hidden fixed right-4 z-40 w-14 h-14 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-2xl font-bold rounded-full shadow-lg shadow-[#10B981]/40 transition-all flex items-center justify-center"
+          style={{ bottom: "calc(5rem + env(safe-area-inset-bottom, 0px))" }}
           aria-label={t("training.add")}
         >
           +

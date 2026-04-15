@@ -50,7 +50,8 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
   const [editingId, setEditingId] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error"; duration?: number; onUndo?: () => void } | null>(null);
+  const [pendingTechDelete, setPendingTechDelete] = useState<{ id: string; entry: Technique; timerId: ReturnType<typeof setTimeout> } | null>(null);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [dangerConfirmPending, setDangerConfirmPending] = useState(false);
   const [form, setForm] = useState<TechniqueFormState>({
@@ -69,6 +70,23 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
   // Stable supabase client ref — prevents useEffect dep churn
   const supabaseRef = useRef(createClient());
   const supabase = supabaseRef.current;
+
+  // Flush pending delete on unmount so data is never lost
+  const pendingTechDeleteRef = useRef(pendingTechDelete);
+  pendingTechDeleteRef.current = pendingTechDelete;
+  useEffect(() => {
+    return () => {
+      const pending = pendingTechDeleteRef.current;
+      if (pending) {
+        clearTimeout(pending.timerId);
+        void supabaseRef.current
+          .from("techniques")
+          .delete()
+          .eq("id", pending.id)
+          .eq("user_id", userId);
+      }
+    };
+  }, [userId]);
 
   // ── URL param helpers ──────────────────────────────────────────────────────
   const updateUrlParams = (q: string, p: number) => {
@@ -212,27 +230,58 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
     setLoading(false);
   };
 
-  const handleDelete = async (id: string) => {
-    // Optimistic: remove from state immediately
-    const snapshot = techniques;
-    setTechniques((prev) => prev.filter((t) => t.id !== id));
-    setDeletingId(id);
+  const handleDelete = (id: string) => {
+    const removed = techniques.find((tech) => tech.id === id);
+    if (!removed) return;
 
-    const { error } = await supabase
-      .from("techniques")
-      .delete()
-      .eq("id", id)
-      .eq("user_id", userId);
-    if (!error) {
-      setToast({ message: t("techniques.deleted"), type: "success" });
-      navigator.vibrate?.([30, 20, 30]);
-    } else {
-      // Rollback on error
-      setTechniques(snapshot);
-      setToast({ message: t("techniques.deleteFailed"), type: "error" });
-      navigator.vibrate?.([50, 100, 50]);
+    // Flush any pending delete immediately
+    if (pendingTechDelete) {
+      clearTimeout(pendingTechDelete.timerId);
+      void supabase
+        .from("techniques")
+        .delete()
+        .eq("id", pendingTechDelete.id)
+        .eq("user_id", userId);
     }
-    setDeletingId(null);
+
+    // Optimistic: remove from state immediately
+    setTechniques((prev) => prev.filter((tech) => tech.id !== id));
+
+    const timerId = setTimeout(async () => {
+      setPendingTechDelete(null);
+      setDeletingId(id);
+      const { error } = await supabase
+        .from("techniques")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", userId);
+      if (!error) {
+        navigator.vibrate?.([30, 20, 30]);
+      } else {
+        setTechniques((prev) => [removed, ...prev].sort((a, b) =>
+          (b.created_at ?? "").localeCompare(a.created_at ?? ""),
+        ));
+        setToast({ message: t("techniques.deleteFailed"), type: "error" });
+        navigator.vibrate?.([50, 100, 50]);
+      }
+      setDeletingId(null);
+    }, 5000);
+
+    setPendingTechDelete({ id, entry: removed, timerId });
+
+    setToast({
+      message: t("techniques.deleted"),
+      type: "success",
+      duration: 5000,
+      onUndo: () => {
+        clearTimeout(timerId);
+        setPendingTechDelete(null);
+        setTechniques((prev) => [removed, ...prev].sort((a, b) =>
+          (b.created_at ?? "").localeCompare(a.created_at ?? ""),
+        ));
+        setToast(null);
+      },
+    });
   };
 
   const startEdit = (tech: Technique) => {
@@ -351,7 +400,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
   return (
     <div>
       {toast && (
-        <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
+        <Toast message={toast.message} type={toast.type} duration={toast.duration} onUndo={toast.onUndo} onClose={() => setToast(null)} />
       )}
 
       {/* Free plan usage meter */}

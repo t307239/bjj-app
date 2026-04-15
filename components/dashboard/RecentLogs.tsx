@@ -131,7 +131,7 @@ export default function RecentLogs({ logs, weekCount = 0, streak = 0, t }: Props
               </span>
 
               {/* Type badge */}
-              <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border flex-shrink-0 ${typeColor}`}>
+              <span className={`text-[11px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border flex-shrink-0 ${typeColor}`}>
                 {getTypeLabel(log.type, t)}
               </span>
 

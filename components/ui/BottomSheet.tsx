@@ -191,7 +191,7 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
               <button
                 type="button"
                 onClick={onClose}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+                className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                 aria-label="Close"
               >
                 <svg
@@ -200,7 +200,7 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
                   stroke="currentColor"
                   strokeWidth={2}
                   strokeLinecap="round"
-                  className="w-4 h-4"
+                  className="w-5 h-5"
                 >
                   <path d="M6 18L18 6M6 6l12 12" />
                 </svg>
