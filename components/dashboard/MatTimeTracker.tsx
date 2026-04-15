@@ -1,7 +1,7 @@
 /**
- * 10,000 Hour Mat Time Tracker
- * Shows cumulative training hours as a progress bar toward the 10,000-hour mastery milestone.
- * Includes estimated completion date based on recent training pace.
+ * Milestone-based Mat Time Tracker
+ * Shows cumulative training hours toward the NEXT achievable milestone.
+ * Milestones: 10h → 50h → 100h → 500h → 1,000h → 5,000h → 10,000h
  */
 
 type Props = {
@@ -11,43 +11,56 @@ type Props = {
   t: (key: string, vars?: Record<string, string | number>) => string;
 };
 
-const TARGET_HOURS = 10000;
-const TARGET_MINUTES = TARGET_HOURS * 60;
+const MILESTONES = [10, 50, 100, 500, 1000, 5000, 10000];
+
+function getNextMilestone(hours: number): number {
+  for (const ms of MILESTONES) {
+    if (hours < ms) return ms;
+  }
+  return MILESTONES[MILESTONES.length - 1];
+}
 
 export default function MatTimeTracker({ totalMinutes, weeklyAvgMinutes, t }: Props) {
   if (totalMinutes <= 0) return null;
 
   const totalHours = totalMinutes / 60;
-  const percent = Math.min((totalMinutes / TARGET_MINUTES) * 100, 100);
+  const target = getNextMilestone(totalHours);
+  const reachedAll = totalHours >= MILESTONES[MILESTONES.length - 1];
+
+  // Progress within current milestone segment
+  const prevMilestone = MILESTONES.filter((ms) => ms <= totalHours).pop() ?? 0;
+  const segmentTotal = target - prevMilestone;
+  const segmentProgress = totalHours - prevMilestone;
+  const percent = reachedAll ? 100 : Math.min((segmentProgress / segmentTotal) * 100, 100);
 
   // Format hours display
   const displayHours = totalHours >= 100
     ? Math.round(totalHours).toLocaleString()
     : totalHours.toFixed(1);
 
-  // ETA calculation
-  const remainingMinutes = TARGET_MINUTES - totalMinutes;
+  // ETA to next milestone
+  const remainingMinutes = (target * 60) - totalMinutes;
   let etaText = "";
-  if (remainingMinutes <= 0) {
+  if (reachedAll || remainingMinutes <= 0) {
     etaText = t("matTime.reached");
   } else if (weeklyAvgMinutes > 0) {
     const weeksRemaining = remainingMinutes / weeklyAvgMinutes;
-    const yearsRemaining = weeksRemaining / 52;
-    if (yearsRemaining >= 1) {
-      etaText = t("matTime.etaYears", { n: Math.round(yearsRemaining * 10) / 10 });
+    if (weeksRemaining >= 52) {
+      const years = Math.round((weeksRemaining / 52) * 10) / 10;
+      etaText = t("matTime.etaYears", { n: years });
+    } else if (weeksRemaining >= 8) {
+      const months = Math.round(weeksRemaining / 4.33);
+      etaText = t("matTime.etaMonths", { n: months });
     } else {
-      const monthsRemaining = Math.round(weeksRemaining / 4.33);
-      etaText = t("matTime.etaMonths", { n: monthsRemaining });
+      const weeks = Math.max(1, Math.round(weeksRemaining));
+      etaText = t("matTime.etaWeeks", { n: weeks });
     }
   }
 
-  // Milestone markers (percentage positions)
-  const milestones = [
-    { hours: 100, label: "100h" },
-    { hours: 1000, label: "1,000h" },
-    { hours: 5000, label: "5,000h" },
-    { hours: 10000, label: "10,000h" },
-  ];
+  // Visual milestone markers on the bar (show passed milestones within segment)
+  const visibleMarkers = MILESTONES.filter(
+    (ms) => ms > prevMilestone && ms < target
+  );
 
   return (
     <div className="mb-5 bg-zinc-900/40 border border-zinc-800/50 rounded-2xl p-4">
@@ -68,7 +81,7 @@ export default function MatTimeTracker({ totalMinutes, weeklyAvgMinutes, t }: Pr
           {t("matTime.hoursUnit")}
         </span>
         <span className="text-xs text-zinc-600 ml-auto whitespace-nowrap">
-          / {TARGET_HOURS.toLocaleString()}h
+          {reachedAll ? "🏆" : t("matTime.nextMilestone", { target: target.toLocaleString() })}
         </span>
       </div>
 
@@ -77,19 +90,18 @@ export default function MatTimeTracker({ totalMinutes, weeklyAvgMinutes, t }: Pr
         <div
           className="h-full rounded-full transition-all duration-700"
           style={{
-            width: `${Math.max(percent, 1)}%`,
-            background: percent >= 100
+            width: `${Math.max(percent, 2)}%`,
+            background: reachedAll
               ? "linear-gradient(90deg, #10B981, #06D6A0)"
               : "linear-gradient(90deg, #3B82F6, #8B5CF6)",
           }}
         />
-        {/* Milestone markers */}
-        {milestones.map((ms) => {
-          const pos = (ms.hours / TARGET_HOURS) * 100;
-          if (pos > 95) return null; // skip 10K marker (it's the end)
+        {/* Milestone markers within segment */}
+        {visibleMarkers.map((ms) => {
+          const pos = ((ms - prevMilestone) / segmentTotal) * 100;
           return (
             <div
-              key={ms.hours}
+              key={ms}
               className="absolute top-0 h-full w-px bg-zinc-600/50"
               style={{ left: `${pos}%` }}
             />
@@ -100,7 +112,7 @@ export default function MatTimeTracker({ totalMinutes, weeklyAvgMinutes, t }: Pr
       {/* Percentage + ETA */}
       <div className="flex items-center justify-between">
         <span className="text-xs text-zinc-500">
-          {percent.toFixed(1)}%
+          {percent.toFixed(0)}%
         </span>
         {etaText && (
           <span className="text-xs text-zinc-500">

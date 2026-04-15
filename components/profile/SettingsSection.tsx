@@ -48,9 +48,9 @@ export default function SettingsSection({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Section header */}
-      <p className="text-xs font-semibold text-zinc-400 tracking-widest uppercase mt-2">
+      <p className="text-xs font-semibold text-zinc-400 tracking-widest uppercase mt-1">
         {t("profile.tabs.settings")}
       </p>
 
@@ -64,7 +64,7 @@ export default function SettingsSection({
 
       {/* B2B lead card — always show to non-gym-owners; drive them to /gym */}
       {!isPro && (
-        <div className="bg-zinc-900 border border-blue-500/20 rounded-xl px-4 py-4">
+        <div className="bg-zinc-900 border border-blue-500/20 rounded-xl px-4 py-3">
           <div className="flex items-start gap-3">
             <span className="text-2xl mt-0.5">🥋</span>
             <div className="flex-1 min-w-0">
@@ -111,7 +111,7 @@ export default function SettingsSection({
             {t("profile.dangerZone")}
           </h3>
         </div>
-        <div className="bg-zinc-900 px-5 py-4">
+        <div className="bg-zinc-900 px-5 py-3">
           {!confirm ? (
             <div className="flex items-center justify-between gap-4">
               <div>

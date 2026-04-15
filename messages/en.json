@@ -1799,8 +1799,10 @@
   "matTime": {
     "title": "Mat Time",
     "hoursUnit": "hours on the mat",
-    "reached": "Mastery milestone reached!",
-    "etaYears": "~{n} years to 10,000h at current pace",
-    "etaMonths": "~{n} months to 10,000h at current pace"
+    "reached": "Milestone reached!",
+    "nextMilestone": "Next: {target}h",
+    "etaYears": "~{n} years at current pace",
+    "etaMonths": "~{n} months at current pace",
+    "etaWeeks": "~{n} weeks at current pace"
   }
 }

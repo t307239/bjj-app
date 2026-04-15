@@ -1801,8 +1801,10 @@
   "matTime": {
     "title": "マットタイム",
     "hoursUnit": "時間",
-    "reached": "マスター達成！",
-    "etaYears": "現在のペースで10,000時間まで約{n}年",
-    "etaMonths": "現在のペースで10,000時間まで約{n}ヶ月"
+    "reached": "マイルストーン達成！",
+    "nextMilestone": "次の目標: {target}h",
+    "etaYears": "現在のペースで約{n}年",
+    "etaMonths": "現在のペースで約{n}ヶ月",
+    "etaWeeks": "現在のペースで約{n}週間"
   }
 }
