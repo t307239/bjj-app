@@ -70,6 +70,16 @@ export default function GlobalError({
           >
             Try again
           </button>
+          {/* Q-18: Contact link — global-error runs outside layout, so i18n is unavailable. Hardcoded EN is acceptable here. */}
+          <p style={{ color: "#52525b", fontSize: "0.75rem", marginTop: "1.5rem" }}>
+            If the problem persists,{" "}
+            <a
+              href="mailto:307239t777@gmail.com?subject=BJJ App Error Report"
+              style={{ color: "#10B981", textDecoration: "underline" }}
+            >
+              contact us
+            </a>
+          </p>
         </div>
       </body>
     </html>

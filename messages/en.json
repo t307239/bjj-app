@@ -965,7 +965,10 @@
     "title": "Something went wrong",
     "description": "An error occurred while loading the page.",
     "retry": "Try Again",
-    "goHome": "Back to Home"
+    "goHome": "Back to Home",
+    "contact": "If the problem persists,",
+    "contactLink": "contact us",
+    "dataSafe": "Your training data is safely stored."
   },
   "goal": {
     "title": "ð¯ Training Goals",

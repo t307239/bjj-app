@@ -450,7 +450,10 @@
     "tryAgain": "Tentar novamente",
     "goHome": "Voltar ao início",
     "description": "Ocorreu um erro ao carregar a página.",
-    "retry": "Tentar novamente"
+    "retry": "Tentar novamente",
+    "contact": "Se o problema persistir,",
+    "contactLink": "entre em contato",
+    "dataSafe": "Seus dados de treino estão salvos com segurança."
   },
   "landing": {
     "hero": "Seu treinamento de BJJ, elevado",
