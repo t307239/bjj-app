@@ -18,7 +18,8 @@
     "license:audit:full": "node scripts/license-audit.mjs --full",
     "license:audit:json": "node scripts/license-audit.mjs --json",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "analyze": "ANALYZE=true next build"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -45,6 +46,7 @@
     "web-push": "^3.6.7"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.2.3",
     "@playwright/test": "^1.49.0",
     "@types/node": "^22",
     "@types/react": "^19",
