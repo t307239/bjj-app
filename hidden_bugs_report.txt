@@ -1,11 +1,11 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 220 files
+TS/TSX Scanned: 223 files
 CRITICAL: 1
-WARNING: 11
+WARNING: 13
 INFO: 89
-Total: 101
+Total: 103
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 36% (607/1681 キー) — 1104 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 36% (607/1687 キー) — 1110 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -39,6 +39,10 @@ Total: 101
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [DANGEROUS_HTML] app/profile/page.tsx: L145: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
+[WARNING] [JSX_HARDCODED_ENGLISH] app/records/[id]/page.tsx: L149: JSX内に英語テキスト直書き: "Roll"
+  FIX: t() キーを追加して多言語対応
+[WARNING] [UNUSED_IMPORT] app/records/[id]/page.tsx: L8: 'notFound' がimport後に使用されていない
+  FIX: import文から 'notFound' を削除
 [INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L162: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/ConfettiEffect.tsx: L41: style={{...}} — Tailwindクラスで統一推奨

@@ -5,6 +5,7 @@ import { useLocale } from "@/lib/i18n";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import DraftNumberInput from "@/components/ui/DraftNumberInput";
 import ShareButton from "@/components/ShareButton";
+import CopyLinkButton from "@/components/CopyLinkButton";
 import SwipeableCard from "@/components/SwipeableCard";
 import {
   type TrainingEntry,
@@ -361,6 +362,8 @@ const TrainingLogList = memo(function TrainingLogList({
                           }`
                         : `${entry.duration_min}m`}
                     </span>
+                    {/* Deep link copy */}
+                    <CopyLinkButton entryId={entry.id} />
                     {/* B-06: Share training card */}
                     <ShareButton entry={entry} />
                     <button
