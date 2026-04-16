@@ -103,6 +103,9 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
             >
               {t("pricing.getStarted")}
             </Link>
+            <p className="text-zinc-500 text-xs text-center mt-3">
+              {t("pricing.freeUpsell")}
+            </p>
           </div>
 
           {/* Pro */}
@@ -163,9 +166,12 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
               </span>
             </label>
 
+            <p className="text-emerald-400/80 text-xs text-center mt-3 mb-1">
+              {t("pricing.proTrialHint")}
+            </p>
             <a
               href={disclaimerAccepted ? upgradeUrl : undefined}
-              className={`mt-3 block text-center font-bold py-3 rounded-full transition-all ${
+              className={`block text-center font-bold py-3 rounded-full transition-all ${
                 disclaimerAccepted
                   ? "bg-yellow-500 hover:bg-yellow-400 text-black cursor-pointer"
                   : "bg-zinc-700 text-zinc-500 cursor-not-allowed"

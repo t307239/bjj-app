@@ -667,7 +667,9 @@
     "disclaimerText": "Eu entendo que este é um serviço de assinatura digital. Eu concordo com os {terms}.",
     "termsLink": "Termos de Serviço",
     "moneyBack": "Garantia de 7 dias — reembolso total se não estiver satisfeito",
-    "benefitHighlight": "Usuários Pro treinam 2,3x mais em média"
+    "benefitHighlight": "Usuários Pro treinam 2,3x mais em média",
+    "freeUpsell": "Quer análises avançadas e proteção de streak? Vá Pro →",
+    "proTrialHint": "Garantia de reembolso de 7 dias incluída"
   },
   "competition": {
     "title": "Histórico de Lutas",

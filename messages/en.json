@@ -1806,7 +1806,9 @@
     "disclaimerText": "I understand this is a digital subscription service. I agree to the {terms}.",
     "termsLink": "Terms of Service",
     "moneyBack": "7-day money-back guarantee — full refund if not satisfied",
-    "benefitHighlight": "Pro users train 2.3x more on average"
+    "benefitHighlight": "Pro users train 2.3x more on average",
+    "freeUpsell": "Want advanced analytics & streak protection? Go Pro →",
+    "proTrialHint": "7-day money-back guarantee included"
   },
   "weightCut": {
     "title": "Weight Cut Planner",

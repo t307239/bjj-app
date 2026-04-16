@@ -1808,7 +1808,9 @@
     "disclaimerText": "デジタルサブスクリプションであることを理解し、{terms}に同意します。",
     "termsLink": "利用規約",
     "moneyBack": "7日間返金保証 — 満足いただけなければ全額返金",
-    "benefitHighlight": "Proユーザーは平均2.3倍多く練習しています"
+    "benefitHighlight": "Proユーザーは平均2.3倍多く練習しています",
+    "freeUpsell": "さらに高度な分析やストリーク保護が欲しい方はProへ →",
+    "proTrialHint": "7日間返金保証付きで安心"
   },
   "weightCut": {
     "title": "減量プランナー",

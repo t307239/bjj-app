@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import PricingSection from "@/components/PricingSection";
 import IABSafeLink from "@/components/IABSafeLink";
+
+const PricingSection = dynamic(() => import("@/components/PricingSection"), {
+  loading: () => <div className="px-4 py-16 bg-zinc-900/50 animate-pulse" style={{ minHeight: 400 }} />,
+});
 import { detectServerLocale, makeT } from "@/lib/i18n";
 
 export const metadata: Metadata = {
