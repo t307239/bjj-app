@@ -2,6 +2,40 @@
 
 ---
 
+## 2026/04/16 チェック
+
+### 新着リリース
+
+#### 🧠 新モデル / 非推奨化
+- **Claude Haiku 3 retire 2026/04/19 迫る** — 3日後に停止。Haiku 4.5 (`claude-haiku-4-5-20251001`) へ移行必須
+- **Claude Sonnet 4 / Opus 4 retire 2026/06/15** — 4.6系へ移行予定（bjj-appは既に4.6のため影響なし）
+
+#### 🛠️ Claude Code（v2.1.69 → 2.1.101, 4月）
+- **Routines 機能**（4/11）: 繰り返し実行タスクをClaude Codeで定義可能。Mac offline時も動作
+- **プロンプトキャッシュ強化**: `ENABLE_PROMPT_CACHING_1H` 環境変数で1時間TTL（API Key / Bedrock / Vertex / Foundry対応）
+- **`/recap` コマンド** + セッション再開時のrecap（`/config`で自動化可）
+- **Skill tool → 組込slash commands**: `/init` / `/review` / `/security-review` をモデルが自動発見・実行可能に
+- **`/model` 切替警告**: モデル切替で次応答がhistory再読込（uncached）される旨を明示
+- エラーメッセージ改善: rate limit種別区別、5xx/529でstatus.claude.comリンク、未知コマンドで類似候補提示
+
+#### 📡 API変更
+- **Advisor tool**（public beta）: 高速executorモデル + 高知能advisorモデルのペア実行。生成中の戦略ガイダンス提供
+- Managed Agents / ant CLI / web search GA / 動的フィルタリング は前回（4/13）報告済み
+
+#### 🖥️ プロダクト
+- **Computer Use on Pro/Max**: Pro/Maxプランでも有効化。画面操作・dev tools実行可能に
+- **Claude Cowork GA (macOS/Windows)**: Claude Desktop経由で一般提供開始
+- **Analytics API** が Cowork 対応
+
+### 💡 BJJ Appへの影響
+- **⚠️ Haiku 3 棚卸し**: 4/19 retire。bjj-appでHaiku 3を直接呼ぶ箇所があれば今週中に置換（要grep）
+- **1時間プロンプトキャッシュ**: Wiki動画/FAQ注入のGitHub Actionsバッチに `ENABLE_PROMPT_CACHING_1H=1` を追加すれば大幅コスト削減可能性
+- **Advisor tool**: Wiki品質スコアリングや記録レビュー機能に応用余地
+- **Routines (Claude Code)**: 現在の `net.bjj-app.autopush` デーモン + cron構成の一部を置換可能
+- **現行モデル (Sonnet 4.6) は継続利用OK**
+
+---
+
 ## 2026/04/13 チェック
 
 ### 新着リリース
