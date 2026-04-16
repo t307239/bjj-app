@@ -532,6 +532,28 @@ def check_accessibility(filepath: Path, content: str, report: BugReport):
 
 
 # ─────────────────────────────────────────────────────
+# カテゴリ 12b: カラーコントラスト退行検出（WCAG AA）
+# ─────────────────────────────────────────────────────
+
+def check_low_contrast_gray(filepath: Path, content: str, report: BugReport):
+    """
+    ダーク基調で低コントラストになりがちな text-gray-{500,600,700} の残存を検出。
+    ダッシュボード/UIは text-zinc-* に統一しWCAG AAを維持する運用ルール（Q-44以降）。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+    # JSXクラス属性に出現する text-gray-500..700 を検出（gray-300/400は許容）
+    pattern = re.compile(r'className="[^"]*?\btext-gray-(500|600|700)\b')
+    for m in pattern.finditer(content):
+        line_no = content[:m.start()].count('\n') + 1
+        report.add(
+            "WARNING", "LOW_CONTRAST_GRAY",
+            f"{rel}:{line_no}",
+            f"text-gray-{m.group(1)} はダーク背景でコントラスト不足(WCAG AA): '{m.group(0)[:80]}'",
+            "text-zinc-400 (or text-zinc-300) に置換してAA準拠にする",
+        )
+
+
+# ─────────────────────────────────────────────────────
 # カテゴリ 13: dangerouslySetInnerHTML
 # ─────────────────────────────────────────────────────
 
@@ -1444,6 +1466,7 @@ def scan_all() -> BugReport:
             check_technical_leakage(fpath, content, report)
             check_hardcoded_ui_return_strings(fpath, content, report)
             check_accessibility(fpath, content, report)       # カテゴリ12
+            check_low_contrast_gray(fpath, content, report)   # カテゴリ12b
             check_dangerous_html(fpath, content, report)      # カテゴリ13
             check_jsx_hardcoded_english(fpath, content, report) # カテゴリ24
             check_form_prevent_default(fpath, content, report)  # カテゴリ26

@@ -15,10 +15,11 @@ const TOC = [
   { id: "cookies", label: "5. Cookies" },
   { id: "sharing", label: "6. Data Sharing" },
   { id: "rights", label: "7. Your Rights" },
-  { id: "retention", label: "8. Data Retention" },
-  { id: "children", label: "9. Children's Privacy" },
-  { id: "changes", label: "10. Changes to This Policy" },
-  { id: "contact", label: "11. Contact" },
+  { id: "portability", label: "8. Data Portability" },
+  { id: "retention", label: "9. Data Retention" },
+  { id: "children", label: "10. Children's Privacy" },
+  { id: "changes", label: "11. Changes to This Policy" },
+  { id: "contact", label: "12. Contact" },
 ];
 
 export default function PrivacyPage() {
@@ -30,7 +31,7 @@ export default function PrivacyPage() {
         </Link>
 
         <h1 className="text-3xl font-bold text-white mb-2 mt-4">Privacy Policy</h1>
-        <p className="text-zinc-400 text-sm mb-8">Last updated: March 2026</p>
+        <p className="text-zinc-400 text-sm mb-8">Last updated: April 2026</p>
 
         {/* Table of Contents */}
         <nav className="bg-zinc-900/60 border border-white/8 rounded-xl px-5 py-4 mb-10">
@@ -147,12 +148,32 @@ export default function PrivacyPage() {
               <li>Correct inaccurate data (editable in your profile)</li>
               <li>Delete your account and all associated data (Profile → Settings → Delete Account)</li>
               <li>Withdraw newsletter consent at any time via the unsubscribe link in any email</li>
+              <li>Export your data in machine-readable format at any time (see Data Portability below)</li>
             </ul>
+          </section>
+
+          <section id="portability">
+            <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
+              8. Data Portability
+            </h2>
+            <p className="text-zinc-400 mb-2">
+              You own your training data. BJJ App supports free data export for all users —
+              regardless of subscription tier — in the following machine-readable formats:
+            </p>
+            <ul className="list-disc pl-5 space-y-1.5 text-zinc-400 mb-3">
+              <li><span className="text-zinc-200">CSV</span> — training logs, technique records, streak history (compatible with Excel, Google Sheets, Numbers)</li>
+              <li><span className="text-zinc-200">PDF</span> — a printable summary report with statistics and charts</li>
+            </ul>
+            <p className="text-zinc-400">
+              Export is available from the dashboard at any time. Even if you cancel a Pro subscription
+              or delete your account, you can download your full data set beforehand. This satisfies
+              the data portability requirement under GDPR Article 20 and similar regulations.
+            </p>
           </section>
 
           <section id="retention">
             <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
-              8. Data Retention
+              9. Data Retention
             </h2>
             <p className="text-zinc-400">
               We retain your data for as long as your account is active. Upon account deletion,
@@ -163,7 +184,7 @@ export default function PrivacyPage() {
 
           <section id="children">
             <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
-              9. Children&apos;s Privacy
+              10. Children&apos;s Privacy
             </h2>
             <p className="text-zinc-400">
               BJJ App is not directed at children under 13. We do not knowingly collect personal
@@ -174,7 +195,7 @@ export default function PrivacyPage() {
 
           <section id="changes">
             <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
-              10. Changes to This Policy
+              11. Changes to This Policy
             </h2>
             <p className="text-zinc-400">
               We may update this Privacy Policy from time to time. We will notify users of
@@ -185,7 +206,7 @@ export default function PrivacyPage() {
 
           <section id="contact">
             <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
-              11. Contact
+              12. Contact
             </h2>
             <p className="text-zinc-400">
               For privacy-related inquiries or data deletion requests, please contact us at{" "}

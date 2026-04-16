@@ -54,12 +54,12 @@ export default function ProGate({
       <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-zinc-950/80 backdrop-blur-sm border border-white/10 z-10">
         <div className="text-center px-4">
           <div className="text-2xl mb-2">🔒</div>
-          <p className="text-sm text-gray-400 mb-1">{featureText}</p>
-          <p className="text-xs text-gray-500 mb-3">{t("pro.available")}</p>
+          <p className="text-sm text-zinc-300 mb-1">{featureText}</p>
+          <p className="text-xs text-zinc-400 mb-3">{t("pro.available")}</p>
 
           {/* Monthly / Annual toggle */}
           <div className="flex items-center justify-center gap-2 mb-3">
-            <span className={`text-xs whitespace-nowrap ${!isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>{t("pro.monthly")}</span>
+            <span className={`text-xs whitespace-nowrap ${!isAnnual ? "text-white font-semibold" : "text-zinc-400"}`}>{t("pro.monthly")}</span>
             <button
               onClick={() => setIsAnnual((v) => !v)}
               aria-label="Toggle billing period"
@@ -73,7 +73,7 @@ export default function ProGate({
                 }`}
               />
             </button>
-            <span className={`text-xs whitespace-nowrap ${isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>{t("pro.annual")}</span>
+            <span className={`text-xs whitespace-nowrap ${isAnnual ? "text-white font-semibold" : "text-zinc-400"}`}>{t("pro.annual")}</span>
             {isAnnual && (
               <span className="bg-emerald-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">
                 {t("pro.savePct")}
@@ -99,7 +99,7 @@ export default function ProGate({
               className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-yellow-500 flex-shrink-0 cursor-pointer"
               aria-label={t("pro.disclaimerAria")}
             />
-            <span className="text-xs text-gray-400 leading-relaxed">
+            <span className="text-xs text-zinc-300 leading-relaxed">
               {t("pro.disclaimer")}
             </span>
           </label>
@@ -111,7 +111,7 @@ export default function ProGate({
             className={`inline-block text-sm font-bold px-5 py-2 rounded-lg transition-colors ${
               disclaimerAccepted
                 ? "bg-yellow-500 hover:bg-yellow-400 text-black cursor-pointer"
-                : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+                : "bg-zinc-700 text-zinc-400 cursor-not-allowed"
             }`}
             onClick={(e) => {
               if (!disclaimerAccepted) {
@@ -124,7 +124,7 @@ export default function ProGate({
           >
             {t("pro.upgradeButton")}
           </a>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-zinc-400 mt-2">
             {t("pro.features")}
           </p>
         </div>
