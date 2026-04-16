@@ -209,21 +209,21 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
       <div className="flex items-center gap-4 mb-4">
         <div className="flex items-baseline gap-1">
           <span className="text-2xl font-bold text-green-400">{analytics.wins}</span>
-          <span className="text-xs text-gray-500">{t("competition.wins")}</span>
+          <span className="text-xs text-zinc-400">{t("competition.wins")}</span>
         </div>
         <span className="text-zinc-500">-</span>
         <div className="flex items-baseline gap-1">
           <span className="text-2xl font-bold text-red-400">{analytics.losses}</span>
-          <span className="text-xs text-gray-500">{t("competition.losses")}</span>
+          <span className="text-xs text-zinc-400">{t("competition.losses")}</span>
         </div>
         <span className="text-zinc-500">-</span>
         <div className="flex items-baseline gap-1">
           <span className="text-2xl font-bold text-yellow-400">{analytics.draws}</span>
-          <span className="text-xs text-gray-500">{t("competition.draws")}</span>
+          <span className="text-xs text-zinc-400">{t("competition.draws")}</span>
         </div>
         <div className="ml-auto text-right">
           <span className="text-lg font-bold text-white whitespace-nowrap">{analytics.winRate}%</span>
-          <span className="text-xs text-gray-500 ml-1 whitespace-nowrap">{t("competition.winRate")}</span>
+          <span className="text-xs text-zinc-400 ml-1 whitespace-nowrap">{t("competition.winRate")}</span>
         </div>
       </div>
 
@@ -395,13 +395,13 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
                   </span>
                 </div>
                 {(m.comp.finish || m.comp.event) && (
-                  <p className="text-xs text-gray-500 truncate">
+                  <p className="text-xs text-zinc-400 truncate">
                     {[m.comp.finish, m.comp.event].filter(Boolean).join(" · ")}
                   </p>
                 )}
               </div>
               {m.comp.gi_type && (
-                <span className="text-xs text-gray-500 whitespace-nowrap">
+                <span className="text-xs text-zinc-400 whitespace-nowrap">
                   {m.comp.gi_type === "gi" ? "Gi" : m.comp.gi_type === "nogi" ? "No-Gi" : m.comp.gi_type}
                 </span>
               )}

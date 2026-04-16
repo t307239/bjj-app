@@ -38,12 +38,12 @@ const TrainingLogStats = memo(function TrainingLogStats({ entries, totalPages, p
           <div className="flex items-center gap-3 flex-1">
             <div className="flex items-center gap-1.5">
               <span className="text-sm font-bold text-white">{weekEntries.length}</span>
-              <span className="text-xs text-gray-500">{t("dashboard.sessionsUnit")}</span>
+              <span className="text-xs text-zinc-400">{t("dashboard.sessionsUnit")}</span>
             </div>
             <div className="w-px h-4 bg-white/10" />
             <div className="flex items-center gap-1.5">
               <span className="text-sm font-bold text-white">{weekHoursDisplay}</span>
-              <span className="text-xs text-gray-500">{t("trainingLog.totalLabel")}</span>
+              <span className="text-xs text-zinc-400">{t("trainingLog.totalLabel")}</span>
             </div>
             {weekEntries.length > 0 && (
               <>
@@ -57,7 +57,7 @@ const TrainingLogStats = memo(function TrainingLogStats({ entries, totalPages, p
         </div>
       )}
       {totalPages > 1 && page < totalPages && (
-        <p className="text-gray-500 text-xs text-center mt-2">
+        <p className="text-zinc-400 text-xs text-center mt-2">
           {t("trainingLog.paginationNote")}
         </p>
       )}

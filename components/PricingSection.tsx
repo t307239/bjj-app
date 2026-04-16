@@ -52,13 +52,13 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
         <h2 className="text-2xl font-bold text-center mb-3 text-white">
           {t("pricing.title")}
         </h2>
-        <p className="text-gray-500 text-center text-sm mb-8">
+        <p className="text-zinc-400 text-center text-sm mb-8">
           {t("pricing.subtitle")}
         </p>
 
         {/* Monthly / Annual toggle */}
         <div className="flex items-center justify-center gap-3 mb-10">
-          <span className={`text-sm font-medium whitespace-nowrap ${!isAnnual ? "text-white" : "text-gray-500"}`}>
+          <span className={`text-sm font-medium whitespace-nowrap ${!isAnnual ? "text-white" : "text-zinc-400"}`}>
             {t("pricing.monthly")}
           </span>
           <button
@@ -74,7 +74,7 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
               }`}
             />
           </button>
-          <span className={`text-sm font-medium whitespace-nowrap ${isAnnual ? "text-white" : "text-gray-500"}`}>
+          <span className={`text-sm font-medium whitespace-nowrap ${isAnnual ? "text-white" : "text-zinc-400"}`}>
             {t("pricing.annually")}
           </span>
           {isAnnual && (
@@ -89,7 +89,7 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
           <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10">
             <div className="text-lg font-bold mb-1">{t("pricing.freePlan")}</div>
             <div className="text-3xl font-bold text-white mb-1">{t("pricing.freePrice")}</div>
-            <div className="text-gray-500 text-xs mb-6">{t("pricing.freeForever")}</div>
+            <div className="text-zinc-400 text-xs mb-6">{t("pricing.freeForever")}</div>
             <ul className="space-y-3 text-sm text-gray-400">
               {freeFeatures.map((feat, i) => (
                 <li key={i} className="flex items-center gap-2">
@@ -117,12 +117,12 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
               <>
                 <div className="flex items-baseline gap-2 flex-wrap">
                   <div className="text-3xl font-bold text-white whitespace-nowrap">{t("pricing.proAnnual")}</div>
-                  <span className="text-sm font-normal text-gray-500 whitespace-nowrap">{t("pricing.proAnnualUnit")}</span>
+                  <span className="text-sm font-normal text-zinc-400 whitespace-nowrap">{t("pricing.proAnnualUnit")}</span>
                   <span className="bg-emerald-600 text-white text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
                     {t("pricing.savePct")}
                   </span>
                 </div>
-                <div className="text-gray-500 text-xs mb-6">
+                <div className="text-zinc-400 text-xs mb-6">
                   {t("pricing.proAnnualApprox")} · {t("pricing.proAnnualBilled")}
                 </div>
               </>
@@ -130,9 +130,9 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
               <>
                 <div className="text-3xl font-bold text-white mb-1">
                   {t("pricing.proMonthly")}
-                  <span className="text-sm font-normal text-gray-500">{t("pricing.proMonthlyUnit")}</span>
+                  <span className="text-sm font-normal text-zinc-400">{t("pricing.proMonthlyUnit")}</span>
                 </div>
-                <div className="text-gray-500 text-xs mb-6">{t("pricing.proMonthlyBilled")}</div>
+                <div className="text-zinc-400 text-xs mb-6">{t("pricing.proMonthlyBilled")}</div>
               </>
             )}
 

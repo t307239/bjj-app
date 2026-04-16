@@ -44,7 +44,7 @@ export default function CopyLinkButton({ entryId }: Props) {
       className={`transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center ${
         copied
           ? "text-emerald-400"
-          : "text-gray-500 hover:text-zinc-200"
+          : "text-zinc-400 hover:text-zinc-200"
       }`}
       title={copied ? t("training.linkCopied") : t("training.copyLink")}
       aria-label={copied ? t("training.linkCopied") : t("training.copyLink")}

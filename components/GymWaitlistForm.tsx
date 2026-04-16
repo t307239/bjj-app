@@ -97,7 +97,7 @@ export default function GymWaitlistForm() {
           t("gym.waitlistJoin")
         )}
       </button>
-      <p className="text-gray-500 text-xs text-center">{t("gym.waitlistNoSpam")}</p>
+      <p className="text-zinc-400 text-xs text-center">{t("gym.waitlistNoSpam")}</p>
     </form>
   );
 }

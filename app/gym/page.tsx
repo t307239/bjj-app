@@ -95,7 +95,7 @@ export default async function GymPage() {
               </Link>
               <a
                 href="#waitlist"
-                className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
+                className="text-sm text-zinc-400 hover:text-gray-300 transition-colors"
               >
                 {t("gymLanding.heroWaitlist")}
               </a>
@@ -265,7 +265,7 @@ export default async function GymPage() {
                 </Link>
               </div>
             </div>
-            <p className="text-gray-500 text-center text-xs mt-8">
+            <p className="text-zinc-400 text-center text-xs mt-8">
               {t("gymLanding.pricingNote")}
             </p>
           </div>
@@ -278,7 +278,7 @@ export default async function GymPage() {
               <h2 className="text-2xl font-bold text-zinc-100 mb-3">
                 {t("gymLanding.waitlistTitle")}
               </h2>
-              <p className="text-gray-500 text-sm leading-relaxed">
+              <p className="text-zinc-400 text-sm leading-relaxed">
                 {t("gymLanding.waitlistDesc")}
               </p>
             </div>
@@ -329,7 +329,7 @@ export default async function GymPage() {
           <h2 className="text-2xl font-bold mb-3 text-zinc-100">
             {t("gymLanding.finalCtaTitle")}
           </h2>
-          <p className="text-gray-500 text-sm mb-8">
+          <p className="text-zinc-400 text-sm mb-8">
             {t("gymLanding.finalCtaDesc")}
           </p>
           <Link

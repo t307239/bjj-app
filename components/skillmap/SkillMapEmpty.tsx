@@ -35,7 +35,7 @@ export default function SkillMapEmpty({
     <div className="flex flex-col items-center justify-center h-56 text-center">
       <div className="text-5xl mb-4">🗺️</div>
       <p className="text-gray-300 font-medium mb-1">{t("skillmap.emptyTitle")}</p>
-      <p className="text-gray-500 text-sm mb-5">{isMobile ? t("skillmap.emptyBody") : t("skillmap.emptyBodyPC")}</p>
+      <p className="text-zinc-400 text-sm mb-5">{isMobile ? t("skillmap.emptyBody") : t("skillmap.emptyBodyPC")}</p>
       {!emptyAddName ? (
         <button
           onClick={() => {

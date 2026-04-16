@@ -207,13 +207,13 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         <div>
           <h4 className="text-sm font-medium text-zinc-300">📊 {t("chart.monthlyGraph")}</h4>
           {!isOpen && (
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-zinc-400 mt-0.5">
               {totalCount > 0 ? `${t("chart.totalLabel")}${totalCount}${timesUnit} · ${formatMinutes(totalMinutes)}` : t("chart.noSessionsYet")}
             </p>
           )}
         </div>
         <svg
-          className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+          className={`w-4 h-4 text-zinc-400 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
           fill="none" stroke="currentColor" viewBox="0 0 24 24"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
@@ -223,7 +223,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
       <div className="flex items-center justify-between mb-3">
         <div>
           <h4 className="text-sm font-medium text-zinc-300">{t("chart.monthlyGraph")}</h4>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-xs text-zinc-400 mt-0.5">
             {t("chart.pastMonths", { n: range })}: {t("chart.totalLabel")}{totalCount}{timesUnit} · {formatMinutes(totalMinutes)}
           </p>
         </div>
@@ -272,8 +272,8 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           <svg className="w-8 h-8 text-zinc-500 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v18h18M9 17V9m4 8V5m4 12v-4" />
           </svg>
-          <p className="text-sm text-gray-500">{t("chart.noSessionsYet")}</p>
-          <p className="text-xs text-gray-500">{t("chart.logToFillChart")}</p>
+          <p className="text-sm text-zinc-400">{t("chart.noSessionsYet")}</p>
+          <p className="text-xs text-zinc-400">{t("chart.logToFillChart")}</p>
         </div>
       ) : range === 12 && !isPro ? (
         <div className="relative" style={{ height: "120px" }}>
@@ -301,7 +301,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                 {t("chart.upgradeToProBtn")}
               </a>
             ) : (
-              <span className="mt-3 inline-block bg-zinc-700 text-gray-500 text-xs font-semibold px-4 py-2 rounded-lg cursor-not-allowed">
+              <span className="mt-3 inline-block bg-zinc-700 text-zinc-400 text-xs font-semibold px-4 py-2 rounded-lg cursor-not-allowed">
                 {t("chart.upgradeToProBtn")}
               </span>
             )}
@@ -360,7 +360,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                   <span
                     className={`leading-none transition-opacity text-xs ${
                       val > 0 && (range === 6 || isCurrentMonth) ? "opacity-100" : "opacity-0"
-                    } ${isCurrentMonth ? "text-[#10B981]" : "text-gray-500"}`}
+                    } ${isCurrentMonth ? "text-[#10B981]" : "text-zinc-400"}`}
                   >
                     {label}
                   </span>
@@ -400,7 +400,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                         ? "text-yellow-400 font-semibold"
                         : isCurrentMonth
                         ? "text-white font-semibold"
-                        : "text-gray-500"
+                        : "text-zinc-400"
                     }`}
                   >
                     {d.label}
@@ -412,7 +412,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         </div>
       )}
       {avgPct > 0 && (
-        <div className="text-xs text-gray-500 text-right mt-1">
+        <div className="text-xs text-zinc-400 text-right mt-1">
           {t("chart.average")} {view === "count" ? `${Math.round(avgVal)}${timesUnit}/${t("chart.month")}` : `${formatMinutes(Math.round(avgVal))}/${t("chart.month")}`}
         </div>
       )}
@@ -438,7 +438,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             </span>
             <button
               onClick={() => setSelectedMonth(null)}
-              className="text-xs text-gray-500 hover:text-zinc-300 transition-colors"
+              className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors"
             >
               ✕ {t("chart.close")}
             </button>
@@ -450,7 +450,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
               ))}
             </div>
           ) : selectedLogs.length === 0 ? (
-            <p className="text-xs text-gray-500 text-center py-2">{t("chart.noRecords")}</p>
+            <p className="text-xs text-zinc-400 text-center py-2">{t("chart.noRecords")}</p>
           ) : (
             <div className="space-y-1 max-h-48 overflow-y-auto scrollbar-hide">
               {selectedLogs.map((log, idx) => {
@@ -458,7 +458,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                 const typeColor = TYPE_COLORS[log.type] ?? "bg-zinc-500/70";
                 return (
                   <div key={idx} className="flex items-center gap-2 text-xs">
-                    <span className="text-gray-500 w-16 flex-shrink-0">{log.date.substring(5).replace("-", "/")}</span>
+                    <span className="text-zinc-400 w-16 flex-shrink-0">{log.date.substring(5).replace("-", "/")}</span>
                     <span className={`${typeColor} text-white px-1.5 py-0.5 rounded text-xs flex-shrink-0`}>
                       {typeLabel}
                     </span>
@@ -471,7 +471,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             </div>
           )}
           {selectedLogs.length > 0 && (
-            <div className="mt-2 pt-1 border-t border-white/10 flex gap-4 text-xs text-gray-500">
+            <div className="mt-2 pt-1 border-t border-white/10 flex gap-4 text-xs text-zinc-400">
               <span>{selectedLogs.length}{timesUnit}</span>
               <span>{t("chart.totalLabel")}{formatMinutes(selectedLogs.reduce((s, l) => s + (l.duration_min || 0), 0))}</span>
               <span>{t("chart.avgLabel")}{selectedLogs.length > 0 ? formatMinutes(Math.round(selectedLogs.reduce((s, l) => s + (l.duration_min || 0), 0) / selectedLogs.length)) : "-"}</span>

@@ -131,7 +131,7 @@ export default function TechniqueLogList({
             className="w-full bg-zinc-900/50 text-zinc-200 rounded-lg px-4 py-2.5 text-sm border border-zinc-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 pl-9 placeholder:text-zinc-600"
           />
           <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -146,7 +146,7 @@ export default function TechniqueLogList({
           {searchQuery && (
             <button
               onClick={() => onSearchChange("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white text-xs"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white text-xs"
             >
               ✕
             </button>
@@ -187,7 +187,7 @@ export default function TechniqueLogList({
 
       {/* ローディング */}
       {initialLoading && (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-zinc-400">
           <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin mb-2" />
           <p className="text-sm">{t("techniques.loading")}</p>
         </div>
@@ -195,7 +195,7 @@ export default function TechniqueLogList({
 
       {/* 空状態 */}
       {!initialLoading && techniques.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-zinc-400">
           <div className="text-4xl mb-3">📚</div>
           <p>{t("techniques.empty")}</p>
           <p className="text-sm mt-1">{t("techniques.emptyDesc")}</p>
@@ -332,7 +332,7 @@ export default function TechniqueLogList({
                         {t("techniques.masteryLevels." + technique.mastery_level)}
                       </span>
                       {technique.created_at && (
-                        <span className="text-xs text-gray-500 ml-auto leading-none">
+                        <span className="text-xs text-zinc-400 ml-auto leading-none">
                           {relativeDate(technique.created_at, t)}
                         </span>
                       )}
@@ -387,7 +387,7 @@ export default function TechniqueLogList({
                     )}
                     <button
                       onClick={() => onStartEdit(technique)}
-                      className="text-gray-500 hover:text-[#10B981] transition-colors p-2 flex items-center justify-center min-w-[44px] min-h-[44px]"
+                      className="text-zinc-400 hover:text-[#10B981] transition-colors p-2 flex items-center justify-center min-w-[44px] min-h-[44px]"
                       title={t("techniques.edit")}
                       aria-label={t("techniques.edit")}
                     >
@@ -418,7 +418,7 @@ export default function TechniqueLogList({
                         </button>
                         <button
                           onClick={() => setConfirmDeleteId(null)}
-                          className="text-xs text-gray-500 hover:text-gray-300 transition-colors min-h-[44px] px-3 py-2"
+                          className="text-xs text-zinc-400 hover:text-gray-300 transition-colors min-h-[44px] px-3 py-2"
                         >
                           {t("training.cancel")}
                         </button>
@@ -427,7 +427,7 @@ export default function TechniqueLogList({
                       <button
                         onClick={() => setConfirmDeleteId(technique.id)}
                         disabled={deletingId === technique.id}
-                        className="text-gray-500 hover:text-red-400 transition-colors p-2 flex items-center justify-center min-w-[44px] min-h-[44px] disabled:opacity-50"
+                        className="text-zinc-400 hover:text-red-400 transition-colors p-2 flex items-center justify-center min-w-[44px] min-h-[44px] disabled:opacity-50"
                         title={t("techniques.delete")}
                         aria-label={t("techniques.delete")}
                       >
@@ -465,7 +465,7 @@ export default function TechniqueLogList({
               >
                 <svg className="w-4 h-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg> {t("training.prev")}
               </button>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-zinc-400">
                 {page} / {totalPages}
               </span>
               <button
@@ -482,7 +482,7 @@ export default function TechniqueLogList({
 
       {/* フィルター結果ゼロ */}
       {!initialLoading && techniques.length > 0 && filtered.length === 0 && (
-        <div className="text-center py-8 text-gray-500 text-sm">
+        <div className="text-center py-8 text-zinc-400 text-sm">
           {t("techniques.noResults")}
         </div>
       )}

@@ -71,11 +71,11 @@ export default function MemberCard({
         {showDetail ? (
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-400">{t("gym.lastSeen", { text: lastSeenText })}</span>
-            <span className="text-xs text-gray-500">·</span>
+            <span className="text-xs text-zinc-400">·</span>
             <span className="text-xs text-gray-400">{t("gym.sessionsPerMonth", { n: member.sessions_last_30d })}</span>
           </div>
         ) : proRequired ? (
-          <span className="text-xs text-gray-500 italic">
+          <span className="text-xs text-zinc-400 italic">
             {t("gym.detailsHidden")}{" "}
             {onUpgradeClick && (
               <button onClick={onUpgradeClick} className="text-yellow-400 hover:underline">
@@ -93,7 +93,7 @@ export default function MemberCard({
           className={`flex-shrink-0 text-xs px-2 py-1 rounded-lg transition-colors ${
             nudgeCopied
               ? "text-green-400 bg-green-400/10"
-              : "text-gray-500 hover:text-yellow-400 hover:bg-yellow-400/10"
+              : "text-zinc-400 hover:text-yellow-400 hover:bg-yellow-400/10"
           }`}
           title={t("gym.nudgeAriaLabel", { name: member.display_name ?? "member" })}
           aria-label={t("gym.nudgeAriaLabel", { name: member.display_name ?? "member" })}
@@ -106,7 +106,7 @@ export default function MemberCard({
       {onKickRequest && (
         <button
           onClick={() => onKickRequest(member)}
-          className="flex-shrink-0 text-gray-500 hover:text-[#e94560] transition-colors p-1"
+          className="flex-shrink-0 text-zinc-400 hover:text-[#e94560] transition-colors p-1"
           title={t("gym.removeMemberTitle")}
           aria-label={`Remove ${member.display_name || "member"} from gym`}
         >

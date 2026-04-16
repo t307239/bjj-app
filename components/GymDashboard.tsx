@@ -54,7 +54,7 @@ function PrivacyShieldBadge() {
                 🔒 {t("gym.privacyShieldNeverSeen")}
               </p>
               {([1, 2, 3] as const).map((i) => (
-                <p key={i} className="text-xs text-gray-500 leading-relaxed line-through decoration-zinc-600">
+                <p key={i} className="text-xs text-zinc-400 leading-relaxed line-through decoration-zinc-600">
                   {t(`gym.privacyShieldHidden${i}`)}
                 </p>
               ))}
@@ -153,7 +153,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
           {t("gym.shareOther")}
         </button>
       </div>
-      <p className="text-xs text-gray-500 mt-2">
+      <p className="text-xs text-zinc-400 mt-2">
         {t("gym.inviteCode")} <span className="font-mono">{currentCode}</span>
       </p>
       {/* Regenerate — inline confirm */}
@@ -169,7 +169,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
           </button>
           <button
             onClick={() => setConfirmRegen(false)}
-            className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+            className="text-xs text-zinc-400 hover:text-gray-300 transition-colors"
           >
             {t("training.cancel")}
           </button>
@@ -178,7 +178,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
         <button
           onClick={() => setConfirmRegen(true)}
           disabled={regenerating}
-          className="mt-3 text-xs text-gray-500 hover:text-orange-400 transition-colors disabled:opacity-50"
+          className="mt-3 text-xs text-zinc-400 hover:text-orange-400 transition-colors disabled:opacity-50"
           aria-label={t("gym.ariaRegenerate")}
         >
           {regenerating ? t("gym.regenerating") : t("gym.regenerateBtn")}
@@ -282,7 +282,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-48 text-gray-500 text-sm">
+      <div className="flex items-center justify-center h-48 text-zinc-400 text-sm">
         {t("common.loading")}
       </div>
     );
@@ -336,17 +336,17 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
       <div className="grid grid-cols-3 gap-3 mb-3">
         <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
           <div className="text-2xl font-bold text-white">{members.length}</div>
-          <div className="text-xs text-gray-500 mt-0.5">{t("gym.activeMembers")}</div>
+          <div className="text-xs text-zinc-400 mt-0.5">{t("gym.activeMembers")}</div>
         </div>
         <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
           <div className="text-2xl font-bold text-green-400">{greenMembers.length}</div>
-          <div className="text-xs text-gray-500 mt-0.5">{t("gym.trainingWell")}</div>
+          <div className="text-xs text-zinc-400 mt-0.5">{t("gym.trainingWell")}</div>
         </div>
         <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
           <div className={`text-2xl font-bold ${atRiskCount > 0 ? "text-[#e94560]" : "text-gray-400"}`}>
             {atRiskCount}
           </div>
-          <div className="text-xs text-gray-500 mt-0.5">{t("gym.atRisk")}</div>
+          <div className="text-xs text-zinc-400 mt-0.5">{t("gym.atRisk")}</div>
         </div>
       </div>
       {/* Gym-wide stats row */}
@@ -354,11 +354,11 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
         <div className="grid grid-cols-2 gap-3 mb-6">
           <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
             <div className="text-2xl font-bold text-[#10B981]">{totalSessionsThisMonth}</div>
-            <div className="text-xs text-gray-500 mt-0.5">{t("gym.totalSessions30d")}</div>
+            <div className="text-xs text-zinc-400 mt-0.5">{t("gym.totalSessions30d")}</div>
           </div>
           <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
             <div className="text-2xl font-bold text-purple-400">{avgSessions30d}</div>
-            <div className="text-xs text-gray-500 mt-0.5">{t("gym.avgSessions30d")}</div>
+            <div className="text-xs text-zinc-400 mt-0.5">{t("gym.avgSessions30d")}</div>
           </div>
         </div>
       )}
@@ -385,7 +385,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
           <div className="text-center py-10 bg-zinc-900 border border-white/10 rounded-xl">
             <div className="text-4xl mb-3">🏫</div>
             <p className="text-gray-300 font-medium mb-1">{t("gym.noMembers")}</p>
-            <p className="text-gray-500 text-sm">
+            <p className="text-zinc-400 text-sm">
               {t("gym.noMembersDesc")}
             </p>
           </div>
@@ -450,7 +450,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
                 name: kickTarget.display_name || t("gym.rankingAnon"),
               })}
             </p>
-            <p className="text-gray-500 text-xs mb-5">
+            <p className="text-zinc-400 text-xs mb-5">
               {t("gym.removeMemberNote")}
             </p>
             <div className="flex gap-3">

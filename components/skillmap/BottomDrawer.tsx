@@ -133,7 +133,7 @@ export default function BottomDrawer({
                 {t("skillmap.drawerRemove")} (Pro)
               </div>
             )}
-            <button onClick={onClose} className="w-full text-sm text-gray-500 hover:text-gray-300 py-2.5 mt-1 transition-colors">
+            <button onClick={onClose} className="w-full text-sm text-zinc-400 hover:text-gray-300 py-2.5 mt-1 transition-colors">
               {t("common.cancel")}
             </button>
           </div>

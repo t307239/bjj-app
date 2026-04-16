@@ -117,7 +117,7 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
         </div>
         <button
           onClick={() => setConfirmLeave(true)}
-          className="text-xs text-gray-500 hover:text-red-400 transition-colors"
+          className="text-xs text-zinc-400 hover:text-red-400 transition-colors"
           aria-label={t("profile.ariaLeaveGym")}
         >
           {t("gym.leaveGym")}
@@ -127,7 +127,7 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
       <div className="flex items-center justify-between pt-3 border-t border-white/10">
         <div>
           <p className="text-xs text-gray-300">{t("gym.shareData")}</p>
-          <p className="text-xs text-gray-500 mt-0.5">{t("gym.shareDataSub")}</p>
+          <p className="text-xs text-zinc-400 mt-0.5">{t("gym.shareDataSub")}</p>
         </div>
         <button
           onClick={handleToggleSharing}
@@ -156,7 +156,7 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
             <div>
               <p className="text-[10px] text-zinc-500 mb-1 uppercase tracking-wide">{t("gym.shareDataShieldHides")}</p>
               {([1, 2, 3] as const).map((i) => (
-                <p key={i} className="text-[10px] text-gray-500 leading-relaxed">🔒 {t(`gym.shareDataShieldHidden${i}`)}</p>
+                <p key={i} className="text-[10px] text-zinc-400 leading-relaxed">🔒 {t(`gym.shareDataShieldHidden${i}`)}</p>
               ))}
             </div>
           </div>

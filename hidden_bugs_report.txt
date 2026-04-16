@@ -1,50 +1,18 @@
 BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 237 files
 CRITICAL: 1
-WARNING: 220
+WARNING: 10
 INFO: 90
-Total: 311
+Total: 101
 
 [CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (629/1723 キー) — 1124 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
-[WARNING] [LOW_CONTRAST_GRAY] app/admin/AdminPanel.tsx:99: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/admin/AdminPanel.tsx:113: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/admin/AdminPanel.tsx:117: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/admin/AdminPanel.tsx:121: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/admin/AdminPanel.tsx:125: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/admin/AdminPanel.tsx:150: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-center py-16 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/admin/AdminPanel.tsx:191: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/admin/AdminPanel.tsx:195: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/admin/AdminPanel.tsx:199: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/admin/AdminPanel.tsx:203: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/admin/AdminPanel.tsx:212: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-center py-16 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/admin/AdminPanel.tsx:228: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L125: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/page.tsx: L455: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] app/gym/page.tsx:98: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-sm text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/gym/page.tsx:268: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/gym/page.tsx:281: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/gym/page.tsx:332: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [DANGEROUS_HTML] app/gym/page.tsx: L44: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/page.tsx: L51: JSX内に英語テキスト直書き: "BJJ App"
@@ -55,48 +23,10 @@ Total: 311
   FIX: t() キーを追加して多言語対応
 [INFO] [DANGEROUS_HTML] app/layout.tsx: L122: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [LOW_CONTRAST_GRAY] app/legal/tokushoho/page.tsx:111: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="mt-12 text-center text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/legal/tokushoho/page.tsx:155: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/login/LoginClient.tsx:66: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/login/LoginClient.tsx:189: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/login/LoginClient.tsx:194: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/login/LoginClient.tsx:199: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/login/LoginClient.tsx:229: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/login/LoginClient.tsx:290: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/login/LoginClient.tsx:329: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="w-full flex items-center justify-center gap-2 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/login/LoginClient.tsx:341: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-center text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/login/LoginClient.tsx:350: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="inline-flex items-center gap-1.5 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/login/LoginClient.tsx:358: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/login/LoginClient.tsx:361: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-center text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [DANGEROUS_HTML] app/login/layout.tsx: L49: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/login/page.tsx: L44: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [LOW_CONTRAST_GRAY] app/page.tsx:226: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/page.tsx:296: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/page.tsx:297: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/page.tsx:385: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/page.tsx:614: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/page.tsx:711: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [DANGEROUS_HTML] app/page.tsx: L156: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L163: JSX内に英語テキスト直書き: "BJJ App"
@@ -111,12 +41,6 @@ Total: 311
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [DANGEROUS_HTML] app/profile/page.tsx: L145: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [LOW_CONTRAST_GRAY] app/records/[id]/page.tsx:131: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/records/[id]/page.tsx:149: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] app/records/[id]/page.tsx:157: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L162: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/ConfettiEffect.tsx: L41: style={{...}} — Tailwindクラスで統一推奨
@@ -145,10 +69,6 @@ Total: 311
   FIX: t() キーを追加して多言語対応
 [WARNING] [JSX_HARDCODED_ENGLISH] app/wiki/[lang]/page.tsx: L227: JSX内に英語テキスト直書き: "BJJ Wiki"
   FIX: t() キーを追加して多言語対応
-[WARNING] [LOW_CONTRAST_GRAY] components/AICoachCard.tsx:170: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/AICoachCard.tsx:200: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/AchievementBadge.tsx: L84: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [WARNING] [JSX_HARDCODED_ENGLISH] components/AgeGate.tsx: L47: JSX内に英語テキスト直書き: "307239t777@gmail.com"
@@ -165,10 +85,6 @@ Total: 311
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BeltProgressCard.tsx: L170: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/BeltPromotionCelebration.tsx:226: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/BeltPromotionCelebration.tsx:276: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/BeltPromotionCelebration.tsx: L178: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BeltPromotionCelebration.tsx: L194: style={{...}} — Tailwindクラスで統一推奨
@@ -179,132 +95,24 @@ Total: 311
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BeltPromotionCelebration.tsx: L266: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/BodyHeatmap.tsx:206: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/BodyHeatmap.tsx:331: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-center text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L77: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L317: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L322: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/BodyManagementSection.tsx:185: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="mt-1 inline-block bg-zinc-700 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/CompetitionSummaryCard.tsx:212: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/CompetitionSummaryCard.tsx:217: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/CompetitionSummaryCard.tsx:222: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/CompetitionSummaryCard.tsx:226: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/CompetitionSummaryCard.tsx:398: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/CompetitionSummaryCard.tsx:404: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/CompetitionSummaryCard.tsx: L301: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [WARNING] [JSX_HARDCODED_ENGLISH] components/CsvExport.tsx: L307: JSX内に英語テキスト直書き: "BJJ App — bjj-app.net"
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/ExtendedBadgeGrid.tsx: L89: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTracker.tsx:242: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTracker.tsx:307: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTracker.tsx:315: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTracker.tsx:395: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTracker.tsx:407: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTracker.tsx:447: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTracker.tsx:463: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs mt-1 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTracker.tsx:474: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTracker.tsx:514: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTracker.tsx:521: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [WARNING] [JSX_HARDCODED_ENGLISH] components/GoalTracker.tsx: L244: JSX内に英語テキスト直書き: "supabase-goals-schema.sql"
   FIX: t() キーを追加して多言語対応
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTrackerEditor.tsx:118: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/GoalTrackerEditor.tsx: L57: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTrackerGrid.tsx:78: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTrackerGrid.tsx:81: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTrackerGrid.tsx:153: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GoalTrackerGrid.tsx:172: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GuestDashboard.tsx:208: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GuestDashboard.tsx:296: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-center py-8 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GuestDashboard.tsx:311: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GuestDashboard.tsx:315: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GuestDashboard.tsx:349: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymCurriculumCard.tsx:95: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs font-semibold text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymCurriculumCard.tsx:109: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymDashboard.tsx:57: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymDashboard.tsx:156: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymDashboard.tsx:172: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymDashboard.tsx:181: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="mt-3 text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymDashboard.tsx:285: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="flex items-center justify-center h-48 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymDashboard.tsx:339: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymDashboard.tsx:343: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymDashboard.tsx:349: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymDashboard.tsx:357: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymDashboard.tsx:361: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymDashboard.tsx:388: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymDashboard.tsx:453: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymRanking.tsx:160: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymRanking.tsx:164: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymRanking.tsx:173: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymRanking.tsx:193: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymRanking.tsx:269: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="w-5 text-center text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymRanking.tsx:292: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-center text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymRanking.tsx:294: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="w-5 text-center text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymRanking.tsx:311: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/GymWaitlistForm.tsx:100: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/MilestoneBadgeGrid.tsx: L169: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/NavBar.tsx:161: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="hidden sm:flex items-center gap-1 bg-zinc-700 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/NavBar.tsx:187: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="w-3 h-3 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [WARNING] [JSX_HARDCODED_ENGLISH] components/NavBar.tsx: L104: JSX内に英語テキスト直書き: "BJJ App"
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L113: style={{...}} — Tailwindクラスで統一推奨
@@ -319,66 +127,14 @@ Total: 311
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/PartnerStatsCard.tsx: L39: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/PersonalBests.tsx:73: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/PersonalBests.tsx:199: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/PersonalBests.tsx:260: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/PersonalBests.tsx:291: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/PersonalBests.tsx:374: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/PersonalBests.tsx: L362: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/PricingSection.tsx:55: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/PricingSection.tsx:92: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/PricingSection.tsx:120: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-sm font-normal text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/PricingSection.tsx:125: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/PricingSection.tsx:133: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-sm font-normal text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/PricingSection.tsx:135: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/ProfileForm.tsx:65: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/ProfileForm.tsx:83: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/ProfileForm.tsx:89: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/ProfileForm.tsx:91: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/ProfileForm.tsx:102: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/ProfileForm.tsx:112: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/ProfileForm.tsx:120: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/ProfileForm.tsx:124: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/ProfileForm.tsx:274: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/ProfileForm.tsx:297: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/ProfileForm.tsx:313: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/ProfileForm.tsx:353: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-center py-8 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/PushNotificationSection.tsx:58: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/ReferralSection.tsx: L128: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/RollAnalyticsCard.tsx: L81: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/RollAnalyticsCard.tsx: L249: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/ShareButton.tsx:205: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/SkillMapV2.tsx:289: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="flex items-center justify-center h-64 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/SkillMapV2.tsx: L417: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/SkillMapV2.tsx: L429: style={{...}} — Tailwindクラスで統一推奨
@@ -389,50 +145,6 @@ Total: 311
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/SwipeableCard.tsx: L138: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/TechniqueLogForm.tsx:194: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TechniqueLogForm.tsx:213: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TechniqueLogList.tsx:134: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TechniqueLogList.tsx:149: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TechniqueLogList.tsx:190: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-center py-8 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TechniqueLogList.tsx:198: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-center py-12 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TechniqueLogList.tsx:335: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TechniqueLogList.tsx:390: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TechniqueLogList.tsx:421: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TechniqueLogList.tsx:430: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TechniqueLogList.tsx:468: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TechniqueLogList.tsx:485: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-center py-8 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingBarChart.tsx:210: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingBarChart.tsx:226: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingBarChart.tsx:275: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-sm text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingBarChart.tsx:276: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingBarChart.tsx:304: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="mt-3 inline-block bg-zinc-700 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingBarChart.tsx:415: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingBarChart.tsx:441: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingBarChart.tsx:453: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingBarChart.tsx:461: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingBarChart.tsx:474: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="mt-2 pt-1 border-t border-white/10 flex gap-4 text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L279: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L290: style={{...}} — Tailwindクラスで統一推奨
@@ -451,98 +163,10 @@ Total: 311
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L425: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingChart.tsx:141: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="mt-3 inline-block bg-zinc-700 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingChart.tsx:174: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingChart.tsx:297: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingChart.tsx:306: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingChart.tsx:331: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="flex items-center gap-1 text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingChart.tsx:339: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingChart.tsx:350: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingChart.tsx:368: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="flex-1 text-center text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingChart.tsx:373: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingChart.tsx: L355: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLog.tsx:268: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="ml-2 text-sm font-normal text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLog.tsx:324: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLog.tsx:330: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLog.tsx:334: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLog.tsx:361: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLog.tsx:376: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLog.tsx:453: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLog.tsx:465: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="flex-shrink-0 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingLog.tsx: L83: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogForm.tsx:203: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogForm.tsx:407: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogForm.tsx:444: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogForm.tsx:478: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogList.tsx:87: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogList.tsx:176: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-center py-8 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogList.tsx:190: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="flex justify-center gap-4 text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogList.tsx:211: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-center py-8 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogList.tsx:387: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogList.tsx:403: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogList.tsx:474: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="ml-1 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogList.tsx:484: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogList.tsx:487: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogList.tsx:509: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogList.tsx:524: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogStats.tsx:41: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogStats.tsx:46: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingLogStats.tsx:60: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingTypeChart.tsx:224: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingTypeChart.tsx:233: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingTypeChart.tsx:326: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingTypeChart.tsx:347: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="mt-3 inline-block bg-zinc-700 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingTypeChart.tsx:376: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-sm text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingTypeChart.tsx:377: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingTypeChart.tsx:380: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-center py-4 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingTypeChart.tsx:418: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/TrainingTypeChart.tsx:420: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingTypeChart.tsx: L225: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingTypeChart.tsx: L238: style={{...}} — Tailwindクラスで統一推奨
@@ -553,8 +177,6 @@ Total: 311
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L281: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/WeightChart.tsx:208: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/WeightChart.tsx: L137: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeightCutPlanner.tsx: L190: style={{...}} — Tailwindクラスで統一推奨
@@ -565,52 +187,10 @@ Total: 311
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/dashboard/MatTimeTracker.tsx: L106: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/gym/BeltDistributionChart.tsx:46: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/gym/BeltDistributionChart.tsx: L43: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/gym/CsvBulkInvite.tsx:122: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/gym/CsvBulkInvite.tsx:142: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/gym/CsvBulkInvite.tsx:198: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/gym/CurriculumDispatch.tsx:78: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/gym/CurriculumDispatch.tsx:106: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/gym/CurriculumDispatch.tsx:158: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/gym/CurriculumDispatch.tsx:165: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/gym/MemberCard.tsx:74: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/gym/MemberCard.tsx:78: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/gym/MemberCard.tsx:109: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="flex-shrink-0 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/profile/AccountSection.tsx:130: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/profile/AccountSection.tsx:316: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/profile/GymMembershipSection.tsx:120: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/profile/GymMembershipSection.tsx:130: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/profile/GymMembershipSection.tsx:159: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-[10px] text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/AddNodePopup.tsx: L24: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [LOW_CONTRAST_GRAY] components/skillmap/BottomDrawer.tsx:136: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="w-full text-sm text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/skillmap/ProModal.tsx:73: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="block w-full bg-zinc-700 text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/skillmap/ProModal.tsx:77: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-sm text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/skillmap/SkillMapEmpty.tsx:38: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
-[WARNING] [LOW_CONTRAST_GRAY] components/skillmap/SkillMapToolbar.tsx:97: text-gray-500 はダーク背景でコントラスト不足(WCAG AA): 'className="text-xs text-gray-500'
-  FIX: text-zinc-400 (or text-zinc-300) に置換してAA準拠にする
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/TechniqueNode.tsx: L58: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/TechniqueNode.tsx: L63: style={{...}} — Tailwindクラスで統一推奨

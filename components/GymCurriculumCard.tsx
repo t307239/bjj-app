@@ -92,7 +92,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
           <span className="text-xl flex-shrink-0 mt-0.5">📚</span>
         )}
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-semibold text-gray-500 tracking-widest mb-0.5 truncate">
+          <p className="text-xs font-semibold text-zinc-400 tracking-widest mb-0.5 truncate">
             {gymName
               ? `From ${gymName}`
               : t("gym.curriculumCardTitle")}
@@ -106,7 +106,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
           >
             {pageName ?? t("gym.curriculumCardTitle")}
           </a>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-xs text-zinc-400 mt-0.5">
             {daysAgo === 0 ? t("gym.sentToday") : daysAgo === 1 ? t("gym.sentYesterday") : t("gym.sentDaysAgo", { n: daysAgo })}
           </p>
         </div>
@@ -129,7 +129,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
             className={`text-xs font-semibold px-2 py-0.5 rounded-full transition-colors ${
               practiced
                 ? "text-[#10B981] bg-[#10B981]/10 cursor-default"
-                : "text-gray-500 hover:text-[#10B981] hover:bg-[#10B981]/10"
+                : "text-zinc-400 hover:text-[#10B981] hover:bg-[#10B981]/10"
             }`}
           >
             {practiced ? t("gym.curriculumPracticedDone") : t("gym.curriculumPracticedBtn")}

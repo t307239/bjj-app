@@ -223,7 +223,7 @@ export default async function Home() {
             {t("landing.heroSubtext")}
           </p>
           {/* Fix 7: arrow → (not ↓) */}
-          <p className="text-gray-500 text-xs mt-3">
+          <p className="text-zinc-400 text-xs mt-3">
             <Link href="/dashboard" className="hover:text-gray-300 underline transition-colors">
               {t("landing.heroGuest")}
             </Link>
@@ -293,8 +293,8 @@ export default async function Home() {
               <IconArrowRight className="w-4 h-4" />
             </IABSafeLink>
           </div>
-          <p className="text-gray-500 text-xs mt-4">{t("landing.engSubtext")}</p>
-          <p className="text-gray-500 text-xs mt-2">
+          <p className="text-zinc-400 text-xs mt-4">{t("landing.engSubtext")}</p>
+          <p className="text-zinc-400 text-xs mt-2">
             <Link href="/dashboard" className="hover:text-gray-300 underline transition-colors">
               {t("landing.engGuest")}
             </Link>
@@ -382,7 +382,7 @@ export default async function Home() {
           <h2 className="text-2xl font-bold text-center mb-3 text-white">
             {t("landing.previewTitle")}
           </h2>
-          <p className="text-gray-500 text-center text-sm mb-12">{t("landing.previewSubtitle")}</p>
+          <p className="text-zinc-400 text-center text-sm mb-12">{t("landing.previewSubtitle")}</p>
 
           <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
             {/* スマホモックアップ */}
@@ -611,7 +611,7 @@ export default async function Home() {
             <IconBook className="w-6 h-6 text-emerald-400" />
             {t("landing.wikiTitle")}
           </h2>
-          <p className="text-gray-500 text-center text-sm mb-8">
+          <p className="text-zinc-400 text-center text-sm mb-8">
             {t("landing.wikiSubtitle")}
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
@@ -708,7 +708,7 @@ export default async function Home() {
       {/* Final CTA — Fix 15 */}
       <section className="px-4 py-16 text-center bg-zinc-900/30">
         <h2 className="text-2xl font-bold mb-3 text-white">{t("landing.finalCtaTitle")}</h2>
-        <p className="text-gray-500 text-sm mb-8">{t("landing.finalCtaSubtitle")}</p>
+        <p className="text-zinc-400 text-sm mb-8">{t("landing.finalCtaSubtitle")}</p>
         <Link
           href="/login"
           className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-bold py-4 px-10 rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#10B981]/20"

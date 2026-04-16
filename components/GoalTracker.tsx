@@ -239,7 +239,7 @@ export default function GoalTracker({ userId }: Props) {
   if (!schemaReady) {
     return (
       <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 border border-white/10 mb-4 shadow-lg shadow-black/40">
-        <p className="text-xs text-gray-500 text-center">
+        <p className="text-xs text-zinc-400 text-center">
           To enable goal tracking, run
           <code className="text-yellow-400 mx-1">supabase-goals-schema.sql</code>
           in Supabase.
@@ -304,7 +304,7 @@ export default function GoalTracker({ userId }: Props) {
           <h4 className="text-sm font-medium text-gray-300">{t("goal.title")}</h4>
           <div className="flex items-center gap-2">
             {!isOpen && hasGoals && (
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-zinc-400">
                 {[
                   data.weeklyGoal > 0 ? t("goal.compactWeekly", { a: data.weekCount, b: data.weeklyGoal }) : "",
                   data.monthlyGoal > 0 ? t("goal.compactMonthly", { a: data.monthCount, b: data.monthlyGoal }) : "",
@@ -312,10 +312,10 @@ export default function GoalTracker({ userId }: Props) {
               </span>
             )}
             {!isOpen && !hasGoals && (
-              <span className="text-xs text-gray-500">{t("goal.setAGoal")}</span>
+              <span className="text-xs text-zinc-400">{t("goal.setAGoal")}</span>
             )}
             <svg
-              className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+              className={`w-4 h-4 text-zinc-400 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
               fill="none" stroke="currentColor" viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
@@ -392,7 +392,7 @@ export default function GoalTracker({ userId }: Props) {
                     <span className="text-xs bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
+                <button className="text-xs text-zinc-400 hover:text-gray-300 transition-colors">
                   {data.weeklyGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>
@@ -404,7 +404,7 @@ export default function GoalTracker({ userId }: Props) {
                   <GoalWeekHeatmap weekHistory={weekHistory} consecutiveAchievedWeeks={consecutiveAchievedWeeks} />
                 </>
               ) : (
-                <p className="text-xs text-gray-500 mt-1">{t("goal.noGoal")}</p>
+                <p className="text-xs text-zinc-400 mt-1">{t("goal.noGoal")}</p>
               )}
             </div>
           )}
@@ -444,7 +444,7 @@ export default function GoalTracker({ userId }: Props) {
                     <span className="text-xs bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
+                <button className="text-xs text-zinc-400 hover:text-gray-300 transition-colors">
                   {data.monthlyGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>
@@ -460,7 +460,7 @@ export default function GoalTracker({ userId }: Props) {
                         : t("goal.monthlyAchieved")}
                     </p>
                   ) : data.monthCount < data.monthlyGoal && remainingDaysInMonth > 0 && (
-                    <p className="text-xs mt-1 text-gray-500">
+                    <p className="text-xs mt-1 text-zinc-400">
                       {t("goal.moreNeeded", { needed: data.monthlyGoal - data.monthCount, days: remainingDaysInMonth })}
                       {monthlyProjected > 0 ? (
                         <span className={monthOnTrack ? "text-green-400" : "text-orange-400"}>
@@ -471,7 +471,7 @@ export default function GoalTracker({ userId }: Props) {
                   )}
                 </>
               ) : (
-                <p className="text-xs text-gray-500 mt-1">{t("goal.noGoal")}</p>
+                <p className="text-xs text-zinc-400 mt-1">{t("goal.noGoal")}</p>
               )}
             </div>
           )}
@@ -511,14 +511,14 @@ export default function GoalTracker({ userId }: Props) {
                     <span className="text-xs bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
+                <button className="text-xs text-zinc-400 hover:text-gray-300 transition-colors">
                   {data.techniqueGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>
               {data.techniqueGoal > 0 ? (
                 <ProgressBar current={data.techniqueCount} target={data.techniqueGoal} sessionsUnit={t("chart.timesUnit")} doneLabel={t("goal.done")} />
               ) : (
-                <p className="text-xs text-gray-500 mt-1">{t("goal.noGoalParen")}</p>
+                <p className="text-xs text-zinc-400 mt-1">{t("goal.noGoalParen")}</p>
               )}
             </div>
           )}

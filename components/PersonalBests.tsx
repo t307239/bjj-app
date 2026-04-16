@@ -70,7 +70,7 @@ function IntensitySparkline({ data }: { data: { ym: string; avgSessionMin: numbe
           <circle cx={width - padding} cy={padding + graphHeight - ((currentMonth.avgSessionMin - minIntensity) / Math.max(1, maxIntensity - minIntensity)) * graphHeight} r="1.5" fill="#10B981" />
         )}
       </svg>
-      <span className="text-xs text-gray-500 flex-shrink-0">{fmtTime(currentMonth.avgSessionMin)}</span>
+      <span className="text-xs text-zinc-400 flex-shrink-0">{fmtTime(currentMonth.avgSessionMin)}</span>
     </div>
   );
 }
@@ -196,7 +196,7 @@ export default function PersonalBests({ userId }: Props) {
       <div className="mb-4 bg-zinc-900 rounded-xl px-4 py-6 border border-white/10 text-center">
         <p className="text-2xl mb-2">📊</p>
         <p className="text-sm font-medium text-gray-300 mb-1">{t("stats.personalBests")}</p>
-        <p className="text-xs text-gray-500">{t("stats.emptyBests")}</p>
+        <p className="text-xs text-zinc-400">{t("stats.emptyBests")}</p>
       </div>
     );
   }
@@ -257,13 +257,13 @@ export default function PersonalBests({ userId }: Props) {
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-gray-300">📊 {t("stats.personalBests")}</span>
           {!isOpen && (
-            <span className="text-xs text-gray-500 font-normal">
+            <span className="text-xs text-zinc-400 font-normal">
               {bests.totalSessions}{timesUnit} · {bests.longestStreak}{t("stats.dayStreak")}
             </span>
           )}
         </div>
         <svg
-          className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          className={`w-4 h-4 text-zinc-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
           fill="none" viewBox="0 0 24 24" stroke="currentColor"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
@@ -288,7 +288,7 @@ export default function PersonalBests({ userId }: Props) {
                 ▼ {diff}{timesUnit} · -{pct}% {t("stats.lastMonthCompare")}
               </span>
             );
-            return <span className="text-xs text-gray-500 mt-0.5">= {t("stats.samePaceLast")}</span>;
+            return <span className="text-xs text-zinc-400 mt-0.5">= {t("stats.samePaceLast")}</span>;
           })()}
         </div>
         <button
@@ -364,14 +364,14 @@ export default function PersonalBests({ userId }: Props) {
                         background: isBest ? "#10B981" : count > 0 ? "#374151" : "#1f2937",
                       }}
                     />
-                    <span className={`text-xs leading-none ${isBest ? "text-[#10B981] font-bold" : "text-gray-500"}`}>
+                    <span className={`text-xs leading-none ${isBest ? "text-[#10B981] font-bold" : "text-zinc-400"}`}>
                       {DOW_LABELS[i]}
                     </span>
                   </div>
                 );
               })}
             </div>
-            <p className="text-xs text-gray-500 text-center mt-1">
+            <p className="text-xs text-zinc-400 text-center mt-1">
               {t("stats.bestDayLabel")}: <span className="text-[#10B981] font-medium">{DOW_LONG[bestDowIdx]}</span> ({bests.dowCounts[bestDowIdx]}{timesUnit})
             </p>
           </div>

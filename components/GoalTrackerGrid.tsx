@@ -34,14 +34,14 @@ export function GoalWeekDayGrid({
                   : isToday
                   ? "bg-blue-500/20 border border-blue-500/50 text-blue-300"
                   : isPast
-                  ? "bg-white/3 border border-dashed border-white/20 text-gray-500"
-                  : "bg-transparent text-gray-500"
+                  ? "bg-white/3 border border-dashed border-white/20 text-zinc-400"
+                  : "bg-transparent text-zinc-400"
               }`}
             >
               {trained ? "✓" : isToday ? "•" : ""}
             </div>
             <span className={`text-xs leading-none ${
-              isToday ? "text-gray-300 font-semibold" : isFuture ? "text-gray-500" : "text-gray-400"
+              isToday ? "text-gray-300 font-semibold" : isFuture ? "text-zinc-400" : "text-gray-400"
             }`}>
               {label}
             </span>
@@ -75,10 +75,10 @@ export function GoalDaysLeftText({
     </p>
   );
   if (daysLeftInWeek === 0) return (
-    <p className="text-xs text-gray-500 mt-1.5">{t("goal.zeroDaysLeft", { n: needed })}</p>
+    <p className="text-xs text-zinc-400 mt-1.5">{t("goal.zeroDaysLeft", { n: needed })}</p>
   );
   return (
-    <p className="text-xs text-gray-500 mt-1.5">
+    <p className="text-xs text-zinc-400 mt-1.5">
       {t("goal.moreNeeded", { needed, days: daysLeftInWeek })}
       {needed <= daysLeftInWeek ? t("goal.onTrackSuffix") : t("goal.pickUpPace")}
     </p>
@@ -111,12 +111,12 @@ export function GoalWeekHeatmap({
                     : "bg-blue-500/20 border border-blue-500/40 text-blue-300"
                   : w.achieved
                   ? "bg-emerald-500/25 text-emerald-400"
-                  : "bg-transparent border border-dashed border-white/20 text-gray-500"
+                  : "bg-transparent border border-dashed border-white/20 text-zinc-400"
               }`}
             >
               {w.achieved ? "✓" : w.count > 0 ? w.count : "-"}
             </div>
-            <span className={`text-xs leading-none ${w.isCurrent ? "text-gray-300" : "text-gray-500"}`}>
+            <span className={`text-xs leading-none ${w.isCurrent ? "text-gray-300" : "text-zinc-400"}`}>
               {w.isCurrent
                 ? t("goal.thisWeek")
                 : weekHistory.indexOf(w) === weekHistory.length - 2
@@ -150,7 +150,7 @@ export function GoalMonthHistoryBadges({
 
   return (
     <div className="border-t border-white/10 px-4 py-3">
-      <p className="text-xs text-gray-500 mb-2 tracking-wider">{t("goal.past6Months")}</p>
+      <p className="text-xs text-zinc-400 mb-2 tracking-wider">{t("goal.past6Months")}</p>
       <div className="flex items-end justify-between gap-1">
         {monthHistory.map((m) => (
           <div key={m.ym} className="flex flex-col items-center gap-1 flex-1">
@@ -158,18 +158,18 @@ export function GoalMonthHistoryBadges({
               className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
                 m.achieved
                   ? "bg-emerald-500 text-white shadow-sm shadow-emerald-500/40"
-                  : "border border-dashed border-white/20 text-gray-500"
+                  : "border border-dashed border-white/20 text-zinc-400"
               }`}
             >
               {m.achieved ? "✓" : m.count}
             </div>
-            <span className={`text-xs ${m.achieved ? "text-emerald-400" : "text-gray-500"}`}>
+            <span className={`text-xs ${m.achieved ? "text-emerald-400" : "text-zinc-400"}`}>
               {m.label}
             </span>
           </div>
         ))}
       </div>
-      <p className="text-xs text-gray-500 mt-2 text-center">
+      <p className="text-xs text-zinc-400 mt-2 text-center">
         {t("goal.monthsAchieved", { n: monthHistory.filter((m) => m.achieved).length })}
       </p>
     </div>

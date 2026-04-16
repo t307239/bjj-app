@@ -96,7 +96,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div>
             <h1 className="text-lg font-bold text-white">🛡️ Admin Panel</h1>
-            <p className="text-xs text-gray-500">{adminEmail}</p>
+            <p className="text-xs text-zinc-400">{adminEmail}</p>
           </div>
           <a href="/dashboard" className="text-xs text-gray-400 hover:text-white transition-colors">
             ← Back to app
@@ -110,19 +110,19 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-white">{data.total}</div>
-              <div className="text-xs text-gray-500 mt-0.5">Total Users</div>
+              <div className="text-xs text-zinc-400 mt-0.5">Total Users</div>
             </div>
             <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-yellow-400">{proCount}</div>
-              <div className="text-xs text-gray-500 mt-0.5">Pro (this page)</div>
+              <div className="text-xs text-zinc-400 mt-0.5">Pro (this page)</div>
             </div>
             <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-blue-400">{gymOwnerCount}</div>
-              <div className="text-xs text-gray-500 mt-0.5">Gym Members</div>
+              <div className="text-xs text-zinc-400 mt-0.5">Gym Members</div>
             </div>
             <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-green-400">{activeCount}</div>
-              <div className="text-xs text-gray-500 mt-0.5">Active (30d)</div>
+              <div className="text-xs text-zinc-400 mt-0.5">Active (30d)</div>
             </div>
           </div>
         )}
@@ -147,7 +147,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
 
         {/* User table */}
         {loading && !data ? (
-          <div className="text-center py-16 text-gray-500 text-sm">Loading…</div>
+          <div className="text-center py-16 text-zinc-400 text-sm">Loading…</div>
         ) : (
           <>
             <div className="space-y-1.5">
@@ -188,19 +188,19 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
                   {expanded === user.id && (
                     <div className="bg-zinc-900/60 border border-white/5 border-t-0 rounded-b-xl px-4 py-4 -mt-1 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
                       <div>
-                        <div className="text-gray-500 mb-0.5">User ID</div>
+                        <div className="text-zinc-400 mb-0.5">User ID</div>
                         <div className="font-mono text-gray-300 break-all">{user.id}</div>
                       </div>
                       <div>
-                        <div className="text-gray-500 mb-0.5">Signed up</div>
+                        <div className="text-zinc-400 mb-0.5">Signed up</div>
                         <div className="text-gray-300">{fmtDate(user.created_at)}</div>
                       </div>
                       <div>
-                        <div className="text-gray-500 mb-0.5">Last login</div>
+                        <div className="text-zinc-400 mb-0.5">Last login</div>
                         <div className="text-gray-300">{fmtDaysAgo(user.last_sign_in_at)}</div>
                       </div>
                       <div>
-                        <div className="text-gray-500 mb-0.5">Total sessions</div>
+                        <div className="text-zinc-400 mb-0.5">Total sessions</div>
                         <div className="text-gray-300 font-bold">{user.sessions_total}</div>
                       </div>
                     </div>
@@ -209,7 +209,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
               ))}
 
               {data?.users.length === 0 && !loading && (
-                <div className="text-center py-16 text-gray-500 text-sm">
+                <div className="text-center py-16 text-zinc-400 text-sm">
                   {query ? `No users matching "${query}"` : "No users found"}
                 </div>
               )}
@@ -225,7 +225,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
                 >
                   ← Previous
                 </button>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-zinc-400">
                   Page {page + 1} · {data.total} total
                 </span>
                 <button

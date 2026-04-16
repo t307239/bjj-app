@@ -138,7 +138,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
               {t("chart.upgradeToProBtn")}
             </a>
           ) : (
-            <span className="mt-3 inline-block bg-zinc-700 text-gray-500 text-xs font-semibold px-4 py-2 rounded-lg cursor-not-allowed">
+            <span className="mt-3 inline-block bg-zinc-700 text-zinc-400 text-xs font-semibold px-4 py-2 rounded-lg cursor-not-allowed">
               {t("chart.upgradeToProBtn")}
             </span>
           )}
@@ -171,7 +171,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
           <div className="flex gap-1">
             <div className="flex flex-col gap-0.5 mr-1">
               {["S","M","T","W","T","F","S"].map((d, i) => (
-                <div key={i} className="text-xs text-gray-500 h-3 flex items-center">{d}</div>
+                <div key={i} className="text-xs text-zinc-400 h-3 flex items-center">{d}</div>
               ))}
             </div>
             {dummyWeeks.map((week, wi) => (
@@ -294,7 +294,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
             <div className="flex gap-1 ml-5 mb-0.5">
               {monthLabels.map((label, wi) => (
                 <div key={wi} className="w-3 overflow-visible flex-shrink-0">
-                  <span className="text-xs text-gray-500 whitespace-nowrap leading-none">{label}</span>
+                  <span className="text-xs text-zinc-400 whitespace-nowrap leading-none">{label}</span>
                 </div>
               ))}
             </div>
@@ -303,7 +303,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
               {/* 曜日ラベル */}
               <div className="flex flex-col gap-0.5 mr-1">
                 {dayLabels.map((d, i) => (
-                  <div key={i} className="text-xs text-gray-500 h-3 flex items-center">
+                  <div key={i} className="text-xs text-zinc-400 h-3 flex items-center">
                     {d}
                   </div>
                 ))}
@@ -328,7 +328,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
             </div>
           </div>
           <div className="flex items-center justify-between mt-2">
-            <div className="flex items-center gap-1 text-xs text-gray-500">
+            <div className="flex items-center gap-1 text-xs text-zinc-400">
               <span>{t("chart.less")}</span>
               <div className="w-3 h-3 rounded-sm bg-zinc-900/50" />
               <div className="w-3 h-3 rounded-sm bg-green-700/60" />
@@ -336,7 +336,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
               <div className="w-3 h-3 rounded-sm bg-green-400" />
               <span>{t("chart.more")}</span>
             </div>
-            <span className="text-xs text-gray-500">{t("chart.past84Days", { n: totalDays })}</span>
+            <span className="text-xs text-zinc-400">{t("chart.past84Days", { n: totalDays })}</span>
           </div>
         </>
       ) : (
@@ -347,7 +347,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
               const heightPct = maxMonthCount > 0 ? (m.count / maxMonthCount) * 100 : 0;
               return (
                 <div key={m.ym} className="flex-1 flex flex-col items-center gap-0.5">
-                  <div className="text-xs text-gray-500 mb-0.5">
+                  <div className="text-xs text-zinc-400 mb-0.5">
                     {m.count > 0 ? m.count : ""}
                   </div>
                   <div
@@ -365,12 +365,12 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
           </div>
           <div className="flex gap-1.5">
             {monthData.map((m) => (
-              <div key={m.ym} className="flex-1 text-center text-xs text-gray-500">
+              <div key={m.ym} className="flex-1 text-center text-xs text-zinc-400">
                 {m.label}
               </div>
             ))}
           </div>
-          <div className="text-xs text-gray-500 text-right mt-1">
+          <div className="text-xs text-zinc-400 text-right mt-1">
             {t("chart.past6Months")}: {t("chart.sessionsFmt", { n: monthData.reduce((s, m) => s + m.count, 0) })}
           </div>
         </>

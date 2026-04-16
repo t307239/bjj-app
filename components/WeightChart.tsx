@@ -205,7 +205,7 @@ export default function WeightChart({ userId, refreshKey, targetWeight, targetDa
   return (
     <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
       <p className="text-xs text-gray-400 font-semibold mb-1 uppercase tracking-wide">
-        {t("body.weightChart")} <span className="text-gray-500 font-normal">({t("body.weightChartPeriod")})</span>
+        {t("body.weightChart")} <span className="text-zinc-400 font-normal">({t("body.weightChartPeriod")})</span>
       </p>
 
       {/* Legend — flex-wrap for narrow viewports */}

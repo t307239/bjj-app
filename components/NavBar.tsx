@@ -158,7 +158,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
                   ⚡ {t("nav.upgradeToPro")}
                 </a>
               ) : (
-                <span className="hidden sm:flex items-center gap-1 bg-zinc-700 text-gray-500 font-bold px-3 py-1 rounded-lg text-xs cursor-not-allowed" aria-disabled="true">
+                <span className="hidden sm:flex items-center gap-1 bg-zinc-700 text-zinc-400 font-bold px-3 py-1 rounded-lg text-xs cursor-not-allowed" aria-disabled="true">
                   ⚡ {t("nav.upgradeToPro")}
                 </span>
               )
@@ -184,7 +184,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
                     {displayName.charAt(0).toUpperCase()}
                   </span>
                 )}
-                <svg className="w-3 h-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <svg className="w-3 h-3 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
@@ -235,7 +235,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
                 className={`relative flex flex-col items-center gap-0.5 py-3 text-xs transition-colors ${
                   isActive
                     ? "text-white"
-                    : "text-gray-500 hover:text-gray-300"
+                    : "text-zinc-400 hover:text-gray-300"
                 }`}
               >
                 {/* Active indicator bar */}

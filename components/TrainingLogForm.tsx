@@ -200,7 +200,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
               <button
                 type="button"
                 onClick={() => setForm({ ...form, date: getYesterdayDateString() })}
-                className="text-xs text-gray-500 hover:text-white font-medium"
+                className="text-xs text-zinc-400 hover:text-white font-medium"
               >
                 {t("training.yesterday")}
               </button>
@@ -250,7 +250,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
               className={`py-3 rounded-xl border-2 text-sm font-bold transition-all active:scale-95 ${
                 form.type === opt.value
                   ? opt.activeClass
-                  : "border-white/10 bg-zinc-800/60 text-gray-500 hover:border-white/20 hover:text-gray-300"
+                  : "border-white/10 bg-zinc-800/60 text-zinc-400 hover:border-white/20 hover:text-gray-300"
               }`}
             >
               {opt.label}
@@ -404,7 +404,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
             ))}
           </datalist>
         )}
-        <p className="text-xs text-gray-500 mt-0.5">{t("competition.techAppendNote")}</p>
+        <p className="text-xs text-zinc-400 mt-0.5">{t("competition.techAppendNote")}</p>
       </div>
 
       {/* ── Optional details toggle (Instructor, Partner, Weight) ─────────── */}
@@ -441,7 +441,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
           <div>
             <label className="block text-gray-400 text-xs mb-1">{t("training.partnerTag")}</label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm select-none">@</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm select-none">@</span>
               <input
                 type="text"
                 list="partner-suggestions-list"
@@ -475,7 +475,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
                 placeholder={t("training.weightPlaceholder")}
                 className="w-full bg-zinc-800 text-white rounded-lg pr-14 px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-600"
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none select-none">
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 text-xs pointer-events-none select-none">
                 {t("body.weightUnit")}
               </span>
             </div>

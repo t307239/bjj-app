@@ -127,7 +127,7 @@ export default function AccountSection({ userId, supabase }: Props) {
 
   return (
     <div className="mt-10 border-t border-white/10 pt-6 space-y-4">
-      <h3 className="text-gray-500 text-xs tracking-wider">{t("profile.account")}</h3>
+      <h3 className="text-zinc-400 text-xs tracking-wider">{t("profile.account")}</h3>
 
       {/* Email change — self-serve (Axis 11 CS) */}
       <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
@@ -313,7 +313,7 @@ export default function AccountSection({ userId, supabase }: Props) {
           </div>
           <p className="text-gray-400 text-xs leading-relaxed">{t("profile.deleteDesc")}</p>
           <div>
-            <label className="text-gray-500 text-xs mb-1 block">{t("profile.deleteTypeLabel")}</label>
+            <label className="text-zinc-400 text-xs mb-1 block">{t("profile.deleteTypeLabel")}</label>
             <input
               type="text"
               value={deleteInput}

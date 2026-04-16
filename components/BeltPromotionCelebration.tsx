@@ -223,7 +223,7 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
         <p className="text-gray-400 text-sm mb-2">
           {t("beltPromo.advanced", { from: fromLabel, to: toLabel })}
         </p>
-        <p className="text-gray-500 text-xs mb-7 italic">
+        <p className="text-zinc-400 text-xs mb-7 italic">
           {t("beltPromo.keepRolling")}
         </p>
 
@@ -273,7 +273,7 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
         </button>
 
         {/* Hint that modal won't close on its own */}
-        <p className="text-gray-500 text-xs mt-3 select-none">
+        <p className="text-zinc-400 text-xs mt-3 select-none">
           {t("beltPromo.screenshotHint")}
         </p>
       </div>

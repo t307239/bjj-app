@@ -43,7 +43,7 @@ export default function BeltDistributionChart({ members }: { members: MemberRow[
                 style={{ width: `${(counts[belt] / max) * 100}%`, minWidth: counts[belt] > 0 ? "8px" : "0" }}
               />
             </div>
-            <span className="text-xs text-gray-500 w-4 text-right">{counts[belt]}</span>
+            <span className="text-xs text-zinc-400 w-4 text-right">{counts[belt]}</span>
           </div>
         ))}
       </div>

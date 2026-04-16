@@ -182,7 +182,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
                 {t("body.paywallCta")}
               </a>
             ) : (
-              <span className="mt-1 inline-block bg-zinc-700 text-gray-500 text-xs font-bold px-5 py-2.5 rounded-xl cursor-not-allowed">
+              <span className="mt-1 inline-block bg-zinc-700 text-zinc-400 text-xs font-bold px-5 py-2.5 rounded-xl cursor-not-allowed">
                 {t("body.paywallCta")}
               </span>
             )}

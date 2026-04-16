@@ -167,7 +167,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
           <span className="text-2xl flex-shrink-0">🤖</span>
           <div className="flex-1">
             <h3 className="text-sm font-semibold text-white">{t("aiCoach.title")}</h3>
-            <p className="text-xs text-gray-500 mt-0.5">{t("aiCoach.proDesc")}</p>
+            <p className="text-xs text-zinc-400 mt-0.5">{t("aiCoach.proDesc")}</p>
           </div>
           <a
             href="/techniques#pro"
@@ -197,7 +197,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
           <span className="text-2xl flex-shrink-0">🤖</span>
           <div>
             <h3 className="text-sm font-semibold text-white">{t("aiCoach.title")}</h3>
-            <p className="text-xs text-gray-500 mt-0.5">{t("aiCoach.generateDesc")}</p>
+            <p className="text-xs text-zinc-400 mt-0.5">{t("aiCoach.generateDesc")}</p>
           </div>
         </div>
         {/* Mode chips */}

@@ -108,7 +108,7 @@ export default function TokushohoPage() {
           />
         </div>
 
-        <div className="mt-12 text-center text-gray-500 text-xs space-y-1">
+        <div className="mt-12 text-center text-zinc-400 text-xs space-y-1">
           <p>Last updated: March 2026</p>
           <div className="flex justify-center gap-4">
             <a href="/terms" className="hover:text-white transition-colors">
@@ -152,7 +152,7 @@ function Row({
         </dd>
       )}
       {note && (
-        <dd className="text-xs text-gray-500 mt-1 italic">{note}</dd>
+        <dd className="text-xs text-zinc-400 mt-1 italic">{note}</dd>
       )}
     </div>
   );

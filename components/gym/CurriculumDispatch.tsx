@@ -75,7 +75,7 @@ export default function CurriculumDispatch({ gym, onUpgradeClick, upgrading, isG
           <span className="text-xl flex-shrink-0">📚</span>
           <div className="flex-1">
             <p className="text-sm font-semibold text-white">{t("gym.curriculumTitle")}</p>
-            <p className="text-xs text-gray-500 mt-0.5">{t("gym.curriculumProRequired")}</p>
+            <p className="text-xs text-zinc-400 mt-0.5">{t("gym.curriculumProRequired")}</p>
           </div>
           <button
             onClick={onUpgradeClick}
@@ -103,7 +103,7 @@ export default function CurriculumDispatch({ gym, onUpgradeClick, upgrading, isG
   return (
     <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
       <h3 className="text-sm font-semibold text-white mb-1">📚 {t("gym.curriculumTitle")}</h3>
-      <p className="text-xs text-gray-500 mb-3">{t("gym.curriculumDesc")}</p>
+      <p className="text-xs text-zinc-400 mb-3">{t("gym.curriculumDesc")}</p>
 
       {/* B-34: 1-Click Template Picker */}
       <div className="mb-3">
@@ -155,14 +155,14 @@ export default function CurriculumDispatch({ gym, onUpgradeClick, upgrading, isG
           </button>
           <button
             onClick={() => setConfirmDispatch(false)}
-            className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+            className="text-xs text-zinc-400 hover:text-gray-300 transition-colors"
           >
             {t("training.cancel")}
           </button>
         </div>
       )}
       {sentAgo && (
-        <p className="text-xs text-gray-500 mt-2">
+        <p className="text-xs text-zinc-400 mt-2">
           {t("gym.curriculumLastSent", { text: sentAgo })}
         </p>
       )}

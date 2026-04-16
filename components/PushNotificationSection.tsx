@@ -55,7 +55,7 @@ export default function PushNotificationSection() {
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="text-gray-300 text-xs font-semibold mb-0.5">🔔 {t("profile.pushNotifications")}</p>
-          <p className="text-gray-500 text-xs leading-relaxed">{t("profile.pushNotificationsDesc")}</p>
+          <p className="text-zinc-400 text-xs leading-relaxed">{t("profile.pushNotificationsDesc")}</p>
           {subState === "blocked" && (
             <p className="text-amber-400 text-xs mt-1">{t("profile.pushBlocked")}</p>
           )}

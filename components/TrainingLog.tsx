@@ -265,7 +265,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         <h3 className="text-lg font-semibold whitespace-nowrap">
           {t("training.title")}
           {totalCount !== null && totalCount > 0 && (
-            <span className="ml-2 text-sm font-normal text-gray-500">({totalCount})</span>
+            <span className="ml-2 text-sm font-normal text-zinc-400">({totalCount})</span>
           )}
         </h3>
         <div className="flex items-center gap-2 flex-shrink-0 print:hidden">
@@ -321,17 +321,17 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
               <div className="bg-zinc-900 rounded-xl p-3 border border-white/10 flex items-center gap-3">
                 <MiniTypeDonut entries={monthEntries} />
                 <div>
-                  <p className="text-xs text-gray-500 tracking-wide">{t("training.monthCount")}</p>
+                  <p className="text-xs text-zinc-400 tracking-wide">{t("training.monthCount")}</p>
                   <p className="text-lg font-bold text-white">{monthEntries.length}</p>
                   <p className="text-xs text-gray-400">{t("training.bentoSessions")}</p>
                 </div>
               </div>
               <div className="bg-zinc-900 rounded-xl p-3 border border-white/10">
-                <p className="text-xs text-gray-500 tracking-wide mb-1.5">{t("training.bentoTypeMix")}</p>
+                <p className="text-xs text-zinc-400 tracking-wide mb-1.5">{t("training.bentoTypeMix")}</p>
                 <MonthTypeStackBar entries={monthEntries} />
                 <div className="flex flex-wrap gap-x-2 gap-y-0.5 mt-1.5">
                   {TRAINING_TYPES.filter((t) => monthEntries.some((e) => e.type === t.value)).map((t) => (
-                    <span key={t.value} className="text-xs text-gray-500">
+                    <span key={t.value} className="text-xs text-zinc-400">
                       {t.icon} {t.label}: {monthEntries.filter((e) => e.type === t.value).length}
                     </span>
                   ))}
@@ -358,7 +358,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
           {searchLoading ? (
             <div className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 border-2 border-gray-500 border-t-emerald-400 rounded-full animate-spin pointer-events-none" />
           ) : (
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           )}
@@ -373,7 +373,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
             <button
               onClick={() => setSearchQuery("")}
               aria-label={t("common.clearSearch")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
@@ -450,7 +450,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
                     onChange={(e) => setDateFrom(e.target.value)}
                     className="w-28 flex-shrink-0 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:border-white/30"
                   />
-                  <span className="text-gray-500 text-xs flex-shrink-0">–</span>
+                  <span className="text-zinc-400 text-xs flex-shrink-0">–</span>
                   <input
                     type="date"
                     value={dateTo}
@@ -462,7 +462,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
                   <button
                     onClick={() => { setDateFrom(""); setDateTo(""); }}
                     aria-label={t("common.clearFilter")}
-                    className="flex-shrink-0 text-gray-500 hover:text-white text-xs px-1 transition-colors"
+                    className="flex-shrink-0 text-zinc-400 hover:text-white text-xs px-1 transition-colors"
                   >
                     ✕
                   </button>

@@ -205,7 +205,7 @@ export default function GuestDashboard() {
                       <button
                         type="button"
                         onClick={() => setDate(getYesterdayLocalDateString())}
-                        className="text-xs text-gray-500 hover:text-white font-medium"
+                        className="text-xs text-zinc-400 hover:text-white font-medium"
                       >
                         {t("training.yesterday")}
                       </button>
@@ -257,7 +257,7 @@ export default function GuestDashboard() {
                     type="button"
                     onClick={() => setType(t.value)}
                     className={`px-3 py-1 rounded-full text-xs border transition-colors ${
-                      type === t.value ? t.color + " ring-1 ring-white/30" : "bg-zinc-900/50 text-gray-500 border-white/10 hover:text-gray-300"
+                      type === t.value ? t.color + " ring-1 ring-white/30" : "bg-zinc-900/50 text-zinc-400 border-white/10 hover:text-gray-300"
                     }`}
                   >
                     {t.label}
@@ -293,7 +293,7 @@ export default function GuestDashboard() {
 
           {/* ログ一覧 */}
           {logs.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-zinc-400">
               <p className="text-4xl mb-2">🥋</p>
               <p className="text-sm">{t("training.empty")}</p>
               <p className="text-xs mt-1">{t("training.emptyDesc")}</p>
@@ -308,11 +308,11 @@ export default function GuestDashboard() {
                     </span>
                     <span className="text-white text-sm">{log.date}</span>
                     <span className="text-gray-400 text-xs">{log.duration_min}{t("training.durationUnit")}</span>
-                    {log.notes && <span className="text-gray-500 text-xs truncate">{log.notes}</span>}
+                    {log.notes && <span className="text-zinc-400 text-xs truncate">{log.notes}</span>}
                   </div>
                   <button
                     onClick={() => handleDelete(log.id)}
-                    className="text-gray-500 hover:text-red-400 ml-2 flex-shrink-0 text-lg leading-none w-11 h-11 flex items-center justify-center rounded"
+                    className="text-zinc-400 hover:text-red-400 ml-2 flex-shrink-0 text-lg leading-none w-11 h-11 flex items-center justify-center rounded"
                     aria-label={t("training.delete")}
                   >
                     ×
@@ -346,7 +346,7 @@ export default function GuestDashboard() {
           >
             {t("guest.ctaButton")}
           </Link>
-          <p className="text-gray-500 text-xs mt-2">
+          <p className="text-zinc-400 text-xs mt-2">
             {t("guest.ctaNote")}
           </p>
         </div>

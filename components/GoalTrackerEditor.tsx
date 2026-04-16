@@ -47,7 +47,7 @@ export function ProgressBar({
         <span className={`text-xs font-bold ${done ? "text-green-400" : "text-gray-300"}`}>
           {current}{sessionsUnit} / {target}{sessionsUnit}
         </span>
-        <span className={`text-xs ${done ? "text-green-400" : "text-gray-500"}`}>
+        <span className={`text-xs ${done ? "text-green-400" : "text-zinc-400"}`}>
           {done ? `✓ ${doneLabel}` : `${pct}%`}
         </span>
       </div>
@@ -115,7 +115,7 @@ export function GoalEditor({
         </button>
       </div>
       {value > 0 && (
-        <div className="text-xs text-gray-500 text-center mb-3">
+        <div className="text-xs text-zinc-400 text-center mb-3">
           {currentDoneText}
         </div>
       )}

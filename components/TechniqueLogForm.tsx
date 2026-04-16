@@ -191,7 +191,7 @@ export default function TechniqueLogForm({
         <span className="text-sm font-semibold text-violet-600">
           {t("techniques.bulkTitle")}
         </span>
-        <span className="text-xs text-gray-500">{t("techniques.bulkDesc")}</span>
+        <span className="text-xs text-zinc-400">{t("techniques.bulkDesc")}</span>
       </div>
       {formError && (
         <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2 mb-3 text-red-400 text-xs">
@@ -210,7 +210,7 @@ export default function TechniqueLogForm({
           className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 resize-none font-mono"
         />
         {bulkText && (
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-zinc-400 mt-1">
             {t("techniques.bulkCount", {
               n: bulkText.split("\n").filter((n) => n.trim()).length,
             })}

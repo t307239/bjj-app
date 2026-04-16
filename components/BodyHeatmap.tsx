@@ -203,7 +203,7 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
         <LegendChip status="ok"      label={t("body.status.ok")}      />
         <LegendChip status="sore"    label={t("body.status.sore")}    />
         <LegendChip status="injured" label={t("body.status.injured")} />
-        <span className="text-xs text-gray-500 italic">{t("body.status.tapToMark")}</span>
+        <span className="text-xs text-zinc-400 italic">{t("body.status.tapToMark")}</span>
       </div>
 
       {/* Front / Back view toggle */}
@@ -328,7 +328,7 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
       </div>
 
       {/* Tap hint */}
-      <p className="text-center text-xs text-gray-500 mt-3">{t("body.tapHint")}</p>
+      <p className="text-center text-xs text-zinc-400 mt-3">{t("body.tapHint")}</p>
 
       {toast && (
         <div className="mt-2 text-xs text-center text-green-400 font-medium">{toast}</div>

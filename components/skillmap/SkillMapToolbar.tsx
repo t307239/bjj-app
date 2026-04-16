@@ -94,7 +94,7 @@ export default function SkillMapToolbar({
         )}
       </button>
       {!isMobile && (
-        <span className="text-xs text-gray-500 ml-2 hidden sm:inline">{t("skillmap.pcHint")}</span>
+        <span className="text-xs text-zinc-400 ml-2 hidden sm:inline">{t("skillmap.pcHint")}</span>
       )}
       {isMobile && editMode && (
         <button

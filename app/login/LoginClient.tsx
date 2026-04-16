@@ -63,7 +63,7 @@ function IABWarning() {
         >
           {copied ? t("login.iabCopied") : t("login.iabCopy")}
         </button>
-        <p className="text-gray-500 text-xs mt-4">
+        <p className="text-zinc-400 text-xs mt-4">
           {t("login.iabPaste")}
         </p>
       </div>
@@ -186,17 +186,17 @@ function LoginForm() {
         <div className="flex justify-center gap-6 mb-6">
           <div className="text-center">
             <p className="text-lg font-bold text-white">{t("login.free")}</p>
-            <p className="text-xs text-gray-500">{t("login.freeDesc")}</p>
+            <p className="text-xs text-zinc-400">{t("login.freeDesc")}</p>
           </div>
           <div className="w-px bg-white/10" />
           <div className="text-center">
             <p className="text-lg font-bold text-white">🔥 {t("login.streaks")}</p>
-            <p className="text-xs text-gray-500">{t("login.streaksDesc")}</p>
+            <p className="text-xs text-zinc-400">{t("login.streaksDesc")}</p>
           </div>
           <div className="w-px bg-white/10" />
           <div className="text-center">
             <p className="text-lg font-bold text-white">{t("login.noPassword")}</p>
-            <p className="text-xs text-gray-500">{t("login.noPasswordDesc")}</p>
+            <p className="text-xs text-zinc-400">{t("login.noPasswordDesc")}</p>
           </div>
         </div>
 
@@ -226,7 +226,7 @@ function LoginForm() {
               {t("login.ageConfirmPre")} <span className="text-white font-medium">{t("login.ageConfirm")}</span>
               <span className="text-gray-400"> {t("login.ageConfirmNote")}</span>
               <br />
-              <span className="text-gray-500">{t("login.parentalConsent")}</span>
+              <span className="text-zinc-400">{t("login.parentalConsent")}</span>
             </span>
           </label>
 
@@ -287,7 +287,7 @@ function LoginForm() {
               </p>
               <button
                 onClick={() => { setEmailSent(false); setEmail(""); }}
-                className="text-gray-500 text-xs mt-4 hover:text-gray-300 transition-colors underline"
+                className="text-zinc-400 text-xs mt-4 hover:text-gray-300 transition-colors underline"
               >
                 {t("login.emailSentRetry")}
               </button>
@@ -326,7 +326,7 @@ function LoginForm() {
               onClick={signInWithGitHub}
               disabled={!canProceed}
               aria-label={t("login.ariaSignInGitHub")}
-              className="w-full flex items-center justify-center gap-2 text-gray-500 hover:text-gray-300 py-2 px-4 rounded-xl hover:bg-white/10 transition-colors text-xs disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 text-zinc-400 hover:text-gray-300 py-2 px-4 rounded-xl hover:bg-white/10 transition-colors text-xs disabled:cursor-not-allowed"
             >
               <svg className="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24">
                 <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
@@ -338,7 +338,7 @@ function LoginForm() {
 
         {/* Hint when checkboxes not yet checked */}
         {!canProceed && (
-          <p className="text-center text-gray-500 text-xs mt-2">
+          <p className="text-center text-zinc-400 text-xs mt-2">
             {t("login.checkboxesRequired")}
           </p>
         )}
@@ -347,7 +347,7 @@ function LoginForm() {
         <div className="text-center mt-5">
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-gray-500 hover:text-gray-300 text-sm transition-colors"
+            className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-gray-300 text-sm transition-colors"
           >
             <span>👀</span>
             <span>{t("login.guestMode")}</span>
@@ -355,10 +355,10 @@ function LoginForm() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
           </Link>
-          <p className="text-gray-500 text-xs mt-1">{t("login.guestDesc")}</p>
+          <p className="text-zinc-400 text-xs mt-1">{t("login.guestDesc")}</p>
         </div>
 
-        <p className="text-center text-gray-500 text-xs mt-4">
+        <p className="text-center text-zinc-400 text-xs mt-4">
           {t("login.termsAgree")}{" "}
           <Link href="/terms" className="hover:text-gray-400 underline">{t("login.termsLink")}</Link>
           {" & "}

@@ -45,14 +45,14 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
         <h3 className="text-lg font-bold text-white mb-2">{t("skillmap.proModalTitlePC")}</h3>
         <p className="text-sm text-gray-400 mb-4">{t("skillmap.proModalBodyPC")}</p>
         <div className="flex items-center justify-center gap-2 mb-3">
-          <span className={`text-xs ${!isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>{t("proModal.monthly")}</span>
+          <span className={`text-xs ${!isAnnual ? "text-white font-semibold" : "text-zinc-400"}`}>{t("proModal.monthly")}</span>
           <button
             onClick={() => setIsAnnual((v) => !v)}
             className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${isAnnual ? "bg-emerald-600" : "bg-zinc-600"}`}
           >
             <span className={`inline-block h-3 w-3 rounded-full bg-white shadow transition-transform ${isAnnual ? "translate-x-5" : "translate-x-1"}`} />
           </button>
-          <span className={`text-xs ${isAnnual ? "text-white font-semibold" : "text-gray-500"}`}>{t("proModal.annual")}</span>
+          <span className={`text-xs ${isAnnual ? "text-white font-semibold" : "text-zinc-400"}`}>{t("proModal.annual")}</span>
           {isAnnual && <span className="bg-emerald-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{t("proModal.save33")}</span>}
         </div>
         <div className="mb-1">
@@ -70,11 +70,11 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
             {isLoading ? "…" : t("skillmap.upgradeBtn")}
           </button>
         ) : (
-          <span className="block w-full bg-zinc-700 text-gray-500 font-semibold py-3 rounded-xl mb-3 cursor-not-allowed">
+          <span className="block w-full bg-zinc-700 text-zinc-400 font-semibold py-3 rounded-xl mb-3 cursor-not-allowed">
             {t("skillmap.upgradeBtn")}
           </span>
         )}
-        <button onClick={onClose} className="text-sm text-gray-500 hover:text-gray-300 min-h-[44px] px-6 py-2">{t("skillmap.maybeLater")}</button>
+        <button onClick={onClose} className="text-sm text-zinc-400 hover:text-gray-300 min-h-[44px] px-6 py-2">{t("skillmap.maybeLater")}</button>
       </div>
     </div>
   );

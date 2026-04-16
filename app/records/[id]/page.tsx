@@ -128,7 +128,7 @@ export default async function RecordDetailPage({
           {/* Competition details */}
           {comp && (
             <div className="bg-white/5 rounded-xl p-3 space-y-1">
-              <p className="text-xs text-gray-500 uppercase tracking-wide">{t("csv.header.result")}</p>
+              <p className="text-xs text-zinc-400 uppercase tracking-wide">{t("csv.header.result")}</p>
               <p className="text-white text-sm font-medium">
                 {comp.result === "win" ? "🏆" : comp.result === "loss" ? "💪" : "🤝"}{" "}
                 {t(`csv.${comp.result}`)}
@@ -146,7 +146,7 @@ export default async function RecordDetailPage({
           {/* Roll data */}
           {roll && (
             <div className="bg-white/5 rounded-xl p-3 space-y-1.5">
-              <p className="text-xs text-gray-500 uppercase tracking-wide">{t("training.rollDetailsTitle")}</p>
+              <p className="text-xs text-zinc-400 uppercase tracking-wide">{t("training.rollDetailsTitle")}</p>
               <p className="text-gray-300 text-sm">{formatRollBadge(roll)}</p>
             </div>
           )}
@@ -154,7 +154,7 @@ export default async function RecordDetailPage({
           {/* Notes */}
           {userNotes && (
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t("csv.header.notes")}</p>
+              <p className="text-xs text-zinc-400 uppercase tracking-wide mb-1">{t("csv.header.notes")}</p>
               <p className="text-gray-300 text-sm whitespace-pre-wrap">{userNotes}</p>
             </div>
           )}

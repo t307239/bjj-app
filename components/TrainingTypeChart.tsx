@@ -221,7 +221,7 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color, trendSubtitle }: {
 
   return (
     <div className="mt-3 pt-3 border-t border-white/5">
-      <p className="text-xs text-gray-500 mb-2">
+      <p className="text-xs text-zinc-400 mb-2">
         <span style={{ color }} className="font-semibold">{typeLabel}</span>{trendSubtitle}
       </p>
       <div className="flex items-end gap-1.5 h-12">
@@ -230,7 +230,7 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color, trendSubtitle }: {
           const isCurrentMonth = m.key === months[5].key;
           return (
             <div key={m.key} className="flex-1 flex flex-col items-center justify-end gap-0.5">
-              <span className="text-xs text-gray-500 leading-none">
+              <span className="text-xs text-zinc-400 leading-none">
                 {m.count > 0 ? m.count : ""}
               </span>
               <div
@@ -241,7 +241,7 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color, trendSubtitle }: {
                   backgroundColor: isCurrentMonth ? color : `${color}66`,
                 }}
               />
-              <span className={`text-xs leading-none ${isCurrentMonth ? "text-white font-semibold" : "text-gray-500"}`}>
+              <span className={`text-xs leading-none ${isCurrentMonth ? "text-white font-semibold" : "text-zinc-400"}`}>
                 {m.label}
               </span>
             </div>
@@ -323,12 +323,12 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
         <h4 className="text-sm font-medium text-gray-300">🥋 {t("chart.typeDistribution")}</h4>
         <div className="flex items-center gap-2">
           {!isOpen && total > 0 && (
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-zinc-400">
               {totalTime > 0 ? fmtMins(totalTime) : `${total}${t("chart.timesUnit")}`}
             </span>
           )}
           <svg
-            className={`w-4 h-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+            className={`w-4 h-4 text-zinc-400 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
             fill="none" stroke="currentColor" viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
@@ -344,7 +344,7 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
               {t("chart.upgradeToProBtn")}
             </a>
           ) : (
-            <span className="mt-3 inline-block bg-zinc-700 text-gray-500 text-xs font-semibold px-4 py-2 rounded-lg cursor-not-allowed">
+            <span className="mt-3 inline-block bg-zinc-700 text-zinc-400 text-xs font-semibold px-4 py-2 rounded-lg cursor-not-allowed">
               {t("chart.upgradeToProBtn")}
             </span>
           )}
@@ -373,11 +373,11 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
             <svg className="w-8 h-8 text-zinc-500 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m8.66-13l-.87.5M4.21 15.5l-.87.5M19.79 15.5l-.87-.5M4.21 8.5l-.87-.5M21 12h-1M4 12H3m15.36-6.36l-.7.7M6.34 17.66l-.7.7M17.66 17.66l.7.7M6.34 6.34l.7.7" />
             </svg>
-            <p className="text-sm text-gray-500">{t("chart.noSessionsYet")}</p>
-            <p className="text-xs text-gray-500">{t("chart.logToFillChart")}</p>
+            <p className="text-sm text-zinc-400">{t("chart.noSessionsYet")}</p>
+            <p className="text-xs text-zinc-400">{t("chart.logToFillChart")}</p>
           </div>
         ) : (
-          <div className="text-center py-4 text-gray-500 text-xs">
+          <div className="text-center py-4 text-zinc-400 text-xs">
             {period === "week" ? t("chart.noSessionsThisWeek") : t("chart.noSessionsThisMonth")}
           </div>
         )
@@ -415,9 +415,9 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
                     <span className="text-xs font-medium text-white">
                       {chartMode === "time" ? fmtMins(d.totalMins) : `${d.count}${t("chart.timesUnit")}`}
                     </span>
-                    <span className="text-xs text-gray-500 w-7 text-right">{pct}%</span>
+                    <span className="text-xs text-zinc-400 w-7 text-right">{pct}%</span>
                     {chartMode !== "time" && d.totalMins > 0 && (
-                      <span className="text-xs text-gray-500 w-8 text-right">{fmtMins(d.totalMins)}</span>
+                      <span className="text-xs text-zinc-400 w-8 text-right">{fmtMins(d.totalMins)}</span>
                     )}
                     <MiniSparkline logs={allLogs} typeValue={d.value} color={d.color} />
                   </div>

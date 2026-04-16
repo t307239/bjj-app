@@ -62,7 +62,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
   return (
     <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-xl p-5 border border-white/10">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xs text-gray-500 tracking-wider">{t("profile.title")}</h3>
+        <h3 className="text-xs text-zinc-400 tracking-wider">{t("profile.title")}</h3>
         <button onClick={onEdit} className="text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-2 min-h-[44px] transition-colors">
           ✏️ {t("training.edit")}
         </button>
@@ -80,15 +80,15 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
       <div className="space-y-2">
         {profile.gym && (
           <div className="flex items-center gap-2 text-sm text-gray-300">
-            <span className="text-gray-500">🏗</span>
+            <span className="text-zinc-400">🏗</span>
             <span>{profile.gym}</span>
           </div>
         )}
         {profile.start_date && (
           <div className="flex items-center gap-2 text-sm text-gray-300">
-            <span className="text-gray-500">🥋</span>
+            <span className="text-zinc-400">🥋</span>
             <span>{formatBjjDuration(profile.start_date, t)}</span>
-            <span className="text-gray-500 text-xs">
+            <span className="text-zinc-400 text-xs">
               {(() => {
                 const [y, m] = profile.start_date.split("-");
                 const d = new Date(parseInt(y), parseInt(m) - 1, 1);
@@ -99,7 +99,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
           </div>
         )}
         {!profile.gym && !profile.start_date && (
-          <p className="text-gray-500 text-xs">{t("profile.gymNotSet")}</p>
+          <p className="text-zinc-400 text-xs">{t("profile.gymNotSet")}</p>
         )}
       </div>
       {profile.bio && (
@@ -109,7 +109,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
         <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-3 gap-2 text-center">
           <div>
             <div className="text-lg font-bold text-white">{stats.totalCount}</div>
-            <div className="text-xs text-gray-500">{t("stats.totalSessions")}</div>
+            <div className="text-xs text-zinc-400">{t("stats.totalSessions")}</div>
           </div>
           <div>
             <div className="text-lg font-bold text-[#10B981]">
@@ -117,11 +117,11 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
                 ? `${Math.floor(stats.totalMinutes / 60)}h${stats.totalMinutes % 60 > 0 ? `${stats.totalMinutes % 60}m` : ""}`
                 : `${stats.totalMinutes}m`}
             </div>
-            <div className="text-xs text-gray-500">{t("stats.totalMinutes")}</div>
+            <div className="text-xs text-zinc-400">{t("stats.totalMinutes")}</div>
           </div>
           <div>
             <div className="text-lg font-bold text-purple-400">{stats.techniqueCount}</div>
-            <div className="text-xs text-gray-500">{t("dashboard.techniques")}</div>
+            <div className="text-xs text-zinc-400">{t("dashboard.techniques")}</div>
           </div>
         </div>
       )}
@@ -271,7 +271,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-1">{t("profile.gym")}</label>
-          <p className="text-gray-500 text-xs mb-2">{t("profile.gymSubtext")}</p>
+          <p className="text-zinc-400 text-xs mb-2">{t("profile.gymSubtext")}</p>
           <input
             type="text"
             value={form.gym}
@@ -294,7 +294,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
           <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.startDate")}</label>
           <input type="date" value={form.start_date} max={today} onChange={(e) => setForm({ ...form, start_date: e.target.value })} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30" />
           {form.start_date && (
-            <p className="text-gray-500 text-xs mt-1">
+            <p className="text-zinc-400 text-xs mt-1">
               {(() => {
                 const [y, m] = form.start_date.split("-");
                 const d = new Date(parseInt(y), parseInt(m) - 1, 1);
@@ -310,7 +310,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
           <label className="block text-gray-300 text-sm font-medium mb-1">{t("profile.timezone")}</label>
-          <p className="text-gray-500 text-xs mb-2">{t("profile.timezoneDesc")}</p>
+          <p className="text-zinc-400 text-xs mb-2">{t("profile.timezoneDesc")}</p>
           <select
             value={form.timezone || "UTC"}
             onChange={(e) => setForm({ ...form, timezone: e.target.value })}
@@ -350,7 +350,7 @@ export default function ProfileForm({ userId, hideAccount }: Props) {
 
   if (initialLoading) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-zinc-400">
         <div className="inline-block w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin mb-2" />
         <p className="text-sm">{t("training.loading")}</p>
       </div>

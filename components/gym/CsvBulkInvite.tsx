@@ -119,7 +119,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
           <span className="text-xl flex-shrink-0">📥</span>
           <div className="flex-1">
             <p className="text-sm font-semibold text-white">{t("gym.csvTitle")}</p>
-            <p className="text-xs text-gray-500 mt-0.5">{t("gym.csvProRequired")}</p>
+            <p className="text-xs text-zinc-400 mt-0.5">{t("gym.csvProRequired")}</p>
           </div>
           <button
             onClick={onUpgradeClick}
@@ -139,7 +139,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-sm font-semibold text-white">📥 {t("gym.csvTitle")}</h3>
-            <p className="text-xs text-gray-500 mt-0.5">{t("gym.csvDesc")}</p>
+            <p className="text-xs text-zinc-400 mt-0.5">{t("gym.csvDesc")}</p>
           </div>
           <button
             onClick={() => { setOpen(true); reset(); }}
@@ -195,7 +195,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
                     </p>
                     <button
                       onClick={reset}
-                      className="text-xs text-gray-500 hover:text-white transition-colors"
+                      className="text-xs text-zinc-400 hover:text-white transition-colors"
                     >
                       {t("gym.csvReset")}
                     </button>
