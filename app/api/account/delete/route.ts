@@ -4,23 +4,14 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
 import { serverEnv } from "@/lib/env";
+import { createRateLimiter } from "@/lib/rateLimit";
 
 // ── Rate limit: max 3 attempts per IP per 15 min ──
-const deleteRateMap = new Map<string, { count: number; resetAt: number }>();
-function checkDeleteRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = deleteRateMap.get(ip);
-  if (!entry || now > entry.resetAt) {
-    deleteRateMap.set(ip, { count: 1, resetAt: now + 15 * 60 * 1000 });
-    return true;
-  }
-  entry.count++;
-  return entry.count <= 3;
-}
+const deleteLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 3 });
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (!checkDeleteRateLimit(ip)) {
+  if (!deleteLimiter.check(ip)) {
     return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
   }
   const cookieStore = await cookies();

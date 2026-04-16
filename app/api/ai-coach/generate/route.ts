@@ -27,18 +27,10 @@ const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const VALID_MODES = ["general", "weakness", "next_session", "comp_prep"] as const;
 type CoachMode = typeof VALID_MODES[number];
 
-// ── Rate limit: AI generation — max 5 per IP per hour (abuse protection) ──
-const aiRateMap = new Map<string, { count: number; resetAt: number }>();
-function checkAIRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = aiRateMap.get(ip);
-  if (!entry || now > entry.resetAt) {
-    aiRateMap.set(ip, { count: 1, resetAt: now + 60 * 60 * 1000 });
-    return true;
-  }
-  entry.count++;
-  return entry.count <= 5;
-}
+import { createRateLimiter } from "@/lib/rateLimit";
+
+// ── Rate limit: AI generation — max 5 per IP per hour ──
+const aiLimiter = createRateLimiter({ windowMs: 60 * 60 * 1000, max: 5 });
 
 async function callAnthropicAPI(prompt: string): Promise<string | null> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -315,7 +307,7 @@ function buildFallbackCompPrep(stats: CoachStats, loc: string): string {
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (!checkAIRateLimit(ip)) {
+  if (!aiLimiter.check(ip)) {
     return NextResponse.json({ error: "Too many requests. Try again later." }, { status: 429 });
   }
 

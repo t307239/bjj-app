@@ -127,6 +127,11 @@ export default function ProGate({
           <p className="text-xs text-zinc-400 mt-2">
             {t("pro.features")}
           </p>
+
+          {/* Social proof */}
+          <p className="text-xs text-zinc-500 mt-3">
+            {t("pro.socialProof")}
+          </p>
         </div>
       </div>
     </div>

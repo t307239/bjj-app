@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { logger } from "@/lib/logger";
+import { createRateLimiter } from "@/lib/rateLimit";
 
 const CheckoutBodySchema = z.object({
   plan: z.enum(["monthly", "annual", "gym"]).default("monthly"),
@@ -12,18 +13,8 @@ const CheckoutBodySchema = z.object({
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// ── Rate limit: Stripe checkout — max 10 per IP per 10 min (prevents Vercel/Stripe abuse) ──
-const checkoutRateMap = new Map<string, { count: number; resetAt: number }>();
-function checkCheckoutRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = checkoutRateMap.get(ip);
-  if (!entry || now > entry.resetAt) {
-    checkoutRateMap.set(ip, { count: 1, resetAt: now + 10 * 60 * 1000 });
-    return true;
-  }
-  entry.count++;
-  return entry.count <= 10;
-}
+// ── Rate limit: Stripe checkout — max 10 per IP per 10 min ──
+const checkoutLimiter = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 10 });
 
 /**
  * POST /api/stripe/checkout
@@ -43,7 +34,7 @@ function checkCheckoutRateLimit(ip: string): boolean {
  */
 export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (!checkCheckoutRateLimit(ip)) {
+  if (!checkoutLimiter.check(ip)) {
     return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
   }
 

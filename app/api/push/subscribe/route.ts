@@ -23,6 +23,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { logger } from "@/lib/logger";
+import { createRateLimiter } from "@/lib/rateLimit";
 
 const SubscribeBodySchema = z.object({
   endpoint: z.string().url().max(2048),
@@ -34,17 +35,7 @@ const SubscribeBodySchema = z.object({
 });
 
 // ── Rate limit: push subscribe — max 20 per IP per 10 min ──
-const pushRateMap = new Map<string, { count: number; resetAt: number }>();
-function checkPushRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = pushRateMap.get(ip);
-  if (!entry || now > entry.resetAt) {
-    pushRateMap.set(ip, { count: 1, resetAt: now + 10 * 60 * 1000 });
-    return true;
-  }
-  entry.count++;
-  return entry.count <= 20;
-}
+const pushLimiter = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 20 });
 
 /** Validate IANA timezone string using Intl.DateTimeFormat */
 function isValidTimezone(tz: string): boolean {
@@ -58,7 +49,7 @@ function isValidTimezone(tz: string): boolean {
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (!checkPushRateLimit(ip)) {
+  if (!pushLimiter.check(ip)) {
     return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
   }
 

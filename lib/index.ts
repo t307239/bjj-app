@@ -64,3 +64,6 @@ export { logger } from "./logger";
 
 // ── Haptics ──────────────────────────────────────────────────────────────────
 export { hapticTap, hapticDouble, hapticSuccess, hapticNudge } from "./haptics";
+
+// ── Rate Limiting ───────────────────────────────────────────────────────────
+export { createRateLimiter } from "./rateLimit";

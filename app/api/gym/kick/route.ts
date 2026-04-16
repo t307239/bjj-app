@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { logger } from "@/lib/logger";
+import { createRateLimiter } from "@/lib/rateLimit";
 
 const KickBodySchema = z.object({
   member_id: z.string().uuid("Invalid member ID"),
@@ -11,17 +12,7 @@ const KickBodySchema = z.object({
 export const dynamic = "force-dynamic";
 
 // ── Rate limit: kick — max 20 per IP per hour ──
-const kickRateMap = new Map<string, { count: number; resetAt: number }>();
-function checkKickRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = kickRateMap.get(ip);
-  if (!entry || now > entry.resetAt) {
-    kickRateMap.set(ip, { count: 1, resetAt: now + 60 * 60 * 1000 });
-    return true;
-  }
-  entry.count++;
-  return entry.count <= 20;
-}
+const kickLimiter = createRateLimiter({ windowMs: 60 * 60 * 1000, max: 20 });
 
 /**
  * POST /api/gym/kick
@@ -35,7 +26,7 @@ function checkKickRateLimit(ip: string): boolean {
  */
 export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (!checkKickRateLimit(ip)) {
+  if (!kickLimiter.check(ip)) {
     return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
   }
   const cookieStore = await cookies();

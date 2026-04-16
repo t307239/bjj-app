@@ -1,36 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { logger } from "@/lib/logger";
+import { createRateLimiter } from "@/lib/rateLimit";
 
 const WaitlistBodySchema = z.object({
   email: z.string().email("Invalid email address").max(320),
   gymName: z.string().max(200).optional(),
 });
 
-// ── Rate limit (in-memory, same pattern as submit-video) ─────────────────────
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 min
-const RATE_LIMIT_MAX = 5;
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return true;
-  }
-
-  entry.count++;
-  if (entry.count > RATE_LIMIT_MAX) return false;
-  return true;
-}
+// ── Rate limit: waitlist — max 5 per IP per 10 min ──
+const waitlistLimiter = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 5 });
 
 export async function POST(req: NextRequest) {
   try {
     // Rate limit by IP
     const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-    if (!checkRateLimit(ip)) {
+    if (!waitlistLimiter.check(ip)) {
       return NextResponse.json(
         { error: "Too many requests. Please try again later." },
         { status: 429 },

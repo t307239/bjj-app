@@ -3,22 +3,13 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
+import { createRateLimiter } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 // ── Rate limit: portal — max 10 per IP per 10 min ──
-const portalRateMap = new Map<string, { count: number; resetAt: number }>();
-function checkPortalRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = portalRateMap.get(ip);
-  if (!entry || now > entry.resetAt) {
-    portalRateMap.set(ip, { count: 1, resetAt: now + 10 * 60 * 1000 });
-    return true;
-  }
-  entry.count++;
-  return entry.count <= 10;
-}
+const portalLimiter = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 10 });
 
 /**
  * POST /api/stripe/portal
@@ -29,7 +20,7 @@ function checkPortalRateLimit(ip: string): boolean {
  */
 export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (!checkPortalRateLimit(ip)) {
+  if (!portalLimiter.check(ip)) {
     return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
   }
   const cookieStore = await cookies();

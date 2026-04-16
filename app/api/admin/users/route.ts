@@ -16,19 +16,10 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
 import { serverEnv } from "@/lib/env";
+import { createRateLimiter } from "@/lib/rateLimit";
 
 // ── Rate limit: admin queries — max 60 per IP per 10 min ──
-const adminRateMap = new Map<string, { count: number; resetAt: number }>();
-function checkAdminRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = adminRateMap.get(ip);
-  if (!entry || now > entry.resetAt) {
-    adminRateMap.set(ip, { count: 1, resetAt: now + 10 * 60 * 1000 });
-    return true;
-  }
-  entry.count++;
-  return entry.count <= 60;
-}
+const adminLimiter = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 60 });
 
 function isAdminEmail(email: string): boolean {
   const adminEmail = process.env.ADMIN_EMAIL;
@@ -38,7 +29,7 @@ function isAdminEmail(email: string): boolean {
 
 export async function GET(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (!checkAdminRateLimit(ip)) {
+  if (!adminLimiter.check(ip)) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
   }
 
