@@ -77,7 +77,7 @@ export default function ReferralSection({
           <p className="text-sm font-semibold text-white">
             {t("profile.referralTitle")}
           </p>
-          <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">
+          <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">
             {t("profile.referralDesc")}
           </p>
         </div>

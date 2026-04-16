@@ -54,7 +54,7 @@ function IABWarning() {
         <h1 className="text-xl font-bold text-white mb-2">
           {t("login.iabWarning")}
         </h1>
-        <p className="text-gray-400 text-sm leading-relaxed mb-6">
+        <p className="text-zinc-400 text-sm leading-relaxed mb-6">
           {t("login.iabDesc")}
         </p>
         <button
@@ -177,7 +177,7 @@ function LoginForm() {
         <div className="text-center mb-6">
           <div className="text-5xl mb-3">🥋</div>
           <h1 className="text-2xl font-bold text-white">{t("login.getStarted")}</h1>
-          <p className="text-gray-400 mt-2 text-sm">
+          <p className="text-zinc-400 mt-2 text-sm">
             {t("login.subtitle")}
           </p>
         </div>
@@ -222,9 +222,9 @@ function LoginForm() {
               className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#10B981] flex-shrink-0 cursor-pointer"
               aria-label={t("login.ariaAgeConfirm")}
             />
-            <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
+            <span className="text-xs text-zinc-400 group-hover:text-zinc-300 leading-relaxed">
               {t("login.ageConfirmPre")} <span className="text-white font-medium">{t("login.ageConfirm")}</span>
-              <span className="text-gray-400"> {t("login.ageConfirmNote")}</span>
+              <span className="text-zinc-400"> {t("login.ageConfirmNote")}</span>
               <br />
               <span className="text-zinc-400">{t("login.parentalConsent")}</span>
             </span>
@@ -239,7 +239,7 @@ function LoginForm() {
               className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#10B981] flex-shrink-0 cursor-pointer"
               aria-label={t("login.ariaDisclaimerConfirm")}
             />
-            <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
+            <span className="text-xs text-zinc-400 group-hover:text-zinc-300 leading-relaxed">
               {t("login.disclaimerPre")} <span className="text-white font-medium">{t("login.disclaimerRisk")}</span>{" "}
               {t("login.disclaimerPost")}
             </span>
@@ -268,7 +268,7 @@ function LoginForm() {
           {/* Divider */}
           <div className="flex items-center gap-3 py-1">
             <div className="flex-1 h-px bg-white/10" />
-            <span className="text-gray-400 text-xs">{t("login.orEmail")}</span>
+            <span className="text-zinc-400 text-xs">{t("login.orEmail")}</span>
             <div className="flex-1 h-px bg-white/10" />
           </div>
 
@@ -277,17 +277,17 @@ function LoginForm() {
             <div className="bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-5 text-center">
               <div className="text-3xl mb-2">📬</div>
               <p className="text-green-400 text-sm font-semibold">{t("login.emailSent")}</p>
-              <p className="text-gray-400 text-xs mt-2 leading-relaxed">
+              <p className="text-zinc-400 text-xs mt-2 leading-relaxed">
                 {t("login.emailSentTo")}<br />
                 <span className="text-white">{email}</span>.<br />
                 {t("login.emailSentTap")}
               </p>
-              <p className="text-gray-400 text-xs mt-3">
+              <p className="text-zinc-400 text-xs mt-3">
                 {t("login.emailSentSpam")}
               </p>
               <button
                 onClick={() => { setEmailSent(false); setEmail(""); }}
-                className="text-zinc-400 text-xs mt-4 hover:text-gray-300 transition-colors underline"
+                className="text-zinc-400 text-xs mt-4 hover:text-zinc-300 transition-colors underline"
               >
                 {t("login.emailSentRetry")}
               </button>
@@ -314,7 +314,7 @@ function LoginForm() {
               >
                 {emailLoading ? t("login.sending") : t("login.sendLink")}
               </button>
-              <p className="text-xs text-gray-400 text-center pt-0.5">
+              <p className="text-xs text-zinc-400 text-center pt-0.5">
                 {t("login.noPasswordNote")}
               </p>
             </form>
@@ -326,7 +326,7 @@ function LoginForm() {
               onClick={signInWithGitHub}
               disabled={!canProceed}
               aria-label={t("login.ariaSignInGitHub")}
-              className="w-full flex items-center justify-center gap-2 text-zinc-400 hover:text-gray-300 py-2 px-4 rounded-xl hover:bg-white/10 transition-colors text-xs disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 text-zinc-400 hover:text-zinc-300 py-2 px-4 rounded-xl hover:bg-white/10 transition-colors text-xs disabled:cursor-not-allowed"
             >
               <svg className="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24">
                 <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
@@ -347,7 +347,7 @@ function LoginForm() {
         <div className="text-center mt-5">
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-gray-300 text-sm transition-colors"
+            className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-zinc-300 text-sm transition-colors"
           >
             <span>👀</span>
             <span>{t("login.guestMode")}</span>
@@ -360,9 +360,9 @@ function LoginForm() {
 
         <p className="text-center text-zinc-400 text-xs mt-4">
           {t("login.termsAgree")}{" "}
-          <Link href="/terms" className="hover:text-gray-400 underline">{t("login.termsLink")}</Link>
+          <Link href="/terms" className="hover:text-zinc-400 underline">{t("login.termsLink")}</Link>
           {" & "}
-          <Link href="/privacy" className="hover:text-gray-400 underline">{t("login.privacyLink")}</Link>
+          <Link href="/privacy" className="hover:text-zinc-400 underline">{t("login.privacyLink")}</Link>
         </p>
       </div>
     </main>

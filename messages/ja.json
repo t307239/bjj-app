@@ -1601,7 +1601,9 @@
     "socialProofAvgStreakLabel": "平均ストリーク（日数）",
     "socialProofProSubscribers": "300+",
     "socialProofProSubscribersLabel": "Pro会員",
-    "proFeatures": "プロ機能"
+    "proFeatures": "プロ機能",
+    "engPillWeight": "体重管理",
+    "engPillBelt": "帯の進捗"
   },
   "body": {
     "injuryAlert": {

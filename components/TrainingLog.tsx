@@ -155,7 +155,7 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
       <button
         onClick={() => setOpen((v) => !v)}
         disabled={isAnyLoading}
-        className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white bg-zinc-900 border border-white/10 hover:border-white/20 px-3 py-2 rounded-lg transition-colors disabled:opacity-50"
+        className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-900 border border-white/10 hover:border-white/20 px-3 py-2 rounded-lg transition-colors disabled:opacity-50"
         aria-label="Export options"
       >
         {isAnyLoading ? (
@@ -168,16 +168,16 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
       </button>
       {open && (
         <div className="absolute right-0 top-full mt-1 z-50 bg-zinc-800 border border-white/10 rounded-xl shadow-xl min-w-[160px] overflow-hidden">
-          <button onClick={exportTraining} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-gray-300 hover:bg-zinc-700 hover:text-white transition-colors text-left">
+          <button onClick={exportTraining} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors text-left">
             <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             {t("csv.button.training")}
           </button>
-          <button onClick={exportTechniques} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-gray-300 hover:bg-zinc-700 hover:text-white transition-colors text-left">
+          <button onClick={exportTechniques} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors text-left">
             <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             {t("csv.button.techniques")}
           </button>
           <div className="border-t border-white/10" />
-          <button onClick={() => { setOpen(false); onPdf(); }} disabled={pdfLoading} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-gray-300 hover:bg-zinc-700 hover:text-white transition-colors text-left disabled:opacity-50">
+          <button onClick={() => { setOpen(false); onPdf(); }} disabled={pdfLoading} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors text-left disabled:opacity-50">
             <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
             {t("training.printPDF")}
           </button>
@@ -323,7 +323,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
                 <div>
                   <p className="text-xs text-zinc-400 tracking-wide">{t("training.monthCount")}</p>
                   <p className="text-lg font-bold text-white">{monthEntries.length}</p>
-                  <p className="text-xs text-gray-400">{t("training.bentoSessions")}</p>
+                  <p className="text-xs text-zinc-400">{t("training.bentoSessions")}</p>
                 </div>
               </div>
               <div className="bg-zinc-900 rounded-xl p-3 border border-white/10">
@@ -394,7 +394,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
               <select
                 value={periodFilter}
                 onChange={(e) => setPeriodFilter(e.target.value as "all" | "month" | "week")}
-                className="flex-shrink-0 bg-zinc-900 text-xs text-gray-300 border border-white/10 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-white/30 cursor-pointer hover:border-white/20 transition-colors"
+                className="flex-shrink-0 bg-zinc-900 text-xs text-zinc-300 border border-white/10 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-white/30 cursor-pointer hover:border-white/20 transition-colors"
                 aria-label="Filter by period"
               >
                 <option value="all">{t("training.periodAll")}</option>
@@ -409,7 +409,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
                 className={`flex-shrink-0 px-3 py-1.5 min-h-[32px] rounded-full text-xs font-medium transition-colors active:scale-95 ${
                   filterType === "all"
                     ? "bg-zinc-600 text-white"
-                    : "bg-zinc-900 text-gray-400 border border-white/10 hover:text-gray-300"
+                    : "bg-zinc-900 text-zinc-400 border border-white/10 hover:text-zinc-300"
                 }`}
               >
                 {t("training.all")}
@@ -422,7 +422,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
                   className={`flex-shrink-0 px-3 py-1.5 min-h-[32px] rounded-full text-xs font-medium transition-colors active:scale-95 ${
                     filterType === tt.value
                       ? "bg-zinc-600 text-white"
-                      : "bg-zinc-900 text-gray-400 border border-white/10 hover:text-gray-300"
+                      : "bg-zinc-900 text-zinc-400 border border-white/10 hover:text-zinc-300"
                   }`}
                 >
                   {tt.label}
@@ -434,7 +434,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
               {!hasDateFilter ? (
                 <button
                   onClick={() => setDateFrom(today)}
-                  className="flex-shrink-0 px-3 py-1.5 min-h-[32px] rounded-full text-xs font-medium transition-colors active:scale-95 text-gray-400 border border-white/10 hover:text-gray-300 hover:border-white/20"
+                  className="flex-shrink-0 px-3 py-1.5 min-h-[32px] rounded-full text-xs font-medium transition-colors active:scale-95 text-zinc-400 border border-white/10 hover:text-zinc-300 hover:border-white/20"
                 >
                   <svg className="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />

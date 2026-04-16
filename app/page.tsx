@@ -166,7 +166,7 @@ export default async function Home() {
         <div className="flex items-center gap-3">
           <Link
             href="/login"
-            className="text-sm text-gray-400 hover:text-white transition-colors"
+            className="text-sm text-zinc-400 hover:text-white transition-colors"
           >
             {t("landing.navLogin")}
           </Link>
@@ -197,7 +197,7 @@ export default async function Home() {
             </span>
           </h1>
 
-          <p className="text-gray-400 text-lg md:text-xl mb-10 leading-relaxed">
+          <p className="text-zinc-400 text-lg md:text-xl mb-10 leading-relaxed">
             {t("landing.heroDesc").split("\n")[0]}<br className="hidden md:block" />
             {t("landing.heroDesc").split("\n")[1]}
           </p>
@@ -213,18 +213,18 @@ export default async function Home() {
             </IABSafeLink>
             <a
               href="#preview"
-              className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-white/5 active:scale-95 text-gray-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-white/10"
+              className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-white/5 active:scale-95 text-zinc-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-white/10"
             >
               {t("landing.heroSeeApp")}
             </a>
           </div>
 
-          <p className="text-gray-400 text-sm">
+          <p className="text-zinc-400 text-sm">
             {t("landing.heroSubtext")}
           </p>
           {/* Fix 7: arrow → (not ↓) */}
           <p className="text-zinc-400 text-xs mt-3">
-            <Link href="/dashboard" className="hover:text-gray-300 underline transition-colors">
+            <Link href="/dashboard" className="hover:text-zinc-300 underline transition-colors">
               {t("landing.heroGuest")}
             </Link>
           </p>
@@ -259,7 +259,7 @@ export default async function Home() {
             </span>
           </h2>
 
-          <p className="text-gray-400 text-base md:text-lg mb-8 leading-relaxed">
+          <p className="text-zinc-400 text-base md:text-lg mb-8 leading-relaxed">
             {t("landing.engDesc").split("\n")[0]}<br className="hidden md:block" />
             {t("landing.engDesc").split("\n")[1]}
           </p>
@@ -274,8 +274,8 @@ export default async function Home() {
               t("landing.engPillHeatmap"),
               t("landing.engPillComp"),
               t("landing.engPillSkillMap"),
-              "Weight Management",
-              "Belt Progress",
+              t("landing.engPillWeight"),
+              t("landing.engPillBelt"),
             ].map((f) => (
               <span key={f} className="bg-zinc-900 border border-white/10 text-zinc-300 px-3 py-1.5 rounded-full">
                 {f}
@@ -295,7 +295,7 @@ export default async function Home() {
           </div>
           <p className="text-zinc-400 text-xs mt-4">{t("landing.engSubtext")}</p>
           <p className="text-zinc-400 text-xs mt-2">
-            <Link href="/dashboard" className="hover:text-gray-300 underline transition-colors">
+            <Link href="/dashboard" className="hover:text-zinc-300 underline transition-colors">
               {t("landing.engGuest")}
             </Link>
           </p>
@@ -318,35 +318,35 @@ export default async function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
               <div className="text-3xl font-bold text-white mb-1">{t("landing.proofSessions")}</div>
-              <p className="text-gray-400 text-xs">{t("landing.proofSessionsLabel")}</p>
+              <p className="text-zinc-400 text-xs">{t("landing.proofSessionsLabel")}</p>
             </div>
             <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
               <div className="text-3xl font-bold text-white mb-1">{t("landing.proofTechniques")}</div>
-              <p className="text-gray-400 text-xs">{t("landing.proofTechniquesLabel")}</p>
+              <p className="text-zinc-400 text-xs">{t("landing.proofTechniquesLabel")}</p>
             </div>
             <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
               <div className="text-3xl font-bold text-white mb-1">{t("landing.proofStreak")}</div>
-              <p className="text-gray-400 text-xs">{t("landing.proofStreakLabel")}</p>
+              <p className="text-zinc-400 text-xs">{t("landing.proofStreakLabel")}</p>
             </div>
             <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
               <div className="text-3xl font-bold text-white mb-1">{t("landing.proofFree")}</div>
-              <p className="text-gray-400 text-xs">{t("landing.proofFreeLabel")}</p>
+              <p className="text-zinc-400 text-xs">{t("landing.proofFreeLabel")}</p>
             </div>
             <div className="bg-zinc-900 rounded-2xl p-6 border border-emerald-500/30 text-center">
               <div className="text-3xl font-bold text-emerald-400 mb-1">{t("landing.socialProofUsers")}</div>
-              <p className="text-gray-400 text-xs">{t("landing.socialProofUsersLabel")}</p>
+              <p className="text-zinc-400 text-xs">{t("landing.socialProofUsersLabel")}</p>
             </div>
             <div className="bg-zinc-900 rounded-2xl p-6 border border-purple-500/30 text-center">
               <div className="text-3xl font-bold text-purple-400 mb-1">{t("landing.socialProofWiki")}</div>
-              <p className="text-gray-400 text-xs">{t("landing.socialProofWikiLabel")}</p>
+              <p className="text-zinc-400 text-xs">{t("landing.socialProofWikiLabel")}</p>
             </div>
             <div className="bg-zinc-900 rounded-2xl p-6 border border-orange-500/30 text-center">
               <div className="text-3xl font-bold text-orange-400 mb-1">{t("landing.socialProofAvgStreak")}</div>
-              <p className="text-gray-400 text-xs">{t("landing.socialProofAvgStreakLabel")}</p>
+              <p className="text-zinc-400 text-xs">{t("landing.socialProofAvgStreakLabel")}</p>
             </div>
             <div className="bg-zinc-900 rounded-2xl p-6 border border-pink-500/30 text-center">
               <div className="text-3xl font-bold text-pink-400 mb-1">{t("landing.socialProofProSubscribers")}</div>
-              <p className="text-gray-400 text-xs">{t("landing.socialProofProSubscribersLabel")}</p>
+              <p className="text-zinc-400 text-xs">{t("landing.socialProofProSubscribersLabel")}</p>
             </div>
           </div>
         </div>
@@ -361,17 +361,17 @@ export default async function Home() {
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-white/10 rounded-full text-xl font-bold text-white mb-4">1</div>
             <h3 className="font-bold text-lg text-white mb-3">{t("landing.step1Title")}</h3>
-            <p className="text-gray-400 text-sm">{t("landing.step1Desc")}</p>
+            <p className="text-zinc-400 text-sm">{t("landing.step1Desc")}</p>
           </div>
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-[#10B981]/20 rounded-full text-xl font-bold text-[#10B981] mb-4">2</div>
             <h3 className="font-bold text-lg text-white mb-3">{t("landing.step2Title")}</h3>
-            <p className="text-gray-400 text-sm">{t("landing.step2Desc")}</p>
+            <p className="text-zinc-400 text-sm">{t("landing.step2Desc")}</p>
           </div>
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-[#10B981]/20 rounded-full text-xl font-bold text-[#10B981] mb-4">3</div>
             <h3 className="font-bold text-lg text-white mb-3">{t("landing.step3Title")}</h3>
-            <p className="text-gray-400 text-sm">{t("landing.step3Desc")}</p>
+            <p className="text-zinc-400 text-sm">{t("landing.step3Desc")}</p>
           </div>
         </div>
       </section>
@@ -393,75 +393,75 @@ export default async function Home() {
                   <span className="text-sm font-semibold">BJJ App</span>
                 </div>
                 <div className="flex gap-4">
-                  <span className="text-xs text-gray-400">{t("dashboard.mockDashboardLog")}</span>
-                  <span className="text-xs text-gray-400">{t("dashboard.mockDashboardTech")}</span>
-                  <span className="text-xs text-gray-400">{t("dashboard.mockDashboardProfile")}</span>
+                  <span className="text-xs text-zinc-400">{t("dashboard.mockDashboardLog")}</span>
+                  <span className="text-xs text-zinc-400">{t("dashboard.mockDashboardTech")}</span>
+                  <span className="text-xs text-zinc-400">{t("dashboard.mockDashboardProfile")}</span>
                 </div>
               </div>
 
               <div className="p-4">
                 <div className="mb-4">
                   <h3 className="text-base font-bold">{t("dashboard.mockDashboardWelcome")}</h3>
-                  <p className="text-xs text-gray-400">{t("dashboard.mockDashboardDate")}</p>
+                  <p className="text-xs text-zinc-400">{t("dashboard.mockDashboardDate")}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 mb-3">
                   <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     <div className="text-2xl font-bold text-rose-400">12</div>
-                    <div className="text-xs text-gray-400 mt-0.5">{t("dashboard.mockDashboardMonth")}</div>
+                    <div className="text-xs text-zinc-400 mt-0.5">{t("dashboard.mockDashboardMonth")}</div>
                   </div>
                   <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     <div className="text-2xl font-bold text-blue-400">3</div>
-                    <div className="text-xs text-gray-400 mt-0.5">{t("dashboard.mockDashboardWeek")}</div>
+                    <div className="text-xs text-zinc-400 mt-0.5">{t("dashboard.mockDashboardWeek")}</div>
                   </div>
                   <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     <div className="text-2xl font-bold text-purple-400">47</div>
-                    <div className="text-xs text-gray-400 mt-0.5">{t("dashboard.mockDashboardTechniques")}</div>
+                    <div className="text-xs text-zinc-400 mt-0.5">{t("dashboard.mockDashboardTechniques")}</div>
                   </div>
                   <div className="bg-zinc-900 rounded-xl p-3 text-center border border-white/10">
                     {/* Fix 12: remove 🔥 emoji from mockup */}
                     <div className="text-xl font-bold text-orange-400">5</div>
-                    <div className="text-xs text-gray-400 mt-0.5">{t("dashboard.mockDashboardStreak")}</div>
+                    <div className="text-xs text-zinc-400 mt-0.5">{t("dashboard.mockDashboardStreak")}</div>
                   </div>
                 </div>
 
                 <div className="bg-zinc-900 rounded-xl border border-white/10 mb-3 overflow-hidden">
                   <div className="px-3 py-2 border-b border-white/10">
-                    <span className="text-xs font-medium text-gray-300">{t("dashboard.mockDashboardGoals")}</span>
+                    <span className="text-xs font-medium text-zinc-300">{t("dashboard.mockDashboardGoals")}</span>
                   </div>
                   <div className="p-3 space-y-3">
                     <div>
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs text-gray-400">{t("dashboard.mockDashboardWeeklyGoal")}</span>
+                        <span className="text-xs text-zinc-400">{t("dashboard.mockDashboardWeeklyGoal")}</span>
                         <span className="text-xs text-yellow-400">75%</span>
                       </div>
                       <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-yellow-400 rounded-full" style={{ width: "75%" }} />
                       </div>
-                      <div className="text-xs text-gray-400 mt-1">{t("dashboard.mockDashboardWeeklySessions")}</div>
+                      <div className="text-xs text-zinc-400 mt-1">{t("dashboard.mockDashboardWeeklySessions")}</div>
                     </div>
                     <div>
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs text-gray-400">{t("dashboard.mockDashboardMonthlyGoal")}</span>
+                        <span className="text-xs text-zinc-400">{t("dashboard.mockDashboardMonthlyGoal")}</span>
                         <span className="text-xs text-green-400">{t("dashboard.mockDashboardMonthlyDone")}</span>
                       </div>
                       <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-green-400 rounded-full" style={{ width: "100%" }} />
                       </div>
-                      <div className="text-xs text-gray-400 mt-1">{t("dashboard.mockDashboardMonthlySessions")}</div>
+                      <div className="text-xs text-zinc-400 mt-1">{t("dashboard.mockDashboardMonthlySessions")}</div>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-xs text-gray-400 font-medium mb-1">{t("dashboard.mockDashboardRecentSessions")}</div>
+                  <div className="text-xs text-zinc-400 font-medium mb-1">{t("dashboard.mockDashboardRecentSessions")}</div>
                   <div className="bg-zinc-900 rounded-xl p-3 border border-white/10">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-xs font-medium">2026/03/17</div>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-xs bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded">Gi</span>
-                          <span className="text-xs text-gray-400">1h 30m</span>
+                          <span className="text-xs text-zinc-400">1h 30m</span>
                         </div>
                       </div>
                     </div>
@@ -472,7 +472,7 @@ export default async function Home() {
                         <div className="text-xs font-medium">2026/03/15</div>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-xs bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded">NoGi</span>
-                          <span className="text-xs text-gray-400">1h</span>
+                          <span className="text-xs text-zinc-400">1h</span>
                         </div>
                       </div>
                     </div>
@@ -489,7 +489,7 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">{t("landing.featureLogTitle")}</h3>
-                  <p className="text-gray-400 text-sm">{t("landing.featureLogDesc")}</p>
+                  <p className="text-zinc-400 text-sm">{t("landing.featureLogDesc")}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -498,7 +498,7 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">{t("landing.featureGoalsTitle")}</h3>
-                  <p className="text-gray-400 text-sm">{t("landing.featureGoalsDesc")}</p>
+                  <p className="text-zinc-400 text-sm">{t("landing.featureGoalsDesc")}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -507,7 +507,7 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">{t("landing.featureWeakTitle")}</h3>
-                  <p className="text-gray-400 text-sm">{t("landing.featureWeakDesc")}</p>
+                  <p className="text-zinc-400 text-sm">{t("landing.featureWeakDesc")}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -516,7 +516,7 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">{t("landing.featureStreakTitle")}</h3>
-                  <p className="text-gray-400 text-sm">{t("landing.featureStreakDesc")}</p>
+                  <p className="text-zinc-400 text-sm">{t("landing.featureStreakDesc")}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -525,7 +525,7 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">{t("landing.featureCalendarTitle")}</h3>
-                  <p className="text-gray-400 text-sm">{t("landing.featureCalendarDesc")}</p>
+                  <p className="text-zinc-400 text-sm">{t("landing.featureCalendarDesc")}</p>
                 </div>
               </div>
               {/* Fix 20: Visual Skill Map highlight */}
@@ -535,7 +535,7 @@ export default async function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">{t("landing.featureSkillMapTitle")}</h3>
-                  <p className="text-gray-400 text-sm">{t("landing.featureSkillMapDesc")}</p>
+                  <p className="text-zinc-400 text-sm">{t("landing.featureSkillMapDesc")}</p>
                 </div>
               </div>
 
@@ -562,42 +562,42 @@ export default async function Home() {
           <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-colors">
             <div className="mb-3"><IconBarChart className="w-8 h-8 text-emerald-400" /></div>
             <h3 className="font-bold text-lg mb-2">{t("landing.coreLogTitle")}</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-zinc-400 text-sm leading-relaxed">
               {t("landing.coreLogDesc")}
             </p>
           </div>
           <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-colors">
             <div className="mb-3"><IconBook className="w-8 h-8 text-purple-400" /></div>
             <h3 className="font-bold text-lg mb-2">{t("landing.coreTechTitle")}</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-zinc-400 text-sm leading-relaxed">
               {t("landing.coreTechDesc")}
             </p>
           </div>
           <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-colors">
             <div className="mb-3"><IconFlame className="w-8 h-8 text-orange-400" /></div>
             <h3 className="font-bold text-lg mb-2">{t("landing.coreStreakTitle")}</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-zinc-400 text-sm leading-relaxed">
               {t("landing.coreStreakDesc")}
             </p>
           </div>
           <div className="bg-zinc-900 rounded-2xl p-6 border border-cyan-500/30 hover:border-cyan-500/50 transition-colors">
             <div className="mb-3"><IconNetwork className="w-8 h-8 text-cyan-400" /></div>
             <h3 className="font-bold text-lg mb-2">{t("landing.coreSkillMapTitle")}</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-zinc-400 text-sm leading-relaxed">
               {t("landing.coreSkillMapDesc")}
             </p>
           </div>
           <div className="bg-zinc-900 rounded-2xl p-6 border border-emerald-500/30 hover:border-emerald-500/50 transition-colors">
             <div className="mb-3"><IconTrophy className="w-8 h-8 text-yellow-400" /></div>
             <h3 className="font-bold text-lg mb-2">{t("landing.coreBeltTitle")}</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-zinc-400 text-sm leading-relaxed">
               {t("landing.coreBeltDesc")}
             </p>
           </div>
           <div className="bg-zinc-900 rounded-2xl p-6 border border-blue-500/30 hover:border-blue-500/50 transition-colors">
             <div className="mb-3"><IconTrendingUp className="w-8 h-8 text-blue-400" /></div>
             <h3 className="font-bold text-lg mb-2">{t("landing.coreWeightTitle")}</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-zinc-400 text-sm leading-relaxed">
               {t("landing.coreWeightDesc")}
             </p>
           </div>
@@ -630,7 +630,7 @@ export default async function Home() {
               >
                 <div className="mb-2">{item.icon}</div>
                 <div className="text-sm font-semibold text-white mb-1">{item.title}</div>
-                <div className="text-xs text-gray-400">{item.desc}</div>
+                <div className="text-xs text-zinc-400">{item.desc}</div>
               </a>
             ))}
           </div>
@@ -640,7 +640,7 @@ export default async function Home() {
               href="https://wiki.bjj-app.net/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-gray-300 hover:text-white transition-colors text-sm font-medium"
+              className="inline-flex items-center gap-1.5 text-zinc-300 hover:text-white transition-colors text-sm font-medium"
             >
               {t("landing.wikiExplore")}
               <IconArrowRight className="w-4 h-4" />
@@ -658,7 +658,7 @@ export default async function Home() {
           <div className="bg-zinc-900 rounded-2xl p-6 border border-purple-500/30 hover:border-purple-500/50 transition-colors">
             <div className="mb-3"><IconNetwork className="w-8 h-8 text-purple-400" /></div>
             <h3 className="font-bold text-lg mb-2">{t("landing.proRollAnalysisTitle")}</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-zinc-400 text-sm leading-relaxed">
               {t("landing.proRollAnalysisDesc")}
             </p>
             <p className="text-purple-400 text-xs font-semibold mt-3">Pro</p>
@@ -666,7 +666,7 @@ export default async function Home() {
           <div className="bg-zinc-900 rounded-2xl p-6 border border-pink-500/30 hover:border-pink-500/50 transition-colors">
             <div className="mb-3"><IconTrophy className="w-8 h-8 text-pink-400" /></div>
             <h3 className="font-bold text-lg mb-2">{t("landing.proBadgesTitle")}</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-zinc-400 text-sm leading-relaxed">
               {t("landing.proBadgesDesc")}
             </p>
             <p className="text-pink-400 text-xs font-semibold mt-3">Pro</p>
@@ -674,7 +674,7 @@ export default async function Home() {
           <div className="bg-zinc-900 rounded-2xl p-6 border border-blue-500/30 hover:border-blue-500/50 transition-colors">
             <div className="mb-3"><IconTarget className="w-8 h-8 text-blue-400" /></div>
             <h3 className="font-bold text-lg mb-2">{t("landing.proGoalWeightTitle")}</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-zinc-400 text-sm leading-relaxed">
               {t("landing.proGoalWeightDesc")}
             </p>
             <p className="text-blue-400 text-xs font-semibold mt-3">Pro</p>
@@ -699,7 +699,7 @@ export default async function Home() {
             <div key={i} className="bg-zinc-900 rounded-xl p-5 border border-white/10">
               {/* Fix 17: zinc-100 for stronger contrast */}
               <h3 className="font-semibold text-zinc-100 mb-2 text-sm">Q. {q}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{a}</p>
+              <p className="text-zinc-400 text-sm leading-relaxed">{a}</p>
             </div>
           ))}
         </div>
@@ -719,12 +719,12 @@ export default async function Home() {
       </section>
 
       {/* フッター — Fix 9: SaaS standard footer */}
-      <footer className="px-6 py-8 text-center text-gray-400 text-sm border-t border-white/5">
+      <footer className="px-6 py-8 text-center text-zinc-400 text-sm border-t border-white/5">
         <p className="mb-3">{t("landing.footerCopyright")}</p>
         <div className="flex justify-center flex-wrap gap-4 text-xs">
-          <a href="/terms" className="hover:text-gray-400 transition-colors">{t("landing.footerTerms")}</a>
-          <a href="/privacy" className="hover:text-gray-400 transition-colors">{t("landing.footerPrivacy")}</a>
-          <a href="/legal/tokushoho" className="hover:text-gray-400 transition-colors">{t("landing.footerTokushoho")}</a>
+          <a href="/terms" className="hover:text-zinc-400 transition-colors">{t("landing.footerTerms")}</a>
+          <a href="/privacy" className="hover:text-zinc-400 transition-colors">{t("landing.footerPrivacy")}</a>
+          <a href="/legal/tokushoho" className="hover:text-zinc-400 transition-colors">{t("landing.footerTokushoho")}</a>
         </div>
       </footer>
     </main>

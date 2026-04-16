@@ -163,7 +163,7 @@ export default function GuestDashboard() {
         {/* ヘッダー */}
         <div className="mb-6">
           <h2 className="text-2xl font-bold">{t("guest.welcome")}</h2>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-zinc-400 text-sm mt-1">
             {t("guest.noLogin")}
           </p>
         </div>
@@ -172,13 +172,13 @@ export default function GuestDashboard() {
         <div className="grid grid-cols-2 gap-3 mb-6">
           <div className="bg-zinc-900 rounded-xl p-4 text-center border border-white/10">
             <div className="text-2xl font-bold text-white">{logs.length}</div>
-            <div className="text-gray-400 text-xs mt-1">{t("guest.sessions")}</div>
+            <div className="text-zinc-400 text-xs mt-1">{t("guest.sessions")}</div>
           </div>
           <div className="bg-zinc-900 rounded-xl p-4 text-center border border-white/10">
             <div className="text-2xl font-bold text-yellow-400">
               {logs.reduce((s, l) => s + l.duration_min, 0)}
             </div>
-            <div className="text-gray-400 text-xs mt-1">{t("guest.totalMins")}</div>
+            <div className="text-zinc-400 text-xs mt-1">{t("guest.totalMins")}</div>
           </div>
         </div>
 
@@ -199,7 +199,7 @@ export default function GuestDashboard() {
             <div className="space-y-3 mb-4 border border-white/10 rounded-xl p-4 bg-white/5">
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-gray-400 text-xs">{t("training.date")}</label>
+                  <label className="text-zinc-400 text-xs">{t("training.date")}</label>
                   <div className="flex items-center gap-2">
                     {date !== getYesterdayLocalDateString() && (
                       <button
@@ -231,7 +231,7 @@ export default function GuestDashboard() {
               </div>
               {/* 時間プリセット */}
               <div>
-                <p className="text-gray-400 text-xs mb-1.5">{t("training.duration")}</p>
+                <p className="text-zinc-400 text-xs mb-1.5">{t("training.duration")}</p>
                 <div className="flex gap-2 flex-wrap">
                   {DURATION_PRESETS.map((d) => (
                     <button
@@ -241,7 +241,7 @@ export default function GuestDashboard() {
                       className={`px-3 py-2 min-h-[36px] rounded-lg text-sm font-medium border transition-colors ${
                         duration === d
                           ? "bg-zinc-600 border-zinc-600 text-white"
-                          : "bg-zinc-800 border-white/10 text-gray-400 hover:text-white"
+                          : "bg-zinc-800 border-white/10 text-zinc-400 hover:text-white"
                       }`}
                     >
                       {d}{t("training.durationUnit")}
@@ -257,7 +257,7 @@ export default function GuestDashboard() {
                     type="button"
                     onClick={() => setType(t.value)}
                     className={`px-3 py-1 rounded-full text-xs border transition-colors ${
-                      type === t.value ? t.color + " ring-1 ring-white/30" : "bg-zinc-900/50 text-zinc-400 border-white/10 hover:text-gray-300"
+                      type === t.value ? t.color + " ring-1 ring-white/30" : "bg-zinc-900/50 text-zinc-400 border-white/10 hover:text-zinc-300"
                     }`}
                   >
                     {t.label}
@@ -279,7 +279,7 @@ export default function GuestDashboard() {
                   onChange={(e) => setContinuousInput(e.target.checked)}
                   className="w-4 h-4 rounded accent-[#10B981] cursor-pointer"
                 />
-                <span className="text-gray-400 text-xs">{t("training.continuousInput")}</span>
+                <span className="text-zinc-400 text-xs">{t("training.continuousInput")}</span>
               </label>
               <button
                 onClick={handleAdd}
@@ -307,7 +307,7 @@ export default function GuestDashboard() {
                       {typeInfo(log.type).label}
                     </span>
                     <span className="text-white text-sm">{log.date}</span>
-                    <span className="text-gray-400 text-xs">{log.duration_min}{t("training.durationUnit")}</span>
+                    <span className="text-zinc-400 text-xs">{log.duration_min}{t("training.durationUnit")}</span>
                     {log.notes && <span className="text-zinc-400 text-xs truncate">{log.notes}</span>}
                   </div>
                   <button
@@ -337,7 +337,7 @@ export default function GuestDashboard() {
           <p className="text-white font-semibold mb-1">
             {t("guest.ctaTitle")}
           </p>
-          <p className="text-gray-400 text-xs mb-4">
+          <p className="text-zinc-400 text-xs mb-4">
             {t("guest.ctaDesc")}
           </p>
           <Link

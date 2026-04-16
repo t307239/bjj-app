@@ -38,7 +38,7 @@ export default function RecordDetailClient({ recordId }: Props) {
     <button
       type="button"
       onClick={handleCopy}
-      className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/10 hover:border-white/20 px-3 py-2 min-h-[36px] rounded-lg transition-colors"
+      className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white border border-white/10 hover:border-white/20 px-3 py-2 min-h-[36px] rounded-lg transition-colors"
       aria-label={t("training.copyLink")}
     >
       {copied ? (

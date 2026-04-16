@@ -51,10 +51,10 @@ export default async function GymPage() {
             <span className="font-bold text-lg">BJJ App</span>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/" className="text-sm text-gray-400 hover:text-white transition-colors">
+            <Link href="/" className="text-sm text-zinc-400 hover:text-white transition-colors">
               {t("gymLanding.navIndividuals")}
             </Link>
-            <Link href="/login" className="text-sm text-gray-400 hover:text-white transition-colors">
+            <Link href="/login" className="text-sm text-zinc-400 hover:text-white transition-colors">
               {t("gymLanding.navSignIn")}
             </Link>
             <Link
@@ -82,7 +82,7 @@ export default async function GymPage() {
               </span>
             </h1>
 
-            <p className="text-gray-400 text-lg md:text-xl mb-10 leading-relaxed">
+            <p className="text-zinc-400 text-lg md:text-xl mb-10 leading-relaxed">
               {t("gymLanding.heroDesc")}
             </p>
 
@@ -95,7 +95,7 @@ export default async function GymPage() {
               </Link>
               <a
                 href="#waitlist"
-                className="text-sm text-zinc-400 hover:text-gray-300 transition-colors"
+                className="text-sm text-zinc-400 hover:text-zinc-300 transition-colors"
               >
                 {t("gymLanding.heroWaitlist")}
               </a>
@@ -116,10 +116,10 @@ export default async function GymPage() {
                 <h3 className="font-bold text-lg mb-3 text-zinc-100">
                   {t("gymLanding.feature1Title")}
                 </h3>
-                <p className="text-gray-400 text-sm leading-relaxed mb-4">
+                <p className="text-zinc-400 text-sm leading-relaxed mb-4">
                   {t("gymLanding.feature1Desc")}
                 </p>
-                <ul className="text-xs text-gray-400 space-y-2">
+                <ul className="text-xs text-zinc-400 space-y-2">
                   <li>✓ {t("gymLanding.feature1Point1")}</li>
                   <li>✓ {t("gymLanding.feature1Point2")}</li>
                   <li>✓ {t("gymLanding.feature1Point3")}</li>
@@ -132,10 +132,10 @@ export default async function GymPage() {
                 <h3 className="font-bold text-lg mb-3 text-zinc-100">
                   {t("gymLanding.feature2Title")}
                 </h3>
-                <p className="text-gray-400 text-sm leading-relaxed mb-4">
+                <p className="text-zinc-400 text-sm leading-relaxed mb-4">
                   {t("gymLanding.feature2Desc")}
                 </p>
-                <ul className="text-xs text-gray-400 space-y-2">
+                <ul className="text-xs text-zinc-400 space-y-2">
                   <li>✓ {t("gymLanding.feature2Point1")}</li>
                   <li>✓ {t("gymLanding.feature2Point2")}</li>
                   <li>✓ {t("gymLanding.feature2Point3")}</li>
@@ -148,10 +148,10 @@ export default async function GymPage() {
                 <h3 className="font-bold text-lg mb-3 text-zinc-100">
                   {t("gymLanding.feature3Title")}
                 </h3>
-                <p className="text-gray-400 text-sm leading-relaxed mb-4">
+                <p className="text-zinc-400 text-sm leading-relaxed mb-4">
                   {t("gymLanding.feature3Desc")}
                 </p>
-                <ul className="text-xs text-gray-400 space-y-2">
+                <ul className="text-xs text-zinc-400 space-y-2">
                   <li>✓ {t("gymLanding.feature3Point1")}</li>
                   <li>✓ {t("gymLanding.feature3Point2")}</li>
                   <li>✓ {t("gymLanding.feature3Point3")}</li>
@@ -172,7 +172,7 @@ export default async function GymPage() {
                 1
               </div>
               <h3 className="font-bold text-lg text-zinc-100 mb-3">{t("gymLanding.step1Title")}</h3>
-              <p className="text-gray-400 text-sm">
+              <p className="text-zinc-400 text-sm">
                 {t("gymLanding.step1Desc")}
               </p>
             </div>
@@ -181,7 +181,7 @@ export default async function GymPage() {
                 2
               </div>
               <h3 className="font-bold text-lg text-zinc-100 mb-3">{t("gymLanding.step2Title")}</h3>
-              <p className="text-gray-400 text-sm">
+              <p className="text-zinc-400 text-sm">
                 {t("gymLanding.step2Desc")}
               </p>
             </div>
@@ -190,7 +190,7 @@ export default async function GymPage() {
                 3
               </div>
               <h3 className="font-bold text-lg text-zinc-100 mb-3">{t("gymLanding.step3Title")}</h3>
-              <p className="text-gray-400 text-sm">
+              <p className="text-zinc-400 text-sm">
                 {t("gymLanding.step3Desc")}
               </p>
             </div>
@@ -211,10 +211,10 @@ export default async function GymPage() {
                 </div>
                 <h3 className="text-lg font-bold mb-2 text-zinc-100">{t("gymLanding.pricingStarter")}</h3>
                 <div className="text-3xl font-bold text-zinc-100 mb-1">
-                  $99<span className="text-sm font-normal text-gray-400">/{t("gymLanding.pricingMonth")}</span>
+                  $99<span className="text-sm font-normal text-zinc-400">/{t("gymLanding.pricingMonth")}</span>
                 </div>
-                <p className="text-gray-400 text-xs mb-6">{t("gymLanding.pricingStarterLimit")}</p>
-                <ul className="space-y-3 text-sm text-gray-400 mb-8">
+                <p className="text-zinc-400 text-xs mb-6">{t("gymLanding.pricingStarterLimit")}</p>
+                <ul className="space-y-3 text-sm text-zinc-400 mb-8">
                   <li className="flex items-center gap-2">
                     <span className="text-blue-400">✓</span> {t("gymLanding.pricingStarterF1")}
                   </li>
@@ -240,10 +240,10 @@ export default async function GymPage() {
               <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10">
                 <h3 className="text-lg font-bold mb-2 text-zinc-100">{t("gymLanding.pricingPro")}</h3>
                 <div className="text-3xl font-bold text-zinc-100 mb-1">
-                  $99<span className="text-sm font-normal text-gray-400">/{t("gymLanding.pricingMonth")}</span>
+                  $99<span className="text-sm font-normal text-zinc-400">/{t("gymLanding.pricingMonth")}</span>
                 </div>
-                <p className="text-gray-400 text-xs mb-6">{t("gymLanding.pricingProLimit")}</p>
-                <ul className="space-y-3 text-sm text-gray-400 mb-8">
+                <p className="text-zinc-400 text-xs mb-6">{t("gymLanding.pricingProLimit")}</p>
+                <ul className="space-y-3 text-sm text-zinc-400 mb-8">
                   <li className="flex items-center gap-2">
                     <span className="text-blue-400">✓</span> {t("gymLanding.pricingProF1")}
                   </li>
@@ -318,7 +318,7 @@ export default async function GymPage() {
                 <h3 className="font-semibold text-zinc-100 mb-2 text-sm">
                   {q}
                 </h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{a}</p>
+                <p className="text-zinc-400 text-sm leading-relaxed">{a}</p>
               </div>
             ))}
           </div>
@@ -341,12 +341,12 @@ export default async function GymPage() {
         </section>
 
         {/* Footer */}
-        <footer className="px-6 py-8 text-center text-gray-400 text-sm border-t border-white/5">
+        <footer className="px-6 py-8 text-center text-zinc-400 text-sm border-t border-white/5">
           <p className="mb-3">{t("gymLanding.footerCopyright")}</p>
           <div className="flex justify-center flex-wrap gap-4 text-xs">
-            <a href="/terms" className="hover:text-gray-400 transition-colors">{t("gymLanding.footerTerms")}</a>
-            <a href="/privacy" className="hover:text-gray-400 transition-colors">{t("gymLanding.footerPrivacy")}</a>
-            <a href="/legal/tokushoho" className="hover:text-gray-400 transition-colors">{t("gymLanding.footerTokushoho")}</a>
+            <a href="/terms" className="hover:text-zinc-400 transition-colors">{t("gymLanding.footerTerms")}</a>
+            <a href="/privacy" className="hover:text-zinc-400 transition-colors">{t("gymLanding.footerPrivacy")}</a>
+            <a href="/legal/tokushoho" className="hover:text-zinc-400 transition-colors">{t("gymLanding.footerTokushoho")}</a>
           </div>
         </footer>
       </main>

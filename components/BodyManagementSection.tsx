@@ -193,7 +193,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
         {isPro && (
           <div className="bg-zinc-900 rounded-xl border border-white/10 p-4">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">
+              <p className="text-xs text-zinc-400 font-semibold uppercase tracking-wide">
                 🎯 {t("body.targetWeightTitle")}
               </p>
               <button

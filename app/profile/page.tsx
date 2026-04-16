@@ -195,7 +195,7 @@ export default async function ProfilePage() {
                 {user.email}
               </p>
               {gymName && (
-                <p className="text-gray-400 text-xs mt-0.5 truncate">
+                <p className="text-zinc-400 text-xs mt-0.5 truncate">
                   🥋 {gymName}
                 </p>
               )}

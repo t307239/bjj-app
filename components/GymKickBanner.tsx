@@ -40,14 +40,14 @@ export default function GymKickBanner({ userId }: { userId: string }) {
         <p className="text-sm font-semibold text-white">
           {t("gym.kickedBannerTitle")}
         </p>
-        <p className="text-xs text-gray-400 mt-0.5">
+        <p className="text-xs text-zinc-400 mt-0.5">
           {t("gym.kickedBannerDesc")}
         </p>
       </div>
       <button
         onClick={dismiss}
         disabled={dismissing}
-        className="flex-shrink-0 text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-2 py-1 transition-colors disabled:opacity-50 mt-0.5"
+        className="flex-shrink-0 text-xs text-zinc-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-2 py-1 transition-colors disabled:opacity-50 mt-0.5"
         aria-label={t("gym.kickedBannerDismiss")}
       >
         {dismissing ? "…" : t("gym.kickedBannerDismiss")}

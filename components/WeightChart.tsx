@@ -146,10 +146,10 @@ export default function WeightChart({ userId, refreshKey, targetWeight, targetDa
   if (data.length === 0) {
     return (
       <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-        <p className="text-xs text-gray-400 font-semibold mb-2 uppercase tracking-wide">
+        <p className="text-xs text-zinc-400 font-semibold mb-2 uppercase tracking-wide">
           {t("body.weightChart")}
         </p>
-        <p className="text-gray-400 text-sm text-center py-6">{t("body.noData")}</p>
+        <p className="text-zinc-400 text-sm text-center py-6">{t("body.noData")}</p>
       </div>
     );
   }
@@ -204,17 +204,17 @@ export default function WeightChart({ userId, refreshKey, targetWeight, targetDa
 
   return (
     <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-      <p className="text-xs text-gray-400 font-semibold mb-1 uppercase tracking-wide">
+      <p className="text-xs text-zinc-400 font-semibold mb-1 uppercase tracking-wide">
         {t("body.weightChart")} <span className="text-zinc-400 font-normal">({t("body.weightChartPeriod")})</span>
       </p>
 
       {/* Legend — flex-wrap for narrow viewports */}
       <div className="flex flex-wrap gap-x-4 gap-y-1 mb-2">
-        <span className="flex items-center gap-1.5 text-xs text-gray-400 whitespace-nowrap">
+        <span className="flex items-center gap-1.5 text-xs text-zinc-400 whitespace-nowrap">
           <span className="inline-block w-5 h-0.5 bg-[#10B981] rounded flex-shrink-0" />
           {t("body.standalone")}
         </span>
-        <span className="flex items-center gap-1.5 text-xs text-gray-400 whitespace-nowrap">
+        <span className="flex items-center gap-1.5 text-xs text-zinc-400 whitespace-nowrap">
           <span className="inline-block w-5 h-0.5 bg-[#60a5fa] rounded border-t-2 border-dashed border-[#60a5fa] flex-shrink-0" />
           {t("body.postTraining")}
         </span>

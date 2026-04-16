@@ -184,7 +184,7 @@ export default async function TechniquesPage() {
               <h1 className="text-2xl font-black text-white tracking-tight">
                 {t("techniquesPage.title")}
               </h1>
-              <p className="text-gray-400 text-sm mt-0.5">
+              <p className="text-zinc-400 text-sm mt-0.5">
                 {t("techniquesPage.subtitle")}
               </p>
             </div>
@@ -314,7 +314,7 @@ export default async function TechniquesPage() {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs bg-zinc-800/60 hover:bg-zinc-700/60 text-gray-400 hover:text-white px-3 py-1.5 rounded-full border border-white/8 hover:border-white/20 transition-all active:scale-95"
+                      className="inline-flex items-center gap-1 text-xs bg-zinc-800/60 hover:bg-zinc-700/60 text-zinc-400 hover:text-white px-3 py-1.5 rounded-full border border-white/8 hover:border-white/20 transition-all active:scale-95"
                     >
                       {link.label}
                       <svg className="w-3 h-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

@@ -485,7 +485,9 @@
     "socialProofProSubscribers": "300+",
     "socialProofProSubscribersLabel": "Membros Pro",
     "coreTitle": "Recursos Principais",
-    "proFeatures": "Recursos Pro"
+    "proFeatures": "Recursos Pro",
+    "engPillWeight": "Gestão de Peso",
+    "engPillBelt": "Progresso de Faixa"
   },
   "body": {
     "injuryAlert": {

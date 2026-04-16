@@ -193,7 +193,7 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
               <button
                 type="button"
                 onClick={onClose}
-                className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                 aria-label="Close"
               >
                 <svg

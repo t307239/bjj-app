@@ -133,18 +133,18 @@ export default function AccountSection({ userId, supabase }: Props) {
       <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
         {!emailEditing ? (
           <div className="flex items-center justify-between">
-            <p className="text-gray-400 text-xs">{t("profile.emailChangeDesc")}</p>
+            <p className="text-zinc-400 text-xs">{t("profile.emailChangeDesc")}</p>
             <button
               type="button"
               onClick={() => { setEmailEditing(true); setEmailMsg(null); setEmailError(null); }}
-              className="text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
+              className="text-xs text-zinc-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
             >
               {t("profile.emailChangeBtn")}
             </button>
           </div>
         ) : (
           <div className="space-y-2">
-            <p className="text-gray-400 text-xs">{t("profile.emailChangeLabel")}</p>
+            <p className="text-zinc-400 text-xs">{t("profile.emailChangeLabel")}</p>
             <input
               type="email"
               value={newEmail}
@@ -166,7 +166,7 @@ export default function AccountSection({ userId, supabase }: Props) {
               <button
                 type="button"
                 onClick={() => { setEmailEditing(false); setNewEmail(""); setEmailError(null); }}
-                className="text-xs text-gray-400 hover:text-white px-3 py-2 min-h-[36px]"
+                className="text-xs text-zinc-400 hover:text-white px-3 py-2 min-h-[36px]"
               >
                 {t("training.cancel")}
               </button>
@@ -179,18 +179,18 @@ export default function AccountSection({ userId, supabase }: Props) {
       <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
         {!nameEditing ? (
           <div className="flex items-center justify-between">
-            <p className="text-gray-400 text-xs">{t("profile.nameChangeDesc")}</p>
+            <p className="text-zinc-400 text-xs">{t("profile.nameChangeDesc")}</p>
             <button
               type="button"
               onClick={() => { setNameEditing(true); setNameMsg(null); }}
-              className="text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
+              className="text-xs text-zinc-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
             >
               {t("profile.nameChangeBtn")}
             </button>
           </div>
         ) : (
           <div className="space-y-2">
-            <p className="text-gray-400 text-xs">{t("profile.nameChangeLabel")}</p>
+            <p className="text-zinc-400 text-xs">{t("profile.nameChangeLabel")}</p>
             <input
               type="text"
               value={newName}
@@ -212,7 +212,7 @@ export default function AccountSection({ userId, supabase }: Props) {
               <button
                 type="button"
                 onClick={() => { setNameEditing(false); setNewName(""); setNameMsg(null); }}
-                className="text-xs text-gray-400 hover:text-white px-3 py-2 min-h-[36px]"
+                className="text-xs text-zinc-400 hover:text-white px-3 py-2 min-h-[36px]"
               >
                 {t("training.cancel")}
               </button>
@@ -223,14 +223,14 @@ export default function AccountSection({ userId, supabase }: Props) {
 
       {/* Stripe Customer Portal — cancel/downgrade without chargeback risk */}
       <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
-        <p className="text-gray-400 text-xs mb-2">{t("profile.manageSubDesc")}</p>
+        <p className="text-zinc-400 text-xs mb-2">{t("profile.manageSubDesc")}</p>
         {CUSTOMER_PORTAL_URL ? (
           <a
             href={CUSTOMER_PORTAL_URL}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={t("profile.ariaManageSub")}
-            className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors"
           >
             💳 {t("profile.manageSub")}
           </a>
@@ -240,7 +240,7 @@ export default function AccountSection({ userId, supabase }: Props) {
               type="submit"
               disabled={portalLoading}
               aria-label={t("profile.ariaManageSub")}
-              className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors disabled:opacity-50 disabled:pointer-events-none"
+              className="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors disabled:opacity-50 disabled:pointer-events-none"
             >
               {portalLoading ? "…" : <>💳 {t("profile.manageSub")}</>}
             </button>
@@ -253,12 +253,12 @@ export default function AccountSection({ userId, supabase }: Props) {
 
       {/* Data export — CCPA/GDPR Right to Data Portability */}
       <div className="bg-zinc-900/60 rounded-xl border border-white/10 px-4 py-3">
-        <p className="text-gray-400 text-xs mb-2">{t("profile.exportDesc")}</p>
+        <p className="text-zinc-400 text-xs mb-2">{t("profile.exportDesc")}</p>
         <CsvExport userId={userId} />
       </div>
 
       {/* Help & Support links — Axis 11 CS self-serve */}
-      <div className="flex items-center gap-3 text-xs text-gray-400 flex-wrap">
+      <div className="flex items-center gap-3 text-xs text-zinc-400 flex-wrap">
         <a
           href="/help"
           className="hover:text-white transition-colors underline underline-offset-2"
@@ -311,7 +311,7 @@ export default function AccountSection({ userId, supabase }: Props) {
               💾 {exporting ? t("profile.exporting") : t("profile.exportBtn")}
             </button>
           </div>
-          <p className="text-gray-400 text-xs leading-relaxed">{t("profile.deleteDesc")}</p>
+          <p className="text-zinc-400 text-xs leading-relaxed">{t("profile.deleteDesc")}</p>
           <div>
             <label className="text-zinc-400 text-xs mb-1 block">{t("profile.deleteTypeLabel")}</label>
             <input
@@ -337,7 +337,7 @@ export default function AccountSection({ userId, supabase }: Props) {
             <button
               type="button"
               onClick={() => { setConfirm(false); setDeleteInput(""); setDeleteError(null); }}
-              className="flex-1 bg-white/10 hover:bg-white/15 text-gray-300 font-bold py-2 rounded-lg text-sm"
+              className="flex-1 bg-white/10 hover:bg-white/15 text-zinc-300 font-bold py-2 rounded-lg text-sm"
             >
               {t("training.cancel")}
             </button>

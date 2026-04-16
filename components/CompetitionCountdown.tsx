@@ -258,7 +258,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
     <div className="bg-zinc-900/50 backdrop-blur-sm border border-white/10 rounded-2xl mb-5 overflow-hidden shadow-lg shadow-black/40">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-        <h4 className="text-sm font-medium text-gray-300 flex items-center gap-1.5">
+        <h4 className="text-sm font-medium text-zinc-300 flex items-center gap-1.5">
           <span>🏆</span>
           {t("compGoal.title")}
         </h4>

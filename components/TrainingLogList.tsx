@@ -57,7 +57,7 @@ function DurationPicker({
   const isPreset = DURATION_PRESETS.includes(value);
   return (
     <div>
-      <label className="block text-gray-400 text-xs mb-1">{t("training.duration")}</label>
+      <label className="block text-zinc-400 text-xs mb-1">{t("training.duration")}</label>
       <div className="flex flex-wrap gap-1.5 mb-2">
         {DURATION_PRESETS.map((d) => (
           <button
@@ -67,7 +67,7 @@ function DurationPicker({
             className={`px-2.5 py-1.5 min-h-[32px] rounded-lg text-xs font-medium transition-colors ${
               value === d
                 ? "bg-[#10B981] text-white"
-                : "bg-zinc-800 text-gray-400 hover:text-white"
+                : "bg-zinc-800 text-zinc-400 hover:text-white"
             }`}
           >
             {formatDuration(d)}
@@ -184,7 +184,7 @@ const TrainingLogList = memo(function TrainingLogList({
       <div className="text-center py-12 px-4">
         <div className="text-6xl mb-4 animate-bounce inline-block">🥋</div>
         <p className="text-white font-bold text-lg mb-1">{t("training.empty")}</p>
-        <p className="text-gray-400 text-sm mb-2">
+        <p className="text-zinc-400 text-sm mb-2">
           {t("training.emptyDesc")}
         </p>
         <div className="flex justify-center gap-4 text-xs text-zinc-400 mb-6">
@@ -218,7 +218,7 @@ const TrainingLogList = memo(function TrainingLogList({
   return (
     <>
       {searchQuery && totalCount !== null && (
-        <div className="text-xs text-gray-400 mb-2">
+        <div className="text-xs text-zinc-400 mb-2">
           {t("training.searchResultCount", { count: String(totalCount) })}
         </div>
       )}
@@ -338,7 +338,7 @@ const TrainingLogList = memo(function TrainingLogList({
                   <button
                     type="button"
                     onClick={onCancelEdit}
-                    className="px-3 text-gray-400 hover:text-gray-200 text-xs transition-colors"
+                    className="px-3 text-zinc-400 hover:text-gray-200 text-xs transition-colors"
                   >
                     {t("training.cancel")}
                   </button>
@@ -354,7 +354,7 @@ const TrainingLogList = memo(function TrainingLogList({
                     <span
                       className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${
                         TRAINING_TYPES.find((t) => t.value === entry.type)?.color ||
-                        "bg-white/10 text-gray-300"
+                        "bg-white/10 text-zinc-300"
                       }`}
                     >
                       <span>
@@ -364,7 +364,7 @@ const TrainingLogList = memo(function TrainingLogList({
                         {TRAINING_TYPES.find((t) => t.value === entry.type)?.label || entry.type}
                       </span>
                     </span>
-                    <span className="text-gray-400 text-xs whitespace-nowrap">{formatRelativeDate(entry.date, t)}</span>
+                    <span className="text-zinc-400 text-xs whitespace-nowrap">{formatRelativeDate(entry.date, t)}</span>
                   </div>
                   {/* Right: duration + action buttons */}
                   <div className="flex items-center gap-0.5 ml-2 flex-shrink-0">
@@ -451,7 +451,7 @@ const TrainingLogList = memo(function TrainingLogList({
                           <div className="mt-1.5 flex flex-wrap gap-1.5">
                             <span
                               className={`text-xs font-semibold ${
-                                RESULT_LABELS[comp.result]?.color ?? "text-gray-400"
+                                RESULT_LABELS[comp.result]?.color ?? "text-zinc-400"
                               }`}
                             >
                               {RESULT_LABELS[comp.result]?.label ?? comp.result}
@@ -468,7 +468,7 @@ const TrainingLogList = memo(function TrainingLogList({
                               </span>
                             )}
                             {comp.opponent && (
-                              <span className="text-xs text-gray-400">
+                              <span className="text-xs text-zinc-400">
                                 vs {comp.opponent}
                                 {comp.opponent_rank && (
                                   <span className="ml-1 text-zinc-400">
@@ -496,7 +496,7 @@ const TrainingLogList = memo(function TrainingLogList({
                         {userNotes &&
                           (expandedNotes.has(entry.id) || userNotes.length <= 80 ? (
                             <div>
-                              <p className="text-gray-300 text-sm mt-1">{userNotes}</p>
+                              <p className="text-zinc-300 text-sm mt-1">{userNotes}</p>
                               {userNotes.length > 80 && (
                                 <button
                                   onClick={() =>
@@ -506,7 +506,7 @@ const TrainingLogList = memo(function TrainingLogList({
                                       return s;
                                     })
                                   }
-                                  className="text-xs text-zinc-400 hover:text-gray-300 mt-0.5"
+                                  className="text-xs text-zinc-400 hover:text-zinc-300 mt-0.5"
                                 >
                                   {t("training.collapse")}
                                 </button>
@@ -514,14 +514,14 @@ const TrainingLogList = memo(function TrainingLogList({
                             </div>
                           ) : (
                             <div>
-                              <p className="text-gray-300 text-sm mt-1">
+                              <p className="text-zinc-300 text-sm mt-1">
                                 {userNotes.slice(0, 80)}…
                               </p>
                               <button
                                 onClick={() =>
                                   setExpandedNotes((prev) => new Set([...prev, entry.id]))
                                 }
-                                className="text-xs text-zinc-400 hover:text-gray-300 mt-0.5"
+                                className="text-xs text-zinc-400 hover:text-zinc-300 mt-0.5"
                               >
                                 {t("training.showMore")}
                               </button>
@@ -541,7 +541,7 @@ const TrainingLogList = memo(function TrainingLogList({
               <button
                 onClick={() => onPageChange(page - 1)}
                 disabled={page <= 1 || pageLoading}
-                className="flex items-center gap-1 text-xs text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors active:scale-95"
+                className="flex items-center gap-1 text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors active:scale-95"
                 aria-label="Previous page"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -564,7 +564,7 @@ const TrainingLogList = memo(function TrainingLogList({
               <button
                 onClick={() => onPageChange(page + 1)}
                 disabled={page >= totalPages || pageLoading}
-                className="flex items-center gap-1 text-xs text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors active:scale-95"
+                className="flex items-center gap-1 text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors active:scale-95"
                 aria-label="Next page"
               >
                 {t("training.next")}

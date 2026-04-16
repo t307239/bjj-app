@@ -65,7 +65,7 @@ export default function GymJoinClient({
         <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 max-w-sm w-full">
           <div className="text-3xl mb-3 text-center">⚠️</div>
           <h2 className="text-lg font-bold text-white text-center mb-2">{t("gymJoin.transferTitle")}</h2>
-          <p className="text-sm text-gray-400 text-center mb-5">
+          <p className="text-sm text-zinc-400 text-center mb-5">
             {t("gymJoin.transferDesc", { name: gymName })}
           </p>
           <button
@@ -78,7 +78,7 @@ export default function GymJoinClient({
           </button>
           <button
             onClick={() => router.back()}
-            className="w-full bg-zinc-700 hover:bg-zinc-600 text-gray-300 py-3 rounded-xl text-sm transition-colors"
+            className="w-full bg-zinc-700 hover:bg-zinc-600 text-zinc-300 py-3 rounded-xl text-sm transition-colors"
           >
             {t("common.cancel")}
           </button>
@@ -98,18 +98,18 @@ export default function GymJoinClient({
           <h1 className="text-xl font-bold text-white mb-1">
             <span className="text-white">{t("gymJoin.title", { name: gymName })}</span>
           </h1>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-zinc-400 mt-1">
             {t("gymJoin.managedBy", { owner: ownerName })}
             {maskedEmail && (
-              <span className="ml-1 text-gray-400">({maskedEmail})</span>
+              <span className="ml-1 text-zinc-400">({maskedEmail})</span>
             )}
           </p>
         </div>
 
         {/* Consent explanation */}
-        <div className="bg-zinc-800 rounded-xl p-4 mb-5 text-sm text-gray-300">
+        <div className="bg-zinc-800 rounded-xl p-4 mb-5 text-sm text-zinc-300">
           <p className="font-medium text-white mb-2">{t("gymJoin.ownerCanSee")}</p>
-          <ul className="space-y-1 text-xs text-gray-400">
+          <ul className="space-y-1 text-xs text-zinc-400">
             <li className="flex items-center gap-1.5">
               <svg className="w-3.5 h-3.5 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
               {t("gymJoin.canSeeFrequency")}
@@ -138,9 +138,9 @@ export default function GymJoinClient({
             className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#10B981] flex-shrink-0 cursor-pointer"
             aria-label={t("gymJoin.ariaAgeConfirm")}
           />
-          <span className="text-xs text-gray-400 group-hover:text-gray-300 leading-relaxed">
+          <span className="text-xs text-zinc-400 group-hover:text-zinc-300 leading-relaxed">
             I am <span className="text-white font-medium">{t("gymJoin.ageRequirement")}</span>{" "}
-            <span className="text-gray-400">{t("gymJoin.ageRequirementLegal")}</span>
+            <span className="text-zinc-400">{t("gymJoin.ageRequirementLegal")}</span>
           </span>
         </label>
 
@@ -158,14 +158,14 @@ export default function GymJoinClient({
         <button
           onClick={() => handleJoin(false)}
           disabled={loading || !ageConfirmed}
-          className="w-full bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 text-gray-300 py-3 rounded-xl text-sm mb-4 transition-colors"
+          className="w-full bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 text-zinc-300 py-3 rounded-xl text-sm mb-4 transition-colors"
           aria-label={t("gymJoin.ariaJoinNoShare")}
         >
           {t("gymJoin.joinNoShare")}
         </button>
 
         {/* Privacy note */}
-        <p className="text-xs text-gray-400 text-center">
+        <p className="text-xs text-zinc-400 text-center">
           {t("gymJoin.privacyNote")}
         </p>
 

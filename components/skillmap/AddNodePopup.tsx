@@ -39,7 +39,7 @@ export default function AddNodePopup({ screenX, screenY, onAdd, onCancel, t }: P
         maxLength={80}
       />
       <div className="flex gap-2">
-        <button onClick={onCancel} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-xs text-gray-300 py-2 min-h-[44px] rounded-lg transition-colors">
+        <button onClick={onCancel} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-xs text-zinc-300 py-2 min-h-[44px] rounded-lg transition-colors">
           {t("common.cancel")}
         </button>
         <button

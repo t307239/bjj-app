@@ -230,12 +230,12 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
       {/* Mini stat chips */}
       <div className="flex flex-wrap gap-2 mb-4">
         {analytics.subWins > 0 && (
-          <span className="text-xs bg-zinc-800 text-gray-300 px-2 py-1 rounded-full whitespace-nowrap">
+          <span className="text-xs bg-zinc-800 text-zinc-300 px-2 py-1 rounded-full whitespace-nowrap">
             {t("competition.bySubmission")}: {analytics.subWins}
           </span>
         )}
         {analytics.decisionWins > 0 && (
-          <span className="text-xs bg-zinc-800 text-gray-300 px-2 py-1 rounded-full whitespace-nowrap">
+          <span className="text-xs bg-zinc-800 text-zinc-300 px-2 py-1 rounded-full whitespace-nowrap">
             {t("competition.byDecision")}: {analytics.decisionWins}
           </span>
         )}
@@ -245,7 +245,7 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
           </span>
         )}
         {analytics.bestStreak >= 2 && analytics.currentStreak < analytics.bestStreak && (
-          <span className="text-xs bg-zinc-800 text-gray-300 px-2 py-1 rounded-full whitespace-nowrap">
+          <span className="text-xs bg-zinc-800 text-zinc-300 px-2 py-1 rounded-full whitespace-nowrap">
             {t("competition.bestStreak", { n: analytics.bestStreak })}
           </span>
         )}
@@ -294,7 +294,7 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
                   const pct = analytics.subWins > 0 ? Math.round((count / analytics.subWins) * 100) : 0;
                   return (
                     <div key={finish} className="flex items-center gap-2">
-                      <span className="text-xs text-gray-300 flex-1 truncate">{finish}</span>
+                      <span className="text-xs text-zinc-300 flex-1 truncate">{finish}</span>
                       <div className="w-20 h-2 bg-zinc-800 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-green-500/70 rounded-full"
@@ -338,15 +338,15 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
               <div className="bg-zinc-800/50 rounded-lg px-3 py-2 mb-2">
                 <p className="text-xs text-zinc-500">{t("competition.topFinishes")}</p>
                 <div className="flex gap-2 mt-1">
-                  <span className="text-xs text-gray-300">Armbar: 3</span>
-                  <span className="text-xs text-gray-300">Triangle: 2</span>
+                  <span className="text-xs text-zinc-300">Armbar: 3</span>
+                  <span className="text-xs text-zinc-300">Triangle: 2</span>
                 </div>
               </div>
               <div className="bg-zinc-800/50 rounded-lg px-3 py-2">
                 <p className="text-xs text-zinc-500">{t("competition.winRateByBelt")}</p>
                 <div className="flex gap-2 mt-1">
-                  <span className="text-xs text-gray-300">{t("competition.whiteBelt")}</span>
-                  <span className="text-xs text-gray-300">{t("competition.blueBelt")}</span>
+                  <span className="text-xs text-zinc-300">{t("competition.whiteBelt")}</span>
+                  <span className="text-xs text-zinc-300">{t("competition.blueBelt")}</span>
                 </div>
               </div>
             </div>
@@ -382,7 +382,7 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
               key={m.id}
               className="flex items-center gap-3 bg-zinc-800/60 rounded-xl px-3 py-2"
             >
-              <span className={`text-xs font-bold w-5 text-center ${resultStyle[m.comp.result] ?? "text-gray-400"}`}>
+              <span className={`text-xs font-bold w-5 text-center ${resultStyle[m.comp.result] ?? "text-zinc-400"}`}>
                 {resultLabel[m.comp.result] ?? "?"}
               </span>
               <div className="flex-1 min-w-0">

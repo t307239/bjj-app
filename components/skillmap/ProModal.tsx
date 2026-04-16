@@ -43,7 +43,7 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
       <div className="bg-zinc-900 border border-white/10 rounded-2xl p-7 max-w-sm w-full text-center shadow-2xl mx-4">
         <div className="text-4xl mb-3">🥋</div>
         <h3 className="text-lg font-bold text-white mb-2">{t("skillmap.proModalTitlePC")}</h3>
-        <p className="text-sm text-gray-400 mb-4">{t("skillmap.proModalBodyPC")}</p>
+        <p className="text-sm text-zinc-400 mb-4">{t("skillmap.proModalBodyPC")}</p>
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className={`text-xs ${!isAnnual ? "text-white font-semibold" : "text-zinc-400"}`}>{t("proModal.monthly")}</span>
           <button
@@ -74,7 +74,7 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
             {t("skillmap.upgradeBtn")}
           </span>
         )}
-        <button onClick={onClose} className="text-sm text-zinc-400 hover:text-gray-300 min-h-[44px] px-6 py-2">{t("skillmap.maybeLater")}</button>
+        <button onClick={onClose} className="text-sm text-zinc-400 hover:text-zinc-300 min-h-[44px] px-6 py-2">{t("skillmap.maybeLater")}</button>
       </div>
     </div>
   );

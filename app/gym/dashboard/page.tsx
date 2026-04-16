@@ -122,7 +122,7 @@ export default async function GymDashboardPage({
                   <h1 className="text-xl font-black text-white truncate">
                     {gym.name}
                   </h1>
-                  <p className="text-gray-400 text-xs mt-0.5">
+                  <p className="text-zinc-400 text-xs mt-0.5">
                     {t("gym.dashboardSubtitle")}
                   </p>
                 </div>
@@ -166,7 +166,7 @@ export default async function GymDashboardPage({
             <h1 className="text-2xl font-black text-white tracking-tight">
               {t("gym.dashboardTitle")}
             </h1>
-            <p className="text-gray-400 text-sm mt-1">
+            <p className="text-zinc-400 text-sm mt-1">
               {t("gym.dashboardSubtitle")}
             </p>
           </div>

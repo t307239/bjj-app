@@ -71,7 +71,7 @@ export default function SettingsSection({
               <p className="text-sm font-semibold text-white">
                 {t("profile.gymLeadTitle")}
               </p>
-              <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">
+              <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">
                 {t("profile.gymLeadDesc")}
               </p>
             </div>

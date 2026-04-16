@@ -31,7 +31,7 @@ export default function EdgeNotesPanel({ notes, onChange, onSave, onClose, t }: 
       <div className="flex gap-2 mt-2">
         <button
           onClick={onClose}
-          className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 text-sm py-2 rounded-lg transition-colors"
+          className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-2 rounded-lg transition-colors"
         >
           {t("common.cancel")}
         </button>

@@ -1676,7 +1676,9 @@
     "socialProofAvgStreakLabel": "Average streak (days)",
     "socialProofProSubscribers": "300+",
     "socialProofProSubscribersLabel": "Pro members",
-    "proFeatures": "Pro Features"
+    "proFeatures": "Pro Features",
+    "engPillWeight": "Weight Management",
+    "engPillBelt": "Belt Progress"
   },
   "ageGate": {
     "title": "Age Restriction",

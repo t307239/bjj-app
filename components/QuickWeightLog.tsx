@@ -55,13 +55,13 @@ export default function QuickWeightLog({ userId, onLogged }: Props) {
 
   return (
     <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-      <p className="text-xs text-gray-400 font-semibold mb-3 uppercase tracking-wide">
+      <p className="text-xs text-zinc-400 font-semibold mb-3 uppercase tracking-wide">
         {t("body.quickLog")}
       </p>
       <form onSubmit={handleSubmit} className="space-y-2">
         <div className="flex gap-2 items-end">
           <div className="flex-1">
-            <label className="block text-gray-400 text-xs mb-1">{t("body.weightKg")}</label>
+            <label className="block text-zinc-400 text-xs mb-1">{t("body.weightKg")}</label>
             <input
               type="number"
               inputMode="decimal"
@@ -84,7 +84,7 @@ export default function QuickWeightLog({ userId, onLogged }: Props) {
           </button>
         </div>
         <div>
-          <label className="block text-gray-400 text-xs mb-1">{t("body.note")}</label>
+          <label className="block text-zinc-400 text-xs mb-1">{t("body.note")}</label>
           <input
             type="text"
             value={note}

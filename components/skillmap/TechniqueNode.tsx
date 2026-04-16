@@ -83,7 +83,7 @@ function TechniqueNodeComp({
             {data.t?.("common.delete") ?? "Del"}
           </button>
           <button
-            className="text-xs text-gray-400 hover:text-gray-200 transition-colors"
+            className="text-xs text-zinc-400 hover:text-gray-200 transition-colors"
             onClick={(e) => { e.stopPropagation(); setConfirmDel(false); }}
           >
             {data.t?.("common.cancel") ?? "✕"}

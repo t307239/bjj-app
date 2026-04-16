@@ -320,7 +320,7 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
         aria-expanded={isOpen}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
       >
-        <h4 className="text-sm font-medium text-gray-300">🥋 {t("chart.typeDistribution")}</h4>
+        <h4 className="text-sm font-medium text-zinc-300">🥋 {t("chart.typeDistribution")}</h4>
         <div className="flex items-center gap-2">
           {!isOpen && total > 0 && (
             <span className="text-xs text-zinc-400">
@@ -351,14 +351,14 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
         </div>
       )}
       <div className="flex items-center justify-between mb-3">
-        <h4 className="text-sm font-medium text-gray-300">{t("chart.typeDistribution")}</h4>
+        <h4 className="text-sm font-medium text-zinc-300">{t("chart.typeDistribution")}</h4>
         <div className="flex bg-zinc-800 rounded-lg p-0.5">
           {(["all", "month", "week"] as const).map((p) => (
             <button
               key={p}
               onClick={() => setPeriod(p)}
               className={`text-xs px-2 py-1.5 rounded-lg transition-all ${
-                period === p ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-white"
+                period === p ? "bg-zinc-600 text-white shadow-sm" : "text-zinc-400 hover:text-white"
               }`}
             >
               {p === "all" ? t("chart.allTime") : p === "month" ? t("chart.thisMonth") : t("chart.thisWeek")}
@@ -411,7 +411,7 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
                     }}
                   >
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${d.bg}`} />
-                    <span className={`text-xs flex-1 truncate ${isSelected ? "text-white font-medium" : "text-gray-400"}`}>{d.label}</span>
+                    <span className={`text-xs flex-1 truncate ${isSelected ? "text-white font-medium" : "text-zinc-400"}`}>{d.label}</span>
                     <span className="text-xs font-medium text-white">
                       {chartMode === "time" ? fmtMins(d.totalMins) : `${d.count}${t("chart.timesUnit")}`}
                     </span>

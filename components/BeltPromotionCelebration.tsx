@@ -220,7 +220,7 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
         >
           {t("beltPromo.congrats")}
         </h2>
-        <p className="text-gray-400 text-sm mb-2">
+        <p className="text-zinc-400 text-sm mb-2">
           {t("beltPromo.advanced", { from: fromLabel, to: toLabel })}
         </p>
         <p className="text-zinc-400 text-xs mb-7 italic">

@@ -29,7 +29,7 @@ export default function LogoutButton({ onDone, className }: Props) {
     <button
       onClick={handleLogout}
       disabled={isLoading}
-      className={className ?? "flex items-center gap-1.5 text-gray-400 hover:text-white text-sm transition-colors px-2 py-1 rounded disabled:opacity-60"}
+      className={className ?? "flex items-center gap-1.5 text-zinc-400 hover:text-white text-sm transition-colors px-2 py-1 rounded disabled:opacity-60"}
     >
       {isLoading && (
         <svg className="animate-spin h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none">

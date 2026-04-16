@@ -162,7 +162,7 @@ export default function TechniqueLogList({
             className={`flex-shrink-0 px-3 py-1.5 min-h-[44px] rounded-full text-xs font-medium transition-colors ${
               filterCategory === "all"
                 ? "bg-zinc-600 text-white"
-                : "bg-zinc-900 text-gray-400 border border-white/10"
+                : "bg-zinc-900 text-zinc-400 border border-white/10"
             }`}
           >
             {t("techniques.all")}
@@ -176,7 +176,7 @@ export default function TechniqueLogList({
               className={`flex-shrink-0 px-3 py-1.5 min-h-[44px] rounded-full text-xs font-medium transition-colors ${
                 filterCategory === catVal
                   ? "bg-zinc-600 text-white"
-                  : "bg-zinc-900 text-gray-400 border border-white/10"
+                  : "bg-zinc-900 text-zinc-400 border border-white/10"
               }`}
             >
               {t("techniques.categories." + catVal)}
@@ -274,7 +274,7 @@ export default function TechniqueLogList({
                     <button
                       type="button"
                       onClick={onCancelEdit}
-                      className="px-3 text-gray-400 text-xs"
+                      className="px-3 text-zinc-400 text-xs"
                     >
                       {t("techniques.cancel")}
                     </button>
@@ -291,7 +291,7 @@ export default function TechniqueLogList({
                       <span className="font-semibold text-sm truncate">
                         {technique.name}
                       </span>
-                      <span className="text-xs bg-zinc-800/80 text-gray-300 border border-zinc-700/50 px-2 py-0.5 rounded-full flex-shrink-0">
+                      <span className="text-xs bg-zinc-800/80 text-zinc-300 border border-zinc-700/50 px-2 py-0.5 rounded-full flex-shrink-0">
                         {t("techniques.categories." + technique.category) ||
                           technique.category}
                       </span>
@@ -339,7 +339,7 @@ export default function TechniqueLogList({
                     </div>
                     {technique.notes && (
                       <div className="mt-1.5">
-                        <p className="text-gray-400 text-xs leading-relaxed">
+                        <p className="text-zinc-400 text-xs leading-relaxed">
                           {renderNotes(
                             technique.notes,
                             expandedIds.has(technique.id),
@@ -418,7 +418,7 @@ export default function TechniqueLogList({
                         </button>
                         <button
                           onClick={() => setConfirmDeleteId(null)}
-                          className="text-xs text-zinc-400 hover:text-gray-300 transition-colors min-h-[44px] px-3 py-2"
+                          className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors min-h-[44px] px-3 py-2"
                         >
                           {t("training.cancel")}
                         </button>

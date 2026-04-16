@@ -36,7 +36,7 @@ export default function BeltDistributionChart({ members }: { members: MemberRow[
       <div className="space-y-2">
         {BELTS.map((belt) => (
           <div key={belt} className="flex items-center gap-2">
-            <span className="text-xs text-gray-400 w-12">{BELT_LABELS[belt]}</span>
+            <span className="text-xs text-zinc-400 w-12">{BELT_LABELS[belt]}</span>
             <div className="flex-1 bg-zinc-800 rounded-full h-2 overflow-hidden">
               <div
                 className={`h-full rounded-full ${BELT_BG[belt]}`}

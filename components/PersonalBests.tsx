@@ -195,7 +195,7 @@ export default function PersonalBests({ userId }: Props) {
     return (
       <div className="mb-4 bg-zinc-900 rounded-xl px-4 py-6 border border-white/10 text-center">
         <p className="text-2xl mb-2">📊</p>
-        <p className="text-sm font-medium text-gray-300 mb-1">{t("stats.personalBests")}</p>
+        <p className="text-sm font-medium text-zinc-300 mb-1">{t("stats.personalBests")}</p>
         <p className="text-xs text-zinc-400">{t("stats.emptyBests")}</p>
       </div>
     );
@@ -255,7 +255,7 @@ export default function PersonalBests({ userId }: Props) {
         className="w-full flex items-center justify-between bg-zinc-900 hover:bg-white/5 rounded-xl px-4 py-3 border border-white/10 transition-colors active:scale-95 transform"
       >
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-300">📊 {t("stats.personalBests")}</span>
+          <span className="text-sm font-medium text-zinc-300">📊 {t("stats.personalBests")}</span>
           {!isOpen && (
             <span className="text-xs text-zinc-400 font-normal">
               {bests.totalSessions}{timesUnit} · {bests.longestStreak}{t("stats.dayStreak")}
@@ -297,7 +297,7 @@ export default function PersonalBests({ userId }: Props) {
           className={`flex items-center gap-1 text-xs bg-white/5 border border-white/10 px-2.5 py-2 min-h-[44px] rounded-lg transition-colors ${
             isCopied
               ? "text-green-400 border-green-500/30 cursor-default"
-              : "text-gray-400 hover:text-white hover:bg-white/10"
+              : "text-zinc-400 hover:text-white hover:bg-white/10"
           }`}
         >
           {isCopied ? (
@@ -380,7 +380,7 @@ export default function PersonalBests({ userId }: Props) {
       {/* 6ヶ月の月別強度推移 */}
       {bests.monthlyIntensity.length > 0 && (
         <div className="mt-3 pt-3 border-t border-white/5">
-          <p className="text-xs text-gray-400 mb-2">📈 {t("stats.last6MonthsAvg")}</p>
+          <p className="text-xs text-zinc-400 mb-2">📈 {t("stats.last6MonthsAvg")}</p>
           <IntensitySparkline data={bests.monthlyIntensity} />
         </div>
       )}

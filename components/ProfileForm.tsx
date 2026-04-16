@@ -63,7 +63,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
     <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-xl p-5 border border-white/10">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xs text-zinc-400 tracking-wider">{t("profile.title")}</h3>
-        <button onClick={onEdit} className="text-xs text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-2 min-h-[44px] transition-colors">
+        <button onClick={onEdit} className="text-xs text-zinc-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-2 min-h-[44px] transition-colors">
           ✏️ {t("training.edit")}
         </button>
       </div>
@@ -79,13 +79,13 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
       </div>
       <div className="space-y-2">
         {profile.gym && (
-          <div className="flex items-center gap-2 text-sm text-gray-300">
+          <div className="flex items-center gap-2 text-sm text-zinc-300">
             <span className="text-zinc-400">🏗</span>
             <span>{profile.gym}</span>
           </div>
         )}
         {profile.start_date && (
-          <div className="flex items-center gap-2 text-sm text-gray-300">
+          <div className="flex items-center gap-2 text-sm text-zinc-300">
             <span className="text-zinc-400">🥋</span>
             <span>{formatBjjDuration(profile.start_date, t)}</span>
             <span className="text-zinc-400 text-xs">
@@ -103,7 +103,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
         )}
       </div>
       {profile.bio && (
-        <p className="text-gray-400 text-sm mt-3 border-t border-white/10 pt-3 leading-relaxed">{profile.bio}</p>
+        <p className="text-zinc-400 text-sm mt-3 border-t border-white/10 pt-3 leading-relaxed">{profile.bio}</p>
       )}
       {stats && (
         <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-3 gap-2 text-center">
@@ -245,10 +245,10 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
               ))}
             </div>
           </div>
-          <p className="text-gray-400 text-xs">{currentBelt?.label}</p>
+          <p className="text-zinc-400 text-xs">{currentBelt?.label}</p>
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-          <label className="block text-gray-300 text-sm font-medium mb-3">{t("profile.belt")}</label>
+          <label className="block text-zinc-300 text-sm font-medium mb-3">{t("profile.belt")}</label>
           <div className="grid grid-cols-5 gap-2">
             {belts.map((belt) => (
               <button key={belt.value} type="button" onClick={() => setForm({ ...form, belt: belt.value })}
@@ -259,18 +259,18 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
           </div>
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-          <label className="block text-gray-300 text-sm font-medium mb-3">{t("profile.stripe")} (0–4)</label>
+          <label className="block text-zinc-300 text-sm font-medium mb-3">{t("profile.stripe")} (0–4)</label>
           <div className="flex gap-2">
             {[0, 1, 2, 3, 4].map((s) => (
               <button key={s} type="button" onClick={() => setForm({ ...form, stripe: s })}
-                className={"flex-1 py-2 rounded-lg text-sm font-semibold transition-all active:scale-95 " + (form.stripe === s ? "bg-[#10B981] text-white" : "bg-zinc-800 text-gray-400 hover:text-white")}>
+                className={"flex-1 py-2 rounded-lg text-sm font-semibold transition-all active:scale-95 " + (form.stripe === s ? "bg-[#10B981] text-white" : "bg-zinc-800 text-zinc-400 hover:text-white")}>
                 {s}
               </button>
             ))}
           </div>
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-          <label className="block text-gray-300 text-sm font-medium mb-1">{t("profile.gym")}</label>
+          <label className="block text-zinc-300 text-sm font-medium mb-1">{t("profile.gym")}</label>
           <p className="text-zinc-400 text-xs mb-2">{t("profile.gymSubtext")}</p>
           <input
             type="text"
@@ -291,7 +291,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
           )}
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-          <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.startDate")}</label>
+          <label className="block text-zinc-300 text-sm font-medium mb-2">{t("profile.startDate")}</label>
           <input type="date" value={form.start_date} max={today} onChange={(e) => setForm({ ...form, start_date: e.target.value })} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30" />
           {form.start_date && (
             <p className="text-zinc-400 text-xs mt-1">
@@ -305,11 +305,11 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
           )}
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-          <label className="block text-gray-300 text-sm font-medium mb-2">{t("profile.bio")}</label>
+          <label className="block text-zinc-300 text-sm font-medium mb-2">{t("profile.bio")}</label>
           <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder={t("profile.bioPlaceholder")} rows={3} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 resize-none" />
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
-          <label className="block text-gray-300 text-sm font-medium mb-1">{t("profile.timezone")}</label>
+          <label className="block text-zinc-300 text-sm font-medium mb-1">{t("profile.timezone")}</label>
           <p className="text-zinc-400 text-xs mb-2">{t("profile.timezoneDesc")}</p>
           <select
             value={form.timezone || "UTC"}
@@ -326,7 +326,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
           <button type="submit" disabled={loading || !isOnline} className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 disabled:opacity-50 text-white font-bold py-3 rounded-xl text-sm transition-all">
             {loading ? t("profile.saving") : t("profile.save")}
           </button>
-          <button type="button" onClick={onCancel} className="flex-1 bg-zinc-900 hover:bg-white/5 text-gray-300 font-bold py-3 rounded-xl text-sm border border-white/10 transition-colors">
+          <button type="button" onClick={onCancel} className="flex-1 bg-zinc-900 hover:bg-white/5 text-zinc-300 font-bold py-3 rounded-xl text-sm border border-white/10 transition-colors">
             {t("training.cancel")}
           </button>
         </div>

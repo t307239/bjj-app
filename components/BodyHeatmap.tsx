@@ -71,7 +71,7 @@ const BODY_PARTS: BodyPart[] = [
 
 function LegendChip({ status, label }: { status: PartStatus; label: string }) {
   return (
-    <span className="flex items-center gap-1 text-xs text-gray-400">
+    <span className="flex items-center gap-1 text-xs text-zinc-400">
       <span
         className="inline-block w-2.5 h-2.5 rounded-full flex-shrink-0"
         style={{ background: STATUS_COLOR[status] }}
@@ -190,7 +190,7 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
   return (
     <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">
+        <p className="text-xs text-zinc-400 font-semibold uppercase tracking-wide">
           {t("body.bodyMap")}
         </p>
         {!isOnline && (
@@ -216,7 +216,7 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
             className={`px-4 py-1.5 min-h-[44px] rounded-lg text-xs font-medium transition-all duration-200 ${
               view === v
                 ? "bg-white/10 text-white border border-white/20"
-                : "text-gray-400 border border-transparent hover:bg-white/5"
+                : "text-zinc-400 border border-transparent hover:bg-white/5"
             }`}
           >
             {v === "front" ? t("body.viewFront") : t("body.viewBack")}
@@ -316,7 +316,7 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
               className="inline-block w-2 h-2 rounded-full flex-shrink-0"
               style={{ background: STATUS_COLOR[status[p.key]!] }}
             />
-            <span className="text-gray-400 truncate">{t(p.labelKey)}</span>
+            <span className="text-zinc-400 truncate">{t(p.labelKey)}</span>
             <span
               className="ml-auto text-xs font-semibold"
               style={{ color: STATUS_COLOR[status[p.key]!] }}

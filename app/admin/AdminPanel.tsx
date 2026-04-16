@@ -98,7 +98,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
             <h1 className="text-lg font-bold text-white">🛡️ Admin Panel</h1>
             <p className="text-xs text-zinc-400">{adminEmail}</p>
           </div>
-          <a href="/dashboard" className="text-xs text-gray-400 hover:text-white transition-colors">
+          <a href="/dashboard" className="text-xs text-zinc-400 hover:text-white transition-colors">
             ← Back to app
           </a>
         </div>
@@ -189,19 +189,19 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
                     <div className="bg-zinc-900/60 border border-white/5 border-t-0 rounded-b-xl px-4 py-4 -mt-1 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
                       <div>
                         <div className="text-zinc-400 mb-0.5">User ID</div>
-                        <div className="font-mono text-gray-300 break-all">{user.id}</div>
+                        <div className="font-mono text-zinc-300 break-all">{user.id}</div>
                       </div>
                       <div>
                         <div className="text-zinc-400 mb-0.5">Signed up</div>
-                        <div className="text-gray-300">{fmtDate(user.created_at)}</div>
+                        <div className="text-zinc-300">{fmtDate(user.created_at)}</div>
                       </div>
                       <div>
                         <div className="text-zinc-400 mb-0.5">Last login</div>
-                        <div className="text-gray-300">{fmtDaysAgo(user.last_sign_in_at)}</div>
+                        <div className="text-zinc-300">{fmtDaysAgo(user.last_sign_in_at)}</div>
                       </div>
                       <div>
                         <div className="text-zinc-400 mb-0.5">Total sessions</div>
-                        <div className="text-gray-300 font-bold">{user.sessions_total}</div>
+                        <div className="text-zinc-300 font-bold">{user.sessions_total}</div>
                       </div>
                     </div>
                   )}
@@ -221,7 +221,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
                 <button
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
                   disabled={page === 0 || loading}
-                  className="text-xs text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-1.5 border border-white/10 rounded-lg"
+                  className="text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-1.5 border border-white/10 rounded-lg"
                 >
                   ← Previous
                 </button>
@@ -231,7 +231,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
                 <button
                   onClick={() => setPage((p) => p + 1)}
                   disabled={(page + 1) * (data.limit ?? 50) >= data.total || loading}
-                  className="text-xs text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-1.5 border border-white/10 rounded-lg"
+                  className="text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-1.5 border border-white/10 rounded-lg"
                 >
                   Next →
                 </button>

@@ -231,13 +231,13 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           <div className="flex bg-zinc-800 rounded-lg p-0.5 mr-1">
             <button
               onClick={() => { setRange(6); setSelectedMonth(null); }}
-              className={`text-xs px-2 py-1.5 rounded-lg transition-all ${range === 6 ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-white"}`}
+              className={`text-xs px-2 py-1.5 rounded-lg transition-all ${range === 6 ? "bg-zinc-600 text-white shadow-sm" : "text-zinc-400 hover:text-white"}`}
             >
               6{t("chart.months")}
             </button>
             <button
               onClick={() => { setRange(12); setSelectedMonth(null); }}
-              className={`text-xs px-2 py-1.5 rounded-lg transition-all ${range === 12 ? "bg-zinc-600 text-white shadow-sm" : "text-gray-400 hover:text-white"}`}
+              className={`text-xs px-2 py-1.5 rounded-lg transition-all ${range === 12 ? "bg-zinc-600 text-white shadow-sm" : "text-zinc-400 hover:text-white"}`}
             >
               12{t("chart.months")}
             </button>
@@ -248,7 +248,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
               className={`text-xs px-2.5 py-1.5 rounded-lg transition-all ${
                 view === "count"
                   ? "bg-zinc-600 text-white shadow-sm"
-                  : "text-gray-400 hover:text-white"
+                  : "text-zinc-400 hover:text-white"
               }`}
             >
               {t("chart.count")}
@@ -258,7 +258,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
               className={`text-xs px-2.5 py-1.5 rounded-lg transition-all ${
                 view === "minutes"
                   ? "bg-zinc-600 text-white shadow-sm"
-                  : "text-gray-400 hover:text-white"
+                  : "text-zinc-400 hover:text-white"
               }`}
             >
               {t("chart.duration")}
@@ -421,7 +421,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
       {view === "count" && visibleTypes.length > 1 && (
         <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 pt-2 border-t border-white/10">
           {visibleTypes.map((t) => (
-            <span key={t} className="flex items-center gap-1 text-xs text-gray-400">
+            <span key={t} className="flex items-center gap-1 text-xs text-zinc-400">
               <span className="w-2 h-2 rounded-sm inline-block" style={{ background: TYPE_HEX[t] }} />
               {TYPE_LABELS[t] ?? t}
             </span>
@@ -462,7 +462,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
                     <span className={`${typeColor} text-white px-1.5 py-0.5 rounded text-xs flex-shrink-0`}>
                       {typeLabel}
                     </span>
-                    <span className="text-gray-400">
+                    <span className="text-zinc-400">
                       {log.duration_min > 0 ? formatMinutes(log.duration_min) : "-"}
                     </span>
                   </div>

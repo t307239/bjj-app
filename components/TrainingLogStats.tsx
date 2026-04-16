@@ -48,7 +48,7 @@ const TrainingLogStats = memo(function TrainingLogStats({ entries, totalPages, p
             {weekEntries.length > 0 && (
               <>
                 <div className="w-px h-4 bg-white/10" />
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-zinc-400">
                   {formatDuration(Math.round(weekTotalMins / weekEntries.length))}/{t("trainingLog.perSession")}
                 </span>
               </>

@@ -41,7 +41,7 @@ export function GoalWeekDayGrid({
               {trained ? "✓" : isToday ? "•" : ""}
             </div>
             <span className={`text-xs leading-none ${
-              isToday ? "text-gray-300 font-semibold" : isFuture ? "text-zinc-400" : "text-gray-400"
+              isToday ? "text-zinc-300 font-semibold" : isFuture ? "text-zinc-400" : "text-zinc-400"
             }`}>
               {label}
             </span>
@@ -116,7 +116,7 @@ export function GoalWeekHeatmap({
             >
               {w.achieved ? "✓" : w.count > 0 ? w.count : "-"}
             </div>
-            <span className={`text-xs leading-none ${w.isCurrent ? "text-gray-300" : "text-zinc-400"}`}>
+            <span className={`text-xs leading-none ${w.isCurrent ? "text-zinc-300" : "text-zinc-400"}`}>
               {w.isCurrent
                 ? t("goal.thisWeek")
                 : weekHistory.indexOf(w) === weekHistory.length - 2

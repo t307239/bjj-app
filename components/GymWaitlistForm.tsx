@@ -41,7 +41,7 @@ export default function GymWaitlistForm() {
       <div className="bg-zinc-900 border border-blue-500/40 rounded-2xl p-8 text-center">
         <div className="text-4xl mb-4">🎉</div>
         <h3 className="text-xl font-bold text-white mb-2">{t("gym.waitlistSuccess")}</h3>
-        <p className="text-gray-400 text-sm">
+        <p className="text-zinc-400 text-sm">
           {t("gym.waitlistSuccessDesc")}
         </p>
       </div>
@@ -51,7 +51,7 @@ export default function GymWaitlistForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm text-gray-400 mb-1.5" htmlFor="gym-email">
+        <label className="block text-sm text-zinc-400 mb-1.5" htmlFor="gym-email">
           {t("gym.waitlistEmailLabel")}
         </label>
         <input
@@ -65,7 +65,7 @@ export default function GymWaitlistForm() {
         />
       </div>
       <div>
-        <label className="block text-sm text-gray-400 mb-1.5" htmlFor="gym-name">
+        <label className="block text-sm text-zinc-400 mb-1.5" htmlFor="gym-name">
           {t("gym.waitlistGymLabel")}
         </label>
         <input

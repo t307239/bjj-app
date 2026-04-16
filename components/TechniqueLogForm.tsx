@@ -85,7 +85,7 @@ export default function TechniqueLogForm({
           </div>
         )}
         <div className="mb-3">
-          <label className="block text-gray-400 text-xs mb-1">
+          <label className="block text-zinc-400 text-xs mb-1">
             {t("techniques.name")}
           </label>
           <input
@@ -107,7 +107,7 @@ export default function TechniqueLogForm({
 
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div>
-            <label className="block text-gray-400 text-xs mb-1">
+            <label className="block text-zinc-400 text-xs mb-1">
               {t("techniques.category")}
             </label>
             <select
@@ -123,7 +123,7 @@ export default function TechniqueLogForm({
             </select>
           </div>
           <div>
-            <label className="block text-gray-400 text-xs mb-1">
+            <label className="block text-zinc-400 text-xs mb-1">
               {t("techniques.mastery")}
             </label>
             <select
@@ -143,7 +143,7 @@ export default function TechniqueLogForm({
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-400 text-xs mb-1">
+          <label className="block text-zinc-400 text-xs mb-1">
             {t("techniques.notes")}
           </label>
           <textarea
@@ -166,7 +166,7 @@ export default function TechniqueLogForm({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
+            className="px-4 py-2 text-zinc-400 hover:text-white text-sm transition-colors"
           >
             {t("techniques.cancel")}
           </button>
@@ -199,7 +199,7 @@ export default function TechniqueLogForm({
         </div>
       )}
       <div className="mb-3">
-        <label className="block text-gray-400 text-xs mb-1">
+        <label className="block text-zinc-400 text-xs mb-1">
           {t("techniques.nameMultiple")}
         </label>
         <textarea
@@ -219,7 +219,7 @@ export default function TechniqueLogForm({
       </div>
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div>
-          <label className="block text-gray-400 text-xs mb-1">
+          <label className="block text-zinc-400 text-xs mb-1">
             {t("techniques.categoryMultiple")}
           </label>
           <select
@@ -235,7 +235,7 @@ export default function TechniqueLogForm({
           </select>
         </div>
         <div>
-          <label className="block text-gray-400 text-xs mb-1">
+          <label className="block text-zinc-400 text-xs mb-1">
             {t("techniques.masteryMultiple")}
           </label>
           <select
@@ -262,7 +262,7 @@ export default function TechniqueLogForm({
         <button
           type="button"
           onClick={onCloseBulk}
-          className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
+          className="px-4 py-2 text-zinc-400 hover:text-white text-sm transition-colors"
         >
           {t("techniques.cancel")}
         </button>

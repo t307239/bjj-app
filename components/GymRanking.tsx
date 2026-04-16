@@ -189,7 +189,7 @@ export default function GymRanking({ userId, gymId }: Props) {
         <h3 className="text-sm font-semibold text-white mb-3">🏆 {t("gym.rankingTitle")}</h3>
         <div className="text-center py-6">
           <div className="text-3xl mb-2">👥</div>
-          <p className="text-gray-400 text-sm">{t("gym.noMembers")}</p>
+          <p className="text-zinc-400 text-sm">{t("gym.noMembers")}</p>
           <p className="text-zinc-400 text-xs mt-1">{t("gym.noMembersHint")}</p>
         </div>
         <OptToggle />
@@ -221,7 +221,7 @@ export default function GymRanking({ userId, gymId }: Props) {
           👥 {t("gym.rankingTitle")}
         </h3>
         {myRank !== null && (
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-zinc-400">
             {t("gym.myRank", { n: myRank })}
           </span>
         )}
@@ -236,7 +236,7 @@ export default function GymRanking({ userId, gymId }: Props) {
             className={`text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors ${
               mode === m
                 ? "bg-zinc-600 text-white"
-                : "bg-zinc-800 text-gray-400 hover:text-white"
+                : "bg-zinc-800 text-zinc-400 hover:text-white"
             }`}
           >
             {m === "sessions" ? t("gym.rankingSessions") : t("gym.rankingStreak")}
@@ -275,12 +275,12 @@ export default function GymRanking({ userId, gymId }: Props) {
               />
               <span
                 className={`flex-1 text-xs ${
-                  isMe ? "text-white font-semibold" : "text-gray-300"
+                  isMe ? "text-white font-semibold" : "text-zinc-300"
                 }`}
               >
                 {isMe ? t("gym.rankingMe") : t("gym.rankingAnon")}
               </span>
-              <span className="text-xs text-gray-400 font-mono">
+              <span className="text-xs text-zinc-400 font-mono">
                 {val}{mode === "streak" && val >= 30 ? "🔥" : mode === "streak" && val >= 7 ? "⚡" : ""}
               </span>
             </div>
@@ -300,7 +300,7 @@ export default function GymRanking({ userId, gymId }: Props) {
               <span className="flex-1 text-xs text-white font-semibold">
                 {t("gym.rankingMe")}
               </span>
-              <span className="text-xs text-gray-400 font-mono">
+              <span className="text-xs text-zinc-400 font-mono">
                 {getValue(sorted[myRankIdx])}{mode === "streak" && getValue(sorted[myRankIdx]) >= 30 ? "🔥" : mode === "streak" && getValue(sorted[myRankIdx]) >= 7 ? "⚡" : ""}
               </span>
             </div>

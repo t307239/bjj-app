@@ -68,7 +68,7 @@ function DurationPicker({
 
   return (
     <div>
-      <label className="block text-gray-400 text-xs mb-1">{t("training.duration")}</label>
+      <label className="block text-zinc-400 text-xs mb-1">{t("training.duration")}</label>
       <div className="flex gap-1.5 flex-wrap mb-2">
         {DURATION_PRESETS.map((p) => (
           <button
@@ -78,7 +78,7 @@ function DurationPicker({
             className={`px-2.5 py-2 min-h-[36px] rounded-lg text-xs font-medium border transition-all active:scale-95 ${
               value === p && !showCustom
                 ? "bg-[#10B981] border-[#10B981] text-white"
-                : "bg-zinc-800 border-white/10 text-gray-400 hover:border-white/20"
+                : "bg-zinc-800 border-white/10 text-zinc-400 hover:border-white/20"
             }`}
           >
             {p >= 60 ? `${p / 60}h` : `${p}m`}
@@ -91,7 +91,7 @@ function DurationPicker({
           className={`px-2.5 py-2 min-h-[36px] rounded-lg text-xs font-medium border transition-all active:scale-95 ${
             showCustom || !isPreset
               ? "bg-[#10B981] border-[#10B981] text-white"
-              : "bg-zinc-800 border-white/10 text-gray-400 hover:border-white/20"
+              : "bg-zinc-800 border-white/10 text-zinc-400 hover:border-white/20"
           }`}
         >
           {!isPreset && !showCustom ? `${value}m` : t("training.durationCustom")}
@@ -194,7 +194,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
       {/* Date */}
       <div className="mb-3">
         <div className="flex items-center justify-between mb-1">
-          <label className="text-gray-400 text-xs">{t("training.date")}</label>
+          <label className="text-zinc-400 text-xs">{t("training.date")}</label>
           <div className="flex items-center gap-2">
             {form.date !== getYesterdayDateString() && (
               <button
@@ -236,7 +236,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
 
       {/* Type — Giant Gi/No-Gi toggle + sub-types */}
       <div className="mb-3">
-        <label className="block text-gray-400 text-xs mb-2">{t("training.typeShort")}</label>
+        <label className="block text-zinc-400 text-xs mb-2">{t("training.typeShort")}</label>
         {/* Primary: Gi / No-Gi — giant 2-tap selector */}
         <div className="grid grid-cols-2 gap-2 mb-2">
           {[
@@ -250,7 +250,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
               className={`py-3 rounded-xl border-2 text-sm font-bold transition-all active:scale-95 ${
                 form.type === opt.value
                   ? opt.activeClass
-                  : "border-white/10 bg-zinc-800/60 text-zinc-400 hover:border-white/20 hover:text-gray-300"
+                  : "border-white/10 bg-zinc-800/60 text-zinc-400 hover:border-white/20 hover:text-zinc-300"
               }`}
             >
               {opt.label}
@@ -269,7 +269,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
                 className={`flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-xl border text-xs font-semibold transition-all active:scale-95 ${
                   active
                     ? "bg-[#10B981]/25 border-[#10B981]/60 text-[#10B981] shadow-sm shadow-[#10B981]/20"
-                    : "bg-zinc-800/60 border-white/10 text-gray-400 hover:border-white/20 hover:text-white"
+                    : "bg-zinc-800/60 border-white/10 text-zinc-400 hover:border-white/20 hover:text-white"
                 }`}
               >
                 <span className="leading-none text-xs">{t(`training.${tt.value}`)}</span>
@@ -285,7 +285,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
           <p className="text-xs text-red-400 font-semibold mb-2">{t("competition.formHeader")}</p>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-gray-400 text-xs mb-1">{t("competition.result")}</label>
+              <label className="block text-zinc-400 text-xs mb-1">{t("competition.result")}</label>
               <select
                 value={compForm.result}
                 onChange={(e) => setCompForm({ ...compForm, result: e.target.value })}
@@ -297,7 +297,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
               </select>
             </div>
             <div>
-              <label className="block text-gray-400 text-xs mb-1">{t("competition.opponent")} (optional)</label>
+              <label className="block text-zinc-400 text-xs mb-1">{t("competition.opponent")} (optional)</label>
               <input
                 type="text"
                 value={compForm.opponent}
@@ -309,7 +309,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-gray-400 text-xs mb-1">{t("competition.finish")} (optional)</label>
+              <label className="block text-zinc-400 text-xs mb-1">{t("competition.finish")} (optional)</label>
               <input
                 type="text"
                 value={compForm.finish}
@@ -319,7 +319,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
               />
             </div>
             <div>
-              <label className="block text-gray-400 text-xs mb-1">{t("competition.event")} (optional)</label>
+              <label className="block text-zinc-400 text-xs mb-1">{t("competition.event")} (optional)</label>
               <input
                 type="text"
                 value={compForm.event}
@@ -331,7 +331,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-gray-400 text-xs mb-1">{t("competition.opponentBelt")} (optional)</label>
+              <label className="block text-zinc-400 text-xs mb-1">{t("competition.opponentBelt")} (optional)</label>
               <select
                 value={compForm.opponent_rank}
                 onChange={(e) => setCompForm({ ...compForm, opponent_rank: e.target.value })}
@@ -343,7 +343,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
               </select>
             </div>
             <div>
-              <label className="block text-gray-400 text-xs mb-1">{t("competition.giType")}</label>
+              <label className="block text-zinc-400 text-xs mb-1">{t("competition.giType")}</label>
               <select
                 value={compForm.gi_type}
                 onChange={(e) => setCompForm({ ...compForm, gi_type: e.target.value })}
@@ -359,7 +359,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
 
       {/* Technique autocomplete + quick-add (OP2: inline technique creation) */}
       <div className="mb-3">
-        <label className="block text-gray-400 text-xs mb-1">{t("competition.quickTechniqueTag")}</label>
+        <label className="block text-zinc-400 text-xs mb-1">{t("competition.quickTechniqueTag")}</label>
         <div className="flex gap-1.5">
           <input
             ref={techniqueInputRef}
@@ -427,7 +427,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
         <div className="mb-3 space-y-3">
           {/* Instructor (B-04: optional, for BJJ Wrapped year-end stats) */}
           <div>
-            <label className="block text-gray-400 text-xs mb-1">{t("training.instructor")}</label>
+            <label className="block text-zinc-400 text-xs mb-1">{t("training.instructor")}</label>
             <input
               type="text"
               value={form.instructor_name ?? ""}
@@ -439,7 +439,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
 
           {/* Partner Tag (B-09: optional @username for sparring partner) */}
           <div>
-            <label className="block text-gray-400 text-xs mb-1">{t("training.partnerTag")}</label>
+            <label className="block text-zinc-400 text-xs mb-1">{t("training.partnerTag")}</label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm select-none">@</span>
               <input
@@ -462,7 +462,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
 
           {/* Post-training weight */}
           <div>
-            <label className="block text-gray-400 text-xs mb-1">{t("training.weight")}</label>
+            <label className="block text-zinc-400 text-xs mb-1">{t("training.weight")}</label>
             <div className="relative">
               <input
                 type="number"
@@ -599,7 +599,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
 
       {/* Notes */}
       <div className="mb-4">
-        <label className="block text-gray-400 text-xs mb-1">{t("training.memo")}</label>
+        <label className="block text-zinc-400 text-xs mb-1">{t("training.memo")}</label>
         <textarea
           value={form.notes}
           onChange={(e) => setForm({ ...form, notes: e.target.value })}

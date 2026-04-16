@@ -89,7 +89,7 @@ export default function BottomDrawer({
         onPointerDown={(e) => e.stopPropagation()}
       >
         <div className="w-10 h-1 bg-zinc-600 rounded-full mx-auto mb-4" />
-        <p className="text-xs text-gray-400 text-center mb-4 font-semibold truncate px-6">
+        <p className="text-xs text-zinc-400 text-center mb-4 font-semibold truncate px-6">
           {String(node.data.label)}
         </p>
 
@@ -133,7 +133,7 @@ export default function BottomDrawer({
                 {t("skillmap.drawerRemove")} (Pro)
               </div>
             )}
-            <button onClick={onClose} className="w-full text-sm text-zinc-400 hover:text-gray-300 py-2.5 mt-1 transition-colors">
+            <button onClick={onClose} className="w-full text-sm text-zinc-400 hover:text-zinc-300 py-2.5 mt-1 transition-colors">
               {t("common.cancel")}
             </button>
           </div>
@@ -141,7 +141,7 @@ export default function BottomDrawer({
 
         {mode === "addChild" && (
           <div className="flex flex-col gap-3">
-            <p className="text-xs text-gray-400 text-center">{t("skillmap.drawerAddChildHint")}</p>
+            <p className="text-xs text-zinc-400 text-center">{t("skillmap.drawerAddChildHint")}</p>
             <input
               ref={inputRef}
               type="text"
@@ -158,7 +158,7 @@ export default function BottomDrawer({
             <div className="flex gap-2">
               <button
                 onClick={() => setMode("menu")}
-                className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 text-sm py-3 rounded-xl transition-colors"
+                className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-3 rounded-xl transition-colors"
               >
                 {t("common.cancel")}
               </button>
@@ -175,7 +175,7 @@ export default function BottomDrawer({
 
         {mode === "editTags" && (
           <div className="flex flex-col gap-3">
-            <p className="text-xs text-gray-400 text-center">{t("skillmap.drawerEditTagsHint")}</p>
+            <p className="text-xs text-zinc-400 text-center">{t("skillmap.drawerEditTagsHint")}</p>
             {/* Preset + custom tags as toggle chips */}
             <div className="flex flex-wrap gap-1.5">
               {PRESET_POSITIONS.map((tag) => (
@@ -236,11 +236,11 @@ export default function BottomDrawer({
 
         {mode === "confirmDelete" && (
           <div className="flex flex-col gap-3">
-            <p className="text-sm text-gray-300 text-center px-4">{t("skillmap.deleteConfirmMsg")}</p>
+            <p className="text-sm text-zinc-300 text-center px-4">{t("skillmap.deleteConfirmMsg")}</p>
             <div className="flex gap-2">
               <button
                 onClick={() => setMode("menu")}
-                className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 text-sm py-3 rounded-xl transition-colors"
+                className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-3 rounded-xl transition-colors"
               >
                 {t("common.cancel")}
               </button>

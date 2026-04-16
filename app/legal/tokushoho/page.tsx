@@ -15,7 +15,7 @@ export default function TokushohoPage() {
         <h1 className="text-2xl font-bold mb-8">
           Specified Commercial Transactions Act
         </h1>
-        <p className="text-gray-400 text-sm mb-8">
+        <p className="text-zinc-400 text-sm mb-8">
           (Disclosure pursuant to Article 11 of the Act on Specified Commercial
           Transactions)
         </p>
@@ -140,10 +140,10 @@ function Row({
 }) {
   return (
     <div>
-      <dt className="text-sm font-semibold text-gray-300 mb-1">{label}</dt>
-      {value && <dd className="text-sm text-gray-400 leading-relaxed">{value}</dd>}
+      <dt className="text-sm font-semibold text-zinc-300 mb-1">{label}</dt>
+      {value && <dd className="text-sm text-zinc-400 leading-relaxed">{value}</dd>}
       {values && (
-        <dd className="text-sm text-gray-400 leading-relaxed">
+        <dd className="text-sm text-zinc-400 leading-relaxed">
           <ul className="list-disc list-inside space-y-1">
             {values.map((v, i) => (
               <li key={i}>{v}</li>

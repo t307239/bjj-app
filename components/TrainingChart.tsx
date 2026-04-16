@@ -113,7 +113,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
   if (!isPro && data.some((d) => d.count > 0)) {
     return (
       <div className="relative bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4 overflow-hidden">
-        <h4 className="text-sm font-medium text-gray-300 mb-3">{t("chart.activity")}</h4>
+        <h4 className="text-sm font-medium text-zinc-300 mb-3">{t("chart.activity")}</h4>
         <div className="blur-sm opacity-40 pointer-events-none select-none">
           <div className="flex gap-1">
             {Array.from({ length: 12 }, (_, wi) => (
@@ -162,10 +162,10 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
         {/* Blurred dummy heatmap background */}
         <div className="blur-sm opacity-40 pointer-events-none select-none">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-gray-300">{t("chart.activity")}</span>
+            <span className="text-sm font-medium text-zinc-300">{t("chart.activity")}</span>
             <div className="flex bg-zinc-800 rounded-lg p-0.5 gap-0.5">
               <span className="text-xs px-3 py-1 rounded-lg bg-zinc-600 text-white">{t("training.threeMonths")}</span>
-              <span className="text-xs px-3 py-1 text-gray-400">{t("training.monthly")}</span>
+              <span className="text-xs px-3 py-1 text-zinc-400">{t("training.monthly")}</span>
             </div>
           </div>
           <div className="flex gap-1">
@@ -197,7 +197,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
           <p className="text-white font-semibold text-sm text-center leading-snug">
             {t("chart.emptyHeading")}
           </p>
-          <p className="text-gray-400 text-xs text-center">{t("chart.emptySubtitle")}</p>
+          <p className="text-zinc-400 text-xs text-center">{t("chart.emptySubtitle")}</p>
           <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-xs font-semibold px-5 py-2 rounded-full transition-all shadow-lg shadow-[#10B981]/25"
@@ -261,7 +261,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
   return (
     <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
       <div className="flex items-center justify-between mb-3">
-        <h4 className="text-sm font-medium text-gray-300">{t("chart.activity")}</h4>
+        <h4 className="text-sm font-medium text-zinc-300">{t("chart.activity")}</h4>
         {/* iOS-style segment control (#59) */}
         <div className="flex bg-zinc-800 rounded-lg p-0.5">
           <button
@@ -269,7 +269,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
             className={`text-xs px-3 py-1.5 rounded-lg transition-all ${
               viewMode === "heatmap"
                 ? "bg-zinc-600 text-white shadow-sm"
-                : "text-gray-400 hover:text-white"
+                : "text-zinc-400 hover:text-white"
             }`}
           >
             {t("chart.days84")}
@@ -279,7 +279,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
             className={`text-xs px-3 py-1.5 rounded-lg transition-all ${
               viewMode === "monthly"
                 ? "bg-zinc-600 text-white shadow-sm"
-                : "text-gray-400 hover:text-white"
+                : "text-zinc-400 hover:text-white"
             }`}
           >
             {t("chart.monthly")}

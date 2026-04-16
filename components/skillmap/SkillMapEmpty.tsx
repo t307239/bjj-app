@@ -34,7 +34,7 @@ export default function SkillMapEmpty({
   return (
     <div className="flex flex-col items-center justify-center h-56 text-center">
       <div className="text-5xl mb-4">🗺️</div>
-      <p className="text-gray-300 font-medium mb-1">{t("skillmap.emptyTitle")}</p>
+      <p className="text-zinc-300 font-medium mb-1">{t("skillmap.emptyTitle")}</p>
       <p className="text-zinc-400 text-sm mb-5">{isMobile ? t("skillmap.emptyBody") : t("skillmap.emptyBodyPC")}</p>
       {!emptyAddName ? (
         <button
@@ -63,7 +63,7 @@ export default function SkillMapEmpty({
             maxLength={80}
           />
           <div className="flex gap-2 w-full">
-            <button onClick={() => setEmptyAddName("")} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 text-sm py-2 rounded-xl transition-colors">{t("common.cancel")}</button>
+            <button onClick={() => setEmptyAddName("")} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-2 rounded-xl transition-colors">{t("common.cancel")}</button>
             <button
               onClick={() => { if (emptyAddName.trim()) { onAddNode(emptyAddName.trim(), 200, 200); setEmptyAddName(""); } }}
               disabled={!emptyAddName.trim()}

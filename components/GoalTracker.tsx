@@ -301,7 +301,7 @@ export default function GoalTracker({ userId }: Props) {
           aria-expanded={isOpen}
           className="w-full flex items-center justify-between px-4 py-3 border-b border-white/10 hover:bg-white/5 transition-colors text-left"
         >
-          <h4 className="text-sm font-medium text-gray-300">{t("goal.title")}</h4>
+          <h4 className="text-sm font-medium text-zinc-300">{t("goal.title")}</h4>
           <div className="flex items-center gap-2">
             {!isOpen && hasGoals && (
               <span className="text-xs text-zinc-400">
@@ -346,7 +346,7 @@ export default function GoalTracker({ userId }: Props) {
             <div className="cf-p"/><div className="cf-p"/><div className="cf-p"/><div className="cf-p"/>
             <div className="text-2xl mb-1 animate-bounce">🎉</div>
             <div className="text-sm font-bold text-green-400">{t("goal.allAchieved")}</div>
-            <div className="text-xs text-gray-400 mt-1">
+            <div className="text-xs text-zinc-400 mt-1">
               {consecutiveAchievedMonths >= 3
                 ? t("goal.monthsInRow", { n: consecutiveAchievedMonths })
                 : consecutiveAchievedMonths >= 2
@@ -392,7 +392,7 @@ export default function GoalTracker({ userId }: Props) {
                     <span className="text-xs bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-xs text-zinc-400 hover:text-gray-300 transition-colors">
+                <button className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors">
                   {data.weeklyGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>
@@ -444,7 +444,7 @@ export default function GoalTracker({ userId }: Props) {
                     <span className="text-xs bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-xs text-zinc-400 hover:text-gray-300 transition-colors">
+                <button className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors">
                   {data.monthlyGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>
@@ -511,7 +511,7 @@ export default function GoalTracker({ userId }: Props) {
                     <span className="text-xs bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-xs text-zinc-400 hover:text-gray-300 transition-colors">
+                <button className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors">
                   {data.techniqueGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>

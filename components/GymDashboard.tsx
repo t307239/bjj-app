@@ -44,7 +44,7 @@ function PrivacyShieldBadge() {
                 ✅ {t("gym.privacyShieldCoachSees")}
               </p>
               {([1, 2, 3] as const).map((i) => (
-                <p key={i} className="text-xs text-gray-300 leading-relaxed">
+                <p key={i} className="text-xs text-zinc-300 leading-relaxed">
                   {t(`gym.privacyShieldVisible${i}`)}
                 </p>
               ))}
@@ -114,11 +114,11 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
   return (
     <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
       <h3 className="text-sm font-semibold text-white mb-2">{t("gym.inviteTitle")}</h3>
-      <p className="text-xs text-gray-400 mb-3">
+      <p className="text-xs text-zinc-400 mb-3">
         {t("gym.inviteDesc")}
       </p>
       <div className="flex gap-2">
-        <code className="flex-1 bg-zinc-800 text-xs text-gray-300 px-3 py-2 rounded-lg overflow-hidden text-ellipsis whitespace-nowrap">
+        <code className="flex-1 bg-zinc-800 text-xs text-zinc-300 px-3 py-2 rounded-lg overflow-hidden text-ellipsis whitespace-nowrap">
           {inviteUrl}
         </code>
         <button
@@ -169,7 +169,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
           </button>
           <button
             onClick={() => setConfirmRegen(false)}
-            className="text-xs text-zinc-400 hover:text-gray-300 transition-colors"
+            className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors"
           >
             {t("training.cancel")}
           </button>
@@ -206,7 +206,7 @@ function FreePlanBanner({
           <p className="text-sm font-semibold text-amber-300">
             {t("gym.freePlanBannerTitle")}
           </p>
-          <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">
+          <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">
             {t("gym.freePlanBannerDesc")}
           </p>
         </div>
@@ -242,7 +242,7 @@ function ProPaywallBanner({
           <p className="text-sm font-semibold text-white">
             {t("gym.churnAlertTitle", { n: riskCount })}
           </p>
-          <p className="text-xs text-gray-400 mt-0.5">{t("gym.churnAlertDesc")}</p>
+          <p className="text-xs text-zinc-400 mt-0.5">{t("gym.churnAlertDesc")}</p>
         </div>
         <button
           onClick={onUpgradeClick}
@@ -322,7 +322,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
         <div className="flex justify-end mb-4">
           <button
             onClick={printLeaderboard}
-            className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/10 hover:border-white/20 px-3 py-1.5 rounded-lg transition-colors"
+            className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white border border-white/10 hover:border-white/20 px-3 py-1.5 rounded-lg transition-colors"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -343,7 +343,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
           <div className="text-xs text-zinc-400 mt-0.5">{t("gym.trainingWell")}</div>
         </div>
         <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
-          <div className={`text-2xl font-bold ${atRiskCount > 0 ? "text-[#e94560]" : "text-gray-400"}`}>
+          <div className={`text-2xl font-bold ${atRiskCount > 0 ? "text-[#e94560]" : "text-zinc-400"}`}>
             {atRiskCount}
           </div>
           <div className="text-xs text-zinc-400 mt-0.5">{t("gym.atRisk")}</div>
@@ -384,7 +384,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
         {members.length === 0 ? (
           <div className="text-center py-10 bg-zinc-900 border border-white/10 rounded-xl">
             <div className="text-4xl mb-3">🏫</div>
-            <p className="text-gray-300 font-medium mb-1">{t("gym.noMembers")}</p>
+            <p className="text-zinc-300 font-medium mb-1">{t("gym.noMembers")}</p>
             <p className="text-zinc-400 text-sm">
               {t("gym.noMembersDesc")}
             </p>
@@ -445,7 +445,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
             <h3 className="text-white font-bold text-base mb-2">
               {t("gym.removeMemberTitle")}
             </h3>
-            <p className="text-gray-400 text-sm leading-relaxed mb-5">
+            <p className="text-zinc-400 text-sm leading-relaxed mb-5">
               {t("gym.removeMemberConfirm", {
                 name: kickTarget.display_name || t("gym.rankingAnon"),
               })}
@@ -457,7 +457,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
               <button
                 type="button"
                 onClick={() => setKickTarget(null)}
-                className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 font-semibold py-2.5 rounded-xl text-sm transition-colors"
+                className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold py-2.5 rounded-xl text-sm transition-colors"
               >
                 {t("training.cancel")}
               </button>

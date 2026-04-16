@@ -56,7 +56,7 @@ export default function GymRegistrationForm({ userId }: Props) {
       <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 text-center">
         <div className="text-5xl mb-4">🏫</div>
         <h3 className="text-lg font-bold text-white mb-2">{t("gym.registerTitle")}</h3>
-        <p className="text-sm text-gray-400 mb-6">
+        <p className="text-sm text-zinc-400 mb-6">
           {t("gym.registerDesc")}
         </p>
 

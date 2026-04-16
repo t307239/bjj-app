@@ -219,7 +219,7 @@ export default async function WikiIndexPage({
           <div className="flex items-center gap-3">
             <a
               href="https://bjj-app.net"
-              className="text-sm text-gray-400 hover:text-white transition-colors"
+              className="text-sm text-zinc-400 hover:text-white transition-colors"
             >
               ← BJJ App
             </a>
@@ -235,7 +235,7 @@ export default async function WikiIndexPage({
                 className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-150 ${
                   l === lang
                     ? "bg-white/10 text-white shadow-sm"
-                    : "text-gray-400 hover:text-white"
+                    : "text-zinc-400 hover:text-white"
                 }`}
               >
                 {l.toUpperCase()}
@@ -261,7 +261,7 @@ export default async function WikiIndexPage({
                   BJJ Wiki
                 </h1>
               </div>
-              <p className="text-gray-400 max-w-xl text-sm leading-relaxed">
+              <p className="text-zinc-400 max-w-xl text-sm leading-relaxed">
                 The complete Brazilian Jiu-Jitsu encyclopedia — techniques,
                 concepts, rules, athlete bios, and more.
               </p>
@@ -271,7 +271,7 @@ export default async function WikiIndexPage({
               <p className="text-2xl font-bold text-white tabular-nums" suppressHydrationWarning>
                 {new Intl.NumberFormat(lang === "ja" ? "ja-JP" : lang === "pt" ? "pt-BR" : "en-US").format(totalCount)}
               </p>
-              <p className="text-xs text-gray-400 mt-0.5 uppercase tracking-widest">
+              <p className="text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
                 articles
               </p>
             </div>
@@ -330,7 +330,7 @@ export default async function WikiIndexPage({
                   <a
                     key={slug}
                     href={`/wiki/${lang}/${slug}`}
-                    className="group flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-gray-400 hover:bg-white/5 hover:text-white transition-all duration-150"
+                    className="group flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-zinc-400 hover:bg-white/5 hover:text-white transition-all duration-150"
                   >
                     <span
                       className={`h-1.5 w-1.5 rounded-full flex-shrink-0 ${cfg.dotClass} group-hover:scale-125 transition-transform`}

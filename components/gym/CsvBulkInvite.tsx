@@ -159,7 +159,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
               <h2 className="text-base font-bold text-white">📥 {t("gym.csvTitle")}</h2>
               <button
                 onClick={() => setOpen(false)}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-zinc-400 hover:text-white transition-colors"
                 aria-label={t("common.close")}
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -171,7 +171,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
             <div className="p-5">
               {!parsed ? (
                 <>
-                  <p className="text-xs text-gray-400 mb-3">{t("gym.csvInstructions")}</p>
+                  <p className="text-xs text-zinc-400 mb-3">{t("gym.csvInstructions")}</p>
                   <textarea
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
@@ -190,7 +190,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
               ) : (
                 <>
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-zinc-400">
                       {t("gym.csvResult", { n: rows.length })}
                     </p>
                     <button
@@ -209,11 +209,11 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
                           {row.name && (
                             <p className="text-xs font-medium text-white truncate">{row.name}</p>
                           )}
-                          <p className="text-xs text-gray-400 truncate">{row.email}</p>
+                          <p className="text-xs text-zinc-400 truncate">{row.email}</p>
                         </div>
                         <button
                           onClick={() => copyLink(idx)}
-                          className="flex-shrink-0 text-xs bg-zinc-700 hover:bg-zinc-600 text-gray-300 px-2.5 py-1 rounded-lg transition-colors"
+                          className="flex-shrink-0 text-xs bg-zinc-700 hover:bg-zinc-600 text-zinc-300 px-2.5 py-1 rounded-lg transition-colors"
                         >
                           {copiedIdx === idx ? t("gym.inviteCopied") : t("gym.inviteCopy")}
                         </button>
@@ -231,7 +231,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
                     </button>
                     <button
                       onClick={downloadCsv}
-                      className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-gray-300 text-xs font-semibold py-2.5 rounded-xl transition-colors"
+                      className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-xs font-semibold py-2.5 rounded-xl transition-colors"
                     >
                       {t("gym.csvDownload")}
                     </button>

@@ -70,9 +70,9 @@ export default function MemberCard({
       <div className="flex-1 min-w-0">
         {showDetail ? (
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400">{t("gym.lastSeen", { text: lastSeenText })}</span>
+            <span className="text-xs text-zinc-400">{t("gym.lastSeen", { text: lastSeenText })}</span>
             <span className="text-xs text-zinc-400">·</span>
-            <span className="text-xs text-gray-400">{t("gym.sessionsPerMonth", { n: member.sessions_last_30d })}</span>
+            <span className="text-xs text-zinc-400">{t("gym.sessionsPerMonth", { n: member.sessions_last_30d })}</span>
           </div>
         ) : proRequired ? (
           <span className="text-xs text-zinc-400 italic">

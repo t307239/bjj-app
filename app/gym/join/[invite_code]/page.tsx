@@ -50,10 +50,10 @@ export default async function GymJoinPage({ params }: Props) {
         <div className="text-center">
           <div className="text-5xl mb-4">❌</div>
           <p className="text-white font-bold text-lg mb-2">{t("gym.invalidInviteTitle")}</p>
-          <p className="text-gray-400 text-sm">
+          <p className="text-zinc-400 text-sm">
             {t("gym.invalidInviteDesc")}
           </p>
-          <a href="/dashboard" className="mt-6 inline-block text-gray-400 hover:text-white text-sm">
+          <a href="/dashboard" className="mt-6 inline-block text-zinc-400 hover:text-white text-sm">
             {t("gym.goToDashboard")} →
           </a>
         </div>
@@ -103,7 +103,7 @@ export default async function GymJoinPage({ params }: Props) {
           <p className="text-white font-bold text-lg mb-2">
             You&apos;re already a member of {gym.name}
           </p>
-          <a href="/dashboard" className="mt-6 inline-block text-gray-400 hover:text-white text-sm">
+          <a href="/dashboard" className="mt-6 inline-block text-zinc-400 hover:text-white text-sm">
             Go to dashboard →
           </a>
         </div>

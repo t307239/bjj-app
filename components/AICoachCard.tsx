@@ -307,7 +307,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
                 {section.items.map((item, j) => (
                   <div key={j} className="flex items-start gap-2">
                     <span className="text-[#10B981] text-sm font-bold flex-shrink-0 mt-0.5">•</span>
-                    <p className="text-xs text-gray-300 leading-relaxed">{item}</p>
+                    <p className="text-xs text-zinc-300 leading-relaxed">{item}</p>
                   </div>
                 ))}
               </div>
@@ -321,7 +321,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
                 {section.label === "CHALLENGE" ? "🎯" : section.label === "PLAN" ? "📝" : section.label === "SPARRING" ? "🥊" : "📅"}{" "}
                 {t(`aiCoach.section_${section.label.toLowerCase()}`)}
               </p>
-              <p className="text-xs text-gray-300 leading-relaxed">{section.content}</p>
+              <p className="text-xs text-zinc-300 leading-relaxed">{section.content}</p>
             </div>
           );
         }
