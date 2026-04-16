@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useLocale } from "@/lib/i18n";
+import { useUnsavedChanges } from "@/lib/useUnsavedChanges";
 import { CATEGORY_VALUES, type TechniqueFormState } from "@/lib/techniqueLogTypes";
 import BottomSheet from "@/components/ui/BottomSheet";
 import { BJJ_TECHNIQUE_SUGGESTIONS } from "@/lib/bjjTechniques";
@@ -57,15 +58,7 @@ export default function TechniqueLogForm({
 
   // ── beforeunload: warn if unsaved form input ──────────────────────────────
   const hasInput = showForm && (form.name.trim() !== "" || form.notes.trim() !== "" || bulkText.trim() !== "");
-  useEffect(() => {
-    if (!hasInput) return;
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = "";
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [hasInput]);
+  useUnsavedChanges(hasInput);
 
   // ── Single add form ────────────────────────────────────────────────────────
   if (!bulkMode) {

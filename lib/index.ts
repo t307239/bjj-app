@@ -8,6 +8,7 @@
  * - database.types.ts (auto-generated types, import from "@/lib/database.types")
  * - i18n.tsx (contains JSX, import from "@/lib/i18n")
  * - useOnlineStatus.ts (React hook, import from "@/lib/useOnlineStatus")
+ * - useUnsavedChanges.ts (React hook, import from "@/lib/useUnsavedChanges")
  * - webpush.ts (server-only, import from "@/lib/webpush")
  * - env.ts (server-only env validation, import from "@/lib/env")
  * - techniqueLogTypes.tsx (contains JSX, import from "@/lib/techniqueLogTypes")
@@ -70,3 +71,7 @@ export { createRateLimiter } from "./rateLimit";
 
 // ── SEO ─────────────────────────────────────────────────────────────────────
 export { buildBreadcrumbJsonLd } from "./breadcrumb";
+
+// ── Network ─────────────────────────────────────────────────────────────────
+export { fetchWithRetry } from "./fetchWithRetry";
+export type { RetryOptions } from "./fetchWithRetry";

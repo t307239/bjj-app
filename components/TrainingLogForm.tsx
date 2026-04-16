@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState, memo } from "react";
 import { useLocale } from "@/lib/i18n";
 import { useOnlineStatus } from "@/lib/useOnlineStatus";
+import { useUnsavedChanges } from "@/lib/useUnsavedChanges";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type CompData, BELT_RANKS } from "@/lib/trainingLogHelpers";
 import BottomSheet from "@/components/ui/BottomSheet";
@@ -155,15 +156,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
 
   // Warn user if they try to leave with meaningful unsaved form data (notes only)
   const hasInput = form.notes.trim() !== "";
-  useEffect(() => {
-    if (!showForm || !hasInput) return;
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = "";
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [showForm, hasInput]);
+  useUnsavedChanges(showForm && hasInput);
 
   // Append selected technique tag to notes, then clear the input
   const handleTechniqueSelect = (value: string) => {

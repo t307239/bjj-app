@@ -7,6 +7,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
 import { useOnlineStatus } from "@/lib/useOnlineStatus";
+import { useUnsavedChanges } from "@/lib/useUnsavedChanges";
 import Toast from "./Toast";
 import BeltPromotionCelebration, { isBeltPromotion } from "./BeltPromotionCelebration";
 import GymMembershipSection from "./profile/GymMembershipSection";
@@ -150,6 +151,12 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
   const today = getLocalDateString();
   const belts = BELTS({ t });
   const currentBelt = belts.find((b) => b.value === form.belt);
+
+  // Warn on page leave if form has unsaved changes
+  const isDirty = form.belt !== profile.belt || form.stripe !== profile.stripe ||
+    form.gym !== profile.gym || form.bio !== profile.bio ||
+    form.start_date !== profile.start_date || form.timezone !== profile.timezone;
+  useUnsavedChanges(isDirty);
 
   useEffect(() => {
     return () => {
