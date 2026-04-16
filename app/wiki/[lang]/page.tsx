@@ -269,7 +269,7 @@ export default async function WikiIndexPage({
             {/* 記事カウント — glassmorphism */}
             <div className="rounded-xl bg-white/5 border border-white/10 px-6 py-4 text-center min-w-[120px] backdrop-blur-sm">
               <p className="text-2xl font-bold text-white tabular-nums" suppressHydrationWarning>
-                {totalCount.toLocaleString()}
+                {new Intl.NumberFormat(lang === "ja" ? "ja-JP" : lang === "pt" ? "pt-BR" : "en-US").format(totalCount)}
               </p>
               <p className="text-xs text-gray-400 mt-0.5 uppercase tracking-widest">
                 articles

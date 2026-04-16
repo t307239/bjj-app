@@ -13,7 +13,7 @@ import {
   getLocalDateParts,
 } from "@/lib/timezone";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
-import { serverT, makeT, type Locale } from "@/lib/i18n";
+import { serverT, makeT, parseAcceptLanguage, type Locale } from "@/lib/i18n";
 import { calcBjjDuration, formatBjjDuration } from "@/lib/bjjDuration";
 import ProStatusBanner from "@/components/ProStatusBanner";
 import GuestDashboardClient from "@/components/GuestDashboardClient";
@@ -241,21 +241,21 @@ export default async function DashboardPage({
   const totalCount = Number(m?.total_count ?? 0);
 
   // ── Locale-aware translation for page body (metadata stays EN for SEO) ──
-  // Priority: bjj_locale cookie → profile.locale (ja only) → Accept-Language → "en"
-  // NOTE: pt disabled on server — pt.json is ~18% complete, would show mixed pt/en
+  // Priority: bjj_locale cookie → profile.locale → Accept-Language → "en"
   let userLocale: Locale = "en";
   const cookieStore = await cookies();
   const cookieLocale = cookieStore.get("bjj_locale")?.value;
-  if (cookieLocale === "ja") {
-    userLocale = "ja";
+  if (cookieLocale === "ja" || cookieLocale === "pt" || cookieLocale === "en") {
+    userLocale = cookieLocale as Locale;
   } else {
     const profileLocale = (profileData as { locale?: string | null })?.locale;
-    if (profileLocale === "ja") {
-      userLocale = "ja";
+    if (profileLocale === "ja" || profileLocale === "pt" || profileLocale === "en") {
+      userLocale = profileLocale as Locale;
     } else {
       const hdrs = await headers();
       const acceptLang = hdrs.get("accept-language") ?? "";
-      if (acceptLang.toLowerCase().startsWith("ja")) userLocale = "ja";
+      const detected = parseAcceptLanguage(acceptLang);
+      if (detected) userLocale = detected;
     }
   }
   const t = makeT(userLocale);
@@ -393,6 +393,7 @@ export default async function DashboardPage({
             totalMinutes={totalMinutes}
             weeklyAvgMinutes={weeklyAvgMinutes}
             t={t}
+            locale={userLocale}
           />
         )}
 
