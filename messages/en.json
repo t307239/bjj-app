@@ -802,7 +802,7 @@
   "pro": {
     "defaultFeature": "This feature",
     "available": "Available in Pro plan",
-    "upgradeButton": "Upgrade to Pro â $9.99/month",
+    "upgradeButton": "Upgrade to Pro",
     "features": "AI-powered insights to fix weak spots · Never lose your streak again · Your data, always exportable",
     "bannerTitle": "â¡ Upgrade to Pro â $9.99/month",
     "bannerFeatures": "Find your weak spots · Track recovery · Protect your streak",
@@ -822,7 +822,14 @@
     "disclaimerAria": "Subscription disclaimer acknowledgement",
     "monthly": "Monthly",
     "annual": "Annual",
-    "savePct": "Save 33%"
+    "savePct": "Save 33%",
+    "monthlyPrice": "$9.99 / month",
+    "annualPrice": "$79.99 / year",
+    "annualPerMonth": "≈ $6.67/mo",
+    "annualSavings": "Save $40/year vs monthly",
+    "featureAI": "AI-powered weak spot analysis",
+    "featureStreak": "Never lose your streak again",
+    "featureExport": "Export your data anytime"
   },
   "beltPromo": {
     "congrats": "Congratulations! ð",

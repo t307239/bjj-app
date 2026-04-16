@@ -592,7 +592,15 @@
   "pro": {
     "monthly": "Mensal",
     "annual": "Anual",
-    "savePct": "Economize 33%"
+    "savePct": "Economize 33%",
+    "monthlyPrice": "$9,99 / mês",
+    "annualPrice": "$79,99 / ano",
+    "annualPerMonth": "≈ $6,67/mês",
+    "annualSavings": "Economize $40/ano vs mensal",
+    "featureAI": "Análise de pontos fracos com IA",
+    "featureStreak": "Nunca perca sua sequência",
+    "featureExport": "Exporte seus dados a qualquer momento",
+    "upgradeButton": "Upgrade para Pro"
   },
   "pricing": {
     "title": "Preços Simples",

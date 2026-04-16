@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/db-check",
       "schedule": "0 3 * * 0"
+    },
+    {
+      "path": "/api/cron/weekly-goal",
+      "schedule": "0 10 * * 1"
     }
   ]
 }

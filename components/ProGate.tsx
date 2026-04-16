@@ -84,10 +84,20 @@ export default function ProGate({
           {/* Price display */}
           <div className="mb-3">
             {isAnnual ? (
-              <p className="text-white font-bold text-sm">$79.99 / year <span className="text-emerald-400 text-xs">≈ $6.67/mo</span></p>
+              <div>
+                <p className="text-white font-bold text-sm">{t("pro.annualPrice")} <span className="text-emerald-400 text-xs">{t("pro.annualPerMonth")}</span></p>
+                <p className="text-emerald-400 text-xs mt-0.5">{t("pro.annualSavings")}</p>
+              </div>
             ) : (
-              <p className="text-white font-bold text-sm">$9.99 / month</p>
+              <p className="text-white font-bold text-sm">{t("pro.monthlyPrice")}</p>
             )}
+          </div>
+
+          {/* Feature list with icons */}
+          <div className="flex flex-col items-start gap-1 mb-3 text-xs text-zinc-300 max-w-xs mx-auto">
+            <span>🧠 {t("pro.featureAI")}</span>
+            <span>🔥 {t("pro.featureStreak")}</span>
+            <span>📊 {t("pro.featureExport")}</span>
           </div>
 
           {/* Stripe pre-checkout disclaimer */}
@@ -124,10 +134,6 @@ export default function ProGate({
           >
             {t("pro.upgradeButton")}
           </a>
-          <p className="text-xs text-zinc-400 mt-2">
-            {t("pro.features")}
-          </p>
-
           {/* Social proof */}
           <p className="text-xs text-zinc-500 mt-3">
             {t("pro.socialProof")}

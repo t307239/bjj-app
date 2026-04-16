@@ -803,7 +803,7 @@
   "pro": {
     "defaultFeature": "この機能",
     "available": "Pro プランで利用可能",
-    "upgradeButton": "Pro にアップグレード — $9.99/月",
+    "upgradeButton": "Proにアップグレード",
     "features": "AIが弱点を分析 · ストリークを絶対守る · データはいつでもエクスポート可能",
     "bannerTitle": "⚡ Proにアップグレード — $9.99/月",
     "bannerFeatures": "弱点を可視化 · リカバリー管理 · ストリーク保護",
@@ -823,7 +823,14 @@
     "disclaimerAria": "サブスクリプション免責事項の確認",
     "monthly": "月額",
     "annual": "年額",
-    "savePct": "33%お得"
+    "savePct": "33%お得",
+    "monthlyPrice": "$9.99 / 月",
+    "annualPrice": "$79.99 / 年",
+    "annualPerMonth": "≈ $6.67/月",
+    "annualSavings": "月額より年間$40お得",
+    "featureAI": "AIが弱点を分析",
+    "featureStreak": "ストリークを絶対守る",
+    "featureExport": "データはいつでもエクスポート可能"
   },
   "common": {
     "close": "閉じる",
