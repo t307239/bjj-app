@@ -10,6 +10,7 @@ import ProfileTabsLayout from "@/components/profile/ProfileTabsLayout";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
 import { formatBjjDuration, calcBjjDuration } from "@/lib/bjjDuration";
+import { buildBreadcrumbJsonLd } from "@/lib/breadcrumb";
 import AvatarImage from "@/components/AvatarImage";
 
 // ─── Lazy-loaded sections (keep initial bundle light) ───
@@ -92,6 +93,11 @@ const jsonLd = {
   url: "https://bjj-app.net/profile",
 };
 
+const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+  { name: "BJJ App", url: "https://bjj-app.net" },
+  { name: "Profile", url: "https://bjj-app.net/profile" },
+]);
+
 
 export default async function ProfilePage() {
   const data = await getProfileData();
@@ -144,6 +150,10 @@ export default async function ProfilePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <NavBar displayName={displayName} avatarUrl={avatarUrl} isPro={isPro} />
 
       <main className="max-w-4xl mx-auto px-4 py-5">
@@ -151,19 +161,19 @@ export default async function ProfilePage() {
         {/* ═══════════════════════════════════════════
             PROFILE HERO
             ═══════════════════════════════════════════ */}
-        <div className="bg-zinc-900/40 border border-white/8 rounded-2xl p-5 mb-6">
-          <div className="flex items-start gap-4">
+        <div className="bg-zinc-900/40 border border-white/8 rounded-2xl p-5 md:p-6 mb-6">
+          <div className="flex items-start gap-4 md:gap-5">
             {/* Avatar */}
             {avatarUrl ? (
               <AvatarImage
                 src={avatarUrl}
                 alt={displayName}
-                className="w-16 h-16 rounded-2xl border border-white/15 object-cover flex-shrink-0"
+                className="w-16 h-16 md:w-20 md:h-20 rounded-2xl border border-white/15 object-cover flex-shrink-0"
                 priority
               />
             ) : (
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-emerald-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-violet-900/30">
-                <span className="text-2xl font-bold text-white select-none">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-violet-500 to-emerald-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-violet-900/30">
+                <span className="text-2xl md:text-3xl font-bold text-white select-none">
                   {displayName[0]?.toUpperCase() ?? "?"}
                 </span>
               </div>
@@ -181,7 +191,7 @@ export default async function ProfilePage() {
                   </span>
                 )}
               </div>
-              <p className="text-sm text-zinc-400 mb-3 truncate">
+              <p className="text-sm md:text-base text-zinc-400 mb-3 truncate">
                 {user.email}
               </p>
               {gymName && (

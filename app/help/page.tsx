@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { detectServerLocale, makeT } from "@/lib/i18n";
+import { buildBreadcrumbJsonLd } from "@/lib/breadcrumb";
 
 export const metadata: Metadata = {
   title: "Help & FAQ",
@@ -51,11 +52,20 @@ export default async function HelpPage() {
     })),
   };
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "BJJ App", url: "https://bjj-app.net" },
+    { name: "Help & FAQ", url: "https://bjj-app.net/help" },
+  ]);
+
   return (
     <div className="min-h-[100dvh] bg-zinc-950 text-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <div className="max-w-2xl mx-auto px-4 py-12">
         {/* Back link */}

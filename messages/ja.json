@@ -830,7 +830,20 @@
     "annualSavings": "月額より年間$40お得",
     "featureAI": "AIが弱点を分析",
     "featureStreak": "ストリークを絶対守る",
-    "featureExport": "データはいつでもエクスポート可能"
+    "featureExport": "データはいつでもエクスポート可能",
+    "compareTitle": "Free vs Pro",
+    "compareFree": "無料",
+    "comparePro": "Pro",
+    "compareLog": "練習記録",
+    "compareTechniques": "テクニックマップ",
+    "compareHeatmap": "ヒートマップ",
+    "compareAI": "AI分析",
+    "compareStreak": "ストリーク保護",
+    "compareExport": "PDF/CSVエクスポート",
+    "compareRoll": "ロール分析",
+    "compareCheck": "✓",
+    "compareCross": "—",
+    "urgencyBadge": "人気No.1"
   },
   "common": {
     "close": "閉じる",

@@ -74,9 +74,13 @@ export default function ProGate({
               />
             </button>
             <span className={`text-xs whitespace-nowrap ${isAnnual ? "text-white font-semibold" : "text-zinc-400"}`}>{t("pro.annual")}</span>
-            {isAnnual && (
+            {isAnnual ? (
               <span className="bg-emerald-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">
                 {t("pro.savePct")}
+              </span>
+            ) : (
+              <span className="bg-yellow-500/20 text-yellow-400 text-xs font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                {t("pro.urgencyBadge")}
               </span>
             )}
           </div>
@@ -93,11 +97,30 @@ export default function ProGate({
             )}
           </div>
 
-          {/* Feature list with icons */}
-          <div className="flex flex-col items-start gap-1 mb-3 text-xs text-zinc-300 max-w-xs mx-auto">
-            <span>🧠 {t("pro.featureAI")}</span>
-            <span>🔥 {t("pro.featureStreak")}</span>
-            <span>📊 {t("pro.featureExport")}</span>
+          {/* Free vs Pro comparison table */}
+          <div className="max-w-xs mx-auto mb-3 rounded-lg border border-white/10 overflow-hidden text-xs">
+            <div className="grid grid-cols-3 bg-zinc-800/60 text-zinc-300 font-semibold">
+              <div className="px-2 py-1.5 text-left">{t("pro.compareTitle")}</div>
+              <div className="px-2 py-1.5 text-center">{t("pro.compareFree")}</div>
+              <div className="px-2 py-1.5 text-center text-emerald-400">{t("pro.comparePro")}</div>
+            </div>
+            {[
+              { label: t("pro.compareLog"), free: true, pro: true },
+              { label: t("pro.compareTechniques"), free: true, pro: true },
+              { label: t("pro.compareHeatmap"), free: true, pro: true },
+              { label: t("pro.compareAI"), free: false, pro: true },
+              { label: t("pro.compareStreak"), free: false, pro: true },
+              { label: t("pro.compareExport"), free: false, pro: true },
+              { label: t("pro.compareRoll"), free: false, pro: true },
+            ].map((row, i) => (
+              <div key={i} className={`grid grid-cols-3 ${i % 2 === 0 ? "bg-zinc-900/40" : "bg-zinc-900/20"}`}>
+                <div className="px-2 py-1 text-left text-zinc-300 whitespace-nowrap">{row.label}</div>
+                <div className={`px-2 py-1 text-center ${row.free ? "text-emerald-400" : "text-zinc-600"}`}>
+                  {row.free ? t("pro.compareCheck") : t("pro.compareCross")}
+                </div>
+                <div className="px-2 py-1 text-center text-emerald-400">{t("pro.compareCheck")}</div>
+              </div>
+            ))}
           </div>
 
           {/* Stripe pre-checkout disclaimer */}

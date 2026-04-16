@@ -63,9 +63,12 @@ export async function GET(request: Request) {
 
   // ── 2. Push subscriptions without profiles ────────────────────────────────
   try {
-    const { data } = await supabase.rpc("exec_sql", {
+    const { data, error } = await supabase.rpc("exec_sql", {
       query: `SELECT count(*) AS cnt FROM push_subscriptions ps LEFT JOIN profiles p ON ps.user_id = p.id WHERE p.id IS NULL`,
     });
+    if (error) {
+      logger.warn("db-check: orphan_push_subscriptions RPC failed", { error: error.message });
+    }
     // Fallback: if RPC doesn't exist, use a simpler check
     const orphanPush = data?.[0]?.cnt ?? 0;
     results.push({
@@ -114,10 +117,13 @@ export async function GET(request: Request) {
 
   // ── 5. Duplicate push subscriptions (same endpoint) ───────────────────────
   try {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("push_subscriptions")
       .select("endpoint")
       .limit(1000);
+    if (error) {
+      logger.warn("db-check: duplicate_push_endpoints query failed", { error: error.message });
+    }
     const endpoints = data?.map((d) => d.endpoint) ?? [];
     const dupes = endpoints.length - new Set(endpoints).size;
     results.push({

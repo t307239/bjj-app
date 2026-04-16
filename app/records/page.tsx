@@ -16,6 +16,7 @@ import {
   getLocalDateParts,
 } from "@/lib/timezone";
 import { serverT, makeT, type Locale } from "@/lib/i18n";
+import { buildBreadcrumbJsonLd } from "@/lib/breadcrumb";
 import GuestDashboardClient from "@/components/GuestDashboardClient";
 
 // perf: Heavy chart components lazy-loaded
@@ -147,8 +148,17 @@ export default async function RecordsPage() {
     }
   }
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "BJJ App", url: "https://bjj-app.net" },
+    { name: "Records", url: "https://bjj-app.net/records" },
+  ]);
+
   return (
     <div className="min-h-[100dvh] bg-zinc-950 pb-20 sm:pb-0">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <NavBar displayName={displayName} avatarUrl={avatarUrl} isPro={isPro} />
 
       <main className="max-w-4xl mx-auto px-4 py-5">
@@ -234,7 +244,7 @@ export default async function RecordsPage() {
 
                 <section className="mb-7">
                   <ProGate isPro={isPro} feature="ロール分析 & パートナー統計" userId={user.id}>
-                    <div className="space-y-4">
+                    <div className="md:grid md:grid-cols-2 md:gap-4 space-y-4 md:space-y-0">
                       <RollAnalyticsCard userId={user.id} />
                       <PartnerStatsCard userId={user.id} />
                     </div>

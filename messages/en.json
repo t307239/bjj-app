@@ -829,7 +829,20 @@
     "annualSavings": "Save $40/year vs monthly",
     "featureAI": "AI-powered weak spot analysis",
     "featureStreak": "Never lose your streak again",
-    "featureExport": "Export your data anytime"
+    "featureExport": "Export your data anytime",
+    "compareTitle": "Free vs Pro",
+    "compareFree": "Free",
+    "comparePro": "Pro",
+    "compareLog": "Training log",
+    "compareTechniques": "Technique map",
+    "compareHeatmap": "Activity heatmap",
+    "compareAI": "AI analysis",
+    "compareStreak": "Streak protect",
+    "compareExport": "PDF/CSV export",
+    "compareRoll": "Roll analytics",
+    "compareCheck": "✓",
+    "compareCross": "—",
+    "urgencyBadge": "Most popular"
   },
   "beltPromo": {
     "congrats": "Congratulations! ð",

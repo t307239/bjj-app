@@ -379,37 +379,31 @@ export default async function DashboardPage({
         </Link>
 
         {/* ═══════════════════════════════════════════
-            HEATMAP CALENDAR — GitHub-style training activity
+            HEATMAP + MAT TIME — side-by-side on tablet
             ═══════════════════════════════════════════ */}
         {hasFirstLog && (
-          <HeatmapCalendar trainingDates={heatmapDates} />
+          <div className="md:grid md:grid-cols-2 md:gap-5">
+            <HeatmapCalendar trainingDates={heatmapDates} />
+            <MatTimeTracker
+              totalMinutes={totalMinutes}
+              weeklyAvgMinutes={weeklyAvgMinutes}
+              t={t}
+              locale={userLocale}
+            />
+          </div>
         )}
 
         {/* ═══════════════════════════════════════════
-            MAT TIME TRACKER — 10,000 hour progress
+            FOCUS + COUNTDOWN — side-by-side on tablet
             ═══════════════════════════════════════════ */}
-        {hasFirstLog && (
-          <MatTimeTracker
-            totalMinutes={totalMinutes}
-            weeklyAvgMinutes={weeklyAvgMinutes}
+        <div className="md:grid md:grid-cols-2 md:gap-5">
+          <TechniqueFocusCard
+            techniques={focusTechniques}
+            weekPracticeCount={focusWeekPractice}
             t={t}
-            locale={userLocale}
           />
-        )}
-
-        {/* ═══════════════════════════════════════════
-            TECHNIQUE FOCUS — pinned techniques as weekly focus
-            ═══════════════════════════════════════════ */}
-        <TechniqueFocusCard
-          techniques={focusTechniques}
-          weekPracticeCount={focusWeekPractice}
-          t={t}
-        />
-
-        {/* ═══════════════════════════════════════════
-            COMPETITION COUNTDOWN — upcoming competitions + AI training recs
-            ═══════════════════════════════════════════ */}
-        <CompetitionCountdown userId={user.id} isPro={isPro} />
+          <CompetitionCountdown userId={user.id} isPro={isPro} />
+        </div>
 
         {/* ═══════════════════════════════════════════
             WEEKLY REPORT — Pro auto-generated performance report

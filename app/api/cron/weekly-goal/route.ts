@@ -105,11 +105,15 @@ export async function GET(request: Request) {
 
   // For each user, count training logs this week
   const userIds = [...new Set(subs.map((s) => s.user_id))];
-  const { data: logCounts } = await supabase
+  const { data: logCounts, error: logErr } = await supabase
     .from("training_logs")
     .select("user_id")
     .gte("date", weekStart)
     .in("user_id", userIds);
+
+  if (logErr) {
+    logger.warn("weekly-goal: failed to fetch training logs", { error: logErr.message });
+  }
 
   // Build count map
   const countMap = new Map<string, number>();

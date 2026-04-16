@@ -7,6 +7,7 @@ import NavBar from "@/components/NavBar";
 import TechniqueLog from "@/components/TechniqueLog";
 import TechniquesTabsLayout from "@/components/techniques/TechniquesTabsLayout";
 import { detectServerLocale, makeT } from "@/lib/i18n";
+import { buildBreadcrumbJsonLd } from "@/lib/breadcrumb";
 import { Suspense } from "react";
 import Link from "next/link";
 import SafetyBanner from "@/components/SafetyBanner";

@@ -600,7 +600,20 @@
     "featureAI": "Análise de pontos fracos com IA",
     "featureStreak": "Nunca perca sua sequência",
     "featureExport": "Exporte seus dados a qualquer momento",
-    "upgradeButton": "Upgrade para Pro"
+    "upgradeButton": "Upgrade para Pro",
+    "compareTitle": "Free vs Pro",
+    "compareFree": "Grátis",
+    "comparePro": "Pro",
+    "compareLog": "Registro de treino",
+    "compareTechniques": "Mapa de técnicas",
+    "compareHeatmap": "Mapa de atividade",
+    "compareAI": "Análise por IA",
+    "compareStreak": "Proteção de sequência",
+    "compareExport": "Exportar PDF/CSV",
+    "compareRoll": "Análise de rola",
+    "compareCheck": "✓",
+    "compareCross": "—",
+    "urgencyBadge": "Mais popular"
   },
   "pricing": {
     "title": "Preços Simples",
