@@ -162,6 +162,15 @@ export default async function TechniquesPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildBreadcrumbJsonLd([
+            { name: "BJJ App", url: "https://bjj-app.net" },
+            { name: "Techniques", url: "https://bjj-app.net/techniques" },
+          ])),
+        }}
+      />
       <NavBar displayName={displayName} avatarUrl={avatarUrl} isPro={isPro} />
 
       <main className="max-w-4xl mx-auto px-4 py-5">

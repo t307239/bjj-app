@@ -1,27 +1,23 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 245 files
+TS/TSX Scanned: 250 files
 CRITICAL: 1
 WARNING: 0
-INFO: 93
-Total: 94
+INFO: 94
+Total: 95
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (639/1732 キー) — 1123 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (652/1745 キー) — 1123 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
-[INFO] [SUPABASE_NO_ERROR] app/api/cron/db-check/route.ts: L66: Supabase query の戻り値で error を無視 — サイレント失敗リスク
-  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [SUPABASE_NO_ERROR] app/api/cron/db-check/route.ts: L117: Supabase query の戻り値で error を無視 — サイレント失敗リスク
-  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [SUPABASE_NO_ERROR] app/api/cron/weekly-goal/route.ts: L108: Supabase query の戻り値で error を無視 — サイレント失敗リスク
-  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L125: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/dashboard/page.tsx: L456: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] app/dashboard/page.tsx: L450: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [DANGEROUS_HTML] app/gym/page.tsx: L44: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/help/page.tsx: L58: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/help/page.tsx: L64: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
+[INFO] [DANGEROUS_HTML] app/help/page.tsx: L68: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/layout.tsx: L124: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
@@ -37,9 +33,15 @@ Total: 94
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L449: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L145: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L151: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L162: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L155: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
+[INFO] [DANGEROUS_HTML] app/records/page.tsx: L160: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
+[INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L163: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
+[INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L167: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/ConfettiEffect.tsx: L41: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
