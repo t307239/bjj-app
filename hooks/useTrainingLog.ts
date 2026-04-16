@@ -367,13 +367,23 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     const weightNum = form.weight !== "" ? parseFloat(form.weight) : null;
     const weightValue = weightNum !== null && !isNaN(weightNum) && weightNum > 0 ? weightNum : null;
 
-    // Exclude fields with no DB column — encoded into notes or UI-only
-    const { roll_focus: _rf, partner_belt: _pb, size_diff: _sd, gi_name: _gn, ...insertForm } = form;
+    // Whitelist: only DB columns — prevents PostgREST rejection from unknown fields
+    const insertPayload = {
+      id: idempotencyKey.current,
+      user_id: userId,
+      date: form.date,
+      duration_min: form.duration_min,
+      type: form.type,
+      notes: finalNotes,
+      instructor_name: form.instructor_name,
+      partner_username: form.partner_username,
+      weight: weightValue,
+    };
 
     setLoading(true);
     const { data, error } = await supabase
       .from("training_logs")
-      .insert([{ id: idempotencyKey.current, ...insertForm, notes: finalNotes, user_id: userId, weight: weightValue }])
+      .insert([insertPayload])
       .select()
       .single();
 
@@ -571,9 +581,16 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     setEditingId(null);
     setToast({ message: tRef.current("training.updated"), type: "success" });
 
+    // Whitelist: only DB columns
+    const updatePayload = {
+      date: editForm.date,
+      duration_min: editForm.duration_min,
+      type: editForm.type,
+      notes: finalEditNotes,
+    };
     const { data, error } = await supabase
       .from("training_logs")
-      .update({ ...editForm, notes: finalEditNotes })
+      .update(updatePayload)
       .eq("id", id)
       .eq("user_id", userId)
       .select("id, date, duration_min, type, notes, created_at, instructor_name, partner_username")

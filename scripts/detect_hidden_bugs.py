@@ -36,6 +36,7 @@ AUDIT_FRAMEWORK.md の20軸スコアリングでは見逃される、
  28. インラインスタイルオブジェクト（Tailwind統一推奨）
  29. Unsafe number input（parseInt||fallback / Number() on input[type=number]）
  30. setTimeout without cleanup（setState呼び出し + clearTimeout無し → メモリリーク）
+ 31. Supabase .insert/.update/.upsert にスプレッド構文（DBカラム不一致リスク）
 
 使い方:
     python3 scripts/detect_hidden_bugs.py              # 全チェック
@@ -1439,6 +1440,31 @@ def check_settimeout_no_cleanup(filepath: Path, content: str, report: BugReport)
                 )
 
 
+def check_spread_into_db(filepath: Path, content: str, report: BugReport):
+    """Supabase .insert() / .update() / .upsert() にスプレッド構文が使われている（カテゴリ31）
+
+    問題: ...formObj のようなスプレッドでDBに挿入すると、フォームstateに
+    DBカラムに存在しないフィールドが含まれたとき PostgREST がリクエストを拒否する。
+    ホワイトリスト方式（必要なカラムだけ明示列挙）を推奨。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+    lines = content.split("\n")
+
+    for line_no, line in enumerate(lines, 1):
+        stripped = line.strip()
+        if stripped.startswith("//") or stripped.startswith("*"):
+            continue
+
+        # .insert([{ ...xxx }]) / .update({ ...xxx }) / .upsert({ ...xxx }) パターン
+        if re.search(r'\.(insert|update|upsert)\s*\(\s*\[?\s*\{[^}]*\.\.\.(?!.*Payload|.*payload)', line):
+            report.add(
+                "WARNING", "SPREAD_INTO_DB",
+                str(rel),
+                f"L{line_no}: .insert/.update/.upsert に ...spread — DBカラム不一致で PostgREST 拒否リスク",
+                "ホワイトリスト方式に変更: { col1: val1, col2: val2 } と明示列挙する",
+            )
+
+
 # ─────────────────────────────────────────────────────
 # メインスキャナ
 # ─────────────────────────────────────────────────────
@@ -1490,6 +1516,7 @@ def scan_all() -> BugReport:
         check_supabase_error_handling(fpath, content, report) # カテゴリ17
         check_promise_no_catch(fpath, content, report)        # カテゴリ18
         check_silent_catch(fpath, content, report)            # カテゴリ20
+        check_spread_into_db(fpath, content, report)          # カテゴリ31
 
     # ファイル横断チェック（カテゴリ16, 19）
     check_unused_exports(source_files, report)

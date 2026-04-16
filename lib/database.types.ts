@@ -62,8 +62,9 @@ export type DbTrainingLog = {
   duration_min: number;
   type: string;
   notes: string;
-  instructor: string | null;
-  partner: string | null;
+  instructor_name: string | null;
+  partner_username: string | null;
+  weight: number | null;
   created_at: string;
 };
 

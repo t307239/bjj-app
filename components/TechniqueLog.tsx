@@ -147,9 +147,16 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
     setDangerConfirmPending(false);
     setLoading(true);
 
+    const insertPayload = {
+      user_id: userId,
+      name: trimmedName,
+      category: form.category,
+      mastery_level: form.mastery_level,
+      notes: form.notes,
+    };
     const { data, error } = await supabase
       .from("techniques")
-      .insert([{ ...form, name: trimmedName, user_id: userId }])
+      .insert([insertPayload])
       .select()
       .single();
     if (!error && data) {
