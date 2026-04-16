@@ -237,7 +237,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
                     </button>
                   </div>
 
-                  <p className="text-xs text-gray-600 mt-3 text-center">
+                  <p className="text-xs text-zinc-500 mt-3 text-center">
                     {t("gym.csvNote")}
                   </p>
                 </>

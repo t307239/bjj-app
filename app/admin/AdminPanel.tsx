@@ -177,7 +177,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
                             GYM
                           </span>
                         )}
-                        <span className={`text-xs px-1.5 py-0.5 rounded-full ${user.sessions_30d > 0 ? "bg-green-500/20 text-green-400" : "bg-zinc-800 text-gray-600"}`}>
+                        <span className={`text-xs px-1.5 py-0.5 rounded-full ${user.sessions_30d > 0 ? "bg-green-500/20 text-green-400" : "bg-zinc-800 text-zinc-500"}`}>
                           {user.sessions_30d}s/30d
                         </span>
                       </div>
@@ -241,7 +241,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
         )}
 
         {loading && data && (
-          <div className="text-center text-xs text-gray-600 mt-2">Refreshing…</div>
+          <div className="text-center text-xs text-zinc-500 mt-2">Refreshing…</div>
         )}
       </div>
     </div>

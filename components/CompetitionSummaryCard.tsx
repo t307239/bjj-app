@@ -211,12 +211,12 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
           <span className="text-2xl font-bold text-green-400">{analytics.wins}</span>
           <span className="text-xs text-gray-500">{t("competition.wins")}</span>
         </div>
-        <span className="text-gray-600">-</span>
+        <span className="text-zinc-500">-</span>
         <div className="flex items-baseline gap-1">
           <span className="text-2xl font-bold text-red-400">{analytics.losses}</span>
           <span className="text-xs text-gray-500">{t("competition.losses")}</span>
         </div>
-        <span className="text-gray-600">-</span>
+        <span className="text-zinc-500">-</span>
         <div className="flex items-baseline gap-1">
           <span className="text-2xl font-bold text-yellow-400">{analytics.draws}</span>
           <span className="text-xs text-gray-500">{t("competition.draws")}</span>
@@ -405,7 +405,7 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
                   {m.comp.gi_type === "gi" ? "Gi" : m.comp.gi_type === "nogi" ? "No-Gi" : m.comp.gi_type}
                 </span>
               )}
-              <span className="text-xs text-gray-600 whitespace-nowrap">{m.date}</span>
+              <span className="text-xs text-zinc-500 whitespace-nowrap">{m.date}</span>
             </div>
           ))}
         </div>

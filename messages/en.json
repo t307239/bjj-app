@@ -801,7 +801,7 @@
     "defaultFeature": "This feature",
     "available": "Available in Pro plan",
     "upgradeButton": "Upgrade to Pro â $9.99/month",
-    "features": "See your weakest positions · Track injuries · Never lose your streak",
+    "features": "AI-powered insights to fix weak spots · Never lose your streak again · Your data, always exportable",
     "bannerTitle": "â¡ Upgrade to Pro â $9.99/month",
     "bannerFeatures": "Find your weak spots · Track recovery · Protect your streak",
     "bannerCta": "Unlock Pro",
@@ -1240,7 +1240,11 @@
     "faq12Q": "I'm not receiving notifications",
     "faq12A": "Check your browser notification settings. On iOS Safari, you need to add the app to your Home Screen before enabling notifications.",
     "troubleshootingTitle": "Troubleshooting",
-    "troubleshootingSubtitle": "Common issues and solutions"
+    "troubleshootingSubtitle": "Common issues and solutions",
+    "faq13Q": "Can I export my training data?",
+    "faq13A": "Yes! You can export your full training history as CSV or PDF anytime from Settings. Your data belongs to you — no lock-in.",
+    "faq14Q": "What happens to my data if I cancel Pro?",
+    "faq14A": "Your training records are safe. Free users keep full read access and export capability. Only advanced analytics features are paused."
   },
   "onboarding": {
     "title": "Getting Started",

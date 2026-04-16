@@ -260,7 +260,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
         </div>
         <div className="flex items-center gap-2">
           {generatedAt && (
-            <span className="text-xs text-gray-600">{fmtAge(generatedAt, locale)}</span>
+            <span className="text-xs text-zinc-500">{fmtAge(generatedAt, locale)}</span>
           )}
           {isStale && (
             <button

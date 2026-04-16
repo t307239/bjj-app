@@ -33,6 +33,8 @@ export default async function HelpPage() {
     { q: t("help.faq10Q"), a: t("help.faq10A") },
     { q: t("help.faq11Q"), a: t("help.faq11A") },
     { q: t("help.faq12Q"), a: t("help.faq12A") },
+    { q: t("help.faq13Q"), a: t("help.faq13A") },
+    { q: t("help.faq14Q"), a: t("help.faq14A") },
   ];
 
   const allFaqs = [...faqs, ...troubleshooting];

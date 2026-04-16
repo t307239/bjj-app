@@ -20,6 +20,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "analyze": "ANALYZE=true next build",
+    "check:all": "npm run lint && tsc --noEmit && npm run test && python3 scripts/detect_hidden_bugs.py --fix-hint",
     "prepare": "husky"
   },
   "lint-staged": {
