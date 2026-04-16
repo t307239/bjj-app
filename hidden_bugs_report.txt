@@ -1,15 +1,17 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 244 files
+TS/TSX Scanned: 245 files
 CRITICAL: 1
 WARNING: 0
-INFO: 92
-Total: 93
+INFO: 93
+Total: 94
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (631/1725 キー) — 1124 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (639/1732 キー) — 1123 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/db-check/route.ts: L66: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/db-check/route.ts: L117: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] app/api/cron/weekly-goal/route.ts: L108: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
