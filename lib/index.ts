@@ -17,7 +17,7 @@
 export { trackEvent } from "./analytics";
 
 // ── Date / Time ──────────────────────────────────────────────────────────────
-export { formatDateShort, formatDateLong, formatRelativeTime, formatTime } from "./formatDate";
+export { formatDateShort, formatDateLong, formatRelativeTime, formatTime, formatNumber, formatMonthYear } from "./formatDate";
 export { getLogicalTrainingDate } from "./logicalDate";
 export { getUserTimezone, getLocalDateString, utcIsoToLocalDateString } from "./timezone";
 

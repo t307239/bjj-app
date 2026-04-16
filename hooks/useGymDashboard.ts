@@ -7,6 +7,8 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { formatMonthYear } from "@/lib/formatDate";
+import type { Locale } from "@/lib/i18n";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -55,9 +57,10 @@ export function beltColor(belt: string): string {
 type UseGymDashboardProps = {
   initialGym: Gym;
   t: (k: string, vars?: Record<string, string | number>) => string;
+  locale?: Locale;
 };
 
-export function useGymDashboard({ initialGym, t }: UseGymDashboardProps) {
+export function useGymDashboard({ initialGym, t, locale = "en" }: UseGymDashboardProps) {
   const supabase = useRef(createClient()).current;
   // t is recreated every render by makeT() — use ref to keep deps stable
   const tRef = useRef(t);
@@ -140,7 +143,7 @@ export function useGymDashboard({ initialGym, t }: UseGymDashboardProps) {
   const printLeaderboard = useCallback(() => {
     const t = tRef.current;
     const now = new Date();
-    const monthLabel = now.toLocaleString(undefined, { month: "long", year: "numeric" });
+    const monthLabel = formatMonthYear(now, locale);
     const sorted = [...members].sort((a, b) => b.sessions_last_30d - a.sessions_last_30d);
     const rows = sorted
       .map((m, i) => {

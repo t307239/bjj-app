@@ -259,7 +259,7 @@ function ProPaywallBanner({
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripeGymPaymentLink }: Props) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const {
     gym,
     members,
@@ -278,7 +278,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
     atRiskCount,
     totalSessionsThisMonth,
     avgSessions30d,
-  } = useGymDashboard({ initialGym, t });
+  } = useGymDashboard({ initialGym, t, locale });
 
   if (loading) {
     return (

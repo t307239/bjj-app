@@ -115,3 +115,36 @@ export function formatTime(
     return "—";
   }
 }
+
+/**
+ * Locale-aware number formatting (e.g., 1,234 / 1.234 / 1,234).
+ * Replaces bare `.toLocaleString()` calls that default to system locale.
+ */
+export function formatNumber(
+  value: number,
+  locale: SupportedLocale = "en",
+  options?: Intl.NumberFormatOptions,
+): string {
+  try {
+    return new Intl.NumberFormat(INTL_LOCALE[locale], options).format(value);
+  } catch {
+    return String(value);
+  }
+}
+
+/**
+ * Format a month label (e.g., "2026年4月", "April 2026", "abril de 2026").
+ */
+export function formatMonthYear(
+  date: Date,
+  locale: SupportedLocale = "en",
+): string {
+  try {
+    return date.toLocaleDateString(INTL_LOCALE[locale], {
+      month: "long",
+      year: "numeric",
+    });
+  } catch {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+  }
+}

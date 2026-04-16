@@ -81,22 +81,53 @@ export const serverT = makeT("en");
 
 // ── Server-side locale detection (for SSR in Server Components) ──────────────
 // Reads bjj_locale cookie → Accept-Language header → "en"
-// NOTE: pt disabled on server — pt.json is ~18% complete
+// NOTE: pt disabled on server auto-detect — pt.json is ~37% complete
+// Users can still explicitly select pt in Settings (cookie-based)
 export async function detectServerLocale(): Promise<Locale> {
   // Dynamic imports to avoid bundling next/headers in client code
   const { cookies, headers } = await import("next/headers");
+  // 1. Cookie (explicit user preference) — highest priority
   try {
     const cookieStore = await cookies();
     const cookieLocale = cookieStore.get(LOCALE_STORAGE_KEY)?.value;
-    if (cookieLocale === "ja") return "ja";
-    // pt disabled server-side (coverage too low)
+    if (cookieLocale === "ja" || cookieLocale === "pt" || cookieLocale === "en") {
+      return cookieLocale as Locale;
+    }
   } catch { /* ignore — cookies() may throw outside request context */ }
+  // 2. Accept-Language header — parse quality-weighted list
   try {
     const hdrs = await headers();
     const acceptLang = hdrs.get("accept-language") ?? "";
-    if (acceptLang.toLowerCase().startsWith("ja")) return "ja";
+    const detected = parseAcceptLanguage(acceptLang);
+    if (detected) return detected;
   } catch { /* ignore */ }
   return "en";
+}
+
+/**
+ * Parse Accept-Language header and return the best matching locale.
+ * Handles formats like "ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7"
+ * Only auto-detects ja (pt auto-detect disabled due to low coverage).
+ */
+export function parseAcceptLanguage(header: string): Locale | null {
+  if (!header) return null;
+  // Split by comma, parse each tag + quality
+  const entries = header.split(",").map((part) => {
+    const [tag, ...params] = part.trim().split(";");
+    const qParam = params.find((p) => p.trim().startsWith("q="));
+    const q = qParam ? parseFloat(qParam.trim().slice(2)) : 1.0;
+    return { lang: tag.trim().toLowerCase(), q: isNaN(q) ? 0 : q };
+  });
+  // Sort by quality descending
+  entries.sort((a, b) => b.q - a.q);
+  for (const { lang } of entries) {
+    if (lang.startsWith("ja")) return "ja";
+    // pt auto-detect disabled: pt.json ~37% — would show mixed pt/en UI
+    // Uncomment when pt.json reaches 80%+:
+    // if (lang.startsWith("pt")) return "pt";
+    if (lang.startsWith("en")) return "en";
+  }
+  return null;
 }
 
 // ── Client-side locale detection (runs once at module load) ──────────────────

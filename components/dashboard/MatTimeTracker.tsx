@@ -4,11 +4,15 @@
  * Milestones: 10h → 50h → 100h → 500h → 1,000h → 5,000h → 10,000h
  */
 
+import { formatNumber } from "@/lib/formatDate";
+import type { Locale } from "@/lib/i18n";
+
 type Props = {
   totalMinutes: number;
   /** Average minutes per week (based on recent data) — used for ETA */
   weeklyAvgMinutes: number;
   t: (key: string, vars?: Record<string, string | number>) => string;
+  locale?: Locale;
 };
 
 const MILESTONES = [10, 50, 100, 500, 1000, 5000, 10000];
@@ -20,7 +24,7 @@ function getNextMilestone(hours: number): number {
   return MILESTONES[MILESTONES.length - 1];
 }
 
-export default function MatTimeTracker({ totalMinutes, weeklyAvgMinutes, t }: Props) {
+export default function MatTimeTracker({ totalMinutes, weeklyAvgMinutes, t, locale = "en" }: Props) {
   if (totalMinutes <= 0) return null;
 
   const totalHours = totalMinutes / 60;
@@ -33,9 +37,9 @@ export default function MatTimeTracker({ totalMinutes, weeklyAvgMinutes, t }: Pr
   const segmentProgress = totalHours - prevMilestone;
   const percent = reachedAll ? 100 : Math.min((segmentProgress / segmentTotal) * 100, 100);
 
-  // Format hours display
+  // Format hours display — locale-aware number formatting
   const displayHours = totalHours >= 100
-    ? Math.round(totalHours).toLocaleString()
+    ? formatNumber(Math.round(totalHours), locale)
     : totalHours.toFixed(1);
 
   // ETA to next milestone
@@ -81,7 +85,7 @@ export default function MatTimeTracker({ totalMinutes, weeklyAvgMinutes, t }: Pr
           {t("matTime.hoursUnit")}
         </span>
         <span className="text-xs text-zinc-600 ml-auto whitespace-nowrap">
-          {reachedAll ? "🏆" : t("matTime.nextMilestone", { target: target.toLocaleString() })}
+          {reachedAll ? "🏆" : t("matTime.nextMilestone", { target: formatNumber(target, locale) })}
         </span>
       </div>
 
