@@ -41,11 +41,17 @@ const nextConfig: NextConfig = {
               "frame-ancestors 'none'",   // X-Frame-Options より強力なフレーム埋め込み禁止
               "object-src 'none'",        // Flash / プラグイン完全禁止
               "base-uri 'self'",          // <base>タグ書き換えによるフィッシング防止
+              "form-action 'self' https://checkout.stripe.com", // Q-74: フォーム送信先制限（CSRF軽減）
             ].join("; "),
           },
           {
             key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
+            value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()",
+          },
+          // Q-74: Cross-Origin isolation headers (Spectre mitigation)
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin",
           },
           // Q-22: Referrer policy — send origin only for cross-origin requests
           {
