@@ -364,7 +364,9 @@
     "rustyCount": "{n} need review",
     "rustyDesc": "These techniques were added 30+ days ago and still have low mastery. Time to drill!",
     "rustyDays": "{n}d ago",
-    "rustyReview": "Review in Journal"
+    "rustyReview": "Review in Journal",
+    "freeCounter": "📝 {count}/{limit} techniques (free plan)",
+    "freeLimitReachedShort": "🔒 Free limit reached — {limit}/{limit} techniques"
   },
   "profile": {
     "title": "Profile",

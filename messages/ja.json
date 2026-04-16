@@ -365,7 +365,9 @@
     "rustyCount": "{n}件が要復習",
     "rustyDesc": "30日以上前に追加されて、まだマスタリーが低いテクニックです。ドリルしよう！",
     "rustyDays": "{n}日前",
-    "rustyReview": "ジャーナルで確認"
+    "rustyReview": "ジャーナルで確認",
+    "freeCounter": "📝 {count}/{limit} テクニック（無料プラン）",
+    "freeLimitReachedShort": "🔒 無料上限に達しました — {limit}/{limit} テクニック"
   },
   "profile": {
     "title": "プロフィール",

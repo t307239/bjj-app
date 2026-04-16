@@ -569,7 +569,9 @@
     "safetyWikiLink": "Saiba mais sobre técnicas perigosas no BJJ Wiki →"
   },
   "techniques": {
-    "freePlanLimit": "Limite do plano gratuito: {n} técnicas. Faça upgrade para Pro para ilimitado."
+    "freePlanLimit": "Limite do plano gratuito: {n} técnicas. Faça upgrade para Pro para ilimitado.",
+    "freeCounter": "📝 {count}/{limit} técnicas (plano gratuito)",
+    "freeLimitReachedShort": "🔒 Limite atingido — {limit}/{limit} técnicas"
   },
   "notFound": {
     "title": "404 — Página não encontrada",

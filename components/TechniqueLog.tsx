@@ -412,8 +412,8 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
         }`}>
           <span className={`text-xs ${techniques.length >= TECHNIQUE_FREE_LIMIT ? "text-red-300" : "text-zinc-400"}`}>
             {techniques.length >= TECHNIQUE_FREE_LIMIT
-              ? `🔒 Free limit reached — ${TECHNIQUE_FREE_LIMIT}/${TECHNIQUE_FREE_LIMIT} techniques`
-              : `📝 ${techniques.length}/${TECHNIQUE_FREE_LIMIT} techniques (free plan)`}
+              ? t("techniques.freeLimitReachedShort", { limit: TECHNIQUE_FREE_LIMIT })
+              : t("techniques.freeCounter", { count: techniques.length, limit: TECHNIQUE_FREE_LIMIT })}
           </span>
           {techniques.length >= Math.floor(TECHNIQUE_FREE_LIMIT * 0.75) && (
             <span className="text-xs font-medium text-blue-400 whitespace-nowrap">{t("skillmap.upgradeText")}</span>
