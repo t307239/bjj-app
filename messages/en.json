@@ -888,7 +888,12 @@
     "cookieConsentMessage": "We use privacy-friendly analytics (no tracking cookies) to improve the app.",
     "cookieConsentPrivacy": "Privacy Policy",
     "cookieConsentAccept": "Accept",
-    "cookieConsentDecline": "Decline"
+    "cookieConsentDecline": "Decline",
+    "cookieEssential": "Essential cookies (always on)",
+    "cookieAnalytics": "Analytics cookies",
+    "cookieMarketing": "Marketing cookies",
+    "cookieCustomize": "Customize",
+    "cookieSavePreferences": "Save preferences"
   },
   "aiCoach": {
     "title": "AI Coach",

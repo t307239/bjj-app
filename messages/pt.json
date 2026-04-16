@@ -38,7 +38,12 @@
     "cookieConsentMessage": "Usamos análise amigável à privacidade (sem cookies de rastreamento) para melhorar o aplicativo.",
     "cookieConsentPrivacy": "Política de Privacidade",
     "cookieConsentAccept": "Aceitar",
-    "cookieConsentDecline": "Recusar"
+    "cookieConsentDecline": "Recusar",
+    "cookieEssential": "Cookies essenciais (sempre ativos)",
+    "cookieAnalytics": "Cookies de análise",
+    "cookieMarketing": "Cookies de marketing",
+    "cookieCustomize": "Personalizar",
+    "cookieSavePreferences": "Salvar preferências"
   },
   "login": {
     "title": "Entrar no BJJ App",

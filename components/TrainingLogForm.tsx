@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, memo } from "react";
+import { useRef, useState, memo } from "react";
 import { useLocale } from "@/lib/i18n";
 import { useOnlineStatus } from "@/lib/useOnlineStatus";
 import { useUnsavedChanges } from "@/lib/useUnsavedChanges";

@@ -1,11 +1,11 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 252 files
+TS/TSX Scanned: 256 files
 CRITICAL: 1
-WARNING: 2
-INFO: 95
-Total: 98
+WARNING: 3
+INFO: 97
+Total: 101
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 38% (666/1759 キー) — 1123 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 38% (671/1764 キー) — 1123 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -161,6 +161,8 @@ Total: 98
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingLog.tsx: L83: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[WARNING] [UNUSED_IMPORT] components/TrainingLogForm.tsx: L3: 'useEffect' がimport後に使用されていない
+  FIX: import文から 'useEffect' を削除
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingTypeChart.tsx: L225: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingTypeChart.tsx: L238: style={{...}} — Tailwindクラスで統一推奨
@@ -201,3 +203,7 @@ Total: 98
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/ui/Skeleton.tsx: L30: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [UNUSED_EXPORT] components/CookieConsent.tsx: export 'getCookiePreferences' がどこからもimportされていない — デッドコードの可能性
+  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
+[INFO] [MISSING_ERROR_BOUNDARY] app/legal/dpa: error.tsx が存在しない — エラー時にグローバルエラーハンドラにフォールバック
+  FIX: app/legal/dpa/error.tsx を作成。最低限 'use client' + エラーメッセージ + リトライボタン

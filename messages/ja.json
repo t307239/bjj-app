@@ -879,7 +879,12 @@
     "cookieConsentMessage": "プライバシーに配慮した分析（トラッキングCookieなし）でアプリを改善しています。",
     "cookieConsentPrivacy": "プライバシーポリシー",
     "cookieConsentAccept": "承認",
-    "cookieConsentDecline": "拒否"
+    "cookieConsentDecline": "拒否",
+    "cookieEssential": "必須Cookie（常に有効）",
+    "cookieAnalytics": "分析Cookie",
+    "cookieMarketing": "マーケティングCookie",
+    "cookieCustomize": "カスタマイズ",
+    "cookieSavePreferences": "設定を保存"
   },
   "aiCoach": {
     "title": "AIコーチ",

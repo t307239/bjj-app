@@ -729,6 +729,7 @@ export default async function Home() {
           <a href="/terms" className="hover:text-zinc-400 transition-colors">{t("landing.footerTerms")}</a>
           <a href="/privacy" className="hover:text-zinc-400 transition-colors">{t("landing.footerPrivacy")}</a>
           <a href="/legal/tokushoho" className="hover:text-zinc-400 transition-colors">{t("landing.footerTokushoho")}</a>
+          <a href="/legal/dpa" className="hover:text-zinc-400 transition-colors">DPA</a>
         </div>
       </footer>
     </main>
