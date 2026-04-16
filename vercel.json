@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/gym-milestone",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/reengagement",
+      "schedule": "0 12 * * *"
     }
   ]
 }
