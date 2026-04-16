@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import CookieConsent from "@/components/CookieConsent";
+import WebVitalsReporter from "@/components/WebVitalsReporter";
 import AgeGate from "@/components/AgeGate";
 import LocaleProvider from "@/components/LocaleProvider";
 import { detectServerLocale } from "@/lib/i18n";
@@ -117,6 +118,7 @@ export default async function RootLayout({
           <CookieConsent />
           <Analytics />
           <SpeedInsights />
+          <WebVitalsReporter />
         </LocaleProvider>
         <script
           dangerouslySetInnerHTML={{
