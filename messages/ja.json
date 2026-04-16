@@ -848,7 +848,10 @@
     "compareRoll": "ロール分析",
     "compareCheck": "✓",
     "compareCross": "—",
-    "urgencyBadge": "人気No.1"
+    "urgencyBadge": "人気No.1",
+    "moneyBack": "7日間返金保証 💰",
+    "benefitHighlight": "Proユーザーの平均練習頻度が2.3倍に向上",
+    "trialCta": "リスクなしで始める"
   },
   "common": {
     "close": "閉じる",
@@ -1801,7 +1804,9 @@
     "getStarted": "無料で始める",
     "upgradeToPro": "Proにアップグレード",
     "disclaimerText": "デジタルサブスクリプションであることを理解し、{terms}に同意します。",
-    "termsLink": "利用規約"
+    "termsLink": "利用規約",
+    "moneyBack": "7日間返金保証 — 満足いただけなければ全額返金",
+    "benefitHighlight": "Proユーザーは平均2.3倍多く練習しています"
   },
   "weightCut": {
     "title": "減量プランナー",

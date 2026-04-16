@@ -6,7 +6,7 @@
  * PATCH /api/push/preferences
  *
  * Updates notification preferences for the authenticated user.
- * Body: { reengagement?: boolean, weekly_goal?: boolean, milestone?: boolean }
+ * Body: { reengagement?: boolean, weekly_goal?: boolean, milestone?: boolean, weekly_email?: boolean }
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -19,6 +19,7 @@ const PreferencesSchema = z.object({
   reengagement: z.boolean().optional(),
   weekly_goal: z.boolean().optional(),
   milestone: z.boolean().optional(),
+  weekly_email: z.boolean().optional(),
 });
 
 const prefLimiter = createRateLimiter({ windowMs: 60 * 1000, max: 30 });
@@ -46,7 +47,7 @@ export async function GET(_req: NextRequest) {
   }
 
   // Default preferences if no subscription exists
-  const defaults = { reengagement: true, weekly_goal: true, milestone: true };
+  const defaults = { reengagement: true, weekly_goal: true, milestone: true, weekly_email: true };
   const prefs = data?.notification_preferences ?? defaults;
 
   return NextResponse.json({ ok: true, preferences: prefs });

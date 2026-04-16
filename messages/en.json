@@ -847,7 +847,10 @@
     "compareRoll": "Roll analytics",
     "compareCheck": "✓",
     "compareCross": "—",
-    "urgencyBadge": "Most popular"
+    "urgencyBadge": "Most popular",
+    "moneyBack": "7-day money-back guarantee 💰",
+    "benefitHighlight": "Pro users train 2.3x more on average",
+    "trialCta": "Start risk-free"
   },
   "beltPromo": {
     "congrats": "Congratulations! ð",
@@ -1799,7 +1802,9 @@
     "getStarted": "Get Started Free",
     "upgradeToPro": "Upgrade to Pro",
     "disclaimerText": "I understand this is a digital subscription service. I agree to the {terms}.",
-    "termsLink": "Terms of Service"
+    "termsLink": "Terms of Service",
+    "moneyBack": "7-day money-back guarantee — full refund if not satisfied",
+    "benefitHighlight": "Pro users train 2.3x more on average"
   },
   "weightCut": {
     "title": "Weight Cut Planner",

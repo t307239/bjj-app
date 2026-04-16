@@ -157,9 +157,16 @@ export default function ProGate({
           >
             {t("pro.upgradeButton")}
           </a>
-          {/* Social proof */}
-          <p className="text-xs text-zinc-500 mt-3">
+          {/* Money-back guarantee */}
+          <p className="text-emerald-400/80 text-xs font-medium mt-2">
+            {t("pro.moneyBack")}
+          </p>
+          {/* Social proof + benefit */}
+          <p className="text-xs text-zinc-500 mt-1.5">
             {t("pro.socialProof")}
+          </p>
+          <p className="text-xs text-zinc-500 mt-0.5">
+            {t("pro.benefitHighlight")}
           </p>
         </div>
       </div>

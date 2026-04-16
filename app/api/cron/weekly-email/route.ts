@@ -105,7 +105,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: true, skipped: true, reason: "no_api_key" });
   }
 
-  const log = logger.child("cron/weekly-email");
+  const log = logger.child({ scope: "cron/weekly-email" });
   const supabase = createServiceClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,

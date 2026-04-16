@@ -90,7 +90,7 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
             <div className="text-lg font-bold mb-1">{t("pricing.freePlan")}</div>
             <div className="text-3xl font-bold text-white mb-1">{t("pricing.freePrice")}</div>
             <div className="text-zinc-400 text-xs mb-6">{t("pricing.freeForever")}</div>
-            <ul className="space-y-3 text-sm text-gray-400">
+            <ul className="space-y-3 text-sm text-zinc-400">
               {freeFeatures.map((feat, i) => (
                 <li key={i} className="flex items-center gap-2">
                   <span className="text-green-400 flex-shrink-0">✓</span> {feat}
@@ -136,7 +136,7 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
               </>
             )}
 
-            <ul className="space-y-3 text-sm text-gray-400">
+            <ul className="space-y-3 text-sm text-zinc-400">
               {proFeatures.map((feat, i) => (
                 <li key={i} className="flex items-center gap-2">
                   <span className={`flex-shrink-0 ${feat.icon === "★" ? "text-yellow-400" : "text-green-400"}`}>
@@ -156,7 +156,7 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
                 className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-yellow-500 flex-shrink-0 cursor-pointer"
                 aria-label={t("pro.disclaimerAria")}
               />
-              <span className="text-xs text-gray-400 leading-relaxed">
+              <span className="text-xs text-zinc-400 leading-relaxed">
                 {t("pricing.disclaimerText").split("{terms}")[0]}
                 <Link href="/terms" className="text-emerald-400 hover:underline">{t("pricing.termsLink")}</Link>
                 {t("pricing.disclaimerText").split("{terms}")[1] || ""}
@@ -181,6 +181,13 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
             >
               {t("pricing.upgradeToPro")}
             </a>
+            {/* Money-back guarantee + benefit highlight */}
+            <p className="text-emerald-400 text-xs font-medium text-center mt-3">
+              {t("pricing.moneyBack")}
+            </p>
+            <p className="text-zinc-500 text-xs text-center mt-1">
+              {t("pricing.benefitHighlight")}
+            </p>
           </div>
         </div>
       </div>
