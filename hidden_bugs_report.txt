@@ -5,7 +5,7 @@ WARNING: 10
 INFO: 90
 Total: 101
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (629/1719 キー) — 1120 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (629/1723 キー) — 1124 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -17,7 +17,7 @@ Total: 101
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/page.tsx: L51: JSX内に英語テキスト直書き: "BJJ App"
   FIX: t() キーを追加して多言語対応
-[INFO] [DANGEROUS_HTML] app/help/page.tsx: L56: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/help/page.tsx: L58: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [WARNING] [JSX_HARDCODED_ENGLISH] app/invite/[code]/page.tsx: L51: JSX内に英語テキスト直書き: "BJJ App"
   FIX: t() キーを追加して多言語対応

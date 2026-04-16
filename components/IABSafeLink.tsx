@@ -30,6 +30,16 @@ export default function IABSafeLink({
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, []);
 
+  // Close modal on Escape key
+  useEffect(() => {
+    if (!showBanner) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowBanner(false);
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [showBanner]);
+
   if (!isIAB) {
     return <Link href={href} className={className}>{children}</Link>;
   }

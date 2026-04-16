@@ -21,8 +21,7 @@ describe("trackEvent", () => {
     mockTrack.mockClear();
     // Simulate browser environment
     if (typeof globalThis.window === "undefined") {
-      // @ts-expect-error — minimal window stub for typeof check
-      globalThis.window = {} as Window & typeof globalThis;
+        globalThis.window = {} as Window & typeof globalThis;
     }
   });
 
