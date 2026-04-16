@@ -95,7 +95,7 @@ export async function GET(request: Request) {
   // Fetch push subscriptions joined with profile weekly_goal
   const { data: subs, error: subErr } = await supabase
     .from("push_subscriptions")
-    .select("id, endpoint, p256dh, auth_key, timezone, user_id, profiles!inner(weekly_goal)")
+    .select("id, endpoint, p256dh, auth_key, timezone, user_id, notification_preferences, profiles!inner(weekly_goal)")
     .gt("profiles.weekly_goal", 0);
 
   if (subErr || !subs) {
@@ -121,16 +121,22 @@ export async function GET(request: Request) {
     countMap.set(log.user_id, (countMap.get(log.user_id) ?? 0) + 1);
   }
 
-  // Filter sendable & send
-  const mappedSubs = subs.map((s) => ({
-    id: s.id,
-    endpoint: s.endpoint,
-    p256dh: s.p256dh,
-    auth_key: s.auth_key,
-    timezone: s.timezone ?? "Asia/Tokyo",
-    user_id: s.user_id,
-    profiles: s.profiles,
-  }));
+  // Filter by notification preferences, then sendable hours
+  type NotifPrefs = { weekly_goal?: boolean };
+  const mappedSubs = subs
+    .filter((s) => {
+      const prefs = (s.notification_preferences ?? { weekly_goal: true }) as NotifPrefs;
+      return prefs.weekly_goal !== false;
+    })
+    .map((s) => ({
+      id: s.id,
+      endpoint: s.endpoint,
+      p256dh: s.p256dh,
+      auth_key: s.auth_key,
+      timezone: s.timezone ?? "Asia/Tokyo",
+      user_id: s.user_id,
+      profiles: s.profiles,
+    }));
   const sendable = filterSendableSubscriptions(
     mappedSubs,
     (s) => s.timezone,

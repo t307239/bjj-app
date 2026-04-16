@@ -511,7 +511,11 @@
     "showExtendedBadges": "Show more badges",
     "hideExtendedBadges": "Hide badges",
     "exportDataTitle": "Export Your Data",
-    "exportDataHint": "Download all your training records as CSV — your data, always yours."
+    "exportDataHint": "Download all your training records as CSV — your data, always yours.",
+    "pushPrefTitle": "Notification types",
+    "pushPrefReengagement": "Training reminders",
+    "pushPrefWeeklyGoal": "Weekly goal progress",
+    "pushPrefMilestone": "Training milestones"
   },
   "competition": {
     "title": "Match Record",

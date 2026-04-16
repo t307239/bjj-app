@@ -512,7 +512,11 @@
     "showExtendedBadges": "バッジをもっと見る",
     "hideExtendedBadges": "バッジを隠す",
     "exportDataTitle": "データエクスポート",
-    "exportDataHint": "トレーニング記録をCSVでいつでもダウンロードできます。データはあなたのものです。"
+    "exportDataHint": "トレーニング記録をCSVでいつでもダウンロードできます。データはあなたのものです。",
+    "pushPrefTitle": "通知の種類",
+    "pushPrefReengagement": "練習リマインダー",
+    "pushPrefWeeklyGoal": "週間目標の進捗",
+    "pushPrefMilestone": "トレーニングマイルストーン"
   },
   "competition": {
     "title": "試合戦績",

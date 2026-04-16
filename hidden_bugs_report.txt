@@ -1,11 +1,11 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 250 files
+TS/TSX Scanned: 251 files
 CRITICAL: 1
-WARNING: 0
+WARNING: 1
 INFO: 94
-Total: 95
+Total: 96
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (652/1745 キー) — 1123 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 38% (656/1749 キー) — 1123 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -117,6 +117,8 @@ Total: 95
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/PersonalBests.tsx: L362: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[WARNING] [PROMISE_NO_CATCH] components/PushNotificationSection.tsx: L56: .then() に .catch() がない — エラー時サイレント失敗
+  FIX: .catch((err) => console.error(err)) を追加、または async/await + try-catch に変更
 [INFO] [INLINE_STYLE_OBJECT] components/ReferralSection.tsx: L128: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/RollAnalyticsCard.tsx: L81: style={{...}} — Tailwindクラスで統一推奨
