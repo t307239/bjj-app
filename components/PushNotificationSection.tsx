@@ -8,12 +8,14 @@ type NotifPrefs = {
   reengagement: boolean;
   weekly_goal: boolean;
   milestone: boolean;
+  weekly_email: boolean;
 };
 
 const DEFAULT_PREFS: NotifPrefs = {
   reengagement: true,
   weekly_goal: true,
   milestone: true,
+  weekly_email: true,
 };
 
 /**
@@ -60,6 +62,7 @@ export default function PushNotificationSection() {
             reengagement: json.preferences.reengagement ?? true,
             weekly_goal: json.preferences.weekly_goal ?? true,
             milestone: json.preferences.milestone ?? true,
+            weekly_email: json.preferences.weekly_email ?? true,
           });
         }
       })
@@ -102,6 +105,7 @@ export default function PushNotificationSection() {
     { key: "reengagement", label: t("profile.pushPrefReengagement"), icon: "🔥" },
     { key: "weekly_goal", label: t("profile.pushPrefWeeklyGoal"), icon: "🎯" },
     { key: "milestone", label: t("profile.pushPrefMilestone"), icon: "🏆" },
+    { key: "weekly_email", label: t("profile.pushPrefWeeklyEmail"), icon: "📧" },
   ];
 
   return (

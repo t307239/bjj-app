@@ -263,7 +263,8 @@
     "pushPrefTitle": "Tipos de notificação",
     "pushPrefReengagement": "Lembretes de treino",
     "pushPrefWeeklyGoal": "Progresso da meta semanal",
-    "pushPrefMilestone": "Marcos de treino"
+    "pushPrefMilestone": "Marcos de treino",
+    "pushPrefWeeklyEmail": "E-mail resumo semanal"
   },
   "gym": {
     "inviteTitle": "ð Convidar Alunos",

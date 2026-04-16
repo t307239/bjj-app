@@ -515,7 +515,8 @@
     "pushPrefTitle": "Notification types",
     "pushPrefReengagement": "Training reminders",
     "pushPrefWeeklyGoal": "Weekly goal progress",
-    "pushPrefMilestone": "Training milestones"
+    "pushPrefMilestone": "Training milestones",
+    "pushPrefWeeklyEmail": "Weekly summary email"
   },
   "competition": {
     "title": "Match Record",

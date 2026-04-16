@@ -91,7 +91,7 @@ export default async function RootLayout({
 
   return (
     // #48: dark クラスを固定 — Tailwind の dark: modifier を常に有効化
-    <html lang={locale} className={`dark ${inter.variable} overscroll-none`}>
+    <html lang={locale} className={`dark ${inter.variable} overscroll-none`} suppressHydrationWarning>
       <head>
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -100,7 +100,7 @@ export default async function RootLayout({
         <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
       </head>
       {/* #41: font-sans → Inter variable font */}
-      <body className={`${inter.className} min-h-screen bg-zinc-950 text-white antialiased overscroll-none`}>
+      <body className={`${inter.className} min-h-screen bg-zinc-950 text-white antialiased overscroll-none`} suppressHydrationWarning>
         {/* Q-2: Skip navigation for keyboard/screen reader users */}
         <a
           href="#main-content"

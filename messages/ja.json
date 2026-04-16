@@ -516,7 +516,8 @@
     "pushPrefTitle": "通知の種類",
     "pushPrefReengagement": "練習リマインダー",
     "pushPrefWeeklyGoal": "週間目標の進捗",
-    "pushPrefMilestone": "トレーニングマイルストーン"
+    "pushPrefMilestone": "トレーニングマイルストーン",
+    "pushPrefWeeklyEmail": "週報メール"
   },
   "competition": {
     "title": "試合戦績",
