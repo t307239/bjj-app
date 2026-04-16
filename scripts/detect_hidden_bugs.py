@@ -1052,7 +1052,8 @@ BJJ_TERMS_WHITELIST = {
     "drilling", "competition", "open mat", "recovery",
     "flow", "positional", "hard roll",
     # ブランド・固有名詞
-    "bjj app", "vercel", "supabase", "stripe", "pro", "beta",
+    "bjj app", "bjj wiki", "vercel", "supabase", "stripe", "pro", "beta",
+    "team", "wiki", "app",
     # HTML/CSS/コード関連（偽陽性防止）
     "null", "undefined", "true", "false", "none", "auto",
     "flex", "grid", "block", "inline", "hidden", "relative", "absolute",
@@ -1112,11 +1113,16 @@ def check_jsx_hardcoded_english(filepath: Path, content: str, report: BugReport)
         # 数字のみ or 数字+単位
         if re.match(r'^[\d.]+\s*[a-zA-Z]{0,3}$', text):
             continue
-        # URL
-        if re.match(r'https?://', text):
+        # URL or domain
+        if re.match(r'https?://', text) or re.search(r'[a-z0-9-]+\.[a-z]{2,}', text):
             continue
-        # ファイルパス
+        # ファイルパス or ファイル名（拡張子付き）
         if '/' in text and '.' in text:
+            continue
+        if re.search(r'\.\w{2,4}$', text):  # filename.sql, image.png etc
+            continue
+        # メールアドレス
+        if '@' in text:
             continue
         # {t("...")} で囲まれている場合は除外（正規表現の限界で拾ってしまうケース）
         context_start = max(0, m.start() - 30)

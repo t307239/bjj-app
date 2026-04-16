@@ -1,11 +1,11 @@
 BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 237 files
 CRITICAL: 1
-WARNING: 10
+WARNING: 0
 INFO: 90
-Total: 101
+Total: 91
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (629/1723 キー) — 1124 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 37% (631/1725 キー) — 1124 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -15,12 +15,8 @@ Total: 101
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [DANGEROUS_HTML] app/gym/page.tsx: L44: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/page.tsx: L51: JSX内に英語テキスト直書き: "BJJ App"
-  FIX: t() キーを追加して多言語対応
 [INFO] [DANGEROUS_HTML] app/help/page.tsx: L58: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [JSX_HARDCODED_ENGLISH] app/invite/[code]/page.tsx: L51: JSX内に英語テキスト直書き: "BJJ App"
-  FIX: t() キーを追加して多言語対応
 [INFO] [DANGEROUS_HTML] app/layout.tsx: L122: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/login/layout.tsx: L49: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
@@ -29,10 +25,6 @@ Total: 101
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/page.tsx: L156: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L163: JSX内に英語テキスト直書き: "BJJ App"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/page.tsx: L393: JSX内に英語テキスト直書き: "BJJ App"
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L233: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L439: style={{...}} — Tailwindクラスで統一推奨
@@ -65,14 +57,8 @@ Total: 101
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L791: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [JSX_HARDCODED_ENGLISH] app/wiki/[lang]/[slug]/page.tsx: L722: JSX内に英語テキスト直書き: "BJJ App Team"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/wiki/[lang]/page.tsx: L227: JSX内に英語テキスト直書き: "BJJ Wiki"
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/AchievementBadge.tsx: L84: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] components/AgeGate.tsx: L47: JSX内に英語テキスト直書き: "307239t777@gmail.com"
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/BeltProgressCard.tsx: L114: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BeltProgressCard.tsx: L121: style={{...}} — Tailwindクラスで統一推奨
@@ -103,18 +89,12 @@ Total: 101
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/CompetitionSummaryCard.tsx: L301: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] components/CsvExport.tsx: L307: JSX内に英語テキスト直書き: "BJJ App — bjj-app.net"
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/ExtendedBadgeGrid.tsx: L89: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] components/GoalTracker.tsx: L244: JSX内に英語テキスト直書き: "supabase-goals-schema.sql"
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/GoalTrackerEditor.tsx: L57: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/MilestoneBadgeGrid.tsx: L169: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] components/NavBar.tsx: L104: JSX内に英語テキスト直書き: "BJJ App"
-  FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L113: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L126: style={{...}} — Tailwindクラスで統一推奨
