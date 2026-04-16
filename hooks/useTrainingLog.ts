@@ -367,8 +367,8 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     const weightNum = form.weight !== "" ? parseFloat(form.weight) : null;
     const weightValue = weightNum !== null && !isNaN(weightNum) && weightNum > 0 ? weightNum : null;
 
-    // Exclude roll-detail fields (roll_focus, partner_belt, size_diff) — encoded into notes; no DB columns
-    const { roll_focus: _rf, partner_belt: _pb, size_diff: _sd, ...insertForm } = form;
+    // Exclude fields with no DB column — encoded into notes or UI-only
+    const { roll_focus: _rf, partner_belt: _pb, size_diff: _sd, gi_name: _gn, ...insertForm } = form;
 
     setLoading(true);
     const { data, error } = await supabase
