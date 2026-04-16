@@ -15,8 +15,8 @@ describe("/api/account/delete route", () => {
   });
 
   it("implements rate limiting (3 attempts per 15 min)", () => {
-    expect(source).toContain("checkDeleteRateLimit");
-    expect(source).toContain("entry.count <= 3");
+    expect(source).toContain("createRateLimiter");
+    expect(source).toContain("max: 3");
   });
 
   it("performs soft delete (sets deleted_at, not hard delete)", () => {
