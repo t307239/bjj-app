@@ -18,8 +18,9 @@ const TOC = [
   { id: "portability", label: "8. Data Portability" },
   { id: "retention", label: "9. Data Retention" },
   { id: "children", label: "10. Children's Privacy" },
-  { id: "changes", label: "11. Changes to This Policy" },
-  { id: "contact", label: "12. Contact" },
+  { id: "security-incident", label: "11. Security Incident Notification" },
+  { id: "changes", label: "12. Changes to This Policy" },
+  { id: "contact", label: "13. Contact" },
 ];
 
 export default function PrivacyPage() {
@@ -175,10 +176,53 @@ export default function PrivacyPage() {
             <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
               9. Data Retention
             </h2>
+            <p className="text-zinc-400 mb-3">
+              We retain your data for as long as your account is active. Specific retention
+              periods by data category:
+            </p>
+            <div className="overflow-x-auto mb-3">
+              <table className="w-full text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-white/10 text-left">
+                    <th className="py-2 pr-4 text-zinc-300 font-semibold">Data Category</th>
+                    <th className="py-2 pr-4 text-zinc-300 font-semibold">While Active</th>
+                    <th className="py-2 text-zinc-300 font-semibold">After Deletion</th>
+                  </tr>
+                </thead>
+                <tbody className="text-zinc-400">
+                  <tr className="border-b border-white/5">
+                    <td className="py-2 pr-4">Training logs &amp; techniques</td>
+                    <td className="py-2 pr-4">Retained indefinitely</td>
+                    <td className="py-2">Purged within 30 days</td>
+                  </tr>
+                  <tr className="border-b border-white/5">
+                    <td className="py-2 pr-4">Profile &amp; account data</td>
+                    <td className="py-2 pr-4">Retained indefinitely</td>
+                    <td className="py-2">Purged within 30 days</td>
+                  </tr>
+                  <tr className="border-b border-white/5">
+                    <td className="py-2 pr-4">Payment records (Stripe)</td>
+                    <td className="py-2 pr-4">Retained per Stripe policy</td>
+                    <td className="py-2">Retained for tax/legal compliance (up to 7 years)</td>
+                  </tr>
+                  <tr className="border-b border-white/5">
+                    <td className="py-2 pr-4">Push notification tokens</td>
+                    <td className="py-2 pr-4">Until unsubscribed or expired</td>
+                    <td className="py-2">Deleted immediately on account deletion</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 pr-4">Analytics (Vercel)</td>
+                    <td className="py-2 pr-4">Anonymized, no PII</td>
+                    <td className="py-2">Not linked to individual accounts</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <p className="text-zinc-400">
-              We retain your data for as long as your account is active. Upon account deletion,
-              your data is permanently removed from our primary database within 30 days. Backups
-              may retain data for an additional 30 days before being purged.
+              Upon account deletion, your data enters a 30-day soft-delete period during
+              which you may request restoration. After this window, data is permanently
+              removed from our primary database. Encrypted backups may retain data for an
+              additional 30 days before automatic purge.
             </p>
           </section>
 
@@ -186,16 +230,49 @@ export default function PrivacyPage() {
             <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
               10. Children&apos;s Privacy
             </h2>
+            <p className="text-zinc-400 mb-3">
+              BJJ App is not directed at children under 13 (United States, per COPPA) or
+              under 16 (European Economic Area, per GDPR). We do not knowingly collect
+              personal information from individuals below these age thresholds.
+            </p>
+            <p className="text-zinc-400 mb-3">
+              If you are a parent or guardian and believe your child has provided personal
+              information to BJJ App without your consent, please contact us at{" "}
+              <a href="mailto:307239t777@gmail.com" className="text-emerald-400 hover:underline">
+                307239t777@gmail.com
+              </a>
+              . We will promptly verify the request and delete any data associated with the
+              child&apos;s account within 48 hours.
+            </p>
             <p className="text-zinc-400">
-              BJJ App is not directed at children under 13. We do not knowingly collect personal
-              information from children under 13. If you believe a child has provided us personal
-              information, please contact us.
+              Minors between 13 and 16 (or the applicable age of digital consent in their
+              jurisdiction) may use BJJ App only with verifiable parental or guardian consent.
+            </p>
+          </section>
+
+          <section id="security-incident">
+            <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
+              11. Security Incident Notification
+            </h2>
+            <p className="text-zinc-400 mb-3">
+              In the event of a data breach that affects your personal information, we will:
+            </p>
+            <ul className="list-disc pl-5 space-y-1.5 text-zinc-400 mb-3">
+              <li>Notify affected users via email within 72 hours of confirmed discovery, as required by GDPR Article 33</li>
+              <li>Describe the nature of the breach, the categories of data affected, and the approximate number of individuals impacted</li>
+              <li>Outline the measures taken to contain and remediate the breach</li>
+              <li>Provide guidance on steps you can take to protect yourself</li>
+            </ul>
+            <p className="text-zinc-400">
+              We also maintain appropriate technical and organizational security measures —
+              including encryption at rest and in transit, Row-Level Security, and regular
+              access reviews — to minimize the risk and impact of security incidents.
             </p>
           </section>
 
           <section id="changes">
             <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
-              11. Changes to This Policy
+              12. Changes to This Policy
             </h2>
             <p className="text-zinc-400">
               We may update this Privacy Policy from time to time. We will notify users of
@@ -206,7 +283,7 @@ export default function PrivacyPage() {
 
           <section id="contact">
             <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
-              12. Contact
+              13. Contact
             </h2>
             <p className="text-zinc-400">
               For privacy-related inquiries or data deletion requests, please contact us at{" "}
