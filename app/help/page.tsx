@@ -67,7 +67,7 @@ export default async function HelpPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <div className="max-w-2xl mx-auto px-4 py-12">
+      <div className="max-w-2xl md:max-w-3xl mx-auto px-4 py-12">
         {/* Back link */}
         <Link
           href="/dashboard"

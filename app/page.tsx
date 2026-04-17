@@ -563,21 +563,21 @@ export default async function Home() {
           {t("landing.coreTitle")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-colors">
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/5 transition-all">
             <div className="mb-3"><IconBarChart className="w-8 h-8 text-emerald-400" /></div>
             <h3 className="font-bold text-lg mb-2">{t("landing.coreLogTitle")}</h3>
             <p className="text-zinc-400 text-sm leading-relaxed">
               {t("landing.coreLogDesc")}
             </p>
           </div>
-          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-colors">
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/5 transition-all">
             <div className="mb-3"><IconBook className="w-8 h-8 text-purple-400" /></div>
             <h3 className="font-bold text-lg mb-2">{t("landing.coreTechTitle")}</h3>
             <p className="text-zinc-400 text-sm leading-relaxed">
               {t("landing.coreTechDesc")}
             </p>
           </div>
-          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-colors">
+          <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/5 transition-all">
             <div className="mb-3"><IconFlame className="w-8 h-8 text-orange-400" /></div>
             <h3 className="font-bold text-lg mb-2">{t("landing.coreStreakTitle")}</h3>
             <p className="text-zinc-400 text-sm leading-relaxed">
@@ -630,7 +630,7 @@ export default async function Home() {
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-zinc-900 rounded-xl p-4 border border-white/10 hover:border-white/30 transition-colors block"
+                className="bg-zinc-900 rounded-xl p-4 border border-white/10 hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/5 transition-all block"
               >
                 <div className="mb-2">{item.icon}</div>
                 <div className="text-sm font-semibold text-white mb-1">{item.title}</div>
@@ -690,9 +690,9 @@ export default async function Home() {
       <PricingSection userId={null} />
 
       {/* FAQ — Fix 17: brighter question text | Fix 19: remove "Offline support is also planned" */}
-      <section className="px-4 py-16 max-w-3xl mx-auto w-full">
+      <section className="px-4 py-16 max-w-4xl mx-auto w-full">
         <h2 className="text-2xl font-bold text-center mb-10 text-white">{t("landing.faqTitle")}</h2>
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
             { q: t("landing.faq1Q"), a: t("landing.faq1A") },
             { q: t("landing.faq2Q"), a: t("landing.faq2A") },
