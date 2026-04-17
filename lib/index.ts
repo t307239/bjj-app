@@ -269,3 +269,56 @@ export {
   DEFAULT_ALERT_CONFIG,
 } from "./syntheticProbe";
 export type { ProbeEndpoint, ProbeResult, ProbeReport, ProbeAlertConfig } from "./syntheticProbe";
+
+// ── Gamification Engine ────────────────────────────────────────────────
+export {
+  calculateXP,
+  calculateBadgeXP,
+  getLevel,
+  checkBadges,
+  getEarnedBadges,
+  getNextBadges,
+  buildGamificationSummary,
+  formatGamificationSummary,
+  XP_RATES,
+  LEVEL_THRESHOLDS,
+  LEVEL_TITLES,
+  BADGES,
+} from "./gamificationEngine";
+export type { UserStats, Badge, BadgeCategory, BadgeTier, LevelInfo, BadgeProgress, GamificationSummary } from "./gamificationEngine";
+
+// ── Code Health Dashboard ──────────────────────────────────────────────
+export {
+  calculateCategoryScores,
+  calculateHealthScore,
+  classifyHealth,
+  identifyTopIssues,
+  buildHealthReport,
+  formatHealthReport,
+  HEALTH_WEIGHTS,
+  GRADE_THRESHOLDS,
+  PENALTIES,
+} from "./codeHealthDashboard";
+export type { CodeHealthMetrics, HealthGrade, HealthCategory, CodeHealthReport } from "./codeHealthDashboard";
+
+// ── Rollback Guard ─────────────────────────────────────────────────────
+export {
+  compareDeployments,
+  shouldRollback,
+  formatRollbackDecision,
+  ROLLBACK_THRESHOLDS,
+} from "./rollbackGuard";
+export type { DeploymentMetrics, RollbackDecision, RollbackCheck, DeploymentComparison } from "./rollbackGuard";
+
+// ── Funnel Analytics ───────────────────────────────────────────────────
+export {
+  analyzeFunnel,
+  classifyConversion,
+  compareFunnels,
+  getRecommendations,
+  buildFunnelReport,
+  formatFunnelReport,
+  FUNNELS,
+  CONVERSION_THRESHOLDS,
+} from "./funnelAnalytics";
+export type { FunnelStep, FunnelDefinition, StepMetrics, FunnelAnalysis, FunnelComparison } from "./funnelAnalytics";
