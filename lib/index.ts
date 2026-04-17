@@ -78,3 +78,9 @@ export type { RetryOptions } from "./fetchWithRetry";
 
 // ── API Middleware ──────────────────────────────────────────────────────────
 export { withApiTracking } from "./withApiTracking";
+
+// ── Observability ──────────────────────────────────────────────────────────
+export { SLO, ALERT_THRESHOLDS, REQUEST_ID_HEADER, generateRequestId } from "./errorBudget";
+
+// ── Streak ─────────────────────────────────────────────────────────────────
+export { calcStreak, calcStreakWithGrace, detectComeback, classifyEngagement } from "./streakUtils";

@@ -23,6 +23,7 @@
     "check:env": "node scripts/check-env.mjs",
     "check:backup": "node scripts/verify-backup.mjs",
     "check:smoke": "node scripts/smoke-test.mjs",
+    "check:bundle": "node scripts/bundle-size-check.mjs",
     "check:all": "npm run lint && tsc --noEmit && npm run test && python3 scripts/detect_hidden_bugs.py --fix-hint",
     "prepare": "husky"
   },
