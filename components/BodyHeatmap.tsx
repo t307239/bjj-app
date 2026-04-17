@@ -47,21 +47,21 @@ interface BodyPart {
 }
 
 const BODY_PARTS: BodyPart[] = [
-  // ── Front view ──
+  // ── Front view (facing viewer — subject's left appears on viewer's right) ──
   { key: "neck",           labelKey: "body.parts.neck",          cx: 60, cy: 55,  r: 7,  view: "front" },
   { key: "chest",          labelKey: "body.parts.chest",         cx: 60, cy: 90,  r: 10, view: "front" },
-  { key: "left_shoulder",  labelKey: "body.parts.leftShoulder",  cx: 28, cy: 72,  r: 10, view: "front" },
-  { key: "right_shoulder", labelKey: "body.parts.rightShoulder", cx: 92, cy: 72,  r: 10, view: "front" },
-  { key: "left_elbow",     labelKey: "body.parts.leftElbow",     cx: 17, cy: 110, r: 8,  view: "front" },
-  { key: "right_elbow",    labelKey: "body.parts.rightElbow",    cx: 103,cy: 110, r: 8,  view: "front" },
-  { key: "left_wrist",     labelKey: "body.parts.leftWrist",     cx: 14, cy: 145, r: 6,  view: "front" },
-  { key: "right_wrist",    labelKey: "body.parts.rightWrist",    cx: 106,cy: 145, r: 6,  view: "front" },
-  { key: "left_hip",       labelKey: "body.parts.leftHip",       cx: 40, cy: 175, r: 9,  view: "front" },
-  { key: "right_hip",      labelKey: "body.parts.rightHip",      cx: 80, cy: 175, r: 9,  view: "front" },
-  { key: "left_knee",      labelKey: "body.parts.leftKnee",      cx: 38, cy: 212, r: 9,  view: "front" },
-  { key: "right_knee",     labelKey: "body.parts.rightKnee",     cx: 82, cy: 212, r: 9,  view: "front" },
-  { key: "left_ankle",     labelKey: "body.parts.leftAnkle",     cx: 37, cy: 245, r: 7,  view: "front" },
-  { key: "right_ankle",    labelKey: "body.parts.rightAnkle",    cx: 83, cy: 245, r: 7,  view: "front" },
+  { key: "left_shoulder",  labelKey: "body.parts.leftShoulder",  cx: 92, cy: 72,  r: 10, view: "front" },
+  { key: "right_shoulder", labelKey: "body.parts.rightShoulder", cx: 28, cy: 72,  r: 10, view: "front" },
+  { key: "left_elbow",     labelKey: "body.parts.leftElbow",     cx: 103,cy: 110, r: 8,  view: "front" },
+  { key: "right_elbow",    labelKey: "body.parts.rightElbow",    cx: 17, cy: 110, r: 8,  view: "front" },
+  { key: "left_wrist",     labelKey: "body.parts.leftWrist",     cx: 106,cy: 145, r: 6,  view: "front" },
+  { key: "right_wrist",    labelKey: "body.parts.rightWrist",    cx: 14, cy: 145, r: 6,  view: "front" },
+  { key: "left_hip",       labelKey: "body.parts.leftHip",       cx: 80, cy: 175, r: 9,  view: "front" },
+  { key: "right_hip",      labelKey: "body.parts.rightHip",      cx: 40, cy: 175, r: 9,  view: "front" },
+  { key: "left_knee",      labelKey: "body.parts.leftKnee",      cx: 82, cy: 212, r: 9,  view: "front" },
+  { key: "right_knee",     labelKey: "body.parts.rightKnee",     cx: 38, cy: 212, r: 9,  view: "front" },
+  { key: "left_ankle",     labelKey: "body.parts.leftAnkle",     cx: 83, cy: 245, r: 7,  view: "front" },
+  { key: "right_ankle",    labelKey: "body.parts.rightAnkle",    cx: 37, cy: 245, r: 7,  view: "front" },
   // ── Back view ──
   { key: "upper_back",     labelKey: "body.parts.upperBack",     cx: 60, cy: 90,  r: 10, view: "back" },
   { key: "lower_back",     labelKey: "body.parts.lowerBack",     cx: 60, cy: 145, r: 9,  view: "back" },
