@@ -215,3 +215,57 @@ export {
   MAX_PER_PAGE,
 } from "./adminSearch";
 export type { UserSearchFilters, PaginatedResult, AdminLogFilter } from "./adminSearch";
+
+// ── Server Component Analysis ───────────────────────────────────────────
+export {
+  classifyComponent,
+  calculateMigrationROI,
+  createSCRatioSnapshot,
+  isSCRatioHealthy,
+  formatMigrationSummary,
+  SC_BUDGET,
+  CLIENT_PATTERNS,
+  SERVER_PATTERNS,
+} from "./serverComponentAnalysis";
+export type { ComponentClassification, ComponentAnalysis, MigrationROI, SCRatioSnapshot } from "./serverComponentAnalysis";
+
+// ── List Keyboard Navigation ────────────────────────────────────────────
+export {
+  getNextIndex,
+  findByTypeAhead,
+  keyToDirection,
+  isSelectionKey,
+  isEscapeKey,
+  getItemId,
+  buildContainerProps,
+  buildItemProps,
+  LIST_ITEM_ID_PREFIX,
+  TYPEAHEAD_RESET_MS,
+} from "./useListKeyNav";
+export type { UseListKeyNavOptions, ListKeyNavResult, ContainerProps, ItemProps } from "./useListKeyNav";
+
+// ── CSP Builder ─────────────────────────────────────────────────────────
+export {
+  generateNonce,
+  buildCSPHeader,
+  isValidSRIFormat,
+  parseCSPViolation,
+  formatCSPSummary,
+  uint8ToBase64url,
+  CSP_DIRECTIVES,
+  TRUSTED_SCRIPT_DOMAINS,
+  SRI_ALGORITHMS,
+  NONCE_BYTES,
+} from "./cspBuilder";
+export type { CSPDirective, CSPConfig, CSPResult, SRIHash, CSPViolation } from "./cspBuilder";
+
+// ── Synthetic Probe ─────────────────────────────────────────────────────
+export {
+  buildProbeReport,
+  formatProbeSummary,
+  shouldAlert,
+  buildTelegramMessage,
+  PROBE_CONFIG,
+  DEFAULT_ALERT_CONFIG,
+} from "./syntheticProbe";
+export type { ProbeEndpoint, ProbeResult, ProbeReport, ProbeAlertConfig } from "./syntheticProbe";
