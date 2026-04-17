@@ -112,3 +112,27 @@ jobs:
             echo "::error::CRITICAL issues detected by detect_hidden_bugs.py"
             exit 1
           fi
+
+  smoke-test:
+    name: Post-deploy Smoke Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: quality
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read .nvmrc
+        id: nvmrc
+        run: echo "node_version=$(cat .nvmrc | tr -d 'v')" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.nvmrc.outputs.node_version }}
+
+      - name: Wait for Vercel deployment
+        run: sleep 60
+
+      - name: Run smoke tests
+        run: node scripts/smoke-test.mjs --json

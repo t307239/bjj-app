@@ -1,4 +1,12 @@
-// Shared types and helpers for TrainingLog components
+/**
+ * lib/trainingLogHelpers.ts — Shared types and pure helpers for TrainingLog.
+ *
+ * Contains the canonical TrainingEntry / CompData types, duration formatting,
+ * competition notes encoding, X share URL builder, and belt rank constants.
+ *
+ * @example
+ *   import { TrainingEntry, formatDuration, BELT_RANKS } from "@/lib/trainingLogHelpers";
+ */
 export { getLocalDateString } from "@/lib/timezone";
 
 export type TrainingEntry = {

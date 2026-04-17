@@ -1,3 +1,13 @@
+/**
+ * lib/trainingTypes.ts — Training session type definitions.
+ *
+ * Central registry of all BJJ training types with display metadata.
+ * Used by TrainingLog forms, charts, and PDF export.
+ *
+ * @example
+ *   import { TRAINING_TYPES, TrainingTypeValue } from "@/lib/trainingTypes";
+ *   const label = TRAINING_TYPES.find(t => t.value === "gi")?.label;
+ */
 export const TRAINING_TYPES = [
   { value: "gi",          label: "Gi",          color: "bg-blue-500/20 text-blue-300",     icon: "🥋" },
   { value: "nogi",        label: "No-Gi",       color: "bg-orange-500/20 text-orange-300", icon: "👕" },

@@ -221,7 +221,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
 
                   {/* Expanded detail row */}
                   {expanded === user.id && (
-                    <div className="bg-zinc-900/60 border border-white/5 border-t-0 rounded-b-xl px-4 py-4 -mt-1 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                    <div className="bg-zinc-900/60 border border-white/5 border-t-0 rounded-b-xl px-4 py-4 -mt-1 grid grid-cols-2 md:grid-cols-3 gap-4 text-xs">
                       <div>
                         <div className="text-zinc-400 mb-0.5">User ID</div>
                         <div className="font-mono text-zinc-300 break-all">{user.id}</div>
@@ -237,6 +237,16 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
                       <div>
                         <div className="text-zinc-400 mb-0.5">Total sessions</div>
                         <div className="text-zinc-300 font-bold">{user.sessions_total}</div>
+                      </div>
+                      <div>
+                        <div className="text-zinc-400 mb-0.5">Stripe (belt)</div>
+                        <div className="text-zinc-300">{user.stripe}</div>
+                      </div>
+                      <div>
+                        <div className="text-zinc-400 mb-0.5">Subscription</div>
+                        <div className={`font-semibold ${user.is_pro ? "text-yellow-400" : "text-zinc-500"}`}>
+                          {user.is_pro ? "Pro" : "Free"}
+                        </div>
                       </div>
                     </div>
                   )}
