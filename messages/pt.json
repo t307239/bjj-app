@@ -774,5 +774,9 @@
     "records": "Ir para Registros",
     "techniques": "Ir para Técnicas",
     "profile": "Ir para Perfil"
+  },
+  "offline": {
+    "banner": "Você está offline. Algumas funções estão desativadas.",
+    "reconnected": "Conexão restabelecida"
   }
 }

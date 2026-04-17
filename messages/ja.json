@@ -1694,7 +1694,8 @@
     "ageVerificationDesc": "13歳以上"
   },
   "offline": {
-    "banner": "オフラインです。再接続するまで一部の機能が無効になります。"
+    "banner": "オフラインです。再接続するまで一部の機能が無効になります。",
+    "reconnected": "インターネット接続が復旧しました"
   },
   "weeklyStrip": {
     "same": "= 同じ",

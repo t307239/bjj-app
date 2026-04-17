@@ -96,3 +96,11 @@ export {
   LIMITS,
 } from "./dataValidation";
 export type { Belt } from "./dataValidation";
+
+// ── Engagement Scoring ────────────────────────────────────────────────────
+export { calculateEngagement, batchEngagementScores } from "./engagementScoring";
+export type { EngagementInput, EngagementResult } from "./engagementScoring";
+
+// ── Alert Routing ─────────────────────────────────────────────────────────
+export { routeAlert, alertCritical, alertWarning, UPTIME_MONITORS } from "./alertRouter";
+export type { Alert, AlertSeverity, AlertCategory, AlertRouteResult } from "./alertRouter";

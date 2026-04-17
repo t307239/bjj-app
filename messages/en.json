@@ -1425,7 +1425,8 @@
     "vsLastWeek": "vs last week"
   },
   "offline": {
-    "banner": "You are offline. Some features are disabled until you reconnect."
+    "banner": "You are offline. Some features are disabled until you reconnect.",
+    "reconnected": "Connection restored"
   },
   "body": {
     "title": "Body Management",
