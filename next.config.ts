@@ -23,9 +23,19 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: false,
   },
-  // セキュリティヘッダー設定
+  // セキュリティヘッダー + キャッシュ設定
   async headers() {
     return [
+      // Q-107: Static/legal pages — CDN cache for cost optimization
+      {
+        source: "/:path(privacy|terms|help|legal/:slug*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=3600, stale-while-revalidate=86400",
+          },
+        ],
+      },
       {
         source: "/(.*)",
         headers: [

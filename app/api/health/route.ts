@@ -36,17 +36,21 @@ export async function GET() {
       );
     }
 
+    // Q-108: Classify DB latency for observability dashboards
+    const dbStatus = dbLatencyMs < 200 ? "fast" : dbLatencyMs < 1000 ? "normal" : "slow";
+
     return NextResponse.json(
       {
         status: "ok",
         db: "ok",
         dbLatencyMs,
+        dbStatus,
         uptime: uptimeSeconds,
         version: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? "dev",
         region: process.env.VERCEL_REGION ?? "local",
         timestamp: new Date().toISOString(),
       },
-      { status: 200, headers: { "Cache-Control": "no-store" } },
+      { status: 200, headers: { "Cache-Control": "no-store", "Server-Timing": `db;dur=${dbLatencyMs}` } },
     );
   } catch (err) {
     return NextResponse.json(

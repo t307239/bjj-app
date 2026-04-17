@@ -75,3 +75,6 @@ export { buildBreadcrumbJsonLd } from "./breadcrumb";
 // ── Network ─────────────────────────────────────────────────────────────────
 export { fetchWithRetry } from "./fetchWithRetry";
 export type { RetryOptions } from "./fetchWithRetry";
+
+// ── API Middleware ──────────────────────────────────────────────────────────
+export { withApiTracking } from "./withApiTracking";

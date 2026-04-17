@@ -40,6 +40,12 @@ jobs:
       - name: Unit tests with coverage
         run: npx vitest run --coverage
 
+      - name: Validate env vars
+        run: node scripts/check-env.mjs
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-key-for-build-check
+
       - name: Build
         run: npm run build
         env:
