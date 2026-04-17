@@ -12,15 +12,16 @@ const TOC = [
   { id: "use", label: "2. How We Use Your Information" },
   { id: "storage", label: "3. Data Storage" },
   { id: "third-party", label: "4. Third-Party Services" },
-  { id: "cookies", label: "5. Cookies" },
+  { id: "cookies", label: "5. Cookies & Tracking" },
   { id: "sharing", label: "6. Data Sharing" },
   { id: "rights", label: "7. Your Rights" },
   { id: "portability", label: "8. Data Portability" },
   { id: "retention", label: "9. Data Retention" },
   { id: "children", label: "10. Children's Privacy" },
   { id: "security-incident", label: "11. Security Incident Notification" },
-  { id: "changes", label: "12. Changes to This Policy" },
-  { id: "contact", label: "13. Contact" },
+  { id: "ccpa", label: "12. California Privacy Rights (CCPA)" },
+  { id: "changes", label: "13. Changes to This Policy" },
+  { id: "contact", label: "14. Contact" },
 ];
 
 export default function PrivacyPage() {
@@ -120,11 +121,33 @@ export default function PrivacyPage() {
 
           <section id="cookies">
             <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
-              5. Cookies
+              5. Cookies &amp; Tracking
             </h2>
+            <p className="text-zinc-400 mb-3">
+              BJJ App uses a minimal set of cookies, organized into three categories:
+            </p>
+            <ul className="list-disc pl-5 space-y-2 text-zinc-400 mb-3">
+              <li>
+                <span className="text-zinc-200 font-medium">Essential</span> — authentication
+                session cookies (Supabase). These cannot be disabled and are required for the
+                Service to function.
+              </li>
+              <li>
+                <span className="text-zinc-200 font-medium">Analytics</span> — anonymized
+                page-level usage data via Vercel Analytics. No personally identifiable
+                information is collected. You may opt out via the cookie preferences banner.
+              </li>
+              <li>
+                <span className="text-zinc-200 font-medium">Marketing</span> — currently not
+                used. If we introduce marketing cookies in the future, they will require your
+                explicit opt-in consent.
+              </li>
+            </ul>
             <p className="text-zinc-400">
-              We use only essential cookies required for authentication (Supabase session cookies).
-              We do not use advertising cookies or tracking pixels.
+              You can manage your cookie preferences at any time by clearing your browser
+              cookies for bjj-app.net, which will re-display the consent banner on your next
+              visit. We do not use advertising cookies, tracking pixels, or fingerprinting
+              techniques.
             </p>
           </section>
 
@@ -270,9 +293,32 @@ export default function PrivacyPage() {
             </p>
           </section>
 
+          <section id="ccpa">
+            <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
+              12. California Privacy Rights (CCPA)
+            </h2>
+            <p className="text-zinc-400 mb-3">
+              If you are a California resident, the California Consumer Privacy Act (CCPA)
+              grants you additional rights regarding your personal information:
+            </p>
+            <ul className="list-disc pl-5 space-y-1.5 text-zinc-400 mb-3">
+              <li><span className="text-zinc-200 font-medium">Right to Know</span> — you may request the categories and specific pieces of personal information we have collected about you</li>
+              <li><span className="text-zinc-200 font-medium">Right to Delete</span> — you may request deletion of your personal information (available via Profile → Settings → Delete Account)</li>
+              <li><span className="text-zinc-200 font-medium">Right to Opt-Out of Sale</span> — BJJ App does not sell, rent, or trade your personal information to third parties for monetary or other valuable consideration. Therefore, there is no need to opt out</li>
+              <li><span className="text-zinc-200 font-medium">Right to Non-Discrimination</span> — we will not discriminate against you for exercising any of your CCPA rights</li>
+            </ul>
+            <p className="text-zinc-400">
+              To exercise any of these rights, contact us at{" "}
+              <a href="mailto:307239t777@gmail.com" className="text-emerald-400 hover:underline">
+                307239t777@gmail.com
+              </a>
+              . We will verify your identity and respond within 45 days as required by the CCPA.
+            </p>
+          </section>
+
           <section id="changes">
             <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
-              12. Changes to This Policy
+              13. Changes to This Policy
             </h2>
             <p className="text-zinc-400">
               We may update this Privacy Policy from time to time. We will notify users of
@@ -283,7 +329,7 @@ export default function PrivacyPage() {
 
           <section id="contact">
             <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
-              13. Contact
+              14. Contact
             </h2>
             <p className="text-zinc-400">
               For privacy-related inquiries or data deletion requests, please contact us at{" "}
@@ -296,6 +342,7 @@ export default function PrivacyPage() {
 
         <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap gap-6 text-xs text-zinc-400">
           <Link href="/terms" className="hover:text-zinc-400 transition-colors">Terms of Service</Link>
+          <Link href="/legal/dpa" className="hover:text-zinc-400 transition-colors">Data Processing Agreement</Link>
           <Link href="/legal/tokushoho" className="hover:text-zinc-400 transition-colors">Specified Commercial Transactions Act</Link>
           <Link href="/" className="hover:text-zinc-400 transition-colors">← Home</Link>
         </div>
