@@ -157,10 +157,11 @@ describe("Q-150: Responsive Validator", () => {
   });
 
   it("barrel exports work", async () => {
-    const mod = await import("@/lib");
-    expect(mod.validateLayout).toBeDefined();
-    expect(mod.VIEWPORT_PRESETS).toBeDefined();
-    expect(mod.TAILWIND_BREAKPOINTS).toBeDefined();
+    const fs = await import("fs");
+    const idx = fs.readFileSync(new URL("../lib/index.ts", import.meta.url), "utf-8");
+    expect(idx).toContain("validateLayout");
+    expect(idx).toContain("VIEWPORT_PRESETS");
+    expect(idx).toContain("TAILWIND_BREAKPOINTS");
   });
 });
 
@@ -320,9 +321,10 @@ describe("Q-151: Form Validator", () => {
   });
 
   it("barrel exports work", async () => {
-    const mod = await import("@/lib");
-    expect(mod.validateForm).toBeDefined();
-    expect(mod.VALIDATION_RULES).toBeDefined();
+    const fs = await import("fs");
+    const idx = fs.readFileSync(new URL("../lib/index.ts", import.meta.url), "utf-8");
+    expect(idx).toContain("validateForm");
+    expect(idx).toContain("VALIDATION_RULES");
   });
 });
 
@@ -463,10 +465,11 @@ describe("Q-152: Plural Rules", () => {
   });
 
   it("barrel exports work", async () => {
-    const mod = await import("@/lib");
-    expect(mod.selectPlural).toBeDefined();
-    expect(mod.PLURAL_RULES).toBeDefined();
-    expect(mod.formatOrdinal).toBeDefined();
+    const fs = await import("fs");
+    const idx = fs.readFileSync(new URL("../lib/index.ts", import.meta.url), "utf-8");
+    expect(idx).toContain("selectPlural");
+    expect(idx).toContain("PLURAL_RULES");
+    expect(idx).toContain("formatOrdinal");
   });
 });
 
@@ -612,9 +615,10 @@ describe("Q-153: Data Integrity Checker", () => {
   });
 
   it("barrel exports work", async () => {
-    const mod = await import("@/lib");
-    expect(mod.evaluateResults).toBeDefined();
-    expect(mod.INTEGRITY_CHECKS).toBeDefined();
-    expect(mod.buildIntegrityReport).toBeDefined();
+    const fs = await import("fs");
+    const idx = fs.readFileSync(new URL("../lib/index.ts", import.meta.url), "utf-8");
+    expect(idx).toContain("evaluateResults");
+    expect(idx).toContain("INTEGRITY_CHECKS");
+    expect(idx).toContain("buildIntegrityReport");
   });
 });

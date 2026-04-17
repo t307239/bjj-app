@@ -13,11 +13,11 @@ describe("Q-175: sliDashboard", () => {
 
   it("calculateErrorBudget: healthy availability", async () => {
     const m = await import("@/lib/sliDashboard");
-    const result = m.calculateErrorBudget("availability", 99.95, 30, 15);
+    const result = m.calculateErrorBudget("availability", 99.99, 30, 15);
     expect(result.status).toBe("healthy");
-    expect(result.budgetTotal).toBe(0.1); // 100 - 99.9
-    expect(result.budgetConsumed).toBe(0.05); // 100 - 99.95
-    expect(result.consumedPercent).toBe(50);
+    expect(result.budgetTotal).toBeCloseTo(0.1, 5); // 100 - 99.9
+    expect(result.budgetConsumed).toBeCloseTo(0.01, 5); // 100 - 99.99
+    expect(result.consumedPercent).toBe(10);
   });
 
   it("calculateErrorBudget: exhausted error_rate", async () => {
