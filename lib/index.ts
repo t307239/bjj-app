@@ -735,3 +735,137 @@ export {
   DR_SCENARIOS,
 } from "./disasterRecovery";
 export type { RTOTier, RPOClass, DRScenario, ServiceComponent, DRPlanEntry, BackupValidation, DRReadinessReport } from "./disasterRecovery";
+
+// Q-178: UI — Theme validator
+export {
+  detectLightBackgrounds,
+  detectGrayUsage,
+  detectRawWhite,
+  detectInconsistentBorders,
+  detectOpacityText,
+  auditTheme,
+  isDarkColor,
+  calculateContrastRatio,
+  isContrastCompliant,
+  formatThemeAudit,
+  DARK_MODE_REQUIREMENTS,
+  THEME_RULES,
+} from "./themeValidator";
+export type { ThemeSeverity, ThemeViolation, ThemeAuditResult } from "./themeValidator";
+
+// Q-179: UX — Navigation flow analyzer
+export {
+  detectDeadEnds,
+  detectOrphans,
+  detectDeepNesting,
+  detectMissingBreadcrumbs,
+  detectCircularNav,
+  detectAuthLeaks,
+  calculateDepthStats,
+  countReachable,
+  analyzeNavFlow,
+  formatNavFlowReport,
+  MAX_RECOMMENDED_DEPTH,
+  BREADCRUMB_REQUIRED_DEPTH,
+} from "./navigationFlow";
+export type { NavNode, NavEdge, NavFlowIssue, NavFlowReport } from "./navigationFlow";
+
+// Q-180: i18n — Locale negotiator
+export {
+  parseAcceptLanguage as parseAcceptLanguageNeg,
+  normalizeBCP47,
+  extractLanguage,
+  buildFallbackChain,
+  negotiateLocale,
+  getLocaleConfig,
+  isRTL,
+  isValidBCP47,
+  calculateI18nCoverage as calculateI18nCoverageNeg,
+  formatLocaleDebug,
+  SUPPORTED_LOCALES,
+  DEFAULT_LOCALE,
+} from "./localeNegotiator";
+export type { LocaleConfig, QualityLocale } from "./localeNegotiator";
+
+// Q-181: Data — Migration helper
+export {
+  parseSemver,
+  compareSemver,
+  compareVersions,
+  getStepsBetween,
+  buildMigrationPlan,
+  validateMigrationPlan,
+  validateSchemaSnapshot,
+  formatMigrationPlan,
+} from "./dataMigrationHelper";
+export type { MigrationStep, MigrationPlan, MigrationValidation, SchemaSnapshot, VersionComparison } from "./dataMigrationHelper";
+
+// Q-182: Retention — Loyalty tier system
+export {
+  getTierForPoints,
+  getNextTier,
+  calculateProgress as calculateLoyaltyProgress,
+  buildLoyaltyProfile,
+  calculateActionPoints,
+  suggestRetentionActions,
+  formatLoyaltyProfile,
+  LOYALTY_TIERS,
+  LOYALTY_ACTIONS,
+} from "./loyaltyTierSystem";
+export type { LoyaltyTier, LoyaltyProfile, LoyaltyAction } from "./loyaltyTierSystem";
+
+// Q-183: Legal — Terms version manager
+export {
+  compareTermsVersions,
+  isConsentCurrent,
+  getConsentStatus,
+  buildConsentAudit,
+  detectMaterialChanges,
+  requiresNotification,
+  buildUpdateNotification,
+  formatConsentAudit,
+  TERMS_DOCUMENTS,
+  CONSENT_MAX_AGE_DAYS as TERMS_CONSENT_MAX_AGE_DAYS,
+} from "./termsVersionManager";
+export type { TermsVersion, TermsDocType, TermsChange, UserConsent, ConsentStatus, ConsentAuditReport } from "./termsVersionManager";
+
+// Q-184: Cost — Revenue forecaster
+export {
+  forecastRevenue,
+  calculateNRR,
+  calculateGrowthRate,
+  analyzePricingSensitivity,
+  evaluateRevenueHealth,
+  formatForecast,
+  BENCHMARK_SAAS,
+} from "./revenueForecaster";
+export type { RevenueSnapshot, ForecastParams, ForecastResult, ForecastMonth, PricingSensitivity } from "./revenueForecaster";
+
+// Q-185: Ops — Alert escalation policy
+export {
+  getPolicy,
+  getCurrentEscalationLevel,
+  needsEscalation,
+  calculateSLAStatus,
+  buildEscalationAudit,
+  formatEscalationAudit,
+  DEFAULT_POLICIES,
+} from "./alertEscalationPolicy";
+export type { AlertSeverity as EscalationSeverity, EscalationTier, EscalationChannel, EscalationPolicy, AlertEvent, EscalationEntry, AlertSLAStatus, EscalationAuditReport } from "./alertEscalationPolicy";
+
+// Q-186: Conversion — A/B test analyzer
+export {
+  normalCDF,
+  normalInvCDF,
+  conversionRate,
+  pooledStandardError,
+  calculateZScore,
+  calculatePValue,
+  analyzeABTest,
+  estimateSampleSize,
+  calculateRevenueLift,
+  formatABTestResult,
+  CONFIDENCE_LEVELS,
+  MIN_SAMPLE_SIZE,
+} from "./abTestAnalyzer";
+export type { ABVariant, ABTestConfig, ABTestResult, SampleSizeEstimate } from "./abTestAnalyzer";
