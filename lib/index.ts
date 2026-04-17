@@ -131,3 +131,38 @@ export type { CoverageResult, CoverageSummary, LocaleCode } from "./i18nCoverage
 // ── Churn Prediction ────────────────────────────────────────────────────
 export { predictChurnRisk, suggestWinBackAction, batchChurnPredictions } from "./churnPredictor";
 export type { ChurnRisk, ChurnPrediction, WinBackAction } from "./churnPredictor";
+
+// ── Deployment Guard ────────────────────────────────────────────────────
+export {
+  checkEnvVars,
+  getAllRequiredEnvVars,
+  validateHealthResponse,
+  validateBuildManifest,
+  aggregateChecks,
+  formatReadinessSummary,
+  REQUIRED_ENV_VARS,
+} from "./deploymentGuard";
+export type { DeployCheck, DeployReadiness, EnvCategory } from "./deploymentGuard";
+
+// ── Cost Estimator ──────────────────────────────────────────────────────
+export { estimateMonthlyCost, detectCostAnomalies, formatCostSummary, PRICING } from "./costEstimator";
+export type { UsageMetrics, CostBreakdown, CostEstimate, CostAnomaly } from "./costEstimator";
+
+// ── Design Tokens ───────────────────────────────────────────────────────
+export {
+  COLORS,
+  BREAKPOINTS,
+  SPACING,
+  RADII,
+  SHADOWS,
+  Z_INDEX,
+  ANIMATION,
+  TYPOGRAPHY,
+  isAboveBreakpoint,
+  getCurrentBreakpoint,
+} from "./designTokens";
+export type { Breakpoint } from "./designTokens";
+
+// ── Offline Queue ───────────────────────────────────────────────────────
+export { OfflineQueue, MAX_QUEUE_SIZE, MAX_ATTEMPTS, BASE_RETRY_DELAY_MS } from "./offlineQueue";
+export type { QueuedAction, QueuedActionType, SyncResult } from "./offlineQueue";
