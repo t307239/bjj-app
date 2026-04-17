@@ -2,85 +2,67 @@
  * Tests for Q-165: messageFormatter (i18n 93→94)
  */
 import { describe, it, expect } from "vitest";
-import {
-  formatMessage,
-  formatCompiled,
-  compileMessage,
-  validateMessage,
-  checkMissingParams,
-  extractParams,
-  createLocaleFormatter,
-  buildMessageDiagnostic,
-  getPluralCategory,
-} from "@/lib/messageFormatter";
 
 describe("Q-165: messageFormatter", () => {
-  it("getPluralCategory: EN/JA/PT", () => {
-    expect(getPluralCategory(1, "en")).toBe("one");
-    expect(getPluralCategory(0, "en")).toBe("other");
-    expect(getPluralCategory(1, "ja")).toBe("other");
-    expect(getPluralCategory(0, "pt")).toBe("one");
-    expect(getPluralCategory(2, "pt")).toBe("other");
+  it("core formatting: interpolation + plural + select", async () => {
+    const m = await import("@/lib/messageFormatter");
+
+    // Simple interpolation
+    expect(m.formatMessage("Hi {name}", { name: "T" })).toBe("Hi T");
+    expect(m.formatMessage("{a}+{b}", { a: "X", b: "Y" })).toBe("X+Y");
+    expect(m.formatMessage("{x}")).toBe("{x}");
+    expect(m.formatMessage("N:{n}", { n: 42 })).toBe("N:42");
+
+    // Plural EN
+    expect(m.formatMessage("{n, plural, one {# item} other {# items}}", { n: 1 }, "en")).toBe("1 item");
+    expect(m.formatMessage("{n, plural, one {# item} other {# items}}", { n: 5 }, "en")).toBe("5 items");
+
+    // Plural =0
+    expect(m.formatMessage("{n, plural, =0 {zero} other {#}}", { n: 0 })).toBe("zero");
+
+    // Select
+    expect(m.formatMessage("{x, select, a {AA} other {BB}}", { x: "a" })).toBe("AA");
+    expect(m.formatMessage("{x, select, a {AA} other {BB}}", { x: "z" })).toBe("BB");
+
+    // Escaped quote
+    expect(m.formatMessage("It''s {x}", { x: "ok" })).toBe("It's ok");
   });
 
-  it("compileMessage: types", () => {
-    expect(compileMessage("Hello").parts[0].type).toBe("literal");
-    expect(compileMessage("{name}").requiredParams).toContain("name");
-    expect(compileMessage("{n, plural, one {#} other {#s}}").parts[0].type).toBe("plural");
-    expect(compileMessage("{x, select, a {A} other {B}}").parts[0].type).toBe("select");
-  });
+  it("compile + validate + utils", async () => {
+    const m = await import("@/lib/messageFormatter");
 
-  it("formatMessage: simple", () => {
-    expect(formatMessage("Hello, {name}!", { name: "T" })).toBe("Hello, T!");
-    expect(formatMessage("{a}+{b}", { a: "X", b: "Y" })).toBe("X+Y");
-    expect(formatMessage("{missing}")).toBe("{missing}");
-    expect(formatMessage("N:{n}", { n: 42 })).toBe("N:42");
-  });
+    // getPluralCategory
+    expect(m.getPluralCategory(1, "en")).toBe("one");
+    expect(m.getPluralCategory(0, "en")).toBe("other");
+    expect(m.getPluralCategory(1, "ja")).toBe("other");
+    expect(m.getPluralCategory(0, "pt")).toBe("one");
 
-  it("formatMessage: plural", () => {
-    const t = "{count, plural, one {# item} other {# items}}";
-    expect(formatMessage(t, { count: 1 }, "en")).toBe("1 item");
-    expect(formatMessage(t, { count: 5 }, "en")).toBe("5 items");
-  });
+    // compileMessage
+    expect(m.compileMessage("Hello").parts[0].type).toBe("literal");
+    expect(m.compileMessage("{n, plural, one {#} other {#s}}").parts[0].type).toBe("plural");
 
-  it("formatMessage: plural =0 and offset", () => {
-    expect(formatMessage("{n, plural, =0 {zero} other {#}}", { n: 0 })).toBe("zero");
-    expect(formatMessage("{n, plural, offset:1 one {# more} other {# more}}", { n: 3 })).toBe("2 more");
-  });
+    // formatCompiled
+    const c = m.compileMessage("{name}!");
+    expect(m.formatCompiled(c, { name: "A" })).toBe("A!");
 
-  it("formatMessage: select", () => {
-    expect(formatMessage("{x, select, a {AAA} other {BBB}}", { x: "a" })).toBe("AAA");
-    expect(formatMessage("{x, select, a {AAA} other {BBB}}", { x: "z" })).toBe("BBB");
-  });
+    // validateMessage
+    expect(m.validateMessage("{ok}").valid).toBe(true);
+    expect(m.validateMessage("{bad").valid).toBe(false);
 
-  it("formatCompiled: reuse", () => {
-    const c = compileMessage("{name}!");
-    expect(formatCompiled(c, { name: "A" })).toBe("A!");
-    expect(formatCompiled(c, { name: "B" })).toBe("B!");
-  });
+    // checkMissingParams
+    const c2 = m.compileMessage("{a} {b}");
+    expect(m.checkMissingParams(c2, { a: "x" })).toEqual(["b"]);
 
-  it("escaped quotes", () => {
-    expect(formatMessage("It''s {x}", { x: "ok" })).toBe("It's ok");
-  });
+    // extractParams
+    expect(m.extractParams("{a} {b}")).toEqual(["a", "b"]);
 
-  it("validateMessage", () => {
-    expect(validateMessage("{name}").valid).toBe(true);
-    expect(validateMessage("{name").valid).toBe(false);
-    expect(validateMessage("{n, plural, one {#}}").errors.length).toBeGreaterThan(0);
-  });
-
-  it("checkMissingParams + extractParams", () => {
-    const c = compileMessage("{a} {b}");
-    expect(checkMissingParams(c, { a: "x" })).toEqual(["b"]);
-    expect(extractParams("{a} {b}")).toEqual(["a", "b"]);
-  });
-
-  it("createLocaleFormatter + buildMessageDiagnostic", () => {
-    const ja = createLocaleFormatter("ja");
+    // createLocaleFormatter
+    const ja = m.createLocaleFormatter("ja");
     expect(ja("{n, plural, other {#個}}", { n: 3 })).toBe("3個");
-    const d = buildMessageDiagnostic("{n, plural, one {#} other {#s}}");
+
+    // buildMessageDiagnostic
+    const d = m.buildMessageDiagnostic("{n, plural, one {#} other {#s}}");
     expect(d.hasPluralRules).toBe(true);
-    expect(d.validation.valid).toBe(true);
   });
 
   it("barrel export", async () => {

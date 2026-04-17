@@ -164,13 +164,13 @@ function parseArgument(
   start: number
 ): { part: MessagePart; endIndex: number } {
   // Find the content between matching { }
-  let depth = 0;
   let i = start;
   const contentStart = start + 1;
 
   // First, find the top-level content before any sub-braces
   let commaPositions: number[] = [];
   let tempDepth = 0;
+  let foundClose = false;
 
   for (let j = contentStart; j < source.length; j++) {
     if (source[j] === "{") tempDepth++;
@@ -178,12 +178,21 @@ function parseArgument(
       if (tempDepth === 0) {
         // This is our closing brace
         i = j + 1;
+        foundClose = true;
         break;
       }
       tempDepth--;
     } else if (source[j] === "," && tempDepth === 0) {
       commaPositions.push(j);
     }
+  }
+
+  // If no closing brace found, treat remainder as literal and advance past end
+  if (!foundClose) {
+    return {
+      part: { type: "literal", value: source.substring(start) },
+      endIndex: source.length,
+    };
   }
 
   const fullContent = source.substring(contentStart, i - 1);
