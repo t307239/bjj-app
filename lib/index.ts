@@ -84,3 +84,15 @@ export { SLO, ALERT_THRESHOLDS, REQUEST_ID_HEADER, generateRequestId } from "./e
 
 // ── Streak ─────────────────────────────────────────────────────────────────
 export { calcStreak, calcStreakWithGrace, detectComeback, classifyEngagement } from "./streakUtils";
+
+// ── Data Validation ───────────────────────────────────────────────────────
+export {
+  validateTrainingLog,
+  validateBelt,
+  validateStripe,
+  validateWeight,
+  sanitizeText,
+  VALID_BELTS,
+  LIMITS,
+} from "./dataValidation";
+export type { Belt } from "./dataValidation";
