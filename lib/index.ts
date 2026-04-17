@@ -416,3 +416,48 @@ export {
   STATUS_FLOW,
 } from "./incidentTracker";
 export type { Incident, SeverityLevel, IncidentCategory, IncidentStatus, TimelineEntry, IncidentMetrics, PostmortemTemplate } from "./incidentTracker";
+
+// Q-157: Performance — Resource timing analyzer
+export {
+  analyzeResourceTiming,
+  detectRenderBlocking,
+  calculateWaterfallEfficiency,
+  classifyResourceSize,
+  formatResourceAnalysis,
+  RESOURCE_BUDGETS,
+  SIZE_THRESHOLDS,
+  BLOCKING_TYPES,
+} from "./resourceTimingAnalyzer";
+export type { ResourceEntry, ResourceType, ResourceAnalysis, TypeBreakdown, OptimizationSuggestion, ResourceBudget } from "./resourceTimingAnalyzer";
+
+// Q-158: a11y — Focus trap manager
+export {
+  getFocusableElements,
+  analyzeFocusableElements,
+  createTrapKeyHandler,
+  getInitialFocusTarget,
+  buildTrapContainerProps,
+  isWithinContainer,
+  formatFocusTrapInfo,
+  FOCUSABLE_SELECTOR,
+  DEFAULT_TRAP_OPTIONS,
+  TAB_KEY,
+  ESCAPE_KEY,
+} from "./focusTrapManager";
+export type { FocusTrap, FocusTrapOptions, FocusableInfo } from "./focusTrapManager";
+
+// Q-159: Security — Input sanitizer
+export {
+  escapeHTML,
+  sanitizeHTML,
+  sanitizeFilename,
+  sanitizeURL,
+  detectInjection,
+  isSafeForContext,
+  formatInjectionReport,
+  HTML_ENTITIES,
+  INJECTION_PATTERNS,
+  MAX_INPUT_LENGTH,
+  UNSAFE_FILENAME_CHARS,
+} from "./inputSanitizer";
+export type { SanitizeResult, ThreatType, InjectionDetection, InjectionMatch, InjectionPattern } from "./inputSanitizer";
