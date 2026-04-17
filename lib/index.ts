@@ -322,3 +322,59 @@ export {
   CONVERSION_THRESHOLDS,
 } from "./funnelAnalytics";
 export type { FunnelStep, FunnelDefinition, StepMetrics, FunnelAnalysis, FunnelComparison } from "./funnelAnalytics";
+
+// ── Responsive Validator ───────────────────────────────────────────────
+export {
+  validateLayout,
+  checkBreakpointCoverage,
+  calculateCoverage,
+  buildResponsiveReport,
+  getViewportCategory,
+  formatResponsiveReport,
+  VIEWPORT_PRESETS,
+  TAILWIND_BREAKPOINTS,
+  LAYOUT_RULES,
+} from "./responsiveValidator";
+export type { ViewportSize, LayoutMeasurement, LayoutIssue, BreakpointCoverage, ResponsiveReport } from "./responsiveValidator";
+
+// ── Form Validator ─────────────────────────────────────────────────────
+export {
+  validateField,
+  validateForm,
+  getErrorAnnouncement,
+  getFieldAriaProps,
+  createRule,
+  combineRules,
+  formatValidationSummary,
+  VALIDATION_RULES,
+  ANNOUNCE_DELAY_MS,
+} from "./formValidator";
+export type { ValidationRule, FieldValidation, FormValidation, FormField } from "./formValidator";
+
+// ── Plural Rules ───────────────────────────────────────────────────────
+export {
+  selectPlural,
+  getPluralCategory,
+  getOrdinalCategory,
+  formatOrdinal,
+  formatCount,
+  formatCompact,
+  isSupportedLocale,
+  PLURAL_RULES,
+  COUNT_FORMATS,
+  EN_ORDINAL_SUFFIXES,
+} from "./pluralRules";
+export type { PluralCategory, SupportedLocale, PluralMessages, PluralRule, CountFormat } from "./pluralRules";
+
+// ── Data Integrity Checker ─────────────────────────────────────────────
+export {
+  defineCheck,
+  evaluateResults,
+  getChecksForTable,
+  getChecksByCategory,
+  buildIntegrityReport,
+  formatIntegrityReport,
+  INTEGRITY_CHECKS,
+  MAX_SAMPLES,
+} from "./dataIntegrityChecker";
+export type { IntegrityCheck, IntegrityCategory, CheckResult, IntegrityReport } from "./dataIntegrityChecker";
