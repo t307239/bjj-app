@@ -691,3 +691,47 @@ export {
   SECURITY_HEADERS,
 } from "./permissionPolicy";
 export type { PermissionDirective, SecurityHeaderName, HeaderSeverity, HeaderAuditResult, PermissionAuditIssue, PermissionPolicyConfig } from "./permissionPolicy";
+
+// Q-175: Obs — SLI/SLO dashboard
+export {
+  calculateErrorBudget,
+  calculatePercentile as sliPercentile,
+  aggregateSLIMetrics,
+  generateComplianceReport as generateSLOComplianceReport,
+  detectSLOViolations,
+  formatComplianceReport as formatSLOComplianceReport,
+  SLO_DEFINITIONS,
+  ERROR_BUDGET_ALERTS,
+} from "./sliDashboard";
+export type { SLOName, SLIDataPoint, ErrorBudgetStatus, SLOComplianceReport } from "./sliDashboard";
+
+// Q-176: DX — PR review checklist
+export {
+  validateCommitMessage,
+  classifyPRSize,
+  detectCodeSmells,
+  generateReviewChecklist,
+  assessPRRisk,
+  analyzePR,
+  formatPRAnalysis,
+  COMMIT_TYPES,
+  PR_SIZE_THRESHOLDS,
+  CODE_SMELL_PATTERNS,
+  REVIEW_CATEGORIES,
+} from "./prReviewChecklist";
+export type { CommitType, PRSize, CodeSmellType, ReviewCategory, CommitValidation, CodeSmellResult, PRAnalysis } from "./prReviewChecklist";
+
+// Q-177: Infra — Disaster recovery
+export {
+  isRTOCompliant,
+  isRPOCompliant,
+  validateBackup,
+  identifyDRGaps,
+  generateDRReadinessReport,
+  getDRSteps,
+  formatDRReport,
+  RTO_CLASSIFICATIONS,
+  RPO_CLASSIFICATIONS,
+  DR_SCENARIOS,
+} from "./disasterRecovery";
+export type { RTOTier, RPOClass, DRScenario, ServiceComponent, DRPlanEntry, BackupValidation, DRReadinessReport } from "./disasterRecovery";
