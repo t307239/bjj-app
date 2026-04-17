@@ -461,3 +461,55 @@ export {
   UNSAFE_FILENAME_CHARS,
 } from "./inputSanitizer";
 export type { SanitizeResult, ThreatType, InjectionDetection, InjectionMatch, InjectionPattern } from "./inputSanitizer";
+
+// Q-160: Obs — Trace context
+export {
+  generateHexId,
+  generateTraceId,
+  generateSpanId,
+  createTraceContext,
+  createSpan,
+  endSpan,
+  formatTraceparent,
+  parseTraceparent,
+  formatBaggage,
+  parseBaggage,
+  calculateTraceMetrics,
+  formatTraceMetrics,
+  TRACEPARENT_HEADER,
+  BAGGAGE_HEADER,
+  TRACE_VERSION,
+  DEFAULT_SAMPLE_RATE,
+  MAX_BAGGAGE_ITEMS,
+} from "./traceContext";
+export type { TraceContext, Span, TraceFlags, SpanStatus, TraceMetrics } from "./traceContext";
+
+// Q-161: DX — API doc generator
+export {
+  defineEndpoint,
+  buildApiDoc,
+  findUndocumented,
+  findDeprecated,
+  buildChangelog,
+  formatApiDoc,
+  API_METHODS,
+  STANDARD_ERRORS,
+  AUTH_LABELS,
+} from "./apiDocGenerator";
+export type { ApiEndpoint, HttpMethod, AuthRequirement, SchemaDoc, FieldDoc, ErrorDoc, ApiDoc, ApiCoverage, ApiChangelog, ApiChange } from "./apiDocGenerator";
+
+// Q-162: Infra — Feature toggle manager
+export {
+  defineToggle,
+  evaluateToggle,
+  findStaleToggles,
+  findBrokenDependencies,
+  auditToggles,
+  formatToggleAudit,
+  deterministicHash,
+  TOGGLE_STATES,
+  STALE_WARNING_THRESHOLD,
+  STALE_CRITICAL_THRESHOLD,
+  DEFAULT_EXPIRY_DAYS,
+} from "./featureToggleManager";
+export type { FeatureToggle, ToggleState, ToggleEvaluation, EvalReason, ToggleAudit } from "./featureToggleManager";
