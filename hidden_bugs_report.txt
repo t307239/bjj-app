@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 302 files
+TS/TSX Scanned: 308 files
 CRITICAL: 1
 WARNING: 2
-INFO: 97
-Total: 100
+INFO: 98
+Total: 101
 
 [CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 38% (680/1772 キー) — 1122 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
@@ -203,5 +203,7 @@ Total: 100
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [ANY_TYPE_ESCAPE] lib/codeHealthDashboard.ts: L217: `as any` 型アサーション — 適切な型に置換推奨
   FIX: 具体的な型を定義するか、unknown + 型ガードを使用
+[INFO] [CONSOLE_LOG] lib/styleAuditor.ts: console.log() が 1 件残存
+  FIX: 本番前に削除
 [INFO] [UNUSED_EXPORT] components/CookieConsent.tsx: export 'getCookiePreferences' がどこからもimportされていない — デッドコードの可能性
   FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載
