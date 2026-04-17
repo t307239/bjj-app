@@ -24,6 +24,8 @@
     "check:backup": "node scripts/verify-backup.mjs",
     "check:smoke": "node scripts/smoke-test.mjs",
     "check:bundle": "node scripts/bundle-size-check.mjs",
+    "check:images": "node scripts/image-audit.mjs",
+    "check:exports": "node scripts/check-unused-exports.mjs",
     "check:all": "npm run lint && tsc --noEmit && npm run test && python3 scripts/detect_hidden_bugs.py --fix-hint",
     "prepare": "husky"
   },
