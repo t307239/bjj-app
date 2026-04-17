@@ -104,3 +104,18 @@ export type { EngagementInput, EngagementResult } from "./engagementScoring";
 // ── Alert Routing ─────────────────────────────────────────────────────────
 export { routeAlert, alertCritical, alertWarning, UPTIME_MONITORS } from "./alertRouter";
 export type { Alert, AlertSeverity, AlertCategory, AlertRouteResult } from "./alertRouter";
+
+// ── Data Export ──────────────────────────────────────────────────────────
+export { buildUserDataExport, validateExportData } from "./dataExport";
+export type { UserDataExport, DataExportFormat } from "./dataExport";
+
+// ── Admin Metrics ────────────────────────────────────────────────────────
+export { calcBeltDistribution, calcProRate, countActiveUsers, calcAvgSessionsPerUser } from "./adminMetrics";
+export type { PlatformMetrics, BeltDistribution } from "./adminMetrics";
+
+// ── CSRF Protection ─────────────────────────────────────────────────────
+export { generateCsrfToken, setCsrfCookie, validateCsrf, CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from "./csrf";
+
+// ── Performance Monitoring ──────────────────────────────────────────────
+export { measureAsync, getMemorySnapshot, CacheHitTracker, PERF_BUDGETS } from "./perfMonitor";
+export type { PerfMeasurement, PerfCategory } from "./perfMonitor";
