@@ -166,3 +166,52 @@ export type { Breakpoint } from "./designTokens";
 // ── Offline Queue ───────────────────────────────────────────────────────
 export { OfflineQueue, MAX_QUEUE_SIZE, MAX_ATTEMPTS, BASE_RETRY_DELAY_MS } from "./offlineQueue";
 export type { QueuedAction, QueuedActionType, SyncResult } from "./offlineQueue";
+
+// ── Consent Manager ─────────────────────────────────────────────────────
+export {
+  createConsentRecord,
+  isConsentValid,
+  findExpiredConsents,
+  buildConsentSummary,
+  formatConsentAuditEntry,
+  CONSENT_VERSIONS,
+  CONSENT_MAX_AGE_DAYS,
+  REQUIRED_CONSENTS,
+} from "./consentManager";
+export type { ConsentType, ConsentRecord, ConsentSummary } from "./consentManager";
+
+// ── Uptime Monitor ──────────────────────────────────────────────────────
+export {
+  classifyStatus,
+  createHealthCheck,
+  calculateUptime,
+  determineOverallStatus,
+  formatUptimePercent,
+  MONITOR_ENDPOINTS,
+  RESPONSE_THRESHOLDS,
+} from "./uptimeMonitor";
+export type { ServiceStatus, HealthCheck, UptimeReport, StatusPage } from "./uptimeMonitor";
+
+// ── Data Retention ──────────────────────────────────────────────────────
+export {
+  findPurgeCandidates,
+  isWithinRetention,
+  generateRetentionReport,
+  getUserDeletableCategories,
+  RETENTION_POLICIES,
+} from "./dataRetention";
+export type { DataCategory, RetentionPolicy, PurgeCandidate, RetentionReport } from "./dataRetention";
+
+// ── Admin Search ────────────────────────────────────────────────────────
+export {
+  maskEmail,
+  maskEmailPartial,
+  buildUserSearchQuery,
+  paginateResults,
+  supabaseRange,
+  buildLogFilter,
+  formatAdminSummary,
+  DEFAULT_PER_PAGE,
+  MAX_PER_PAGE,
+} from "./adminSearch";
+export type { UserSearchFilters, PaginatedResult, AdminLogFilter } from "./adminSearch";
