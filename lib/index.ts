@@ -558,3 +558,52 @@ export {
   getPluralCategory as getMessagePluralCategory,
 } from "./messageFormatter";
 export type { MessageValues, CompiledMessage, MessagePart, PluralCategory as MessagePluralCategory, Locale, ValidationResult } from "./messageFormatter";
+
+// Q-166: Data — Anomaly detector
+export {
+  detectOutliers,
+  detectDuplicates,
+  detectTemporalAnomalies,
+  detectVolumeAnomalies,
+  validateDomainRange,
+  runAnomalyReport,
+  formatAnomalyReport,
+  mean as anomalyMean,
+  stddev as anomalyStddev,
+  median as anomalyMedian,
+  quartiles as anomalyQuartiles,
+  DOMAIN_RANGES,
+  DEFAULT_ANOMALY_CONFIG,
+} from "./dataAnomalyDetector";
+export type { AnomalyPoint, DuplicateGroup, TemporalAnomaly, VolumeAnomaly, AnomalyDetectorConfig, AnomalyReport } from "./dataAnomalyDetector";
+
+// Q-167: Retention — Cohort analyzer
+export {
+  buildCohortMatrix,
+  analyzeCohort,
+  calculateNDayRetention,
+  compareCohorts,
+  formatCohortMatrix,
+  dateToPeriodKey,
+  daysBetween,
+  RETENTION_DAYS,
+  RETENTION_THRESHOLDS,
+  INTERVENTION_TEMPLATES,
+} from "./cohortAnalyzer";
+export type { UserActivity, CohortBucket, CohortMatrix, CohortAnalysis, CohortIntervention } from "./cohortAnalyzer";
+
+// Q-168: Legal — Privacy Impact Assessment
+export {
+  createAssessment,
+  scoreRisk,
+  checkDPIARequired,
+  identifyRiskFactors,
+  suggestMitigations,
+  generatePIAReport,
+  quickRiskCheck,
+  DATA_SENSITIVITY,
+  PROCESSING_RISK,
+  DPIA_TRIGGERS,
+  STANDARD_MITIGATIONS,
+} from "./privacyImpactAssessment";
+export type { DataCategory as PIADataCategory, ProcessingActivity, RiskLevel, RiskFactor, Mitigation, DataFlow, PIAAssessment } from "./privacyImpactAssessment";
