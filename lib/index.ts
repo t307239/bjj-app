@@ -513,3 +513,48 @@ export {
   DEFAULT_EXPIRY_DAYS,
 } from "./featureToggleManager";
 export type { FeatureToggle, ToggleState, ToggleEvaluation, EvalReason, ToggleAudit } from "./featureToggleManager";
+
+// Q-163: UI — Style auditor (design token compliance)
+export {
+  auditStyles,
+  auditMultipleStyles,
+  getTokenSummary,
+  formatAuditReport,
+  APPROVED_COLORS,
+  APPROVED_COLOR_PREFIXES,
+  FORBIDDEN_COLOR_PATTERNS,
+  STANDARD_SPACING,
+  AUDIT_RULES,
+} from "./styleAuditor";
+export type { AuditViolation, AuditRule, AuditSeverity, StyleAuditReport } from "./styleAuditor";
+
+// Q-164: UX — Gesture manager (touch gesture recognition)
+export {
+  detectSwipe,
+  detectLongPress,
+  detectPinch,
+  classifyPinch,
+  resolveGesture,
+  getSwipeAxis,
+  getDistance,
+  createGestureConfig,
+  createVelocityTracker,
+  formatGestureDebug,
+  DEFAULT_GESTURE_CONFIG,
+} from "./gestureManager";
+export type { Point, TimedPoint, SwipeDirection, SwipeResult, LongPressResult, PinchResult, GestureConfig, GestureType, GesturePriority } from "./gestureManager";
+
+// Q-165: i18n — Message formatter (ICU-compatible)
+export {
+  formatMessage,
+  formatCompiled,
+  compileMessage,
+  validateMessage,
+  checkMissingParams,
+  extractParams,
+  createLocaleFormatter,
+  formatMessageWithNumbers,
+  buildMessageDiagnostic,
+  getPluralCategory as getMessagePluralCategory,
+} from "./messageFormatter";
+export type { MessageValues, CompiledMessage, MessagePart, PluralCategory as MessagePluralCategory, Locale, ValidationResult } from "./messageFormatter";
