@@ -125,12 +125,30 @@ export async function GET(req: NextRequest) {
       created_at: authUser.created_at,
       last_sign_in_at: authUser.last_sign_in_at ?? null,
       belt: profile?.belt ?? "white",
+      stripe: (profile?.stripe as number | null) ?? 0,
       is_pro: profile?.is_pro ?? false,
       has_gym: !!profile?.gym_id,
       sessions_30d: sessions30Map.get(authUser.id) ?? 0,
       sessions_total: totalSessionsMap.get(authUser.id) ?? 0,
     };
   });
+
+  // Q-110: CSV export mode
+  const format = searchParams.get("format");
+  if (format === "csv") {
+    const header = "id,email,created_at,last_sign_in_at,belt,stripe,is_pro,has_gym,sessions_30d,sessions_total";
+    const rows = users.map((u) =>
+      [u.id, `"${u.email}"`, u.created_at, u.last_sign_in_at ?? "", u.belt, u.stripe, u.is_pro, u.has_gym, u.sessions_30d, u.sessions_total].join(",")
+    );
+    const csv = [header, ...rows].join("\n");
+    return new NextResponse(csv, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/csv; charset=utf-8",
+        "Content-Disposition": `attachment; filename="bjj-app-users-${new Date().toISOString().split("T")[0]}.csv"`,
+      },
+    });
+  }
 
   return NextResponse.json({
     users,

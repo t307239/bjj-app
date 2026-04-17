@@ -9,6 +9,7 @@ type AdminUser = {
   created_at: string;
   last_sign_in_at: string | null;
   belt: string;
+  stripe: number;
   is_pro: boolean;
   has_gym: boolean;
   sessions_30d: number;
@@ -50,6 +51,30 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [exporting, setExporting] = useState(false);
+
+  // Q-110: CSV export
+  const handleExportCsv = useCallback(async () => {
+    setExporting(true);
+    try {
+      const params = new URLSearchParams({ q: query, page: "0", limit: "200", format: "csv" });
+      const res = await fetch(`/api/admin/users?${params}`);
+      if (!res.ok) return;
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `bjj-app-users-${new Date().toISOString().split("T")[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      // Network error — silently ignore
+    } finally {
+      setExporting(false);
+    }
+  }, [query]);
 
   const fetchUsers = useCallback(async (q: string, pg: number) => {
     setLoading(true);
@@ -98,9 +123,19 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
             <h1 className="text-lg font-bold text-white">🛡️ Admin Panel</h1>
             <p className="text-xs text-zinc-400">{adminEmail}</p>
           </div>
-          <a href="/dashboard" className="text-xs text-zinc-400 hover:text-white transition-colors">
-            ← Back to app
-          </a>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleExportCsv}
+              disabled={exporting || !data}
+              className="text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors border border-white/10 px-3 py-1.5 rounded-lg"
+            >
+              {exporting ? "Exporting…" : "Export CSV"}
+            </button>
+            <a href="/dashboard" className="text-xs text-zinc-400 hover:text-white transition-colors">
+              ← Back to app
+            </a>
+          </div>
         </div>
       </div>
 
