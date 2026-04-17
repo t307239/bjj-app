@@ -36,10 +36,10 @@ describe("Q-166: dataAnomalyDetector", () => {
     // No outliers in uniform data
     expect(m.detectOutliers([10, 11, 10, 12, 11])).toEqual([]);
 
-    // Extreme outlier
-    const result = m.detectOutliers([10, 11, 10, 12, 11, 100]);
+    // Extreme outlier (needs enough normal data to keep stddev low)
+    const result = m.detectOutliers([10, 11, 10, 12, 11, 10, 11, 10, 12, 11, 200]);
     expect(result.length).toBeGreaterThan(0);
-    expect(result[0].value).toBe(100);
+    expect(result[0].value).toBe(200);
     expect(result[0].severity).toBeDefined();
 
     // Too few values
