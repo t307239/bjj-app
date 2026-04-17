@@ -607,3 +607,42 @@ export {
   STANDARD_MITIGATIONS,
 } from "./privacyImpactAssessment";
 export type { DataCategory as PIADataCategory, ProcessingActivity, RiskLevel, RiskFactor, Mitigation, DataFlow, PIAAssessment } from "./privacyImpactAssessment";
+
+// Q-169: Cost — Billing analyzer
+export {
+  calculateMRR,
+  calculateRevenue,
+  calculateChurnRate,
+  analyzeBillingHealth,
+  formatBillingHealth,
+  toMonthlyCents,
+  TIER_PRICES,
+  BILLING_THRESHOLDS,
+} from "./billingAnalyzer";
+export type { BillingTier, BillingInterval, Subscription, MRRBreakdown, RevenueMetrics, BillingHealth, BillingIssue } from "./billingAnalyzer";
+
+// Q-170: Ops — Runbook generator
+export {
+  createRunbook,
+  startExecution,
+  advanceStep,
+  getEscalationPath,
+  formatRunbook,
+  getTemplateKeys,
+  RUNBOOK_TEMPLATES,
+} from "./runbookGenerator";
+export type { RunbookSeverity, StepStatus, RunbookStep, EscalationPath, Runbook, RunbookExecution, RunbookTemplateKey } from "./runbookGenerator";
+
+// Q-171: Conversion — Pricing optimizer
+export {
+  analyzePriceSensitivity,
+  compareTiers,
+  modelDiscount,
+  calculateAnnualSavings,
+  applyCharmPricing,
+  generateRecommendations as generatePricingRecommendations,
+  formatPricingAnalysis,
+  PRICING_PSYCHOLOGY,
+  CURRENT_PRICING,
+} from "./pricingOptimizer";
+export type { PricePoint, PriceSensitivity, TierComparison, DiscountModel, PricingRecommendation } from "./pricingOptimizer";
