@@ -378,3 +378,41 @@ export {
   MAX_SAMPLES,
 } from "./dataIntegrityChecker";
 export type { IntegrityCheck, IntegrityCategory, CheckResult, IntegrityReport } from "./dataIntegrityChecker";
+
+// Q-154: Legal — Compliance checker
+export {
+  runComplianceChecks,
+  buildComplianceReport,
+  getRequirementsByRegulation,
+  formatComplianceReport,
+  COMPLIANCE_REQUIREMENTS,
+} from "./complianceChecker";
+export type { ComplianceRequirement, Regulation, ComplianceState, ComplianceCheckResult, ComplianceReport } from "./complianceChecker";
+
+// Q-155: Cost — Cost allocator
+export {
+  allocateUserCost,
+  calculateLTV,
+  calculateCAC,
+  analyzeUnitEconomics,
+  formatCostAllocation,
+  formatUnitEconomics,
+  COST_CENTERS,
+  TIER_PRICING,
+  ECONOMICS_THRESHOLDS,
+} from "./costAllocator";
+export type { UserUsage, CostAllocation, UserTier, UnitEconomics, CostCenter } from "./costAllocator";
+
+// Q-156: Ops — Incident tracker
+export {
+  createIncident,
+  acknowledgeIncident,
+  resolveIncident,
+  addTimelineEntry,
+  calculateMetrics,
+  generatePostmortemTemplate,
+  formatMetrics,
+  SEVERITY_LEVELS,
+  STATUS_FLOW,
+} from "./incidentTracker";
+export type { Incident, SeverityLevel, IncidentCategory, IncidentStatus, TimelineEntry, IncidentMetrics, PostmortemTemplate } from "./incidentTracker";
