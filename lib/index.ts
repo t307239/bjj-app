@@ -119,3 +119,15 @@ export { generateCsrfToken, setCsrfCookie, validateCsrf, CSRF_COOKIE_NAME, CSRF_
 // ── Performance Monitoring ──────────────────────────────────────────────
 export { measureAsync, getMemorySnapshot, CacheHitTracker, PERF_BUDGETS } from "./perfMonitor";
 export type { PerfMeasurement, PerfCategory } from "./perfMonitor";
+
+// ── Feature Flags / A/B Testing ─────────────────────────────────────────
+export { getVariant, isFeatureEnabled, getAllAssignments, EXPERIMENTS } from "./featureFlags";
+export type { ExperimentName, Variant } from "./featureFlags";
+
+// ── i18n Coverage ───────────────────────────────────────────────────────
+export { flattenKeys, findMissingKeys, findExtraKeys, analyzeCoverage, generateCoverageSummary } from "./i18nCoverage";
+export type { CoverageResult, CoverageSummary, LocaleCode } from "./i18nCoverage";
+
+// ── Churn Prediction ────────────────────────────────────────────────────
+export { predictChurnRisk, suggestWinBackAction, batchChurnPredictions } from "./churnPredictor";
+export type { ChurnRisk, ChurnPrediction, WinBackAction } from "./churnPredictor";
