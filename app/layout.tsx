@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import CookieConsent from "@/components/CookieConsent";
 import WebVitalsReporter from "@/components/WebVitalsReporter";
 import AgeGate from "@/components/AgeGate";
+import KeyboardShortcutProvider from "@/components/KeyboardShortcutProvider";
 import LocaleProvider from "@/components/LocaleProvider";
 import { detectServerLocale } from "@/lib/i18n";
 import "./globals.css";
@@ -116,6 +117,7 @@ export default async function RootLayout({
             {children}
           </main>
           <CookieConsent />
+          <KeyboardShortcutProvider />
           <Analytics />
           <SpeedInsights />
           <WebVitalsReporter />

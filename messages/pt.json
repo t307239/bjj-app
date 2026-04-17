@@ -765,5 +765,14 @@
   "home": {
     "weekLabel": "Esta Semana",
     "streakLabel": "Sequência"
+  },
+  "shortcuts": {
+    "title": "Atalhos de Teclado",
+    "hint": "Pressione ? para alternar este painel",
+    "help": "Mostrar atalhos de teclado",
+    "home": "Ir para Início",
+    "records": "Ir para Registros",
+    "techniques": "Ir para Técnicas",
+    "profile": "Ir para Perfil"
   }
 }

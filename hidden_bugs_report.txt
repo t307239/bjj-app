@@ -1,11 +1,11 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 257 files
+TS/TSX Scanned: 261 files
 CRITICAL: 1
 WARNING: 2
 INFO: 96
 Total: 99
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 38% (671/1764 キー) — 1123 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 38% (678/1771 キー) — 1123 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -19,7 +19,7 @@ Total: 99
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/help/page.tsx: L68: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/layout.tsx: L124: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/layout.tsx: L126: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/login/layout.tsx: L49: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証

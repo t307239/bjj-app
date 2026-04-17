@@ -1904,5 +1904,14 @@
     "etaYears": "~{n} years at current pace",
     "etaMonths": "~{n} months at current pace",
     "etaWeeks": "~{n} weeks at current pace"
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "hint": "Press ? to toggle this panel",
+    "help": "Show keyboard shortcuts",
+    "home": "Go to Home",
+    "records": "Go to Records",
+    "techniques": "Go to Techniques",
+    "profile": "Go to Profile"
   }
 }
