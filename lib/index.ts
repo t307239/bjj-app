@@ -646,3 +646,48 @@ export {
   CURRENT_PRICING,
 } from "./pricingOptimizer";
 export type { PricePoint, PriceSensitivity, TierComparison, DiscountModel, PricingRecommendation } from "./pricingOptimizer";
+
+// Q-172: Performance — Bundle optimizer
+export {
+  analyzeBundleChunks,
+  generateSplittingRecommendations,
+  detectTreeShakeOpportunities,
+  classifyRoutes,
+  estimateTotalSavings,
+  formatBundleAnalysis,
+  BUNDLE_BUDGETS,
+  LAZY_LOAD_CANDIDATES,
+  ROUTE_CATEGORIES,
+} from "./bundleOptimizer";
+export type { ChunkInfo, DependencyInfo, SplittingRecommendation, BundleAnalysis, RouteCategory } from "./bundleOptimizer";
+
+// Q-173: a11y — Screen reader audit
+export {
+  auditLandmarks,
+  calculateLandmarkCoverage,
+  auditHeadingHierarchy,
+  isHeadingStructureValid,
+  auditImageAlt,
+  calculateImageAltCoverage,
+  auditRoleAttributes,
+  auditLiveRegions,
+  runScreenReaderAudit,
+  formatScreenReaderAudit,
+  REQUIRED_LANDMARKS,
+  RECOMMENDED_LANDMARKS,
+  HEADING_LEVELS,
+  ROLE_REQUIRED_ATTRS,
+} from "./screenReaderAudit";
+export type { LandmarkInfo, HeadingInfo, LiveRegionInfo, ImageInfo, AuditIssue as SRAuditIssue, ScreenReaderAuditResult } from "./screenReaderAudit";
+
+// Q-174: Security — Permission policy & security header audit
+export {
+  buildPermissionsPolicy,
+  parsePermissionsPolicy,
+  auditPermissionsPolicy,
+  auditSecurityHeaders,
+  formatHeaderAudit,
+  PERMISSION_DIRECTIVES,
+  SECURITY_HEADERS,
+} from "./permissionPolicy";
+export type { PermissionDirective, SecurityHeaderName, HeaderSeverity, HeaderAuditResult, PermissionAuditIssue, PermissionPolicyConfig } from "./permissionPolicy";
