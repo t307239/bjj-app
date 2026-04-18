@@ -168,7 +168,7 @@ function parseArgument(
   const contentStart = start + 1;
 
   // First, find the top-level content before any sub-braces
-  let commaPositions: number[] = [];
+  const commaPositions: number[] = [];
   let tempDepth = 0;
   let foundClose = false;
 
