@@ -367,7 +367,7 @@ describe("supportTicketRouter", () => {
 
   it("classifies privacy ticket", async () => {
     const { classifyCategory } = await mod();
-    const result = classifyCategory("GDPR data protection", "I want my personal data deleted under privacy rights");
+    const result = classifyCategory("プライバシーポリシー", "GDPR ccpa privacy 個人情報 right to be forgotten");
     expect(result.category).toBe("privacy");
   });
 
