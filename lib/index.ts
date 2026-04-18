@@ -868,4 +868,148 @@ export {
   CONFIDENCE_LEVELS,
   MIN_SAMPLE_SIZE,
 } from "./abTestAnalyzer";
+
+// Q-187: Performance — Web Vitals analyzer & RUM
+export {
+  rateMetric,
+  percentile,
+  buildMetricDistribution,
+  detectRegressions,
+  calculateRUMScore,
+  generateRecommendations as generateVitalsRecommendations,
+  buildRUMReport,
+  groupByPage,
+  formatRUMReport,
+  CWV_BUDGETS,
+  CORE_METRICS,
+} from "./webVitalsAnalyzer";
+export type { MetricName, WebVitalEntry, CWVBudget, MetricDistribution, PerformanceRegression, RUMReport } from "./webVitalsAnalyzer";
+
+// Q-188: a11y — Aria live announcer & audit
+export {
+  createAnnouncerState,
+  announce,
+  clearExpired,
+  getCurrentAnnouncement,
+  buildLiveRegionProps,
+  checkKeyboardTrap,
+  getMotionConfig,
+  validateRoleAttributes,
+  runA11yAudit,
+  formatA11yAudit,
+  DEFAULT_ANNOUNCER_CONFIG,
+  REDUCED_MOTION_CONFIG,
+  FULL_MOTION_CONFIG,
+  ROLE_REQUIREMENTS,
+} from "./ariaLiveAnnouncer";
+export type { Politeness, Announcement, AnnouncerConfig, AnnouncerState, KeyboardTrapCheck, ReducedMotionConfig, A11yAuditItem, A11yAuditResult } from "./ariaLiveAnnouncer";
+
+// Q-189: Security — Session manager
+export {
+  generateFingerprint,
+  validateSession,
+  checkConcurrentSessions,
+  checkAccountLock,
+  calculateSessionSecurityScore,
+  formatSessionStatus,
+  DEFAULT_SESSION_POLICY,
+  LOCK_DURATION_MINUTES,
+  ATTEMPT_WINDOW_MINUTES,
+} from "./sessionManager";
+export type { SessionInfo, SessionPolicy, SessionValidation, ConcurrentSessionCheck, DeviceFingerprint, LoginAttempt, AccountLockStatus } from "./sessionManager";
+
+// Q-190: Obs — RUM collector & dashboard
+export {
+  classifyDevice,
+  extractPath,
+  buildPageMetrics,
+  checkBudgetViolations,
+  buildRUMDashboard,
+  segmentByDevice,
+  formatRUMDashboard,
+  DEFAULT_BUDGETS,
+} from "./rumCollector";
+export type { ConnectionType, DeviceType, RUMEntry, PageMetrics, RUMBudget, BudgetViolation, RUMDashboard } from "./rumCollector";
+
+// Q-191: DX — Deprecation tracker
+export {
+  compareSemver as compareDeprecationSemver,
+  classifySeverity,
+  estimateEffort,
+  generateMigrationPlan as generateDeprecationMigration,
+  buildDeprecationReport,
+  buildSunsetTimeline,
+  findUrgentDeprecations,
+  formatDeprecationReport,
+  SUNSET_WARNING_DAYS,
+  SUNSET_URGENT_DAYS,
+} from "./deprecationTracker";
+export type { DeprecatedItem, MigrationStep as DeprecationMigrationStep, MigrationPlan as DeprecationMigrationPlan, DeprecationReport, SunsetTimeline } from "./deprecationTracker";
+
+// Q-192: Ops — Support ticket router
+export {
+  classifyCategory,
+  determinePriority,
+  findResponseTemplate,
+  getSuggestedResponse,
+  getRoutingRule,
+  classifyTicket,
+  buildTicketMetrics,
+  formatTicketMetrics,
+  CATEGORY_PATTERNS,
+  ROUTING_RULES,
+  RESPONSE_TEMPLATES,
+} from "./supportTicketRouter";
+export type { TicketCategory, TicketPriority, SupportTicket, ClassifiedTicket, ResponseTemplate, RoutingRule, TicketMetrics } from "./supportTicketRouter";
+
+// Q-193: UI — Animation orchestrator
+export {
+  applyReducedMotion,
+  calculateStaggerDelays,
+  buildSequence,
+  buildParallel,
+  buildStaggered,
+  createIntersectionTrigger,
+  auditAnimations,
+  toCSS,
+  formatAnimationAudit,
+  EASING_VALUES,
+  DEFAULT_BUDGET as DEFAULT_ANIMATION_BUDGET,
+  PRESETS as ANIMATION_PRESETS,
+} from "./animationOrchestrator";
+export type { EasingFunction, AnimationKeyframe, AnimationConfig, StaggerConfig, AnimationSequence, AnimationStep, IntersectionTrigger, AnimationBudget, AnimationAudit } from "./animationOrchestrator";
+
+// Q-194: UX — User journey tracker
+export {
+  buildSession as buildJourneySession,
+  analyzeFlow,
+  detectFriction,
+  findTopPaths,
+  analyzeJourneys,
+  formatJourneyAnalysis,
+  BOUNCE_MAX_PAGES,
+  MIN_ENGAGEMENT_MS,
+  FRICTION_THRESHOLDS,
+  GOAL_PAGES,
+} from "./userJourneyTracker";
+export type { JourneyEventType, JourneyEvent, PageDwell, JourneySession, FlowStep, FrictionPoint, JourneyAnalysis } from "./userJourneyTracker";
+
+// Q-195: Retention — Notification optimizer
+export {
+  isSilentHour as isNotifSilentHour,
+  findOptimalSendTime,
+  checkFatigue,
+  checkDailyLimit,
+  checkWeeklyLimit,
+  calculateEffectiveness,
+  shouldSendNotification,
+  buildOptimizationReport,
+  formatOptimizationReport,
+  SILENT_HOURS,
+  MAX_DAILY_NOTIFICATIONS,
+  MAX_WEEKLY_NOTIFICATIONS,
+  FATIGUE_DISMISS_RATE,
+  FATIGUE_COOLDOWN_HOURS,
+} from "./notificationOptimizer";
+export type { NotificationChannel, DayOfWeek, NotificationEvent, UserActivityPattern, OptimalSendTime, FatigueStatus, NotificationEffectiveness, OptimizationReport } from "./notificationOptimizer";
 export type { ABVariant, ABTestConfig, ABTestResult, SampleSizeEstimate } from "./abTestAnalyzer";
