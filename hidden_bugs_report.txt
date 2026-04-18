@@ -1,5 +1,5 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 345 files
+TS/TSX Scanned: 344 files
 CRITICAL: 1
 WARNING: 2
 INFO: 98

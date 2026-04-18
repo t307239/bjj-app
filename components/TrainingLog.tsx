@@ -7,7 +7,6 @@ import { useLocale } from "@/lib/i18n";
 import Toast from "./Toast";
 import TrainingLogForm from "./TrainingLogForm";
 import TrainingLogList from "./TrainingLogList";
-import TrainingLogStats from "./TrainingLogStats";
 import FirstRollCelebration from "./FirstRollCelebration";
 import { useTrainingLog } from "@/hooks/useTrainingLog";
 import { decodeCompNotes } from "@/lib/trainingLogHelpers";
@@ -164,8 +163,6 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     filtered,
   } = useTrainingLog({ userId, isPro, initialOpen, t });
 
-  const [listOpen, setListOpen] = useState(true);
-
   return (
     <div>
       {/* First roll celebration overlay (#7) */}
@@ -219,42 +216,18 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         onQuickAddTechnique={handleQuickAddTechnique}
       />
 
-      {/* Collapsible log list toggle */}
-      {!initialLoading && entries.length > 0 && !showForm && (
-        <button
-          onClick={() => setListOpen((v) => !v)}
-          className="w-full flex items-center justify-center gap-1.5 py-2 text-xs font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
-        >
-          <span>{listOpen ? t("training.hideHistory") : t("training.showHistory")}</span>
-          <svg className={`w-3.5 h-3.5 transition-transform ${listOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+      {/* Free plan: 30-day history limit notice */}
+      {!initialLoading && entries.length > 0 && !isPro && (
+        <div className="mb-3 px-4 py-2.5 rounded-xl border border-amber-500/20 bg-amber-500/8 flex items-center justify-between gap-3">
+          <span className="text-xs text-amber-300/80">
+            {t("training.freePlanNotice")}
+          </span>
+          <span className="text-xs font-medium text-blue-400 whitespace-nowrap">{t("training.upgradeFullHistory")}</span>
+        </div>
       )}
 
-      {/* --- Collapsible section: stats, search, filters, list --- */}
-      {listOpen && !initialLoading && entries.length > 0 && (
-        <>
-          {/* Stats (weekly summary) */}
-          <TrainingLogStats entries={entries} totalPages={totalPages} page={page} />
-
-          {/* Monthly stats removed — dashboard shows authoritative month/week totals.
-             Records page focuses on browsing individual log entries. */}
-
-          {/* Free plan: 30-day history limit notice */}
-          {!isPro && (
-            <div className="mb-3 px-4 py-2.5 rounded-xl border border-amber-500/20 bg-amber-500/8 flex items-center justify-between gap-3">
-              <span className="text-xs text-amber-300/80">
-                {t("training.freePlanNotice")}
-              </span>
-              <span className="text-xs font-medium text-blue-400 whitespace-nowrap">{t("training.upgradeFullHistory")}</span>
-            </div>
-          )}
-        </>
-      )}
-
-      {/* Keyword search — shows when list open and has entries or active search */}
-      {listOpen && !initialLoading && (entries.length > 0 || searchQuery) && (
+      {/* Keyword search */}
+      {!initialLoading && (entries.length > 0 || searchQuery) && (
         <div className="relative mb-2">
           {searchLoading ? (
             <div className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 border-2 border-gray-500 border-t-emerald-400 rounded-full animate-spin pointer-events-none" />
@@ -285,7 +258,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       )}
 
       {/* Unified filter row: horizontal scroll chip bar — Period + Type pills + Date */}
-      {listOpen && !initialLoading && (entries.length > 0 || searchQuery) && (() => {
+      {!initialLoading && (entries.length > 0 || searchQuery) && (() => {
         const usedTypes = TRAINING_TYPES.filter((tt) => entries.some((e) => e.type === tt.value));
         const hasDateFilter = !!(dateFrom || dateTo);
         return (
@@ -375,7 +348,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       })()}
 
       {/* Entry list — only when list is open */}
-      {listOpen && <TrainingLogList
+      {<TrainingLogList
         initialLoading={initialLoading}
         entries={entries}
         filtered={filtered}

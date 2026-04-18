@@ -179,21 +179,9 @@ export default async function TechniquesPage() {
             HERO HEADER — title + stats strip
             ═══════════════════════════════════════════ */}
         <div className="mb-6">
-          <div className="flex items-start justify-between gap-4 mb-4">
-            <div>
-              <h1 className="text-2xl font-black text-white tracking-tight">
-                {t("techniquesPage.title")}
-              </h1>
-              <p className="text-zinc-400 text-sm mt-0.5">
-                {t("techniquesPage.subtitle")}
-              </p>
-            </div>
-            {isPro && (
-              <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-1 rounded-full shrink-0 mt-1">
-                ✦ PRO
-              </span>
-            )}
-          </div>
+          <h1 className="text-2xl font-black text-white tracking-tight mb-4">
+            {t("techniquesPage.title")}
+          </h1>
 
           {/* Stats strip — only shown when techniques exist */}
           {totalTechniques > 0 && (
