@@ -354,31 +354,6 @@ export default async function DashboardPage({
         />
 
         {/* ═══════════════════════════════════════════
-            QUICK ACTION — prominent record CTA (desktop)
-            ═══════════════════════════════════════════ */}
-        <Link
-          href="/records"
-          className="hidden md:flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 hover:border-emerald-500/40 rounded-2xl px-5 py-4 mb-5 transition-all group active:scale-[0.98]"
-        >
-          <div className="w-11 h-11 rounded-xl bg-[#10B981] flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/30 transition-shadow">
-            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-            </svg>
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">
-              {t("home.quickActionTitle")}
-            </p>
-            <p className="text-xs text-zinc-400">
-              {t("home.quickActionDesc")}
-            </p>
-          </div>
-          <svg className="w-5 h-5 text-zinc-500 group-hover:text-emerald-400 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
-        </Link>
-
-        {/* ═══════════════════════════════════════════
             HEATMAP + MAT TIME — side-by-side on tablet
             ═══════════════════════════════════════════ */}
         {hasFirstLog && (

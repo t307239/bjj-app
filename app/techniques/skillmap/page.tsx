@@ -8,7 +8,7 @@ import Link from "next/link";
 
 // perf: @xyflow/react (~300KB) + dagre を遅延読み込み。
 // "use client" コンポーネントなので dynamic() のみで遅延読み込み（ssr:false は Server Component で不可）
-const SkillMap = dynamic(() => import("@/components/SkillMap"), {
+const SkillMap = dynamic(() => import("@/components/SkillMapV2"), {
   loading: () => (
     <div className="w-full h-full flex items-center justify-center bg-zinc-950">
       <div className="w-10 h-10 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
