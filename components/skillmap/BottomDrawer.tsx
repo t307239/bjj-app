@@ -77,7 +77,7 @@ export default function BottomDrawer({
   };
 
   return (
-    <div className="fixed inset-0 z-50" onPointerDown={onClose}>
+    <div className="fixed inset-0 z-50" style={{ touchAction: "auto" }} onPointerDown={onClose}>
       <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
       <div
         ref={drawerRef}
@@ -96,7 +96,11 @@ export default function BottomDrawer({
         {mode === "menu" && (
           <div className="flex flex-col gap-2">
             <button
-              onClick={() => setMode("addChild")}
+              onClick={() => {
+                setMode("addChild");
+                // iOS Safari: rAF keeps us within the user-gesture activation window
+                requestAnimationFrame(() => inputRef.current?.focus());
+              }}
               className="w-full flex items-center gap-3 bg-zinc-800 hover:bg-zinc-700 active:scale-[0.98] text-white text-sm font-medium px-4 py-3.5 rounded-xl transition-all"
             >
               <span className="text-lg w-7 text-center">➕</span>
@@ -110,7 +114,10 @@ export default function BottomDrawer({
               {t("skillmap.drawerConnect")}
             </button>
             <button
-              onClick={() => setMode("editTags")}
+              onClick={() => {
+                setMode("editTags");
+                requestAnimationFrame(() => tagInputRef.current?.focus());
+              }}
               className="w-full flex items-center gap-3 bg-zinc-800 hover:bg-zinc-700 active:scale-[0.98] text-white text-sm font-medium px-4 py-3.5 rounded-xl transition-all"
             >
               <span className="text-lg w-7 text-center">🏷️</span>
@@ -145,6 +152,8 @@ export default function BottomDrawer({
             <input
               ref={inputRef}
               type="text"
+              autoFocus
+              inputMode="text"
               placeholder={t("skillmap.namePlaceholder")}
               value={childName}
               onChange={(e) => setChildName(e.target.value)}
@@ -207,6 +216,8 @@ export default function BottomDrawer({
               <input
                 ref={tagInputRef}
                 type="text"
+                autoFocus
+                inputMode="text"
                 placeholder={t("skillmap.tagCustomPlaceholder")}
                 value={customTagInput}
                 onChange={(e) => setCustomTagInput(e.target.value)}

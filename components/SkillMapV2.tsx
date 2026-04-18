@@ -98,7 +98,8 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   const [recentFocusIds, setRecentFocusIds] = useState<string[]>([]);
 
   // ── UI state ─────────────────────────────────────────────────────────────
-  const [isMobile, setIsMobile] = useState(false);
+  // Lazy init avoids isMobile=false flash on iPhone that hides mobile UI before first useEffect fires
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth < 768);
   const [editMode, setEditMode] = useState(true);
   const [drawerNode, setDrawerNode] = useState<Node | null>(null);
   const [addPopup, setAddPopup] = useState<{ screenX: number; screenY: number; flowX: number; flowY: number } | null>(null);
@@ -444,6 +445,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
             setAddPopup({ screenX: 0, screenY: 0, flowX: x, flowY: y });
           }}
           aria-label={t("skillmap.addNodeMobile")}
+          style={{ touchAction: "auto" }}
           className="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white text-2xl font-bold shadow-lg shadow-emerald-900/40 flex items-center justify-center transition-all active:scale-90 z-10"
         >
           +
@@ -474,6 +476,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
               ref={mobileAddRef}
               type="text"
               autoFocus
+              inputMode="text"
               placeholder={t("skillmap.namePlaceholder")}
               onKeyDown={(e) => {
                 const val = (e.target as HTMLInputElement).value.trim();
