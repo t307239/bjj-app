@@ -21,12 +21,14 @@ type Props = {
  * Recommend weekly training hours based on days until competition
  * and current weekly session count.
  *
- * Logic:
- * - ≤7 days  → taper week: 3-4h (light drilling + recovery)
- * - ≤14 days → peak: current + 1-2h intensity
- * - ≤30 days → ramp-up: 6-8h/week (5-6 sessions)
- * - ≤60 days → build: 5-7h/week (4-5 sessions)
- * - >60 days → base: 4-6h/week (3-4 sessions)
+ * Realistic competition preparation (based on actual BJJ competitor norms):
+ * - ≤7 days  → taper: 4-6h (light drilling, game plan review, recovery)
+ * - ≤14 days → peak: current × 1.2 (sharpen, no new techniques)
+ * - ≤30 days → ramp-up: 12-16h/week (6+ sessions, hard sparring)
+ * - ≤60 days → build: 10-14h/week (5-6 sessions, volume + intensity)
+ * - >60 days → base: 8-12h/week (4-5 sessions, technique + conditioning)
+ *
+ * Hours are adjusted upward if the user already trains more than the baseline.
  */
 function getTrainingRecommendation(
   daysLeft: number,
@@ -44,40 +46,54 @@ function getTrainingRecommendation(
     };
   }
   if (daysLeft <= 7) {
+    // Taper: reduce to ~50-60% of current volume
+    const taperLow = Math.max(4, Math.round(currentHoursEstimate * 0.5));
+    const taperHigh = Math.max(6, Math.round(currentHoursEstimate * 0.6));
     return {
-      hours: "3-4",
+      hours: `${taperLow}-${taperHigh}`,
       label: t("compGoal.phaseTaper"),
       phase: "taper",
       tip: t("compGoal.tipTaper"),
     };
   }
   if (daysLeft <= 14) {
-    const peak = Math.max(Math.round(currentHoursEstimate + 1.5), 5);
+    // Peak: current + 20%, cap at ~18h
+    const peakLow = Math.max(8, Math.round(currentHoursEstimate));
+    const peakHigh = Math.min(18, Math.max(12, Math.round(currentHoursEstimate * 1.2)));
     return {
-      hours: `${Math.max(peak - 1, 4)}-${peak + 1}`,
+      hours: `${peakLow}-${peakHigh}`,
       label: t("compGoal.phasePeak"),
       phase: "peak",
       tip: t("compGoal.tipPeak"),
     };
   }
   if (daysLeft <= 30) {
+    // Ramp-up: 12-16h baseline, push higher if user already trains a lot
+    const rampLow = Math.max(12, Math.round(currentHoursEstimate * 1.1));
+    const rampHigh = Math.max(16, Math.round(currentHoursEstimate * 1.3));
     return {
-      hours: "6-8",
+      hours: `${rampLow}-${rampHigh}`,
       label: t("compGoal.phaseRampUp"),
       phase: "ramp",
       tip: t("compGoal.tipRampUp"),
     };
   }
   if (daysLeft <= 60) {
+    // Build: 10-14h baseline
+    const buildLow = Math.max(10, Math.round(currentHoursEstimate * 1.0));
+    const buildHigh = Math.max(14, Math.round(currentHoursEstimate * 1.15));
     return {
-      hours: "5-7",
+      hours: `${buildLow}-${buildHigh}`,
       label: t("compGoal.phaseBuild"),
       phase: "build",
       tip: t("compGoal.tipBuild"),
     };
   }
+  // Base: 8-12h baseline
+  const baseLow = Math.max(8, Math.round(currentHoursEstimate * 0.9));
+  const baseHigh = Math.max(12, Math.round(currentHoursEstimate * 1.1));
   return {
-    hours: "4-6",
+    hours: `${baseLow}-${baseHigh}`,
     label: t("compGoal.phaseBase"),
     phase: "base",
     tip: t("compGoal.tipBase"),
