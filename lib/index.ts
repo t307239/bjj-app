@@ -1013,3 +1013,101 @@ export {
 } from "./notificationOptimizer";
 export type { NotificationChannel, DayOfWeek, NotificationEvent, UserActivityPattern, OptimalSendTime, FatigueStatus, NotificationEffectiveness, OptimizationReport } from "./notificationOptimizer";
 export type { ABVariant, ABTestConfig, ABTestResult, SampleSizeEstimate } from "./abTestAnalyzer";
+
+// Q-196: SEO — Structured data validator
+export {
+  validateStructuredData,
+  generateWebSiteSchema,
+  generateBreadcrumbSchema,
+  generateFAQSchema,
+  generateSoftwareAppSchema,
+  auditPageSEO,
+  formatSEOAudit,
+  SCHEMA_CONTEXT,
+  REQUIRED_FIELDS as SEO_REQUIRED_FIELDS,
+} from "./seoStructuredData";
+export type { SchemaType, StructuredDataEntry, SEOValidationError, SEOAuditResult } from "./seoStructuredData";
+
+// Q-197: i18n — Locale routing optimizer
+export {
+  buildHreflangTags,
+  detectUserLocale,
+  buildLocalizedUrl,
+  validateLocaleRoutes,
+  auditLocaleRouting,
+  formatLocaleRoutingAudit,
+  SUPPORTED_LOCALES as ROUTING_SUPPORTED_LOCALES,
+  DEFAULT_LOCALE as ROUTING_DEFAULT_LOCALE,
+  LOCALE_DOMAINS,
+} from "./localeRoutingOptimizer";
+export type { LocaleRoute, HreflangEntry, LocaleRoutingIssue, LocaleRoutingAudit, SupportedLocale as RoutingSupportedLocale } from "./localeRoutingOptimizer";
+
+// Q-198: Infra — Zero-downtime deploy
+export {
+  createDeployPlan,
+  evaluateHealthCheck,
+  shouldRollback as shouldDeployRollback,
+  calculateCanaryTraffic,
+  auditDeployReadiness,
+  formatDeployPlan,
+  DEPLOY_STRATEGIES,
+  HEALTH_CHECK_ENDPOINTS,
+  CANARY_TRAFFIC_STEPS,
+} from "./zeroDowntimeDeploy";
+export type { DeployStrategy, HealthStatus, DeployPhase, HealthCheckResult, DeployPlan, DeployAudit } from "./zeroDowntimeDeploy";
+
+// Q-199: Data — Data lineage tracker
+export {
+  buildLineageGraph,
+  traceDataOrigin,
+  findDownstreamDependencies,
+  detectPIIFlow,
+  auditDataLineage,
+  formatLineageAudit,
+  SENSITIVE_FIELDS,
+  PII_CATEGORIES,
+} from "./dataLineageTracker";
+export type { DataSource, LineageNode, LineageEdge, DataLineageGraph, PIIFlowViolation, LineageIssue, LineageAudit } from "./dataLineageTracker";
+
+// Q-200: Legal — Consent flow auditor
+export {
+  validateConsentFlow,
+  checkConsentExpiry,
+  detectDarkPatterns,
+  auditConsentCompliance,
+  buildConsentReport,
+  formatConsentReport,
+  GDPR_REQUIREMENTS,
+  CCPA_REQUIREMENTS,
+  CONSENT_MAX_AGE_DAYS as CONSENT_FLOW_MAX_AGE_DAYS,
+} from "./consentFlowAuditor";
+export type { ConsentPurpose, ConsentRegulation, ConsentFlowStep, DarkPattern, ConsentExpiryStatus, ConsentComplianceResult, ConsentReport, ConsentAudit } from "./consentFlowAuditor";
+
+// Q-201: Cost — Cloud cost analyzer
+export {
+  detectCostAnomalies as detectCloudCostAnomalies,
+  calculateCostTrend,
+  suggestOptimizations as suggestCostOptimizations,
+  forecastMonthlyCost,
+  buildCostReport,
+  formatCostReport,
+  COST_BASELINES,
+  ANOMALY_THRESHOLD,
+  OPTIMIZATION_RULES,
+} from "./cloudCostAnalyzer";
+export type { CloudService, CostEntry, CostAnomaly as CloudCostAnomaly, CostTrend, CostOptimization, CostReport } from "./cloudCostAnalyzer";
+
+// Q-202: Conversion — Onboarding funnel optimizer
+export {
+  analyzeOnboardingFunnel,
+  identifyDropOffReasons,
+  suggestOnboardingImprovements,
+  calculateTimeToValue,
+  compareWithBenchmarks,
+  buildOnboardingReport,
+  formatOnboardingReport,
+  ONBOARDING_STEPS,
+  DROP_OFF_THRESHOLDS,
+  BENCHMARK_RATES,
+} from "./onboardingFunnelOptimizer";
+export type { OnboardingStep, StepMetrics as OnboardingStepMetrics, DropOffReason, Improvement, BenchmarkComparison, OnboardingReport } from "./onboardingFunnelOptimizer";
