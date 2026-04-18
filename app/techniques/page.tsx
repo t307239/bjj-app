@@ -199,7 +199,7 @@ export default async function TechniquesPage() {
           {totalTechniques > 0 && (
             <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
               {/* Total */}
-              <div className="bg-zinc-900/50 border border-white/8 rounded-xl px-2 py-2.5 sm:p-3 text-center">
+              <div className="bg-zinc-900/50 border border-white/8 border-l-2 border-l-zinc-400 rounded-xl px-2 py-2.5 sm:p-3 text-center">
                 <p className="text-xl sm:text-2xl font-black text-white tabular-nums">
                   {totalTechniques}
                 </p>
@@ -208,8 +208,8 @@ export default async function TechniquesPage() {
                 </p>
               </div>
               {/* Solid+ */}
-              <div className="bg-zinc-900/50 border border-white/8 rounded-xl px-2 py-2.5 sm:p-3 text-center">
-                <p className="text-xl sm:text-2xl font-black text-yellow-400 tabular-nums">
+              <div className="bg-zinc-900/50 border border-white/8 border-l-2 border-l-amber-400 rounded-xl px-2 py-2.5 sm:p-3 text-center">
+                <p className="text-xl sm:text-2xl font-black text-amber-400 tabular-nums">
                   {learned + mastered}
                 </p>
                 <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
@@ -217,8 +217,8 @@ export default async function TechniquesPage() {
                 </p>
               </div>
               {/* Mastered */}
-              <div className="bg-zinc-900/50 border border-white/8 rounded-xl px-2 py-2.5 sm:p-3 text-center">
-                <p className="text-xl sm:text-2xl font-black text-green-400 tabular-nums">
+              <div className="bg-zinc-900/50 border border-white/8 border-l-2 border-l-emerald-400 rounded-xl px-2 py-2.5 sm:p-3 text-center">
+                <p className="text-xl sm:text-2xl font-black text-emerald-400 tabular-nums">
                   {mastered}
                 </p>
                 <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">

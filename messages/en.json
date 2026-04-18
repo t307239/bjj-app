@@ -1895,7 +1895,9 @@
     "mastery3": "Mastered",
     "more": "+{n} more",
     "weekCount": "Practiced {n} time(s) this week",
-    "weekNone": "Practice your focus technique this week!"
+    "weekNone": "Practice your focus technique this week!",
+    "emptyTitle": "Pin techniques to focus on",
+    "emptyHint": "Go to Techniques → tap the pin icon"
   },
   "matTime": {
     "title": "Mat Time",

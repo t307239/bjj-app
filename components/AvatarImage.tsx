@@ -41,7 +41,7 @@ export default function AvatarImage({
   if (errored || !src) {
     return (
       <div
-        className={`${className ?? ""} flex items-center justify-center bg-zinc-800 text-zinc-400 font-semibold text-xs`}
+        className={`${className ?? ""} flex items-center justify-center bg-gradient-to-br from-violet-500/80 to-emerald-600/80 text-white font-bold text-sm`}
         aria-label={alt}
       >
         {fallbackInitials ? (

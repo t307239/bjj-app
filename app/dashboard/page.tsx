@@ -382,7 +382,7 @@ export default async function DashboardPage({
             HEATMAP + MAT TIME — side-by-side on tablet
             ═══════════════════════════════════════════ */}
         {hasFirstLog && (
-          <div className="md:grid md:grid-cols-2 md:gap-5">
+          <div className="md:grid md:grid-cols-2 md:gap-5 md:items-start">
             <HeatmapCalendar trainingDates={heatmapDates} />
             <MatTimeTracker
               totalMinutes={totalMinutes}
@@ -396,7 +396,7 @@ export default async function DashboardPage({
         {/* ═══════════════════════════════════════════
             FOCUS + COUNTDOWN — side-by-side on tablet
             ═══════════════════════════════════════════ */}
-        <div className="md:grid md:grid-cols-2 md:gap-5">
+        <div className="md:grid md:grid-cols-2 md:gap-5 md:items-start">
           <TechniqueFocusCard
             techniques={focusTechniques}
             weekPracticeCount={focusWeekPractice}
