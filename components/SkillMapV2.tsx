@@ -389,7 +389,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
       <div className="relative">
       <div
         className="w-full rounded-xl overflow-hidden border border-white/10"
-        style={{ height: "clamp(350px, 60vh, 620px)", touchAction: "none" }}
+        style={{ height: "clamp(350px, 60vh, 620px)", touchAction: "none", zIndex: 1 }}
       >
         <ReactFlow
           nodes={filteredDisplayNodes}
@@ -471,19 +471,22 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
       {/* Add node popup */}
       {addPopup && (
         addPopup.screenX === 0 ? (
-          <div className="mt-2 bg-zinc-800 border border-white/20 rounded-xl shadow-2xl p-3 w-full">
+          <div className="mt-2 bg-zinc-800 border border-white/20 rounded-xl shadow-2xl p-3 w-full" style={{ touchAction: "auto", position: "relative", zIndex: 10 }}>
             <input
               ref={mobileAddRef}
               type="text"
               autoFocus
               inputMode="text"
+              enterKeyHint="done"
               placeholder={t("skillmap.namePlaceholder")}
               onKeyDown={(e) => {
                 const val = (e.target as HTMLInputElement).value.trim();
                 if (e.key === "Enter" && val) { handleAddNode(val, addPopup.flowX, addPopup.flowY); setAddPopup(null); }
                 if (e.key === "Escape") setAddPopup(null);
               }}
+              onTouchStart={(e) => e.stopPropagation()}
               className="w-full bg-zinc-700 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none mb-2"
+              style={{ touchAction: "auto" }}
               maxLength={80}
             />
             <div className="flex gap-2">

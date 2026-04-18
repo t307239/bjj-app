@@ -114,8 +114,14 @@ export default function BottomDrawer({
         aria-modal="true"
         aria-label={String(node.data.label)}
         tabIndex={-1}
-        className="absolute bottom-0 left-0 right-0 bg-zinc-900 border-t border-white/10 rounded-t-2xl p-5 pb-8 outline-none"
+        className="absolute left-0 right-0 bg-zinc-900 border-t border-white/10 rounded-t-2xl p-5 pb-8 outline-none"
+        style={{
+          bottom: keyboardOffset > 0 ? `${keyboardOffset}px` : 0,
+          zIndex: 51,
+          touchAction: "auto",
+        }}
         onPointerDown={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
       >
         <div className="w-10 h-1 bg-zinc-600 rounded-full mx-auto mb-4" />
         <p className="text-xs text-zinc-400 text-center mb-4 font-semibold truncate px-6">
@@ -183,6 +189,7 @@ export default function BottomDrawer({
               type="text"
               autoFocus
               inputMode="text"
+              enterKeyHint="done"
               placeholder={t("skillmap.namePlaceholder")}
               value={childName}
               onChange={(e) => setChildName(e.target.value)}
@@ -190,7 +197,9 @@ export default function BottomDrawer({
                 if (e.key === "Enter" && childName.trim()) { onAddChild(childName.trim()); onClose(); }
                 if (e.key === "Escape") setMode("menu");
               }}
+              onTouchStart={(e) => e.stopPropagation()}
               className="w-full bg-zinc-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/30"
+              style={{ touchAction: "auto" }}
               maxLength={80}
             />
             <div className="flex gap-2">
@@ -247,6 +256,7 @@ export default function BottomDrawer({
                 type="text"
                 autoFocus
                 inputMode="text"
+                enterKeyHint="done"
                 placeholder={t("skillmap.tagCustomPlaceholder")}
                 value={customTagInput}
                 onChange={(e) => setCustomTagInput(e.target.value)}
@@ -254,7 +264,9 @@ export default function BottomDrawer({
                   if (e.key === "Enter") addCustomTag();
                   if (e.key === "Escape") setMode("menu");
                 }}
+                onTouchStart={(e) => e.stopPropagation()}
                 className="flex-1 bg-zinc-800 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/30"
+                style={{ touchAction: "auto" }}
                 maxLength={40}
               />
               <button
