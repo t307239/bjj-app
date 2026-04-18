@@ -4,6 +4,33 @@ import { useState, useRef, useLayoutEffect, useEffect, useCallback } from "react
 import { type Node } from "@xyflow/react";
 import { PRESET_POSITIONS } from "./constants";
 
+/**
+ * iOS Safari virtual keyboard pushes `position:fixed` elements off-screen.
+ * We listen to the VisualViewport resize event and adjust the drawer's
+ * bottom offset so it stays visible above the keyboard.
+ */
+function useIOSKeyboardOffset() {
+  const [offset, setOffset] = useState(0);
+  useEffect(() => {
+    const vv = typeof window !== "undefined" ? window.visualViewport : null;
+    if (!vv) return;
+    const handler = () => {
+      // When the virtual keyboard opens, visualViewport.height shrinks.
+      // The difference between window.innerHeight and visualViewport.height
+      // is the keyboard height.
+      const keyboardHeight = window.innerHeight - vv.height;
+      setOffset(Math.max(0, keyboardHeight));
+    };
+    vv.addEventListener("resize", handler);
+    vv.addEventListener("scroll", handler);
+    return () => {
+      vv.removeEventListener("resize", handler);
+      vv.removeEventListener("scroll", handler);
+    };
+  }, []);
+  return offset;
+}
+
 type Props = {
   node: Node;
   isPro: boolean;
@@ -59,6 +86,8 @@ export default function BottomDrawer({
     drawerRef.current?.focus();
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
+
+  const keyboardOffset = useIOSKeyboardOffset();
 
   const currentTags: string[] = ((node.data as { tags?: string[] }).tags ?? []);
 
