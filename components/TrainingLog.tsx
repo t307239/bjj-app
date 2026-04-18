@@ -22,72 +22,6 @@ type Props = {
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
 void DURATION_PRESETS; // used by sub-components
 
-// Mini donut chart (monthly type distribution)
-function MiniTypeDonut({ entries }: { entries: { type: string }[] }) {
-  const TYPE_COLORS_RAW: Record<string, string> = {
-    gi: "#3b82f6", nogi: "#f97316", drilling: "#a855f7", competition: "#e94560", open_mat: "#22c55e",
-  };
-  const counts: Record<string, number> = {};
-  entries.forEach((e) => { counts[e.type] = (counts[e.type] ?? 0) + 1; });
-  const total = Object.values(counts).reduce((s, v) => s + v, 0);
-  if (total === 0) return null;
-
-  const cx = 20, cy = 20, R = 18, r = 10;
-  let cumAngle = -Math.PI / 2;
-  const slices = Object.entries(counts).map(([type, count]) => {
-    const angle = (count / total) * 2 * Math.PI;
-    const start = cumAngle;
-    const end = cumAngle + angle;
-    cumAngle = end;
-    const x1 = cx + R * Math.cos(start), y1 = cy + R * Math.sin(start);
-    const x2 = cx + R * Math.cos(end),   y2 = cy + R * Math.sin(end);
-    const ix1 = cx + r * Math.cos(end),  iy1 = cy + r * Math.sin(end);
-    const ix2 = cx + r * Math.cos(start),iy2 = cy + r * Math.sin(start);
-    const large = angle > Math.PI ? 1 : 0;
-    const path = `M ${x1} ${y1} A ${R} ${R} 0 ${large} 1 ${x2} ${y2} L ${ix1} ${iy1} A ${r} ${r} 0 ${large} 0 ${ix2} ${iy2} Z`;
-    return { type, path, color: TYPE_COLORS_RAW[type] ?? "#9ca3af", count };
-  });
-
-  return (
-    <svg viewBox="0 0 40 40" className="w-10 h-10 flex-shrink-0">
-      {slices.map((s) => (
-        <g key={s.type}><title>{s.type}: {s.count} sessions</title><path d={s.path} fill={s.color} opacity={0.85} /></g>
-      ))}
-      <text x={cx} y={cy + 3} textAnchor="middle" fill="white" fontSize="7" fontWeight="bold">
-        {total}
-      </text>
-    </svg>
-  );
-}
-
-// Stack bar (monthly type distribution ratio)
-function MonthTypeStackBar({ entries }: { entries: { type: string }[] }) {
-  const TYPE_COLORS: Record<string, string> = {
-    gi: "#3b82f6", nogi: "#f97316", drilling: "#a855f7", competition: "#e94560", open_mat: "#22c55e",
-  };
-  const counts: Record<string, number> = {};
-  TRAINING_TYPES.forEach((t) => { counts[t.value] = entries.filter((e) => e.type === t.value).length; });
-  const total = Object.values(counts).reduce((s, v) => s + v, 0);
-  if (total === 0) return null;
-
-  const segments = TRAINING_TYPES
-    .filter((t) => counts[t.value] > 0)
-    .map((t) => ({ ...t, count: counts[t.value], percent: (counts[t.value] / total) * 100 }));
-
-  return (
-    <div className="w-full h-6 rounded-full flex overflow-hidden gap-0.5 bg-white/5 p-0.5">
-      {segments.map((seg) => (
-        <div
-          key={seg.value}
-          className="flex-1 rounded-full transition-all"
-          style={{ backgroundColor: TYPE_COLORS[seg.value], width: `${seg.percent}%`, minWidth: seg.percent > 10 ? "auto" : "2px" }}
-          title={`${seg.label}: ${seg.count} sessions (${seg.percent.toFixed(0)}%)`}
-        />
-      ))}
-    </div>
-  );
-}
-
 // ── Item 2: Export dropdown — replaces the secondary row of 3 loose buttons ──
 function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
   userId: string; isPro: boolean; onPdf: () => void; pdfLoading: boolean;
@@ -228,20 +162,9 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     handleQuickAddTechnique,
     totalPages,
     filtered,
-    monthEntries,
-    monthHoursDisplay,
-    monthProjected,
-    remainingDaysLog,
-    monthDelta,
   } = useTrainingLog({ userId, isPro, initialOpen, t });
 
   const [listOpen, setListOpen] = useState(true);
-
-  // Suppress unused-var TS warnings for stats used in Bento/Analytics (kept for future use)
-  void monthHoursDisplay;
-  void monthProjected;
-  void remainingDaysLog;
-  void monthDelta;
 
   return (
     <div>
@@ -315,30 +238,8 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
           {/* Stats (weekly summary) */}
           <TrainingLogStats entries={entries} totalPages={totalPages} page={page} />
 
-          {/* Monthly Bento Grid section */}
-          {monthEntries.length > 0 && (
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              <div className="bg-zinc-900 rounded-xl p-3 border border-white/10 flex items-center gap-3">
-                <MiniTypeDonut entries={monthEntries} />
-                <div>
-                  <p className="text-xs text-zinc-400 tracking-wide">{t("training.monthCount")}</p>
-                  <p className="text-lg font-bold text-white">{monthEntries.length}</p>
-                  <p className="text-xs text-zinc-400">{t("training.bentoSessions")}</p>
-                </div>
-              </div>
-              <div className="bg-zinc-900 rounded-xl p-3 border border-white/10">
-                <p className="text-xs text-zinc-400 tracking-wide mb-1.5">{t("training.bentoTypeMix")}</p>
-                <MonthTypeStackBar entries={monthEntries} />
-                <div className="flex flex-wrap gap-x-2 gap-y-0.5 mt-1.5">
-                  {TRAINING_TYPES.filter((t) => monthEntries.some((e) => e.type === t.value)).map((t) => (
-                    <span key={t.value} className="text-xs text-zinc-400">
-                      {t.icon} {t.label}: {monthEntries.filter((e) => e.type === t.value).length}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Monthly stats removed — dashboard shows authoritative month/week totals.
+             Records page focuses on browsing individual log entries. */}
 
           {/* Free plan: 30-day history limit notice */}
           {!isPro && (
