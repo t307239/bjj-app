@@ -214,10 +214,10 @@ export default async function DashboardPage({
       .eq("is_pinned", true)
       .order("created_at", { ascending: false })
       .limit(5),
-    // All durations for 10K hour tracker (lightweight — just one int column)
+    // All durations + dates for 10K hour tracker + pace calculation
     supabase
       .from("training_logs")
-      .select("duration_min")
+      .select("duration_min, date")
       .eq("user_id", user.id),
   ]);
 
@@ -295,12 +295,15 @@ export default async function DashboardPage({
     (sum: number, row: { duration_min: number }) => sum + (row.duration_min ?? 0),
     0
   );
-  // Weekly average: total minutes / weeks since start_date (or total count / 4 as fallback)
-  const startDate = profileData?.start_date;
+  // Weekly average: total minutes / weeks since FIRST LOG (not BJJ career start)
+  const allDurationRows = (allDurations ?? []) as { duration_min: number; date: string }[];
+  const firstLogDate = allDurationRows.length > 0
+    ? allDurationRows.reduce((min, r) => (r.date < min ? r.date : min), allDurationRows[0].date)
+    : null;
   const weeklyAvgMinutes = (() => {
     if (totalMinutes <= 0) return 0;
-    if (startDate) {
-      const startMs = new Date(startDate + "T00:00:00Z").getTime();
+    if (firstLogDate) {
+      const startMs = new Date(firstLogDate + "T00:00:00Z").getTime();
       const nowMs = Date.now() + 9 * 60 * 60 * 1000; // JST
       const weeksElapsed = Math.max(1, (nowMs - startMs) / (7 * 86400000));
       return totalMinutes / weeksElapsed;

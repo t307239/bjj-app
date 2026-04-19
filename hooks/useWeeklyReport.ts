@@ -28,6 +28,10 @@ export type WeeklyReportData = {
   monthDelta: number;
   avgMinutesPerSession: number;
   maxConsecutiveDays: number;
+  /** Total training minutes for the current week */
+  currentWeekTotalMinutes: number;
+  /** Total training minutes for the current month */
+  currentMonthTotalMinutes: number;
   // Type distribution for current period
   typeDistribution: Record<TrainingType, number>;
   // Weekly trend (up to 8 weeks)
@@ -98,6 +102,8 @@ export function useWeeklyReport(
         monthDelta: 0,
         avgMinutesPerSession: 0,
         maxConsecutiveDays: 0,
+        currentWeekTotalMinutes: 0,
+        currentMonthTotalMinutes: 0,
         typeDistribution: emptyDist(),
         weeklyTrend: [],
         insights: [],
@@ -132,6 +138,8 @@ export function useWeeklyReport(
     let prevMonthCount = 0;
     let totalMinutes = 0;
     let sessionsWithDuration = 0;
+    let currentWeekTotalMinutes = 0;
+    let currentMonthTotalMinutes = 0;
     const allDates = new Set<string>();
     const currentWeekDist = emptyDist();
 
@@ -158,6 +166,7 @@ export function useWeeklyReport(
       if (monday === currentMonday) {
         currentWeekCount++;
         currentWeekDist[typ]++;
+        currentWeekTotalMinutes += log.duration_min ?? 0;
       } else if (monday === prevMonday) {
         prevWeekCount++;
       }
@@ -165,6 +174,7 @@ export function useWeeklyReport(
       // Current/prev month
       if (monthStart === currentMonthStart) {
         currentMonthCount++;
+        currentMonthTotalMinutes += log.duration_min ?? 0;
       } else if (monthStart === prevMonthStart) {
         prevMonthCount++;
       }
@@ -232,6 +242,8 @@ export function useWeeklyReport(
       monthDelta,
       avgMinutesPerSession,
       maxConsecutiveDays,
+      currentWeekTotalMinutes,
+      currentMonthTotalMinutes,
       typeDistribution: currentWeekDist,
       weeklyTrend,
       insights,

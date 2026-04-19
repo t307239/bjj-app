@@ -214,6 +214,14 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
           positive={(tab === "week" ? report.weekDelta : report.monthDelta) > 0}
           negative={(tab === "week" ? report.weekDelta : report.monthDelta) < 0}
         />
+        {(() => {
+          const totalMin = tab === "week" ? report.currentWeekTotalMinutes : report.currentMonthTotalMinutes;
+          if (totalMin <= 0) return null;
+          const h = Math.floor(totalMin / 60);
+          const m = totalMin % 60;
+          const display = h > 0 && m > 0 ? `${h}h${m}m` : h > 0 ? `${h}h` : `${m}m`;
+          return <KPIItem label={t("report.totalTime")} value={display} />;
+        })()}
         {report.avgMinutesPerSession > 0 && (
           <KPIItem
             label={t("report.avgTime")}
