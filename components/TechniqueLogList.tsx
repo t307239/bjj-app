@@ -368,7 +368,7 @@ export default function TechniqueLogList({
                     {/* B-23: Private reference video URL (localStorage) */}
                     <TechniqueVideoButton techniqueId={technique.id} />
                   </div>
-                  <div className="flex gap-1 ml-3 flex-shrink-0">
+                  <div className="flex gap-1 ml-2 flex-shrink-0">
                     {onTogglePin && (
                       <button
                         onClick={() => onTogglePin(technique.id)}
@@ -385,9 +385,10 @@ export default function TechniqueLogList({
                         </svg>
                       </button>
                     )}
+                    {/* Edit/Delete: desktop only — mobile uses swipe gestures */}
                     <button
                       onClick={() => onStartEdit(technique)}
-                      className="text-zinc-400 hover:text-[#10B981] transition-colors p-2 flex items-center justify-center min-w-[44px] min-h-[44px]"
+                      className="hidden md:flex text-zinc-400 hover:text-[#10B981] transition-colors p-2 items-center justify-center min-w-[44px] min-h-[44px]"
                       title={t("techniques.edit")}
                       aria-label={t("techniques.edit")}
                     >
@@ -407,7 +408,7 @@ export default function TechniqueLogList({
                     </button>
                     {confirmDeleteId === technique.id && deletingId !== technique.id ? (
                       /* Inline delete confirm — avoids window.confirm() */
-                      <div className="flex items-center gap-1 ml-1">
+                      <div className="hidden md:flex items-center gap-1 ml-1">
                         <button
                           onClick={() => { setConfirmDeleteId(null); onDelete(technique.id); }}
                           className="text-xs font-semibold text-white bg-[#e94560] hover:bg-[#c73652] min-h-[44px] px-3 py-2 rounded-lg transition-colors"
@@ -427,7 +428,7 @@ export default function TechniqueLogList({
                       <button
                         onClick={() => setConfirmDeleteId(technique.id)}
                         disabled={deletingId === technique.id}
-                        className="text-zinc-400 hover:text-red-400 transition-colors p-2 flex items-center justify-center min-w-[44px] min-h-[44px] disabled:opacity-50"
+                        className="hidden md:flex text-zinc-400 hover:text-red-400 transition-colors p-2 items-center justify-center min-w-[44px] min-h-[44px] disabled:opacity-50"
                         title={t("techniques.delete")}
                         aria-label={t("techniques.delete")}
                       >
