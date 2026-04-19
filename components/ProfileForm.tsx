@@ -61,7 +61,7 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
   const belts = BELTS({ t });
   const beltInfo = belts.find((b) => b.value === profile.belt);
   return (
-    <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-xl p-5 border border-white/10">
+    <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-xl p-5 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xs text-zinc-400 tracking-wider">{t("profile.title")}</h3>
         <button onClick={onEdit} className="text-xs text-zinc-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-2 min-h-[44px] transition-colors">
@@ -251,7 +251,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
         />
       )}
       <form onSubmit={handleSave} className="space-y-5">
-        <div className="bg-zinc-900 rounded-xl p-5 border border-white/10 text-center">
+        <div className="bg-zinc-900 rounded-xl p-5 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30 text-center">
           <div className="inline-flex items-center gap-3 mb-1">
             <span className={"px-6 py-2 rounded-full text-sm font-bold " + (currentBelt?.color ?? "")}>{currentBelt?.label}</span>
             <div className="flex gap-1">
@@ -262,7 +262,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
           </div>
           <p className="text-zinc-400 text-xs">{currentBelt?.label}</p>
         </div>
-        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
+        <div className="bg-zinc-900 rounded-xl p-4 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30">
           <label className="block text-zinc-300 text-sm font-medium mb-3">{t("profile.belt")}</label>
           <div className="grid grid-cols-5 gap-2">
             {belts.map((belt) => (
@@ -273,7 +273,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
             ))}
           </div>
         </div>
-        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
+        <div className="bg-zinc-900 rounded-xl p-4 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30">
           <label className="block text-zinc-300 text-sm font-medium mb-3">{t("profile.stripe")} (0–4)</label>
           <div className="flex gap-2">
             {[0, 1, 2, 3, 4].map((s) => (
@@ -284,7 +284,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
             ))}
           </div>
         </div>
-        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
+        <div className="bg-zinc-900 rounded-xl p-4 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30">
           <label className="block text-zinc-300 text-sm font-medium mb-1">{t("profile.gym")}</label>
           <p className="text-zinc-400 text-xs mb-2">{t("profile.gymSubtext")}</p>
           <input
@@ -305,7 +305,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
             <p className="text-xs text-emerald-400 mt-1">✓ {t("profile.gymMatched")}</p>
           )}
         </div>
-        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
+        <div className="bg-zinc-900 rounded-xl p-4 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30">
           <label className="block text-zinc-300 text-sm font-medium mb-2">{t("profile.startDate")}</label>
           <input type="date" value={form.start_date} max={today} onChange={(e) => setForm({ ...form, start_date: e.target.value })} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30" />
           {form.start_date && (
@@ -319,11 +319,11 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
             </p>
           )}
         </div>
-        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
+        <div className="bg-zinc-900 rounded-xl p-4 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30">
           <label className="block text-zinc-300 text-sm font-medium mb-2">{t("profile.bio")}</label>
           <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder={t("profile.bioPlaceholder")} rows={3} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 resize-none" />
         </div>
-        <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
+        <div className="bg-zinc-900 rounded-xl p-4 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30">
           <label className="block text-zinc-300 text-sm font-medium mb-1">{t("profile.timezone")}</label>
           <p className="text-zinc-400 text-xs mb-2">{t("profile.timezoneDesc")}</p>
           <select

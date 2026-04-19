@@ -193,7 +193,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
 
         {/* T-31: Target weight section (Pro only) */}
         {isPro && (
-          <div className="bg-zinc-900 rounded-xl border border-white/10 p-4">
+          <div className="bg-zinc-900 rounded-xl ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30 p-4">
             <div className="flex items-center justify-between mb-3">
               <p className="text-xs text-zinc-400 font-semibold uppercase tracking-wide">
                 🎯 {t("body.targetWeightTitle")}

@@ -88,7 +88,7 @@ export default function BeltProgressCard({
 
   return (
     <div
-      className={`bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:border-white/20 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 ${className}`}
+      className={`bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-5 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 hover:ring-white/[0.08] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50 ${className}`}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">

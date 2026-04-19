@@ -16,13 +16,13 @@ import BeltHistoryEditor from "@/components/profile/BeltHistoryEditor";
 
 // ─── Lazy-loaded sections (keep initial bundle light) ───
 const ProfileForm = dynamic(() => import("@/components/ProfileForm"), {
-  loading: () => <div className="h-48 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="h-48 bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl animate-pulse" />,
 });
 const BodyManagementSection = dynamic(() => import("@/components/BodyManagementSection"), {
-  loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="h-36 bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl animate-pulse" />,
 });
 const MilestoneBadgeGrid = dynamic(() => import("@/components/MilestoneBadgeGrid"), {
-  loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="h-36 bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl animate-pulse" />,
 });
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
@@ -179,7 +179,7 @@ export default async function ProfilePage() {
         {/* ═══════════════════════════════════════════
             PROFILE HERO
             ═══════════════════════════════════════════ */}
-        <div className="bg-zinc-900/40 border border-white/8 rounded-2xl p-5 md:p-6 mb-6">
+        <div className="bg-zinc-900/40 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl p-5 md:p-6 mb-6">
           <div className="flex items-start gap-4 md:gap-5">
             {/* Avatar */}
             {avatarUrl ? (

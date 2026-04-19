@@ -380,6 +380,10 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         onMagicOrganize={handleMagicOrganize}
         onShowProModal={() => setShowProModal(true)}
         onAddPopup={setAddPopup}
+        onMobileAdd={(pos) => {
+          setMobileAddDrawer(pos);
+          requestAnimationFrame(() => mobileAddRef.current?.focus());
+        }}
         t={t}
       />
 

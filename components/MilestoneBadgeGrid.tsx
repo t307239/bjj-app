@@ -109,7 +109,7 @@ export default function MilestoneBadgeGrid({ totalCount }: Props) {
   const earnedCount = MILESTONES.filter((m) => m <= totalCount).length;
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-zinc-900 p-5 mt-4">
+    <div className="rounded-2xl ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 bg-zinc-900 p-5 mt-4">
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
         <span className="text-base">🏅</span>

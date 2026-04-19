@@ -210,7 +210,7 @@ export default function TechniqueLogList({
               key={technique.id}
               onDelete={() => onDelete(technique.id)}
               onEdit={() => onStartEdit(technique)}
-              className="bg-zinc-900 rounded-xl p-4 border border-white/10 hover:bg-white/[0.04] active:bg-white/[0.06] transition-colors duration-150"
+              className="bg-zinc-900 rounded-xl p-4 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30 hover:ring-white/[0.08] hover:bg-white/[0.04] active:bg-white/[0.06] transition-colors duration-150"
             >
               {editingId === technique.id ? (
                 // インライン編集フォーム
@@ -339,7 +339,7 @@ export default function TechniqueLogList({
                     </div>
                     {technique.notes && (
                       <div className="mt-1.5">
-                        <p className="text-zinc-400 text-xs leading-relaxed">
+                        <p className="text-zinc-400 text-xs leading-relaxed whitespace-pre-line">
                           {renderNotes(
                             technique.notes,
                             expandedIds.has(technique.id),

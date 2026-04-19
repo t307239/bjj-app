@@ -114,12 +114,12 @@ export default function BeltHistoryEditor({ userId }: Props) {
 
   if (loading) {
     return (
-      <div className="bg-zinc-900/50 border border-white/8 rounded-2xl p-4 animate-pulse h-24" />
+      <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl p-4 animate-pulse h-24" />
     );
   }
 
   return (
-    <div className="bg-zinc-900/50 border border-white/8 rounded-2xl p-4">
+    <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl p-4">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-xs font-semibold text-zinc-500 tracking-widest">
           {t("beltProgress.historyTitle")}

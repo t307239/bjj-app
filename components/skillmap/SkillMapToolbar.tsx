@@ -14,6 +14,7 @@ type Props = {
   onMagicOrganize: () => void;
   onShowProModal: () => void;
   onAddPopup: (popup: { screenX: number; screenY: number; flowX: number; flowY: number }) => void;
+  onMobileAdd: (pos: { flowX: number; flowY: number }) => void;
   t: (k: string) => string;
 };
 
@@ -31,13 +32,14 @@ export default function SkillMapToolbar({
   onMagicOrganize,
   onShowProModal,
   onAddPopup,
+  onMobileAdd,
   t,
 }: Props) {
   const handleMobileAdd = () => {
     if (!isPro && nodeCount >= 10) { onShowProModal(); return; }
     const x = lastNodePosition ? lastNodePosition.x + 200 : 100;
     const y = lastNodePosition ? lastNodePosition.y : 100;
-    onAddPopup({ screenX: 0, screenY: 0, flowX: x, flowY: y });
+    onMobileAdd({ flowX: x, flowY: y });
   };
 
   return (
