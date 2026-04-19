@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { getLocalDateString } from "@/lib/timezone";
@@ -34,6 +34,7 @@ export default function BeltHistoryEditor({ userId }: Props) {
   const [newBelt, setNewBelt] = useState("");
   const [newDate, setNewDate] = useState("");
   const [toast, setToast] = useState<string | null>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const today = getLocalDateString();
 
   const supabase = createClient();
@@ -50,6 +51,11 @@ export default function BeltHistoryEditor({ userId }: Props) {
     };
     fetch();
   }, [userId, supabase]);
+
+  // Cleanup toast timer on unmount
+  useEffect(() => {
+    return () => { if (toastTimer.current) clearTimeout(toastTimer.current); };
+  }, []);
 
   const BELT_LABELS: Record<string, string> = {
     white: t("dashboard.beltWhite"),
@@ -80,7 +86,7 @@ export default function BeltHistoryEditor({ userId }: Props) {
       setNewDate("");
       setShowAdd(false);
       setToast(t("profile.saved"));
-      setTimeout(() => setToast(null), 2000);
+      toastTimer.current = setTimeout(() => setToast(null), 2000);
     }
     setSaving(false);
   };
@@ -108,7 +114,7 @@ export default function BeltHistoryEditor({ userId }: Props) {
         prev.map((e) => (e.belt === belt ? { ...e, promoted_at: newDateValue } : e))
       );
       setToast(t("profile.saved"));
-      setTimeout(() => setToast(null), 2000);
+      toastTimer.current = setTimeout(() => setToast(null), 2000);
     }
     setSaving(false);
   };
