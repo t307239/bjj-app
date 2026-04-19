@@ -31,11 +31,11 @@ html, body {
   margin-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* Horizontal scroll container with fade-edge hints */
+/* Horizontal scroll container with fade-edge hint (right side only) */
 .scroll-fade-x {
   position: relative;
-  -webkit-mask-image: linear-gradient(to right, transparent, black 12px, black calc(100% - 24px), transparent);
-  mask-image: linear-gradient(to right, transparent, black 12px, black calc(100% - 24px), transparent);
+  -webkit-mask-image: linear-gradient(to right, black, black calc(100% - 24px), transparent);
+  mask-image: linear-gradient(to right, black, black calc(100% - 24px), transparent);
 }
 
 /* #110: Ensure placeholder text meets WCAG AA contrast on dark backgrounds */

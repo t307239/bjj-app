@@ -1,11 +1,11 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 343 files
+TS/TSX Scanned: 344 files
 CRITICAL: 1
-WARNING: 2
-INFO: 99
-Total: 102
+WARNING: 4
+INFO: 100
+Total: 105
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 38% (680/1774 キー) — 1125 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 38% (680/1777 キー) — 1128 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -33,9 +33,9 @@ Total: 102
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L453: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L163: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L164: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L167: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L168: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/records/page.tsx: L160: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
@@ -157,7 +157,7 @@ Total: 102
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L425: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/TrainingChart.tsx: L355: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/TrainingChart.tsx: L362: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingTypeChart.tsx: L225: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -181,6 +181,12 @@ Total: 102
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/gym/BeltDistributionChart.tsx: L43: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[WARNING] [SETTIMEOUT_NO_CLEANUP] components/profile/BeltHistoryEditor.tsx: L82: setTimeout(() => setState) without clearTimeout — メモリリーク
+  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
+[WARNING] [SETTIMEOUT_NO_CLEANUP] components/profile/BeltHistoryEditor.tsx: L110: setTimeout(() => setState) without clearTimeout — メモリリーク
+  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
+[INFO] [SUPABASE_NO_ERROR] components/profile/BeltHistoryEditor.tsx: L42: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/AddNodePopup.tsx: L24: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/BottomDrawer.tsx: L118: style={{...}} — Tailwindクラスで統一推奨
