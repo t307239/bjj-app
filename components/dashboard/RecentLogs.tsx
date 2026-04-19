@@ -78,7 +78,7 @@ function cleanNotes(raw: string | null): string {
 export default function RecentLogs({ logs, weekCount = 0, streak = 0, t }: Props) {
   if (logs.length === 0) {
     return (
-      <div className="bg-zinc-900/40 border border-white/[0.06] rounded-2xl p-8 mb-5 text-center">
+      <div className="bg-zinc-900/40 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl p-8 mb-5 text-center">
         {/* Stat-integrated empty state */}
         <div className="text-5xl mb-4">🥋</div>
         <p className="text-white text-base font-bold mb-1.5">
@@ -123,7 +123,7 @@ export default function RecentLogs({ logs, weekCount = 0, streak = 0, t }: Props
           return (
             <div
               key={log.id}
-              className="bg-zinc-900/40 border border-white/[0.06] rounded-xl px-3.5 py-3 flex items-center gap-3 hover:border-white/10 active:scale-[0.98] transition-all"
+              className="bg-zinc-900/40 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30 rounded-xl px-3.5 py-3 flex items-center gap-3 hover:ring-white/[0.08] active:scale-[0.98] transition-all"
             >
               {/* Date */}
               <span className="text-xs text-zinc-500 font-medium tabular-nums whitespace-nowrap w-[72px] flex-shrink-0">

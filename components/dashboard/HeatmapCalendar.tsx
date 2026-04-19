@@ -135,7 +135,7 @@ export default function HeatmapCalendar({ trainingDates }: Props) {
   const totalDaysInPeriod = new Set(trainingDates.filter((d) => dateGrid.includes(d))).size;
 
   return (
-    <div className="bg-zinc-900/40 border border-white/[0.06] rounded-2xl px-4 py-3.5 mb-5">
+    <div className="bg-zinc-900/40 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl px-4 py-3.5 mb-5">
       {/* Header */}
       <div className="flex items-center justify-between mb-2.5">
         <span className="text-xs font-medium text-zinc-400">

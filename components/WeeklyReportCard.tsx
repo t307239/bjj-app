@@ -84,7 +84,7 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
   // ── Loading skeleton — matches real content height to prevent layout shift ──
   if (loading) {
     return (
-      <div className="bg-zinc-900/60 border border-white/[0.08] rounded-2xl px-4 py-4 mb-5 animate-pulse">
+      <div className="bg-zinc-900/60 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl px-4 py-4 mb-5 animate-pulse">
         {/* Header row */}
         <div className="flex items-center justify-between mb-3">
           <div className="h-4 bg-zinc-800 rounded w-32" />
@@ -125,7 +125,7 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
   // ── Empty state (not enough data) ──
   if (!report.hasEnoughData && isPro) {
     return (
-      <div className="bg-zinc-900/60 border border-white/[0.08] rounded-2xl px-4 py-4 mb-5">
+      <div className="bg-zinc-900/60 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl px-4 py-4 mb-5">
         <div className="flex items-center gap-2 mb-2">
           <span className="text-base">📊</span>
           <h3 className="text-sm font-semibold text-white">{t("report.title")}</h3>
@@ -138,7 +138,7 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
   // ── Free user: blur teaser ──
   if (!isPro) {
     return (
-      <div className="relative bg-zinc-900/60 border border-white/[0.08] rounded-2xl px-4 py-4 mb-5 overflow-hidden">
+      <div className="relative bg-zinc-900/60 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl px-4 py-4 mb-5 overflow-hidden">
         {/* Blurred preview content */}
         <div className="blur-sm pointer-events-none select-none" aria-hidden="true">
           <div className="flex items-center gap-2 mb-3">
@@ -174,7 +174,7 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
   const totalTypeCount = Object.values(report.typeDistribution).reduce((a, b) => a + b, 0);
 
   return (
-    <div className="bg-zinc-900/60 border border-white/[0.08] rounded-2xl px-4 py-4 mb-5">
+    <div className="bg-zinc-900/60 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl px-4 py-4 mb-5">
       {/* Header with tab */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">

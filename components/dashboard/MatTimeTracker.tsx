@@ -67,7 +67,7 @@ export default function MatTimeTracker({ totalMinutes, weeklyAvgMinutes, t, loca
   );
 
   return (
-    <div className="mb-5 bg-zinc-900/40 border border-zinc-800/50 rounded-2xl p-4">
+    <div className="mb-5 bg-zinc-900/40 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl p-4">
       {/* Header */}
       <div className="flex items-center gap-2 mb-3">
         <span className="text-base">⏱️</span>

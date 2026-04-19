@@ -31,7 +31,7 @@ export default function StatusBar({
     <div className="mb-5">
       {/* Mobile: 2 cards (week + streak) */}
       <div className="grid grid-cols-2 gap-2 sm:hidden">
-        <div className="bg-zinc-900/60 border border-white/[0.08] rounded-2xl px-3.5 py-3 text-center">
+        <div className="bg-zinc-900/60 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl px-3.5 py-3 text-center">
           <span className="block text-2xl font-bold text-white tabular-nums">{weekCount}</span>
           <span className="block text-xs text-zinc-400 mt-0.5">{t("home.weekLabel")}</span>
         </div>
@@ -42,7 +42,7 @@ export default function StatusBar({
       </div>
 
       {/* Desktop: full 4-stat bar */}
-      <div className="hidden sm:block bg-zinc-900/60 border border-white/[0.08] rounded-2xl px-4 py-3.5">
+      <div className="hidden sm:block bg-zinc-900/60 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl px-4 py-3.5">
         {/* Row 1: Primary stats */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
