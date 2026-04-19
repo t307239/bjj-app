@@ -55,6 +55,7 @@ type Props = {
   bjjStartDate: string | null;
   beltHistory: BeltHistoryEntry[];
   className?: string;
+  onEditClick?: () => void;
 };
 
 export default function BeltProgressCard({
@@ -64,6 +65,7 @@ export default function BeltProgressCard({
   bjjStartDate,
   beltHistory,
   className = "",
+  onEditClick,
 }: Props) {
   const { t } = useLocale();
 
@@ -95,16 +97,29 @@ export default function BeltProgressCard({
         <span className="text-xs font-semibold text-zinc-500 tracking-widest">
           {t("beltProgress.title")}
         </span>
-        <Link
-          href="/profile"
-          className="rounded-xl bg-white/5 hover:bg-white/10 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
-          title={t("beltProgress.editTitle")}
-          aria-label={t("beltProgress.editTitle")}
-        >
-          <svg className="w-4 h-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-          </svg>
-        </Link>
+        {onEditClick ? (
+          <button
+            onClick={onEditClick}
+            className="rounded-xl bg-white/5 hover:bg-white/10 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+            title={t("beltProgress.editTitle")}
+            aria-label={t("beltProgress.editTitle")}
+          >
+            <svg className="w-4 h-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+          </button>
+        ) : (
+          <Link
+            href="/profile"
+            className="rounded-xl bg-white/5 hover:bg-white/10 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+            title={t("beltProgress.editTitle")}
+            aria-label={t("beltProgress.editTitle")}
+          >
+            <svg className="w-4 h-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+          </Link>
+        )}
       </div>
 
       {/* Belt visual + info */}

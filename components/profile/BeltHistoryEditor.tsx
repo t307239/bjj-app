@@ -22,14 +22,17 @@ type BeltHistoryEntry = {
 
 type Props = {
   userId: string;
+  externalExpanded?: boolean;
 };
 
-export default function BeltHistoryEditor({ userId }: Props) {
+export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
   const { t } = useLocale();
   const [entries, setEntries] = useState<BeltHistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+  const [internalExpanded, setInternalExpanded] = useState(false);
+  const expanded = externalExpanded || internalExpanded;
+  const setExpanded = (v: boolean) => setInternalExpanded(v);
   const [showAdd, setShowAdd] = useState(false);
   const [newBelt, setNewBelt] = useState("");
   const [newDate, setNewDate] = useState("");

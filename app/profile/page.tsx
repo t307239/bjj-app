@@ -5,14 +5,13 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import dynamic from "next/dynamic";
 import NavBar from "@/components/NavBar";
-import BeltProgressCard from "@/components/BeltProgressCard";
 import ProfileTabsLayout from "@/components/profile/ProfileTabsLayout";
+import BeltProgressSection from "@/components/profile/BeltProgressSection";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
 import { formatBjjDuration, calcBjjDuration } from "@/lib/bjjDuration";
 import { buildBreadcrumbJsonLd } from "@/lib/breadcrumb";
 import AvatarImage from "@/components/AvatarImage";
-import BeltHistoryEditor from "@/components/profile/BeltHistoryEditor";
 
 // ─── Lazy-loaded sections (keep initial bundle light) ───
 const ProfileForm = dynamic(() => import("@/components/ProfileForm"), {
@@ -255,15 +254,14 @@ export default async function ProfilePage() {
         {/* ═══════════════════════════════════════════
             BELT PROGRESS — always visible, outside tabs
             ═══════════════════════════════════════════ */}
-        <BeltProgressCard
+        <BeltProgressSection
           belt={belt}
           stripes={stripeCount}
           monthsAtBelt={monthsAtBelt}
           bjjStartDate={profile?.start_date ?? null}
           beltHistory={beltHistory}
-          className="mb-3"
+          userId={user.id}
         />
-        <BeltHistoryEditor userId={user.id} />
 
         {/* ═══════════════════════════════════════════
             TAB LAYOUT: プロフィール / ボディ管理 / 実績
