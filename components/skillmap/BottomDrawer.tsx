@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useLayoutEffect, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { type Node } from "@xyflow/react";
 import { PRESET_POSITIONS } from "./constants";
 
@@ -58,8 +58,8 @@ export default function BottomDrawer({
   const inputRef = useRef<HTMLInputElement>(null);
   const tagInputRef = useRef<HTMLInputElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
-  useLayoutEffect(() => { if (mode === "addChild") inputRef.current?.focus(); }, [mode]);
-  useLayoutEffect(() => { if (mode === "editTags") tagInputRef.current?.focus(); }, [mode]);
+  useEffect(() => { if (mode === "addChild") requestAnimationFrame(() => inputRef.current?.focus()); }, [mode]);
+  useEffect(() => { if (mode === "editTags") requestAnimationFrame(() => tagInputRef.current?.focus()); }, [mode]);
 
   // Focus trap + ESC to close
   const handleKeyDown = useCallback((e: KeyboardEvent) => {

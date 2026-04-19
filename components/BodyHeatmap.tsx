@@ -270,7 +270,7 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates, initi
           viewBox="0 0 120 265"
           className="w-40 select-none"
           aria-label={t("body.bodyMap")}
-          style={{ touchAction: "none" }}
+          style={{ touchAction: "auto" }}
         >
           {/* ── Silhouette shapes (non-interactive, dark fill) ── */}
           {/* Head */}
@@ -308,7 +308,7 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates, initi
               <g
                 key={part.key}
                 onPointerUp={(e) => { e.preventDefault(); handlePartClick(part.key); }}
-                style={{ cursor: isOnline ? "pointer" : "default", touchAction: "none" }}
+                style={{ cursor: isOnline ? "pointer" : "default", touchAction: "auto" }}
                 role="button"
                 aria-label={t(part.labelKey)}
               >

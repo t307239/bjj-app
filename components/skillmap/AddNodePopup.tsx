@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 
 type Props = {
   screenX: number;
@@ -13,7 +13,7 @@ type Props = {
 export default function AddNodePopup({ screenX, screenY, onAdd, onCancel, t }: Props) {
   const [name, setName] = useState("");
   const ref = useRef<HTMLInputElement>(null);
-  useLayoutEffect(() => { ref.current?.focus(); }, []);
+  useEffect(() => { requestAnimationFrame(() => ref.current?.focus()); }, []);
 
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions

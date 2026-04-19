@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef, useEffect } from "react";
+
 type Props = {
   edgeId: string;
   notes: string;
@@ -10,6 +12,9 @@ type Props = {
 };
 
 export default function EdgeNotesPanel({ notes, onChange, onSave, onClose, t }: Props) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => { requestAnimationFrame(() => textareaRef.current?.focus()); }, []);
+
   return (
     <div className="mt-2 bg-zinc-900 border border-indigo-500/30 rounded-xl p-3 shadow-xl">
       <div className="flex items-center gap-2 mb-2">
@@ -21,12 +26,12 @@ export default function EdgeNotesPanel({ notes, onChange, onSave, onClose, t }: 
         >✕</button>
       </div>
       <textarea
+        ref={textareaRef}
         value={notes}
         onChange={(e) => onChange(e.target.value)}
         placeholder={t("skillmap.edgeNotesPlaceholder")}
         className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 resize-none"
         rows={3}
-        autoFocus
       />
       <div className="flex gap-2 mt-2">
         <button

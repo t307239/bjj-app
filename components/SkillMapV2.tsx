@@ -497,7 +497,6 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
             <input
               ref={mobileAddRef}
               type="text"
-              autoFocus
               inputMode="text"
               enterKeyHint="done"
               placeholder={t("skillmap.namePlaceholder")}
