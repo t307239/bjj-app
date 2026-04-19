@@ -389,7 +389,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
       <div className="relative">
       <div
         className="w-full rounded-xl overflow-hidden border border-white/10"
-        style={{ height: "clamp(350px, 60vh, 620px)", touchAction: "none", zIndex: 1 }}
+        style={{ height: "clamp(350px, 60vh, 620px)", touchAction: isMobile ? "manipulation" : "none", zIndex: 1 }}
       >
         <ReactFlow
           nodes={filteredDisplayNodes}
@@ -412,7 +412,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           elementsSelectable={!isLockedReadOnly && editMode}
           deleteKeyCode={!isLockedReadOnly && isPro ? "Backspace" : null}
           panOnDrag={!connectingFrom}
-          preventScrolling
+          preventScrolling={!isMobile}
           minZoom={0.2}
           maxZoom={2.5}
           style={{ background: "#080f1e" }}
