@@ -222,9 +222,9 @@ export default async function TechniquesPage() {
               {topCategories.map(([cat, count]) => (
                 <span
                   key={cat}
-                  className="text-xs font-medium bg-zinc-800/60 border border-white/8 text-zinc-400 px-2.5 py-1 rounded-full capitalize"
+                  className="text-xs font-medium bg-zinc-800/60 border border-white/8 text-zinc-400 px-2.5 py-1 rounded-full"
                 >
-                  {cat} · {count}
+                  {t("techniques.categories." + cat)} · {count}
                 </span>
               ))}
             </div>
