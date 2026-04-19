@@ -36,7 +36,7 @@ const getProfileData = cache(async () => {
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const [{ data: profile }, { count: totalCount }, { data: recentLogs }] =
+  const [{ data: profile }, { count: totalCount }, { data: recentLogs }, { data: beltHistory }] =
     await Promise.all([
       supabase
         .from("profiles")
@@ -53,9 +53,14 @@ const getProfileData = cache(async () => {
         .eq("user_id", user.id)
         .order("date", { ascending: false })
         .limit(60),
+      supabase
+        .from("belt_history")
+        .select("belt, promoted_at, notes")
+        .eq("user_id", user.id)
+        .order("promoted_at", { ascending: true }),
     ]);
 
-  return { user, profile, totalCount: totalCount ?? 0, recentLogs: recentLogs ?? [] };
+  return { user, profile, totalCount: totalCount ?? 0, recentLogs: recentLogs ?? [], beltHistory: beltHistory ?? [] };
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -103,7 +108,7 @@ export default async function ProfilePage() {
   const data = await getProfileData();
   if (!data) redirect("/login?next=/profile");
 
-  const { user, profile, totalCount, recentLogs } = data;
+  const { user, profile, totalCount, recentLogs, beltHistory } = data;
 
   const locale = await detectServerLocale();
   const t = makeT(locale);
@@ -118,9 +123,16 @@ export default async function ProfilePage() {
 
   const belt = profile?.belt ?? "white";
   const stripeCount = profile?.stripe ?? 0;
-  const monthsAtBelt = profile?.start_date ? calcBjjDuration(profile.start_date).totalMonths : 0;
   const isPro = profile?.is_pro ?? false;
   const gymName = profile?.gym_name ?? null;
+
+  // Belt duration: from belt_history (current belt's promoted_at), not start_date
+  const currentBeltEntry = beltHistory.find(
+    (h: { belt: string }) => h.belt === belt
+  );
+  const monthsAtBelt = currentBeltEntry?.promoted_at
+    ? calcBjjDuration(currentBeltEntry.promoted_at).totalMonths
+    : 0;
 
   // Calculate streak (same algorithm as NavBar — uses logical training date)
   let streak = 0;
@@ -241,6 +253,8 @@ export default async function ProfilePage() {
           belt={belt}
           stripes={stripeCount}
           monthsAtBelt={monthsAtBelt}
+          bjjStartDate={profile?.start_date ?? null}
+          beltHistory={beltHistory}
           className="mb-4"
         />
 
