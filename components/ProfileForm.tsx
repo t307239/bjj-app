@@ -219,6 +219,14 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
       { onConflict: "id" }
     );
     if (!upsertError) {
+      // Record belt change in belt_history (upsert: one entry per belt per user)
+      if (form.belt !== profile.belt) {
+        const today = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+        await supabase.from("belt_history").upsert(
+          { user_id: userId, belt: form.belt, promoted_at: today },
+          { onConflict: "user_id,belt" }
+        );
+      }
       // Detect belt promotion (viral celebration moment)
       if (isBeltPromotion(profile.belt, form.belt)) {
         setPromotionFrom(profile.belt);

@@ -12,6 +12,7 @@ import { getLogicalTrainingDate } from "@/lib/logicalDate";
 import { formatBjjDuration, calcBjjDuration } from "@/lib/bjjDuration";
 import { buildBreadcrumbJsonLd } from "@/lib/breadcrumb";
 import AvatarImage from "@/components/AvatarImage";
+import BeltHistoryEditor from "@/components/profile/BeltHistoryEditor";
 
 // ─── Lazy-loaded sections (keep initial bundle light) ───
 const ProfileForm = dynamic(() => import("@/components/ProfileForm"), {
@@ -255,8 +256,9 @@ export default async function ProfilePage() {
           monthsAtBelt={monthsAtBelt}
           bjjStartDate={profile?.start_date ?? null}
           beltHistory={beltHistory}
-          className="mb-4"
+          className="mb-3"
         />
+        <BeltHistoryEditor userId={user.id} />
 
         {/* ═══════════════════════════════════════════
             TAB LAYOUT: プロフィール / ボディ管理 / 実績

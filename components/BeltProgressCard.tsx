@@ -57,7 +57,7 @@ type Props = {
 };
 
 /** Format duration from a date string to now as "Xy Zm" */
-function formatDuration(dateStr: string, t: (key: string, vars?: Record<string, unknown>) => string): string {
+function formatDuration(dateStr: string, t: (key: string, vars?: Record<string, string | number>) => string): string {
   const start = new Date(dateStr);
   const now = new Date(Date.now() + 9 * 60 * 60 * 1000); // JST
   let months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());

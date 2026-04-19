@@ -118,14 +118,16 @@
   "beltProgress": {
     "title": "Belt Progress",
     "editTitle": "Edit belt in Profile",
-    "almostThere": "Almost there!",
     "stripe": "stripe",
     "stripes": "stripes",
     "stripesOf4": "{n} / 4 stripes",
     "month": "month",
     "months": "months",
     "monthsAt": "at {belt}",
-    "beltSuffix": " Belt"
+    "beltSuffix": " Belt",
+    "bjjHistory": "BJJ History",
+    "timeAtBelt": "{belt}",
+    "historyTitle": "Promotion History"
   },
   "training": {
     "title": "Training Log",
