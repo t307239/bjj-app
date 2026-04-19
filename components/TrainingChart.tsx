@@ -91,9 +91,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
             d.setDate(1);
             d.setMonth(d.getMonth() - i);
             const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-            const label = locale === "ja"
-              ? `${d.getMonth() + 1}月`
-              : new Intl.DateTimeFormat("en", { month: "short" }).format(d);
+            const label = new Intl.DateTimeFormat(locale, { month: "short" }).format(d);
             const info = mCounts[ym] || { count: 0, minutes: 0 };
             months.push({ ym, label, count: info.count, minutes: info.minutes });
           }
@@ -172,7 +170,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
           </div>
           <div className="flex gap-1">
             <div className="flex flex-col gap-0.5 mr-1">
-              {(locale === "ja" ? ["日","月","火","水","木","金","土"] : ["S","M","T","W","T","F","S"]).map((d, i) => (
+              {Array.from({ length: 7 }, (_, i) => new Intl.DateTimeFormat(locale, { weekday: "narrow" }).format(new Date(2024, 0, 7 + i))).map((d, i) => (
                 <div key={i} className="text-xs text-zinc-400 h-3 flex items-center">{d}</div>
               ))}
             </div>
@@ -220,12 +218,10 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
 
   // Weekday labels: locale-aware (Sun=0 ... Sat=6)
   const isJa = locale === "ja";
-  const dayLabels = isJa
-    ? ["日", "月", "火", "水", "木", "金", "土"]
-    : Array.from({ length: 7 }, (_, i) => {
-        const d = new Date(2024, 0, 7 + i); // 2024-01-07 is Sun
-        return new Intl.DateTimeFormat("en", { weekday: "narrow" }).format(d);
-      });
+  const dayLabels = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(2024, 0, 7 + i); // 2024-01-07 is Sun
+    return new Intl.DateTimeFormat(locale, { weekday: "narrow" }).format(d);
+  });
 
   // GitHub-style Sunday-aligned weeks: pad front so data[0] aligns to its actual weekday
   // data[0] = today-83; determine its day-of-week (0=Sun) and prepend that many nulls
@@ -251,9 +247,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
     const firstDay = week.find((d) => d !== null);
     if (!firstDay) return "";
     const dt = new Date(firstDay.date + "T00:00:00");
-    const monthAbbrev = isJa
-      ? `${dt.getMonth() + 1}月`
-      : new Intl.DateTimeFormat("en", { month: "short" }).format(dt);
+    const monthAbbrev = new Intl.DateTimeFormat(locale, { month: "short" }).format(dt);
     if (wi === 0) return monthAbbrev;
     const prevWeek = weeks[wi - 1];
     const prevFirst = prevWeek.find((d) => d !== null);
@@ -323,7 +317,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
                       <div key={di} className="relative group w-3 h-3">
                         <div className={`w-3 h-3 rounded-sm ${getColor(day.count)} transition-colors cursor-default`} />
                         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-zinc-800 border border-white/10 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 shadow-lg">
-                          {new Intl.DateTimeFormat(isJa ? "ja" : "en", { month: "short", day: "numeric", year: "numeric" }).format(new Date(day.date + "T00:00:00"))}: {day.count} {isJa ? "回" : day.count === 1 ? "session" : "sessions"}
+                          {new Intl.DateTimeFormat(locale, { month: "short", day: "numeric", year: "numeric" }).format(new Date(day.date + "T00:00:00"))}: {day.count} {t("training.sessionsUnit", { n: day.count })}
                         </div>
                       </div>
                     ) : (
