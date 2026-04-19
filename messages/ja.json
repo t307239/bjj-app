@@ -131,6 +131,7 @@
     "historyTitle": "昇格履歴",
     "addPromotion": "昇格を追加",
     "savePromotion": "保存",
+    "editHistory": "編集",
     "noHistory": "昇格履歴がありません。「昇格を追加」から過去の帯を登録できます。"
   },
   "training": {

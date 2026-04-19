@@ -187,7 +187,7 @@ export default async function TechniquesPage() {
           {totalTechniques > 0 && (
             <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
               {/* Total */}
-              <div className="bg-zinc-900/50 border border-white/8 border-l-2 border-l-zinc-400 rounded-xl px-2 py-2.5 sm:p-3 text-center">
+              <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30 border-l-2 border-l-zinc-400 rounded-xl px-2 py-2.5 sm:p-3 text-center">
                 <p className="text-xl sm:text-2xl font-black text-white tabular-nums">
                   {totalTechniques}
                 </p>
@@ -196,7 +196,7 @@ export default async function TechniquesPage() {
                 </p>
               </div>
               {/* Solid+ */}
-              <div className="bg-zinc-900/50 border border-white/8 border-l-2 border-l-amber-400 rounded-xl px-2 py-2.5 sm:p-3 text-center">
+              <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30 border-l-2 border-l-amber-400 rounded-xl px-2 py-2.5 sm:p-3 text-center">
                 <p className="text-xl sm:text-2xl font-black text-amber-400 tabular-nums">
                   {learned + mastered}
                 </p>
@@ -205,7 +205,7 @@ export default async function TechniquesPage() {
                 </p>
               </div>
               {/* Mastered */}
-              <div className="bg-zinc-900/50 border border-white/8 border-l-2 border-l-emerald-400 rounded-xl px-2 py-2.5 sm:p-3 text-center">
+              <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30 border-l-2 border-l-emerald-400 rounded-xl px-2 py-2.5 sm:p-3 text-center">
                 <p className="text-xl sm:text-2xl font-black text-emerald-400 tabular-nums">
                   {mastered}
                 </p>
@@ -272,7 +272,7 @@ export default async function TechniquesPage() {
               </div>
               <Link
                 href="/techniques/skillmap"
-                className="group block bg-zinc-900/40 border border-white/8 hover:border-emerald-400/30 rounded-2xl p-5 transition-all active:scale-[0.98]"
+                className="group block bg-zinc-900/40 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30 hover:ring-emerald-400/30 rounded-2xl p-5 transition-all active:scale-[0.98]"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -294,7 +294,7 @@ export default async function TechniquesPage() {
           }
           wikiSlot={
             <section className="mb-7">
-              <div className="bg-zinc-900/40 border border-white/8 rounded-2xl p-4">
+              <div className="bg-zinc-900/40 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30 rounded-2xl p-4">
                 <div className="flex flex-wrap gap-2 mb-3">
                   {WIKI_LINKS.map((link) => (
                     <a

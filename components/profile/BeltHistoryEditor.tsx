@@ -29,6 +29,7 @@ export default function BeltHistoryEditor({ userId }: Props) {
   const [entries, setEntries] = useState<BeltHistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [newBelt, setNewBelt] = useState("");
   const [newDate, setNewDate] = useState("");
@@ -118,20 +119,47 @@ export default function BeltHistoryEditor({ userId }: Props) {
     );
   }
 
+  // Collapsed: show a minimal toggle bar
+  if (!expanded) {
+    return (
+      <button
+        onClick={() => setExpanded(true)}
+        className="w-full flex items-center justify-between bg-zinc-900/30 hover:bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-xl px-4 py-2.5 transition-colors group"
+      >
+        <span className="text-xs font-semibold text-zinc-500 tracking-widest">
+          {t("beltProgress.historyTitle")}
+        </span>
+        <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">
+          {t("beltProgress.editHistory")}
+        </span>
+      </button>
+    );
+  }
+
   return (
     <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl p-4">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-xs font-semibold text-zinc-500 tracking-widest">
           {t("beltProgress.historyTitle")}
         </h3>
-        {availableBelts.length > 0 && (
+        <div className="flex items-center gap-2">
+          {availableBelts.length > 0 && (
+            <button
+              onClick={() => setShowAdd(!showAdd)}
+              className="text-xs text-zinc-400 hover:text-white transition-colors px-2 py-1 rounded-lg hover:bg-white/5"
+            >
+              {showAdd ? t("training.cancel") : `+ ${t("beltProgress.addPromotion")}`}
+            </button>
+          )}
           <button
-            onClick={() => setShowAdd(!showAdd)}
-            className="text-xs text-zinc-400 hover:text-white transition-colors px-2 py-1 rounded-lg hover:bg-white/5"
+            onClick={() => { setExpanded(false); setShowAdd(false); }}
+            className="text-xs text-zinc-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
           >
-            {showAdd ? t("training.cancel") : `+ ${t("beltProgress.addPromotion")}`}
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+            </svg>
           </button>
-        )}
+        </div>
       </div>
 
       {/* Toast */}
