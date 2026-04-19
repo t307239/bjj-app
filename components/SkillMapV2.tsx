@@ -103,6 +103,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
   const [editMode, setEditMode] = useState(true);
   const [drawerNode, setDrawerNode] = useState<Node | null>(null);
   const [addPopup, setAddPopup] = useState<{ screenX: number; screenY: number; flowX: number; flowY: number } | null>(null);
+  const [mobileAddDrawer, setMobileAddDrawer] = useState<{ flowX: number; flowY: number } | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const mobileAddRef = useRef<HTMLInputElement>(null);
 
@@ -442,7 +443,9 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
             if (!isPro && rfNodes.length >= 10) { setShowProModal(true); return; }
             const x = lastNodePosition ? lastNodePosition.x + 200 : 100;
             const y = lastNodePosition ? lastNodePosition.y : 100;
-            setAddPopup({ screenX: 0, screenY: 0, flowX: x, flowY: y });
+            setMobileAddDrawer({ flowX: x, flowY: y });
+            // iOS Safari: focus within user-gesture activation window
+            requestAnimationFrame(() => mobileAddRef.current?.focus());
           }}
           aria-label={t("skillmap.addNodeMobile")}
           style={{ touchAction: "auto" }}
@@ -468,10 +471,29 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
         />
       )}
 
-      {/* Add node popup */}
+      {/* Desktop: Add node popup (right-click context menu) */}
       {addPopup && (
-        addPopup.screenX === 0 ? (
-          <div className="mt-2 bg-zinc-800 border border-white/20 rounded-xl shadow-2xl p-3 w-full" style={{ touchAction: "auto", position: "relative", zIndex: 10 }}>
+        <AddNodePopup
+          screenX={addPopup.screenX}
+          screenY={addPopup.screenY}
+          onAdd={(name) => { handleAddNode(name, addPopup.flowX, addPopup.flowY); setAddPopup(null); }}
+          onCancel={() => setAddPopup(null)}
+          t={t}
+        />
+      )}
+
+      {/* Mobile: Add node drawer (BottomDrawer pattern — iOS Safari keyboard compatible) */}
+      {mobileAddDrawer && (
+        <div className="fixed inset-0 z-50" style={{ touchAction: "auto" }} onPointerDown={() => setMobileAddDrawer(null)}>
+          <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
+          <div
+            className="absolute left-0 right-0 bottom-0 bg-zinc-900 border-t border-white/10 rounded-t-2xl p-5 pb-8"
+            style={{ zIndex: 51, touchAction: "auto" }}
+            onPointerDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+          >
+            <div className="w-10 h-1 bg-zinc-600 rounded-full mx-auto mb-4" />
+            <p className="text-xs text-zinc-400 text-center mb-3 font-semibold">{t("skillmap.addNodeMobile")}</p>
             <input
               ref={mobileAddRef}
               type="text"
@@ -481,38 +503,39 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
               placeholder={t("skillmap.namePlaceholder")}
               onKeyDown={(e) => {
                 const val = (e.target as HTMLInputElement).value.trim();
-                if (e.key === "Enter" && val) { handleAddNode(val, addPopup.flowX, addPopup.flowY); setAddPopup(null); }
-                if (e.key === "Escape") setAddPopup(null);
+                if (e.key === "Enter" && val) {
+                  handleAddNode(val, mobileAddDrawer.flowX, mobileAddDrawer.flowY);
+                  setMobileAddDrawer(null);
+                }
+                if (e.key === "Escape") setMobileAddDrawer(null);
               }}
               onTouchStart={(e) => e.stopPropagation()}
-              className="w-full bg-zinc-700 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none mb-2"
+              className="w-full bg-zinc-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/30 mb-3"
               style={{ touchAction: "auto" }}
               maxLength={80}
             />
             <div className="flex gap-2">
-              <button onClick={() => setAddPopup(null)} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-xs text-zinc-300 py-2 min-h-[44px] rounded-lg transition-colors">
+              <button
+                onClick={() => setMobileAddDrawer(null)}
+                className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-3 min-h-[44px] rounded-xl transition-colors"
+              >
                 {t("common.cancel")}
               </button>
               <button
                 onClick={() => {
                   const val = mobileAddRef.current?.value.trim() ?? "";
-                  if (val) { handleAddNode(val, addPopup.flowX, addPopup.flowY); setAddPopup(null); }
+                  if (val) {
+                    handleAddNode(val, mobileAddDrawer.flowX, mobileAddDrawer.flowY);
+                    setMobileAddDrawer(null);
+                  }
                 }}
-                className="flex-1 bg-[#10B981] hover:bg-[#0d9668] text-xs text-white py-2 min-h-[44px] rounded-lg transition-colors"
+                className="flex-1 bg-[#10B981] hover:bg-[#0d9668] text-white text-sm font-semibold py-3 min-h-[44px] rounded-xl transition-colors"
               >
                 {t("skillmap.addBtn")}
               </button>
             </div>
           </div>
-        ) : (
-          <AddNodePopup
-            screenX={addPopup.screenX}
-            screenY={addPopup.screenY}
-            onAdd={(name) => { handleAddNode(name, addPopup.flowX, addPopup.flowY); setAddPopup(null); }}
-            onCancel={() => setAddPopup(null)}
-            t={t}
-          />
-        )
+        </div>
       )}
 
       {/* Mobile: Bottom Drawer */}
