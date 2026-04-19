@@ -539,7 +539,8 @@
       "upperBack": "Costas"
     },
     "viewFront": "Frente",
-    "viewBack": "Costas"
+    "viewBack": "Costas",
+    "notePlaceholder": "Adicionar nota (ex: ligamento interno, dorso da mão)"
   },
   "skillmap": {
     "collapse": "Recolher filhos",

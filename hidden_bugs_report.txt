@@ -2,10 +2,10 @@ BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 344 files
 CRITICAL: 1
 WARNING: 4
-INFO: 100
-Total: 105
+INFO: 101
+Total: 106
 
-[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 38% (680/1777 キー) — 1128 キー欠損
+[CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 38% (681/1777 キー) — 1127 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -93,9 +93,11 @@ Total: 105
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L77: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L317: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L354: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L322: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L383: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L391: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/CompetitionSummaryCard.tsx: L301: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換

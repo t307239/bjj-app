@@ -1679,6 +1679,7 @@
       "tapToMark": "タップして痛み/怪我をマーク",
       "untouched": "未設定"
     },
+    "notePlaceholder": "メモを追加（例: 内側靭帯、手の甲〜手首）",
     "tapHint": "体の部位をタップ: OK → 痛み → 怪我",
     "title": "ボディ管理",
     "weightKg": "体重 (kg)",

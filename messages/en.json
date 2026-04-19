@@ -1444,7 +1444,7 @@
     "saveError": "Save failed. Try again.",
     "offlineError": "You're offline â changes will not be saved.",
     "note": "Note (optional)",
-    "notePlaceholder": "Fasted, post-training, post-workout...",
+    "notePlaceholder": "Add note (e.g. inner ligament, back of hand)",
     "weightChart": "Weight Trend",
     "standalone": "Morning / Standalone",
     "postTraining": "Post-Training",

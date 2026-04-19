@@ -87,23 +87,28 @@ interface Props {
   userId: string;
   initialStatus?: BodyStatus | null;
   initialDates?: Record<string, string> | null;
+  initialNotes?: Record<string, string> | null;
 }
 
 function toDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-export default function BodyHeatmap({ userId, initialStatus, initialDates }: Props) {
+export default function BodyHeatmap({ userId, initialStatus, initialDates, initialNotes }: Props) {
   const { t } = useLocale();
   const isOnline = useOnlineStatus();
   const supabase = createClient();
 
   const [status, setStatus] = useState<BodyStatus>(initialStatus ?? {});
   const [statusDates, setStatusDates] = useState<Record<string, string>>(initialDates ?? {});
+  const [notes, setNotes] = useState<Record<string, string>>(initialNotes ?? {});
+  const [activePart, setActivePart] = useState<PartKey | null>(null);
   const [savingPart, setSavingPart] = useState<PartKey | null>(null);
+  const [savingNote, setSavingNote] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [view, setView] = useState<BodyView>("front");
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const noteDebounceTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   // Sync prop changes (e.g. parent reloads profile)
   useEffect(() => {
@@ -113,6 +118,15 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
   useEffect(() => {
     if (initialDates) setStatusDates(initialDates);
   }, [initialDates]);
+
+  useEffect(() => {
+    if (initialNotes) setNotes(initialNotes);
+  }, [initialNotes]);
+
+  // Cleanup debounce timer
+  useEffect(() => {
+    return () => { if (noteDebounceTimer.current) clearTimeout(noteDebounceTimer.current); };
+  }, []);
 
   const showToast = useCallback((msg: string) => {
     setToast(msg);
@@ -148,15 +162,19 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
       delete newStatusClean[part];
       const newDatesClean = { ...statusDates };
       delete newDatesClean[part];
+      const newNotesClean = { ...notes };
+      delete newNotesClean[part];
       setStatus(newStatusClean);
       setStatusDates(newDatesClean);
+      setNotes(newNotesClean);
+      setActivePart(null);
       setSavingPart(part);
       const { error } = await supabase
         .from("profiles")
-        .update({ body_status: newStatusClean, body_status_dates: newDatesClean })
+        .update({ body_status: newStatusClean, body_status_dates: newDatesClean, body_notes: newNotesClean })
         .eq("id", userId);
       setSavingPart(null);
-      if (error) { setStatus(status); setStatusDates(statusDates); showToast(t("body.saveError")); }
+      if (error) { setStatus(status); setStatusDates(statusDates); setNotes(notes); showToast(t("body.saveError")); }
       return;
     }
 
@@ -167,6 +185,7 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
     const newStatus: BodyStatus = { ...status, [part]: next };
     setStatus(newStatus);
     setStatusDates(newDates);
+    setActivePart(part);
     setSavingPart(part);
 
     const { error } = await supabase
@@ -177,12 +196,33 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
     setSavingPart(null);
 
     if (error) {
-      // Revert on error
       setStatus(status);
       setStatusDates(statusDates);
       showToast(t("body.saveError"));
     }
-  }, [isOnline, status, statusDates, userId, supabase, showToast, t]);
+  }, [isOnline, status, statusDates, notes, userId, supabase, showToast, t]);
+
+  // Save note with debounce
+  const saveNote = useCallback((part: PartKey, value: string) => {
+    const newNotes = { ...notes };
+    if (value.trim()) {
+      newNotes[part] = value.trim();
+    } else {
+      delete newNotes[part];
+    }
+    setNotes(newNotes);
+
+    if (noteDebounceTimer.current) clearTimeout(noteDebounceTimer.current);
+    noteDebounceTimer.current = setTimeout(async () => {
+      setSavingNote(true);
+      const { error } = await supabase
+        .from("profiles")
+        .update({ body_notes: newNotes })
+        .eq("id", userId);
+      setSavingNote(false);
+      if (error) showToast(t("body.saveError"));
+    }, 800);
+  }, [notes, userId, supabase, showToast, t]);
 
   const partColor = (key: PartKey) =>
     status[key] ? STATUS_COLOR[status[key]!] : DEFAULT_COLOR;
@@ -305,25 +345,54 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates }: Pro
         </svg>
       </div>
 
+      {/* Active part note input — appears when a part is tapped to sore/injured */}
+      {activePart && status[activePart] && status[activePart] !== "ok" && (
+        <div className="mt-3 p-3 bg-zinc-800/60 rounded-xl border border-white/8 animate-in fade-in duration-200">
+          <div className="flex items-center gap-2 mb-2">
+            <span
+              className="inline-block w-2.5 h-2.5 rounded-full flex-shrink-0"
+              style={{ background: STATUS_COLOR[status[activePart]!] }}
+            />
+            <span className="text-xs font-medium text-zinc-300">{t(BODY_PARTS.find((p) => p.key === activePart)?.labelKey ?? "")}</span>
+            {savingNote && <span className="text-xs text-zinc-500 ml-auto">{t("body.saving")}</span>}
+          </div>
+          <input
+            type="text"
+            value={notes[activePart] ?? ""}
+            onChange={(e) => saveNote(activePart, e.target.value)}
+            placeholder={t("body.notePlaceholder")}
+            maxLength={100}
+            className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white/20 transition-colors"
+          />
+        </div>
+      )}
+
       {/* Part status summary — show all sore/injured regardless of current view */}
-      <div className="mt-3 grid grid-cols-2 gap-1">
+      <div className="mt-3 space-y-1">
         {BODY_PARTS.filter((p) => status[p.key] && status[p.key] !== "ok").map((p) => (
-          <div
+          <button
             key={p.key}
-            className="flex items-center gap-1.5 text-xs"
+            type="button"
+            onClick={() => setActivePart(activePart === p.key ? null : p.key)}
+            className={`w-full flex items-center gap-1.5 text-xs px-2 py-1.5 rounded-lg transition-colors ${
+              activePart === p.key ? "bg-white/5" : "hover:bg-white/5"
+            }`}
           >
             <span
               className="inline-block w-2 h-2 rounded-full flex-shrink-0"
               style={{ background: STATUS_COLOR[status[p.key]!] }}
             />
             <span className="text-zinc-400 truncate">{t(p.labelKey)}</span>
+            {notes[p.key] && (
+              <span className="text-zinc-500 truncate text-xs ml-1">— {notes[p.key]}</span>
+            )}
             <span
-              className="ml-auto text-xs font-semibold"
+              className="ml-auto text-xs font-semibold flex-shrink-0"
               style={{ color: STATUS_COLOR[status[p.key]!] }}
             >
               {t(`body.status.${status[p.key]}`)}
             </span>
-          </div>
+          </button>
         ))}
       </div>
 

@@ -21,6 +21,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
   const [isPro, setIsPro] = useState(isProProp);
   const [bodyStatus, setBodyStatus] = useState<Record<string, string> | null>(null);
   const [bodyStatusDates, setBodyStatusDates] = useState<Record<string, string>>({});
+  const [bodyNotes, setBodyNotes] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   // Incrementing this key triggers a WeightChart re-fetch after QuickWeightLog saves
   const [chartRefreshKey, setChartRefreshKey] = useState(0);
@@ -54,7 +55,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
         // Body status fields (JSONB — may not exist on older schemas)
         supabase
           .from("profiles")
-          .select("body_status, body_status_dates")
+          .select("body_status, body_status_dates, body_notes")
           .eq("id", userId)
           .single(),
         supabase
@@ -89,6 +90,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
       if (bodyRes.data) {
         setBodyStatus(bodyRes.data?.body_status ?? null);
         setBodyStatusDates((bodyRes.data?.body_status_dates as Record<string, string>) ?? {});
+        setBodyNotes((bodyRes.data?.body_notes as Record<string, string>) ?? {});
       }
     } catch {
       // Network/auth error — show free tier gracefully
@@ -309,7 +311,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
 
         {/* Body heatmap — blurred behind paywall */}
         <div className={!isPro ? "pointer-events-none select-none blur-sm opacity-40" : ""}>
-          <BodyHeatmap userId={userId} initialStatus={bodyStatus} initialDates={bodyStatusDates} />
+          <BodyHeatmap userId={userId} initialStatus={bodyStatus} initialDates={bodyStatusDates} initialNotes={bodyNotes} />
         </div>
       </div>
     </div>
