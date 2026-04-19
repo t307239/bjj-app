@@ -128,7 +128,10 @@
     "beltSuffix": "",
     "bjjHistory": "柔術歴",
     "timeAtBelt": "{belt}帯",
-    "historyTitle": "昇格履歴"
+    "historyTitle": "昇格履歴",
+    "addPromotion": "昇格を追加",
+    "savePromotion": "保存",
+    "noHistory": "昇格履歴がありません。「昇格を追加」から過去の帯を登録できます。"
   },
   "training": {
     "title": "練習記録",

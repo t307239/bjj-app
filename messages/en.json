@@ -127,7 +127,10 @@
     "beltSuffix": " Belt",
     "bjjHistory": "BJJ History",
     "timeAtBelt": "{belt}",
-    "historyTitle": "Promotion History"
+    "historyTitle": "Promotion History",
+    "addPromotion": "Add promotion",
+    "savePromotion": "Save",
+    "noHistory": "No promotion history yet. Add your past belts with \"Add promotion\"."
   },
   "training": {
     "title": "Training Log",
