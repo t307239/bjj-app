@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
+import { formatBjjDuration } from "@/lib/bjjDuration";
 
 /**
  * BeltProgressCard — 帯進捗ビジュアル
@@ -55,21 +56,6 @@ type Props = {
   beltHistory: BeltHistoryEntry[];
   className?: string;
 };
-
-/** Format duration from a date string to now as "Xy Zm" */
-function formatDuration(dateStr: string, t: (key: string, vars?: Record<string, string | number>) => string): string {
-  const start = new Date(dateStr);
-  const now = new Date(Date.now() + 9 * 60 * 60 * 1000); // JST
-  let months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
-  if (now.getDate() < start.getDate()) months--;
-  if (months < 0) months = 0;
-
-  const yrs = Math.floor(months / 12);
-  const mos = months % 12;
-  if (yrs === 0) return t("profile.bjjHistoryMonths", { n: mos || 1 });
-  if (mos === 0) return t("profile.bjjHistoryYears", { n: yrs });
-  return t("profile.bjjHistoryYearsMonths", { y: yrs, m: mos });
-}
 
 export default function BeltProgressCard({
   belt,
@@ -193,7 +179,7 @@ export default function BeltProgressCard({
           <div className="flex items-center justify-between text-xs">
             <span className="text-zinc-500">{t("beltProgress.bjjHistory")}</span>
             <span className="text-zinc-300 font-medium tabular-nums">
-              {formatDuration(bjjStartDate, t)}
+              {formatBjjDuration(bjjStartDate, t)}
             </span>
           </div>
         )}

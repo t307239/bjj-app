@@ -131,9 +131,14 @@ export default async function ProfilePage() {
   const currentBeltEntry = beltHistory.find(
     (h: { belt: string }) => h.belt === belt
   );
-  const monthsAtBelt = currentBeltEntry?.promoted_at
+  const bjjTotalMonths = profile?.start_date
+    ? calcBjjDuration(profile.start_date).totalMonths
+    : 0;
+  const rawMonthsAtBelt = currentBeltEntry?.promoted_at
     ? calcBjjDuration(currentBeltEntry.promoted_at).totalMonths
     : 0;
+  // Safety: belt tenure can never exceed total BJJ history
+  const monthsAtBelt = Math.min(rawMonthsAtBelt, bjjTotalMonths || rawMonthsAtBelt);
 
   // Calculate streak (same algorithm as NavBar — uses logical training date)
   let streak = 0;
