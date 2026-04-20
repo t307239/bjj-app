@@ -20,6 +20,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { logger } from "@/lib/logger";
+import { z } from "zod";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -27,6 +28,11 @@ export const dynamic = "force-dynamic";
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const VALID_MODES = ["general", "weakness", "next_session", "comp_prep"] as const;
 type CoachMode = typeof VALID_MODES[number];
+
+const GenerateBodySchema = z.object({
+  locale: z.enum(["en", "ja", "pt"]).default("en"),
+  mode: z.enum(VALID_MODES).default("general"),
+});
 
 import { createRateLimiter } from "@/lib/rateLimit";
 
@@ -312,9 +318,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Too many requests. Try again later." }, { status: 429 });
   }
 
-  const body = await req.json().catch(() => ({})) as { locale?: string; mode?: string };
-  const locale = (["en", "ja", "pt"].includes(body.locale ?? "")) ? (body.locale ?? "en") : "en";
-  const mode = (VALID_MODES.includes(body.mode as CoachMode) ? body.mode : "general") as CoachMode;
+  let rawBody: unknown;
+  try { rawBody = await req.json(); } catch { rawBody = {}; }
+  const parsed = GenerateBodySchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Validation failed", issues: parsed.error.issues },
+      { status: 400 }
+    );
+  }
+  const { locale, mode } = parsed.data;
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
