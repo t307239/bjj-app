@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
@@ -47,15 +47,19 @@ export default function SettingsSection({
     router.push("/?deleted=1");
   };
 
-  // Detect user's timezone from browser
-  const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const now = new Date();
-  const offsetMinutes = -now.getTimezoneOffset();
-  const offsetHours = Math.floor(Math.abs(offsetMinutes) / 60);
-  const offsetMins = Math.abs(offsetMinutes) % 60;
-  const utcSign = offsetMinutes >= 0 ? "+" : "-";
-  const utcLabel = `UTC${utcSign}${offsetHours}${offsetMins > 0 ? `:${String(offsetMins).padStart(2, "0")}` : ""}`;
-  const shortTz = now.toLocaleTimeString([], { timeZoneName: "short" }).split(" ").pop() ?? "";
+  // Detect user's timezone from browser (client-only to avoid hydration mismatch)
+  const [tzInfo, setTzInfo] = useState<{ zone: string; short: string; utc: string } | null>(null);
+  useEffect(() => {
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const now = new Date();
+    const offsetMinutes = -now.getTimezoneOffset();
+    const offsetHours = Math.floor(Math.abs(offsetMinutes) / 60);
+    const offsetMins = Math.abs(offsetMinutes) % 60;
+    const utcSign = offsetMinutes >= 0 ? "+" : "-";
+    const utc = `UTC${utcSign}${offsetHours}${offsetMins > 0 ? `:${String(offsetMins).padStart(2, "0")}` : ""}`;
+    const short = now.toLocaleTimeString([], { timeZoneName: "short" }).split(" ").pop() ?? "";
+    setTzInfo({ zone, short, utc });
+  }, []);
 
   return (
     <div className="space-y-3">
@@ -109,9 +113,13 @@ export default function SettingsSection({
             {t("profile.timezone")}
           </p>
         </div>
-        <p className="text-xs text-zinc-400 leading-relaxed">
-          {detectedTimezone} ({shortTz}, {utcLabel})
-        </p>
+        {tzInfo ? (
+          <p className="text-xs text-zinc-400 leading-relaxed">
+            {tzInfo.zone} ({tzInfo.short}, {tzInfo.utc})
+          </p>
+        ) : (
+          <p className="text-xs text-zinc-500 leading-relaxed">—</p>
+        )}
         <p className="text-xs text-zinc-500 mt-1 leading-relaxed">
           {t("profile.timezoneDesc")}
         </p>
