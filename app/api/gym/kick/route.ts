@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { logger } from "@/lib/logger";
 import { createRateLimiter } from "@/lib/rateLimit";
@@ -100,6 +101,8 @@ export async function POST(req: NextRequest) {
     logger.error("gym.kick_error", { memberId, gymId: ownerProfile.gym_id }, kickError as Error);
     return NextResponse.json({ error: "Failed to kick member" }, { status: 500 });
   }
+
+  revalidatePath("/gym/dashboard");
 
   return NextResponse.json({ ok: true });
 }

@@ -44,11 +44,16 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
 
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("belt_history")
         .select("belt, promoted_at, notes")
         .eq("user_id", userId)
         .order("promoted_at", { ascending: true });
+      if (error) {
+        console.error("BeltHistoryEditor: failed to load belt history", error);
+        setToast(t("error.title"));
+        toastTimer.current = setTimeout(() => setToast(null), 3000);
+      }
       setEntries((data as BeltHistoryEntry[]) ?? []);
       setLoading(false);
     };

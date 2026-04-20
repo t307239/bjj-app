@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -107,6 +108,8 @@ export async function POST(req: NextRequest) {
     logger.error("gym.curriculum_dispatch_error", { gymId: ownerProfile.gym_id, userId: user.id }, dispatchError as Error);
     return NextResponse.json({ error: "Failed to dispatch curriculum" }, { status: 500 });
   }
+
+  revalidatePath("/gym/dashboard");
 
   return NextResponse.json({ ok: true });
 }

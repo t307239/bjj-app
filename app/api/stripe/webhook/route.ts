@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
+import { revalidatePath } from "next/cache";
 import { logger } from "@/lib/logger";
 import { serverEnv } from "@/lib/env";
 
@@ -186,6 +187,9 @@ export async function POST(req: Request) {
       default:
         logger.debug("stripe.webhook.unhandled_event", { eventType: event.type });
     }
+
+    revalidatePath("/dashboard");
+    revalidatePath("/gym/dashboard");
   } catch (err) {
     logger.error("stripe.webhook.processing_error", { eventType: event.type }, err as Error);
     return new Response("Internal server error", { status: 500 });

@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { logger } from "@/lib/logger";
 import { serverEnv } from "@/lib/env";
 
@@ -42,5 +43,8 @@ export async function POST(req: NextRequest) {
   }
 
   logger.info("account.restore", { userId: user.id, result: "ok" });
+
+  revalidatePath("/");
+
   return NextResponse.json({ ok: true });
 }
