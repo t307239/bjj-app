@@ -1329,6 +1329,9 @@
     "faq8A": "Vá em Perfil > Conta > Baixar meus dados (CSV). Todos os seus registros de treino serão exportados como arquivo CSV que você pode abrir em qualquer planilha.",
     "contactTitle": "Ainda precisa de ajuda?",
     "contactBtn": "Enviar Email ao Suporte",
+    "quickSettings": "Configurações da Conta",
+    "quickExport": "Exportar Dados",
+    "quickProfile": "Editar Perfil",
     "faq9Q": "Minha sessão de treino não salvou?",
     "faq9A": "Verifique sua conexão de rede. As sessões são salvas no servidor quando online. Se o problema persistir, tente atualizar a página.",
     "faq10Q": "Como cancelo minha assinatura Pro?",
@@ -1935,7 +1938,10 @@
     "errorTitle": "Algo deu errado",
     "tabLog": "Registro",
     "tabStats": "Estatísticas",
-    "noStatsYet": "Registre seu primeiro treino para ver estatísticas"
+    "noStatsYet": "Registre seu primeiro treino para desbloquear gráficos, recordes pessoais e análises.",
+    "noStatsTitle": "Suas Estatísticas Aguardam",
+    "noStatsCta": "Registrar Primeiro Treino",
+    "dataPortability": "Seus dados são sempre seus — exporte a qualquer momento como CSV ou PDF nas Configurações."
   },
   "milestone": {
     "shareText": "Compartilhe este marco com sua equipe de treinamento."

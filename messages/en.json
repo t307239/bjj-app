@@ -1279,6 +1279,9 @@
     "faq8A": "Go to Profile > Account > Download my data (CSV). All your training logs will be exported as a CSV file you can open in any spreadsheet app.",
     "contactTitle": "Still need help?",
     "contactBtn": "Email Support",
+    "quickSettings": "Account Settings",
+    "quickExport": "Export Data",
+    "quickProfile": "Edit Profile",
     "faq9Q": "My training session didn't save?",
     "faq9A": "Check your network connection. Sessions are saved to the server when online. If the problem persists, try refreshing the page.",
     "faq10Q": "How do I cancel my Pro subscription?",
@@ -1881,7 +1884,8 @@
     "tabStats": "Stats",
     "noStatsYet": "Record your first training session to unlock charts, personal bests, and analytics.",
     "noStatsTitle": "Your Stats Await",
-    "noStatsCta": "Log Your First Session"
+    "noStatsCta": "Log Your First Session",
+    "dataPortability": "Your data is always yours — export anytime as CSV or PDF from Settings."
   },
   "milestone": {
     "shareText": "Share this milestone with your training crew."
