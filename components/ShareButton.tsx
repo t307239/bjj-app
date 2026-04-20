@@ -84,7 +84,7 @@ function drawShareCard(entry: TrainingEntry): HTMLCanvasElement {
   ctx.fillText("of training", W / 2, centerY + 175);
 
   // Date
-  const dateStr = new Date(entry.date + "T12:00:00").toLocaleDateString("en-US", {
+  const dateStr = new Date(entry.date + "T12:00:00").toLocaleDateString(undefined, {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
   });
   ctx.font = "500 18px system-ui, -apple-system, sans-serif";
