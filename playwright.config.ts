@@ -44,7 +44,7 @@ export default defineConfig({
         storageState: { cookies: [], origins: [] },
       },
       // 認証必須のspecはゲストで実行しない
-      testIgnore: /dashboard-auth|records-auth|profile-auth|pro-features|techniques-auth|skillmap|settings\.spec/,
+      testIgnore: /dashboard-auth|records-auth|profile-auth|pro-features|techniques-auth|skillmap|settings|critical-path\.spec/,
     },
     {
       name: "mobile",
@@ -54,7 +54,7 @@ export default defineConfig({
         isMobile: true,
         storageState: { cookies: [], origins: [] },
       },
-      testIgnore: /dashboard-auth|records-auth|profile-auth|pro-features|techniques-auth|skillmap|settings\.spec/,
+      testIgnore: /dashboard-auth|records-auth|profile-auth|pro-features|techniques-auth|skillmap|settings|critical-path\.spec/,
     },
 
     // ── 認証済み権限マトリックス用プロジェクト ──────────────────────────────
@@ -67,7 +67,7 @@ export default defineConfig({
         storageState: "e2e/auth/free.json",
       },
       // 認証済みテストファイルのみ実行
-      testMatch: /roles-matrix\.spec\.ts|dashboard-auth\.spec\.ts|records-auth\.spec\.ts|profile-auth\.spec\.ts|pro-features\.spec\.ts|techniques-auth\.spec\.ts|skillmap\.spec\.ts|settings\.spec\.ts/,
+      testMatch: /roles-matrix\.spec\.ts|dashboard-auth\.spec\.ts|records-auth\.spec\.ts|profile-auth\.spec\.ts|pro-features\.spec\.ts|techniques-auth\.spec\.ts|skillmap\.spec\.ts|settings\.spec\.ts|critical-path\.spec\.ts/,
     },
     {
       name: "pro-user",
@@ -75,7 +75,7 @@ export default defineConfig({
         ...devices["Desktop Chrome"],
         storageState: "e2e/auth/pro.json",
       },
-      testMatch: /roles-matrix\.spec\.ts|dashboard-auth\.spec\.ts|records-auth\.spec\.ts|profile-auth\.spec\.ts|pro-features\.spec\.ts|techniques-auth\.spec\.ts|skillmap\.spec\.ts|settings\.spec\.ts/,
+      testMatch: /roles-matrix\.spec\.ts|dashboard-auth\.spec\.ts|records-auth\.spec\.ts|profile-auth\.spec\.ts|pro-features\.spec\.ts|techniques-auth\.spec\.ts|skillmap\.spec\.ts|settings\.spec\.ts|critical-path\.spec\.ts/,
     },
     {
       name: "gym-owner",
