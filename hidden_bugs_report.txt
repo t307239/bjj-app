@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 363 files
+TS/TSX Scanned: 371 files
 CRITICAL: 1
 WARNING: 2
-INFO: 101
-Total: 104
+INFO: 102
+Total: 105
 
 [CRITICAL] [I18N_COVERAGE] messages/pt.json: カバレッジ 38% (682/1779 キー) — 1128 キー欠損
   FIX: 欠損例: achievement.milestone.1.emoji, achievement.milestone.1.subtext, achievement.milestone.1.text, achievement.milestone.10.emoji, achievement.milestone.10.subtext
@@ -207,6 +207,8 @@ Total: 104
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [ANY_TYPE_ESCAPE] lib/codeHealthDashboard.ts: L217: `as any` 型アサーション — 適切な型に置換推奨
   FIX: 具体的な型を定義するか、unknown + 型ガードを使用
+[INFO] [CONSOLE_LOG] lib/missingKeyDetector.ts: console.log() が 1 件残存
+  FIX: 本番前に削除
 [INFO] [TODO_COMMENT] lib/prReviewChecklist.ts: L44: TODO: |FIXME|HACK|XXX)\b/g, severity: "info" as const, message: "T
   FIX: 修正済みなら削除、未着手ならBACKLOGへ移動
 [INFO] [CONSOLE_LOG] lib/styleAuditor.ts: console.log() が 1 件残存
