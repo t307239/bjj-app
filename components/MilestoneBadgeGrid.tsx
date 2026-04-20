@@ -3,6 +3,7 @@
 import { useLocale } from "@/lib/i18n";
 import { useEffect, useState, useRef } from "react";
 import { trackEvent } from "@/lib/analytics";
+import MilestoneShareCard from "./MilestoneShareCard";
 
 const MILESTONES = [1, 7, 10, 30, 50, 100, 200, 365, 500, 1000] as const;
 type Milestone = (typeof MILESTONES)[number];

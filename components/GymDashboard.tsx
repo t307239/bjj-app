@@ -9,6 +9,7 @@ import MemberCard from "./gym/MemberCard";
 import BeltDistributionChart from "./gym/BeltDistributionChart";
 import CsvBulkInvite from "./gym/CsvBulkInvite";
 import CurriculumDispatch from "./gym/CurriculumDispatch";
+import InviteQRCode from "./gym/InviteQRCode";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -297,6 +298,9 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
 
       {/* Invite section */}
       <InviteSection gym={gym} onInviteRegenerated={handleInviteRegenerated} />
+
+      {/* QR Code for invite link */}
+      <InviteQRCode inviteCode={gym.invite_code} />
 
       {/* Privacy Shield — B-33: Trust Boundary */}
       <PrivacyShieldBadge />

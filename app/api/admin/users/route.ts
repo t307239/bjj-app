@@ -14,6 +14,7 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { logger } from "@/lib/logger";
 import { serverEnv } from "@/lib/env";
 import { createRateLimiter } from "@/lib/rateLimit";
@@ -156,4 +157,128 @@ export async function GET(req: NextRequest) {
     page,
     limit,
   });
+}
+
+// ── Allowed values for validation ──
+const VALID_BELTS = ["white", "blue", "purple", "brown", "black"] as const;
+const VALID_SUBSCRIPTION_STATUSES = ["active", "past_due", "canceled", "trialing"] as const;
+
+type PatchBody = {
+  userId: string;
+  updates: {
+    belt?: string;
+    stripe?: number;
+    is_pro?: boolean;
+    subscription_status?: string;
+  };
+};
+
+export async function PATCH(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (!adminLimiter.check(ip)) {
+    return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+  }
+
+  // 1. Verify session
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll: () => cookieStore.getAll(),
+        setAll: () => {},
+      },
+    }
+  );
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user?.email || !isAdminEmail(user.email)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  // 2. Parse & validate body
+  let body: PatchBody;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  const { userId, updates } = body;
+  if (!userId || typeof userId !== "string") {
+    return NextResponse.json({ error: "userId is required" }, { status: 400 });
+  }
+  if (!updates || typeof updates !== "object" || Object.keys(updates).length === 0) {
+    return NextResponse.json({ error: "updates object is required and must not be empty" }, { status: 400 });
+  }
+
+  // Validate individual fields
+  const sanitized: Record<string, string | number | boolean> = {};
+
+  if (updates.belt !== undefined) {
+    if (!VALID_BELTS.includes(updates.belt as (typeof VALID_BELTS)[number])) {
+      return NextResponse.json(
+        { error: `Invalid belt. Allowed: ${VALID_BELTS.join(", ")}` },
+        { status: 400 }
+      );
+    }
+    sanitized.belt = updates.belt;
+  }
+
+  if (updates.stripe !== undefined) {
+    const s = Number(updates.stripe);
+    if (!Number.isInteger(s) || s < 0 || s > 4) {
+      return NextResponse.json({ error: "stripe must be an integer 0-4" }, { status: 400 });
+    }
+    sanitized.stripe = s;
+  }
+
+  if (updates.is_pro !== undefined) {
+    if (typeof updates.is_pro !== "boolean") {
+      return NextResponse.json({ error: "is_pro must be a boolean" }, { status: 400 });
+    }
+    sanitized.is_pro = updates.is_pro;
+  }
+
+  if (updates.subscription_status !== undefined) {
+    if (
+      !VALID_SUBSCRIPTION_STATUSES.includes(
+        updates.subscription_status as (typeof VALID_SUBSCRIPTION_STATUSES)[number]
+      )
+    ) {
+      return NextResponse.json(
+        { error: `Invalid subscription_status. Allowed: ${VALID_SUBSCRIPTION_STATUSES.join(", ")}` },
+        { status: 400 }
+      );
+    }
+    sanitized.subscription_status = updates.subscription_status;
+  }
+
+  if (Object.keys(sanitized).length === 0) {
+    return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
+  }
+
+  // 3. Update via Service Role
+  const serviceClient = createServiceClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    serverEnv.supabaseServiceRoleKey()
+  );
+
+  const { data: updatedProfile, error: updateError } = await serviceClient
+    .from("profiles")
+    .update(sanitized)
+    .eq("id", userId)
+    .select()
+    .single();
+
+  if (updateError) {
+    logger.error("admin.update_user_error", { targetUserId: userId }, updateError as unknown as Error);
+    return NextResponse.json({ error: "Failed to update user profile" }, { status: 500 });
+  }
+
+  logger.info("admin.update_user", { targetUserId: userId, updates: sanitized });
+  revalidatePath("/admin");
+
+  return NextResponse.json({ profile: updatedProfile });
 }

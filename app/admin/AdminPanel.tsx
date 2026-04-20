@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { formatDateShort } from "@/lib/formatDate";
 
 type AdminUser = {
@@ -52,6 +52,21 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
   const [error, setError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+  const [updating, setUpdating] = useState<string | null>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showToast = useCallback((msg: string) => {
+    setToast(msg);
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(null), 3000);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimer.current) clearTimeout(toastTimer.current);
+    };
+  }, []);
 
   // Q-110: CSV export
   const handleExportCsv = useCallback(async () => {
@@ -109,6 +124,31 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
     fetchUsers(query, page);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
+
+  const updateUser = useCallback(
+    async (userId: string, updates: Record<string, string | number | boolean>) => {
+      setUpdating(userId);
+      try {
+        const res = await fetch("/api/admin/users", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, updates }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          showToast(`Error: ${(err as { error?: string }).error ?? "Update failed"}`);
+          return;
+        }
+        showToast("User updated successfully");
+        fetchUsers(query, page);
+      } catch {
+        showToast("Network error");
+      } finally {
+        setUpdating(null);
+      }
+    },
+    [query, page, fetchUsers, showToast]
+  );
 
   const proCount = data?.users.filter((u) => u.is_pro).length ?? 0;
   const gymOwnerCount = data?.users.filter((u) => u.has_gym).length ?? 0;
@@ -221,32 +261,83 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
 
                   {/* Expanded detail row */}
                   {expanded === user.id && (
-                    <div className="bg-zinc-900/60 border border-white/5 border-t-0 rounded-b-xl px-4 py-4 -mt-1 grid grid-cols-2 md:grid-cols-3 gap-4 text-xs">
-                      <div>
-                        <div className="text-zinc-400 mb-0.5">User ID</div>
-                        <div className="font-mono text-zinc-300 break-all">{user.id}</div>
-                      </div>
-                      <div>
-                        <div className="text-zinc-400 mb-0.5">Signed up</div>
-                        <div className="text-zinc-300">{fmtDate(user.created_at)}</div>
-                      </div>
-                      <div>
-                        <div className="text-zinc-400 mb-0.5">Last login</div>
-                        <div className="text-zinc-300">{fmtDaysAgo(user.last_sign_in_at)}</div>
-                      </div>
-                      <div>
-                        <div className="text-zinc-400 mb-0.5">Total sessions</div>
-                        <div className="text-zinc-300 font-bold">{user.sessions_total}</div>
-                      </div>
-                      <div>
-                        <div className="text-zinc-400 mb-0.5">Stripe (belt)</div>
-                        <div className="text-zinc-300">{user.stripe}</div>
-                      </div>
-                      <div>
-                        <div className="text-zinc-400 mb-0.5">Subscription</div>
-                        <div className={`font-semibold ${user.is_pro ? "text-yellow-400" : "text-zinc-500"}`}>
-                          {user.is_pro ? "Pro" : "Free"}
+                    <div className="bg-zinc-900/60 border border-white/5 border-t-0 rounded-b-xl px-4 py-4 -mt-1 space-y-4">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                        <div>
+                          <div className="text-zinc-400 mb-0.5">User ID</div>
+                          <div className="font-mono text-zinc-300 break-all">{user.id}</div>
                         </div>
+                        <div>
+                          <div className="text-zinc-400 mb-0.5">Signed up</div>
+                          <div className="text-zinc-300">{fmtDate(user.created_at)}</div>
+                        </div>
+                        <div>
+                          <div className="text-zinc-400 mb-0.5">Last login</div>
+                          <div className="text-zinc-300">{fmtDaysAgo(user.last_sign_in_at)}</div>
+                        </div>
+                        <div>
+                          <div className="text-zinc-400 mb-0.5">Total sessions</div>
+                          <div className="text-zinc-300 font-bold">{user.sessions_total}</div>
+                        </div>
+                        <div>
+                          <div className="text-zinc-400 mb-0.5">Stripe (belt)</div>
+                          <div className="text-zinc-300">{user.stripe}</div>
+                        </div>
+                        <div>
+                          <div className="text-zinc-400 mb-0.5">Subscription</div>
+                          <div className={`font-semibold ${user.is_pro ? "text-yellow-400" : "text-zinc-500"}`}>
+                            {user.is_pro ? "Pro" : "Free"}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Admin actions */}
+                      <div className="border-t border-white/5 pt-3 flex flex-wrap items-center gap-3">
+                        {/* Toggle Pro */}
+                        <button
+                          type="button"
+                          disabled={updating === user.id}
+                          onClick={() => {
+                            const action = user.is_pro ? "revoke Pro from" : "grant Pro to";
+                            if (!window.confirm(`Are you sure you want to ${action} ${user.email}?`)) return;
+                            updateUser(user.id, { is_pro: !user.is_pro });
+                          }}
+                          className={`text-xs px-3 py-1.5 rounded-lg border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                            user.is_pro
+                              ? "border-red-500/30 text-red-400 hover:bg-red-500/10"
+                              : "border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10"
+                          }`}
+                        >
+                          {user.is_pro ? "Revoke Pro" : "Grant Pro"}
+                        </button>
+
+                        {/* Belt change */}
+                        <div className="flex items-center gap-1.5">
+                          <label htmlFor={`belt-${user.id}`} className="text-xs text-zinc-400">
+                            Belt:
+                          </label>
+                          <select
+                            id={`belt-${user.id}`}
+                            value={user.belt}
+                            disabled={updating === user.id}
+                            onChange={(e) => {
+                              if (e.target.value !== user.belt) {
+                                updateUser(user.id, { belt: e.target.value });
+                              }
+                            }}
+                            className="text-xs bg-zinc-800 border border-white/10 text-white rounded-lg px-2 py-1.5 focus:outline-none focus:border-white/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <option value="white">White</option>
+                            <option value="blue">Blue</option>
+                            <option value="purple">Purple</option>
+                            <option value="brown">Brown</option>
+                            <option value="black">Black</option>
+                          </select>
+                        </div>
+
+                        {updating === user.id && (
+                          <span className="text-xs text-zinc-500">Updating…</span>
+                        )}
                       </div>
                     </div>
                   )}
@@ -289,6 +380,13 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
           <div className="text-center text-xs text-zinc-500 mt-2">Refreshing…</div>
         )}
       </div>
+
+      {/* Toast notification */}
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-zinc-800 border border-white/10 text-white text-sm px-4 py-2.5 rounded-xl shadow-lg animate-fade-in">
+          {toast}
+        </div>
+      )}
     </div>
   );
 }
