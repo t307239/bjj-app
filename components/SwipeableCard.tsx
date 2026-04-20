@@ -4,6 +4,8 @@
  * B-10: Swipe Delete/Edit wrapper (react-swipeable の代替・ネイティブタッチ)
  * 左スワイプ → 削除エリア (赤) / 右スワイプ → 編集エリア (緑)
  * threshold 60px でアクション確定。
+ *
+ * a11y: キーボード/スクリーンリーダー向けにフォーカス時にEdit/Deleteボタンを表示。
  */
 import { useRef, useState, useCallback, useEffect } from "react";
 
@@ -12,17 +14,20 @@ type Props = {
   onEdit: () => void;
   children: React.ReactNode;
   className?: string;
+  editLabel?: string;
+  deleteLabel?: string;
 };
 
 const THRESHOLD = 64;    // px — action trigger distance
 const MAX_DRAG = 96;     // px — max visual offset
 
-export default function SwipeableCard({ onDelete, onEdit, children, className = "" }: Props) {
+export default function SwipeableCard({ onDelete, onEdit, children, className = "", editLabel = "Edit", deleteLabel = "Delete" }: Props) {
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const isHorizontal = useRef<boolean | null>(null); // determined on first meaningful move
   const [offsetX, setOffsetX] = useState(0);
   const [animating, setAnimating] = useState(false);
+  const [focused, setFocused] = useState(false);
   const animationTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
@@ -99,7 +104,16 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
   const editIntensity = Math.min(1, offsetX / THRESHOLD);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl">
+    <div
+      className="relative overflow-hidden rounded-2xl group"
+      onFocus={() => setFocused(true)}
+      onBlur={(e) => {
+        // Only unfocus if focus leaves the entire container
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+          setFocused(false);
+        }
+      }}
+    >
       {/* Left action: Edit (right swipe reveals) */}
       <div
         className="absolute inset-y-0 left-0 flex items-center justify-start pl-4 rounded-l-2xl"
@@ -148,6 +162,35 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
         onTouchEnd={handleTouchEnd}
       >
         {children}
+      </div>
+
+      {/* a11y: Keyboard-accessible action buttons (visible on focus/hover) */}
+      <div
+        className={[
+          "absolute top-1 right-1 z-10 flex items-center gap-1 transition-opacity",
+          focused ? "opacity-100" : "opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto",
+        ].join(" ")}
+      >
+        <button
+          type="button"
+          onClick={onEdit}
+          className="p-1.5 rounded-lg bg-emerald-600/80 hover:bg-emerald-600 text-white transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+          aria-label={editLabel}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={onDelete}
+          className="p-1.5 rounded-lg bg-red-600/80 hover:bg-red-600 text-white transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+          aria-label={deleteLabel}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        </button>
       </div>
     </div>
   );
