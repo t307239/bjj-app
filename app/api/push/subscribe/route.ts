@@ -35,6 +35,10 @@ const SubscribeBodySchema = z.object({
   }),
 });
 
+const UnsubscribeBodySchema = z.object({
+  endpoint: z.string().url().max(2048),
+});
+
 // ── Rate limit: push subscribe — max 20 per IP per 10 min ──
 const pushLimiter = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 20 });
 
@@ -109,22 +113,21 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let body: { endpoint?: string };
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
-  }
-
-  if (!body.endpoint) {
-    return NextResponse.json({ error: "Missing endpoint" }, { status: 400 });
+  let rawBody: unknown;
+  try { rawBody = await req.json(); } catch { rawBody = null; }
+  const parsed = UnsubscribeBodySchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Validation failed", issues: parsed.error.issues },
+      { status: 400 }
+    );
   }
 
   const { error } = await supabase
     .from("push_subscriptions")
     .delete()
     .eq("user_id", user.id)
-    .eq("endpoint", body.endpoint);
+    .eq("endpoint", parsed.data.endpoint);
 
   if (error) {
     logger.error("push.unsubscribe_delete_error", { userId: user.id }, error as Error);

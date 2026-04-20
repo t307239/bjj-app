@@ -13,6 +13,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -21,8 +22,13 @@ export const dynamic = "force-dynamic";
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW_MINS = 10;
 
-// ── YouTube video ID バリデーション ─────────────────────────────────────────
-const VALID_VIDEO_ID = /^[A-Za-z0-9_-]{11}$/;
+// ── Zod schema for submission body ────────────────────────────────────────
+const SubmitVideoSchema = z.object({
+  slug: z.string().min(1).max(200),
+  lang: z.enum(["en", "ja", "pt"]),
+  youtube_url: z.string().url().max(300),
+  video_id: z.string().regex(/^[A-Za-z0-9_-]{11}$/, "Invalid YouTube video ID"),
+});
 
 export async function POST(req: NextRequest) {
   // ── IP 取得 ──────────────────────────────────────────────────────────────
@@ -57,28 +63,17 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // ── リクエストボディ検証 ────────────────────────────────────────────────
-  let body: { slug?: string; lang?: string; youtube_url?: string; video_id?: string };
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  // ── リクエストボディ検証（Zodスキーマ）────────────────────────────────────
+  let rawBody: unknown;
+  try { rawBody = await req.json(); } catch { rawBody = null; }
+  const parsed = SubmitVideoSchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Validation failed", issues: parsed.error.issues },
+      { status: 400 }
+    );
   }
-
-  const { slug, lang, youtube_url, video_id } = body;
-
-  if (!slug || typeof slug !== "string" || slug.length > 200) {
-    return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
-  }
-  if (!lang || !["en", "ja", "pt"].includes(lang)) {
-    return NextResponse.json({ error: "Invalid lang" }, { status: 400 });
-  }
-  if (!youtube_url || typeof youtube_url !== "string" || youtube_url.length > 300) {
-    return NextResponse.json({ error: "Invalid youtube_url" }, { status: 400 });
-  }
-  if (!video_id || !VALID_VIDEO_ID.test(video_id)) {
-    return NextResponse.json({ error: "Invalid video_id" }, { status: 400 });
-  }
+  const { slug, lang, youtube_url, video_id } = parsed.data;
 
   const { error } = await supabase.from("ugc_video_submissions").insert({
     slug,
