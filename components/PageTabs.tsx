@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
+import { useSearchParams } from "next/navigation";
 
 export interface Tab {
   key: string;
@@ -11,6 +12,8 @@ export interface Tab {
 interface Props {
   tabs: Tab[];
   defaultTab?: string;
+  /** When set, reads/writes `?<urlParam>=<tab.key>` in the URL */
+  urlParam?: string;
   children: (activeTab: string) => ReactNode;
   /** Extra element rendered to the right of tabs (e.g. settings gear icon) */
   trailing?: ReactNode;
@@ -19,9 +22,24 @@ interface Props {
 /**
  * Reusable horizontal tab bar — sticky below NavBar.
  * Designed for Profile (3 tabs), Records (2 tabs), Techniques (3 tabs).
+ * When `urlParam` is provided, the initial tab is read from the URL search params.
  */
-export default function PageTabs({ tabs, defaultTab, children, trailing }: Props) {
-  const [active, setActive] = useState(defaultTab ?? tabs[0]?.key ?? "");
+export default function PageTabs({ tabs, defaultTab, urlParam, children, trailing }: Props) {
+  const searchParams = useSearchParams();
+  const validKeys = new Set(tabs.map((t) => t.key));
+  const urlTab = urlParam ? searchParams.get(urlParam) : null;
+  const initialTab = (urlTab && validKeys.has(urlTab) ? urlTab : null) ?? defaultTab ?? tabs[0]?.key ?? "";
+  const [active, setActive] = useState(initialTab);
+
+  // Sync if URL param changes externally (e.g. browser back/forward)
+  useEffect(() => {
+    if (!urlParam) return;
+    const paramVal = searchParams.get(urlParam);
+    if (paramVal && validKeys.has(paramVal) && paramVal !== active) {
+      setActive(paramVal);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, urlParam]);
 
   return (
     <>

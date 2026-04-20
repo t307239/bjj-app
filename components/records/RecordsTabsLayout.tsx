@@ -20,7 +20,7 @@ export default function RecordsTabsLayout({ logSlot, statsSlot }: Props) {
   ];
 
   return (
-    <PageTabs tabs={tabs} defaultTab="log">
+    <PageTabs tabs={tabs} defaultTab="log" urlParam="tab">
       {(activeTab) => (
         <>
           {activeTab === "log" && logSlot}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
 
 /**
@@ -141,9 +142,13 @@ export default function HeatmapCalendar({ trainingDates }: Props) {
         <span className="text-xs font-medium text-zinc-400">
           {t("home.heatmapTitle")}
         </span>
-        <span className="text-xs text-zinc-500 tabular-nums">
+        <Link
+          href="/records?tab=stats"
+          className="text-xs text-zinc-500 tabular-nums hover:text-zinc-300 transition-colors"
+        >
           {t("home.heatmapDays", { n: totalDaysInPeriod })}
-        </span>
+          <span className="ml-1 text-zinc-600">›</span>
+        </Link>
       </div>
 
       {/* Mobile: 7-day bar chart (< sm) */}
