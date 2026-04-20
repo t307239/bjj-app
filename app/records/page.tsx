@@ -252,8 +252,23 @@ export default async function RecordsPage() {
                 </section>
               </>
             ) : (
-              <div className="text-center py-12 text-zinc-500 text-sm">
-                {t("records.noStatsYet")}
+              <div className="text-center py-16">
+                <div className="text-5xl mb-4">📊</div>
+                <p className="text-base font-semibold text-white">
+                  {t("records.noStatsTitle")}
+                </p>
+                <p className="text-sm text-zinc-400 mt-1.5 max-w-xs mx-auto leading-relaxed">
+                  {t("records.noStatsYet")}
+                </p>
+                <a
+                  href="/records?tab=log"
+                  className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold transition-colors active:scale-95"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                  {t("records.noStatsCta")}
+                </a>
               </div>
             )
           }

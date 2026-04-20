@@ -1879,7 +1879,9 @@
     "errorTitle": "Something went wrong",
     "tabLog": "Log",
     "tabStats": "Stats",
-    "noStatsYet": "Log your first training to see stats"
+    "noStatsYet": "Record your first training session to unlock charts, personal bests, and analytics.",
+    "noStatsTitle": "Your Stats Await",
+    "noStatsCta": "Log Your First Session"
   },
   "milestone": {
     "shareText": "Share this milestone with your training crew."

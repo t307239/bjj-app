@@ -1881,7 +1881,9 @@
     "errorTitle": "何かが間違っています",
     "tabLog": "ログ",
     "tabStats": "統計",
-    "noStatsYet": "最初の練習を記録して統計を見る"
+    "noStatsYet": "最初の練習を記録すると、グラフ・自己ベスト・分析が使えるようになります。",
+    "noStatsTitle": "統計をはじめよう",
+    "noStatsCta": "最初の練習を記録"
   },
   "milestone": {
     "shareText": "この実績をあなたのトレーニングクルーと共有してください。"
