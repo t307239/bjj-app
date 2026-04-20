@@ -76,18 +76,18 @@ export async function GET(req: NextRequest) {
 
   const entries = logs ?? [];
 
-  // Collect unique user IDs for email lookup (only those in recent entries)
-  const userIds = [...new Set(entries.map((e) => e.user_id))];
+  // Collect unique user IDs from recent entries only (top 20 displayed with masked email)
+  const recentUserIds = [...new Set(entries.slice(0, 20).map((e) => e.user_id))];
 
-  // Fetch emails only for relevant users via profiles table (avoids listing ALL auth users)
+  // Fetch auth users for email display — scoped to page size matching recent entries
   const emailMap = new Map<string, string>();
-  if (userIds.length > 0) {
-    const { data: profileEmails } = await serviceClient
-      .from("profiles")
-      .select("id, email")
-      .in("id", userIds);
-    for (const p of (profileEmails ?? [])) {
-      if (p.email) emailMap.set(p.id, p.email);
+  if (recentUserIds.length > 0) {
+    const { data: authData } = await serviceClient.auth.admin.listUsers({
+      page: 1,
+      perPage: Math.min(recentUserIds.length * 5, 200), // Fetch enough to cover unique users
+    });
+    for (const u of (authData?.users ?? [])) {
+      if (u.email && recentUserIds.includes(u.id)) emailMap.set(u.id, u.email);
     }
   }
 
