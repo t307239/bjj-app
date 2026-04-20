@@ -48,12 +48,16 @@ export default function SkillMapToolbar({
         <div className="flex items-center gap-1.5 bg-zinc-800 rounded-lg p-1">
           <button
             onClick={() => setEditMode(false)}
+            aria-label={t("skillmap.viewMode")}
+            aria-pressed={!editMode}
             className={`text-xs px-2.5 py-1 rounded-md transition-all ${!editMode ? "bg-zinc-600 text-white font-semibold" : "text-zinc-500 hover:text-zinc-300"}`}
           >
             {t("skillmap.viewMode")}
           </button>
           <button
             onClick={() => setEditMode(true)}
+            aria-label={t("skillmap.editMode")}
+            aria-pressed={editMode}
             className={`text-xs px-2.5 py-1 rounded-md transition-all ${editMode ? "bg-[#6366f1] text-white font-semibold" : "text-zinc-500 hover:text-zinc-300"}`}
           >
             ✏️ {t("skillmap.editMode")}
@@ -102,6 +106,7 @@ export default function SkillMapToolbar({
         <button
           disabled={!isOnline}
           onClick={handleMobileAdd}
+          aria-label={t("skillmap.addNodeMobile")}
           className="text-xs bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition-all active:scale-95"
         >
           + {t("skillmap.addNodeMobile")}

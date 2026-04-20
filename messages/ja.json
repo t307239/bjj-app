@@ -1883,7 +1883,8 @@
     "monthly": "月次",
     "annual": "年次",
     "save33": "33%セーブ",
-    "trialText": "✓ 14日間の無料トライアル"
+    "trialText": "✓ 14日間の無料トライアル",
+    "togglePlan": "月額・年額プランの切り替え"
   },
   "insight": {
     "milestone": "🎉 累計{n}回達成！素晴らしい継続力。",

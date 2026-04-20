@@ -47,6 +47,9 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className={`text-xs ${!isAnnual ? "text-white font-semibold" : "text-zinc-400"}`}>{t("proModal.monthly")}</span>
           <button
+            role="switch"
+            aria-checked={isAnnual}
+            aria-label={t("proModal.togglePlan")}
             onClick={() => setIsAnnual((v) => !v)}
             className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${isAnnual ? "bg-emerald-600" : "bg-zinc-600"}`}
           >

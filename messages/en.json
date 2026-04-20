@@ -1881,7 +1881,8 @@
     "monthly": "Monthly",
     "annual": "Annual",
     "save33": "Save 33%",
-    "trialText": "✓ 14-day free trial"
+    "trialText": "✓ 14-day free trial",
+    "togglePlan": "Toggle between monthly and annual plan"
   },
   "insight": {
     "milestone": "🎉 {n} sessions total! Amazing dedication.",

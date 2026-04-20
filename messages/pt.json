@@ -761,7 +761,8 @@
     "monthly": "Mensal",
     "annual": "Anual",
     "save33": "Economize 33%",
-    "trialText": "✓ Avaliação gratuita de 14 dias"
+    "trialText": "✓ Avaliação gratuita de 14 dias",
+    "togglePlan": "Alternar entre plano mensal e anual"
   },
   "home": {
     "weekLabel": "Esta Semana",

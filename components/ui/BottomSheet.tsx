@@ -14,7 +14,7 @@
  *   </BottomSheet>
  */
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useId } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -27,6 +27,8 @@ const CLOSE_THRESHOLD = 80; // px — swipe distance to trigger close
 
 export default function BottomSheet({ isOpen, onClose, title, children }: Props) {
   const sheetRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   // ── Swipe-to-close state ────────────────────────────────────────────────
   const [dragY, setDragY] = useState(0);
@@ -109,9 +111,11 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
     return () => document.removeEventListener("keydown", onKey);
   }, [isOpen, onClose]);
 
-  // ── Focus trap: initial focus + Tab cycling within sheet ────────────────
+  // ── Focus trap: save previous focus, initial focus + Tab cycling within sheet
   useEffect(() => {
     if (!isOpen || !sheetRef.current) return;
+    // Save the element that had focus before opening
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
     sheetRef.current.focus();
 
     const sheet = sheetRef.current;
@@ -136,7 +140,14 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
       }
     };
     document.addEventListener("keydown", handleTab);
-    return () => document.removeEventListener("keydown", handleTab);
+    return () => {
+      document.removeEventListener("keydown", handleTab);
+      // Restore focus to the element that triggered the sheet
+      if (previousFocusRef.current && typeof previousFocusRef.current.focus === "function") {
+        previousFocusRef.current.focus();
+        previousFocusRef.current = null;
+      }
+    };
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -163,6 +174,7 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
           ref={sheetRef}
           role="dialog"
           aria-modal="true"
+          aria-labelledby={title ? titleId : undefined}
           tabIndex={-1}
           className={[
             "pointer-events-auto w-full flex flex-col",
@@ -189,7 +201,7 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
           {/* ── Header ─────────────────────────────────────────────────── */}
           {title && (
             <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 shrink-0">
-              <h2 className="text-base font-semibold text-white">{title}</h2>
+              <h2 id={titleId} className="text-base font-semibold text-white">{title}</h2>
               <button
                 type="button"
                 onClick={onClose}
