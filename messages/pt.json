@@ -547,7 +547,8 @@
     "pushPrefWeeklyEmail": "E-mail resumo semanal",
     "stripes": "Listras",
     "logoutBtn": "Sair",
-    "helpDesc": "FAQ, solução de problemas e contato"
+    "helpDesc": "FAQ, solução de problemas e contato",
+    "dataOwnership": "Seus dados pertencem a você. Exporte a qualquer momento — sem restrições."
   },
   "competition": {
     "title": "Histórico de Lutas",

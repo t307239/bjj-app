@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 type Props = {
   onClose: () => void;
@@ -12,10 +12,39 @@ type Props = {
 export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink, t }: Props) {
   const [isAnnual, setIsAnnual] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
-  // §1 UX: Escape key dismiss
+  // §9 a11y: Save previous focus for restoration on close
+  useEffect(() => {
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    // Auto-focus the dialog container
+    requestAnimationFrame(() => dialogRef.current?.focus());
+    return () => {
+      // Restore focus when modal unmounts
+      previousFocusRef.current?.focus();
+    };
+  }, []);
+
+  // §1 UX: Escape key dismiss + §9 a11y: Focus trap
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key === "Escape") onClose();
+    if (e.key === "Escape") { onClose(); return; }
+    // Focus trap: Tab cycles within the dialog
+    if (e.key === "Tab" && dialogRef.current) {
+      const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
   }, [onClose]);
 
   useEffect(() => {
@@ -49,10 +78,10 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
   const hasLink = !!fallbackUrl;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={onClose} role="dialog" aria-modal="true">
-      <div className="bg-zinc-900 border border-white/10 rounded-2xl p-7 max-w-sm w-full text-center shadow-2xl mx-4" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="pro-modal-title">
+      <div ref={dialogRef} tabIndex={-1} className="bg-zinc-900 border border-white/10 rounded-2xl p-7 max-w-sm w-full text-center shadow-2xl mx-4 outline-none" onClick={(e) => e.stopPropagation()}>
         <div className="text-4xl mb-3">🥋</div>
-        <h3 className="text-lg font-bold text-white mb-2">{t("skillmap.proModalTitlePC")}</h3>
+        <h3 id="pro-modal-title" className="text-lg font-bold text-white mb-2">{t("skillmap.proModalTitlePC")}</h3>
         <p className="text-sm text-zinc-400 mb-4">{t("skillmap.proModalBodyPC")}</p>
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className={`text-xs ${!isAnnual ? "text-white font-semibold" : "text-zinc-400"}`}>{t("proModal.monthly")}</span>

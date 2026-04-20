@@ -19,13 +19,40 @@ interface Props {
 export default function KeyboardShortcutHelp({ open, onClose }: Props) {
   const { t } = useLocale();
   const backdropRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
-  // Close on Escape
+  // §9 a11y: Save previous focus + auto-focus dialog + restore on close
+  useEffect(() => {
+    if (!open) return;
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    requestAnimationFrame(() => dialogRef.current?.focus());
+    return () => { previousFocusRef.current?.focus(); };
+  }, [open]);
+
+  // Close on Escape + Focus trap
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
         onClose();
+        return;
+      }
+      // §9 a11y: Focus trap
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     },
     [onClose],
@@ -50,7 +77,7 @@ export default function KeyboardShortcutHelp({ open, onClose }: Props) {
       aria-modal="true"
       aria-label={t("shortcuts.title") || "Keyboard shortcuts"}
     >
-      <div className="bg-zinc-900 border border-white/10 rounded-xl p-6 w-full max-w-sm mx-4 shadow-2xl">
+      <div ref={dialogRef} tabIndex={-1} className="bg-zinc-900 border border-white/10 rounded-xl p-6 w-full max-w-sm mx-4 shadow-2xl outline-none">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-white uppercase tracking-wide">
             {t("shortcuts.title") || "Keyboard Shortcuts"}

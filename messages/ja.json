@@ -525,7 +525,8 @@
     "pushPrefWeeklyGoal": "週間目標の進捗",
     "pushPrefMilestone": "トレーニングの実績",
     "pushPrefWeeklyEmail": "週報メール",
-    "helpDesc": "よくある質問・トラブル対応・お問い合わせ"
+    "helpDesc": "よくある質問・トラブル対応・お問い合わせ",
+    "dataOwnership": "あなたのデータはあなたのものです。いつでもエクスポート可能 — ロックインなし。"
   },
   "competition": {
     "title": "試合戦績",

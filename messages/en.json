@@ -524,7 +524,8 @@
     "pushPrefWeeklyGoal": "Weekly goal progress",
     "pushPrefMilestone": "Training milestones",
     "pushPrefWeeklyEmail": "Weekly summary email",
-    "helpDesc": "FAQ, troubleshooting & contact"
+    "helpDesc": "FAQ, troubleshooting & contact",
+    "dataOwnership": "Your data belongs to you. Export anytime — no lock-in, no restrictions."
   },
   "competition": {
     "title": "Match Record",

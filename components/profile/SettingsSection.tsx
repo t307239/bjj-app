@@ -139,6 +139,10 @@ export default function SettingsSection({
           <CsvExport userId={userId} />
         </div>
       </div>
+      {/* §18 Brand: Data ownership trust signal */}
+      <p className="text-xs text-zinc-500 px-1">
+        {t("profile.dataOwnership")}
+      </p>
 
       {/* Help & Support */}
       <a
