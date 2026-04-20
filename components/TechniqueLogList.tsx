@@ -212,6 +212,7 @@ export default function TechniqueLogList({
               onEdit={() => onStartEdit(technique)}
               editLabel={t("techniques.edit")}
               deleteLabel={t("techniques.delete")}
+              hideOverlayButtons
               className="bg-zinc-900 rounded-xl p-4 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30 hover:ring-white/[0.08] hover:bg-white/[0.04] active:bg-white/[0.06] transition-colors duration-150"
             >
               {editingId === technique.id ? (

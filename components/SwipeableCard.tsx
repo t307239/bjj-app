@@ -16,12 +16,14 @@ type Props = {
   className?: string;
   editLabel?: string;
   deleteLabel?: string;
+  /** Hide overlay buttons when parent already renders its own edit/delete controls */
+  hideOverlayButtons?: boolean;
 };
 
 const THRESHOLD = 64;    // px — action trigger distance
 const MAX_DRAG = 96;     // px — max visual offset
 
-export default function SwipeableCard({ onDelete, onEdit, children, className = "", editLabel = "Edit", deleteLabel = "Delete" }: Props) {
+export default function SwipeableCard({ onDelete, onEdit, children, className = "", editLabel = "Edit", deleteLabel = "Delete", hideOverlayButtons = false }: Props) {
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const isHorizontal = useRef<boolean | null>(null); // determined on first meaningful move
@@ -165,7 +167,7 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
       </div>
 
       {/* a11y: Keyboard-accessible action buttons (visible on focus/hover) */}
-      <div
+      {!hideOverlayButtons && <div
         className={[
           "absolute top-1 right-1 z-10 flex items-center gap-1 transition-opacity",
           focused ? "opacity-100" : "opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto",
@@ -191,7 +193,7 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
           </svg>
         </button>
-      </div>
+      </div>}
     </div>
   );
 }
