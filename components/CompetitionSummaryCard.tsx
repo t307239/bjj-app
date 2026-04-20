@@ -170,13 +170,13 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
   }, [matches]);
 
   if (loading) {
-    return <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />;
+    return <div className="min-h-[120px] bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl animate-pulse" />;
   }
 
   // Empty state
   if (matches.length === 0) {
     return (
-      <div className="bg-zinc-900/50 border border-white/8 rounded-2xl p-6">
+      <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl p-6">
         <EmptyState
           emoji="🏆"
           title={t("competition.noCompetitions")}
@@ -199,7 +199,7 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
   };
 
   return (
-    <div className="bg-zinc-900/50 border border-white/8 rounded-2xl p-5">
+    <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl p-5">
       {/* Header */}
       <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
         🏆 {t("competition.title")}
