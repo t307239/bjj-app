@@ -31,7 +31,7 @@ export default function TermsPage() {
         </Link>
 
         <h1 className="text-3xl font-bold text-white mb-2 mt-4">Terms of Service</h1>
-        <p className="text-zinc-500 text-sm mb-8">Last updated: March 2026</p>
+        <p className="text-zinc-500 text-sm mb-8">Last updated: April 2026</p>
 
         {/* Table of Contents */}
         <nav className="bg-zinc-900/60 border border-white/8 rounded-xl px-5 py-4 mb-10">

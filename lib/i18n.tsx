@@ -81,8 +81,8 @@ export const serverT = makeT("en");
 
 // ── Server-side locale detection (for SSR in Server Components) ──────────────
 // Reads bjj_locale cookie → Accept-Language header → "en"
-// NOTE: pt disabled on server auto-detect — pt.json is ~37% complete
-// Users can still explicitly select pt in Settings (cookie-based)
+// Auto-detects ja, pt, en from Accept-Language header.
+// pt.json is 101% coverage — safe for auto-detect.
 export async function detectServerLocale(): Promise<Locale> {
   // Dynamic imports to avoid bundling next/headers in client code
   const { cookies, headers } = await import("next/headers");
@@ -107,7 +107,7 @@ export async function detectServerLocale(): Promise<Locale> {
 /**
  * Parse Accept-Language header and return the best matching locale.
  * Handles formats like "ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7"
- * Only auto-detects ja (pt auto-detect disabled due to low coverage).
+ * Auto-detects ja, pt, and en from browser Accept-Language header.
  */
 export function parseAcceptLanguage(header: string): Locale | null {
   if (!header) return null;
@@ -122,9 +122,7 @@ export function parseAcceptLanguage(header: string): Locale | null {
   entries.sort((a, b) => b.q - a.q);
   for (const { lang } of entries) {
     if (lang.startsWith("ja")) return "ja";
-    // pt auto-detect disabled: pt.json ~37% — would show mixed pt/en UI
-    // Uncomment when pt.json reaches 80%+:
-    // if (lang.startsWith("pt")) return "pt";
+    if (lang.startsWith("pt")) return "pt";
     if (lang.startsWith("en")) return "en";
   }
   return null;
@@ -153,8 +151,7 @@ function detectClientLocale(): Locale {
   }
   const lang = navigator.language?.toLowerCase() ?? "en";
   if (lang.startsWith("ja")) detected = "ja";
-  // pt auto-detection disabled: pt.json coverage is ~18% — would show mixed pt/en UI.
-  // Portuguese users can explicitly select "Português" in Settings → Language.
+  else if (lang.startsWith("pt")) detected = "pt";
   syncLocaleCookie(detected);
   return detected;
 }
