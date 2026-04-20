@@ -93,7 +93,7 @@ export default function PartnerStatsCard({ userId }: { userId: string }) {
 
   if (loading) {
     return (
-      <div className="bg-zinc-900 border border-white/10 rounded-2xl p-4 animate-pulse">
+      <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl p-4 animate-pulse">
         <div className="h-4 bg-zinc-800 rounded w-1/3 mb-3" />
         <div className="space-y-2">
           {[1, 2, 3].map((i) => <div key={i} className="h-3 bg-zinc-800 rounded" />)}
@@ -105,7 +105,7 @@ export default function PartnerStatsCard({ userId }: { userId: string }) {
   const notEnough = totalWithPartner < UNLOCK_AT;
 
   return (
-    <div className="bg-zinc-900 border border-white/10 rounded-2xl p-4">
+    <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">

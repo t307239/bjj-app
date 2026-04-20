@@ -156,7 +156,7 @@ const TrainingLogList = memo(function TrainingLogList({
     return (
       <div className="space-y-3">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="bg-zinc-900/60 rounded-xl border border-white/5 p-4 animate-pulse">
+          <div key={i} className="bg-zinc-900/50 rounded-xl ring-1 ring-inset ring-white/[0.04] p-4 animate-pulse">
             <div className="flex items-start justify-between gap-3 mb-3">
               <div className="h-4 w-24 bg-white/10 rounded" />
               <div className="h-4 w-16 bg-white/5 rounded" />

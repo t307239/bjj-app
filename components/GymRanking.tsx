@@ -185,7 +185,7 @@ export default function GymRanking({ userId, gymId }: Props) {
   if (loading) return <Skeleton height={120} rounded="xl" className="mb-4" />;
   if (rows.length === 0) {
     return (
-      <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-4">
+      <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-xl p-4 mb-4">
         <h3 className="text-sm font-semibold text-white mb-3">🏆 {t("gym.rankingTitle")}</h3>
         <div className="text-center py-6">
           <div className="text-3xl mb-2">👥</div>
@@ -214,7 +214,7 @@ export default function GymRanking({ userId, gymId }: Props) {
     mode === "sessions" ? row.total_sessions : row.current_streak;
 
   return (
-    <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-4">
+    <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-xl p-4 mb-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-white">

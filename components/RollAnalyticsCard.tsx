@@ -219,7 +219,7 @@ export default function RollAnalyticsCard({ userId }: { userId: string }) {
   // ── Loading ───────────────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-zinc-900 p-5 mt-4 animate-pulse">
+      <div className="rounded-2xl ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 bg-zinc-900/50 p-5 mt-4 animate-pulse">
         <div className="h-4 w-32 bg-zinc-700 rounded mb-4" />
         <div className="space-y-2">
           {[...Array(3)].map((_, i) => (
@@ -234,7 +234,7 @@ export default function RollAnalyticsCard({ userId }: { userId: string }) {
   if (!unlocked) {
     const progress = Math.round((rollCount / UNLOCK_AT) * 100);
     return (
-      <div className="rounded-2xl border border-white/10 bg-zinc-900 p-5 mt-4">
+      <div className="rounded-2xl ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 bg-zinc-900/50 p-5 mt-4">
         <div className="flex items-center gap-2 mb-3">
           <span className="text-base">📊</span>
           <h3 className="text-sm font-semibold text-white">{t("rollAnalytics.title")}</h3>
@@ -261,7 +261,7 @@ export default function RollAnalyticsCard({ userId }: { userId: string }) {
 
   // ── Full analytics ────────────────────────────────────────────────────────────
   return (
-    <div className="rounded-2xl border border-white/10 bg-zinc-900 p-5 mt-4 space-y-5">
+    <div className="rounded-2xl ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 bg-zinc-900/50 p-5 mt-4 space-y-5">
       {/* Header */}
       <div className="flex items-center gap-2">
         <span className="text-base">📊</span>

@@ -21,29 +21,29 @@ import GuestDashboardClient from "@/components/GuestDashboardClient";
 
 // perf: Heavy chart components lazy-loaded
 const GymRanking = dynamic(() => import("@/components/GymRanking"), {
-  loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="min-h-[120px] bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-2xl animate-pulse" />,
 });
 const AICoachCard = dynamic(() => import("@/components/AICoachCard"), {
-  loading: () => <div className="min-h-[128px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="min-h-[128px] bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-2xl animate-pulse" />,
 });
 
 // ─── Stats & analytics ───
 const PersonalBests = dynamic(() => import("@/components/PersonalBests"), {
-  loading: () => <div className="min-h-[100px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="min-h-[100px] bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-2xl animate-pulse" />,
 });
 const TrainingChart = dynamic(() => import("@/components/TrainingChart"), {
-  loading: () => <div className="min-h-[180px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="min-h-[180px] bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-2xl animate-pulse" />,
 });
 const StatsAccordion = dynamic(() => import("@/components/records/StatsAccordion"));
 const ProGate = dynamic(() => import("@/components/ProGate"));
 const RollAnalyticsCard = dynamic(() => import("@/components/RollAnalyticsCard"), {
-  loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="min-h-[120px] bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-2xl animate-pulse" />,
 });
 const PartnerStatsCard = dynamic(() => import("@/components/PartnerStatsCard"), {
-  loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="min-h-[120px] bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-2xl animate-pulse" />,
 });
 const CompetitionSummaryCard = dynamic(() => import("@/components/CompetitionSummaryCard"), {
-  loading: () => <div className="min-h-[120px] bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="min-h-[120px] bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-2xl animate-pulse" />,
 });
 
 export const metadata: Metadata = {

@@ -193,7 +193,7 @@ export default function PersonalBests({ userId }: Props) {
 
   if (!bests) {
     return (
-      <div className="mb-4 bg-zinc-900 rounded-xl px-4 py-6 border border-white/10 text-center">
+      <div className="mb-4 bg-zinc-900/50 rounded-xl px-4 py-6 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 text-center">
         <p className="text-2xl mb-2">📊</p>
         <p className="text-sm font-medium text-zinc-300 mb-1">{t("stats.personalBests")}</p>
         <p className="text-xs text-zinc-400">{t("stats.emptyBests")}</p>
@@ -252,7 +252,7 @@ export default function PersonalBests({ userId }: Props) {
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
-        className="w-full flex items-center justify-between bg-zinc-900 hover:bg-white/5 rounded-xl px-4 py-3 border border-white/10 transition-colors active:scale-95 transform"
+        className="w-full flex items-center justify-between bg-zinc-900/50 hover:bg-white/5 rounded-xl px-4 py-3 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 transition-colors active:scale-95 transform"
       >
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-zinc-300">📊 {t("stats.personalBests")}</span>
@@ -272,7 +272,7 @@ export default function PersonalBests({ userId }: Props) {
 
       {/* 展開コンテンツ */}
       {isOpen && (
-      <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mt-2">
+      <div className="bg-zinc-900/50 rounded-xl p-4 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 mt-2">
       <div className="flex items-center justify-between mb-3">
         <div>
           {bests.lastMonthCount > 0 && bests.thisMonthCount > 0 && (() => {

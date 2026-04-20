@@ -112,7 +112,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
   // ── Pro paywall: データがある非Proはblur + upgrade CTA ──────────────────
   if (!isPro && data.some((d) => d.count > 0)) {
     return (
-      <div className="relative bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4 overflow-hidden">
+      <div className="relative bg-zinc-900/50 rounded-xl p-4 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 mb-4 overflow-hidden">
         <h4 className="text-sm font-medium text-zinc-300 mb-3">{t("chart.activity")}</h4>
         <div className="blur-sm opacity-40 pointer-events-none select-none">
           <div className="flex gap-1">
@@ -158,7 +158,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
       })
     );
     return (
-      <div className="relative bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4 overflow-hidden">
+      <div className="relative bg-zinc-900/50 rounded-xl p-4 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 mb-4 overflow-hidden">
         {/* Blurred dummy heatmap background */}
         <div className="blur-sm opacity-40 pointer-events-none select-none">
           <div className="flex items-center justify-between mb-3">
@@ -259,7 +259,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
   const maxMonthCount = Math.max(...monthData.map((m) => m.count), 1);
 
   return (
-    <div className="bg-zinc-900 rounded-xl p-4 border border-white/10 mb-4">
+    <div className="bg-zinc-900/50 rounded-xl p-4 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 mb-4">
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-sm font-medium text-zinc-300">{t("chart.activity")}</h4>
         {/* iOS-style segment control (#59) */}

@@ -22,7 +22,7 @@ export default function WeightGoalWidget({ targetWeight, targetDate, latestWeigh
   return (
     <Link
       href="/profile?tab=body"
-      className="flex items-center justify-between gap-3 bg-zinc-900 border border-amber-400/20 rounded-xl px-4 py-3 hover:border-amber-400/40 active:scale-[0.98] transition-all"
+      className="flex items-center justify-between gap-3 bg-zinc-900/50 ring-1 ring-inset ring-amber-400/20 shadow-lg shadow-black/40 rounded-xl px-4 py-3 hover:ring-amber-400/40 active:scale-[0.98] transition-all"
     >
       <div className="flex items-center gap-2.5 min-w-0">
         <span className="text-lg flex-shrink-0">🎯</span>

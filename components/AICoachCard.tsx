@@ -162,7 +162,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
   // ── Pro gate ──
   if (!isPro) {
     return (
-      <div className="bg-zinc-900 border border-white/10 rounded-2xl p-5 mb-6">
+      <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl p-5 mb-6">
         <div className="flex items-start gap-3">
           <span className="text-2xl flex-shrink-0">🤖</span>
           <div className="flex-1">
@@ -192,7 +192,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
   // ── Empty state — not generated yet ──
   if (!coaching && !loading) {
     return (
-      <div className="bg-zinc-900 border border-white/10 rounded-2xl p-5 mb-6">
+      <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl p-5 mb-6">
         <div className="flex items-start gap-3 mb-4">
           <span className="text-2xl flex-shrink-0">🤖</span>
           <div>
@@ -232,7 +232,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
   // ── Loading state ──
   if (loading && !coaching) {
     return (
-      <div className="bg-zinc-900 border border-white/10 rounded-2xl p-5 mb-6">
+      <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl p-5 mb-6">
         <div className="flex items-center gap-2 mb-3">
           <span className="text-xl">{MODE_ICONS[mode]}</span>
           <h3 className="text-sm font-semibold text-white">{t("aiCoach.title")}</h3>
@@ -251,7 +251,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
   const parsed = parseCoaching(coaching ?? "", mode);
 
   return (
-    <div className="bg-zinc-900 border border-white/10 rounded-2xl p-5 mb-6">
+    <div className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl p-5 mb-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">

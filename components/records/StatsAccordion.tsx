@@ -6,15 +6,15 @@ import { useLocale } from "@/lib/i18n";
 
 const TrainingBarChart = dynamic(() => import("@/components/TrainingBarChart"), {
   ssr: false,
-  loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="h-36 bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-2xl animate-pulse" />,
 });
 const TrainingTypeChart = dynamic(() => import("@/components/TrainingTypeChart"), {
   ssr: false,
-  loading: () => <div className="h-36 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="h-36 bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-2xl animate-pulse" />,
 });
 const ExtendedBadgeGrid = dynamic(() => import("@/components/ExtendedBadgeGrid"), {
   ssr: false,
-  loading: () => <div className="h-48 bg-zinc-900/50 border border-white/8 rounded-2xl animate-pulse" />,
+  loading: () => <div className="h-48 bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-2xl animate-pulse" />,
 });
 
 interface Props {

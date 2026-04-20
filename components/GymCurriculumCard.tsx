@@ -82,7 +82,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
   );
 
   return (
-    <div className={`bg-zinc-900 border rounded-xl px-4 py-3 transition-colors ${practiced ? "border-[#10B981]/40" : "border-white/10"}`}>
+    <div className={`bg-zinc-900/50 ring-1 ring-inset rounded-xl px-4 py-3 shadow-lg shadow-black/40 transition-colors ${practiced ? "ring-[#10B981]/30" : "ring-white/[0.04]"}`}>
       <div className="flex items-start gap-3">
         {practiced ? (
           <svg className="w-5 h-5 text-[#10B981] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
