@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 type Props = {
   onClose: () => void;
@@ -12,6 +12,16 @@ type Props = {
 export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink, t }: Props) {
   const [isAnnual, setIsAnnual] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // §1 UX: Escape key dismiss
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === "Escape") onClose();
+  }, [onClose]);
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
   const fallbackUrl = isAnnual ? stripeAnnualLink : stripePaymentLink;
 
   const handleCheckout = async () => {
@@ -39,8 +49,8 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
   const hasLink = !!fallbackUrl;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="bg-zinc-900 border border-white/10 rounded-2xl p-7 max-w-sm w-full text-center shadow-2xl mx-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={onClose} role="dialog" aria-modal="true">
+      <div className="bg-zinc-900 border border-white/10 rounded-2xl p-7 max-w-sm w-full text-center shadow-2xl mx-4" onClick={(e) => e.stopPropagation()}>
         <div className="text-4xl mb-3">🥋</div>
         <h3 className="text-lg font-bold text-white mb-2">{t("skillmap.proModalTitlePC")}</h3>
         <p className="text-sm text-zinc-400 mb-4">{t("skillmap.proModalBodyPC")}</p>

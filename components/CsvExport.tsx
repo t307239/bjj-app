@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { decodeCompNotes } from "@/lib/trainingLogHelpers";
+import { trackEvent } from "@/lib/analytics";
 // ProGate import removed — CSV is now free for all users (CCPA/GDPR data portability)
 
 type Props = {
@@ -119,6 +120,7 @@ export default function CsvExport({ userId }: Props) {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      trackEvent("csv_export_used", { type: "training_logs" });
     } finally {
       setLoadingLogs(false);
     }
@@ -175,6 +177,7 @@ export default function CsvExport({ userId }: Props) {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      trackEvent("csv_export_used", { type: "techniques" });
     } finally {
       setLoadingTech(false);
     }

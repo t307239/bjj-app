@@ -141,6 +141,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
         return;
       }
       trackEvent("ai_coach_generated", { source: data.cached ? "cache_hit" : "fresh", mode: targetMode });
+      if (!data.cached) trackEvent("feature_discovered", { feature: "ai_coach" });
       setCoachingMap((prev) => ({ ...prev, [targetMode]: data.coaching ?? null }));
       setGeneratedAtMap((prev) => ({ ...prev, [targetMode]: data.generated_at ?? null }));
     } catch {
