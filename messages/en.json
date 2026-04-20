@@ -1233,7 +1233,8 @@
     "qrScanToJoin": "Scan to join our gym",
     "qrPrint": "Print QR Code",
     "qrPrintTitle": "Gym Invite QR Code",
-    "qrAltText": "QR code for gym invite link"
+    "qrAltText": "QR code for gym invite link",
+    "inactiveMembers7d": "7d Inactive"
   },
   "gymJoin": {
     "title": "Join {name}",
@@ -1782,7 +1783,8 @@
     "insightWeekDown": "You trained {n} fewer time(s) than last week. Keep it up!",
     "insightConsecutiveUp": "3 weeks of increasing frequency — great momentum!",
     "insightLowDrilling": "Your drilling ratio is low this week. Consider adding technique-focused sessions.",
-    "insightStreak": "Your best streak is {n} consecutive days — impressive consistency!"
+    "insightStreak": "Your best streak is {n} consecutive days — impressive consistency!",
+    "share": "Share"
   },
   "pricing": {
     "title": "Simple Pricing",

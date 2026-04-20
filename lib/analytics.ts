@@ -17,7 +17,14 @@ type KpiEvent =
   | "tab_viewed"               // profile tab engagement
   | "safety_banner_dismissed"  // legal/UX: user acknowledged danger-technique warning
   | "safety_banner_wiki_click" // content funnel: wiki link from safety banner → Axis 6
-  | "pricing_upgrade_click";   // conversion: pricing page CTA click
+  | "pricing_upgrade_click"    // conversion: pricing page CTA click
+  // §6 Telemetry: Funnel tracking events
+  | "signup_completed"         // funnel: account created
+  | "onboarding_profile_set"   // funnel: profile setup (belt, weight, etc.)
+  | "first_training_logged"    // funnel: first ever training log
+  | "feature_discovered"       // funnel: user explored a new feature (props: feature)
+  | "csv_export_used"          // engagement: data export
+  | "gym_member_invited";      // B2B funnel: gym owner invited member
 
 /**
  * Fire a KPI event. Safe to call on the server (no-op).

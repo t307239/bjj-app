@@ -390,13 +390,18 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     if (!error && data) {
       if (typeof navigator !== "undefined") navigator.vibrate?.([50]);
       setEntries((prev) => prev.map((e) => e.id === optimisticId ? data : e));
-      if (totalCount === 0) setShowCelebration(true);
+      if (totalCount === 0) {
+        setShowCelebration(true);
+        trackEvent("first_training_logged", { type: form.type });
+      }
       setTotalCount((c) => (c !== null ? c + 1 : null));
       if (typeof localStorage !== "undefined") {
         const prev = parseInt(localStorage.getItem("bjj_log_count") ?? "0", 10);
         localStorage.setItem("bjj_log_count", String(prev + 1));
       }
       trackEvent("training_logged", { type: form.type });
+      // §2 Logic: Revalidate server-rendered data after successful save
+      router.refresh();
 
       // ── Post-training insight (one-liner feedback) ─────────────────
       const insight = generateInsight(entries, data, totalCount, tRef.current);
@@ -532,6 +537,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       if (!error) {
         if (typeof navigator !== "undefined") navigator.vibrate?.([30, 20, 30]);
         setTotalCount((c) => (c !== null ? Math.max(0, c - 1) : null));
+        router.refresh();
       } else {
         setEntries((prev) => [removed, ...prev].sort((a, b) => b.date.localeCompare(a.date)));
         setToast({ message: tRef.current("training.deleteFailed"), type: "error" });
@@ -598,12 +604,13 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
 
     if (!error && data) {
       setEntries((prev) => prev.map((en) => en.id === id ? data : en));
+      router.refresh();
     } else {
       if (prevEntry) setEntries((prev) => prev.map((en) => en.id === id ? prevEntry : en));
       setEditingId(id);
       setToast({ message: tRef.current("training.updateFailed"), type: "error" });
     }
-  }, [editForm, editCompForm, entries, userId, supabase]); // t via tRef
+  }, [editForm, editCompForm, entries, userId, supabase, router]); // t via tRef
 
   // ── Pagination ────────────────────────────────────────────────────────────
   const handlePageChange = useCallback(async (newPage: number) => {

@@ -1225,7 +1225,8 @@
     "qrScanToJoin": "スキャンしてジムに参加",
     "qrPrint": "QRコードを印刷",
     "qrPrintTitle": "ジム招待QRコード",
-    "qrAltText": "ジム招待リンクのQRコード"
+    "qrAltText": "ジム招待リンクのQRコード",
+    "inactiveMembers7d": "7日間未練習"
   },
   "gymJoin": {
     "title": "{name} に参加する",
@@ -1784,7 +1785,8 @@
     "insightWeekDown": "先週より{n}回少ないです。ペースを取り戻しましょう！",
     "insightConsecutiveUp": "3週連続で練習頻度が上がっています。素晴らしい継続力です！",
     "insightLowDrilling": "今週はドリリングの割合が低いです。技術練習を意識してみましょう。",
-    "insightStreak": "最長{n}日連続練習 — 素晴らしい継続力です！"
+    "insightStreak": "最長{n}日連続練習 — 素晴らしい継続力です！",
+    "share": "シェア"
   },
   "pricing": {
     "title": "シンプルな料金体系",

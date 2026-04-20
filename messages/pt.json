@@ -1283,7 +1283,8 @@
     "qrScanToJoin": "Escaneie para entrar na academia",
     "qrPrint": "Imprimir QR Code",
     "qrPrintTitle": "QR Code de Convite da Academia",
-    "qrAltText": "QR code do link de convite da academia"
+    "qrAltText": "QR code do link de convite da academia",
+    "inactiveMembers7d": "7d Inativos"
   },
   "gymJoin": {
     "title": "Entrar em {name}",
@@ -1838,7 +1839,8 @@
     "insightWeekDown": "Você treinou {n} vez(es) a menos que na semana passada. Continue firme!",
     "insightConsecutiveUp": "3 semanas de frequência crescente — ótimo ritmo!",
     "insightLowDrilling": "Sua proporção de drill está baixa esta semana. Considere adicionar sessões focadas em técnica.",
-    "insightStreak": "Sua melhor sequência é de {n} dias consecutivos — consistência impressionante!"
+    "insightStreak": "Sua melhor sequência é de {n} dias consecutivos — consistência impressionante!",
+    "share": "Compartilhar"
   },
   "pricing": {
     "title": "Preços Simples",

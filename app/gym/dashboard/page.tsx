@@ -58,6 +58,7 @@ export default async function GymDashboardPage({
   let memberCount = 0;
   let totalSessions30d = 0;
   let avgSessionsPerMember = 0;
+  let inactiveMemberCount = 0;
   if (gym?.id) {
     // Get member IDs (opt-in) + count — then session aggregate (data-dependent)
     const { data: members, count, error } = await supabase
@@ -71,6 +72,7 @@ export default async function GymDashboardPage({
     if (members && members.length > 0) {
       const memberIds = members.map((m: { id: string }) => m.id);
       const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString().split("T")[0];
+      const sevenDaysAgo = new Date(Date.now() - 7 * 86400000).toISOString().split("T")[0];
       const { count: sessCount } = await supabase
         .from("training_logs")
         .select("*", { count: "exact", head: true })
@@ -78,6 +80,15 @@ export default async function GymDashboardPage({
         .gte("date", thirtyDaysAgo);
       totalSessions30d = sessCount ?? 0;
       avgSessionsPerMember = memberCount > 0 ? Math.round((totalSessions30d / memberCount) * 10) / 10 : 0;
+
+      // §14 B2B: Detect inactive members (no training in 7+ days)
+      const { data: activeRecent } = await supabase
+        .from("training_logs")
+        .select("user_id")
+        .in("user_id", memberIds)
+        .gte("date", sevenDaysAgo);
+      const activeUserIds = new Set((activeRecent ?? []).map((r: { user_id: string }) => r.user_id));
+      inactiveMemberCount = memberIds.filter((id: string) => !activeUserIds.has(id)).length;
     }
   }
 
@@ -139,7 +150,7 @@ export default async function GymDashboardPage({
 
               {/* Gym aggregate stats strip */}
               {memberCount > 0 && (
-                <div className="grid grid-cols-2 gap-2 mt-3">
+                <div className="grid grid-cols-3 gap-2 mt-3">
                   <div className="bg-zinc-900/60 border border-white/8 rounded-xl p-3 text-center">
                     <p className="text-xl font-black text-blue-300 tabular-nums">
                       {totalSessions30d}
@@ -154,6 +165,15 @@ export default async function GymDashboardPage({
                     </p>
                     <p className="text-xs text-zinc-400 uppercase tracking-widest">
                       {t("gym.avgSessions30d")}
+                    </p>
+                  </div>
+                  {/* §14 B2B: Inactive member alert */}
+                  <div className={`bg-zinc-900/60 border rounded-xl p-3 text-center ${inactiveMemberCount > 0 ? "border-amber-500/30" : "border-white/8"}`}>
+                    <p className={`text-xl font-black tabular-nums ${inactiveMemberCount > 0 ? "text-amber-400" : "text-blue-300"}`}>
+                      {inactiveMemberCount}
+                    </p>
+                    <p className="text-xs text-zinc-400 uppercase tracking-widest">
+                      {t("gym.inactiveMembers7d")}
                     </p>
                   </div>
                 </div>
