@@ -10,6 +10,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { logger } from "@/lib/logger";
@@ -110,6 +111,8 @@ export async function PATCH(req: NextRequest) {
     logger.error("push.preferences_update_error", { userId: user.id }, updateErr as Error);
     return NextResponse.json({ error: "DB error" }, { status: 500 });
   }
+
+  revalidatePath("/settings");
 
   return NextResponse.json({ ok: true, preferences: merged });
 }

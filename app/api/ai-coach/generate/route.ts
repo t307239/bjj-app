@@ -17,6 +17,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { logger } from "@/lib/logger";
 
@@ -489,6 +490,8 @@ export async function POST(req: NextRequest) {
   } catch {
     // Columns may not exist yet — cache miss is OK
   }
+
+  revalidatePath("/dashboard");
 
   return NextResponse.json({
     coaching,

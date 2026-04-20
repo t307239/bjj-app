@@ -20,6 +20,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { logger } from "@/lib/logger";
@@ -92,6 +93,8 @@ export async function POST(req: NextRequest) {
     logger.error("push.subscribe_upsert_error", { userId: user.id }, error as Error);
     return NextResponse.json({ error: "DB error" }, { status: 500 });
   }
+
+  revalidatePath("/settings");
 
   return NextResponse.json({ ok: true });
 }

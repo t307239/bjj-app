@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { logger } from "@/lib/logger";
 import { createRateLimiter } from "@/lib/rateLimit";
@@ -64,6 +65,10 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify(body),
       }
     );
+
+    if (response.ok) {
+      revalidatePath("/gym");
+    }
 
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
