@@ -1226,7 +1226,12 @@
     "upgradeSuccess": "Gym plan activated! Your dashboard is now live.",
     "freePlanBannerTitle": "You're on the Free Plan",
     "freePlanBannerDesc": "Unlock churn alerts, curriculum dispatch, and CSV bulk invites.",
-    "freePlanBannerCta": "Upgrade to Gym Pro â $99/mo"
+    "freePlanBannerCta": "Upgrade to Gym Pro â $99/mo",
+    "qrTitle": "QR Code",
+    "qrScanToJoin": "Scan to join our gym",
+    "qrPrint": "Print QR Code",
+    "qrPrintTitle": "Gym Invite QR Code",
+    "qrAltText": "QR code for gym invite link"
   },
   "gymJoin": {
     "title": "Join {name}",
@@ -1921,5 +1926,10 @@
     "records": "Go to Records",
     "techniques": "Go to Techniques",
     "profile": "Go to Profile"
+  },
+  "milestoneShare": {
+    "shareTitle": "BJJ Milestone",
+    "shareText": "{value} — {label} on BJJ App!",
+    "buttonTitle": "Share milestone"
   }
 }

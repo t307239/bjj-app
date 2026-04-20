@@ -34,7 +34,7 @@ function BadgeCell({ milestone, earned }: { milestone: Milestone; earned: boolea
 
   return (
     <div
-      className={`flex flex-col items-center gap-1 rounded-xl p-2.5 border transition-all ${
+      className={`relative flex flex-col items-center gap-1 rounded-xl p-2.5 border transition-all ${
         earned
           ? "bg-gradient-to-b from-violet-600/20 to-purple-800/20 border-violet-500/30"
           : "bg-zinc-800/40 border-white/5 opacity-50"
@@ -51,9 +51,18 @@ function BadgeCell({ milestone, earned }: { milestone: Milestone; earned: boolea
         {milestone >= 1000 ? "1K" : milestone}
       </span>
       {earned && (
-        <span className="text-[9px] text-violet-400/70 leading-tight text-center line-clamp-1 w-full text-center">
-          {text.replace(/!$/, "")}
-        </span>
+        <>
+          <span className="text-[9px] text-violet-400/70 leading-tight text-center line-clamp-1 w-full text-center">
+            {text.replace(/!$/, "")}
+          </span>
+          <div className="absolute top-0.5 right-0.5">
+            <MilestoneShareCard
+              type="sessions"
+              value={String(milestone)}
+              label={text.replace(/!$/, "")}
+            />
+          </div>
+        </>
       )}
     </div>
   );

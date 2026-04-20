@@ -1218,7 +1218,12 @@
     "upgradeSuccess": "ジムプランが有効化されました！ダッシュボードが利用可能になりました。",
     "freePlanBannerTitle": "フリープラン利用中",
     "freePlanBannerDesc": "Gym Proにアップグレードして、チャーンアラート・カリキュラム配信・CSV一括招待を解放しましょう。",
-    "freePlanBannerCta": "Gym Proにアップグレード – $99/月"
+    "freePlanBannerCta": "Gym Proにアップグレード – $99/月",
+    "qrTitle": "QRコード",
+    "qrScanToJoin": "スキャンしてジムに参加",
+    "qrPrint": "QRコードを印刷",
+    "qrPrintTitle": "ジム招待QRコード",
+    "qrAltText": "ジム招待リンクのQRコード"
   },
   "gymJoin": {
     "title": "{name} に参加する",
@@ -1923,5 +1928,10 @@
     "records": "記録へ移動",
     "techniques": "テクニックへ移動",
     "profile": "マイページへ移動"
+  },
+  "milestoneShare": {
+    "shareTitle": "BJJマイルストーン",
+    "shareText": "{value} — {label} BJJ Appで達成!",
+    "buttonTitle": "マイルストーンをシェア"
   }
 }
