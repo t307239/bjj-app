@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     .eq("id", user.id)
     .single();
   if (error) {
-    console.error("route.ts:query", error);
+    logger.error("gym.regenerate_invite_profile_query", { userId: user.id }, error as Error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 

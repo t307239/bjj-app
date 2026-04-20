@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
     .eq("id", user.id)
     .single();
   if (error) {
-    console.error("route.ts:query", error);
+    logger.error("gym.kick_owner_query", { userId: user.id }, error as Error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
     .eq("id", memberId)
     .single();
   if (memberError) {
-    console.error("route.ts:query", memberError);
+    logger.error("gym.kick_member_query", { memberId, gymId: ownerProfile.gym_id }, memberError as Error);
     return NextResponse.json({ error: memberError.message }, { status: 500 });
   }
 

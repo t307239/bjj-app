@@ -40,9 +40,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "curriculum_url required" }, { status: 400 });
   }
 
-  // Basic URL validation — must be a valid URL
+  // URL validation — must be a valid URL on an allowed domain
   try {
-    new URL(curriculumUrl);
+    const parsed = new URL(curriculumUrl);
+    const allowedHosts = ["wiki.bjj-app.net", "bjj-app.net", "www.bjj-app.net"];
+    if (!allowedHosts.includes(parsed.hostname)) {
+      return NextResponse.json(
+        { error: "Only BJJ Wiki URLs (wiki.bjj-app.net) are allowed" },
+        { status: 400 }
+      );
+    }
   } catch {
     return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
   }
@@ -54,7 +61,7 @@ export async function POST(req: NextRequest) {
     .eq("id", user.id)
     .single();
   if (error) {
-    console.error("route.ts:query", error);
+    logger.error("gym.curriculum_profile_query", { userId: user.id }, error as Error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
@@ -70,7 +77,7 @@ export async function POST(req: NextRequest) {
     .eq("owner_id", user.id)
     .single();
   if (gymError) {
-    console.error("route.ts:query", gymError);
+    logger.error("gym.curriculum_gym_query", { gymId: ownerProfile.gym_id }, gymError as Error);
     return NextResponse.json({ error: gymError.message }, { status: 500 });
   }
 

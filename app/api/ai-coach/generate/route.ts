@@ -330,7 +330,7 @@ export async function POST(req: NextRequest) {
     .eq("id", user.id)
     .single();
   if (profileError) {
-    console.error("route.ts:query", profileError);
+    logger.error("ai_coach.profile_query", { userId: user.id }, profileError as Error);
     return NextResponse.json({ error: profileError.message }, { status: 500 });
   }
 
@@ -393,7 +393,7 @@ export async function POST(req: NextRequest) {
   ]);
 
   if (logsRes.error) {
-    console.error("route.ts:query", logsRes.error);
+    logger.error("ai_coach.training_logs_query", { userId: user.id }, logsRes.error as Error);
     return NextResponse.json({ error: logsRes.error.message }, { status: 500 });
   }
 
