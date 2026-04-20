@@ -668,7 +668,8 @@
     "samePaceLast": "先月と同じペース",
     "BJJRecordTitle": "BJJ練習記録",
     "BJJHashtag": "BJJ",
-    "daysUnit": "日"
+    "daysUnit": "日",
+    "logFirst": "最初のセッションを記録する"
   },
   "insights": {
     "title": "トレーニング分析",
@@ -1788,7 +1789,8 @@
     "insightConsecutiveUp": "3週連続で練習頻度が上がっています。素晴らしい継続力です！",
     "insightLowDrilling": "今週はドリリングの割合が低いです。技術練習を意識してみましょう。",
     "insightStreak": "最長{n}日連続練習 — 素晴らしい継続力です！",
-    "share": "シェア"
+    "share": "シェア",
+    "logTraining": "練習を記録する"
   },
   "pricing": {
     "title": "シンプルな料金体系",

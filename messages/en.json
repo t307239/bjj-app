@@ -667,7 +667,8 @@
     "samePaceLast": "Same pace as last month",
     "BJJRecordTitle": "BJJ Training Record",
     "BJJHashtag": "BJJ",
-    "daysUnit": " days"
+    "daysUnit": " days",
+    "logFirst": "Log Your First Session"
   },
   "insights": {
     "title": "Training Insights",
@@ -1786,7 +1787,8 @@
     "insightConsecutiveUp": "3 weeks of increasing frequency — great momentum!",
     "insightLowDrilling": "Your drilling ratio is low this week. Consider adding technique-focused sessions.",
     "insightStreak": "Your best streak is {n} consecutive days — impressive consistency!",
-    "share": "Share"
+    "share": "Share",
+    "logTraining": "Log Training"
   },
   "pricing": {
     "title": "Simple Pricing",

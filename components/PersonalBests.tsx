@@ -196,7 +196,13 @@ export default function PersonalBests({ userId }: Props) {
       <div className="mb-4 bg-zinc-900/50 rounded-xl px-4 py-6 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 text-center">
         <p className="text-2xl mb-2">📊</p>
         <p className="text-sm font-medium text-zinc-300 mb-1">{t("stats.personalBests")}</p>
-        <p className="text-xs text-zinc-400">{t("stats.emptyBests")}</p>
+        <p className="text-xs text-zinc-400 mb-3">{t("stats.emptyBests")}</p>
+        <a
+          href="/records"
+          className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-500 transition-colors"
+        >
+          {t("stats.logFirst")}
+        </a>
       </div>
     );
   }

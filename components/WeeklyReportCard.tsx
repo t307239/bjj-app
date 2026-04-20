@@ -131,7 +131,13 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
           <span className="text-base">📊</span>
           <h3 className="text-sm font-semibold text-white">{t("report.title")}</h3>
         </div>
-        <p className="text-xs text-zinc-500">{t("report.emptyState")}</p>
+        <p className="text-xs text-zinc-500 mb-3">{t("report.emptyState")}</p>
+        <a
+          href="/records"
+          className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-500 transition-colors"
+        >
+          {t("report.logTraining")}
+        </a>
       </div>
     );
   }

@@ -347,7 +347,13 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
       {activeGoals.length === 0 && !showForm ? (
         <div className="px-4 py-6 text-center">
           <p className="text-xs text-zinc-500">{t("compGoal.empty")}</p>
-          <p className="text-xs text-zinc-600 mt-1">{t("compGoal.emptyHint")}</p>
+          <p className="text-xs text-zinc-600 mt-1 mb-3">{t("compGoal.emptyHint")}</p>
+          <button
+            onClick={() => setShowForm(true)}
+            className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-500 transition-colors"
+          >
+            {t("compGoal.add")}
+          </button>
         </div>
       ) : (
         <div className="divide-y divide-white/5">

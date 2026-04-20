@@ -15,6 +15,7 @@ import ReadPersistence from "./ReadPersistence";
 import EasterEgg from "./EasterEgg";
 import YouTubeLiteEmbed from "./YouTubeLiteEmbed";
 import UgcVideoSubmit from "./UgcVideoSubmit";
+import { logger } from "@/lib/logger";
 
 export const revalidate = 3600;
 
@@ -187,7 +188,7 @@ async function getWikiPage(lang: string, slug: string) {
     .select("video_url")
     .eq("id", pageData.id)
     .single();
-  if (videoError) console.error("page.tsx:query", videoError);
+  if (videoError) logger.error("wiki.page_video_query_error", { pageId: pageData.id }, videoError as Error);
   const videoUrl = (videoData as { video_url?: string | null } | null)?.video_url ?? null;
 
   return { ...data, video_url: videoUrl };

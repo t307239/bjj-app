@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import NavBar from "@/components/NavBar";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import Link from "next/link";
+import { logger } from "@/lib/logger";
 
 // perf: @xyflow/react (~300KB) + dagre を遅延読み込み。
 // "use client" コンポーネントなので dynamic() のみで遅延読み込み（ssr:false は Server Component で不可）
@@ -46,7 +47,7 @@ export default async function SkillMapPage() {
     .select("is_pro")
     .eq("id", user.id)
     .single();
-  if (error) console.error("page.tsx:query", error);
+  if (error) logger.error("skillmap.page_query_error", {}, error as Error);
 
   const isPro = profile?.is_pro ?? false;
   const stripePaymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || null;

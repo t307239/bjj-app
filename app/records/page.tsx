@@ -17,6 +17,7 @@ import {
 } from "@/lib/timezone";
 import { serverT, makeT, type Locale } from "@/lib/i18n";
 import { buildBreadcrumbJsonLd } from "@/lib/breadcrumb";
+import { logger } from "@/lib/logger";
 import GuestDashboardClient from "@/components/GuestDashboardClient";
 
 // perf: Heavy chart components lazy-loaded
@@ -145,7 +146,7 @@ export default async function RecordsPage() {
       .not("curriculum_url", "is", null)
       .gte("curriculum_set_at", sevenDaysAgo)
       .single();
-    if (error) console.error("records/page.tsx:query", error);
+    if (error) logger.error("records.page_curriculum_query_error", { gymId }, error as Error);
     if (gymData?.curriculum_url && gymData?.curriculum_set_at) {
       gymCurriculum = { curriculum_url: gymData.curriculum_url, curriculum_set_at: gymData.curriculum_set_at };
     }

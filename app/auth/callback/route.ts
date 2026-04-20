@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 /**
  * Check if a ref param is a user referral code (8-char hex from UUID)
@@ -48,7 +49,7 @@ export async function GET(request: Request) {
             .eq("referral_code", refParam)
             .single();
           if (error) {
-            console.error("route.ts:query", error);
+            logger.error("auth.callback_referrer_query_error", { refParam }, error as Error);
             return NextResponse.json({ error: error.message }, { status: 500 });
           }
 

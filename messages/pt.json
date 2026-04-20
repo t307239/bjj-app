@@ -690,7 +690,8 @@
     "samePaceLast": "Mesmo ritmo do mês passado",
     "BJJRecordTitle": "Registro de Treinos BJJ",
     "BJJHashtag": "BJJ",
-    "daysUnit": " dias"
+    "daysUnit": " dias",
+    "logFirst": "Registre Sua Primeira Sessão"
   },
   "insights": {
     "title": "Insights de Treino",
@@ -1842,7 +1843,8 @@
     "insightConsecutiveUp": "3 semanas de frequência crescente — ótimo ritmo!",
     "insightLowDrilling": "Sua proporção de drill está baixa esta semana. Considere adicionar sessões focadas em técnica.",
     "insightStreak": "Sua melhor sequência é de {n} dias consecutivos — consistência impressionante!",
-    "share": "Compartilhar"
+    "share": "Compartilhar",
+    "logTraining": "Registrar Treino"
   },
   "pricing": {
     "title": "Preços Simples",
