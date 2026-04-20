@@ -2,6 +2,7 @@
 
 import { useState, useEffect, type ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
+import { trackEvent } from "@/lib/analytics";
 
 export interface Tab {
   key: string;
@@ -51,7 +52,7 @@ export default function PageTabs({ tabs, defaultTab, urlParam, children, trailin
               <button
                 key={tab.key}
                 type="button"
-                onClick={() => setActive(tab.key)}
+                onClick={() => { setActive(tab.key); trackEvent("tab_viewed", { tab: tab.key }); }}
                 className={`
                   flex items-center gap-1.5 px-3.5 py-2.5 text-sm font-semibold whitespace-nowrap transition-all active:scale-95 relative
                   ${active === tab.key

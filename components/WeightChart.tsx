@@ -149,7 +149,15 @@ export default function WeightChart({ userId, refreshKey, targetWeight, targetDa
         <p className="text-xs text-zinc-400 font-semibold mb-2 uppercase tracking-wide">
           {t("body.weightChart")}
         </p>
-        <p className="text-zinc-400 text-sm text-center py-6">{t("body.noData")}</p>
+        <div className="flex flex-col items-center py-6 gap-3">
+          <p className="text-zinc-400 text-sm">{t("body.noData")}</p>
+          <a
+            href="/body"
+            className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500 transition-colors"
+          >
+            {t("body.recordWeight")}
+          </a>
+        </div>
       </div>
     );
   }

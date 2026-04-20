@@ -65,6 +65,7 @@ export default function CookieConsent() {
   return (
     <div
       role="dialog"
+      aria-modal="true"
       aria-label={t("common.cookieConsent")}
       className="fixed bottom-0 inset-x-0 z-[9999] p-3 sm:p-4"
     >

@@ -1655,6 +1655,7 @@
     "standalone": "朝 / 単独計測",
     "postTraining": "練習後",
     "noData": "体重データがありません。上で最初の体重を記録しましょう。",
+    "recordWeight": "体重を記録する",
     "parts": {
       "neck": "首",
       "leftShoulder": "左肩",
