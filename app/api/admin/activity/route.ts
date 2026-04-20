@@ -76,18 +76,19 @@ export async function GET(req: NextRequest) {
 
   const entries = logs ?? [];
 
-  // Collect unique user IDs for email lookup
+  // Collect unique user IDs for email lookup (only those in recent entries)
   const userIds = [...new Set(entries.map((e) => e.user_id))];
 
-  // Fetch auth users for email display
-  const { data: authData } = await serviceClient.auth.admin.listUsers({
-    page: 1,
-    perPage: 1000,
-  });
-
+  // Fetch emails only for relevant users via profiles table (avoids listing ALL auth users)
   const emailMap = new Map<string, string>();
-  for (const u of (authData?.users ?? [])) {
-    if (u.email) emailMap.set(u.id, u.email);
+  if (userIds.length > 0) {
+    const { data: profileEmails } = await serviceClient
+      .from("profiles")
+      .select("id, email")
+      .in("id", userIds);
+    for (const p of (profileEmails ?? [])) {
+      if (p.email) emailMap.set(p.id, p.email);
+    }
   }
 
   // Aggregate daily stats

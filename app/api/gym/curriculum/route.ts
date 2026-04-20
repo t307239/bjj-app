@@ -2,9 +2,26 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
+
+const ALLOWED_HOSTS = ["wiki.bjj-app.net", "bjj-app.net", "www.bjj-app.net"];
+
+const CurriculumBodySchema = z.object({
+  curriculum_url: z
+    .string()
+    .url("Invalid URL format")
+    .max(500, "URL too long")
+    .refine((url) => {
+      try {
+        return ALLOWED_HOSTS.includes(new URL(url).hostname);
+      } catch {
+        return false;
+      }
+    }, "Only BJJ Wiki URLs (wiki.bjj-app.net) are allowed"),
+});
 
 /**
  * POST /api/gym/curriculum
@@ -34,25 +51,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await req.json().catch(() => null);
-  const curriculumUrl = body?.curriculum_url as string | undefined;
-  if (!curriculumUrl || typeof curriculumUrl !== "string") {
-    return NextResponse.json({ error: "curriculum_url required" }, { status: 400 });
+  let rawBody: unknown;
+  try { rawBody = await req.json(); } catch { rawBody = null; }
+  const parsed = CurriculumBodySchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Validation failed", issues: parsed.error.issues },
+      { status: 400 }
+    );
   }
-
-  // URL validation — must be a valid URL on an allowed domain
-  try {
-    const parsed = new URL(curriculumUrl);
-    const allowedHosts = ["wiki.bjj-app.net", "bjj-app.net", "www.bjj-app.net"];
-    if (!allowedHosts.includes(parsed.hostname)) {
-      return NextResponse.json(
-        { error: "Only BJJ Wiki URLs (wiki.bjj-app.net) are allowed" },
-        { status: 400 }
-      );
-    }
-  } catch {
-    return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
-  }
+  const curriculumUrl = parsed.data.curriculum_url;
 
   // Verify caller is a gym owner
   const { data: ownerProfile , error } = await supabase
