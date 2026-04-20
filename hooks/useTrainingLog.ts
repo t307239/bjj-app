@@ -176,6 +176,11 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       setShowForm(true);
     }
 
+    // §6 Telemetry: Fire signup_completed when new user arrives via auth callback
+    if (hasWelcome) {
+      trackEvent("signup_completed");
+    }
+
     if (addLogDate || hasWelcome) {
       const url = new URL(window.location.href);
       url.searchParams.delete("addLog");

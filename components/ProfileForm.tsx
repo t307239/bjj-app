@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
 import { useOnlineStatus } from "@/lib/useOnlineStatus";
 import { useUnsavedChanges } from "@/lib/useUnsavedChanges";
+import { trackEvent } from "@/lib/analytics";
 import Toast from "./Toast";
 import BeltPromotionCelebration, { isBeltPromotion } from "./BeltPromotionCelebration";
 import GymMembershipSection from "./profile/GymMembershipSection";
@@ -232,6 +233,12 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
         setPromotionFrom(profile.belt);
       }
       setToast({ message: t("profile.saved"), type: "success" });
+      // §6 Telemetry: Track onboarding profile setup (belt/gym/start_date)
+      trackEvent("onboarding_profile_set", {
+        belt: form.belt,
+        has_gym: form.gym ? "yes" : "no",
+        has_start_date: form.start_date ? "yes" : "no",
+      });
       toastTimerRef.current = setTimeout(() => { setToast(null); onSave(form); }, 1200);
     } else {
       setToast({ message: t("profile.saveFailed") + ": " + (upsertError.message || upsertError.code || t("profile.saveFailedUnknown")), type: "error" });

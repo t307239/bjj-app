@@ -10,6 +10,7 @@ import BeltDistributionChart from "./gym/BeltDistributionChart";
 import CsvBulkInvite from "./gym/CsvBulkInvite";
 import CurriculumDispatch from "./gym/CurriculumDispatch";
 import InviteQRCode from "./gym/InviteQRCode";
+import { trackEvent } from "@/lib/analytics";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -91,6 +92,8 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
     try {
       await navigator.clipboard.writeText(inviteUrl);
       setCopied(true);
+      // §6 Telemetry: B2B funnel — gym owner copied invite link
+      trackEvent("gym_member_invited", { method: "copy_link" });
       copiedTimerRef.current = setTimeout(() => setCopied(false), 2000);
     } catch {
       // fallback: select text
