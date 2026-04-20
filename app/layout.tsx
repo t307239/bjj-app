@@ -89,11 +89,30 @@ export default async function RootLayout({
   // Detect locale on server (cookie → Accept-Language → "en")
   // Passed to LocaleProvider to align SSR and client _clientLocale → fixes #418
   const locale = await detectServerLocale();
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const sentryDsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
+  // Extract Sentry ingest origin from DSN (https://<key>@<org>.ingest.<region>.sentry.io/<id>)
+  const sentryIngestOrigin = sentryDsn
+    ? sentryDsn.match(/@([^/]+)/)?.[1] ? `https://${sentryDsn.match(/@([^/]+)/)?.[1]}` : undefined
+    : undefined;
 
   return (
     // #48: dark クラスを固定 — Tailwind の dark: modifier を常に有効化
     <html lang={locale} className={`dark ${inter.variable} overscroll-none`} suppressHydrationWarning>
       <head>
+        {/* Q-215: Resource hints — preconnect to critical origins for faster initial load */}
+        {supabaseUrl && (
+          <>
+            <link rel="preconnect" href={supabaseUrl} />
+            <link rel="dns-prefetch" href={supabaseUrl} />
+          </>
+        )}
+        {sentryIngestOrigin && (
+          <>
+            <link rel="preconnect" href={sentryIngestOrigin} crossOrigin="anonymous" />
+            <link rel="dns-prefetch" href={sentryIngestOrigin} />
+          </>
+        )}
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
