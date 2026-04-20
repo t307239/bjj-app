@@ -1,9 +1,7 @@
-"use client";
-
-import { useLocale } from "@/lib/i18n";
+import { serverT } from "@/lib/i18n";
 
 export default function SkillMapLoading() {
-  const { t } = useLocale();
+  const t = serverT;
   return (
     <div className="h-screen flex flex-col bg-zinc-950">
       {/* NavBar skeleton */}
