@@ -7,7 +7,7 @@ import WebVitalsReporter from "@/components/WebVitalsReporter";
 import AgeGate from "@/components/AgeGate";
 import KeyboardShortcutProvider from "@/components/KeyboardShortcutProvider";
 import LocaleProvider from "@/components/LocaleProvider";
-import { detectServerLocale } from "@/lib/i18n";
+import { detectServerLocale, makeT } from "@/lib/i18n";
 import "./globals.css";
 
 // #41: Next/Font — Google Fonts をビルド時にセルフホスティング化（FOUT/FOIT 防止）
@@ -89,6 +89,7 @@ export default async function RootLayout({
   // Detect locale on server (cookie → Accept-Language → "en")
   // Passed to LocaleProvider to align SSR and client _clientLocale → fixes #418
   const locale = await detectServerLocale();
+  const t = makeT(locale);
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const sentryDsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
   // Extract Sentry ingest origin from DSN (https://<key>@<org>.ingest.<region>.sentry.io/<id>)
@@ -126,7 +127,7 @@ export default async function RootLayout({
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:bg-emerald-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-medium focus:shadow-lg"
         >
-          Skip to main content
+          {t("common.skipToContent")}
         </a>
         {/* I-14: LocaleProvider aligns _clientLocale with server-detected locale
             before any children render → eliminates Hydration Error #418 */}
