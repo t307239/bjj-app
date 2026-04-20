@@ -177,7 +177,7 @@ export default function ShareButton({ entry }: Props) {
         await navigator.share({
           files: [file],
           title: "BJJ Training Log",
-          text: "Logged a training session on BJJ App 🥋",
+          text: "Logged a training session on BJJ App 🥋 #BJJ #JiuJitsu #Training",
         });
       } else {
         // Fallback: download
