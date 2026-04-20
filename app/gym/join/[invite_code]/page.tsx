@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import GymJoinClient from "./GymJoinClient";
 import { detectServerLocale, makeT } from "@/lib/i18n";
+import { logger } from "@/lib/logger";
 
 export const metadata: Metadata = {
   title: "Join Gym",
@@ -86,7 +87,7 @@ export default async function GymJoinPage({ params }: Props) {
     .select("gym_id")
     .eq("id", user.id)
     .single();
-  if (error) console.error("page.tsx:query", error);
+  if (error) logger.error("gym.join_profile_query_error", { userId: user.id }, error as Error);
 
   const currentGymId = currentProfile?.gym_id ?? null;
 

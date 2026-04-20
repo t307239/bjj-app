@@ -104,13 +104,13 @@ export default function TechniqueLogList({
           )}
         </div>
         <div className="flex gap-2">
-          <button
+          <button type="button"
             onClick={() => onShowForm(false)}
             className="bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all"
           >
             {t("techniques.add")}
           </button>
-          <button
+          <button type="button"
             onClick={() => onShowForm(true)}
             title={t("techniques.bulkDesc")}
             className="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-sm font-semibold py-2 px-3 rounded-lg border border-zinc-700 transition-colors"
@@ -144,7 +144,7 @@ export default function TechniqueLogList({
             />
           </svg>
           {searchQuery && (
-            <button
+            <button type="button"
               onClick={() => onSearchChange("")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white text-xs"
             >
@@ -157,7 +157,7 @@ export default function TechniqueLogList({
       {/* カテゴリフィルター */}
       {!initialLoading && techniques.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-2 mb-4 mt-4 scrollbar-hide scroll-fade-x">
-          <button
+          <button type="button"
             onClick={() => setFilterCategory("all")}
             className={`flex-shrink-0 px-3 py-1.5 min-h-[44px] rounded-full text-xs font-medium transition-colors ${
               filterCategory === "all"
@@ -170,7 +170,7 @@ export default function TechniqueLogList({
           {CATEGORY_VALUES.filter((catVal) =>
             techniques.some((t) => t.category === catVal),
           ).map((catVal) => (
-            <button
+            <button type="button"
               key={catVal}
               onClick={() => setFilterCategory(catVal)}
               className={`flex-shrink-0 px-3 py-1.5 min-h-[44px] rounded-full text-xs font-medium transition-colors ${
@@ -322,7 +322,7 @@ export default function TechniqueLogList({
                     <div className="flex items-center gap-2 mt-0.5">
                       <div className="flex items-center gap-0.5">
                         {[1, 2, 3, 4, 5].map((star) => (
-                          <button
+                          <button type="button"
                             key={star}
                             onClick={() =>
                               onQuickMastery(technique.id, star)
@@ -359,7 +359,7 @@ export default function TechniqueLogList({
                           )}
                         </p>
                         {technique.notes.length > NOTE_TRUNCATE && (
-                          <button
+                          <button type="button"
                             onClick={() =>
                               setExpandedIds((prev) => {
                                 const next = new Set(prev);
@@ -383,7 +383,7 @@ export default function TechniqueLogList({
                   </div>
                   <div className="flex gap-1 ml-2 flex-shrink-0">
                     {onTogglePin && (
-                      <button
+                      <button type="button"
                         onClick={() => onTogglePin(technique.id)}
                         className={`transition-colors p-2 flex items-center justify-center min-w-[44px] min-h-[44px] ${
                           technique.is_pinned
@@ -399,7 +399,7 @@ export default function TechniqueLogList({
                       </button>
                     )}
                     {/* Edit/Delete: desktop only — mobile uses swipe gestures */}
-                    <button
+                    <button type="button"
                       onClick={() => onStartEdit(technique)}
                       className="hidden md:flex text-zinc-400 hover:text-[#10B981] transition-colors p-2 items-center justify-center min-w-[44px] min-h-[44px]"
                       title={t("techniques.edit")}
@@ -422,7 +422,7 @@ export default function TechniqueLogList({
                     {confirmDeleteId === technique.id && deletingId !== technique.id ? (
                       /* Inline delete confirm — avoids window.confirm() */
                       <div className="hidden md:flex items-center gap-1 ml-1">
-                        <button
+                        <button type="button"
                           onClick={() => { setConfirmDeleteId(null); onDelete(technique.id); }}
                           className="text-xs font-semibold text-white bg-[#e94560] hover:bg-[#c73652] min-h-[44px] px-3 py-2 rounded-lg transition-colors"
                           title={t("techniques.confirmDelete")}
@@ -430,7 +430,7 @@ export default function TechniqueLogList({
                         >
                           {t("common.delete")}
                         </button>
-                        <button
+                        <button type="button"
                           onClick={() => setConfirmDeleteId(null)}
                           className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors min-h-[44px] px-3 py-2"
                         >
@@ -438,7 +438,7 @@ export default function TechniqueLogList({
                         </button>
                       </div>
                     ) : (
-                      <button
+                      <button type="button"
                         onClick={() => setConfirmDeleteId(technique.id)}
                         disabled={deletingId === technique.id}
                         className="hidden md:flex text-zinc-400 hover:text-red-400 transition-colors p-2 items-center justify-center min-w-[44px] min-h-[44px] disabled:opacity-50"
@@ -472,7 +472,7 @@ export default function TechniqueLogList({
           {/* Prev / Next pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between pt-1">
-              <button
+              <button type="button"
                 onClick={() => onPageChange(page - 1)}
                 disabled={page <= 1}
                 className="px-3 py-2 min-h-[44px] text-sm text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 rounded-md transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
@@ -482,7 +482,7 @@ export default function TechniqueLogList({
               <span className="text-xs text-zinc-400">
                 {page} / {totalPages}
               </span>
-              <button
+              <button type="button"
                 onClick={() => onPageChange(page + 1)}
                 disabled={page >= totalPages}
                 className="px-3 py-2 min-h-[44px] text-sm text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 rounded-md transition-colors disabled:opacity-30 disabled:cursor-not-allowed"

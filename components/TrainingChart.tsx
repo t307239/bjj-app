@@ -198,7 +198,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
             {t("chart.emptyHeading")}
           </p>
           <p className="text-zinc-400 text-xs text-center">{t("chart.emptySubtitle")}</p>
-          <button
+          <button type="button"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-xs font-semibold px-5 py-2 rounded-full transition-all shadow-lg shadow-[#10B981]/25"
             >
@@ -264,7 +264,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
         <h4 className="text-sm font-medium text-zinc-300">{t("chart.activity")}</h4>
         {/* iOS-style segment control (#59) */}
         <div className="flex bg-zinc-800 rounded-lg p-0.5">
-          <button
+          <button type="button"
             onClick={() => setViewMode("heatmap")}
             className={`text-xs px-3 py-1.5 rounded-lg transition-all ${
               viewMode === "heatmap"
@@ -274,7 +274,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
           >
             {t("chart.days84")}
           </button>
-          <button
+          <button type="button"
             onClick={() => setViewMode("monthly")}
             className={`text-xs px-3 py-1.5 rounded-lg transition-all ${
               viewMode === "monthly"

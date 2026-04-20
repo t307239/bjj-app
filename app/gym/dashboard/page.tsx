@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import { detectServerLocale, makeT } from "@/lib/i18n";
+import { logger } from "@/lib/logger";
 import GymDashboard from "@/components/GymDashboard";
 import GymRegistrationForm from "@/components/GymRegistrationForm";
 
@@ -69,7 +70,7 @@ export default async function GymDashboardPage({
       .select("id", { count: "exact" })
       .eq("gym_id", gym.id)
       .eq("share_data_with_gym", true);
-    if (error) console.error("page.tsx:query", error);
+    if (error) logger.error("gym.dashboard_member_query_error", { gymId: gym.id }, error as Error);
     memberCount = count ?? 0;
 
     if (members && members.length > 0) {

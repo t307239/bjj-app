@@ -204,7 +204,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
         {/* Mode chips */}
         <div className="flex flex-wrap gap-1.5 mb-4">
           {modes.map((m) => (
-            <button
+            <button type="button"
               key={m.key}
               onClick={() => handleModeChange(m.key)}
               className={`text-xs px-2.5 py-1.5 rounded-lg transition-colors flex items-center gap-1 ${
@@ -218,7 +218,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
             </button>
           ))}
         </div>
-        <button
+        <button type="button"
           onClick={() => generate(mode).catch((err) => console.error("ai_coach:generate", err))}
           disabled={loading}
           className="w-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors"
@@ -264,7 +264,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
             <span className="text-xs text-zinc-500">{fmtAge(generatedAt, locale)}</span>
           )}
           {isStale && (
-            <button
+            <button type="button"
               onClick={() => generate(mode).catch((err) => console.error("ai_coach:generate", err))}
               disabled={loading}
               className="text-xs text-[#10B981] hover:text-[#0d9668] disabled:opacity-40 transition-colors"
@@ -278,7 +278,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
       {/* Mode chips */}
       <div className="flex flex-wrap gap-1.5 mb-4">
         {modes.map((m) => (
-          <button
+          <button type="button"
             key={m.key}
             onClick={() => handleModeChange(m.key)}
             disabled={loading}

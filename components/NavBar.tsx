@@ -165,7 +165,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
             )}
             {/* Avatar / display name with dropdown */}
             <div ref={userMenuRef} className="relative">
-              <button
+              <button type="button"
                 onClick={() => setShowUserMenu((v) => !v)}
                 className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
                 aria-label={t("common.userMenu")}

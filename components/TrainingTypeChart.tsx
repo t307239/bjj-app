@@ -315,7 +315,7 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
 
   return (
     <div className="bg-zinc-900 rounded-xl border border-white/10 mb-4 overflow-hidden">
-      <button
+      <button type="button"
         onClick={() => setIsOpen((v) => !v)}
         aria-expanded={isOpen}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
@@ -354,7 +354,7 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
         <h4 className="text-sm font-medium text-zinc-300">{t("chart.typeDistribution")}</h4>
         <div className="flex bg-zinc-800 rounded-lg p-0.5">
           {(["all", "month", "week"] as const).map((p) => (
-            <button
+            <button type="button"
               key={p}
               onClick={() => setPeriod(p)}
               className={`text-xs px-2 py-1.5 rounded-lg transition-all ${

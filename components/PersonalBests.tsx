@@ -255,7 +255,7 @@ export default function PersonalBests({ userId }: Props) {
   return (
     <div className="mb-4">
       {/* アコーディオンヘッダー */}
-      <button
+      <button type="button"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         className="w-full flex items-center justify-between bg-zinc-900/50 hover:bg-white/5 rounded-xl px-4 py-3 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 transition-colors active:scale-95 transform"
@@ -297,7 +297,7 @@ export default function PersonalBests({ userId }: Props) {
             return <span className="text-xs text-zinc-400 mt-0.5">= {t("stats.samePaceLast")}</span>;
           })()}
         </div>
-        <button
+        <button type="button"
           onClick={handleShare}
           disabled={isCopied}
           className={`flex items-center gap-1 text-xs bg-white/5 border border-white/10 px-2.5 py-2 min-h-[44px] rounded-lg transition-colors ${
