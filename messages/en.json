@@ -372,7 +372,8 @@
     "rustyDays": "{n}d ago",
     "rustyReview": "Review in Journal",
     "freeCounter": "📝 {count}/{limit} techniques (free plan)",
-    "freeLimitReachedShort": "🔒 Free limit reached — {limit}/{limit} techniques"
+    "freeLimitReachedShort": "🔒 Free limit reached — {limit}/{limit} techniques",
+    "emptyCta": "Add Your First Technique"
   },
   "profile": {
     "title": "Profile",
@@ -522,7 +523,8 @@
     "pushPrefReengagement": "Training reminders",
     "pushPrefWeeklyGoal": "Weekly goal progress",
     "pushPrefMilestone": "Training milestones",
-    "pushPrefWeeklyEmail": "Weekly summary email"
+    "pushPrefWeeklyEmail": "Weekly summary email",
+    "helpDesc": "FAQ, troubleshooting & contact"
   },
   "competition": {
     "title": "Match Record",

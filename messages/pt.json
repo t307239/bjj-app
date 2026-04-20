@@ -393,7 +393,8 @@
     "rustyDays": "{n}d atrás",
     "rustyReview": "Revisar no Diário",
     "freeCounter": "📝 {count}/{limit} técnicas (plano gratuito)",
-    "freeLimitReachedShort": "🔒 Limite atingido — {limit}/{limit} técnicas"
+    "freeLimitReachedShort": "🔒 Limite atingido — {limit}/{limit} técnicas",
+    "emptyCta": "Adicione Sua Primeira Técnica"
   },
   "profile": {
     "title": "Perfil",
@@ -545,7 +546,8 @@
     "pushPrefMilestone": "Marcos de treino",
     "pushPrefWeeklyEmail": "E-mail resumo semanal",
     "stripes": "Listras",
-    "logoutBtn": "Sair"
+    "logoutBtn": "Sair",
+    "helpDesc": "FAQ, solução de problemas e contato"
   },
   "competition": {
     "title": "Histórico de Lutas",

@@ -373,7 +373,8 @@
     "rustyDays": "{n}日前",
     "rustyReview": "ジャーナルで確認",
     "freeCounter": "📝 {count}/{limit} テクニック（無料プラン）",
-    "freeLimitReachedShort": "🔒 無料上限に達しました — {limit}/{limit} テクニック"
+    "freeLimitReachedShort": "🔒 無料上限に達しました — {limit}/{limit} テクニック",
+    "emptyCta": "最初のテクニックを追加"
   },
   "profile": {
     "title": "プロフィール",
@@ -523,7 +524,8 @@
     "pushPrefReengagement": "練習リマインダー",
     "pushPrefWeeklyGoal": "週間目標の進捗",
     "pushPrefMilestone": "トレーニングの実績",
-    "pushPrefWeeklyEmail": "週報メール"
+    "pushPrefWeeklyEmail": "週報メール",
+    "helpDesc": "よくある質問・トラブル対応・お問い合わせ"
   },
   "competition": {
     "title": "試合戦績",

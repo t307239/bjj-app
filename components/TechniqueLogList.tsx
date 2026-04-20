@@ -197,8 +197,18 @@ export default function TechniqueLogList({
       {!initialLoading && techniques.length === 0 && (
         <div className="text-center py-12 text-zinc-400">
           <div className="text-4xl mb-3">📚</div>
-          <p>{t("techniques.empty")}</p>
+          <p className="font-medium text-white">{t("techniques.empty")}</p>
           <p className="text-sm mt-1">{t("techniques.emptyDesc")}</p>
+          <button
+            type="button"
+            onClick={() => onShowForm()}
+            className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold transition-colors active:scale-95"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            {t("techniques.emptyCta")}
+          </button>
         </div>
       )}
 
