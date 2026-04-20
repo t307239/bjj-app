@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "Privacy Policy for BJJ App — how we collect, use, and protect your data.",
   robots: { index: false },
+  alternates: {
+    canonical: "https://bjj-app.net/privacy",
+  },
 };
 
 const TOC = [

@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  const startTime = Date.now();
   let supabaseResponse = NextResponse.next({
     request,
   });
@@ -53,6 +54,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // §21 Observability: レスポンスタイム計測ヘッダー（p95監視用）
+  supabaseResponse.headers.set("X-Response-Time", `${Date.now() - startTime}ms`);
+  supabaseResponse.headers.set("Server-Timing", `middleware;dur=${Date.now() - startTime}`);
   return supabaseResponse;
 }
 

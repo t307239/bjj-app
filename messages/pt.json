@@ -1886,7 +1886,8 @@
     "moneyBack": "Garantia de 7 dias — reembolso total se não estiver satisfeito",
     "benefitHighlight": "Usuários Pro treinam 2,3x mais em média",
     "freeUpsell": "Quer análises avançadas e proteção de streak? Vá Pro →",
-    "proTrialHint": "Garantia de reembolso de 7 dias incluída"
+    "proTrialHint": "Garantia de reembolso de 7 dias incluída",
+    "socialProof": "Usado por praticantes de BJJ em mais de 15 países — de faixa branca a preta"
   },
   "weightCut": {
     "title": "Planejador de Corte de Peso",
@@ -1953,7 +1954,8 @@
     "annual": "Anual",
     "save33": "Economize 33%",
     "trialText": "✓ Avaliação gratuita de 14 dias",
-    "togglePlan": "Alternar entre plano mensal e anual"
+    "togglePlan": "Alternar entre plano mensal e anual",
+    "alreadyPro": "Já é membro Pro? Ajuda →"
   },
   "insight": {
     "milestone": "🎉 {n} sessões no total! Dedicação incrível.",

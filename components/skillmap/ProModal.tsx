@@ -78,6 +78,11 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
           </span>
         )}
         <button onClick={onClose} className="text-sm text-zinc-400 hover:text-zinc-300 min-h-[44px] px-6 py-2">{t("skillmap.maybeLater")}</button>
+        <p className="mt-2">
+          <a href="/help" className="text-xs text-zinc-500 hover:text-zinc-400 underline underline-offset-2">
+            {t("proModal.alreadyPro")}
+          </a>
+        </p>
       </div>
     </div>
   );

@@ -56,6 +56,9 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       images: [ogImage],
     },
+    alternates: {
+      canonical: `${BASE_URL}/techniques`,
+    },
   };
 }
 

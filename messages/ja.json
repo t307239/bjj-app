@@ -1832,7 +1832,8 @@
     "moneyBack": "7日間返金保証 — 満足いただけなければ全額返金",
     "benefitHighlight": "Proユーザーは平均2.3倍多く練習しています",
     "freeUpsell": "さらに高度な分析や連続記録の保護が欲しい方はProへ →",
-    "proTrialHint": "7日間返金保証付きで安心"
+    "proTrialHint": "7日間返金保証付きで安心",
+    "socialProof": "世界15カ国以上の柔術家が利用中 — 白帯から黒帯まで"
   },
   "weightCut": {
     "title": "減量プランナー",
@@ -1899,7 +1900,8 @@
     "annual": "年次",
     "save33": "33%セーブ",
     "trialText": "✓ 14日間の無料トライアル",
-    "togglePlan": "月額・年額プランの切り替え"
+    "togglePlan": "月額・年額プランの切り替え",
+    "alreadyPro": "すでにProメンバーですか？ヘルプ →"
   },
   "insight": {
     "milestone": "🎉 累計{n}回達成！素晴らしい継続力。",

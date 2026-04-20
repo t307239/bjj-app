@@ -9,6 +9,9 @@ import GymRegistrationForm from "@/components/GymRegistrationForm";
 export const metadata: Metadata = {
   title: "Gym Dashboard",
   description: "Manage your BJJ gym — track member activity and reduce churn.",
+  alternates: {
+    canonical: "https://bjj-app.net/gym/dashboard",
+  },
 };
 
 export default async function GymDashboardPage({

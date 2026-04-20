@@ -196,6 +196,13 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
             </p>
           </div>
         </div>
+
+        {/* Social proof */}
+        <div className="mt-10 text-center">
+          <p className="text-zinc-500 text-xs">
+            {t("pricing.socialProof")}
+          </p>
+        </div>
       </div>
     </section>
   );

@@ -11,6 +11,9 @@ const SettingsSection = dynamic(() => import("@/components/profile/SettingsSecti
 
 export const metadata: Metadata = {
   title: "Settings | BJJ App",
+  alternates: {
+    canonical: "https://bjj-app.net/settings",
+  },
 };
 
 export default async function SettingsPage() {

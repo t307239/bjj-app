@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "Terms of Service",
   description: "Terms of Service for BJJ App — Brazilian Jiu-Jitsu training tracker.",
   robots: { index: false },
+  alternates: {
+    canonical: "https://bjj-app.net/terms",
+  },
 };
 
 const TOC = [
