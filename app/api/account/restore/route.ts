@@ -5,8 +5,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { logger } from "@/lib/logger";
 import { serverEnv } from "@/lib/env";
+import { createRateLimiter } from "@/lib/rateLimit";
+
+// ── Rate limit: max 5 attempts per IP per 15 min ──
+const restoreLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 5 });
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (!restoreLimiter.check(ip)) {
+    return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+  }
   const cookieStore = await cookies();
 
   // 1. Verify the requesting user's session
