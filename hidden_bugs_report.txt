@@ -1,5 +1,5 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 356 files
+TS/TSX Scanned: 363 files
 CRITICAL: 1
 WARNING: 2
 INFO: 101
@@ -17,7 +17,7 @@ Total: 104
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/help/page.tsx: L68: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/layout.tsx: L126: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/layout.tsx: L145: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/login/layout.tsx: L49: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
