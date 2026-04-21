@@ -3,6 +3,7 @@
 import React, { useState, useCallback } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { useLocale } from "@/lib/i18n";
+import { clientLogger } from "@/lib/clientLogger";
 
 type CoachMode = "general" | "weakness" | "next_session" | "comp_prep";
 
@@ -156,7 +157,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
     setError(null);
     // Auto-generate if no cached content for this mode
     if (!coachingMap[newMode]) {
-      generate(newMode).catch((err) => console.error("ai_coach:auto_generate", err));
+      generate(newMode).catch((err) => clientLogger.error("ai_coach.auto_generate", {}, err));
     }
   }, [coachingMap, generate]);
 
@@ -219,7 +220,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
           ))}
         </div>
         <button type="button"
-          onClick={() => generate(mode).catch((err) => console.error("ai_coach:generate", err))}
+          onClick={() => generate(mode).catch((err) => clientLogger.error("ai_coach.generate", {}, err))}
           disabled={loading}
           className="w-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors"
         >
@@ -265,7 +266,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
           )}
           {isStale && (
             <button type="button"
-              onClick={() => generate(mode).catch((err) => console.error("ai_coach:generate", err))}
+              onClick={() => generate(mode).catch((err) => clientLogger.error("ai_coach.generate", {}, err))}
               disabled={loading}
               className="text-xs text-[#10B981] hover:text-[#0d9668] disabled:opacity-40 transition-colors"
             >

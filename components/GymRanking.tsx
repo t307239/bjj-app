@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import Skeleton from "@/components/ui/Skeleton";
 import { getLogicalTrainingDate } from "@/lib/logicalDate";
+import { clientLogger } from "@/lib/clientLogger";
 
 type RankRow = {
   student_id: string;
@@ -78,7 +79,7 @@ export default function GymRanking({ userId, gymId }: Props) {
         .select("share_data_with_gym")
         .eq("id", userId)
         .single();
-      if (error) console.error("GymRanking.tsx:query", error);
+      if (error) clientLogger.error("gymranking.query", {}, error);
 
       if (!cancelled) {
         setIsOptedIn(myProfile?.share_data_with_gym ?? false);
@@ -108,7 +109,7 @@ export default function GymRanking({ userId, gymId }: Props) {
         .in("user_id", memberIds)
         .gte("date", oneYearAgo)
         .order("date", { ascending: false });
-      if (logsError) console.error("GymRanking.tsx:query", logsError);
+      if (logsError) clientLogger.error("gymranking.query", {}, logsError);
 
       // 3. Build per-member log maps
       const logsByMember: Record<string, string[]> = {};

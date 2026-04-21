@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { decodeRollNotes, type RollMeta } from "@/lib/trainingLogHelpers";
 import { useLocale } from "@/lib/i18n";
+import { clientLogger } from "@/lib/clientLogger";
 
 const UNLOCK_AT = 20;
 
@@ -172,7 +173,7 @@ export default function RollAnalyticsCard({ userId }: { userId: string }) {
         .in("type", ["gi", "nogi"])
         .order("date", { ascending: false })
         .limit(500);
-      if (error) console.error("RollAnalyticsCard.tsx:query", error);
+      if (error) clientLogger.error("rollanalyticscard.query", {}, error);
 
       if (data) {
         setRecords(

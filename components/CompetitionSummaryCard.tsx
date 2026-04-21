@@ -7,6 +7,7 @@ import { decodeCompNotes, type CompData } from "@/lib/trainingLogHelpers";
 import Link from "next/link";
 import { trackEvent } from "@/lib/analytics";
 import EmptyState from "@/components/EmptyState";
+import { clientLogger } from "@/lib/clientLogger";
 
 type MatchEntry = {
   id: string;
@@ -61,7 +62,7 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
           .order("date", { ascending: false });
         if (cancelled) return;
         if (error) {
-          console.error("CompetitionSummaryCard:fetch", error);
+          clientLogger.error("competitionsummarycard.fetch", {}, error);
           setLoading(false);
           return;
         }
@@ -74,7 +75,7 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
         }
         setMatches(decoded);
       } catch (err) {
-        console.error("CompetitionSummaryCard:fetch", err);
+        clientLogger.error("competitionsummarycard.fetch", {}, err);
       } finally {
         if (!cancelled) setLoading(false);
       }

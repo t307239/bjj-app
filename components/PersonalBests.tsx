@@ -5,6 +5,7 @@ import Skeleton from "@/components/ui/Skeleton";
 import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 import { getLocalDateParts } from "@/lib/timezone";
+import { clientLogger } from "@/lib/clientLogger";
 
 type Props = { userId: string };
 
@@ -97,7 +98,7 @@ export default function PersonalBests({ userId }: Props) {
         .select("date, duration_min")
         .eq("user_id", userId)
         .order("date", { ascending: true });
-      if (error) console.error("PersonalBests.tsx:query", error);
+      if (error) clientLogger.error("personalbests.query", {}, error);
 
       setLoaded(true);
       if (!logs || logs.length === 0) return;

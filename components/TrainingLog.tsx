@@ -10,6 +10,7 @@ import TrainingLogList from "./TrainingLogList";
 import FirstRollCelebration from "./FirstRollCelebration";
 import { useTrainingLog } from "@/hooks/useTrainingLog";
 import { decodeCompNotes } from "@/lib/trainingLogHelpers";
+import { clientLogger } from "@/lib/clientLogger";
 
 type Props = {
   userId: string;
@@ -53,7 +54,7 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
     try {
       const { data: logs , error } = await supabase
         .from("training_logs").select("date,type,duration_min,notes").eq("user_id", userId).order("date", { ascending: false });
-      if (error) console.error("TrainingLog.tsx:query", error);
+      if (error) clientLogger.error("traininglog.query", {}, error);
       if (!logs) return;
       const headers = ["Date","Type","Duration(min)","Result","Opponent","Finish","Event","Notes"];
       const rows = (logs as { date: string; type: string; duration_min: number; notes: string }[]).map((l) => {
@@ -70,7 +71,7 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
     try {
       const { data: techs , error } = await supabase
         .from("techniques").select("name,category,mastery_level,notes").eq("user_id", userId).order("name");
-      if (error) console.error("TrainingLog.tsx:query", error);
+      if (error) clientLogger.error("traininglog.query", {}, error);
       if (!techs) return;
       const headers = ["Technique","Category","Mastery","Notes"];
       const rows = (techs as { name: string; category: string; mastery_level: number; notes: string }[]).map((t) =>

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { isInAppBrowser } from "@/lib/isInAppBrowser";
 import { useLocale } from "@/lib/i18n";
+import { clientLogger } from "@/lib/clientLogger";
 
 /**
  * IABSafeLink — Wraps Link to detect In-App Browsers (Instagram, Facebook, etc.)
@@ -54,7 +55,7 @@ export default function IABSafeLink({
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
       timerRef.current = setTimeout(() => setCopied(false), 2000);
-    }).catch((err) => console.error("clipboard copy failed:", err));
+    }).catch((err) => clientLogger.error("clipboard_copy_failed", {}, err));
   };
 
   return (

@@ -8,6 +8,7 @@ import ReferralSection from "@/components/ReferralSection";
 import PushNotificationSection from "@/components/PushNotificationSection";
 import CsvExport from "@/components/CsvExport";
 import { trackEvent } from "@/lib/analytics";
+import { clientLogger } from "@/lib/clientLogger";
 
 interface Props {
   userId: string;
@@ -35,7 +36,7 @@ export default function SettingsSection({
       const res = await fetch("/api/account/delete", { method: "POST" });
       const json = await res.json();
       if (!res.ok) {
-        console.error("account.delete failed", json.error);
+        clientLogger.error("account.delete_failed", {}, json.error);
         setDeleting(false);
         return;
       }

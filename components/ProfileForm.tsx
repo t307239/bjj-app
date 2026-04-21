@@ -14,6 +14,7 @@ import BeltPromotionCelebration, { isBeltPromotion } from "./BeltPromotionCelebr
 import GymMembershipSection from "./profile/GymMembershipSection";
 import AccountSection from "./profile/AccountSection";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { clientLogger } from "@/lib/clientLogger";
 
 type Profile = {
   belt: string;
@@ -172,7 +173,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
         .from("gyms")
         .select("id, name")
         .order("name", { ascending: true });
-      if (error) { console.error("gym list fetch failed:", error); return; }
+      if (error) { clientLogger.error("gym_list_fetch_failed", {}, error); return; }
       if (data) setGymSuggestions(data as { id: string; name: string }[]);
     };
     fetchGyms();
@@ -192,7 +193,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
       .select("training_disclaimer_agreed_at")
       .eq("id", userId)
       .single();
-    if (disclaimerError) console.error("ProfileEditForm:query", disclaimerError);
+    if (disclaimerError) clientLogger.error("profileeditform.query", {}, disclaimerError);
     const disclaimerAlreadyRecorded = !!existingProfile?.training_disclaimer_agreed_at;
 
     // Auto-link gym_id when user's typed gym name exactly matches a known gym (T-30)

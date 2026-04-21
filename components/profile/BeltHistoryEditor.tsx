@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { getLocalDateString } from "@/lib/timezone";
+import { clientLogger } from "@/lib/clientLogger";
 
 const BELT_ORDER = ["white", "blue", "purple", "brown", "black"] as const;
 const BELT_COLORS: Record<string, string> = {
@@ -50,7 +51,7 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
         .eq("user_id", userId)
         .order("promoted_at", { ascending: true });
       if (error) {
-        console.error("BeltHistoryEditor: failed to load belt history", error);
+        clientLogger.error("belt_history.load_failed", {}, error);
         setToast(t("error.title"));
         toastTimer.current = setTimeout(() => setToast(null), 3000);
       }

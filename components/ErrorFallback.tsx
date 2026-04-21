@@ -15,7 +15,7 @@
 
 import { useEffect } from "react";
 import { useLocale } from "@/lib/i18n";
-import { logClientError } from "@/lib/logger";
+import { clientLogger } from "@/lib/clientLogger";
 
 interface ErrorFallbackProps {
   error: Error & { digest?: string };
@@ -28,7 +28,7 @@ export default function ErrorFallback({ error, reset, context }: ErrorFallbackPr
   const { t } = useLocale();
 
   useEffect(() => {
-    logClientError(context ?? "error-fallback", error, { digest: error.digest });
+    clientLogger.error(context ?? "error-fallback", { digest: error.digest }, error);
   }, [error, context]);
 
   return (

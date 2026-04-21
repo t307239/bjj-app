@@ -20,6 +20,7 @@ import {
   GoalWeekHeatmap,
   GoalMonthHistoryBadges,
 } from "./GoalTrackerGrid";
+import { clientLogger } from "@/lib/clientLogger";
 
 type Props = {
   userId: string;
@@ -110,7 +111,7 @@ export default function GoalTracker({ userId }: Props) {
             .select("date")
             .eq("user_id", userId)
             .gte("date", fourWeeksAgoStr);
-          if (error) console.error("GoalTracker.tsx:query", error);
+          if (error) clientLogger.error("goaltracker.query", {}, error);
 
           // 今週の曜日別達成グリッド（月=0...日=6）
           const dayGrid: boolean[] = Array(7).fill(false);
@@ -154,7 +155,7 @@ export default function GoalTracker({ userId }: Props) {
             .select("date")
             .eq("user_id", userId)
             .gte("date", sixMonthsAgoStr);
-          if (error) console.error("GoalTracker.tsx:query", error);
+          if (error) clientLogger.error("goaltracker.query", {}, error);
           const history: MonthHistory[] = [];
           for (let i = 5; i >= 0; i--) {
             const d = new Date(Date.UTC(nowYear, nowMonth - 1 - i, 1));

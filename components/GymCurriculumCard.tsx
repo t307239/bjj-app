@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
+import { clientLogger } from "@/lib/clientLogger";
 
 type Props = {
   curriculumUrl: string;
@@ -35,7 +36,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
         .select("curriculum_completed_at")
         .eq("id", userId)
         .single();
-      if (error) { console.error("curriculum check failed:", error); return; }
+      if (error) { clientLogger.error("curriculum_check_failed", {}, error); return; }
       if (!data?.curriculum_completed_at) return;
       const completedAt = new Date(data.curriculum_completed_at).getTime();
       const setAt = new Date(curriculumSetAt).getTime();

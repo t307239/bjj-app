@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { formatDateShort } from "@/lib/formatDate";
+import { clientLogger } from "@/lib/clientLogger";
 
 type CompGoal = {
   id: string;
@@ -154,7 +155,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
       ]);
 
       if (goalsRes.error) {
-        console.error("[CompGoal] loadGoals error:", goalsRes.error.message);
+        clientLogger.error("compgoal_loadgoals_error", {}, goalsRes.error.message);
         setErrorMsg(goalsRes.error.message);
         return;
       }
@@ -164,7 +165,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
       const totalSessions = weekRes.count ?? 0;
       setWeeklySessionCount(Math.max(Math.round(totalSessions / 4), 2));
     } catch (err) {
-      console.error("[CompGoal] loadGoals network error:", err);
+      clientLogger.error("compgoal_loadgoals_network_error", {}, err);
       setErrorMsg("Failed to load data");
     } finally {
       setLoading(false);
@@ -199,7 +200,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
           .update({ name: nameInput.trim(), date: dateInput })
           .eq("id", editingId);
         if (error) {
-          console.error("[CompGoal] update error:", error.message);
+          clientLogger.error("compgoal_update_error", {}, error.message);
           setErrorMsg(error.message);
           return;
         }
@@ -208,7 +209,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
           .from("competition_goals")
           .insert({ user_id: userId, name: nameInput.trim(), date: dateInput });
         if (error) {
-          console.error("[CompGoal] insert error:", error.message);
+          clientLogger.error("compgoal_insert_error", {}, error.message);
           setErrorMsg(error.message);
           return;
         }
@@ -219,7 +220,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
       setEditingId(null);
       await loadGoals();
     } catch (err) {
-      console.error("[CompGoal] handleSave network error:", err);
+      clientLogger.error("compgoal_handlesave_network_error", {}, err);
       setErrorMsg("Failed to save");
     } finally {
       setSaving(false);
@@ -234,13 +235,13 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
         .delete()
         .eq("id", id);
       if (error) {
-        console.error("[CompGoal] delete error:", error.message);
+        clientLogger.error("compgoal_delete_error", {}, error.message);
         setErrorMsg(error.message);
         return;
       }
       setGoals((prev) => prev.filter((g) => g.id !== id));
     } catch (err) {
-      console.error("[CompGoal] handleDelete network error:", err);
+      clientLogger.error("compgoal_handledelete_network_error", {}, err);
       setErrorMsg("Failed to delete");
     }
   };

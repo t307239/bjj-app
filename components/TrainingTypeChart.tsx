@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import Skeleton from "@/components/ui/Skeleton";
+import { clientLogger } from "@/lib/clientLogger";
 
 type TypeCount = {
   value: string;
@@ -274,7 +275,7 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
           .from("training_logs")
           .select("date, type, duration_min")
           .eq("user_id", userId);
-        if (error) console.error("TrainingTypeChart.tsx:query", error);
+        if (error) clientLogger.error("trainingtypechart.query", {}, error);
 
         if (logs) {
           setAllLogs(logs as { date: string; type: string; duration_min: number | null }[]);

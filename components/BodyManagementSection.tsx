@@ -8,6 +8,7 @@ import WeightChart from "@/components/WeightChart";
 import BodyHeatmap from "@/components/BodyHeatmap";
 import InjuryCareAlert from "@/components/InjuryCareAlert";
 import WeightCutPlanner from "@/components/WeightCutPlanner";
+import { clientLogger } from "@/lib/clientLogger";
 
 interface Props {
   userId: string;
@@ -66,8 +67,8 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
           .limit(1),
       ]);
 
-      if (coreRes.error) console.error("BodyManagementSection:core", coreRes.error);
-      if (bodyRes.error) console.error("BodyManagementSection:body", bodyRes.error);
+      if (coreRes.error) clientLogger.error("bodymanagementsection.core", {}, coreRes.error);
+      if (bodyRes.error) clientLogger.error("bodymanagementsection.body", {}, bodyRes.error);
 
       if (weightRes.data && weightRes.data.length > 0) {
         setLatestWeight(Number(weightRes.data[0].weight));

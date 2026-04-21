@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Skeleton from "@/components/ui/Skeleton";
 import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
+import { clientLogger } from "@/lib/clientLogger";
 
 type DayData = {
   date: string;
@@ -56,7 +57,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
           .eq("user_id", userId)
           .gte("date", monthSinceStr)
           .order("date", { ascending: true });
-        if (error) console.error("TrainingChart.tsx:query", error);
+        if (error) clientLogger.error("trainingchart.query", {}, error);
 
         if (logs) {
           // --- ヒートマップ用 ---

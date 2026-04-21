@@ -11,7 +11,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { useWeeklyReport, type TrainingType } from "@/hooks/useWeeklyReport";
 import { trackEvent } from "@/lib/analytics";
-import { logClientError } from "@/lib/logger";
+import { clientLogger } from "@/lib/clientLogger";
 import Link from "next/link";
 
 type Props = {
@@ -210,7 +210,7 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
       trackEvent("monthly_share", { period: tab });
     } catch (err) {
       if ((err as Error).name !== "AbortError") {
-        logClientError("weekly_report.share_error", err);
+        clientLogger.error("weekly_report.share_error", {}, err);
       }
     } finally {
       setSharing(false);

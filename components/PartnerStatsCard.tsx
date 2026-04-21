@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
+import { clientLogger } from "@/lib/clientLogger";
 
 const TOP_N = 5;
 const UNLOCK_AT = 5;
@@ -61,7 +62,7 @@ export default function PartnerStatsCard({ userId }: { userId: string }) {
         .eq("user_id", userId)
         .not("partner_username", "is", null)
         .neq("partner_username", "");
-      if (error) console.error("PartnerStatsCard.tsx:query", error);
+      if (error) clientLogger.error("partnerstatscard.query", {}, error);
 
       if (!data) { setLoading(false); return; }
 

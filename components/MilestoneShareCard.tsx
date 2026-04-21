@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useLocale } from "@/lib/i18n";
-import { logClientError } from "@/lib/logger";
+import { clientLogger } from "@/lib/clientLogger";
 
 interface Props {
   type: "belt_promotion" | "streak" | "sessions";
@@ -151,7 +151,7 @@ export default function MilestoneShareCard({ type, value, label }: Props) {
       }
     } catch (err) {
       if ((err as Error).name !== "AbortError") {
-        logClientError("milestone_share.share_error", err);
+        clientLogger.error("milestone_share.share_error", {}, err);
       }
     } finally {
       setSharing(false);

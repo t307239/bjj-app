@@ -5,6 +5,7 @@ import Skeleton from "@/components/ui/Skeleton";
 import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 import { getMonthStartDate } from "@/lib/timezone";
+import { clientLogger } from "@/lib/clientLogger";
 
 type TypeBreakdown = Record<string, number>;
 
@@ -88,7 +89,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           .select("date, duration_min, type")
           .eq("user_id", userId)
           .gte("date", sinceStr);
-        if (error) console.error("TrainingBarChart.tsx:query", error);
+        if (error) clientLogger.error("trainingbarchart.query", {}, error);
 
         if (logs) {
           const buildBuckets = (months: number): MonthData[] => {
@@ -148,7 +149,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         .gte("date", from)
         .lt("date", nextMonth)
         .order("date", { ascending: false });
-      if (error) console.error("TrainingBarChart.tsx:query", error);
+      if (error) clientLogger.error("trainingbarchart.query", {}, error);
 
       setSelectedLogs(data ?? []);
       setSelectedLoading(false);

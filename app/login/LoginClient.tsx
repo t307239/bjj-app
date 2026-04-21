@@ -4,10 +4,10 @@ import { Suspense, useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
-import { logClientError } from "@/lib/logger";
 import Link from "next/link";
 
 import { isInAppBrowser } from "@/lib/isInAppBrowser";
+import { clientLogger } from "@/lib/clientLogger";
 
 // ─── Error banner (from OAuth callback) ───────────────────────────────────────
 function ErrorBanner() {
@@ -44,7 +44,7 @@ function IABWarning() {
     navigator.clipboard.writeText(window.location.href).then(() => {
       setCopied(true);
       timerRef.current = setTimeout(() => setCopied(false), 2000);
-    }).catch((err) => console.error("clipboard copy failed:", err));
+    }).catch((err) => clientLogger.error("clipboard_copy_failed", {}, err));
   };
 
   return (
@@ -161,7 +161,7 @@ function LoginForm() {
       options: { emailRedirectTo: callbackUrl() },
     });
     if (error) {
-      logClientError("login.otp_error", error, { status: error.status });
+      clientLogger.error("login.otp_error", { status: error.status }, error);
       setEmailError(t("login.errorSendFailed"));
     } else {
       setEmailSent(true);

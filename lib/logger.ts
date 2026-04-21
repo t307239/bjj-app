@@ -101,19 +101,3 @@ export const logger = {
   }),
 };
 
-/**
- * Client-safe error logger for "use client" components / error boundaries.
- * Emits structured JSON to console (captured by Vercel runtime on server-rendered pages).
- */
-export function logClientError(event: string, err: unknown, meta: Record<string, unknown> = {}): void {
-  const entry = {
-    ts: new Date().toISOString(),
-    level: "error" as const,
-    event,
-    ...meta,
-    error: err instanceof Error
-      ? { message: err.message, name: err.name }
-      : String(err),
-  };
-  console.error(JSON.stringify(entry));
-}

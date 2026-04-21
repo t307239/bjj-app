@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useLocale } from "@/lib/i18n";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { clientLogger } from "@/lib/clientLogger";
 
 interface Props {
   userId: string;
@@ -26,7 +27,7 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
         .select("gym_id, share_data_with_gym")
         .eq("id", userId)
         .single();
-      if (error) console.error("GymMembershipSection:query", error);
+      if (error) clientLogger.error("gymmembershipsection.query", {}, error);
       if (!data?.gym_id) { setLoading(false); return; }
       setGymId(data.gym_id);
       setSharing(data.share_data_with_gym ?? false);
@@ -36,7 +37,7 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
         .select("name")
         .eq("id", data.gym_id)
         .single();
-      if (gymError) console.error("GymMembershipSection:query", gymError);
+      if (gymError) clientLogger.error("gymmembershipsection.query", {}, gymError);
       setGymName(gym?.name ?? null);
       setLoading(false);
     };
