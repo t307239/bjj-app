@@ -130,7 +130,7 @@ export default function BottomDrawer({
 
         {mode === "menu" && (
           <div className="flex flex-col gap-2">
-            <button
+            <button type="button"
               onClick={() => {
                 setMode("addChild");
                 // iOS Safari: rAF keeps us within the user-gesture activation window
@@ -141,14 +141,14 @@ export default function BottomDrawer({
               <span className="text-lg w-7 text-center">➕</span>
               {t("skillmap.drawerAddChild")}
             </button>
-            <button
+            <button type="button"
               onClick={() => { onClose(); onConnectTo(); }}
               className="w-full flex items-center gap-3 bg-zinc-800 hover:bg-zinc-700 active:scale-[0.98] text-white text-sm font-medium px-4 py-3.5 rounded-xl transition-all"
             >
               <span className="text-lg w-7 text-center">🔗</span>
               {t("skillmap.drawerConnect")}
             </button>
-            <button
+            <button type="button"
               onClick={() => {
                 setMode("editTags");
                 requestAnimationFrame(() => tagInputRef.current?.focus());
@@ -162,7 +162,7 @@ export default function BottomDrawer({
               )}
             </button>
             {isPro ? (
-              <button
+              <button type="button"
                 onClick={() => setMode("confirmDelete")}
                 className="w-full flex items-center gap-3 bg-zinc-800 hover:bg-zinc-700 active:scale-[0.98] text-red-400 text-sm font-medium px-4 py-3.5 rounded-xl transition-all"
               >
@@ -175,7 +175,7 @@ export default function BottomDrawer({
                 {t("skillmap.drawerRemove")} (Pro)
               </div>
             )}
-            <button onClick={onClose} className="w-full text-sm text-zinc-400 hover:text-zinc-300 py-2.5 mt-1 transition-colors">
+            <button type="button" onClick={onClose} className="w-full text-sm text-zinc-400 hover:text-zinc-300 py-2.5 mt-1 transition-colors">
               {t("common.cancel")}
             </button>
           </div>
@@ -203,13 +203,13 @@ export default function BottomDrawer({
               maxLength={80}
             />
             <div className="flex gap-2">
-              <button
+              <button type="button"
                 onClick={() => setMode("menu")}
                 className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-3 rounded-xl transition-colors"
               >
                 {t("common.cancel")}
               </button>
-              <button
+              <button type="button"
                 onClick={() => { if (childName.trim()) { onAddChild(childName.trim()); onClose(); } }}
                 disabled={!childName.trim()}
                 className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-white text-sm font-semibold py-3 rounded-xl transition-colors"
@@ -226,7 +226,7 @@ export default function BottomDrawer({
             {/* Preset + custom tags as toggle chips */}
             <div className="flex flex-wrap gap-1.5">
               {PRESET_POSITIONS.map((tag) => (
-                <button
+                <button type="button"
                   key={tag}
                   onClick={() => toggleTag(tag)}
                   className={`text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95 ${
@@ -240,7 +240,7 @@ export default function BottomDrawer({
               ))}
               {/* Non-preset custom tags */}
               {currentTags.filter((t) => !PRESET_POSITIONS.includes(t)).map((tag) => (
-                <button
+                <button type="button"
                   key={tag}
                   onClick={() => toggleTag(tag)}
                   className="text-xs px-2.5 py-1 rounded-full border bg-indigo-600 border-indigo-500 text-white font-semibold transition-all active:scale-95"
@@ -269,7 +269,7 @@ export default function BottomDrawer({
                 style={{ touchAction: "auto" }}
                 maxLength={40}
               />
-              <button
+              <button type="button"
                 onClick={addCustomTag}
                 disabled={!customTagInput.trim()}
                 className="bg-zinc-700 hover:bg-zinc-600 disabled:opacity-40 text-white text-sm px-3 py-2 rounded-xl transition-colors"
@@ -277,7 +277,7 @@ export default function BottomDrawer({
                 +
               </button>
             </div>
-            <button
+            <button type="button"
               onClick={() => setMode("menu")}
               className="w-full bg-emerald-700 hover:bg-emerald-600 text-white text-sm font-semibold py-3 rounded-xl transition-colors"
             >
@@ -290,13 +290,13 @@ export default function BottomDrawer({
           <div className="flex flex-col gap-3">
             <p className="text-sm text-zinc-300 text-center px-4">{t("skillmap.deleteConfirmMsg")}</p>
             <div className="flex gap-2">
-              <button
+              <button type="button"
                 onClick={() => setMode("menu")}
                 className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-3 rounded-xl transition-colors"
               >
                 {t("common.cancel")}
               </button>
-              <button
+              <button type="button"
                 onClick={() => { onRemove(); onClose(); }}
                 className="flex-1 bg-red-600 hover:bg-red-500 text-white text-sm font-semibold py-3 rounded-xl transition-colors"
               >

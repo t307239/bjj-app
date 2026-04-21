@@ -61,7 +61,7 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
           <span className={`text-sm font-medium whitespace-nowrap ${!isAnnual ? "text-white" : "text-zinc-400"}`}>
             {t("pricing.monthly")}
           </span>
-          <button
+          <button type="button"
             onClick={() => setIsAnnual((v) => !v)}
             aria-label="Toggle billing period"
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-zinc-900 ${

@@ -104,7 +104,7 @@ export default function InviteQRCode({ inviteCode }: Props) {
           <p className="text-xs text-zinc-500 text-center break-all max-w-[260px]">
             {inviteUrl}
           </p>
-          <button
+          <button type="button"
             onClick={handlePrint}
             className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white border border-white/10 hover:border-white/20 px-3 py-1.5 rounded-lg transition-colors"
           >

@@ -226,7 +226,7 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
           <h3 className="text-sm font-semibold text-white">{t("report.title")}</h3>
         </div>
         <div className="flex bg-zinc-800 rounded-lg p-0.5">
-          <button
+          <button type="button"
             onClick={() => setTab("week")}
             className={`text-xs px-2.5 py-1 rounded-md transition-colors ${
               tab === "week"
@@ -236,7 +236,7 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
           >
             {t("report.tabWeek")}
           </button>
-          <button
+          <button type="button"
             onClick={() => setTab("month")}
             className={`text-xs px-2.5 py-1 rounded-md transition-colors ${
               tab === "month"
@@ -354,7 +354,7 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
           </div>
         )}
         {/* §8 Viral: Share report button */}
-        <button
+        <button type="button"
           onClick={handleShareReport}
           disabled={sharing}
           className="flex-shrink-0 flex items-center gap-1.5 text-xs text-zinc-400 hover:text-emerald-400 transition-colors bg-zinc-800/50 rounded-xl px-3 py-2.5 min-h-[36px] disabled:opacity-40"

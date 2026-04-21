@@ -77,7 +77,7 @@ export default function CurriculumDispatch({ gym, onUpgradeClick, upgrading, isG
             <p className="text-sm font-semibold text-white">{t("gym.curriculumTitle")}</p>
             <p className="text-xs text-zinc-400 mt-0.5">{t("gym.curriculumProRequired")}</p>
           </div>
-          <button
+          <button type="button"
             onClick={onUpgradeClick}
             disabled={upgrading}
             className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-60 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
@@ -114,7 +114,7 @@ export default function CurriculumDispatch({ gym, onUpgradeClick, upgrading, isG
           <div key={level} className="mb-1.5">
             <span className="text-[10px] text-zinc-500 mr-1.5">{t(`gym.${LEVEL_LABELS[level]}`)}</span>
             {CURRICULUM_TEMPLATES.filter((tpl) => tpl.level === level).map((tpl) => (
-              <button
+              <button type="button"
                 key={tpl.slug}
                 onClick={() => { setUrl(`${wikiBase}/${tpl.slug}`); setConfirmDispatch(false); }}
                 className={`inline-flex items-center text-[10px] font-medium px-2 py-0.5 rounded border mr-1 mb-1 transition-colors ${LEVEL_COLORS[level]}`}
@@ -134,7 +134,7 @@ export default function CurriculumDispatch({ gym, onUpgradeClick, upgrading, isG
           placeholder={`${wikiBase}/...`}
           className="flex-1 bg-zinc-800 text-xs text-zinc-300 placeholder-gray-500 px-3 py-2 rounded-lg border border-white/10 focus:outline-none focus:border-white/30"
         />
-        <button
+        <button type="button"
           onClick={() => { if (!url.trim()) return; setConfirmDispatch(true); }}
           disabled={dispatching || !url.trim() || confirmDispatch}
           className="flex-shrink-0 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
@@ -146,14 +146,14 @@ export default function CurriculumDispatch({ gym, onUpgradeClick, upgrading, isG
       {confirmDispatch && (
         <div className="mt-2 flex items-center gap-2">
           <span className="text-xs text-blue-400">{t("gym.curriculumConfirm")}</span>
-          <button
+          <button type="button"
             onClick={dispatch}
             disabled={dispatching}
             className="text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 px-2 py-0.5 rounded transition-colors disabled:opacity-50"
           >
             {t("gym.confirmYes")}
           </button>
-          <button
+          <button type="button"
             onClick={() => setConfirmDispatch(false)}
             className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors"
           >

@@ -140,7 +140,7 @@ export default function GuestDashboard() {
       {undoVisible && (
         <div className="fixed bottom-24 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-zinc-800 border border-white/10 px-4 py-2.5 rounded-xl text-sm text-white shadow-lg">
           <span>{t("training.deleted")}</span>
-          <button onClick={handleUndoDelete} className="text-[#10B981] font-semibold hover:text-[#0d9668] transition-colors">
+          <button type="button" onClick={handleUndoDelete} className="text-[#10B981] font-semibold hover:text-[#0d9668] transition-colors">
             {t("training.undo")}
           </button>
         </div>
@@ -186,7 +186,7 @@ export default function GuestDashboard() {
         <div className="bg-zinc-900 rounded-xl border border-white/10 p-4 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-white">{t("training.title")}</h3>
-            <button
+            <button type="button"
               onClick={() => setShowForm(!showForm)}
               className={`text-white text-sm font-bold px-4 py-2.5 min-h-[44px] rounded-lg transition-colors ${showForm ? "bg-zinc-700 hover:bg-zinc-600" : "bg-[#10B981] hover:bg-[#0d9668]"}`}
             >
@@ -281,7 +281,7 @@ export default function GuestDashboard() {
                 />
                 <span className="text-zinc-400 text-xs">{t("training.continuousInput")}</span>
               </label>
-              <button
+              <button type="button"
                 onClick={handleAdd}
                 disabled={saving}
               className="w-full bg-[#10B981] hover:bg-[#0d9668] active:scale-95 disabled:opacity-60 text-white font-bold py-3 min-h-[44px] rounded-lg text-sm transition-all"
@@ -310,7 +310,7 @@ export default function GuestDashboard() {
                     <span className="text-zinc-400 text-xs">{log.duration_min}{t("training.durationUnit")}</span>
                     {log.notes && <span className="text-zinc-400 text-xs truncate">{log.notes}</span>}
                   </div>
-                  <button
+                  <button type="button"
                     onClick={() => handleDelete(log.id)}
                     className="text-zinc-400 hover:text-red-400 ml-2 flex-shrink-0 text-lg leading-none w-11 h-11 flex items-center justify-center rounded"
                     aria-label={t("training.delete")}

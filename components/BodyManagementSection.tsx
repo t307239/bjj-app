@@ -198,7 +198,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
               <p className="text-xs text-zinc-400 font-semibold uppercase tracking-wide">
                 🎯 {t("body.targetWeightTitle")}
               </p>
-              <button
+              <button type="button"
                 onClick={() => { setShowTargetForm(!showTargetForm); setTargetWeightInput(String(targetWeight ?? "")); setTargetDateInput(targetDate); }}
                 className="text-xs text-zinc-400 hover:text-white transition-colors active:scale-95 px-2 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700"
               >
@@ -262,7 +262,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button
+                  <button type="button"
                     onClick={handleSaveTarget}
                     disabled={targetSaving || !targetWeightInput}
                     className="flex-1 bg-amber-500 hover:bg-amber-400 disabled:opacity-40 text-black text-sm font-bold py-2 rounded-lg transition-colors active:scale-95"
@@ -270,7 +270,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
                     {targetSaving ? t("body.saving") : t("body.targetSaveBtn")}
                   </button>
                   {targetWeight != null && (
-                    <button
+                    <button type="button"
                       onClick={handleClearTarget}
                       disabled={targetSaving}
                       className="px-3 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-2 rounded-lg transition-colors active:scale-95"
@@ -278,7 +278,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
                       {t("body.targetClear")}
                     </button>
                   )}
-                  <button
+                  <button type="button"
                     onClick={() => setShowTargetForm(false)}
                     className="px-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 text-sm py-2 rounded-lg transition-colors active:scale-95"
                   >

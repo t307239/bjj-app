@@ -354,7 +354,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
             {/* Pagination */}
             {data && data.total > (data.limit ?? 50) && (
               <div className="flex items-center justify-center gap-3 mt-6">
-                <button
+                <button type="button"
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
                   disabled={page === 0 || loading}
                   className="text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-1.5 border border-white/10 rounded-lg"
@@ -364,7 +364,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
                 <span className="text-xs text-zinc-400">
                   Page {page + 1} · {data.total} total
                 </span>
-                <button
+                <button type="button"
                   onClick={() => setPage((p) => p + 1)}
                   disabled={(page + 1) * (data.limit ?? 50) >= data.total || loading}
                   className="text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-1.5 border border-white/10 rounded-lg"

@@ -71,7 +71,7 @@ export default function GymRegistrationForm({ userId }: Props) {
           aria-label={t("gym.registerTitle")}
         />
 
-        <button
+        <button type="button"
           onClick={handleCreate}
           disabled={loading || !gymName.trim()}
           className="w-full bg-[#10B981] hover:bg-[#0d9668] active:scale-95 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-all"

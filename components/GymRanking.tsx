@@ -158,7 +158,7 @@ export default function GymRanking({ userId, gymId }: Props) {
       return (
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
           <p className="text-xs text-zinc-400">{t("gym.rankingOptOutHint")}</p>
-          <button
+          <button type="button"
             onClick={handleToggle}
             disabled={toggling}
             className="text-xs text-zinc-400 hover:text-red-400 transition-colors disabled:opacity-40 flex-shrink-0 ml-3"
@@ -171,7 +171,7 @@ export default function GymRanking({ userId, gymId }: Props) {
     return (
       <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
         <p className="text-xs text-zinc-400">{t("gym.rankingOptInHint")}</p>
-        <button
+        <button type="button"
           onClick={handleToggle}
           disabled={toggling}
           className="text-xs text-[#10B981] hover:text-[#0d9668] font-semibold transition-colors disabled:opacity-40 flex-shrink-0 ml-3"
@@ -230,7 +230,7 @@ export default function GymRanking({ userId, gymId }: Props) {
       {/* Mode tabs */}
       <div className="flex gap-1 mb-3">
         {(["sessions", "streak"] as Mode[]).map((m) => (
-          <button
+          <button type="button"
             key={m}
             onClick={() => setMode(m)}
             className={`text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors ${

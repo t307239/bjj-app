@@ -296,7 +296,7 @@ export default function GoalTracker({ userId }: Props) {
         <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
       )}
       <div id="goal-tracker" className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl border border-white/10 mb-4 overflow-hidden shadow-lg shadow-black/40">
-        <button
+        <button type="button"
           onClick={() => setIsOpen((v) => !v)}
           aria-expanded={isOpen}
           className="w-full flex items-center justify-between px-4 py-3 border-b border-white/10 hover:bg-white/5 transition-colors text-left"
@@ -392,7 +392,7 @@ export default function GoalTracker({ userId }: Props) {
                     <span className="text-xs bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors">
+                <button type="button" className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors">
                   {data.weeklyGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>
@@ -444,7 +444,7 @@ export default function GoalTracker({ userId }: Props) {
                     <span className="text-xs bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors">
+                <button type="button" className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors">
                   {data.monthlyGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>
@@ -511,7 +511,7 @@ export default function GoalTracker({ userId }: Props) {
                     <span className="text-xs bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">{t("goal.done")}</span>
                   )}
                 </div>
-                <button className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors">
+                <button type="button" className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors">
                   {data.techniqueGoal > 0 ? t("goal.edit") : t("goal.plusSet")}
                 </button>
               </div>

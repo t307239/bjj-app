@@ -53,7 +53,7 @@ export default function GlobalError({
               </span>
             )}
           </p>
-          <button
+          <button type="button"
             onClick={reset}
             style={{
               background: "#3f3f46",

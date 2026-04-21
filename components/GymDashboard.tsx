@@ -28,7 +28,7 @@ function PrivacyShieldBadge() {
   const [expanded, setExpanded] = useState(false);
   return (
     <div className="bg-blue-950/20 border border-blue-500/15 rounded-xl p-3 mb-4">
-      <button
+      <button type="button"
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center justify-between text-left"
         aria-expanded={expanded}
@@ -125,7 +125,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
         <code className="flex-1 bg-zinc-800 text-xs text-zinc-300 px-3 py-2 rounded-lg overflow-hidden text-ellipsis whitespace-nowrap">
           {inviteUrl}
         </code>
-        <button
+        <button type="button"
           onClick={copy}
           className="flex-shrink-0 bg-zinc-700 hover:bg-zinc-600 text-white text-xs px-3 py-2 rounded-lg transition-colors"
           aria-label={t("gym.ariaCopyInvite")}
@@ -144,7 +144,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
         >
           {t("gym.shareWhatsApp")}
         </a>
-        <button
+        <button type="button"
           onClick={() => {
             if (navigator.share) {
               navigator.share({ title: gym.name, text: `Join ${gym.name} on BJJ App!`, url: inviteUrl }).catch(() => {/* user cancelled share */});
@@ -164,14 +164,14 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
       {confirmRegen ? (
         <div className="mt-3 flex items-center gap-2">
           <span className="text-xs text-orange-400">{t("gym.regenerateConfirm")}</span>
-          <button
+          <button type="button"
             onClick={regenerate}
             disabled={regenerating}
             className="text-xs font-semibold text-white bg-orange-600 hover:bg-orange-500 px-2 py-0.5 rounded transition-colors disabled:opacity-50"
           >
             {t("gym.confirmYes")}
           </button>
-          <button
+          <button type="button"
             onClick={() => setConfirmRegen(false)}
             className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors"
           >
@@ -179,7 +179,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
           </button>
         </div>
       ) : (
-        <button
+        <button type="button"
           onClick={() => setConfirmRegen(true)}
           disabled={regenerating}
           className="mt-3 text-xs text-zinc-400 hover:text-orange-400 transition-colors disabled:opacity-50"
@@ -215,7 +215,7 @@ function FreePlanBanner({
           </p>
         </div>
       </div>
-      <button
+      <button type="button"
         onClick={onUpgradeClick}
         disabled={upgrading}
         className="mt-3 w-full bg-amber-500 hover:bg-amber-400 active:scale-95 disabled:opacity-60 text-black text-sm font-semibold py-2.5 rounded-lg transition-all"
@@ -248,7 +248,7 @@ function ProPaywallBanner({
           </p>
           <p className="text-xs text-zinc-400 mt-0.5">{t("gym.churnAlertDesc")}</p>
         </div>
-        <button
+        <button type="button"
           onClick={onUpgradeClick}
           disabled={upgrading}
           className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-60 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
@@ -327,7 +327,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
       {/* Print leaderboard (Pro only) */}
       {isGymPro && members.length > 0 && (
         <div className="flex justify-end mb-4">
-          <button
+          <button type="button"
             onClick={printLeaderboard}
             className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white border border-white/10 hover:border-white/20 px-3 py-1.5 rounded-lg transition-colors"
           >

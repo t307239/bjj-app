@@ -19,7 +19,7 @@ export default function EdgeNotesPanel({ notes, onChange, onSave, onClose, t }: 
     <div className="mt-2 bg-zinc-900 border border-indigo-500/30 rounded-xl p-3 shadow-xl">
       <div className="flex items-center gap-2 mb-2">
         <span className="text-xs font-semibold text-white">📝 {t("skillmap.edgeNotesTitle")}</span>
-        <button
+        <button type="button"
           onClick={onClose}
           className="ml-auto text-zinc-500 hover:text-zinc-300 text-sm leading-none"
           aria-label={t("common.cancel")}
@@ -34,13 +34,13 @@ export default function EdgeNotesPanel({ notes, onChange, onSave, onClose, t }: 
         rows={3}
       />
       <div className="flex gap-2 mt-2">
-        <button
+        <button type="button"
           onClick={onClose}
           className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-2 rounded-lg transition-colors"
         >
           {t("common.cancel")}
         </button>
-        <button
+        <button type="button"
           onClick={onSave}
           className="flex-1 bg-emerald-700 hover:bg-emerald-600 text-white text-sm font-semibold py-2 rounded-lg transition-colors"
         >

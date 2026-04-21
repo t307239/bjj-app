@@ -66,7 +66,7 @@ function TechniqueNodeComp({
         {data.label}
       </span>
       {data.isPro && !confirmDel && (
-        <button
+        <button type="button"
           className="absolute top-1.5 right-1.5 text-zinc-500 hover:text-red-400 text-xs leading-none transition-colors"
           onClick={(e) => { e.stopPropagation(); setConfirmDel(true); }}
           aria-label={data.t?.("skillmap.deleteNode") ?? "Remove"}
@@ -76,13 +76,13 @@ function TechniqueNodeComp({
       )}
       {data.isPro && confirmDel && (
         <div className="flex items-center gap-1 mt-1.5">
-          <button
+          <button type="button"
             className="text-xs bg-red-600 hover:bg-red-500 text-white px-1.5 py-0.5 rounded transition-colors"
             onClick={(e) => { e.stopPropagation(); deleteNodeRef.current(id); }}
           >
             {data.t?.("common.delete") ?? "Del"}
           </button>
-          <button
+          <button type="button"
             className="text-xs text-zinc-400 hover:text-gray-200 transition-colors"
             onClick={(e) => { e.stopPropagation(); setConfirmDel(false); }}
           >
@@ -92,7 +92,7 @@ function TechniqueNodeComp({
       )}
       {/* Collapse/expand toggle — shown only for Pro users with children */}
       {hasChildren && data.isPro && !confirmDel && (
-        <button
+        <button type="button"
           className="flex items-center justify-center gap-0.5 mt-1.5 w-full text-[10px] text-zinc-500 hover:text-zinc-200 transition-colors leading-none"
           onClick={(e) => { e.stopPropagation(); toggleCollapseRef.current(id); }}
           aria-label={

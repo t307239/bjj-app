@@ -109,20 +109,20 @@ export default function AchievementBadge({
 
             {/* Buttons */}
             <div className="flex flex-col gap-2 items-center">
-              <button
+              <button type="button"
                 onClick={handleShare}
                 className="bg-white text-violet-600 px-6 py-2.5 rounded-lg font-bold hover:bg-gray-100 transition-colors min-h-[44px] w-full max-w-[220px]"
               >
                 {t("achievement.shareButton")}
               </button>
               <div className="flex gap-2">
-                <button
+                <button type="button"
                   onClick={handleShareFacebook}
                   className="bg-[#1877F2] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#166FE5] transition-colors min-h-[40px]"
                 >
                   Facebook
                 </button>
-                <button
+                <button type="button"
                   onClick={() => setShowBadge(false)}
                   className="bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-800 transition-colors border border-white border-opacity-30 min-h-[40px]"
                 >

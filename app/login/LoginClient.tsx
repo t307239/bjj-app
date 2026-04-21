@@ -57,7 +57,7 @@ function IABWarning() {
         <p className="text-zinc-400 text-sm leading-relaxed mb-6">
           {t("login.iabDesc")}
         </p>
-        <button
+        <button type="button"
           onClick={copyUrl}
           className="w-full bg-[#10B981] hover:bg-[#0d9668] text-white font-semibold py-3 px-4 rounded-xl transition-colors text-sm"
         >
@@ -250,7 +250,7 @@ function LoginForm() {
         <div className={`bg-zinc-900 rounded-2xl p-6 border border-white/10 space-y-3 transition-opacity ${!canProceed ? "opacity-50" : ""}`}>
 
           {/* Google — most common, top position */}
-          <button
+          <button type="button"
             onClick={signInWithGoogle}
             disabled={!canProceed}
             aria-label={t("login.ariaSignInGoogle")}
@@ -285,7 +285,7 @@ function LoginForm() {
               <p className="text-zinc-400 text-xs mt-3">
                 {t("login.emailSentSpam")}
               </p>
-              <button
+              <button type="button"
                 onClick={() => { setEmailSent(false); setEmail(""); }}
                 className="text-zinc-400 text-xs mt-4 hover:text-zinc-300 transition-colors underline"
               >
@@ -322,7 +322,7 @@ function LoginForm() {
 
           {/* GitHub — developer option, bottom small */}
           <div className="pt-1 border-t border-white/5">
-            <button
+            <button type="button"
               onClick={signInWithGitHub}
               disabled={!canProceed}
               aria-label={t("login.ariaSignInGitHub")}

@@ -85,7 +85,7 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
 
   return (
     <div ref={ref} className="relative">
-      <button
+      <button type="button"
         onClick={() => setOpen((v) => !v)}
         disabled={isAnyLoading}
         className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-900 border border-white/10 hover:border-white/20 px-3 py-2 rounded-lg transition-colors disabled:opacity-50"
@@ -101,16 +101,16 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
       </button>
       {open && (
         <div className="absolute right-0 top-full mt-1 z-50 bg-zinc-800 border border-white/10 rounded-xl shadow-xl min-w-[160px] overflow-hidden">
-          <button onClick={exportTraining} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors text-left">
+          <button type="button" onClick={exportTraining} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors text-left">
             <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             {t("csv.button.training")}
           </button>
-          <button onClick={exportTechniques} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors text-left">
+          <button type="button" onClick={exportTechniques} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors text-left">
             <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             {t("csv.button.techniques")}
           </button>
           <div className="border-t border-white/10" />
-          <button onClick={() => { setOpen(false); onPdf(); }} disabled={pdfLoading} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors text-left disabled:opacity-50">
+          <button type="button" onClick={() => { setOpen(false); onPdf(); }} disabled={pdfLoading} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors text-left disabled:opacity-50">
             <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
             {t("training.printPDF")}
           </button>
@@ -190,7 +190,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         </h3>
         <div className="flex items-center gap-2 flex-shrink-0 print:hidden">
           <ExportDropdown userId={userId} isPro={isPro} onPdf={handlePdfExport} pdfLoading={pdfLoading} />
-          <button
+          <button type="button"
             onClick={() => setShowForm(!showForm)}
             className="bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all"
           >
@@ -244,7 +244,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
             className="w-full bg-zinc-800 text-white rounded-xl pl-9 pr-9 py-2 text-sm border border-white/20 focus:outline-none focus:border-white/30 placeholder-gray-500"
           />
           {searchQuery && (
-            <button
+            <button type="button"
               onClick={() => setSearchQuery("")}
               aria-label={t("common.clearSearch")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors"
@@ -278,7 +278,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
               {/* Divider */}
               <div className="w-px h-4 bg-white/10 flex-shrink-0" />
               {/* All pill */}
-              <button
+              <button type="button"
                 onClick={() => setFilterType("all")}
                 className={`flex-shrink-0 px-3 py-1.5 min-h-[32px] rounded-full text-xs font-medium transition-colors active:scale-95 ${
                   filterType === "all"
@@ -290,7 +290,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
               </button>
               {/* Type pills — all shown, no overflow dropdown */}
               {usedTypes.map((tt) => (
-                <button
+                <button type="button"
                   key={tt.value}
                   onClick={() => setFilterType(tt.value)}
                   className={`flex-shrink-0 px-3 py-1.5 min-h-[32px] rounded-full text-xs font-medium transition-colors active:scale-95 ${
@@ -306,7 +306,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
               <div className="w-px h-4 bg-white/10 flex-shrink-0" />
               {/* Date filter: pill when inactive, inline inputs when active */}
               {!hasDateFilter ? (
-                <button
+                <button type="button"
                   onClick={() => setDateFrom(today)}
                   className="flex-shrink-0 px-3 py-1.5 min-h-[32px] rounded-full text-xs font-medium transition-colors active:scale-95 text-zinc-400 border border-white/10 hover:text-zinc-300 hover:border-white/20"
                 >
@@ -333,7 +333,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
                     onChange={(e) => setDateTo(e.target.value)}
                     className="w-28 flex-shrink-0 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:border-white/30"
                   />
-                  <button
+                  <button type="button"
                     onClick={() => { setDateFrom(""); setDateTo(""); }}
                     aria-label={t("common.clearFilter")}
                     className="flex-shrink-0 text-zinc-400 hover:text-white text-xs px-1 transition-colors"
@@ -375,7 +375,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
       />}
 
       {/* FAB: Mobile only */}
-      <button
+      <button type="button"
         onClick={() => {
           if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([50]);
           setShowForm(true);

@@ -46,7 +46,7 @@ export default function SkillMapToolbar({
     <div className="flex items-center gap-2 mb-2 px-1 flex-wrap">
       {isMobile && (
         <div className="flex items-center gap-1.5 bg-zinc-800 rounded-lg p-1">
-          <button
+          <button type="button"
             onClick={() => setEditMode(false)}
             aria-label={t("skillmap.viewMode")}
             aria-pressed={!editMode}
@@ -54,7 +54,7 @@ export default function SkillMapToolbar({
           >
             {t("skillmap.viewMode")}
           </button>
-          <button
+          <button type="button"
             onClick={() => setEditMode(true)}
             aria-label={t("skillmap.editMode")}
             aria-pressed={editMode}
@@ -69,7 +69,7 @@ export default function SkillMapToolbar({
           {t("skillmap.connectMobileHint")}
         </span>
       )}
-      <button
+      <button type="button"
         onClick={onMagicOrganize}
         disabled={isOrganizing || nodeCount === 0 || !isOnline}
         className="ml-auto flex items-center gap-1.5 text-xs bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition-all active:scale-95"
@@ -77,7 +77,7 @@ export default function SkillMapToolbar({
       >
         {isOrganizing ? "⏳" : "✨"} {t("skillmap.magicOrganize")}
       </button>
-      <button
+      <button type="button"
         onClick={() => {
           if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen();
@@ -103,7 +103,7 @@ export default function SkillMapToolbar({
         <span className="text-xs text-zinc-400 ml-2 hidden sm:inline">{t("skillmap.pcHint")}</span>
       )}
       {isMobile && editMode && (
-        <button
+        <button type="button"
           disabled={!isOnline}
           onClick={handleMobileAdd}
           aria-label={t("skillmap.addNodeMobile")}

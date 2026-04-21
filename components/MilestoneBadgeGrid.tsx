@@ -140,13 +140,13 @@ export default function MilestoneBadgeGrid({ totalCount }: Props) {
             <p className="text-xs text-violet-300/70">{t("milestone.shareText")}</p>
           </div>
           <div className="flex gap-2 flex-shrink-0">
-            <button
+            <button type="button"
               onClick={handleShare}
               className="bg-violet-600 hover:bg-violet-500 active:scale-95 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-all"
             >
               {copied ? "Copied!" : "Share 🔗"}
             </button>
-            <button
+            <button type="button"
               onClick={handleDismiss}
               className="text-zinc-500 hover:text-zinc-300 text-xs px-2 transition-colors"
               aria-label="Dismiss"

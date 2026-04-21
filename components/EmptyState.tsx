@@ -56,7 +56,7 @@ export default function EmptyState({
         </div>
       )}
       {action && (
-        <button
+        <button type="button"
           onClick={action.onClick}
           className="mt-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl transition-colors active:scale-95"
         >

@@ -52,7 +52,7 @@ export default function SafetyBanner({
 
   return (
     <div className="mb-5 p-3.5 rounded-xl bg-amber-950/40 border border-amber-500/30 relative">
-      <button
+      <button type="button"
         onClick={handleDismiss}
         className="absolute top-2 right-2 p-1 rounded-md text-amber-400/60 hover:text-amber-300 hover:bg-amber-900/30 transition-colors"
         aria-label="閉じる"

@@ -230,7 +230,7 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
         {/* Share buttons */}
         <div className="flex gap-2 mb-3">
           {hasNativeShare && (
-            <button
+            <button type="button"
               onClick={handleNativeShare}
               className="flex-1 flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl transition-colors text-sm min-h-[44px]"
             >
@@ -260,7 +260,7 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
         </div>
 
         {/* Primary OSS button — required to dismiss */}
-        <button
+        <button type="button"
           onClick={onClose}
           className="w-full font-bold py-3.5 rounded-xl text-base transition-all duration-200 hover:scale-[1.02] active:scale-95"
           style={{

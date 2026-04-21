@@ -105,13 +105,13 @@ export default function ReadPersistence({ slug, lang = "en" }: ReadPersistencePr
           {s.body}
         </p>
         <div className="flex gap-2 mt-3">
-          <button
+          <button type="button"
             onClick={resume}
             className="px-3 py-1.5 rounded-lg bg-pink-600 hover:bg-pink-500 text-xs font-bold text-white transition-colors focus-visible:ring-2 focus-visible:ring-pink-500"
           >
             {s.resume}
           </button>
-          <button
+          <button type="button"
             onClick={dismiss}
             className="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs text-slate-300 transition-colors"
           >
@@ -119,7 +119,7 @@ export default function ReadPersistence({ slug, lang = "en" }: ReadPersistencePr
           </button>
         </div>
       </div>
-      <button
+      <button type="button"
         onClick={dismiss}
         aria-label={s.dismiss}
         className="text-slate-500 hover:text-slate-300 transition-colors shrink-0 p-1"

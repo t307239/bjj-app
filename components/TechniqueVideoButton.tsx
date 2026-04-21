@@ -95,13 +95,13 @@ export default function TechniqueVideoButton({ techniqueId }: Props) {
           placeholder="https://youtu.be/..."
           className="flex-1 bg-zinc-800 border border-white/15 text-xs text-zinc-200 rounded-lg px-2.5 py-1.5 min-h-[36px] focus:outline-none focus:border-emerald-500 placeholder-zinc-600"
         />
-        <button
+        <button type="button"
           onClick={handleSave}
           className="text-xs font-semibold text-black bg-emerald-500 hover:bg-emerald-400 rounded-lg px-2.5 py-1.5 min-h-[36px] transition-colors flex-shrink-0"
         >
           {t("common.save")}
         </button>
-        <button
+        <button type="button"
           onClick={() => { setEditing(false); setDraft(""); }}
           className="text-xs text-zinc-500 hover:text-zinc-300 rounded-lg px-2 py-1.5 min-h-[36px] transition-colors flex-shrink-0"
         >
@@ -126,7 +126,7 @@ export default function TechniqueVideoButton({ techniqueId }: Props) {
           </svg>
           {t("techniques.watchVideo")}
         </a>
-        <button
+        <button type="button"
           onClick={() => { setDraft(url); setEditing(true); }}
           className="text-zinc-600 hover:text-zinc-400 p-1.5 min-h-[32px] min-w-[32px] transition-colors rounded-lg flex items-center justify-center"
           title={t("techniques.editVideo")}
@@ -136,7 +136,7 @@ export default function TechniqueVideoButton({ techniqueId }: Props) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
           </svg>
         </button>
-        <button
+        <button type="button"
           onClick={handleRemove}
           className="text-zinc-600 hover:text-red-400 p-1.5 min-h-[32px] min-w-[32px] transition-colors rounded-lg flex items-center justify-center"
           title={t("techniques.removeVideo")}
@@ -152,7 +152,7 @@ export default function TechniqueVideoButton({ techniqueId }: Props) {
 
   // ── No URL — show add button ──────────────────────────────────────────────────
   return (
-    <button
+    <button type="button"
       onClick={() => { setDraft(""); setEditing(true); }}
       className="flex items-center gap-1 text-xs text-zinc-600 hover:text-zinc-400 mt-1.5 transition-colors min-h-[28px] group"
       title={t("techniques.addVideo")}

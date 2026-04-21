@@ -163,7 +163,7 @@ export default function WikiContentEnhancer() {
             }
           }}
         >
-          <button
+          <button type="button"
             onClick={() => setLightboxSrc(null)}
             aria-label="Close image viewer"
             className="absolute top-4 right-4 text-white/70 hover:text-white bg-slate-800/80 hover:bg-slate-700 rounded-full p-2 transition-colors"

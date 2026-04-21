@@ -98,7 +98,7 @@ export default function BeltProgressCard({
           {t("beltProgress.title")}
         </span>
         {onEditClick ? (
-          <button
+          <button type="button"
             onClick={onEditClick}
             className="rounded-xl bg-white/5 hover:bg-white/10 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
             title={t("beltProgress.editTitle")}

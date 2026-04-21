@@ -40,7 +40,7 @@ export default function Toast({ message, type = "success", duration = 2500, onCl
         {message}
       </span>
       {onUndo && (
-        <button
+        <button type="button"
           onClick={() => {
             setVisible(false);
             onUndo();

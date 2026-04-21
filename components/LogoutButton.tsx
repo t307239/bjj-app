@@ -26,7 +26,7 @@ export default function LogoutButton({ onDone, className }: Props) {
   };
 
   return (
-    <button
+    <button type="button"
       onClick={handleLogout}
       disabled={isLoading}
       className={className ?? "flex items-center gap-1.5 text-zinc-400 hover:text-white text-sm transition-colors px-2 py-1 rounded disabled:opacity-60"}

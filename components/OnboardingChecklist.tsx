@@ -155,7 +155,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
   return (
     <div className="mb-6 bg-emerald-950/40 border border-emerald-500/30 rounded-2xl p-4 relative">
       {/* Dismiss button */}
-      <button
+      <button type="button"
         onClick={() => { setDismissed(true); localStorage.setItem(DISMISS_KEY, "1"); }}
         className="absolute top-3 right-3 text-zinc-500 hover:text-zinc-300 transition-colors text-xs p-1"
         aria-label={t("common.dismiss")}
@@ -184,7 +184,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
       {!isSafetyDone && (
         <div className="mb-3 p-3 rounded-xl bg-amber-950/40 border border-amber-500/30">
           <p className="text-xs text-amber-200 leading-relaxed mb-2">{t("onboarding.safetyBanner")}</p>
-          <button
+          <button type="button"
             onClick={handleSafetyAck}
             className="text-xs font-medium text-amber-400 hover:text-amber-300 transition-colors py-1.5 px-3 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 min-h-[36px]"
           >

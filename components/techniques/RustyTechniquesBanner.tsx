@@ -42,7 +42,7 @@ export default function RustyTechniquesBanner({ techniques }: Props) {
   return (
     <div className="mb-5 bg-amber-950/30 border border-amber-500/20 rounded-2xl p-4 relative">
       {/* Dismiss */}
-      <button
+      <button type="button"
         onClick={handleDismiss}
         className="absolute top-3 right-3 text-zinc-500 hover:text-zinc-300 transition-colors text-xs p-1"
         aria-label={t("common.dismiss")}

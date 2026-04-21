@@ -333,7 +333,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
               {t("skillmap.overLimitUpgrade")}
             </a>
           ) : (
-            <button
+            <button type="button"
               onClick={() => setShowProModal(true)}
               className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black text-xs font-semibold px-3 py-1.5 rounded-lg transition-all"
             >
@@ -441,7 +441,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
 
       {/* I-19: FAB — floating "+" button on canvas (mobile + editMode only) */}
       {isMobile && editMode && (
-        <button
+        <button type="button"
           disabled={!isOnline}
           onClick={() => {
             if (!isPro && rfNodes.length >= 10) { setShowProModal(true); return; }
@@ -518,13 +518,13 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
               maxLength={80}
             />
             <div className="flex gap-2">
-              <button
+              <button type="button"
                 onClick={() => setMobileAddDrawer(null)}
                 className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-3 min-h-[44px] rounded-xl transition-colors"
               >
                 {t("common.cancel")}
               </button>
-              <button
+              <button type="button"
                 onClick={() => {
                   const val = mobileAddRef.current?.value.trim() ?? "";
                   if (val) {

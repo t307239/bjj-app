@@ -53,7 +53,7 @@ export default function ErrorFallback({ error, reset, context }: ErrorFallbackPr
         )}
       </p>
       <div className="flex gap-3 items-center flex-wrap justify-center">
-        <button
+        <button type="button"
           onClick={reset}
           className="bg-zinc-700 hover:bg-zinc-600 text-white font-semibold py-2 px-6 rounded-full text-sm transition-colors min-h-[44px]"
         >

@@ -46,13 +46,13 @@ export default function FeedbackWidget({ lang }: { lang: string }) {
     <div className="flex flex-wrap items-center gap-3 py-4 border-t border-slate-800/60">
       <span className="text-sm text-slate-400 shrink-0">{l.question}</span>
       <div className="flex gap-2">
-        <button
+        <button type="button"
           onClick={() => setVoted("up")}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 text-slate-300 hover:text-white transition-all focus-visible:ring-2 focus-visible:ring-pink-500"
         >
           👍 {l.yes}
         </button>
-        <button
+        <button type="button"
           onClick={() => setVoted("down")}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 text-slate-300 hover:text-white transition-all focus-visible:ring-2 focus-visible:ring-pink-500"
         >

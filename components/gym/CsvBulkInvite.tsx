@@ -121,7 +121,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
             <p className="text-sm font-semibold text-white">{t("gym.csvTitle")}</p>
             <p className="text-xs text-zinc-400 mt-0.5">{t("gym.csvProRequired")}</p>
           </div>
-          <button
+          <button type="button"
             onClick={onUpgradeClick}
             disabled={upgrading}
             className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-60 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
@@ -141,7 +141,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
             <h3 className="text-sm font-semibold text-white">📥 {t("gym.csvTitle")}</h3>
             <p className="text-xs text-zinc-400 mt-0.5">{t("gym.csvDesc")}</p>
           </div>
-          <button
+          <button type="button"
             onClick={() => { setOpen(true); reset(); }}
             className="flex-shrink-0 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-all"
           >
@@ -157,7 +157,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
             {/* Header */}
             <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-white/10">
               <h2 className="text-base font-bold text-white">📥 {t("gym.csvTitle")}</h2>
-              <button
+              <button type="button"
                 onClick={() => setOpen(false)}
                 className="text-zinc-400 hover:text-white transition-colors"
                 aria-label={t("common.close")}
@@ -179,7 +179,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
                     rows={8}
                     className="w-full bg-zinc-800 text-xs text-gray-200 placeholder-gray-600 px-3 py-2.5 rounded-lg border border-white/10 focus:outline-none focus:border-white/30 resize-none font-mono"
                   />
-                  <button
+                  <button type="button"
                     onClick={parseInput}
                     disabled={!input.trim()}
                     className="mt-3 w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors"
@@ -193,7 +193,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
                     <p className="text-xs text-zinc-400">
                       {t("gym.csvResult", { n: rows.length })}
                     </p>
-                    <button
+                    <button type="button"
                       onClick={reset}
                       className="text-xs text-zinc-400 hover:text-white transition-colors"
                     >
@@ -211,7 +211,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
                           )}
                           <p className="text-xs text-zinc-400 truncate">{row.email}</p>
                         </div>
-                        <button
+                        <button type="button"
                           onClick={() => copyLink(idx)}
                           className="flex-shrink-0 text-xs bg-zinc-700 hover:bg-zinc-600 text-zinc-300 px-2.5 py-1 rounded-lg transition-colors"
                         >
@@ -223,13 +223,13 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
 
                   {/* Bulk actions */}
                   <div className="flex gap-2">
-                    <button
+                    <button type="button"
                       onClick={copyAll}
                       className="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold py-2.5 rounded-xl transition-colors"
                     >
                       {copiedAll ? t("gym.csvCopiedAll") : t("gym.csvCopyAll")}
                     </button>
-                    <button
+                    <button type="button"
                       onClick={downloadCsv}
                       className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-xs font-semibold py-2.5 rounded-xl transition-colors"
                     >

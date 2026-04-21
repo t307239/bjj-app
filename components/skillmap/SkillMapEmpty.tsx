@@ -37,7 +37,7 @@ export default function SkillMapEmpty({
       <p className="text-zinc-300 font-medium mb-1">{t("skillmap.emptyTitle")}</p>
       <p className="text-zinc-400 text-sm mb-5">{isMobile ? t("skillmap.emptyBody") : t("skillmap.emptyBodyPC")}</p>
       {!emptyAddName ? (
-        <button
+        <button type="button"
           onClick={() => {
             if (!isPro && nodeCount >= 10) { onShowProModal(); return; }
             setEmptyAddName(" ");
@@ -63,8 +63,8 @@ export default function SkillMapEmpty({
             maxLength={80}
           />
           <div className="flex gap-2 w-full">
-            <button onClick={() => setEmptyAddName("")} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-2 rounded-xl transition-colors">{t("common.cancel")}</button>
-            <button
+            <button type="button" onClick={() => setEmptyAddName("")} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-2 rounded-xl transition-colors">{t("common.cancel")}</button>
+            <button type="button"
               onClick={() => { if (emptyAddName.trim()) { onAddNode(emptyAddName.trim(), 200, 200); setEmptyAddName(""); } }}
               disabled={!emptyAddName.trim()}
               className="flex-1 bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-40 text-white text-sm font-semibold py-2 rounded-xl transition-colors"

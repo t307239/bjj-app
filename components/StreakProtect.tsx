@@ -48,7 +48,7 @@ export default function StreakProtect({ userId, streak }: Props) {
       <p className="flex-1 text-yellow-300 text-sm font-medium leading-snug truncate">
         {urgencyText}
       </p>
-      <button
+      <button type="button"
         onClick={() => setDismissed(true)}
         className="text-yellow-500/40 hover:text-yellow-400 transition-colors flex-shrink-0 w-5 h-5 flex items-center justify-center rounded"
         aria-label={t("common.close")}

@@ -26,7 +26,7 @@ export default function RecentFocusBar({ nodes, recentIds, onFocus, t }: Props) 
         if (!node) return null;
         const label = String((node.data as { label?: unknown }).label ?? "");
         return (
-          <button
+          <button type="button"
             key={id}
             onClick={() => onFocus(id)}
             className="flex-shrink-0 text-xs bg-zinc-800 hover:bg-zinc-700 border border-white/10 text-zinc-300 hover:text-white px-2.5 py-0.5 rounded-full transition-all active:scale-95 max-w-[140px] truncate"

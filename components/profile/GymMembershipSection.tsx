@@ -83,14 +83,14 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
           {t("gym.leaveConfirmDesc")}
         </p>
         <div className="flex gap-2">
-          <button
+          <button type="button"
             onClick={() => setConfirmLeave(false)}
             className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 py-2 rounded-lg text-sm"
             aria-label={t("profile.ariaLeaveGymCancel")}
           >
             {t("training.cancel")}
           </button>
-          <button
+          <button type="button"
             onClick={handleLeave}
             disabled={leaving}
             className="flex-1 bg-[#e94560] hover:bg-[#c73652] disabled:opacity-50 text-white py-2 rounded-lg text-sm font-semibold"
@@ -115,7 +115,7 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
             <span className="truncate">{gymName ?? t("gym.unknownGym")}</span>
           </p>
         </div>
-        <button
+        <button type="button"
           onClick={() => setConfirmLeave(true)}
           className="text-xs text-zinc-400 hover:text-red-400 transition-colors"
           aria-label={t("profile.ariaLeaveGym")}
@@ -129,7 +129,7 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
           <p className="text-xs text-zinc-300">{t("gym.shareData")}</p>
           <p className="text-xs text-zinc-400 mt-0.5">{t("gym.shareDataSub")}</p>
         </div>
-        <button
+        <button type="button"
           onClick={handleToggleSharing}
           disabled={toggleLoading}
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${sharing ? "bg-[#10B981]" : "bg-zinc-700"}`}

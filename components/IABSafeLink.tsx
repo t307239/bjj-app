@@ -59,7 +59,7 @@ export default function IABSafeLink({
 
   return (
     <>
-      <button onClick={handleClick} className={className}>
+      <button type="button" onClick={handleClick} className={className}>
         {children}
       </button>
       {showBanner && (
@@ -77,7 +77,7 @@ export default function IABSafeLink({
             <div className="text-4xl mb-3">🌐</div>
             <h3 className="text-lg font-bold text-white mb-2">{t("login.iabWarning")}</h3>
             <p className="text-zinc-400 text-sm mb-5">{t("login.iabDesc")}</p>
-            <button
+            <button type="button"
               onClick={copyUrl}
               autoFocus
               className="w-full bg-[#10B981] hover:bg-[#0d9668] text-white font-semibold py-3 px-4 rounded-xl transition-colors text-sm mb-3"

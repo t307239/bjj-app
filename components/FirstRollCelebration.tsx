@@ -128,7 +128,7 @@ export default function FirstRollCelebration({ onDismiss }: Props) {
           <p className="text-zinc-400 text-sm leading-relaxed mb-6">
             {t("onboarding.firstRollDesc")}
           </p>
-          <button
+          <button type="button"
             onClick={onDismiss}
             className="w-full bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white font-semibold py-3 rounded-xl text-sm transition-all shadow-lg shadow-[#10B981]/25"
           >

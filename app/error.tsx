@@ -46,13 +46,13 @@ export default function Error({
         )}
       </p>
       <div className="flex gap-3">
-        <button
+        <button type="button"
           onClick={reset}
           className="rounded-full bg-emerald-600 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-500 transition-colors"
         >
           もう一度試す
         </button>
-        <button
+        <button type="button"
           onClick={() => router.push("/dashboard")}
           className="rounded-full bg-zinc-700 px-5 py-2 text-sm font-semibold text-zinc-200 hover:bg-zinc-600 transition-colors"
         >

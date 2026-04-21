@@ -120,7 +120,7 @@ export default function CookieConsent() {
 
         <div className="flex items-center gap-2 mt-3">
           {showDetails ? (
-            <button
+            <button type="button"
               onClick={handleSaveCustom}
               className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold py-2 rounded-xl transition-colors min-h-[44px]"
             >
@@ -128,13 +128,13 @@ export default function CookieConsent() {
             </button>
           ) : (
             <>
-              <button
+              <button type="button"
                 onClick={handleAcceptAll}
                 className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold py-2 rounded-xl transition-colors min-h-[44px]"
               >
                 {t("common.cookieConsentAccept")}
               </button>
-              <button
+              <button type="button"
                 onClick={handleDeclineAll}
                 className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-sm font-semibold py-2 rounded-xl border border-white/10 transition-colors min-h-[44px]"
               >
@@ -144,7 +144,7 @@ export default function CookieConsent() {
           )}
         </div>
         {!showDetails && (
-          <button
+          <button type="button"
             onClick={() => setShowDetails(true)}
             className="w-full text-center text-xs text-zinc-400 hover:text-zinc-300 mt-2 py-1 transition-colors"
           >

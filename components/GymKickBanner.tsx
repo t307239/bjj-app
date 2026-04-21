@@ -44,7 +44,7 @@ export default function GymKickBanner({ userId }: { userId: string }) {
           {t("gym.kickedBannerDesc")}
         </p>
       </div>
-      <button
+      <button type="button"
         onClick={dismiss}
         disabled={dismissing}
         className="flex-shrink-0 text-xs text-zinc-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-2 py-1 transition-colors disabled:opacity-50 mt-0.5"

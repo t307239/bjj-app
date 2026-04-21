@@ -78,7 +78,7 @@ export default function InstallBanner() {
         <div className="flex gap-2 flex-shrink-0">
           {platform === "android" && (
             <div className="flex flex-col items-end gap-1">
-              <button onClick={handleInstallAndroid} disabled={isInstalling}
+              <button type="button" onClick={handleInstallAndroid} disabled={isInstalling}
                 className="px-4 py-2 bg-white text-[#0d9668] font-semibold rounded-lg hover:bg-emerald-50 transition-colors disabled:opacity-50 text-sm">
                 {isInstalling ? t("install.installing") : t("install.button")}
               </button>
@@ -87,7 +87,7 @@ export default function InstallBanner() {
               )}
             </div>
           )}
-          <button onClick={handleDismiss} className="px-3 py-2 hover:bg-[#0d9668] rounded-lg transition-colors text-sm font-medium" aria-label={t("install.close")}>✕</button>
+          <button type="button" onClick={handleDismiss} className="px-3 py-2 hover:bg-[#0d9668] rounded-lg transition-colors text-sm font-medium" aria-label={t("install.close")}>✕</button>
         </div>
       </div>
     </div>

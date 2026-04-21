@@ -85,7 +85,7 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
         <p className="text-sm text-zinc-400 mb-4">{t("skillmap.proModalBodyPC")}</p>
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className={`text-xs ${!isAnnual ? "text-white font-semibold" : "text-zinc-400"}`}>{t("proModal.monthly")}</span>
-          <button
+          <button type="button"
             role="switch"
             aria-checked={isAnnual}
             aria-label={t("proModal.togglePlan")}
@@ -104,7 +104,7 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
         </div>
         <p className="text-xs text-emerald-400 mb-4">{t("proModal.trialText")}</p>
         {hasLink ? (
-          <button
+          <button type="button"
             onClick={handleCheckout}
             disabled={isLoading}
             className="block w-full bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-60 text-black font-semibold py-3 rounded-xl mb-3 transition-all"
@@ -116,7 +116,7 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
             {t("skillmap.upgradeBtn")}
           </span>
         )}
-        <button onClick={onClose} className="text-sm text-zinc-400 hover:text-zinc-300 min-h-[44px] px-6 py-2">{t("skillmap.maybeLater")}</button>
+        <button type="button" onClick={onClose} className="text-sm text-zinc-400 hover:text-zinc-300 min-h-[44px] px-6 py-2">{t("skillmap.maybeLater")}</button>
         <p className="mt-2">
           <a href="/help" className="text-xs text-zinc-500 hover:text-zinc-400 underline underline-offset-2">
             {t("proModal.alreadyPro")}

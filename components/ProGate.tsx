@@ -60,7 +60,7 @@ export default function ProGate({
           {/* Monthly / Annual toggle */}
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className={`text-xs whitespace-nowrap ${!isAnnual ? "text-white font-semibold" : "text-zinc-400"}`}>{t("pro.monthly")}</span>
-            <button
+            <button type="button"
               onClick={() => setIsAnnual((v) => !v)}
               aria-label="Toggle billing period"
               className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${

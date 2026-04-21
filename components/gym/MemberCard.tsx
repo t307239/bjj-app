@@ -78,7 +78,7 @@ export default function MemberCard({
           <span className="text-xs text-zinc-400 italic">
             {t("gym.detailsHidden")}{" "}
             {onUpgradeClick && (
-              <button onClick={onUpgradeClick} className="text-yellow-400 hover:underline">
+              <button type="button" onClick={onUpgradeClick} className="text-yellow-400 hover:underline">
                 {t("gym.upgradeToSeeLink")}
               </button>
             )}
@@ -88,7 +88,7 @@ export default function MemberCard({
 
       {/* Nudge button: copy reminder msg for at-risk members (Pro only) */}
       {showDetail && (risk === "yellow" || risk === "red") && (
-        <button
+        <button type="button"
           onClick={handleNudge}
           className={`flex-shrink-0 text-xs px-2 py-1 rounded-lg transition-colors ${
             nudgeCopied
@@ -104,7 +104,7 @@ export default function MemberCard({
 
       {/* Kick button (gym owner only) */}
       {onKickRequest && (
-        <button
+        <button type="button"
           onClick={() => onKickRequest(member)}
           className="flex-shrink-0 text-zinc-400 hover:text-[#e94560] transition-colors p-1"
           title={t("gym.removeMemberTitle")}

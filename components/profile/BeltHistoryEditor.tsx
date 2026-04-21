@@ -136,7 +136,7 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
   // Collapsed: show a minimal toggle bar
   if (!expanded) {
     return (
-      <button
+      <button type="button"
         onClick={() => setExpanded(true)}
         className="w-full flex items-center justify-between bg-zinc-900/30 hover:bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-xl px-4 py-2.5 transition-colors group"
       >
@@ -158,14 +158,14 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
         </h3>
         <div className="flex items-center gap-2">
           {availableBelts.length > 0 && (
-            <button
+            <button type="button"
               onClick={() => setShowAdd(!showAdd)}
               className="text-xs text-zinc-400 hover:text-white transition-colors px-2 py-1 rounded-lg hover:bg-white/5"
             >
               {showAdd ? t("training.cancel") : `+ ${t("beltProgress.addPromotion")}`}
             </button>
           )}
-          <button
+          <button type="button"
             onClick={() => { setExpanded(false); setShowAdd(false); }}
             className="text-xs text-zinc-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
           >
@@ -202,7 +202,7 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
                 onChange={(e) => handleDateChange(entry.belt, e.target.value)}
                 className="bg-zinc-800 text-zinc-300 text-xs rounded-lg px-2 py-1.5 border border-white/8 focus:outline-none focus:border-white/20 flex-1 min-w-0"
               />
-              <button
+              <button type="button"
                 onClick={() => handleDelete(entry.belt)}
                 className="text-zinc-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 p-1"
                 title={t("training.delete")}
@@ -240,7 +240,7 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
             onChange={(e) => setNewDate(e.target.value)}
             className="w-full bg-zinc-800 text-zinc-300 text-sm rounded-lg px-3 py-2 border border-white/8 focus:outline-none focus:border-white/20"
           />
-          <button
+          <button type="button"
             onClick={handleAdd}
             disabled={!newBelt || !newDate || saving}
             className="w-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 text-xs font-semibold py-2 rounded-lg border border-emerald-400/20 transition-all disabled:opacity-30"

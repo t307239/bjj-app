@@ -50,14 +50,14 @@ export default function AccountDeletedPage() {
         )}
 
         <div className="space-y-3">
-          <button
+          <button type="button"
             onClick={handleRestore}
             disabled={restoring}
             className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white font-bold py-3 rounded-xl text-sm transition-colors active:scale-95"
           >
             {restoring ? t("profile.restoring") : t("profile.restoreBtn")}
           </button>
-          <button
+          <button type="button"
             onClick={handleSignOut}
             className="w-full bg-white/8 hover:bg-white/12 text-zinc-400 font-medium py-3 rounded-xl text-sm transition-colors"
           >

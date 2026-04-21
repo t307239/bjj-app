@@ -7,19 +7,19 @@ export default function CustomZoomControls() {
   return (
     <Panel position="bottom-left">
       <div className="flex flex-col gap-1 bg-zinc-900/80 border border-white/10 backdrop-blur-sm rounded-lg p-1">
-        <button
+        <button type="button"
           onClick={() => zoomIn({ duration: 200 })}
           className="w-7 h-7 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/60 rounded-md transition-all text-base leading-none"
           aria-label="Zoom in"
           title="Zoom in"
         >+</button>
-        <button
+        <button type="button"
           onClick={() => zoomOut({ duration: 200 })}
           className="w-7 h-7 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-700/60 rounded-md transition-all text-base leading-none"
           aria-label="Zoom out"
           title="Zoom out"
         >−</button>
-        <button
+        <button type="button"
           onClick={() => fitView({ padding: 0.15, duration: 400 })}
           className="w-7 h-7 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-700/60 rounded-md transition-all"
           aria-label="Fit view"

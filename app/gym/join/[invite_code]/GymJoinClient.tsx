@@ -68,7 +68,7 @@ export default function GymJoinClient({
           <p className="text-sm text-zinc-400 text-center mb-5">
             {t("gymJoin.transferDesc", { name: gymName })}
           </p>
-          <button
+          <button type="button"
             onClick={() => performJoin(true)}
             disabled={loading}
             className="w-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white font-semibold py-3 rounded-xl mb-3 transition-colors"
@@ -76,7 +76,7 @@ export default function GymJoinClient({
           >
             {loading ? t("gymJoin.joining") : t("gymJoin.transferYes", { name: gymName })}
           </button>
-          <button
+          <button type="button"
             onClick={() => router.back()}
             className="w-full bg-zinc-700 hover:bg-zinc-600 text-zinc-300 py-3 rounded-xl text-sm transition-colors"
           >
@@ -145,7 +145,7 @@ export default function GymJoinClient({
         </label>
 
         {/* Share data CTA */}
-        <button
+        <button type="button"
           onClick={() => handleJoin(true)}
           disabled={loading || !ageConfirmed}
           className="w-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white font-semibold py-3 rounded-xl mb-3 transition-colors"
@@ -155,7 +155,7 @@ export default function GymJoinClient({
         </button>
 
         {/* Join without sharing */}
-        <button
+        <button type="button"
           onClick={() => handleJoin(false)}
           disabled={loading || !ageConfirmed}
           className="w-full bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 text-zinc-300 py-3 rounded-xl text-sm mb-4 transition-colors"

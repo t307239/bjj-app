@@ -278,7 +278,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
           <span>🏆</span>
           {t("compGoal.title")}
         </h4>
-        <button
+        <button type="button"
           onClick={() => {
             setShowForm(!showForm);
             setEditingId(null);
@@ -319,7 +319,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
             <p className="text-xs text-red-400 mb-2">{errorMsg}</p>
           )}
           <div className="flex gap-2">
-            <button
+            <button type="button"
               onClick={handleSave}
               disabled={saving || !nameInput.trim() || !dateInput}
               className="flex-1 bg-amber-500 hover:bg-amber-400 disabled:opacity-40 text-black text-sm font-bold py-2 rounded-lg transition-colors active:scale-95"
@@ -330,7 +330,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
                   ? t("compGoal.update")
                   : t("compGoal.save")}
             </button>
-            <button
+            <button type="button"
               onClick={() => {
                 setShowForm(false);
                 setEditingId(null);
@@ -348,7 +348,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
         <div className="px-4 py-6 text-center">
           <p className="text-xs text-zinc-500">{t("compGoal.empty")}</p>
           <p className="text-xs text-zinc-600 mt-1 mb-3">{t("compGoal.emptyHint")}</p>
-          <button
+          <button type="button"
             onClick={() => setShowForm(true)}
             className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-500 transition-colors"
           >
@@ -396,7 +396,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
                         {t("compGoal.passed")}
                       </span>
                     )}
-                    <button
+                    <button type="button"
                       onClick={() => startEdit(goal)}
                       className="text-zinc-600 hover:text-zinc-300 transition-colors p-1"
                       aria-label="Edit"
@@ -405,7 +405,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                       </svg>
                     </button>
-                    <button
+                    <button type="button"
                       onClick={() => handleDelete(goal.id)}
                       className="text-zinc-600 hover:text-red-400 transition-colors p-1"
                       aria-label="Delete"

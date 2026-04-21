@@ -39,7 +39,7 @@ export default function CopyLinkButton({ entryId }: Props) {
   }, [entryId]);
 
   return (
-    <button
+    <button type="button"
       onClick={handleCopy}
       className={`transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center ${
         copied

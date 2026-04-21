@@ -199,7 +199,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
 
   return (
     <div className="bg-zinc-900 rounded-xl border border-white/10 mb-4 overflow-hidden">
-      <button
+      <button type="button"
         onClick={() => setIsOpen((v) => !v)}
         aria-expanded={isOpen}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
@@ -229,13 +229,13 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
         </div>
         <div className="flex gap-1">
           <div className="flex bg-zinc-800 rounded-lg p-0.5 mr-1">
-            <button
+            <button type="button"
               onClick={() => { setRange(6); setSelectedMonth(null); }}
               className={`text-xs px-2 py-1.5 rounded-lg transition-all ${range === 6 ? "bg-zinc-600 text-white shadow-sm" : "text-zinc-400 hover:text-white"}`}
             >
               6{t("chart.months")}
             </button>
-            <button
+            <button type="button"
               onClick={() => { setRange(12); setSelectedMonth(null); }}
               className={`text-xs px-2 py-1.5 rounded-lg transition-all ${range === 12 ? "bg-zinc-600 text-white shadow-sm" : "text-zinc-400 hover:text-white"}`}
             >
@@ -243,7 +243,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             </button>
           </div>
           <div className="flex bg-zinc-800 rounded-lg p-0.5">
-            <button
+            <button type="button"
               onClick={() => setView("count")}
               className={`text-xs px-2.5 py-1.5 rounded-lg transition-all ${
                 view === "count"
@@ -253,7 +253,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             >
               {t("chart.count")}
             </button>
-            <button
+            <button type="button"
               onClick={() => setView("minutes")}
               className={`text-xs px-2.5 py-1.5 rounded-lg transition-all ${
                 view === "minutes"
@@ -436,7 +436,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
             <span className="text-xs font-medium text-yellow-400">
               📅 {selectedMonthLabel}{t("chart.trainingLog")}
             </span>
-            <button
+            <button type="button"
               onClick={() => setSelectedMonth(null)}
               className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors"
             >

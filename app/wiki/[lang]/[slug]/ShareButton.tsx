@@ -66,7 +66,7 @@ export default function ShareButton({ title, url, lang }: ShareButtonProps) {
   };
 
   return (
-    <button
+    <button type="button"
       onClick={handleShare}
       aria-label={label}
       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800/60 hover:bg-slate-700 border border-slate-700/60 text-slate-400 hover:text-slate-200 transition-all focus-visible:ring-2 focus-visible:ring-pink-500"

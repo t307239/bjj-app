@@ -192,7 +192,7 @@ const TrainingLogList = memo(function TrainingLogList({
           <span>{t("training.emptyCloud")}</span>
           <span>{t("training.emptyTrack")}</span>
         </div>
-        <button
+        <button type="button"
           onClick={() => {
             if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate([50]);
             onShowForm();
@@ -384,7 +384,7 @@ const TrainingLogList = memo(function TrainingLogList({
                     <div className="flex items-center gap-0.5 md:opacity-0 md:group-hover/row:opacity-100 md:transition-opacity md:duration-150">
                       <CopyLinkButton entryId={entry.id} />
                       <ShareButton entry={entry} />
-                      <button
+                      <button type="button"
                         onClick={() => onStartEdit(entry)}
                         className="text-zinc-400 hover:text-[#10B981] transition-colors p-2 rounded-lg flex items-center justify-center min-w-[44px] min-h-[44px]"
                         title={t("training.edit")}
@@ -399,7 +399,7 @@ const TrainingLogList = memo(function TrainingLogList({
                           />
                         </svg>
                       </button>
-                      <button
+                      <button type="button"
                         onClick={() => onDelete(entry.id)}
                         disabled={deletingId === entry.id}
                         className="text-zinc-400 hover:text-red-400 transition-colors p-2 rounded-lg flex items-center justify-center min-w-[44px] min-h-[44px] disabled:opacity-50"
@@ -501,7 +501,7 @@ const TrainingLogList = memo(function TrainingLogList({
                             <div>
                               <p className="text-zinc-300 text-sm mt-1">{userNotes}</p>
                               {userNotes.length > 80 && (
-                                <button
+                                <button type="button"
                                   onClick={() =>
                                     setExpandedNotes((prev) => {
                                       const s = new Set(prev);
@@ -520,7 +520,7 @@ const TrainingLogList = memo(function TrainingLogList({
                               <p className="text-zinc-300 text-sm mt-1">
                                 {userNotes.slice(0, 80)}…
                               </p>
-                              <button
+                              <button type="button"
                                 onClick={() =>
                                   setExpandedNotes((prev) => new Set([...prev, entry.id]))
                                 }
@@ -541,7 +541,7 @@ const TrainingLogList = memo(function TrainingLogList({
         {totalPages > 1 && (
           <div className="border-t border-white/5 pt-4 pb-2 mt-2">
             <div className="flex items-center justify-between gap-2">
-              <button
+              <button type="button"
                 onClick={() => onPageChange(page - 1)}
                 disabled={page <= 1 || pageLoading}
                 className="flex items-center gap-1 text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors active:scale-95"
@@ -564,7 +564,7 @@ const TrainingLogList = memo(function TrainingLogList({
                 )}
               </span>
 
-              <button
+              <button type="button"
                 onClick={() => onPageChange(page + 1)}
                 disabled={page >= totalPages || pageLoading}
                 className="flex items-center gap-1 text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors active:scale-95"

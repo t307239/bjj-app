@@ -34,7 +34,7 @@ export default function PositionFilterChips({
       className="mb-2 flex items-center gap-1.5 overflow-x-auto pb-0.5"
       style={{ scrollbarWidth: "none" }}
     >
-      <button
+      <button type="button"
         onClick={() => setSelectedTag(null)}
         className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95 ${
           !selectedTag
@@ -45,7 +45,7 @@ export default function PositionFilterChips({
         {t("skillmap.filterAll")}
       </button>
       {visibleTags.map((tag) => (
-        <button
+        <button type="button"
           key={tag}
           onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
           className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95 ${
@@ -60,7 +60,7 @@ export default function PositionFilterChips({
         </button>
       ))}
       {hasMore && (
-        <button
+        <button type="button"
           onClick={() => setTagsExpanded((v) => !v)}
           className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95 ${
             selectedInHidden
