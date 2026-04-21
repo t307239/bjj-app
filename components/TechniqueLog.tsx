@@ -121,8 +121,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
       setInitialLoading(false);
     };
     loadTechniques();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
+  }, [userId, supabase]);
 
   // ── Escape key to dismiss danger confirm modal ────────────────────────────
   useEffect(() => {

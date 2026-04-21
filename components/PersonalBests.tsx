@@ -188,8 +188,7 @@ export default function PersonalBests({ userId }: Props) {
       setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, bestMonthKey, bestWeekCount, avgSessionMin, avgMonthly, thisMonthCount, lastMonthCount, dowCounts: dowArr, monthlyIntensity });
     };
     load();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
+  }, [userId, supabase]);
 
   if (!loaded) return <Skeleton height={60} rounded="xl" className="mb-4" />;
 

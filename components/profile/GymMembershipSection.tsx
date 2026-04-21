@@ -42,8 +42,7 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
       setLoading(false);
     };
     load();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
+  }, [userId, supabase]);
 
   const handleLeave = async () => {
     setLeaving(true);

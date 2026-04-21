@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import Skeleton from "@/components/ui/Skeleton";
@@ -260,7 +260,8 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
   const [period, setPeriod] = useState<Period>("all");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   // Locale-aware training type labels
   const TYPE_DEFS: Omit<TypeCount, "count" | "totalMins">[] = TYPE_DEFS_BASE.map((d) => ({
@@ -287,8 +288,7 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
       }
     };
     load();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
+  }, [userId, supabase]);
 
   if (loading) return <Skeleton height={48} rounded="xl" className="mb-4" />;
 
