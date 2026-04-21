@@ -321,7 +321,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
             </div>
           </div>
           {errorMsg && (
-            <p className="text-xs text-red-400 mb-2">{errorMsg}</p>
+            <p role="alert" className="text-xs text-red-400 mb-2">{errorMsg}</p>
           )}
           <div className="flex gap-2">
             <button type="button"
