@@ -213,7 +213,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           )}
         </div>
         <svg
-          className={`w-4 h-4 text-zinc-400 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+aria-hidden="true"           className={`w-4 h-4 text-zinc-400 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
           fill="none" stroke="currentColor" viewBox="0 0 24 24"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
@@ -269,7 +269,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
 
       {!hasData ? (
         <div className="flex flex-col items-center justify-center h-24 gap-2">
-          <svg className="w-8 h-8 text-zinc-500 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <svg aria-hidden="true" className="w-8 h-8 text-zinc-500 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v18h18M9 17V9m4 8V5m4 12v-4" />
           </svg>
           <p className="text-sm text-zinc-400">{t("chart.noSessionsYet")}</p>

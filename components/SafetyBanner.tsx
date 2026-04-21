@@ -59,7 +59,7 @@ export default function SafetyBanner({
         className="absolute top-2 right-2 p-1 rounded-md text-amber-400/60 hover:text-amber-300 hover:bg-amber-900/30 transition-colors"
         aria-label={t("common.close")}
       >
-        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg aria-hidden="true" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>

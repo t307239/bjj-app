@@ -88,7 +88,7 @@ export default function KeyboardShortcutHelp({ open, onClose }: Props) {
             className="text-zinc-400 hover:text-white min-h-[44px] min-w-[44px] flex items-center justify-center"
             aria-label={t("common.close") || "Close"}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </button>

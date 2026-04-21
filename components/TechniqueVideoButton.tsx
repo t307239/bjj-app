@@ -121,7 +121,7 @@ export default function TechniqueVideoButton({ techniqueId }: Props) {
           rel="noopener noreferrer"
           className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300 font-medium transition-colors min-h-[32px] px-2 rounded-lg bg-red-500/10 border border-red-500/20 hover:border-red-400/30"
         >
-          <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+          <svg aria-hidden="true" className="w-3 h-3 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
             <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
           </svg>
           {t("techniques.watchVideo")}
@@ -132,7 +132,7 @@ export default function TechniqueVideoButton({ techniqueId }: Props) {
           title={t("techniques.editVideo")}
           aria-label={t("techniques.editVideo")}
         >
-          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg aria-hidden="true" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
           </svg>
         </button>
@@ -142,7 +142,7 @@ export default function TechniqueVideoButton({ techniqueId }: Props) {
           title={t("techniques.removeVideo")}
           aria-label={t("techniques.removeVideo")}
         >
-          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg aria-hidden="true" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
@@ -157,7 +157,7 @@ export default function TechniqueVideoButton({ techniqueId }: Props) {
       className="flex items-center gap-1 text-xs text-zinc-600 hover:text-zinc-400 mt-1.5 transition-colors min-h-[28px] group"
       title={t("techniques.addVideo")}
     >
-      <svg className="w-3 h-3 group-hover:text-red-400 transition-colors" viewBox="0 0 24 24" fill="currentColor">
+      <svg aria-hidden="true" className="w-3 h-3 group-hover:text-red-400 transition-colors" viewBox="0 0 24 24" fill="currentColor">
         <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
       </svg>
       <span>{t("techniques.addVideo")}</span>

@@ -320,7 +320,7 @@ export default function GoalTracker({ userId }: Props) {
               <span className="text-xs text-zinc-400">{t("goal.setAGoal")}</span>
             )}
             <svg
-              className={`w-4 h-4 text-zinc-400 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+aria-hidden="true"               className={`w-4 h-4 text-zinc-400 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
               fill="none" stroke="currentColor" viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />

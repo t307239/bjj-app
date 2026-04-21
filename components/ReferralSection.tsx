@@ -174,7 +174,7 @@ export default function ReferralSection({
         className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-bold transition-colors active:scale-95"
       >
         <svg
-          className="w-4 h-4 flex-shrink-0"
+aria-hidden="true"           className="w-4 h-4 flex-shrink-0"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

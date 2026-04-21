@@ -287,7 +287,7 @@ export default async function TechniquesPage() {
                     </p>
                   </div>
                   <div className="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center shrink-0 ml-4 group-hover:bg-emerald-400/20 transition-colors">
-                    <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <svg aria-hidden="true" className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </div>
@@ -308,7 +308,7 @@ export default async function TechniquesPage() {
                       className="inline-flex items-center gap-1 text-xs bg-zinc-800/60 hover:bg-zinc-700/60 text-zinc-400 hover:text-white px-3 py-1.5 rounded-full border border-white/8 hover:border-white/20 transition-all active:scale-95"
                     >
                       {link.label}
-                      <svg className="w-3 h-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg aria-hidden="true" className="w-3 h-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
                     </a>

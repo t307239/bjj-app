@@ -268,7 +268,7 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates, initi
       {/* SVG body map */}
       <div className="flex justify-center">
         <svg
-          viewBox="0 0 120 265"
+aria-hidden="true"           viewBox="0 0 120 265"
           className="w-40 select-none"
           aria-label={t("body.bodyMap")}
           style={{ touchAction: "auto" }}

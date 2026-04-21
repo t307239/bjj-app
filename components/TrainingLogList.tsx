@@ -375,7 +375,7 @@ const TrainingLogList = memo(function TrainingLogList({
                   {/* Right: duration + action buttons */}
                   <div className="flex items-center gap-0.5 ml-2 flex-shrink-0">
                     <span className="inline-flex items-center gap-1 text-zinc-400 text-xs font-medium mr-1">
-                      <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <svg aria-hidden="true" className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <circle cx="12" cy="12" r="10" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
                       </svg>
                       {entry.duration_min >= 60
@@ -394,7 +394,7 @@ const TrainingLogList = memo(function TrainingLogList({
                         title={t("training.edit")}
                         aria-label={t("training.edit")}
                       >
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg aria-hidden="true" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -413,7 +413,7 @@ const TrainingLogList = memo(function TrainingLogList({
                         {deletingId === entry.id ? (
                           <span className="text-xs">...</span>
                         ) : (
-                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg aria-hidden="true" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -431,7 +431,7 @@ const TrainingLogList = memo(function TrainingLogList({
                   <div className="flex flex-wrap gap-2 mt-1.5">
                     {entry.instructor_name && (
                       <span className="inline-flex items-center gap-1 text-xs text-zinc-500">
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <svg aria-hidden="true" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                         {entry.instructor_name}
@@ -439,7 +439,7 @@ const TrainingLogList = memo(function TrainingLogList({
                     )}
                     {entry.partner_username && (
                       <span className="inline-flex items-center gap-1 text-xs text-zinc-500">
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <svg aria-hidden="true" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                         @{entry.partner_username}
@@ -551,7 +551,7 @@ const TrainingLogList = memo(function TrainingLogList({
                 className="flex items-center gap-1 text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors active:scale-95"
                 aria-label={t("common.previousPage")}
               >
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg aria-hidden="true" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
                 {t("training.prev")}
@@ -559,7 +559,7 @@ const TrainingLogList = memo(function TrainingLogList({
 
               <span className="text-xs text-zinc-500 tabular-nums">
                 {pageLoading ? (
-                  <svg className="w-4 h-4 animate-spin mx-auto" viewBox="0 0 24 24" fill="none">
+                  <svg aria-hidden="true" className="w-4 h-4 animate-spin mx-auto" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
                   </svg>
@@ -575,7 +575,7 @@ const TrainingLogList = memo(function TrainingLogList({
                 aria-label={t("common.nextPage")}
               >
                 {t("training.next")}
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg aria-hidden="true" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
               </button>

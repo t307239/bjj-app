@@ -73,7 +73,7 @@ export default async function HelpPage() {
           href="/dashboard"
           className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-white transition-colors mb-8"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
           {t("help.back")}
         </Link>
 
@@ -96,7 +96,7 @@ export default async function HelpPage() {
               href={item.href}
               className="flex flex-col items-center gap-2 bg-zinc-900/60 border border-white/[0.06] rounded-xl px-3 py-4 hover:bg-white/[0.04] transition-colors text-center"
             >
-              <svg className="w-5 h-5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <svg aria-hidden="true" className="w-5 h-5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
               </svg>
               <span className="text-xs text-zinc-300 leading-tight">{item.label}</span>
@@ -114,7 +114,7 @@ export default async function HelpPage() {
               <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-white list-none flex items-center justify-between gap-2 select-none">
                 {faq.q}
                 <svg
-                  className="w-4 h-4 text-zinc-500 shrink-0 transition-transform group-open:rotate-180"
+aria-hidden="true"                   className="w-4 h-4 text-zinc-500 shrink-0 transition-transform group-open:rotate-180"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -144,7 +144,7 @@ export default async function HelpPage() {
               <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-white list-none flex items-center justify-between gap-2 select-none">
                 {faq.q}
                 <svg
-                  className="w-4 h-4 text-zinc-500 shrink-0 transition-transform group-open:rotate-180"
+aria-hidden="true"                   className="w-4 h-4 text-zinc-500 shrink-0 transition-transform group-open:rotate-180"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"

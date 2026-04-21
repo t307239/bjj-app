@@ -235,7 +235,7 @@ export default function WeightChart({ userId, refreshKey, targetWeight, targetDa
         )}
       </div>
 
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" aria-label={t("body.weightChart")}>
+      <svg aria-hidden="true" viewBox={`0 0 ${W} ${H}`} className="w-full" aria-label={t("body.weightChart")}>
         {/* Y-axis unit label */}
         <text x={PL - 4} y={PAD_BASE.top - 6} textAnchor="end" fontSize="7" fill="#4b5563">
           {t("body.weightUnit")}

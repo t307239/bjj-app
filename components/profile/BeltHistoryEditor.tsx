@@ -171,7 +171,7 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
             onClick={() => { setExpanded(false); setShowAdd(false); }}
             className="text-xs text-zinc-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
           >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg aria-hidden="true" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
             </svg>
           </button>
@@ -210,7 +210,7 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
                 className="text-zinc-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 p-1"
                 title={t("training.delete")}
               >
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg aria-hidden="true" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>

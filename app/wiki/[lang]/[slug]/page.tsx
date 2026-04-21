@@ -345,7 +345,7 @@ function MobileTocAccordion({ items, lang }: { items: TocItem[]; lang: string })
           {label}
         </span>
         <svg
-          className="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180"
+aria-hidden="true"           className="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180"
           viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
         >
           <polyline points="6 9 12 15 18 9" />

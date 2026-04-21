@@ -104,7 +104,7 @@ function DonutChart({ data, mode, timesUnit, sessionsLabel, totalTimeLabel }: {
 
   return (
     <svg
-      viewBox="0 0 120 120"
+aria-hidden="true"       viewBox="0 0 120 120"
       className="w-28 h-28 flex-shrink-0"
       onMouseLeave={() => setHovered(null)}
     >
@@ -173,7 +173,7 @@ function MiniSparkline({ logs, typeValue, color }: {
   }).join(" ");
 
   return (
-    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="flex-shrink-0 opacity-70">
+    <svg aria-hidden="true" width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="flex-shrink-0 opacity-70">
       <polyline
         points={pts}
         fill="none"
@@ -329,7 +329,7 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
             </span>
           )}
           <svg
-            className={`w-4 h-4 text-zinc-400 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+aria-hidden="true"             className={`w-4 h-4 text-zinc-400 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
             fill="none" stroke="currentColor" viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
@@ -371,7 +371,7 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
       {total === 0 ? (
         period === "all" ? (
           <div className="flex flex-col items-center justify-center h-24 gap-2">
-            <svg className="w-8 h-8 text-zinc-500 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <svg aria-hidden="true" className="w-8 h-8 text-zinc-500 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m8.66-13l-.87.5M4.21 15.5l-.87.5M19.79 15.5l-.87-.5M4.21 8.5l-.87-.5M21 12h-1M4 12H3m15.36-6.36l-.7.7M6.34 17.66l-.7.7M17.66 17.66l.7.7M6.34 6.34l.7.7" />
             </svg>
             <p className="text-sm text-zinc-400">{t("chart.noSessionsYet")}</p>

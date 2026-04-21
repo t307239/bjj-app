@@ -211,7 +211,7 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
                 aria-label={t("common.close")}
               >
                 <svg
-                  viewBox="0 0 24 24"
+aria-hidden="true"                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth={2}

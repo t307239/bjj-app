@@ -47,7 +47,7 @@ export default function AvatarImage({
         {fallbackInitials ? (
           fallbackInitials.slice(0, 2).toUpperCase()
         ) : (
-          <svg className="w-1/2 h-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <svg aria-hidden="true" className="w-1/2 h-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0" />
           </svg>
         )}

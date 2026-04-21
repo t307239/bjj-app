@@ -147,6 +147,7 @@ export default function AccountSection({ userId, supabase }: Props) {
             <p className="text-zinc-400 text-xs">{t("profile.emailChangeLabel")}</p>
             <input
               type="email"
+              autoComplete="email"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
               placeholder={t("profile.emailPlaceholder")}

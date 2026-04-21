@@ -58,6 +58,7 @@ export default function GymWaitlistForm() {
           id="gym-email"
           type="email"
           required
+          autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder={t("gym.waitlistEmailPlaceholder")}
@@ -71,6 +72,7 @@ export default function GymWaitlistForm() {
         <input
           id="gym-name"
           type="text"
+          autoComplete="organization"
           value={gymName}
           onChange={(e) => setGymName(e.target.value)}
           placeholder={t("gym.waitlistGymPlaceholder")}
@@ -87,7 +89,7 @@ export default function GymWaitlistForm() {
       >
         {state === "loading" ? (
           <>
-            <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+            <svg aria-hidden="true" className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>

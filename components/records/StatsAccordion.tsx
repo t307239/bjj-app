@@ -47,7 +47,7 @@ export default function StatsAccordion({ userId, isPro }: Props) {
             : t("profile.showDetailCharts")}
         </span>
         <svg
-          className={`w-3.5 h-3.5 transition-transform ${showDetailCharts ? "rotate-180" : ""}`}
+aria-hidden="true"           className={`w-3.5 h-3.5 transition-transform ${showDetailCharts ? "rotate-180" : ""}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -74,7 +74,7 @@ export default function StatsAccordion({ userId, isPro }: Props) {
             : t("profile.showExtendedBadges")}
         </span>
         <svg
-          className={`w-3.5 h-3.5 transition-transform ${showExtendedBadges ? "rotate-180" : ""}`}
+aria-hidden="true"           className={`w-3.5 h-3.5 transition-transform ${showExtendedBadges ? "rotate-180" : ""}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

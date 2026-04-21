@@ -108,7 +108,7 @@ export default function SettingsSection({
       {/* Timezone Display */}
       <div className="bg-zinc-900/60 border border-white/8 rounded-xl px-4 py-3">
         <div className="flex items-center gap-2 mb-1">
-          <svg className="w-4 h-4 text-zinc-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <svg aria-hidden="true" className="w-4 h-4 text-zinc-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <p className="text-sm font-medium text-white">
@@ -152,7 +152,7 @@ export default function SettingsSection({
         className="flex items-center justify-between bg-zinc-900/60 border border-white/8 rounded-xl px-4 py-3 hover:bg-white/[0.04] transition-colors group"
       >
         <div className="flex items-center gap-2 min-w-0">
-          <svg className="w-4 h-4 text-zinc-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <svg aria-hidden="true" className="w-4 h-4 text-zinc-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
           </svg>
           <div className="min-w-0">
@@ -164,7 +164,7 @@ export default function SettingsSection({
             </p>
           </div>
         </div>
-        <svg className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors flex-shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <svg aria-hidden="true" className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors flex-shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
         </svg>
       </a>

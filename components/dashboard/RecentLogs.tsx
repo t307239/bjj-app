@@ -91,7 +91,7 @@ export default function RecentLogs({ logs, weekCount = 0, streak = 0, t }: Props
           href="/records"
           className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-sm font-bold px-6 py-3 rounded-xl shadow-lg shadow-emerald-500/20 transition-all min-h-[48px]"
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <svg aria-hidden="true" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
           {t("home.emptyCtaRecord")}
@@ -157,7 +157,7 @@ export default function RecentLogs({ logs, weekCount = 0, streak = 0, t }: Props
         className="flex sm:hidden items-center justify-center gap-1 mt-3 py-2 text-xs font-medium text-zinc-400 hover:text-emerald-400 transition-colors"
       >
         <span>{t("home.viewAllRecords")}</span>
-        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <svg aria-hidden="true" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
         </svg>
       </Link>

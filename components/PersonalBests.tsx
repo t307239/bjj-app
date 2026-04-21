@@ -61,7 +61,7 @@ function IntensitySparkline({ data }: { data: { ym: string; avgSessionMin: numbe
 
   return (
     <div className="flex items-center gap-2">
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-24 h-5 flex-shrink-0">
+      <svg aria-hidden="true" viewBox={`0 0 ${width} ${height}`} className="w-24 h-5 flex-shrink-0">
         {/* Grid line at middle */}
         <line x1={padding} y1={padding + graphHeight / 2} x2={width - padding} y2={padding + graphHeight / 2} stroke="#4b5563" strokeWidth="0.5" opacity="0.3" />
         {/* Sparkline */}
@@ -270,7 +270,7 @@ export default function PersonalBests({ userId }: Props) {
           )}
         </div>
         <svg
-          className={`w-4 h-4 text-zinc-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+aria-hidden="true"           className={`w-4 h-4 text-zinc-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
           fill="none" viewBox="0 0 24 24" stroke="currentColor"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
@@ -308,11 +308,11 @@ export default function PersonalBests({ userId }: Props) {
           }`}
         >
           {isCopied ? (
-            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+            <svg aria-hidden="true" className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           ) : (
-            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+            <svg aria-hidden="true" className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
             </svg>
           )}

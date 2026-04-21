@@ -412,7 +412,7 @@ export default async function DashboardPage({
                   {t("home.proInsightDesc")}
                 </p>
               </div>
-              <svg className="w-4 h-4 text-amber-500/50 group-hover:text-amber-400 transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg aria-hidden="true" className="w-4 h-4 text-amber-500/50 group-hover:text-amber-400 transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </div>

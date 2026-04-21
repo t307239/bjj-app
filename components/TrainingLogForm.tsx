@@ -411,7 +411,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
         className="flex items-center gap-1.5 w-full text-xs text-zinc-500 hover:text-zinc-300 transition-colors py-1 mb-2 group"
       >
         <svg
-          className={`w-3 h-3 flex-shrink-0 transition-transform duration-150 ${showOptional ? "rotate-90" : ""}`}
+aria-hidden="true"           className={`w-3 h-3 flex-shrink-0 transition-transform duration-150 ${showOptional ? "rotate-90" : ""}`}
           viewBox="0 0 24 24" fill="none"
         >
           <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -489,7 +489,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
             className="flex items-center gap-1.5 w-full text-xs text-zinc-500 hover:text-zinc-300 transition-colors py-1 mb-2 group"
           >
             <svg
-              className={`w-3 h-3 flex-shrink-0 transition-transform duration-150 ${showRollDetails ? "rotate-90" : ""}`}
+aria-hidden="true"               className={`w-3 h-3 flex-shrink-0 transition-transform duration-150 ${showRollDetails ? "rotate-90" : ""}`}
               viewBox="0 0 24 24" fill="none"
             >
               <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
