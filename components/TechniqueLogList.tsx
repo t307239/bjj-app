@@ -227,7 +227,7 @@ export default function TechniqueLogList({
             >
               {editingId === technique.id ? (
                 // インライン編集フォーム
-                <form onSubmit={(e) => onUpdate(e, technique.id)}>
+                <form onSubmit={(e) => onUpdate(e, technique.id)} noValidate>
                   <input
                     type="text"
                     value={editForm.name}

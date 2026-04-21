@@ -132,7 +132,7 @@ export default function UgcVideoSubmit({ slug, lang, ugcLabel, ugcCta }: Props) 
               {ugcCta}
             </button>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-3">
+            <form onSubmit={handleSubmit} noValidate className="space-y-3">
               <input
                 type="url"
                 value={url}

@@ -58,7 +58,7 @@ export default function QuickWeightLog({ userId, onLogged }: Props) {
       <p className="text-xs text-zinc-400 font-semibold mb-3 uppercase tracking-wide">
         {t("body.quickLog")}
       </p>
-      <form onSubmit={handleSubmit} className="space-y-2">
+      <form onSubmit={handleSubmit} noValidate className="space-y-2">
         <div className="flex gap-2 items-end">
           <div className="flex-1">
             <label className="block text-zinc-400 text-xs mb-1">{t("body.weightKg")}</label>

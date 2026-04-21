@@ -49,7 +49,7 @@ export default function GymWaitlistForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} noValidate className="space-y-4">
       <div>
         <label className="block text-sm text-zinc-400 mb-1.5" htmlFor="gym-email">
           {t("gym.waitlistEmailLabel")}

@@ -20,8 +20,6 @@ const MASTERY_COLORS = [
   "bg-cyan-400",       // 3 = Mastered
 ];
 
-const MASTERY_LABELS_EN = ["Learning", "Drilling", "Sparring", "Mastered"];
-
 export default function TechniqueFocusCard({ techniques, weekPracticeCount, t }: Props) {
   const displayTechniques = techniques.slice(0, 3);
   const overflow = techniques.length - 3;
@@ -72,7 +70,7 @@ export default function TechniqueFocusCard({ techniques, weekPracticeCount, t }:
                   {/* Mastery dot */}
                   <span
                     className={`w-2.5 h-2.5 rounded-full shrink-0 ${MASTERY_COLORS[masteryIdx]}`}
-                    title={MASTERY_LABELS_EN[masteryIdx]}
+                    title={t(`focus.mastery${masteryIdx}`)}
                   />
                   {/* Name + category */}
                   <div className="flex-1 min-w-0">

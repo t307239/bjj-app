@@ -237,7 +237,7 @@ const TrainingLogList = memo(function TrainingLogList({
           >
             {editingId === entry.id ? (
               /* Inline edit form */
-              <form onSubmit={(e) => onUpdate(e, entry.id)}>
+              <form onSubmit={(e) => onUpdate(e, entry.id)} noValidate>
                 <div className="mb-2">
                   <input
                     type="date"

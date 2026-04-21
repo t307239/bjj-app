@@ -1007,7 +1007,10 @@
     "edgeNotesPlaceholder": "Add notes about this connection...",
     "loadingTitle": "Loading skill map…",
     "upgradeText": "Upgrade for unlimited →",
-    "addTechnique": "Add technique"
+    "addTechnique": "Add technique",
+    "legendLocked": "Locked",
+    "legendLearning": "Learning",
+    "legendMastered": "Mastered"
   },
   "wiki": {
     "dailyTip": "Today's BJJ Knowledge",

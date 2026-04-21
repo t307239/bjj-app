@@ -1056,7 +1056,10 @@
     "edgeNotesPlaceholder": "Adicione notas sobre esta conexão...",
     "loadingTitle": "Carregando mapa de habilidades…",
     "upgradeText": "Atualize para ilimitado →",
-    "addTechnique": "Adicionar técnica"
+    "addTechnique": "Adicionar técnica",
+    "legendLocked": "Bloqueado",
+    "legendLearning": "Aprendendo",
+    "legendMastered": "Dominado"
   },
   "wiki": {
     "dailyTip": "Conhecimento BJJ de Hoje",

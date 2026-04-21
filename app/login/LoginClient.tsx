@@ -293,7 +293,7 @@ function LoginForm() {
               </button>
             </div>
           ) : (
-            <form onSubmit={sendEmailLink} className="space-y-2">
+            <form onSubmit={sendEmailLink} noValidate className="space-y-2">
               {emailError && (
                 <p className="text-red-400 text-xs px-1">{emailError}</p>
               )}

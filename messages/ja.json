@@ -999,7 +999,10 @@
     "edgeNotesPlaceholder": "この接続についてのメモを追加...",
     "loadingTitle": "スキルマップを読み込み中…",
     "upgradeText": "無制限にアップグレード →",
-    "addTechnique": "テクニックを追加"
+    "addTechnique": "テクニックを追加",
+    "legendLocked": "未解放",
+    "legendLearning": "学習中",
+    "legendMastered": "習得済み"
   },
   "wiki": {
     "dailyTip": "今日のBJJ知識",

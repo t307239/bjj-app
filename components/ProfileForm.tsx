@@ -258,7 +258,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
           onClose={() => setPromotionFrom(null)}
         />
       )}
-      <form onSubmit={handleSave} className="space-y-5">
+      <form onSubmit={handleSave} noValidate className="space-y-5">
         <div className="bg-zinc-900 rounded-xl p-5 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30 text-center">
           <div className="inline-flex items-center gap-3 mb-1">
             <span className={"px-6 py-2 rounded-full text-sm font-bold " + (currentBelt?.color ?? "")}>{currentBelt?.label}</span>
