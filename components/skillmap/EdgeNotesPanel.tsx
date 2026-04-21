@@ -15,6 +15,13 @@ export default function EdgeNotesPanel({ notes, onChange, onSave, onClose, t }: 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => { requestAnimationFrame(() => textareaRef.current?.focus()); }, []);
 
+  // ── Escape key to close panel ─────────────────────────────────────────────
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   return (
     <div className="mt-2 bg-zinc-900 border border-indigo-500/30 rounded-xl p-3 shadow-xl">
       <div className="flex items-center gap-2 mb-2">

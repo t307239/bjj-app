@@ -23,6 +23,15 @@ export default function Toast({ message, type = "success", duration = 2500, onCl
     return () => clearTimeout(timer);
   }, [onClose, duration]);
 
+  // ── Escape key to dismiss immediately ─────────────────────────────────────
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { setVisible(false); setTimeout(onClose, 300); }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   return (
     <div
       role={type === "error" ? "alert" : "status"}

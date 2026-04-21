@@ -284,6 +284,14 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
     avgSessions30d,
   } = useGymDashboard({ initialGym, t, locale });
 
+  // ── Escape key to dismiss kick confirmation modal ─────────────────────────
+  useEffect(() => {
+    if (!kickTarget) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setKickTarget(null); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [kickTarget, setKickTarget]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-48 text-zinc-400 text-sm">

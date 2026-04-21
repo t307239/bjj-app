@@ -124,6 +124,14 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
+  // ── Escape key to dismiss danger confirm modal ────────────────────────────
+  useEffect(() => {
+    if (!dangerConfirmPending) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setDangerConfirmPending(false); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [dangerConfirmPending]);
+
   // ── Handlers ───────────────────────────────────────────────────────────────
   const isBeginner = userBelt === "white" || userBelt === "blue";
 

@@ -29,6 +29,14 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
     };
   }, []);
 
+  // ── Escape key to dismiss modal ───────────────────────────────────────────
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
   const inviteBase =
     typeof window !== "undefined"
       ? `${window.location.origin}/gym/join/${gym.invite_code}`

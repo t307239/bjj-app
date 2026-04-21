@@ -9,7 +9,7 @@
  * - LLMトリアージ後に承認されたURLのみ wiki_pages.video_url に反映される
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Props {
   slug: string;
@@ -41,6 +41,16 @@ export default function UgcVideoSubmit({ slug, lang, ugcLabel, ugcCta }: Props) 
   const [url, setUrl] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  // ── Escape key to close form ──────────────────────────────────────────────
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { setOpen(false); setUrl(""); setErrorMsg(""); setStatus("idle"); }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   const successMsg =
     lang === "ja"
