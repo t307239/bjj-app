@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { utcIsoToLocalDateString } from "@/lib/timezone";
@@ -53,7 +53,8 @@ function pointsToPolyline(pts: { x: number; y: number }[]): string {
 
 export default function WeightChart({ userId, refreshKey, targetWeight, targetDate }: Props) {
   const { t } = useLocale();
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   const [data, setData] = useState<WeightPoint[]>([]);
   const [loading, setLoading] = useState(true);

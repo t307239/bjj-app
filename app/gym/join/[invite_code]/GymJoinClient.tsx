@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
@@ -21,7 +21,8 @@ export default function GymJoinClient({
   maskedEmail,
   currentGymId,
 }: Props) {
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
   const router = useRouter();
   const { t } = useLocale();
   const [loading, setLoading] = useState(false);

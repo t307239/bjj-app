@@ -74,7 +74,8 @@ function IABWarning() {
 // ─── Main login form ───────────────────────────────────────────────────────────
 function LoginForm() {
   const { t } = useLocale();
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
   const searchParamsInner = useSearchParams();
   const nextPath = searchParamsInner.get("next") ?? "";
   // Wiki referral attribution: ?ref=wiki&page=closed-guard

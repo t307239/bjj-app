@@ -1,12 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
 
 export default function AccountDeletedPage() {
   const { t } = useLocale();
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
   const router = useRouter();
   const [restoring, setRestoring] = useState(false);
   const [error, setError] = useState<string | null>(null);

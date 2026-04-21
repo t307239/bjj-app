@@ -13,7 +13,8 @@ interface Props {
 export default function QuickWeightLog({ userId, onLogged }: Props) {
   const { t } = useLocale();
   const isOnline = useOnlineStatus();
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   const [weight, setWeight] = useState("");
   const [note, setNote] = useState("");

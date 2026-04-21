@@ -31,7 +31,8 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
   const [loadingLogs, setLoadingLogs] = useState(false);
   const [loadingTech, setLoadingTech] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   // Close on outside click
   useEffect(() => {

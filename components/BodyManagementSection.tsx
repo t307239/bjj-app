@@ -17,7 +17,8 @@ interface Props {
 
 export default function BodyManagementSection({ userId, isPro: isProProp = false }: Props) {
   const { t } = useLocale();
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   const [isPro, setIsPro] = useState(isProProp);
   const [bodyStatus, setBodyStatus] = useState<Record<string, string> | null>(null);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { decodeRollNotes, type RollMeta } from "@/lib/trainingLogHelpers";
 import { useLocale } from "@/lib/i18n";
@@ -162,7 +162,8 @@ export default function RollAnalyticsCard({ userId }: { userId: string }) {
   const { t } = useLocale();
   const [records, setRecords] = useState<RollRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   useEffect(() => {
     const load = async () => {

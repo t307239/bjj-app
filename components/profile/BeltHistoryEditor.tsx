@@ -41,7 +41,8 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const today = getLocalDateString();
 
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   useEffect(() => {
     const fetch = async () => {

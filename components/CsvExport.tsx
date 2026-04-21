@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { decodeCompNotes } from "@/lib/trainingLogHelpers";
@@ -47,7 +47,8 @@ export default function CsvExport({ userId }: Props) {
   const [loadingLogs, setLoadingLogs] = useState(false);
   const [loadingTech, setLoadingTech] = useState(false);
   const [loadingPdf, setLoadingPdf] = useState(false);
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   const handleExport = async () => {
     setLoadingLogs(true);

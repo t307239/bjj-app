@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
@@ -13,7 +13,8 @@ type Props = {
 export default function LogoutButton({ onDone, className }: Props) {
   const router = useRouter();
   const { t } = useLocale();
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogout = async () => {

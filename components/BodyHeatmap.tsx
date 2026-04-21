@@ -97,7 +97,8 @@ function toDateStr(d: Date): string {
 export default function BodyHeatmap({ userId, initialStatus, initialDates, initialNotes }: Props) {
   const { t } = useLocale();
   const isOnline = useOnlineStatus();
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   const [status, setStatus] = useState<BodyStatus>(initialStatus ?? {});
   const [statusDates, setStatusDates] = useState<Record<string, string>>(initialDates ?? {});
