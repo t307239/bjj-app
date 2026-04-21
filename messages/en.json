@@ -919,7 +919,8 @@
     "imageViewer": "Image viewer",
     "closeImageViewer": "Close image viewer",
     "expandedView": "Expanded view",
-    "youtubePlaceholder": "https://youtu.be/..."
+    "youtubePlaceholder": "https://youtu.be/...",
+    "sortBy": "Sort by"
   },
   "aiCoach": {
     "title": "AI Coach",

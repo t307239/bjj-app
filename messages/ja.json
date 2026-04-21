@@ -910,7 +910,8 @@
     "imageViewer": "画像ビューアー",
     "closeImageViewer": "画像ビューアーを閉じる",
     "expandedView": "拡大表示",
-    "youtubePlaceholder": "https://youtu.be/..."
+    "youtubePlaceholder": "https://youtu.be/...",
+    "sortBy": "並び替え"
   },
   "aiCoach": {
     "title": "AIコーチ",

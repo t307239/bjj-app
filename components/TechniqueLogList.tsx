@@ -90,6 +90,7 @@ export default function TechniqueLogList({
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortBy)}
+              aria-label={t("common.sortBy")}
               className="appearance-none text-xs bg-zinc-900 text-zinc-300 border border-zinc-700 hover:border-zinc-600 rounded-lg px-3 py-2 min-h-[44px] focus:outline-none focus:border-emerald-500 cursor-pointer transition-colors"
             >
               <option value="newest">{t("techniques.sortNewest")}</option>
@@ -243,6 +244,7 @@ export default function TechniqueLogList({
                       onChange={(e) =>
                         setEditForm({ ...editForm, category: e.target.value })
                       }
+                      aria-label={t("techniques.category")}
                       className="bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none"
                     >
                       {CATEGORY_VALUES.map((catVal) => (
@@ -259,6 +261,7 @@ export default function TechniqueLogList({
                           mastery_level: Number(e.target.value),
                         })
                       }
+                      aria-label={t("techniques.mastery")}
                       className="bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none"
                     >
                       {[1, 2, 3, 4, 5].map((level) => (
