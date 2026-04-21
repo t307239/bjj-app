@@ -9,6 +9,7 @@ import { useState, useCallback } from "react";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type TrainingEntry } from "@/lib/trainingLogHelpers";
 import { clientLogger } from "@/lib/clientLogger";
+import { useLocale } from "@/lib/i18n";
 
 type Props = {
   entry: TrainingEntry;
@@ -162,6 +163,7 @@ function wrapText(ctx: CanvasRenderingContext2D, text: string, x: number, y: num
 }
 
 export default function ShareButton({ entry }: Props) {
+  const { t } = useLocale();
   const [sharing, setSharing] = useState(false);
 
   const handleShare = useCallback(async () => {
