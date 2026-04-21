@@ -8,6 +8,7 @@ import { type MemberRow, type Gym } from "./gym/types";
 import MemberCard from "./gym/MemberCard";
 import BeltDistributionChart from "./gym/BeltDistributionChart";
 import CsvBulkInvite from "./gym/CsvBulkInvite";
+import { clientLogger } from "@/lib/clientLogger";
 import CurriculumDispatch from "./gym/CurriculumDispatch";
 import InviteQRCode from "./gym/InviteQRCode";
 import { trackEvent } from "@/lib/analytics";
@@ -95,8 +96,8 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
       // §6 Telemetry: B2B funnel — gym owner copied invite link
       trackEvent("gym_member_invited", { method: "copy_link" });
       copiedTimerRef.current = setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // fallback: select text
+    } catch (err: unknown) {
+      clientLogger.error("gym_invite.clipboard_copy_failed", {}, err instanceof Error ? err : new Error(String(err)));
     }
   };
 

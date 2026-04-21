@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useLocale } from "@/lib/i18n";
 import { subscribePush, unsubscribePush } from "@/lib/webpush";
+import { clientLogger } from "@/lib/clientLogger";
 
 type NotifPrefs = {
   reengagement: boolean;
@@ -71,8 +72,8 @@ export default function PushNotificationSection() {
             weekly_email: json.preferences.weekly_email ?? true,
           });
         }
-      } catch {
-        // Silent fail — preferences will use defaults
+      } catch (err: unknown) {
+        clientLogger.error("push_prefs.fetch_failed", {}, err instanceof Error ? err : new Error(String(err)));
       }
     };
     fetchPrefs();
@@ -101,8 +102,8 @@ export default function PushNotificationSection() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ [key]: value }),
       });
-    } catch {
-      // Revert on failure
+    } catch (err: unknown) {
+      clientLogger.error("push_prefs.update_failed", {}, err instanceof Error ? err : new Error(String(err)));
       setPrefs(prefs);
     }
     setSavingPref(false);

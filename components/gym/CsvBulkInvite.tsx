@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocale } from "@/lib/i18n";
 import { type Gym } from "./types";
+import { clientLogger } from "@/lib/clientLogger";
 
 type Props = {
   gym: Gym;
@@ -82,7 +83,9 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
       await navigator.clipboard.writeText(inviteBase);
       setCopiedIdx(idx);
       copiedIdxTimerRef.current = setTimeout(() => setCopiedIdx(null), 2000);
-    } catch {/* ignore */}
+    } catch (err: unknown) {
+      clientLogger.error("csv_bulk_invite.copy_link_failed", {}, err instanceof Error ? err : new Error(String(err)));
+    }
   };
 
   const copyAll = async () => {
@@ -95,7 +98,9 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
       await navigator.clipboard.writeText(text);
       setCopiedAll(true);
       copiedAllTimerRef.current = setTimeout(() => setCopiedAll(false), 2000);
-    } catch {/* ignore */}
+    } catch (err: unknown) {
+      clientLogger.error("csv_bulk_invite.copy_all_failed", {}, err instanceof Error ? err : new Error(String(err)));
+    }
   };
 
   const downloadCsv = () => {

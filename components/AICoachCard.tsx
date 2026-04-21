@@ -145,7 +145,8 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
       if (!data.cached) trackEvent("feature_discovered", { feature: "ai_coach" });
       setCoachingMap((prev) => ({ ...prev, [targetMode]: data.coaching ?? null }));
       setGeneratedAtMap((prev) => ({ ...prev, [targetMode]: data.generated_at ?? null }));
-    } catch {
+    } catch (err: unknown) {
+      clientLogger.error("ai_coach.generate_failed", {}, err instanceof Error ? err : new Error(String(err)));
       setError(t("aiCoach.error"));
     } finally {
       setLoading(false);
