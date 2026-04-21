@@ -86,11 +86,12 @@ export default async function GymDashboardPage({
       avgSessionsPerMember = memberCount > 0 ? Math.round((totalSessions30d / memberCount) * 10) / 10 : 0;
 
       // §14 B2B: Detect inactive members (no training in 7+ days)
-      const { data: activeRecent } = await supabase
+      const { data: activeRecent, error: activeErr } = await supabase
         .from("training_logs")
         .select("user_id")
         .in("user_id", memberIds)
         .gte("date", sevenDaysAgo);
+      if (activeErr) logger.error("gym.dashboard_active_query_error", { gymId: gym.id }, activeErr as Error);
       const activeUserIds = new Set((activeRecent ?? []).map((r: { user_id: string }) => r.user_id));
       inactiveMemberCount = memberIds.filter((id: string) => !activeUserIds.has(id)).length;
     }

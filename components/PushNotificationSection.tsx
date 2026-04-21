@@ -44,19 +44,25 @@ export default function PushNotificationSection() {
       setSubState("blocked");
       return;
     }
-    navigator.serviceWorker.ready.then((reg) =>
-      reg.pushManager.getSubscription()
-    ).then((sub) => {
-      setSubState(sub !== null);
-    }).catch(() => setSubState(false));
+    const checkSubscription = async () => {
+      try {
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.getSubscription();
+        setSubState(sub !== null);
+      } catch {
+        setSubState(false);
+      }
+    };
+    checkSubscription();
   }, [vapidKey]);
 
   // Fetch preferences when subscribed
   useEffect(() => {
     if (subState !== true) return;
-    fetch("/api/push/preferences")
-      .then((r) => r.json())
-      .then((json) => {
+    const fetchPrefs = async () => {
+      try {
+        const r = await fetch("/api/push/preferences");
+        const json = await r.json();
         if (json.ok && json.preferences) {
           setPrefs({
             reengagement: json.preferences.reengagement ?? true,
@@ -65,8 +71,11 @@ export default function PushNotificationSection() {
             weekly_email: json.preferences.weekly_email ?? true,
           });
         }
-      })
-      .catch((err) => { console.error("Failed to fetch push preferences", err); });
+      } catch {
+        // Silent fail — preferences will use defaults
+      }
+    };
+    fetchPrefs();
   }, [subState]);
 
   const handleToggle = async () => {

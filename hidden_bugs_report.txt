@@ -1,16 +1,14 @@
 BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 378 files
 CRITICAL: 0
-WARNING: 2
-INFO: 102
-Total: 104
+WARNING: 0
+INFO: 100
+Total: 100
 
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L125: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [SUPABASE_NO_ERROR] app/gym/dashboard/page.tsx: L89: Supabase query の戻り値で error を無視 — サイレント失敗リスク
-  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [DANGEROUS_HTML] app/gym/page.tsx: L44: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/help/page.tsx: L64: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
@@ -121,10 +119,6 @@ Total: 104
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/PersonalBests.tsx: L368: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [PROMISE_NO_CATCH] components/PushNotificationSection.tsx: L58: .then() に .catch() がない — エラー時サイレント失敗
-  FIX: .catch((err) => console.error(err)) を追加、または async/await + try-catch に変更
-[WARNING] [PROMISE_NO_CATCH] components/PushNotificationSection.tsx: L59: .then() に .catch() がない — エラー時サイレント失敗
-  FIX: .catch((err) => console.error(err)) を追加、または async/await + try-catch に変更
 [INFO] [INLINE_STYLE_OBJECT] components/ReferralSection.tsx: L128: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/RollAnalyticsCard.tsx: L81: style={{...}} — Tailwindクラスで統一推奨
@@ -207,9 +201,7 @@ Total: 104
   FIX: 具体的な型を定義するか、unknown + 型ガードを使用
 [INFO] [CONSOLE_LOG] lib/missingKeyDetector.ts: console.log() が 1 件残存
   FIX: 本番前に削除
-[INFO] [TODO_COMMENT] lib/prReviewChecklist.ts: L44: TODO: |FIXME|HACK|XXX)\b/g, severity: "info" as const, message: "T
+[INFO] [TODO_COMMENT] lib/prReviewChecklist.ts: L44: TODO: /FIXME comment found" },
   FIX: 修正済みなら削除、未着手ならBACKLOGへ移動
 [INFO] [CONSOLE_LOG] lib/styleAuditor.ts: console.log() が 1 件残存
   FIX: 本番前に削除
-[INFO] [UNUSED_EXPORT] components/CookieConsent.tsx: export 'getCookiePreferences' がどこからもimportされていない — デッドコードの可能性
-  FIX: 使用予定がなければファイルごと削除。将来用ならBACKLOG記載

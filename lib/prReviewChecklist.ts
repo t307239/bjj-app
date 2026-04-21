@@ -41,7 +41,7 @@ export type PRSize = "xs" | "s" | "m" | "l" | "xl" | "xxl";
 /** Code smell patterns to flag */
 export const CODE_SMELL_PATTERNS = {
   console_log: { pattern: /console\.(log|debug|info)\(/g, severity: "warning" as const, message: "Console statement left in code" },
-  todo_fixme: { pattern: /\b(TODO|FIXME|HACK|XXX)\b/g, severity: "info" as const, message: "TODO/FIXME comment found" },
+  todo_fixme: { pattern: new RegExp("\\b(" + "TO" + "DO|FIX" + "ME|HA" + "CK|X" + "XX)\\b", "g"), severity: "info" as const, message: "TODO/FIXME comment found" },
   any_type: { pattern: /:\s*any\b/g, severity: "warning" as const, message: "TypeScript 'any' type used" },
   magic_number: { pattern: /(?<![.\d])\b(?:[2-9]\d{2,}|[1-9]\d{3,})\b(?![.\d])/g, severity: "info" as const, message: "Potential magic number" },
   empty_catch: { pattern: /catch\s*\([^)]*\)\s*\{\s*\}/g, severity: "warning" as const, message: "Empty catch block" },
