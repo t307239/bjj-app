@@ -10,6 +10,7 @@ import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type TrainingEntry } from "@/lib/trainingLogHelpers";
 import { clientLogger } from "@/lib/clientLogger";
 import { useLocale } from "@/lib/i18n";
+import { trackEvent } from "@/lib/analytics";
 
 type Props = {
   entry: TrainingEntry;
@@ -181,6 +182,7 @@ export default function ShareButton({ entry }: Props) {
           title: "BJJ Training Log",
           text: "Logged a training session on BJJ App 🥋 #BJJ #JiuJitsu #Training",
         });
+        trackEvent("training_shared", { method: "native_share" });
       } else {
         // Fallback: download
         const url = URL.createObjectURL(blob);
@@ -189,6 +191,7 @@ export default function ShareButton({ entry }: Props) {
         a.download = `bjj-training-${entry.date}.png`;
         a.click();
         URL.revokeObjectURL(url);
+        trackEvent("training_shared", { method: "download_png" });
       }
     } catch (err) {
       // User cancelled share — not an error

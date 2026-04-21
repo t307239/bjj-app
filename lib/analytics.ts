@@ -28,7 +28,9 @@ type KpiEvent =
   | "feature_discovered"       // funnel: user explored a new feature (props: feature)
   | "csv_export_used"          // engagement: data export
   | "gym_member_invited"        // B2B funnel: gym owner invited member
-  | "gym_joined";               // B2B funnel: student joined a gym
+  | "gym_joined"                // B2B funnel: student joined a gym
+  | "training_shared"           // viral: training card shared/downloaded
+  | "goal_set";                 // engagement: user set/updated a goal
 
 /**
  * Fire a KPI event. Safe to call on the server (no-op).

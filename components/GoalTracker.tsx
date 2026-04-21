@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
 import { useLocale } from "@/lib/i18n";
 import { hapticTap } from "@/lib/haptics";
+import { trackEvent } from "@/lib/analytics";
 import Skeleton from "@/components/ui/Skeleton";
 import { getLocalDateParts, getWeekStartDate, getMonthStartDate } from "@/lib/timezone";
 import {
@@ -225,6 +226,7 @@ export default function GoalTracker({ userId }: Props) {
 
     if (!error) {
       hapticTap();
+      trackEvent("goal_set", { type: editing, value: editValue });
       setData((prev) => ({
         ...prev,
         weeklyGoal: editing === "weekly" ? editValue : prev.weeklyGoal,

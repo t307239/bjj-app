@@ -200,6 +200,7 @@ export default function AccountSection({ userId, supabase }: Props) {
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               placeholder={t("profile.namePlaceholder")}
+              aria-label={t("profile.nameChangeLabel")}
               maxLength={50}
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-emerald-500"
             />

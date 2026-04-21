@@ -188,7 +188,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
       {/* Date */}
       <div className="mb-3">
         <div className="flex items-center justify-between mb-1">
-          <label className="text-zinc-400 text-xs">{t("training.date")}</label>
+          <label htmlFor="training-date" className="text-zinc-400 text-xs">{t("training.date")}</label>
           <div className="flex items-center gap-2">
             {form.date !== getYesterdayDateString() && (
               <button
@@ -211,6 +211,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
           </div>
         </div>
         <input
+          id="training-date"
           type="date"
           value={form.date}
           max={today}
