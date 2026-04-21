@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import { useLocale } from "@/lib/i18n";
 import {
   type Technique,
@@ -48,7 +48,7 @@ type Props = {
   userBelt?: string;
 };
 
-export default function TechniqueLogList({
+const TechniqueLogList = memo(function TechniqueLogList({
   techniques,
   initialLoading,
   filtered,
