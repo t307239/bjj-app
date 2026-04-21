@@ -25,23 +25,40 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: "BJJ App for Academies",
-  description: "Academy management software for BJJ coaches and gym owners",
-  url: "https://bjj-app.net/gym",
-};
-
 export default async function GymPage() {
   const locale = await detectServerLocale();
   const t = makeT(locale);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "BJJ App for Academies",
+    description: "Academy management software for BJJ coaches and gym owners",
+    url: "https://bjj-app.net/gym",
+  };
+
+  // §12 SEO: FAQPage JSON-LD for Google rich results
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      { "@type": "Question", name: t("gymLanding.faq1Q"), acceptedAnswer: { "@type": "Answer", text: t("gymLanding.faq1A") } },
+      { "@type": "Question", name: t("gymLanding.faq2Q"), acceptedAnswer: { "@type": "Answer", text: t("gymLanding.faq2A") } },
+      { "@type": "Question", name: t("gymLanding.faq3Q"), acceptedAnswer: { "@type": "Answer", text: t("gymLanding.faq3A") } },
+      { "@type": "Question", name: t("gymLanding.faq4Q"), acceptedAnswer: { "@type": "Answer", text: t("gymLanding.faq4A") } },
+      { "@type": "Question", name: t("gymLanding.faq5Q"), acceptedAnswer: { "@type": "Answer", text: t("gymLanding.faq5A") } },
+    ],
+  };
 
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <main className="min-h-[100dvh] flex flex-col bg-zinc-950">
         {/* Navigation */}

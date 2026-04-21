@@ -53,7 +53,7 @@ const jsonLd = {
     { "@type": "Offer", "name": "Pro Monthly", "price": "9.99", "priceCurrency": "USD", "billingIncrement": "P1M" },
     { "@type": "Offer", "name": "Pro Annual", "price": "79.99", "priceCurrency": "USD", "billingIncrement": "P1Y" },
   ],
-  "inLanguage": ["ja", "en"],
+  "inLanguage": ["ja", "en", "pt"],
   "audience": { "@type": "Audience", "audienceType": "Brazilian Jiu-Jitsu practitioners" },
 };
 
@@ -153,11 +153,28 @@ export default async function Home() {
   const locale = await detectServerLocale();
   const t = makeT(locale);
 
+  // §12 SEO: FAQPage JSON-LD for Google rich results
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      { "@type": "Question", name: t("landing.faq1Q"), acceptedAnswer: { "@type": "Answer", text: t("landing.faq1A") } },
+      { "@type": "Question", name: t("landing.faq2Q"), acceptedAnswer: { "@type": "Answer", text: t("landing.faq2A") } },
+      { "@type": "Question", name: t("landing.faq3Q"), acceptedAnswer: { "@type": "Answer", text: t("landing.faq3A") } },
+      { "@type": "Question", name: t("landing.faq4Q"), acceptedAnswer: { "@type": "Answer", text: t("landing.faq4A") } },
+      { "@type": "Question", name: t("landing.faq5Q"), acceptedAnswer: { "@type": "Answer", text: t("landing.faq5A") } },
+    ],
+  };
+
   return (
     <>
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
     />
     <main className="min-h-[100dvh] flex flex-col">
       {/* ナビゲーション — Fix 3: BETA badge + Get Started CTA */}
