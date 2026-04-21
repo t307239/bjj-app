@@ -903,7 +903,9 @@
     "filterByPeriod": "期間で絞り込み",
     "toggleBillingPeriod": "請求期間を切替",
     "shareTraining": "練習をシェア",
-    "date": "日付"
+    "date": "日付",
+    "copied": "コピー済み！",
+    "shareLink": "シェア"
   },
   "aiCoach": {
     "title": "AIコーチ",
@@ -1237,7 +1239,10 @@
     "qrPrint": "QRコードを印刷",
     "qrPrintTitle": "ジム招待QRコード",
     "qrAltText": "ジム招待リンクのQRコード",
-    "inactiveMembers7d": "7日間未練習"
+    "inactiveMembers7d": "7日間未練習",
+    "featureAttrition": "🔴 離脱アラート",
+    "featureCurriculum": "📚 カリキュラム配信",
+    "featureQr": "📱 QR招待"
   },
   "gymJoin": {
     "title": "{name} に参加する",

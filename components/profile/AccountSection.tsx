@@ -150,9 +150,10 @@ export default function AccountSection({ userId, supabase }: Props) {
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
               placeholder="new@example.com"
+              aria-describedby={emailError ? "email-error" : undefined}
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-emerald-500"
             />
-            {emailError && <p role="alert" className="text-red-400 text-xs">{emailError}</p>}
+            {emailError && <p id="email-error" role="alert" className="text-red-400 text-xs">{emailError}</p>}
             {emailMsg && <p aria-live="polite" className="text-emerald-400 text-xs">{emailMsg}</p>}
             <div className="flex gap-2">
               <button
@@ -320,10 +321,11 @@ export default function AccountSection({ userId, supabase }: Props) {
               onChange={(e) => setDeleteInput(e.target.value)}
               placeholder={t("profile.deleteTypePlaceholder")}
               aria-label={t("profile.ariaDeleteInput")}
+              aria-describedby={deleteError ? "delete-error" : undefined}
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-red-500 font-mono"
             />
           </div>
-          {deleteError && <p role="alert" className="text-red-400 text-xs">{deleteError}</p>}
+          {deleteError && <p id="delete-error" role="alert" className="text-red-400 text-xs">{deleteError}</p>}
           <div className="flex gap-3">
             <button
               type="button"

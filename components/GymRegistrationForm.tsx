@@ -69,6 +69,7 @@ export default function GymRegistrationForm({ userId }: Props) {
           className="w-full bg-zinc-800 border border-zinc-600 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 mb-4 focus:outline-none focus:border-white/50"
           maxLength={80}
           aria-label={t("gym.registerTitle")}
+          aria-describedby={error ? "gym-register-error" : undefined}
         />
 
         <button type="button"
@@ -80,11 +81,11 @@ export default function GymRegistrationForm({ userId }: Props) {
           {loading ? t("gym.creating") : t("gym.createBtn")}
         </button>
 
-        {error && <p role="alert" className="text-red-400 text-xs mt-3">{error}</p>}
+        {error && <p id="gym-register-error" role="alert" className="text-red-400 text-xs mt-3">{error}</p>}
 
         {/* Feature pills */}
         <div className="flex flex-wrap justify-center gap-2 mt-5">
-          {["🔴 Attrition alerts", "📚 Curriculum push", "📱 QR invite"].map((pill) => (
+          {[t("gym.featureAttrition"), t("gym.featureCurriculum"), t("gym.featureQr")].map((pill) => (
             <span key={pill} className="text-xs text-zinc-400 bg-zinc-800 border border-white/10 px-3 py-1 rounded-full">
               {pill}
             </span>

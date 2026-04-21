@@ -144,7 +144,7 @@ export default function MilestoneBadgeGrid({ totalCount }: Props) {
               onClick={handleShare}
               className="bg-violet-600 hover:bg-violet-500 active:scale-95 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-all"
             >
-              {copied ? "Copied!" : "Share 🔗"}
+              {copied ? t("common.copied") : t("common.shareLink")}
             </button>
             <button type="button"
               onClick={handleDismiss}

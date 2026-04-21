@@ -961,7 +961,9 @@
     "filterByPeriod": "Filtrar por período",
     "toggleBillingPeriod": "Alternar período de cobrança",
     "shareTraining": "Compartilhar treino",
-    "date": "Data"
+    "date": "Data",
+    "copied": "Copiado!",
+    "shareLink": "Compartilhar"
   },
   "aiCoach": {
     "title": "🤖 AI Micro-Coach",
@@ -1295,7 +1297,10 @@
     "qrPrint": "Imprimir QR Code",
     "qrPrintTitle": "QR Code de Convite da Academia",
     "qrAltText": "QR code do link de convite da academia",
-    "inactiveMembers7d": "7d Inativos"
+    "inactiveMembers7d": "7d Inativos",
+    "featureAttrition": "🔴 Alertas de evasão",
+    "featureCurriculum": "📚 Currículo push",
+    "featureQr": "📱 Convite QR"
   },
   "gymJoin": {
     "title": "Entrar em {name}",

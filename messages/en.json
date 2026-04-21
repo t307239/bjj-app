@@ -912,7 +912,9 @@
     "filterByPeriod": "Filter by period",
     "toggleBillingPeriod": "Toggle billing period",
     "shareTraining": "Share training",
-    "date": "Date"
+    "date": "Date",
+    "copied": "Copied!",
+    "shareLink": "Share"
   },
   "aiCoach": {
     "title": "AI Coach",
@@ -1245,7 +1247,10 @@
     "qrPrint": "Print QR Code",
     "qrPrintTitle": "Gym Invite QR Code",
     "qrAltText": "QR code for gym invite link",
-    "inactiveMembers7d": "7d Inactive"
+    "inactiveMembers7d": "7d Inactive",
+    "featureAttrition": "🔴 Attrition alerts",
+    "featureCurriculum": "📚 Curriculum push",
+    "featureQr": "📱 QR invite"
   },
   "gymJoin": {
     "title": "Join {name}",
