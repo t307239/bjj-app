@@ -99,8 +99,8 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
           }
           setMonthData(months);
         }
-      } catch {
-        // Network/auth error — show empty heatmap gracefully
+      } catch (err: unknown) {
+        clientLogger.error("trainingchart.load_failed", {}, err instanceof Error ? err : new Error(String(err)));
       } finally {
         setLoading(false);
       }

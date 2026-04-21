@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useLocale } from "@/lib/i18n";
+import { clientLogger } from "@/lib/clientLogger";
 
 type Props = {
   entryId: string;
@@ -26,7 +27,8 @@ export default function CopyLinkButton({ entryId }: Props) {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
-    } catch {
+    } catch (err: unknown) {
+      clientLogger.error("copylink.clipboard_failed", {}, err instanceof Error ? err : new Error(String(err)));
       // Fallback for iOS Safari / older browsers
       const input = document.createElement("input");
       input.value = url;

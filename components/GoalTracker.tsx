@@ -171,8 +171,8 @@ export default function GoalTracker({ userId }: Props) {
           }
           setMonthHistory(history);
         }
-      } catch {
-        // Network/auth error — show empty state gracefully
+      } catch (err: unknown) {
+        clientLogger.error("goaltracker.load_failed", {}, err instanceof Error ? err : new Error(String(err)));
       } finally {
         setLoading(false);
       }

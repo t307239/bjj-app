@@ -93,13 +93,13 @@ Total: 102
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BeltPromotionCelebration.tsx: L266: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L77: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L78: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L355: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L358: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L385: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L388: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L393: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L396: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/CompetitionSummaryCard.tsx: L302: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -169,7 +169,7 @@ Total: 102
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L333: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/WeightChart.tsx: L138: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/WeightChart.tsx: L139: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeightCutPlanner.tsx: L190: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換

@@ -94,8 +94,8 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
         setBodyStatusDates((bodyRes.data?.body_status_dates as Record<string, string>) ?? {});
         setBodyNotes((bodyRes.data?.body_notes as Record<string, string>) ?? {});
       }
-    } catch {
-      // Network/auth error — show free tier gracefully
+    } catch (err: unknown) {
+      clientLogger.error("bodymanagement.load_failed", {}, err instanceof Error ? err : new Error(String(err)));
     } finally {
       setLoading(false);
     }
@@ -120,8 +120,8 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
       setTargetSaved(true);
       setShowTargetForm(false);
       targetSavedTimerRef.current = setTimeout(() => setTargetSaved(false), 2000);
-    } catch {
-      // ignore
+    } catch (err: unknown) {
+      clientLogger.error("bodymanagement.set_target_failed", {}, err instanceof Error ? err : new Error(String(err)));
     } finally {
       setTargetSaving(false);
     }
@@ -139,8 +139,8 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
       setTargetWeightInput("");
       setTargetDateInput("");
       setShowTargetForm(false);
-    } catch {
-      // ignore
+    } catch (err: unknown) {
+      clientLogger.error("bodymanagement.clear_target_failed", {}, err instanceof Error ? err : new Error(String(err)));
     } finally {
       setTargetSaving(false);
     }

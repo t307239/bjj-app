@@ -281,8 +281,8 @@ export default function TrainingTypeChart({ userId, isPro = false }: Props) {
         if (logs) {
           setAllLogs(logs as { date: string; type: string; duration_min: number | null }[]);
         }
-      } catch {
-        // Network/auth error — show empty state gracefully
+      } catch (err: unknown) {
+        clientLogger.error("trainingtypechart.load_failed", {}, err instanceof Error ? err : new Error(String(err)));
       } finally {
         setLoading(false);
       }

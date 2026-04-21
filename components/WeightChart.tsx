@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { utcIsoToLocalDateString } from "@/lib/timezone";
 import { formatDateShort } from "@/lib/formatDate";
+import { clientLogger } from "@/lib/clientLogger";
 
 interface WeightPoint {
   isoDate: string;   // YYYY-MM-DD
@@ -109,8 +110,8 @@ export default function WeightChart({ userId, refreshKey, targetWeight, targetDa
       );
 
       setData(sorted);
-    } catch {
-      // Network/auth error — show empty state gracefully
+    } catch (err: unknown) {
+      clientLogger.error("weightchart.load_failed", {}, err instanceof Error ? err : new Error(String(err)));
       setData([]);
     } finally {
       setLoading(false);

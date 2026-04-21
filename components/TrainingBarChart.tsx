@@ -119,8 +119,8 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
           setData6(buildBuckets(6));
           setData12(buildBuckets(12));
         }
-      } catch {
-        // Network/auth error — show empty bars gracefully
+      } catch (err: unknown) {
+        clientLogger.error("trainingbarchart.load_failed", {}, err instanceof Error ? err : new Error(String(err)));
       } finally {
         setLoading(false);
       }

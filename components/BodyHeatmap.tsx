@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { useOnlineStatus } from "@/lib/useOnlineStatus";
+import { clientLogger } from "@/lib/clientLogger";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -158,7 +159,9 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates, initi
         // Keep max 50 entries
         if (history.length > 50) history.length = 50;
         localStorage.setItem(histKey, JSON.stringify(history));
-      } catch { /* ignore */ }
+      } catch (err: unknown) {
+        clientLogger.error("bodyheatmap.localstorage_failed", {}, err instanceof Error ? err : new Error(String(err)));
+      }
       const newStatusClean: BodyStatus = { ...status };
       delete newStatusClean[part];
       const newDatesClean = { ...statusDates };

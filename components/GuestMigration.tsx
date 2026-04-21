@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
+import { clientLogger } from "@/lib/clientLogger";
 
 const STORAGE_KEY = "bjj_guest_logs";
 
@@ -34,7 +35,8 @@ export default function GuestMigration({ userId }: { userId: string }) {
       let guestLogs: GuestLog[] = [];
       try {
         guestLogs = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      } catch {
+      } catch (err: unknown) {
+        clientLogger.error("guest_migration.parse_failed", {}, err instanceof Error ? err : new Error(String(err)));
         return;
       }
       if (guestLogs.length === 0) return;
