@@ -15,6 +15,7 @@
  */
 
 import { useEffect, useRef, useState, useCallback, useId } from "react";
+import { useLocale } from "@/lib/i18n";
 
 type Props = {
   isOpen: boolean;
@@ -26,6 +27,7 @@ type Props = {
 const CLOSE_THRESHOLD = 80; // px — swipe distance to trigger close
 
 export default function BottomSheet({ isOpen, onClose, title, children }: Props) {
+  const { t } = useLocale();
   const sheetRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -206,7 +208,7 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Props)
                 type="button"
                 onClick={onClose}
                 className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
-                aria-label="Close"
+                aria-label={t("common.close")}
               >
                 <svg
                   viewBox="0 0 24 24"

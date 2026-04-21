@@ -903,7 +903,16 @@
     "cookieAnalytics": "Analytics cookies",
     "cookieMarketing": "Marketing cookies",
     "cookieCustomize": "Customize",
-    "cookieSavePreferences": "Save preferences"
+    "cookieSavePreferences": "Save preferences",
+    "fitView": "Fit view",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "edit": "Edit",
+    "exportOptions": "Export options",
+    "filterByPeriod": "Filter by period",
+    "toggleBillingPeriod": "Toggle billing period",
+    "shareTraining": "Share training",
+    "date": "Date"
   },
   "aiCoach": {
     "title": "AI Coach",

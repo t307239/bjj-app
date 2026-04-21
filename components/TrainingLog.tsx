@@ -90,7 +90,7 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
         onClick={() => setOpen((v) => !v)}
         disabled={isAnyLoading}
         className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-900 border border-white/10 hover:border-white/20 px-3 py-2 rounded-lg transition-colors disabled:opacity-50"
-        aria-label="Export options"
+        aria-label={t("common.exportOptions")}
       >
         {isAnyLoading ? (
           <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
@@ -270,7 +270,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
                 value={periodFilter}
                 onChange={(e) => setPeriodFilter(e.target.value as "all" | "month" | "week")}
                 className="flex-shrink-0 bg-zinc-900 text-xs text-zinc-300 border border-white/10 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-white/30 cursor-pointer hover:border-white/20 transition-colors"
-                aria-label="Filter by period"
+                aria-label={t("common.filterByPeriod")}
               >
                 <option value="all">{t("training.periodAll")}</option>
                 <option value="month">{t("training.periodMonth")}</option>

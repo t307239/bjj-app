@@ -149,7 +149,7 @@ export default function MilestoneBadgeGrid({ totalCount }: Props) {
             <button type="button"
               onClick={handleDismiss}
               className="text-zinc-500 hover:text-zinc-300 text-xs px-2 transition-colors"
-              aria-label="Dismiss"
+              aria-label={t("common.dismiss")}
             >
               ✕
             </button>

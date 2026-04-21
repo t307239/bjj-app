@@ -952,7 +952,16 @@
     "cookieAnalytics": "Cookies de análise",
     "cookieMarketing": "Cookies de marketing",
     "cookieCustomize": "Personalizar",
-    "cookieSavePreferences": "Salvar preferências"
+    "cookieSavePreferences": "Salvar preferências",
+    "fitView": "Ajustar visualização",
+    "previousPage": "Página anterior",
+    "nextPage": "Próxima página",
+    "edit": "Editar",
+    "exportOptions": "Opções de exportação",
+    "filterByPeriod": "Filtrar por período",
+    "toggleBillingPeriod": "Alternar período de cobrança",
+    "shareTraining": "Compartilhar treino",
+    "date": "Data"
   },
   "aiCoach": {
     "title": "🤖 AI Micro-Coach",

@@ -63,7 +63,7 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
           </span>
           <button type="button"
             onClick={() => setIsAnnual((v) => !v)}
-            aria-label="Toggle billing period"
+            aria-label={t("common.toggleBillingPeriod")}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-zinc-900 ${
               isAnnual ? "bg-emerald-600" : "bg-zinc-600"
             }`}

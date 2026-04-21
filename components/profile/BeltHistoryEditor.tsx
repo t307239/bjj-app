@@ -201,7 +201,7 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
                 value={entry.promoted_at}
                 max={today}
                 onChange={(e) => handleDateChange(entry.belt, e.target.value)}
-                aria-label="Date"
+                aria-label={t("common.date")}
                 className="bg-zinc-800 text-zinc-300 text-xs rounded-lg px-2 py-1.5 border border-white/8 focus:outline-none focus:border-white/20 flex-1 min-w-0"
               />
               <button type="button"

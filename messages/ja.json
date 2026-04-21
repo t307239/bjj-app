@@ -894,7 +894,16 @@
     "cookieAnalytics": "分析Cookie",
     "cookieMarketing": "マーケティングCookie",
     "cookieCustomize": "カスタマイズ",
-    "cookieSavePreferences": "設定を保存"
+    "cookieSavePreferences": "設定を保存",
+    "fitView": "全体表示",
+    "previousPage": "前のページ",
+    "nextPage": "次のページ",
+    "edit": "編集",
+    "exportOptions": "エクスポート",
+    "filterByPeriod": "期間で絞り込み",
+    "toggleBillingPeriod": "請求期間を切替",
+    "shareTraining": "練習をシェア",
+    "date": "日付"
   },
   "aiCoach": {
     "title": "AIコーチ",

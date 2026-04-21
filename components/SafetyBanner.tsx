@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { trackEvent } from "@/lib/analytics";
+import { useLocale } from "@/lib/i18n";
 
 const STORAGE_KEY = "bjj_safety_banner_dismissed";
 
@@ -25,6 +26,7 @@ export default function SafetyBanner({
   wikiHref,
   wikiLabel = "Learn more →",
 }: SafetyBannerProps) {
+  const { t } = useLocale();
   // null = not yet checked localStorage (hydration phase — render nothing to avoid flash)
   const [dismissed, setDismissed] = useState<boolean | null>(null);
 
@@ -55,7 +57,7 @@ export default function SafetyBanner({
       <button type="button"
         onClick={handleDismiss}
         className="absolute top-2 right-2 p-1 rounded-md text-amber-400/60 hover:text-amber-300 hover:bg-amber-900/30 transition-colors"
-        aria-label="閉じる"
+        aria-label={t("common.close")}
       >
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

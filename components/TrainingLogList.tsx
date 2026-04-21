@@ -545,7 +545,7 @@ const TrainingLogList = memo(function TrainingLogList({
                 onClick={() => onPageChange(page - 1)}
                 disabled={page <= 1 || pageLoading}
                 className="flex items-center gap-1 text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors active:scale-95"
-                aria-label="Previous page"
+                aria-label={t("common.previousPage")}
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -568,7 +568,7 @@ const TrainingLogList = memo(function TrainingLogList({
                 onClick={() => onPageChange(page + 1)}
                 disabled={page >= totalPages || pageLoading}
                 className="flex items-center gap-1 text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors active:scale-95"
-                aria-label="Next page"
+                aria-label={t("common.nextPage")}
               >
                 {t("training.next")}
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

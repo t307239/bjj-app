@@ -404,7 +404,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
                     <button type="button"
                       onClick={() => startEdit(goal)}
                       className="text-zinc-600 hover:text-zinc-300 transition-colors p-1"
-                      aria-label="Edit"
+                      aria-label={t("common.edit")}
                     >
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -413,7 +413,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
                     <button type="button"
                       onClick={() => handleDelete(goal.id)}
                       className="text-zinc-600 hover:text-red-400 transition-colors p-1"
-                      aria-label="Delete"
+                      aria-label={t("common.delete")}
                     >
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
