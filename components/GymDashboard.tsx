@@ -221,7 +221,12 @@ function FreePlanBanner({
         disabled={upgrading}
         className="mt-3 w-full bg-amber-500 hover:bg-amber-400 active:scale-95 disabled:opacity-60 text-black text-sm font-semibold py-2.5 rounded-lg transition-all"
       >
-        {upgrading ? "..." : t("gym.freePlanBannerCta")}
+        {upgrading ? (
+          <span className="flex items-center justify-center gap-2">
+            <span className="inline-block w-4 h-4 border-2 border-black/20 border-t-black/60 rounded-full animate-spin" />
+            {t("common.loading")}
+          </span>
+        ) : t("gym.freePlanBannerCta")}
       </button>
     </div>
   );
@@ -254,7 +259,12 @@ function ProPaywallBanner({
           disabled={upgrading}
           className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-60 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
         >
-          {upgrading ? "..." : t("gym.upgradeBtn")}
+          {upgrading ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="inline-block w-3 h-3 border-2 border-black/20 border-t-black/60 rounded-full animate-spin" />
+              {t("common.loading")}
+            </span>
+          ) : t("gym.upgradeBtn")}
         </button>
       </div>
     </div>

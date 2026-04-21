@@ -246,9 +246,15 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
           <button type="button"
             onClick={handleAdd}
             disabled={!newBelt || !newDate || saving}
+            aria-busy={saving}
             className="w-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 text-xs font-semibold py-2 rounded-lg border border-emerald-400/20 transition-all disabled:opacity-30"
           >
-            {saving ? "..." : t("beltProgress.savePromotion")}
+            {saving ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="inline-block w-3 h-3 border-2 border-emerald-400/20 border-t-emerald-400/60 rounded-full animate-spin" />
+                {t("common.loading")}
+              </span>
+            ) : t("beltProgress.savePromotion")}
           </button>
         </div>
       )}

@@ -506,4 +506,6 @@ aria-hidden="true"                             className="w-4 h-4"
       )}
     </div>
   );
-}
+});
+
+export default TechniqueLogList;

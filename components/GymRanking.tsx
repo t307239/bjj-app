@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import Skeleton from "@/components/ui/Skeleton";
@@ -198,11 +198,14 @@ export default function GymRanking({ userId, gymId }: Props) {
     );
   }
 
-  // Sort by active mode
-  const sorted = [...rows].sort((a, b) =>
-    mode === "sessions"
-      ? b.total_sessions - a.total_sessions
-      : b.current_streak - a.current_streak
+  // Sort by active mode (memoized to avoid re-sort on unrelated state changes)
+  const sorted = useMemo(
+    () => [...rows].sort((a, b) =>
+      mode === "sessions"
+        ? b.total_sessions - a.total_sessions
+        : b.current_streak - a.current_streak
+    ),
+    [rows, mode],
   );
 
   const myRankIdx = sorted.findIndex((r) => r.isMe);

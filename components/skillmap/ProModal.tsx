@@ -110,7 +110,12 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
             disabled={isLoading}
             className="block w-full bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-60 text-black font-semibold py-3 rounded-xl mb-3 transition-all"
           >
-            {isLoading ? "…" : t("skillmap.upgradeBtn")}
+            {isLoading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="inline-block w-4 h-4 border-2 border-black/20 border-t-black/60 rounded-full animate-spin" />
+                {t("common.loading")}
+              </span>
+            ) : t("skillmap.upgradeBtn")}
           </button>
         ) : (
           <span className="block w-full bg-zinc-700 text-zinc-400 font-semibold py-3 rounded-xl mb-3 cursor-not-allowed">
