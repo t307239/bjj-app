@@ -8,6 +8,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://bjj-app.net/terms",
   },
+  openGraph: {
+    type: "website",
+    url: "https://bjj-app.net/terms",
+    siteName: "BJJ App",
+    title: "Terms of Service | BJJ App",
+    description: "Terms of Service for BJJ App — Brazilian Jiu-Jitsu training tracker.",
+  },
 };
 
 const TOC = [

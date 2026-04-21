@@ -116,6 +116,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: count > 0 ? `Dashboard — ${count} sessions` : "Dashboard",
     openGraph: {
+      type: "website",
+      url: "https://bjj-app.net/dashboard",
+      siteName: "BJJ App",
       title,
       description,
       images: [

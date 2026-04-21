@@ -57,6 +57,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://bjj-app.net/records",
   },
+  openGraph: {
+    type: "website",
+    url: "https://bjj-app.net/records",
+    siteName: "BJJ App",
+    title: "Records | BJJ App",
+    description: "View your BJJ training records, technique progress, competition results, and personal bests.",
+  },
 };
 
 export default async function RecordsPage() {

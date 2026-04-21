@@ -46,6 +46,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Technique Journal",
     openGraph: {
+      type: "website",
+      url: "https://bjj-app.net/techniques",
+      siteName: "BJJ App",
       title,
       description,
       images: [{ url: ogImage, width: 1200, height: 630, alt: "BJJ Technique Journal" }],

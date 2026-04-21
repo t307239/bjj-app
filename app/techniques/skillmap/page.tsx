@@ -21,6 +21,16 @@ export const metadata: Metadata = {
   title: "Skill Map — BJJ App",
   description:
     "Visualize your BJJ technique connections as an interactive skill tree. Explore pathways from each position.",
+  alternates: {
+    canonical: "https://bjj-app.net/techniques/skillmap",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://bjj-app.net/techniques/skillmap",
+    siteName: "BJJ App",
+    title: "Skill Map — BJJ App",
+    description: "Visualize your BJJ technique connections as an interactive skill tree. Explore pathways from each position.",
+  },
 };
 
 export default async function SkillMapPage() {

@@ -15,6 +15,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://bjj-app.net/settings",
   },
+  openGraph: {
+    type: "website",
+    url: "https://bjj-app.net/settings",
+    siteName: "BJJ App",
+    title: "Settings | BJJ App",
+    description: "Manage your BJJ App preferences, notifications, theme, and data settings.",
+  },
 };
 
 export default async function SettingsPage() {

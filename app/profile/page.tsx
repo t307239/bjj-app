@@ -76,6 +76,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Profile",
     openGraph: {
+      type: "profile",
+      url: "https://bjj-app.net/profile",
+      siteName: "BJJ App",
       title,
       description,
       images: [{ url: ogImage, width: 1200, height: 630, alt: "BJJ App Profile" }],

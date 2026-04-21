@@ -8,6 +8,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://bjj-app.net/privacy",
   },
+  openGraph: {
+    type: "website",
+    url: "https://bjj-app.net/privacy",
+    siteName: "BJJ App",
+    title: "Privacy Policy | BJJ App",
+    description: "Privacy Policy for BJJ App — how we collect, use, and protect your data.",
+  },
 };
 
 const TOC = [

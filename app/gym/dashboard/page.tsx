@@ -13,6 +13,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://bjj-app.net/gym/dashboard",
   },
+  openGraph: {
+    type: "website",
+    url: "https://bjj-app.net/gym/dashboard",
+    siteName: "BJJ App",
+    title: "Gym Dashboard | BJJ App",
+    description: "Manage your BJJ gym — track member activity and reduce churn.",
+  },
 };
 
 export default async function GymDashboardPage({

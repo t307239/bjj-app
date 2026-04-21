@@ -10,6 +10,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://bjj-app.net/help",
   },
+  openGraph: {
+    type: "website",
+    url: "https://bjj-app.net/help",
+    siteName: "BJJ App",
+    title: "Help & FAQ | BJJ App",
+    description: "Frequently asked questions about BJJ App — training logs, technique tracking, streaks, gym features, and more.",
+  },
 };
 
 type FaqItem = { q: string; a: string };
