@@ -55,7 +55,7 @@ export default function DPAPage() {
           {/* §3 */}
           <Section title="3. Sub-processors">
             <p>We use the following sub-processors:</p>
-            <table className="w-full mt-2 text-xs">
+            <table className="w-full mt-2 text-xs" aria-label="Sub-processors">
               <thead>
                 <tr className="border-b border-white/10 text-zinc-400">
                   <th className="text-left py-2">Service</th>

@@ -970,7 +970,8 @@
     "expandedView": "Vista expandida",
     "youtubePlaceholder": "https://youtu.be/...",
     "sortBy": "Ordenar por",
-    "cookieSettings": "Configurações de Cookies"
+    "cookieSettings": "Configurações de Cookies",
+    "ageVerification": "Verificação de idade"
   },
   "aiCoach": {
     "title": "🤖 AI Micro-Coach",
@@ -1311,7 +1312,8 @@
     "featureAttrition": "🔴 Alertas de evasão",
     "featureCurriculum": "📚 Currículo push",
     "featureQr": "📱 Convite QR",
-    "waitlistInvalidEmail": "Por favor, insira um endereço de e-mail válido"
+    "waitlistInvalidEmail": "Por favor, insira um endereço de e-mail válido",
+    "csvBulkTitle": "Convite em massa por CSV"
   },
   "gymJoin": {
     "title": "Entrar em {name}",
@@ -2035,5 +2037,8 @@
     "shareTitle": "Marco do BJJ",
     "shareText": "{value} — {label} no BJJ App!",
     "buttonTitle": "Compartilhar marco"
+  },
+  "technique": {
+    "dangerConfirmTitle": "Aviso de segurança"
   }
 }

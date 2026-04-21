@@ -466,7 +466,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
 
       {/* Danger technique confirmation modal for white/blue belts */}
       {dangerConfirmPending && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" onClick={() => setDangerConfirmPending(false)}>
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label={t("technique.dangerConfirmTitle")} onClick={() => setDangerConfirmPending(false)}>
           <div className="bg-zinc-900 border border-amber-500/40 rounded-2xl p-5 max-w-sm w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-start gap-3 mb-4">
               <span className="text-2xl mt-0.5 flex-shrink-0">⚠️</span>

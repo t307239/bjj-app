@@ -921,7 +921,8 @@
     "expandedView": "Expanded view",
     "youtubePlaceholder": "https://youtu.be/...",
     "sortBy": "Sort by",
-    "cookieSettings": "Cookie Settings"
+    "cookieSettings": "Cookie Settings",
+    "ageVerification": "Age verification"
   },
   "aiCoach": {
     "title": "AI Coach",
@@ -1261,7 +1262,8 @@
     "featureAttrition": "🔴 Attrition alerts",
     "featureCurriculum": "📚 Curriculum push",
     "featureQr": "📱 QR invite",
-    "waitlistInvalidEmail": "Please enter a valid email address"
+    "waitlistInvalidEmail": "Please enter a valid email address",
+    "csvBulkTitle": "Bulk invite via CSV"
   },
   "gymJoin": {
     "title": "Join {name}",
@@ -1974,5 +1976,8 @@
     "shareTitle": "BJJ Milestone",
     "shareText": "{value} — {label} on BJJ App!",
     "buttonTitle": "Share milestone"
+  },
+  "technique": {
+    "dangerConfirmTitle": "Safety warning"
   }
 }

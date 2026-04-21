@@ -912,7 +912,8 @@
     "expandedView": "拡大表示",
     "youtubePlaceholder": "https://youtu.be/...",
     "sortBy": "並び替え",
-    "cookieSettings": "Cookie設定"
+    "cookieSettings": "Cookie設定",
+    "ageVerification": "年齢確認"
   },
   "aiCoach": {
     "title": "AIコーチ",
@@ -1253,7 +1254,8 @@
     "featureAttrition": "🔴 離脱アラート",
     "featureCurriculum": "📚 カリキュラム配信",
     "featureQr": "📱 QR招待",
-    "waitlistInvalidEmail": "有効なメールアドレスを入力してください"
+    "waitlistInvalidEmail": "有効なメールアドレスを入力してください",
+    "csvBulkTitle": "CSV一括招待"
   },
   "gymJoin": {
     "title": "{name} に参加する",
@@ -1976,5 +1978,8 @@
     "shareTitle": "BJJマイルストーン",
     "shareText": "{value} — {label} BJJ Appで達成!",
     "buttonTitle": "マイルストーンをシェア"
+  },
+  "technique": {
+    "dangerConfirmTitle": "安全確認"
   }
 }

@@ -207,7 +207,7 @@ export default function PrivacyPage() {
               periods by data category:
             </p>
             <div className="overflow-x-auto mb-3">
-              <table className="w-full text-xs border-collapse">
+              <table className="w-full text-xs border-collapse" aria-label="Data retention periods">
                 <thead>
                   <tr className="border-b border-white/10 text-left">
                     <th className="py-2 pr-4 text-zinc-300 font-semibold">Data Category</th>

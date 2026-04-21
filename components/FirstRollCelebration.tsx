@@ -119,6 +119,7 @@ export default function FirstRollCelebration({ onDismiss }: Props) {
         <div
           role="dialog"
           aria-modal="true"
+          aria-label={t("onboarding.firstRollTitle")}
           className="bg-zinc-900 border border-[#10B981]/40 rounded-t-2xl sm:rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl shadow-[#10B981]/10 max-h-[85vh] overflow-y-auto"
         >
           <div className="text-5xl mb-4">🥋</div>
