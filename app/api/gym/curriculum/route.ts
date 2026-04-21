@@ -4,6 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { logger } from "@/lib/logger";
+import { createRateLimiter } from "@/lib/rateLimit";
+
+const curriculumLimiter = createRateLimiter({ windowMs: 60 * 60 * 1000, max: 10 });
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +35,11 @@ const CurriculumBodySchema = z.object({
  * Requires: caller must be gym owner (is_gym_owner = true) AND gym.is_active = true
  */
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (!curriculumLimiter.check(ip)) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

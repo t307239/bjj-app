@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import IABSafeLink from "@/components/IABSafeLink";
+import CookieSettingsButton from "@/components/CookieSettingsButton";
 
 const PricingSection = dynamic(() => import("@/components/PricingSection"), {
   loading: () => <div className="px-4 py-16 bg-zinc-900/50 animate-pulse" style={{ minHeight: 400 }} />,
@@ -747,6 +748,7 @@ export default async function Home() {
           <a href="/privacy" className="hover:text-zinc-400 transition-colors">{t("landing.footerPrivacy")}</a>
           <a href="/legal/tokushoho" className="hover:text-zinc-400 transition-colors">{t("landing.footerTokushoho")}</a>
           <a href="/legal/dpa" className="hover:text-zinc-400 transition-colors">DPA</a>
+          <CookieSettingsButton />
         </div>
       </footer>
     </main>

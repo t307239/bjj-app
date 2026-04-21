@@ -920,7 +920,8 @@
     "closeImageViewer": "Close image viewer",
     "expandedView": "Expanded view",
     "youtubePlaceholder": "https://youtu.be/...",
-    "sortBy": "Sort by"
+    "sortBy": "Sort by",
+    "cookieSettings": "Cookie Settings"
   },
   "aiCoach": {
     "title": "AI Coach",

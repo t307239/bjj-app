@@ -39,6 +39,14 @@ export default function CookieConsent() {
     } catch {
       // localStorage unavailable — don't show
     }
+
+    // Allow re-opening from footer "Cookie Settings" link
+    function handleReopen() {
+      setVisible(true);
+      setShowDetails(true);
+    }
+    window.addEventListener("bjj:open-cookie-settings", handleReopen);
+    return () => window.removeEventListener("bjj:open-cookie-settings", handleReopen);
   }, []);
 
   function save(prefs: CookiePreferences) {

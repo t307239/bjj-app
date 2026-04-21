@@ -911,7 +911,8 @@
     "closeImageViewer": "画像ビューアーを閉じる",
     "expandedView": "拡大表示",
     "youtubePlaceholder": "https://youtu.be/...",
-    "sortBy": "並び替え"
+    "sortBy": "並び替え",
+    "cookieSettings": "Cookie設定"
   },
   "aiCoach": {
     "title": "AIコーチ",
