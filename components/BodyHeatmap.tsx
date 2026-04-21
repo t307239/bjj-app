@@ -362,6 +362,7 @@ aria-hidden="true"           viewBox="0 0 120 265"
             value={notes[activePart] ?? ""}
             onChange={(e) => saveNote(activePart, e.target.value)}
             placeholder={t("body.notePlaceholder")}
+            aria-label={t("body.notePlaceholder")}
             maxLength={100}
             className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white/20 transition-colors"
           />

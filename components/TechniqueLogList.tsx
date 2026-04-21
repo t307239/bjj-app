@@ -129,6 +129,7 @@ export default function TechniqueLogList({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={t("techniques.search")}
+            aria-label={t("techniques.search")}
             className="w-full bg-zinc-900/50 text-zinc-200 rounded-lg px-4 py-2.5 text-sm border border-zinc-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 pl-9 placeholder:text-zinc-600"
           />
           <svg

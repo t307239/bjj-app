@@ -57,7 +57,7 @@ export default function MemberCard({
   return (
     <div className="flex items-center gap-3 bg-zinc-900 border border-white/10 rounded-xl px-4 py-3">
       {/* Risk indicator */}
-      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${riskDot[risk]}`} />
+      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${riskDot[risk]}`} aria-label={risk === "green" ? t("gym.trainingWell") : t("gym.atRisk")} />
 
       {/* Belt badge */}
       <span

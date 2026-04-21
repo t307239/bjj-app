@@ -273,6 +273,7 @@ export default function GymRanking({ userId, gymId }: Props) {
               <div
                 className={`w-3 h-3 rounded-full flex-shrink-0 ${beltDot(row.belt)}`}
                 title={row.belt}
+                aria-label={row.belt}
               />
               <span
                 className={`flex-1 text-xs ${
@@ -297,6 +298,7 @@ export default function GymRanking({ userId, gymId }: Props) {
               </span>
               <div
                 className={`w-3 h-3 rounded-full flex-shrink-0 ${beltDot(sorted[myRankIdx].belt)}`}
+                aria-label={sorted[myRankIdx].belt}
               />
               <span className="flex-1 text-xs text-white font-semibold">
                 {t("gym.rankingMe")}
