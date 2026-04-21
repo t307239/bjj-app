@@ -41,7 +41,7 @@ const ClickableDiv = forwardRef<HTMLDivElement, Props>(
         onClick={disabled ? undefined : onClick}
         onKeyDown={handleKeyDown}
         aria-disabled={disabled || undefined}
-        className={className}
+        className={`outline-none focus-visible:ring-2 focus-visible:ring-[#10B981]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-zinc-950 rounded-lg${className ? ` ${className}` : ""}`}
         {...rest}
       >
         {children}

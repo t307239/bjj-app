@@ -11,6 +11,7 @@ const SettingsSection = dynamic(() => import("@/components/profile/SettingsSecti
 
 export const metadata: Metadata = {
   title: "Settings | BJJ App",
+  description: "Manage your BJJ App preferences, notifications, theme, and data settings.",
   alternates: {
     canonical: "https://bjj-app.net/settings",
   },
