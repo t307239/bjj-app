@@ -172,7 +172,7 @@ async function getWikiPage(lang: string, slug: string) {
 
   const { data, error } = await supabase
     .from("wiki_translations")
-    .select("title, description, content_html, content_type, updated_at")
+    .select("title, description, content_html, content_type, created_at, updated_at")
     .eq("page_id", pageData.id)
     .eq("language_code", lang)
     .single();
@@ -651,7 +651,7 @@ export default async function WikiPage({
     ],
   };
 
-  // #19: Article JSON-LD
+  // #19: Article JSON-LD (enhanced: datePublished/dateModified/author for §12 SEO)
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -659,10 +659,21 @@ export default async function WikiPage({
     description: page.description ?? "",
     url: `https://bjj-app.net/wiki/${lang}/${slug}`,
     inLanguage: lang,
+    ...(page.created_at && { datePublished: page.created_at }),
+    ...(page.updated_at && { dateModified: page.updated_at }),
+    author: {
+      "@type": "Organization",
+      name: "BJJ App",
+      url: "https://bjj-app.net",
+    },
     publisher: {
       "@type": "Organization",
       name: "BJJ Wiki",
       url: "https://bjj-app.net",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://bjj-app.net/icon-512x512.png",
+      },
     },
   };
 
