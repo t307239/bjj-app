@@ -80,12 +80,15 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
       const pending = pendingTechDeleteRef.current;
       if (pending) {
         clearTimeout(pending.timerId);
-        void supabaseRef.current
-          .from("techniques")
-          .delete()
-          .eq("id", pending.id)
-          .eq("user_id", userId)
-          .then(({ error }) => { if (error) clientLogger.error("techniquelog.cleanup_delete", {}, error); });
+        void Promise.resolve(
+          supabaseRef.current
+            .from("techniques")
+            .delete()
+            .eq("id", pending.id)
+            .eq("user_id", userId)
+        )
+          .then(({ error }) => { if (error) clientLogger.error("techniquelog.cleanup_delete", {}, error); })
+          .catch((err: unknown) => clientLogger.error("techniquelog.cleanup_delete_reject", {}, err instanceof Error ? err : new Error(String(err))));
       }
     };
   }, [userId]);
@@ -253,12 +256,15 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
     // Flush any pending delete immediately
     if (pendingTechDelete) {
       clearTimeout(pendingTechDelete.timerId);
-      void supabase
-        .from("techniques")
-        .delete()
-        .eq("id", pendingTechDelete.id)
-        .eq("user_id", userId)
-        .then(({ error }) => { if (error) clientLogger.error("techniquelog.flush_delete", {}, error); });
+      void Promise.resolve(
+        supabase
+          .from("techniques")
+          .delete()
+          .eq("id", pendingTechDelete.id)
+          .eq("user_id", userId)
+      )
+        .then(({ error }) => { if (error) clientLogger.error("techniquelog.flush_delete", {}, error); })
+        .catch((err: unknown) => clientLogger.error("techniquelog.flush_delete_reject", {}, err instanceof Error ? err : new Error(String(err))));
     }
 
     // Optimistic: remove from state immediately
