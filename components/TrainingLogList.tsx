@@ -254,6 +254,7 @@ const TrainingLogList = memo(function TrainingLogList({
                 <select
                   value={editForm.type}
                   onChange={(e) => setEditForm({ ...editForm, type: e.target.value })}
+                  aria-label={t("training.type")}
                   className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30 mb-2"
                 >
                   {TRAINING_TYPES.map((t) => (
@@ -269,6 +270,7 @@ const TrainingLogList = memo(function TrainingLogList({
                       <select
                         value={editCompForm.result}
                         onChange={(e) => setEditCompForm({ ...editCompForm, result: e.target.value })}
+                        aria-label={t("competition.result")}
                         className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-white/30"
                       >
                         <option value="win">{t("csv.win")} 🏆</option>
@@ -305,6 +307,7 @@ const TrainingLogList = memo(function TrainingLogList({
                         onChange={(e) =>
                           setEditCompForm({ ...editCompForm, opponent_rank: e.target.value })
                         }
+                        aria-label={t("competition.opponentBelt")}
                         className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-white/30"
                       >
                         {BELT_RANKS.map((b) => (
@@ -316,6 +319,7 @@ const TrainingLogList = memo(function TrainingLogList({
                       <select
                         value={editCompForm.gi_type}
                         onChange={(e) => setEditCompForm({ ...editCompForm, gi_type: e.target.value })}
+                        aria-label={t("competition.giType")}
                         className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-white/30"
                       >
                         <option value="gi">{t("training.gi")}</option>

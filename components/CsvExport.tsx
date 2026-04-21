@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { decodeCompNotes } from "@/lib/trainingLogHelpers";
@@ -49,6 +49,11 @@ export default function CsvExport({ userId }: Props) {
   const [loadingPdf, setLoadingPdf] = useState(false);
   const supabaseRef = useRef(createClient());
   const supabase = supabaseRef.current;
+  const revokeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => {
+    return () => { if (revokeTimerRef.current) clearTimeout(revokeTimerRef.current); };
+  }, []);
 
   const handleExport = async () => {
     setLoadingLogs(true);
@@ -317,9 +322,7 @@ export default function CsvExport({ userId }: Props) {
       const url = URL.createObjectURL(blob);
       window.open(url, "_blank");
       // Clean up after a delay to allow the new tab to load
-      const tid = setTimeout(() => URL.revokeObjectURL(url), 60000);
-      // No cleanup needed for this component-level timeout — it's a one-shot fire-and-forget
-      void tid;
+      revokeTimerRef.current = setTimeout(() => URL.revokeObjectURL(url), 60000);
     } finally {
       setLoadingPdf(false);
     }

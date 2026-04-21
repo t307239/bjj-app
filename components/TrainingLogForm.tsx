@@ -176,6 +176,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
     >
     <form
       onSubmit={onSubmit}
+      noValidate
       className=""
     >
       {formError && (
@@ -282,6 +283,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
               <select
                 value={compForm.result}
                 onChange={(e) => setCompForm({ ...compForm, result: e.target.value })}
+                aria-label={t("competition.result")}
                 className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-zinc-700 focus:outline-none focus:border-white/30"
               >
                 <option value="win">{t("csv.win")} 🏆</option>
@@ -328,6 +330,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
               <select
                 value={compForm.opponent_rank}
                 onChange={(e) => setCompForm({ ...compForm, opponent_rank: e.target.value })}
+                aria-label={t("competition.opponentBelt")}
                 className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-zinc-700 focus:outline-none focus:border-white/30"
               >
                 {BELT_RANKS.map((b) => (
@@ -340,6 +343,7 @@ const TrainingLogForm = memo(function TrainingLogForm({
               <select
                 value={compForm.gi_type}
                 onChange={(e) => setCompForm({ ...compForm, gi_type: e.target.value })}
+                aria-label={t("competition.giType")}
                 className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-zinc-700 focus:outline-none focus:border-white/30"
               >
                 <option value="gi">{t("training.gi")}</option>

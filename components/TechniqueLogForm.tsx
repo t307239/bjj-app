@@ -70,6 +70,7 @@ export default function TechniqueLogForm({
       >
       <form
         onSubmit={onSubmit}
+        noValidate
         className=""
       >
         {formError && (
@@ -106,6 +107,7 @@ export default function TechniqueLogForm({
             <select
               value={form.category}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
+              aria-label={t("techniques.category")}
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
             >
               {CATEGORY_VALUES.map((catVal) => (
@@ -124,6 +126,7 @@ export default function TechniqueLogForm({
               onChange={(e) =>
                 setForm({ ...form, mastery_level: Number(e.target.value) })
               }
+              aria-label={t("techniques.mastery")}
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
             >
               {[1, 2, 3, 4, 5].map((level) => (
@@ -218,6 +221,7 @@ export default function TechniqueLogForm({
           <select
             value={bulkCategory}
             onChange={(e) => setBulkCategory(e.target.value)}
+            aria-label={t("techniques.categoryMultiple")}
             className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
           >
             {CATEGORY_VALUES.map((catVal) => (
@@ -234,6 +238,7 @@ export default function TechniqueLogForm({
           <select
             value={bulkMastery}
             onChange={(e) => setBulkMastery(Number(e.target.value))}
+            aria-label={t("techniques.masteryMultiple")}
             className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
           >
             {[1, 2, 3, 4, 5].map((level) => (

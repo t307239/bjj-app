@@ -35,7 +35,7 @@ export default function ProStatusBanner({ subscriptionStatus }: ProStatusBannerP
             {t("pro.pastDueDesc")}
           </p>
         </div>
-        <form action="/api/stripe/portal" method="POST" className="flex-shrink-0" onSubmit={() => setPortalLoading(true)}>
+        <form action="/api/stripe/portal" method="POST" noValidate className="flex-shrink-0" onSubmit={() => setPortalLoading(true)}>
           <button
             type="submit"
             disabled={portalLoading}

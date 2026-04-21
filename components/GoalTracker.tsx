@@ -182,13 +182,14 @@ export default function GoalTracker({ userId }: Props) {
 
   // Onboarding: when navigated to via #goal-tracker hash, auto-expand + open weekly goal editor
   useEffect(() => {
+    let scrollTimer: ReturnType<typeof setTimeout> | undefined;
     const handleGoalHash = () => {
       if (window.location.hash === "#goal-tracker") {
         setIsOpen(true);
         setEditValue(0);
         setEditing("weekly");
         // Smooth scroll to self (hash handles it, but ensure visibility)
-        setTimeout(() => {
+        scrollTimer = setTimeout(() => {
           document.getElementById("goal-tracker")?.scrollIntoView({ behavior: "smooth", block: "start" });
         }, 50);
         // Clear hash so repeat clicks work
@@ -197,7 +198,10 @@ export default function GoalTracker({ userId }: Props) {
     };
     handleGoalHash(); // check on mount (page load with hash)
     window.addEventListener("hashchange", handleGoalHash);
-    return () => window.removeEventListener("hashchange", handleGoalHash);
+    return () => {
+      window.removeEventListener("hashchange", handleGoalHash);
+      if (scrollTimer) clearTimeout(scrollTimer);
+    };
   }, []);
 
   const startEdit = (type: "weekly" | "monthly" | "technique") => {

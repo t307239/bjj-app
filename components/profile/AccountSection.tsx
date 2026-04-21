@@ -236,7 +236,7 @@ export default function AccountSection({ userId, supabase }: Props) {
             💳 {t("profile.manageSub")}
           </a>
         ) : (
-          <form method="POST" action="/api/stripe/portal" onSubmit={() => setPortalLoading(true)}>
+          <form method="POST" action="/api/stripe/portal" noValidate onSubmit={() => setPortalLoading(true)}>
             <button
               type="submit"
               disabled={portalLoading}

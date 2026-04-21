@@ -337,6 +337,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
           <select
             value={form.timezone || "UTC"}
             onChange={(e) => setForm({ ...form, timezone: e.target.value })}
+            aria-label={t("profile.timezone")}
             className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30"
           >
             {TIMEZONE_OPTIONS.map((tz) => (
