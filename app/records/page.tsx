@@ -49,6 +49,7 @@ const CompetitionSummaryCard = dynamic(() => import("@/components/CompetitionSum
 
 export const metadata: Metadata = {
   title: "Records | BJJ App",
+  description: "View your BJJ training records, technique progress, competition results, and personal bests.",
   alternates: {
     canonical: "https://bjj-app.net/records",
   },
