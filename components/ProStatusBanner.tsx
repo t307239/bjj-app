@@ -41,7 +41,7 @@ export default function ProStatusBanner({ subscriptionStatus }: ProStatusBannerP
             disabled={portalLoading}
             className="rounded-lg bg-red-500 hover:bg-red-400 px-3 py-1.5 text-xs font-bold text-white transition-colors whitespace-nowrap disabled:opacity-50 disabled:pointer-events-none"
           >
-            {portalLoading ? "…" : t("pro.updateCard")}
+            {portalLoading ? t("common.loading") : t("pro.updateCard")}
           </button>
         </form>
       </div>

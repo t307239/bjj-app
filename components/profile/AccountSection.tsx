@@ -165,7 +165,7 @@ export default function AccountSection({ userId, supabase }: Props) {
                 disabled={emailSaving || !newEmail}
                 className="text-xs bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white font-bold px-4 py-2 min-h-[36px] rounded-lg transition-colors"
               >
-                {emailSaving ? "..." : t("profile.emailChangeSend")}
+                {emailSaving ? t("common.loading") : t("profile.emailChangeSend")}
               </button>
               <button
                 type="button"
@@ -211,7 +211,7 @@ export default function AccountSection({ userId, supabase }: Props) {
                 disabled={nameSaving || !newName.trim()}
                 className="text-xs bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white font-bold px-4 py-2 min-h-[36px] rounded-lg transition-colors"
               >
-                {nameSaving ? "..." : t("profile.nameChangeSave")}
+                {nameSaving ? t("common.loading") : t("profile.nameChangeSave")}
               </button>
               <button
                 type="button"
@@ -246,7 +246,7 @@ export default function AccountSection({ userId, supabase }: Props) {
               aria-label={t("profile.ariaManageSub")}
               className="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-colors disabled:opacity-50 disabled:pointer-events-none"
             >
-              {portalLoading ? "…" : <>💳 {t("profile.manageSub")}</>}
+              {portalLoading ? t("common.loading") : <>💳 {t("profile.manageSub")}</>}
             </button>
           </form>
         )}

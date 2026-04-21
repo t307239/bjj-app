@@ -50,7 +50,7 @@ export default function GymKickBanner({ userId }: { userId: string }) {
         className="flex-shrink-0 text-xs text-zinc-400 hover:text-white border border-white/20 hover:border-white/40 rounded-lg px-2 py-1 transition-colors disabled:opacity-50 mt-0.5"
         aria-label={t("gym.kickedBannerDismiss")}
       >
-        {dismissing ? "…" : t("gym.kickedBannerDismiss")}
+        {dismissing ? t("common.loading") : t("gym.kickedBannerDismiss")}
       </button>
     </div>
   );

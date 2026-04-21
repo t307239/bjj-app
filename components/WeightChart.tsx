@@ -154,7 +154,7 @@ export default function WeightChart({ userId, refreshKey, targetWeight, targetDa
         <div className="flex flex-col items-center py-6 gap-3">
           <p className="text-zinc-400 text-sm">{t("body.noData")}</p>
           <a
-            href="/body"
+            href="/profile"
             className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500 transition-colors"
           >
             {t("body.recordWeight")}

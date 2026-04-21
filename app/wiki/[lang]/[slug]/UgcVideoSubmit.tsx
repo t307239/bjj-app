@@ -74,6 +74,8 @@ export default function UgcVideoSubmit({ slug, lang, ugcLabel, ugcCta }: Props) 
 
   const submitLabel =
     lang === "ja" ? "送信" : lang === "pt" ? "Enviar" : "Submit";
+  const loadingLabel =
+    lang === "ja" ? "送信中..." : lang === "pt" ? "Enviando..." : "Submitting...";
   const cancelLabel =
     lang === "ja" ? "キャンセル" : lang === "pt" ? "Cancelar" : "Cancel";
 
@@ -155,7 +157,7 @@ export default function UgcVideoSubmit({ slug, lang, ugcLabel, ugcCta }: Props) 
                   disabled={status === "submitting" || !url.trim()}
                   className="rounded-lg bg-pink-600 hover:bg-pink-500 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 text-sm font-semibold text-white transition-colors"
                 >
-                  {status === "submitting" ? "..." : submitLabel}
+                  {status === "submitting" ? loadingLabel : submitLabel}
                 </button>
                 <button
                   type="button"

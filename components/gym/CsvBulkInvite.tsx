@@ -139,7 +139,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
             disabled={upgrading}
             className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-60 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
           >
-            {upgrading ? "..." : t("gym.upgradeBtn")}
+            {upgrading ? t("common.loading") : t("gym.upgradeBtn")}
           </button>
         </div>
       </div>

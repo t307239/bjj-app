@@ -481,7 +481,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
                 disabled={loading}
                 className="flex-1 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white text-sm font-bold transition-colors active:scale-95"
               >
-                {loading ? "..." : t("techniques.add")}
+                {loading ? t("common.loading") : t("techniques.add")}
               </button>
               <button
                 type="button"
