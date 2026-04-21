@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { useLocale } from "@/lib/i18n";
 import { getLocalDateParts } from "@/lib/timezone";
 import type { WeekHistory, MonthHistory } from "./GoalTrackerEditor";
@@ -7,7 +8,7 @@ import type { WeekHistory, MonthHistory } from "./GoalTrackerEditor";
 // ── GoalWeekDayGrid ───────────────────────────────────────────────────────────
 // Shows Mon–Sun completion dots for the current week.
 
-export function GoalWeekDayGrid({
+export const GoalWeekDayGrid = memo(function GoalWeekDayGrid({
   currentWeekDayGrid,
 }: {
   currentWeekDayGrid: boolean[];
@@ -50,12 +51,12 @@ export function GoalWeekDayGrid({
       })}
     </div>
   );
-}
+});
 
 // ── GoalDaysLeftText ──────────────────────────────────────────────────────────
 // Shows "X more sessions needed in Y days" hint below weekly progress.
 
-export function GoalDaysLeftText({
+export const GoalDaysLeftText = memo(function GoalDaysLeftText({
   weeklyGoal,
   weekCount,
 }: {
@@ -83,12 +84,12 @@ export function GoalDaysLeftText({
       {needed <= daysLeftInWeek ? t("goal.onTrackSuffix") : t("goal.pickUpPace")}
     </p>
   );
-}
+});
 
 // ── GoalWeekHeatmap ───────────────────────────────────────────────────────────
 // Shows 4-week achievement heatmap below the weekly section.
 
-export function GoalWeekHeatmap({
+export const GoalWeekHeatmap = memo(function GoalWeekHeatmap({
   weekHistory,
   consecutiveAchievedWeeks,
 }: {
@@ -135,12 +136,12 @@ export function GoalWeekHeatmap({
       )}
     </div>
   );
-}
+});
 
 // ── GoalMonthHistoryBadges ────────────────────────────────────────────────────
 // Shows 6-month achievement badge row at the bottom of the goal tracker.
 
-export function GoalMonthHistoryBadges({
+export const GoalMonthHistoryBadges = memo(function GoalMonthHistoryBadges({
   monthHistory,
 }: {
   monthHistory: MonthHistory[];
@@ -174,4 +175,4 @@ export function GoalMonthHistoryBadges({
       </p>
     </div>
   );
-}
+});

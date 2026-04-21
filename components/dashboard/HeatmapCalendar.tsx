@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, memo } from "react";
 import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
 
@@ -101,7 +101,7 @@ function WeekBarChart({ countMap, locale }: { countMap: Map<string, number>; loc
   );
 }
 
-export default function HeatmapCalendar({ trainingDates }: Props) {
+const HeatmapCalendar = memo(function HeatmapCalendar({ trainingDates }: Props) {
   const { t, locale } = useLocale();
   const WEEKS = 16;
   const countMap = useMemo(() => buildCountMap(trainingDates), [trainingDates]);
@@ -204,4 +204,6 @@ export default function HeatmapCalendar({ trainingDates }: Props) {
       </div>
     </div>
   );
-}
+});
+
+export default HeatmapCalendar;
