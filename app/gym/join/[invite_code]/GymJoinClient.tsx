@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
+import { trackEvent } from "@/lib/analytics";
 
 type Props = {
   gymId: string;
@@ -56,6 +57,7 @@ export default function GymJoinClient({
       setLoading(false);
       return;
     }
+    trackEvent("gym_joined", { gym_name: gymName });
     router.push("/dashboard?gym_joined=1");
   };
 

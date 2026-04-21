@@ -232,7 +232,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative flex flex-col items-center gap-0.5 py-3 text-xs transition-colors ${
+                className={`relative flex flex-col items-center gap-0.5 py-3 min-h-[44px] text-xs transition-colors ${
                   isActive
                     ? "text-white"
                     : "text-zinc-400 hover:text-zinc-300"

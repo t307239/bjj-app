@@ -13,6 +13,7 @@ import {
   isDangerousTechnique,
 } from "@/lib/techniqueLogTypes";
 import { trackEvent } from "@/lib/analytics";
+import { clientLogger } from "@/lib/clientLogger";
 
 type Props = {
   userId: string;
@@ -83,7 +84,8 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
           .from("techniques")
           .delete()
           .eq("id", pending.id)
-          .eq("user_id", userId);
+          .eq("user_id", userId)
+          .then(({ error }) => { if (error) clientLogger.error("techniquelog.cleanup_delete", {}, error); });
       }
     };
   }, [userId]);
@@ -255,7 +257,8 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
         .from("techniques")
         .delete()
         .eq("id", pendingTechDelete.id)
-        .eq("user_id", userId);
+        .eq("user_id", userId)
+        .then(({ error }) => { if (error) clientLogger.error("techniquelog.flush_delete", {}, error); });
     }
 
     // Optimistic: remove from state immediately

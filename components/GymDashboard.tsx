@@ -260,6 +260,41 @@ function ProPaywallBanner({
   );
 }
 
+// ─── Empty members CTA ───────────────────────────────────────────────────────
+function EmptyMembersCta({ inviteCode }: { inviteCode: string }) {
+  const { t } = useLocale();
+  const [emCopied, setEmCopied] = useState(false);
+  const emTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => {
+    return () => { if (emTimerRef.current) clearTimeout(emTimerRef.current); };
+  }, []);
+
+  const emCopy = async () => {
+    try {
+      const url = `${window.location.origin}/gym/join/${inviteCode}`;
+      await navigator.clipboard.writeText(url);
+      setEmCopied(true);
+      trackEvent("gym_member_invited", { method: "empty_state_cta" });
+      emTimerRef.current = setTimeout(() => setEmCopied(false), 2000);
+    } catch { /* clipboard fallback not needed */ }
+  };
+
+  return (
+    <div className="text-center py-10 bg-zinc-900 border border-white/10 rounded-xl">
+      <div className="text-4xl mb-3">🏫</div>
+      <p className="text-zinc-300 font-medium mb-1">{t("gym.noMembers")}</p>
+      <p className="text-zinc-400 text-sm mb-4">{t("gym.noMembersDesc")}</p>
+      <button type="button"
+        onClick={emCopy}
+        className="inline-flex items-center gap-2 bg-[#10B981] hover:bg-[#0d9668] text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-colors"
+      >
+        {emCopied ? "✓" : "📋"} {emCopied ? t("gym.inviteCopied") : t("gym.inviteCopy")}
+      </button>
+    </div>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripeGymPaymentLink }: Props) {
@@ -397,13 +432,7 @@ export default function GymDashboard({ userId, gym: initialGym, isGymPro, stripe
         </h3>
 
         {members.length === 0 ? (
-          <div className="text-center py-10 bg-zinc-900 border border-white/10 rounded-xl">
-            <div className="text-4xl mb-3">🏫</div>
-            <p className="text-zinc-300 font-medium mb-1">{t("gym.noMembers")}</p>
-            <p className="text-zinc-400 text-sm">
-              {t("gym.noMembersDesc")}
-            </p>
-          </div>
+          <EmptyMembersCta inviteCode={gym.invite_code} />
         ) : (
           <div className="space-y-2">
             {greenMembers.map((m) => (
