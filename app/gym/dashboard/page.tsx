@@ -77,11 +77,12 @@ export default async function GymDashboardPage({
       const memberIds = members.map((m: { id: string }) => m.id);
       const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString().split("T")[0];
       const sevenDaysAgo = new Date(Date.now() - 7 * 86400000).toISOString().split("T")[0];
-      const { count: sessCount } = await supabase
+      const { count: sessCount, error: sessErr } = await supabase
         .from("training_logs")
         .select("*", { count: "exact", head: true })
         .in("user_id", memberIds)
         .gte("date", thirtyDaysAgo);
+      if (sessErr) logger.error("gym.dashboard_session_count_error", { gymId: gym.id }, sessErr as Error);
       totalSessions30d = sessCount ?? 0;
       avgSessionsPerMember = memberCount > 0 ? Math.round((totalSessions30d / memberCount) * 10) / 10 : 0;
 
