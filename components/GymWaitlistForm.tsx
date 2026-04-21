@@ -86,7 +86,7 @@ export default function GymWaitlistForm() {
         />
       </div>
       {state === "error" && (
-        <p className="text-red-400 text-xs">{errorMsg}</p>
+        <p role="alert" className="text-red-400 text-xs">{errorMsg}</p>
       )}
       <button
         type="submit"
