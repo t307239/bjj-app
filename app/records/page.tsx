@@ -35,8 +35,12 @@ const PersonalBests = dynamic(() => import("@/components/PersonalBests"), {
 const TrainingChart = dynamic(() => import("@/components/TrainingChart"), {
   loading: () => <div className="min-h-[180px] bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-2xl animate-pulse" />,
 });
-const StatsAccordion = dynamic(() => import("@/components/records/StatsAccordion"));
-const ProGate = dynamic(() => import("@/components/ProGate"));
+const StatsAccordion = dynamic(() => import("@/components/records/StatsAccordion"), {
+  loading: () => <div className="min-h-[80px] bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-2xl animate-pulse" />,
+});
+const ProGate = dynamic(() => import("@/components/ProGate"), {
+  loading: () => <div className="min-h-[60px]" />,
+});
 const RollAnalyticsCard = dynamic(() => import("@/components/RollAnalyticsCard"), {
   loading: () => <div className="min-h-[120px] bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-2xl animate-pulse" />,
 });
