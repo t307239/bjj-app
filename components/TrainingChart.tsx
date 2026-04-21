@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Skeleton from "@/components/ui/Skeleton";
 import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
@@ -35,7 +35,8 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
   const [monthData, setMonthData] = useState<MonthData[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<"heatmap" | "monthly">("heatmap");
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   useEffect(() => {
     const load = async () => {
@@ -105,8 +106,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
       }
     };
     load();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
+  }, [userId, supabase]);
 
   if (loading) return <Skeleton height={120} rounded="xl" className="mb-4" />;
 

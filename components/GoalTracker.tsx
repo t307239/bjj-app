@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Toast from "./Toast";
 import { useLocale } from "@/lib/i18n";
@@ -47,7 +47,8 @@ export default function GoalTracker({ userId }: Props) {
   const [currentWeekDayGrid, setCurrentWeekDayGrid] = useState<boolean[]>(Array(7).fill(false));
   const [isOpen, setIsOpen] = useState(false);
 
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   useEffect(() => {
     const load = async () => {
@@ -177,8 +178,7 @@ export default function GoalTracker({ userId }: Props) {
       }
     };
     load();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
+  }, [userId, supabase]);
 
   // Onboarding: when navigated to via #goal-tracker hash, auto-expand + open weekly goal editor
   useEffect(() => {
