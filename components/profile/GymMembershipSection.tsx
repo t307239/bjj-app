@@ -56,6 +56,8 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
       setGymName(null);
       setSharing(false);
       setConfirmLeave(false);
+    } else {
+      clientLogger.error("gym_membership.leave_failed", {}, error);
     }
     setLeaving(false);
   };
@@ -69,6 +71,8 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
       .eq("id", userId);
     if (!error) {
       setSharing(next);
+    } else {
+      clientLogger.error("gym_membership.toggle_sharing_failed", {}, error);
     }
     setToggleLoading(false);
   };

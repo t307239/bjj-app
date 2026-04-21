@@ -226,7 +226,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
         >
           {loading ? t("aiCoach.generating") : t("aiCoach.generateBtn")}
         </button>
-        {error && <p className="text-red-400 text-xs mt-2 text-center">{error}</p>}
+        {error && <p role="alert" className="text-red-400 text-xs mt-2 text-center">{error}</p>}
       </div>
     );
   }
@@ -334,7 +334,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
         );
       })}
 
-      {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
+      {error && <p role="alert" className="text-red-400 text-xs mt-2">{error}</p>}
     </div>
   );
 }

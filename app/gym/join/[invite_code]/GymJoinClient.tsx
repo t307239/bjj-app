@@ -82,7 +82,7 @@ export default function GymJoinClient({
           >
             {t("common.cancel")}
           </button>
-          {error && <p className="text-red-400 text-xs mt-3 text-center">{error}</p>}
+          {error && <p role="alert" className="text-red-400 text-xs mt-3 text-center">{error}</p>}
         </div>
       </div>
     );
@@ -169,7 +169,7 @@ export default function GymJoinClient({
           {t("gymJoin.privacyNote")}
         </p>
 
-        {error && <p className="text-red-400 text-xs mt-3 text-center">{error}</p>}
+        {error && <p role="alert" className="text-red-400 text-xs mt-3 text-center">{error}</p>}
       </div>
     </div>
   );

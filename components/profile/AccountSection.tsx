@@ -152,8 +152,8 @@ export default function AccountSection({ userId, supabase }: Props) {
               placeholder="new@example.com"
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-emerald-500"
             />
-            {emailError && <p className="text-red-400 text-xs">{emailError}</p>}
-            {emailMsg && <p className="text-emerald-400 text-xs">{emailMsg}</p>}
+            {emailError && <p role="alert" className="text-red-400 text-xs">{emailError}</p>}
+            {emailMsg && <p aria-live="polite" className="text-emerald-400 text-xs">{emailMsg}</p>}
             <div className="flex gap-2">
               <button
                 type="button"
@@ -199,7 +199,7 @@ export default function AccountSection({ userId, supabase }: Props) {
               maxLength={50}
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-emerald-500"
             />
-            {nameMsg && <p className="text-emerald-400 text-xs">{nameMsg}</p>}
+            {nameMsg && <p aria-live="polite" className="text-emerald-400 text-xs">{nameMsg}</p>}
             <div className="flex gap-2">
               <button
                 type="button"
@@ -323,7 +323,7 @@ export default function AccountSection({ userId, supabase }: Props) {
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-red-500 font-mono"
             />
           </div>
-          {deleteError && <p className="text-red-400 text-xs">{deleteError}</p>}
+          {deleteError && <p role="alert" className="text-red-400 text-xs">{deleteError}</p>}
           <div className="flex gap-3">
             <button
               type="button"

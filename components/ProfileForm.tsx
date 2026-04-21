@@ -344,7 +344,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
             ))}
           </select>
         </div>
-        {formError && <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">{formError}</div>}
+        {formError && <div role="alert" className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">{formError}</div>}
         <div className="flex gap-3">
           <button type="submit" disabled={loading || !isOnline} className="flex-1 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 disabled:opacity-50 text-white font-bold py-3 rounded-xl text-sm transition-all">
             {loading ? t("profile.saving") : t("profile.save")}

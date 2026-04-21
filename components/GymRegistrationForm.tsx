@@ -80,7 +80,7 @@ export default function GymRegistrationForm({ userId }: Props) {
           {loading ? t("gym.creating") : t("gym.createBtn")}
         </button>
 
-        {error && <p className="text-red-400 text-xs mt-3">{error}</p>}
+        {error && <p role="alert" className="text-red-400 text-xs mt-3">{error}</p>}
 
         {/* Feature pills */}
         <div className="flex flex-wrap justify-center gap-2 mt-5">

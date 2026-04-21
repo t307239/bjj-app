@@ -229,6 +229,9 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
 
   const handleDelete = async (id: string) => {
     setErrorMsg(null);
+    // Optimistic: remove immediately, rollback on error
+    const snapshot = goals;
+    setGoals((prev) => prev.filter((g) => g.id !== id));
     try {
       const { error } = await supabase
         .from("competition_goals")
@@ -237,12 +240,13 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
       if (error) {
         clientLogger.error("compgoal_delete_error", {}, error.message);
         setErrorMsg(error.message);
+        setGoals(snapshot);
         return;
       }
-      setGoals((prev) => prev.filter((g) => g.id !== id));
     } catch (err) {
       clientLogger.error("compgoal_handledelete_network_error", {}, err);
       setErrorMsg("Failed to delete");
+      setGoals(snapshot);
     }
   };
 
