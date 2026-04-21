@@ -126,7 +126,8 @@ async function sendTelegramAlert(alert: Alert): Promise<boolean> {
       }),
     });
     return res.ok;
-  } catch {
+  } catch (err: unknown) {
+    logger.warn("telegram_send_failed", { chatId, error: err instanceof Error ? err.message : String(err) });
     return false;
   }
 }

@@ -6,6 +6,8 @@
  * for connecting /api/health with external uptime monitors.
  */
 
+import { logger } from "./logger";
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -284,7 +286,8 @@ export function parseUptimeRobotWebhook(body: Record<string, unknown>): WebhookP
       timestamp: new Date().toISOString(),
       message: `${body.monitorFriendlyName} is ${event}`,
     };
-  } catch {
+  } catch (err: unknown) {
+    logger.warn("webhook_parse_failed", { provider: "uptimerobot", error: err instanceof Error ? err.message : String(err) });
     return null;
   }
 }

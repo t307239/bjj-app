@@ -14,6 +14,8 @@
  *   const report = buildProbeReport(results);
  */
 
+import { logger } from "./logger";
+
 // ── Types ────────────────────────────────────────────────────────────────
 
 export interface ProbeEndpoint {
@@ -149,7 +151,8 @@ export async function probeSingleEndpoint(
       try {
         const text = await response.text();
         bodyValid = text.includes(endpoint.expectBodyContains);
-      } catch {
+      } catch (err: unknown) {
+        logger.warn("probe_body_read_failed", { url: endpoint.url, error: err instanceof Error ? err.message : String(err) });
         bodyValid = false;
       }
     }

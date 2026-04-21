@@ -278,7 +278,7 @@ function EmptyMembersCta({ inviteCode }: { inviteCode: string }) {
       setEmCopied(true);
       trackEvent("gym_member_invited", { method: "empty_state_cta" });
       emTimerRef.current = setTimeout(() => setEmCopied(false), 2000);
-    } catch { /* clipboard fallback not needed */ }
+    } catch (err: unknown) { clientLogger.warn("gym_dashboard.clipboard_failed", { error: err instanceof Error ? err.message : String(err) }); }
   };
 
   return (

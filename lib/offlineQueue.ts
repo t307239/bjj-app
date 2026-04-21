@@ -18,6 +18,8 @@
  *   queue.onSync((results) => toast(`Synced ${results.length} actions`));
  */
 
+import { clientLogger } from "./clientLogger";
+
 // ── Types ────────────────────────────────────────────────────────────────
 
 export type QueuedActionType =
@@ -162,8 +164,8 @@ export class OfflineQueue {
     for (const cb of this.syncCallbacks) {
       try {
         cb(results);
-      } catch {
-        // Swallow callback errors
+      } catch (err: unknown) {
+        clientLogger.warn("offline_queue.sync_callback_error", { error: err instanceof Error ? err.message : String(err) });
       }
     }
 

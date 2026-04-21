@@ -77,7 +77,8 @@ export default async function GymJoinPage({ params }: Props) {
       const email = ownerAuth.user.email ?? "";
       maskedEmail = email ? maskEmail(email) : "";
     }
-  } catch {
+  } catch (err: unknown) {
+    logger.warn("gym_join.admin_client_error", { error: err instanceof Error ? err.message : String(err) });
     // Admin client not configured — skip owner identity display (non-fatal)
   }
 
