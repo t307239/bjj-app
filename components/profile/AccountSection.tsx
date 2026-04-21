@@ -149,7 +149,7 @@ export default function AccountSection({ userId, supabase }: Props) {
               type="email"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
-              placeholder="new@example.com"
+              placeholder={t("profile.emailPlaceholder")}
               aria-describedby={emailError ? "email-error" : undefined}
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-emerald-500"
             />

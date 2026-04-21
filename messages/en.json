@@ -525,7 +525,8 @@
     "pushPrefMilestone": "Training milestones",
     "pushPrefWeeklyEmail": "Weekly summary email",
     "helpDesc": "FAQ, troubleshooting & contact",
-    "dataOwnership": "Your data belongs to you. Export anytime — no lock-in, no restrictions."
+    "dataOwnership": "Your data belongs to you. Export anytime — no lock-in, no restrictions.",
+    "emailPlaceholder": "new@example.com"
   },
   "competition": {
     "title": "Match Record",
@@ -914,7 +915,11 @@
     "shareTraining": "Share training",
     "date": "Date",
     "copied": "Copied!",
-    "shareLink": "Share"
+    "shareLink": "Share",
+    "imageViewer": "Image viewer",
+    "closeImageViewer": "Close image viewer",
+    "expandedView": "Expanded view",
+    "youtubePlaceholder": "https://youtu.be/..."
   },
   "aiCoach": {
     "title": "AI Coach",
@@ -1533,7 +1538,9 @@
       "upperBack": "Upper Back"
     },
     "viewFront": "Front",
-    "viewBack": "Back"
+    "viewBack": "Back",
+    "weightPlaceholder": "75.5",
+    "targetWeightPlaceholder": "70.0"
   },
   "gymLanding": {
     "navIndividuals": "For Individuals",

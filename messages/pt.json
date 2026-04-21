@@ -548,7 +548,8 @@
     "stripes": "Listras",
     "logoutBtn": "Sair",
     "helpDesc": "FAQ, solução de problemas e contato",
-    "dataOwnership": "Seus dados pertencem a você. Exporte a qualquer momento — sem restrições."
+    "dataOwnership": "Seus dados pertencem a você. Exporte a qualquer momento — sem restrições.",
+    "emailPlaceholder": "new@example.com"
   },
   "competition": {
     "title": "Histórico de Lutas",
@@ -963,7 +964,11 @@
     "shareTraining": "Compartilhar treino",
     "date": "Data",
     "copied": "Copiado!",
-    "shareLink": "Compartilhar"
+    "shareLink": "Compartilhar",
+    "imageViewer": "Visualizador de imagem",
+    "closeImageViewer": "Fechar visualizador de imagem",
+    "expandedView": "Vista expandida",
+    "youtubePlaceholder": "https://youtu.be/..."
   },
   "aiCoach": {
     "title": "🤖 AI Micro-Coach",
@@ -1585,7 +1590,9 @@
       "upperBack": "Costas"
     },
     "viewFront": "Frente",
-    "viewBack": "Costas"
+    "viewBack": "Costas",
+    "weightPlaceholder": "75.5",
+    "targetWeightPlaceholder": "70.0"
   },
   "gymLanding": {
     "navIndividuals": "Para Indivíduos",

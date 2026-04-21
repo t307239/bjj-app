@@ -92,7 +92,7 @@ export default function TechniqueVideoButton({ techniqueId }: Props) {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="https://youtu.be/..."
+          placeholder={t("common.youtubePlaceholder")}
           className="flex-1 bg-zinc-800 border border-white/15 text-xs text-zinc-200 rounded-lg px-2.5 py-1.5 min-h-[36px] focus:outline-none focus:border-emerald-500 placeholder-zinc-600"
         />
         <button type="button"

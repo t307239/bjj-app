@@ -248,7 +248,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
                       step="0.1"
                       value={targetWeightInput}
                       onChange={(e) => setTargetWeightInput(e.target.value)}
-                      placeholder="70.0"
+                      placeholder={t("body.targetWeightPlaceholder")}
                       className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-400/50"
                     />
                   </div>

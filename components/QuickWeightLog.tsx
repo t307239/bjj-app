@@ -70,7 +70,7 @@ export default function QuickWeightLog({ userId, onLogged }: Props) {
               max="500"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
-              placeholder="75.5"
+              placeholder={t("body.weightPlaceholder")}
               required
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-600"
             />

@@ -526,7 +526,8 @@
     "pushPrefMilestone": "トレーニングの実績",
     "pushPrefWeeklyEmail": "週報メール",
     "helpDesc": "よくある質問・トラブル対応・お問い合わせ",
-    "dataOwnership": "あなたのデータはあなたのものです。いつでもエクスポート可能 — ロックインなし。"
+    "dataOwnership": "あなたのデータはあなたのものです。いつでもエクスポート可能 — ロックインなし。",
+    "emailPlaceholder": "new@example.com"
   },
   "competition": {
     "title": "試合戦績",
@@ -905,7 +906,11 @@
     "shareTraining": "練習をシェア",
     "date": "日付",
     "copied": "コピー済み！",
-    "shareLink": "シェア"
+    "shareLink": "シェア",
+    "imageViewer": "画像ビューアー",
+    "closeImageViewer": "画像ビューアーを閉じる",
+    "expandedView": "拡大表示",
+    "youtubePlaceholder": "https://youtu.be/..."
   },
   "aiCoach": {
     "title": "AIコーチ",
@@ -1715,7 +1720,9 @@
     "title": "体の管理",
     "weightKg": "体重 (kg)",
     "viewFront": "前面",
-    "viewBack": "背面"
+    "viewBack": "背面",
+    "weightPlaceholder": "75.5",
+    "targetWeightPlaceholder": "70.0"
   },
   "ageGate": {
     "title": "年齢制限",

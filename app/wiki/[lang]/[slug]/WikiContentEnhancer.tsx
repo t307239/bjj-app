@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale } from "@/lib/i18n";
 
 /**
  * WikiContentEnhancer — headless client component that progressively enhances
@@ -12,6 +13,7 @@ import { useRouter } from "next/navigation";
  */
 export default function WikiContentEnhancer() {
   const router = useRouter();
+  const { t } = useLocale();
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -153,7 +155,7 @@ export default function WikiContentEnhancer() {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Image viewer"
+          aria-label={t("common.imageViewer")}
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 cursor-zoom-out"
           onClick={() => setLightboxSrc(null)}
           onKeyDown={(e) => {
@@ -165,7 +167,7 @@ export default function WikiContentEnhancer() {
         >
           <button type="button"
             onClick={() => setLightboxSrc(null)}
-            aria-label="Close image viewer"
+            aria-label={t("common.closeImageViewer")}
             className="absolute top-4 right-4 text-white/70 hover:text-white bg-slate-800/80 hover:bg-slate-700 rounded-full p-2 transition-colors"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -175,7 +177,7 @@ export default function WikiContentEnhancer() {
           {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/no-noninteractive-element-interactions */}
           <img
             src={lightboxSrc}
-            alt="Expanded view"
+            alt={t("common.expandedView")}
             className="max-w-full max-h-[90vh] rounded-xl shadow-2xl object-contain"
             onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
           />
