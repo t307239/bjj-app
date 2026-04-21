@@ -160,8 +160,8 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
 
       {/* Modal */}
       {open && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-8 pb-4 bg-black/70 overflow-y-auto">
-          <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-lg shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-8 pb-4 bg-black/70 overflow-y-auto" role="dialog" aria-modal="true" onClick={() => setOpen(false)}>
+          <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-lg shadow-2xl" onClick={(e) => e.stopPropagation()}>
             {/* Header */}
             <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-white/10">
               <h2 className="text-base font-bold text-white">📥 {t("gym.csvTitle")}</h2>
