@@ -1252,7 +1252,8 @@
     "inactiveMembers7d": "7日間未練習",
     "featureAttrition": "🔴 離脱アラート",
     "featureCurriculum": "📚 カリキュラム配信",
-    "featureQr": "📱 QR招待"
+    "featureQr": "📱 QR招待",
+    "waitlistInvalidEmail": "有効なメールアドレスを入力してください"
   },
   "gymJoin": {
     "title": "{name} に参加する",

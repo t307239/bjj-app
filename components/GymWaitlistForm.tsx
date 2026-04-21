@@ -13,7 +13,13 @@ export default function GymWaitlistForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.trim()) return;
+    const trimmed = email.trim();
+    if (!trimmed) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      setErrorMsg(t("gym.waitlistInvalidEmail"));
+      setState("error");
+      return;
+    }
     setState("loading");
     setErrorMsg("");
 

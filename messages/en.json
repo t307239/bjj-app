@@ -1260,7 +1260,8 @@
     "inactiveMembers7d": "7d Inactive",
     "featureAttrition": "🔴 Attrition alerts",
     "featureCurriculum": "📚 Curriculum push",
-    "featureQr": "📱 QR invite"
+    "featureQr": "📱 QR invite",
+    "waitlistInvalidEmail": "Please enter a valid email address"
   },
   "gymJoin": {
     "title": "Join {name}",
