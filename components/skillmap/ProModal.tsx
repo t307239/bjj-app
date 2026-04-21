@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { clientLogger } from "@/lib/clientLogger";
 
 type Props = {
   onClose: () => void;
@@ -68,8 +69,8 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
           return;
         }
       }
-    } catch {
-      // network error — fall through to static link
+    } catch (err: unknown) {
+      clientLogger.error("pro_modal.checkout_failed", {}, err instanceof Error ? err : new Error(String(err)));
     }
     if (fallbackUrl) window.location.href = fallbackUrl;
     setIsLoading(false);

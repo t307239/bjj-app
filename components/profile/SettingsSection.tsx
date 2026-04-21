@@ -41,7 +41,8 @@ export default function SettingsSection({
         setDeleting(false);
         return;
       }
-    } catch {
+    } catch (err: unknown) {
+      clientLogger.error("account.delete_network", {}, err instanceof Error ? err : new Error(String(err)));
       setDeleting(false);
       return;
     }

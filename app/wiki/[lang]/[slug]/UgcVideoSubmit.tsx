@@ -10,6 +10,7 @@
  */
 
 import { useState, useEffect } from "react";
+import { clientLogger } from "@/lib/clientLogger";
 
 interface Props {
   slug: string;
@@ -95,7 +96,8 @@ export default function UgcVideoSubmit({ slug, lang, ugcLabel, ugcCta }: Props) 
       });
       if (!res.ok) throw new Error(await res.text());
       setStatus("success");
-    } catch {
+    } catch (err: unknown) {
+      clientLogger.error("ugc_video.submit_failed", {}, err instanceof Error ? err : new Error(String(err)));
       setStatus("error");
       setErrorMsg(
         lang === "ja"

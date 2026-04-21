@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useLocale } from "@/lib/i18n";
+import { clientLogger } from "@/lib/clientLogger";
 
 type FormState = "idle" | "loading" | "success" | "error";
 
@@ -36,7 +37,8 @@ export default function GymWaitlistForm() {
         setErrorMsg(data.error ?? t("gym.waitlistError"));
         setState("error");
       }
-    } catch {
+    } catch (err: unknown) {
+      clientLogger.error("gym_waitlist.submit_failed", {}, err instanceof Error ? err : new Error(String(err)));
       setErrorMsg(t("gym.waitlistNetworkError"));
       setState("error");
     }

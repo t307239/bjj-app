@@ -6,6 +6,7 @@ import { useLocale } from "@/lib/i18n";
 import PushNotificationSection from "../PushNotificationSection";
 import CsvExport from "../CsvExport";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { clientLogger } from "@/lib/clientLogger";
 
 // Stripe Customer Portal URL — configure in .env.local (Stripe Dashboard > Customer Portal)
 const CUSTOMER_PORTAL_URL = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL ?? "";
@@ -119,7 +120,8 @@ export default function AccountSection({ userId, supabase }: Props) {
       }
       await supabase.auth.signOut();
       router.push("/?deleted=1");
-    } catch {
+    } catch (err: unknown) {
+      clientLogger.error("account.delete_network", {}, err instanceof Error ? err : new Error(String(err)));
       setDeleteError(t("profile.deleteNetworkError"));
       setDeleting(false);
     }

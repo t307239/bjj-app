@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocale } from "@/lib/i18n";
 import { trackEvent } from "@/lib/analytics";
+import { clientLogger } from "@/lib/clientLogger";
 
 const APP_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
@@ -37,7 +38,8 @@ export default function ReferralSection({
       trackEvent("referral_shared", { method: "copy" });
       setCopied(true);
       copiedTimerRef.current = setTimeout(() => setCopied(false), 2000);
-    } catch {
+    } catch (err: unknown) {
+      clientLogger.error("referral.clipboard_failed", {}, err instanceof Error ? err : new Error(String(err)));
       const input = document.createElement("input");
       input.value = referralLink;
       document.body.appendChild(input);
