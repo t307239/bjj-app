@@ -1,9 +1,10 @@
 "use client";
 
+import { memo } from "react";
 import { Panel } from "@xyflow/react";
 import { useLocale } from "@/lib/i18n";
 
-export default function SkillMapLegend() {
+const SkillMapLegend = memo(function SkillMapLegend() {
   const { t } = useLocale();
   return (
     <Panel position="bottom-right">
@@ -21,4 +22,6 @@ export default function SkillMapLegend() {
       </div>
     </Panel>
   );
-}
+});
+
+export default SkillMapLegend;

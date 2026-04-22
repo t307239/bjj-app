@@ -1,9 +1,10 @@
 "use client";
 
+import { memo } from "react";
 import { Panel, useReactFlow } from "@xyflow/react";
 import { useLocale } from "@/lib/i18n";
 
-export default function CustomZoomControls() {
+const CustomZoomControls = memo(function CustomZoomControls() {
   const { zoomIn, zoomOut, fitView } = useReactFlow();
   const { t } = useLocale();
   return (
@@ -34,4 +35,6 @@ export default function CustomZoomControls() {
       </div>
     </Panel>
   );
-}
+});
+
+export default CustomZoomControls;

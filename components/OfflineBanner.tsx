@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { useOnlineStatus } from "@/lib/useOnlineStatus";
 import { useLocale } from "@/lib/i18n";
 
@@ -9,7 +9,7 @@ import { useLocale } from "@/lib/i18n";
  * Renders a sticky banner when offline + briefly shows "reconnected" when back online.
  * Auto-dismiss reconnected message after 3 seconds.
  */
-export default function OfflineBanner() {
+const OfflineBanner = memo(function OfflineBanner() {
   const isOnline = useOnlineStatus();
   const { t } = useLocale();
   const [showReconnected, setShowReconnected] = useState(false);
@@ -47,4 +47,6 @@ export default function OfflineBanner() {
       <span>{isOnline ? t("offline.reconnected") : t("offline.banner")}</span>
     </div>
   );
-}
+});
+
+export default OfflineBanner;

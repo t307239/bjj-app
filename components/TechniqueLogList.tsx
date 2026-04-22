@@ -149,6 +149,7 @@ aria-hidden="true"             className="absolute left-3 top-1/2 -translate-y-1
             <button type="button"
               onClick={() => onSearchChange("")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white text-xs"
+              aria-label={t("common.clearSearch")}
             >
               ✕
             </button>
