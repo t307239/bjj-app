@@ -971,7 +971,8 @@
     "youtubePlaceholder": "https://youtu.be/...",
     "sortBy": "Ordenar por",
     "cookieSettings": "Configurações de Cookies",
-    "ageVerification": "Verificação de idade"
+    "ageVerification": "Verificação de idade",
+    "offlineDisabled": "Requer conexão com a internet"
   },
   "aiCoach": {
     "title": "🤖 AI Micro-Coach",
@@ -2042,5 +2043,14 @@
   },
   "technique": {
     "dangerConfirmTitle": "Aviso de segurança"
+  },
+  "ugcVideo": {
+    "successMsg": "Obrigado! O vídeo será revisado em breve 🎬",
+    "invalidUrl": "Por favor, insira um URL válido do YouTube",
+    "submit": "Enviar",
+    "submitting": "Enviando...",
+    "cancel": "Cancelar",
+    "submitFailed": "Falha ao enviar. Tente novamente.",
+    "reviewNote": "* URLs enviadas serão revisadas antes de serem publicadas"
   }
 }

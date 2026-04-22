@@ -922,7 +922,8 @@
     "youtubePlaceholder": "https://youtu.be/...",
     "sortBy": "Sort by",
     "cookieSettings": "Cookie Settings",
-    "ageVerification": "Age verification"
+    "ageVerification": "Age verification",
+    "offlineDisabled": "Requires internet connection"
   },
   "aiCoach": {
     "title": "AI Coach",
@@ -1981,5 +1982,14 @@
   },
   "technique": {
     "dangerConfirmTitle": "Safety warning"
+  },
+  "ugcVideo": {
+    "successMsg": "Thanks! Your video will be reviewed and added soon 🎬",
+    "invalidUrl": "Please enter a valid YouTube URL",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "cancel": "Cancel",
+    "submitFailed": "Submission failed. Please try again.",
+    "reviewNote": "* Submitted URLs are reviewed before being published"
   }
 }

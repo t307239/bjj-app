@@ -452,6 +452,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
             requestAnimationFrame(() => mobileAddRef.current?.focus());
           }}
           aria-label={t("skillmap.addNodeMobile")}
+          title={!isOnline ? t("common.offlineDisabled") : undefined}
           style={{ touchAction: "auto" }}
           className="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white text-2xl font-bold shadow-lg shadow-emerald-900/40 flex items-center justify-center transition-all active:scale-90 z-10"
         >

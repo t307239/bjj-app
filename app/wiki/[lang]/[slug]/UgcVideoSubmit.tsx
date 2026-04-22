@@ -11,6 +11,7 @@
 
 import { useState, useEffect } from "react";
 import { clientLogger } from "@/lib/clientLogger";
+import { useLocale } from "@/lib/i18n";
 
 interface Props {
   slug: string;
@@ -38,6 +39,7 @@ function extractVideoId(url: string): string | null {
 }
 
 export default function UgcVideoSubmit({ slug, lang, ugcLabel, ugcCta }: Props) {
+  const { t } = useLocale();
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("");
   const [status, setStatus] = useState<Status>("idle");
@@ -53,39 +55,13 @@ export default function UgcVideoSubmit({ slug, lang, ugcLabel, ugcCta }: Props) 
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const successMsg =
-    lang === "ja"
-      ? "ありがとうございます！審査後に掲載されます 🎬"
-      : lang === "pt"
-      ? "Obrigado! O vídeo será revisado em breve 🎬"
-      : "Thanks! Your video will be reviewed and added soon 🎬";
-
-  const placeholder =
-    lang === "ja"
-      ? "https://www.youtube.com/watch?v=..."
-      : "https://www.youtube.com/watch?v=...";
-
-  const invalidMsg =
-    lang === "ja"
-      ? "YouTube の URL を入力してください"
-      : lang === "pt"
-      ? "Por favor, insira um URL válido do YouTube"
-      : "Please enter a valid YouTube URL";
-
-  const submitLabel =
-    lang === "ja" ? "送信" : lang === "pt" ? "Enviar" : "Submit";
-  const loadingLabel =
-    lang === "ja" ? "送信中..." : lang === "pt" ? "Enviando..." : "Submitting...";
-  const cancelLabel =
-    lang === "ja" ? "キャンセル" : lang === "pt" ? "Cancelar" : "Cancel";
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrorMsg("");
 
     const videoId = extractVideoId(url.trim());
     if (!videoId) {
-      setErrorMsg(invalidMsg);
+      setErrorMsg(t("ugcVideo.invalidUrl"));
       return;
     }
 
@@ -101,13 +77,7 @@ export default function UgcVideoSubmit({ slug, lang, ugcLabel, ugcCta }: Props) 
     } catch (err: unknown) {
       clientLogger.error("ugc_video.submit_failed", {}, err instanceof Error ? err : new Error(String(err)));
       setStatus("error");
-      setErrorMsg(
-        lang === "ja"
-          ? "送信に失敗しました。もう一度お試しください。"
-          : lang === "pt"
-          ? "Falha ao enviar. Tente novamente."
-          : "Submission failed. Please try again."
-      );
+      setErrorMsg(t("ugcVideo.submitFailed"));
     }
   }
 
@@ -115,7 +85,7 @@ export default function UgcVideoSubmit({ slug, lang, ugcLabel, ugcCta }: Props) 
     return (
       <div className="flex items-center gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4">
         <span className="text-xl">✅</span>
-        <p className="text-sm text-emerald-400">{successMsg}</p>
+        <p className="text-sm text-emerald-400">{t("ugcVideo.successMsg")}</p>
       </div>
     );
   }
@@ -144,12 +114,12 @@ export default function UgcVideoSubmit({ slug, lang, ugcLabel, ugcCta }: Props) 
                   setUrl(e.target.value);
                   setErrorMsg("");
                 }}
-                placeholder={placeholder}
+                placeholder="https://www.youtube.com/watch?v=..."
                 required
                 className="w-full rounded-lg border border-white/10 bg-slate-800/60 px-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500/50"
               />
               {errorMsg && (
-                <p className="text-xs text-red-400">{errorMsg}</p>
+                <p className="text-xs text-red-400" role="alert">{errorMsg}</p>
               )}
               <div className="flex items-center gap-2">
                 <button
@@ -157,22 +127,18 @@ export default function UgcVideoSubmit({ slug, lang, ugcLabel, ugcCta }: Props) 
                   disabled={status === "submitting" || !url.trim()}
                   className="rounded-lg bg-pink-600 hover:bg-pink-500 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 text-sm font-semibold text-white transition-colors"
                 >
-                  {status === "submitting" ? loadingLabel : submitLabel}
+                  {status === "submitting" ? t("ugcVideo.submitting") : t("ugcVideo.submit")}
                 </button>
                 <button
                   type="button"
                   onClick={() => { setOpen(false); setUrl(""); setErrorMsg(""); setStatus("idle"); }}
                   className="rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-400 hover:text-slate-200 transition-colors"
                 >
-                  {cancelLabel}
+                  {t("ugcVideo.cancel")}
                 </button>
               </div>
               <p className="text-xs text-slate-500">
-                {lang === "ja"
-                  ? "※ 送信されたURLは審査後に掲載されます"
-                  : lang === "pt"
-                  ? "* URLs enviadas serão revisadas antes de serem publicadas"
-                  : "* Submitted URLs are reviewed before being published"}
+                {t("ugcVideo.reviewNote")}
               </p>
             </form>
           )}

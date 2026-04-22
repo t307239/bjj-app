@@ -913,7 +913,8 @@
     "youtubePlaceholder": "https://youtu.be/...",
     "sortBy": "並び替え",
     "cookieSettings": "Cookie設定",
-    "ageVerification": "年齢確認"
+    "ageVerification": "年齢確認",
+    "offlineDisabled": "インターネット接続が必要です"
   },
   "aiCoach": {
     "title": "AIコーチ",
@@ -1983,5 +1984,14 @@
   },
   "technique": {
     "dangerConfirmTitle": "安全確認"
+  },
+  "ugcVideo": {
+    "successMsg": "ありがとうございます！審査後に掲載されます 🎬",
+    "invalidUrl": "YouTube の URL を入力してください",
+    "submit": "送信",
+    "submitting": "送信中...",
+    "cancel": "キャンセル",
+    "submitFailed": "送信に失敗しました。もう一度お試しください。",
+    "reviewNote": "※ 送信されたURLは審査後に掲載されます"
   }
 }
