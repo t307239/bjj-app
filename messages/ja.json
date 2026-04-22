@@ -1277,7 +1277,9 @@
     "ariaJoinNoShare": "データを共有せずにジムに参加",
     "ariaJoinShare": "トレーニングデータを共有してジムに参加",
     "ageRequirement": "13歳以上",
-    "ageRequirementLegal": "（米国法で必須）"
+    "ageRequirementLegal": "（米国法で必須）",
+    "ageConfirmLabel": "{requirement}であることを確認します {legal}",
+    "ariaTransferAndShare": "{name}に移籍してデータを共有する"
   },
   "help": {
     "title": "ヘルプ・よくある質問",

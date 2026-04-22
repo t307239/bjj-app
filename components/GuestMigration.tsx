@@ -56,6 +56,8 @@ export default function GuestMigration({ userId }: { userId: string }) {
         setMigrated(guestLogs.length);
         setShow(true);
         showTimerRef.current = setTimeout(() => setShow(false), 5000);
+      } else {
+        clientLogger.error("guest_migration.insert_failed", { count: rows.length }, error);
       }
     };
 

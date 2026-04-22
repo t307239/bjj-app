@@ -37,14 +37,12 @@ export default function AgeGate() {
     return (
       <div className="fixed inset-0 z-[9999] bg-zinc-950 flex flex-col items-center justify-center px-6 text-center">
         <span className="text-5xl mb-6">🔒</span>
-        <h1 className="text-xl font-black text-white mb-3">{t("ageGate.title")}</h1>
+        <h1 className="text-xl font-black text-white mb-3">{t("ageGate.blockedTitle")}</h1>
         <p className="text-zinc-400 text-sm max-w-xs leading-relaxed">
-          BJJ App is designed for users <span className="text-white font-semibold">{t("ageGate.ageRequirement")}</span>.
-          We cannot allow access for users under 13 (COPPA compliance).
+          {t("ageGate.blockedBody")}
         </p>
         <p className="text-zinc-600 text-xs mt-8">
-          If you believe this is an error, please have a parent or guardian contact us at{" "}
-          <span className="text-zinc-400">307239t777@gmail.com</span>
+          {t("ageGate.blockedContact")}
         </p>
       </div>
     );
@@ -57,8 +55,7 @@ export default function AgeGate() {
         <span className="text-4xl mb-4 block">🥋</span>
         <h2 className="text-lg font-black text-white mb-2">{t("ageGate.ageVerificationTitle")}</h2>
         <p className="text-zinc-400 text-sm leading-relaxed mb-7">
-          BJJ App collects training data. By US law (COPPA), we must verify you are{" "}
-          <span className="text-white font-semibold">{t("ageGate.ageVerificationDesc")}</span> before continuing.
+          {t("ageGate.body")}
         </p>
 
         <div className="space-y-3">
@@ -67,19 +64,19 @@ export default function AgeGate() {
             onClick={() => handleConfirm(true)}
             className="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-sm transition-all active:scale-95"
           >
-            ✓ I am 13 or older
+            {t("ageGate.confirm")}
           </button>
           <button
             type="button"
             onClick={() => handleConfirm(false)}
             className="w-full py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-zinc-400 font-semibold text-sm transition-all active:scale-95"
           >
-            I am under 13
+            {t("ageGate.deny")}
           </button>
         </div>
 
         <p className="text-zinc-600 text-xs mt-5">
-          Required by US federal law · bjj-app.net
+          {t("ageGate.footer")}
         </p>
       </div>
     </div>

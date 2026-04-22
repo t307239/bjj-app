@@ -1335,7 +1335,9 @@
     "ariaJoinShare": "Entrar na academia e compartilhar dados de treino",
     "ariaJoinNoShare": "Entrar na academia sem compartilhar dados",
     "ageRequirement": "13 anos ou mais",
-    "ageRequirementLegal": "(obrigatório por lei dos EUA)"
+    "ageRequirementLegal": "(obrigatório por lei dos EUA)",
+    "ageConfirmLabel": "Eu tenho {requirement} {legal}",
+    "ariaTransferAndShare": "Transferir para {name} e compartilhar dados"
   },
   "help": {
     "title": "Ajuda e FAQ",

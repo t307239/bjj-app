@@ -151,7 +151,7 @@ export default function CurriculumDispatch({ gym, onUpgradeClick, upgrading, isG
             disabled={dispatching}
             className="text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 px-2 py-0.5 rounded transition-colors disabled:opacity-50"
           >
-            {t("gym.confirmYes")}
+            {dispatching ? t("common.loading") : t("gym.confirmYes")}
           </button>
           <button type="button"
             onClick={() => setConfirmDispatch(false)}

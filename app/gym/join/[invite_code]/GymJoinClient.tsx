@@ -75,7 +75,7 @@ export default function GymJoinClient({
             onClick={() => performJoin(true)}
             disabled={loading}
             className="w-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white font-semibold py-3 rounded-xl mb-3 transition-colors"
-            aria-label={`Transfer to ${gymName} and share data`}
+            aria-label={t("gymJoin.ariaTransferAndShare", { name: gymName })}
           >
             {loading ? t("gymJoin.joining") : t("gymJoin.transferYes", { name: gymName })}
           </button>
@@ -142,8 +142,7 @@ export default function GymJoinClient({
             aria-label={t("gymJoin.ariaAgeConfirm")}
           />
           <span className="text-xs text-zinc-400 group-hover:text-zinc-300 leading-relaxed">
-            I am <span className="text-white font-medium">{t("gymJoin.ageRequirement")}</span>{" "}
-            <span className="text-zinc-400">{t("gymJoin.ageRequirementLegal")}</span>
+            {t("gymJoin.ageConfirmLabel", { requirement: t("gymJoin.ageRequirement"), legal: t("gymJoin.ageRequirementLegal") })}
           </span>
         </label>
 
@@ -164,7 +163,7 @@ export default function GymJoinClient({
           className="w-full bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 text-zinc-300 py-3 rounded-xl text-sm mb-4 transition-colors"
           aria-label={t("gymJoin.ariaJoinNoShare")}
         >
-          {t("gymJoin.joinNoShare")}
+          {loading ? t("gymJoin.joining") : t("gymJoin.joinNoShare")}
         </button>
 
         {/* Privacy note */}

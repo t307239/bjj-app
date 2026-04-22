@@ -1285,7 +1285,9 @@
     "ariaJoinShare": "Join gym and share training data",
     "ariaJoinNoShare": "Join gym without sharing data",
     "ageRequirement": "13 years of age or older",
-    "ageRequirementLegal": "(required by US law)"
+    "ageRequirementLegal": "(required by US law)",
+    "ageConfirmLabel": "I am {requirement} {legal}",
+    "ariaTransferAndShare": "Transfer to {name} and share data"
   },
   "help": {
     "title": "Help & FAQ",
