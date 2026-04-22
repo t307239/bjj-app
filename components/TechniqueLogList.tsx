@@ -450,7 +450,7 @@ aria-hidden="true"                         className="w-4 h-4"
                         aria-label={t("techniques.delete")}
                       >
                         {deletingId === technique.id ? (
-                          <span className="text-xs">...</span>
+                          <span className="inline-block w-3.5 h-3.5 border-2 border-zinc-400/20 border-t-zinc-400/60 rounded-full animate-spin" />
                         ) : (
                           <svg
 aria-hidden="true"                             className="w-4 h-4"

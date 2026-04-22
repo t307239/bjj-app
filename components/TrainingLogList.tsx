@@ -411,7 +411,7 @@ const TrainingLogList = memo(function TrainingLogList({
                         aria-label={t("training.delete")}
                       >
                         {deletingId === entry.id ? (
-                          <span className="text-xs">...</span>
+                          <span className="inline-block w-3.5 h-3.5 border-2 border-zinc-400/20 border-t-zinc-400/60 rounded-full animate-spin" />
                         ) : (
                           <svg aria-hidden="true" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path

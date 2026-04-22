@@ -97,6 +97,10 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
       setShowAdd(false);
       setToast(t("profile.saved"));
       toastTimer.current = setTimeout(() => setToast(null), 2000);
+    } else {
+      clientLogger.error("belt_history.add_failed", {}, error);
+      setToast(t("error.title"));
+      toastTimer.current = setTimeout(() => setToast(null), 3000);
     }
     setSaving(false);
   };
@@ -109,6 +113,10 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
       .eq("belt", belt);
     if (!error) {
       setEntries((prev) => prev.filter((e) => e.belt !== belt));
+    } else {
+      clientLogger.error("belt_history.delete_failed", {}, error);
+      setToast(t("error.title"));
+      toastTimer.current = setTimeout(() => setToast(null), 3000);
     }
   };
 

@@ -148,6 +148,8 @@ export default function GymRanking({ userId, gymId }: Props) {
     if (!error) {
       setIsOptedIn(next);
       setRefreshKey((k) => k + 1);
+    } else {
+      clientLogger.error("gym_ranking.toggle_failed", {}, error);
     }
     setToggling(false);
   }

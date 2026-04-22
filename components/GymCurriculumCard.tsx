@@ -59,6 +59,8 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
 
     if (!error) {
       setPracticed(true);
+    } else {
+      clientLogger.error("gym_curriculum.mark_failed", {}, error);
     }
     setMarking(false);
   };
