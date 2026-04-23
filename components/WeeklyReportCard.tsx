@@ -217,43 +217,6 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
   // ── Pro: Full report ──
   const totalTypeCount = Object.values(report.typeDistribution).reduce((a, b) => a + b, 0);
 
-  // ── Share handler — §8 Viral ──
-  const [sharing, setSharing] = useState(false);
-  const handleShareReport = useCallback(async () => {
-    setSharing(true);
-    try {
-      const count = tab === "week" ? report.currentWeekCount : report.currentMonthCount;
-      const periodLabel = tab === "week" ? t("report.tabWeek") : t("report.tabMonth");
-      const totalMin = tab === "week" ? report.currentWeekTotalMinutes : report.currentMonthTotalMinutes;
-      const timeStr = totalMin > 0
-        ? (totalMin >= 60
-          ? `${Math.floor(totalMin / 60)}h${totalMin % 60 > 0 ? `${totalMin % 60}m` : ""}`
-          : `${totalMin}m`)
-        : "";
-      const text = [
-        `🥋 ${periodLabel}: ${count} ${t("report.sessions")}`,
-        timeStr ? `⏱ ${timeStr}` : "",
-        report.maxConsecutiveDays > 0 ? `🔥 ${t("report.streakValue", { n: report.maxConsecutiveDays })}` : "",
-        "",
-        "#BJJ #JiuJitsu #Training",
-        "bjj-app.net",
-      ].filter(Boolean).join("\n");
-
-      if (typeof navigator !== "undefined" && navigator.share) {
-        await navigator.share({ text });
-      } else if (typeof navigator !== "undefined" && navigator.clipboard) {
-        await navigator.clipboard.writeText(text);
-      }
-      trackEvent("monthly_share", { period: tab });
-    } catch (err) {
-      if ((err as Error).name !== "AbortError") {
-        clientLogger.error("weekly_report.share_error", {}, err);
-      }
-    } finally {
-      setSharing(false);
-    }
-  }, [tab, report, t]);
-
   return (
     <div className="bg-zinc-900/60 ring-1 ring-inset ring-white/[0.04] shadow-lg shadow-black/40 rounded-2xl px-4 py-4 mb-5">
       {/* Header with tab */}
@@ -455,7 +418,7 @@ function formatDelta(delta: number): string {
 }
 
 // ── Helper: format week label (e.g. "4/6") ──
-function formatWeekLabel(weekStart: string, locale: string): string {
+function formatWeekLabel(weekStart: string, _locale: string): string {
   const d = new Date(weekStart + "T00:00:00Z");
   const month = d.getUTCMonth() + 1;
   const day = d.getUTCDate();
