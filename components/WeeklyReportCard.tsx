@@ -6,7 +6,7 @@
  * Pro users see full KPI + trend + insights. Free users see blur teaser.
  */
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { useWeeklyReport, type TrainingType } from "@/hooks/useWeeklyReport";
@@ -82,6 +82,43 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
 
   const report = useWeeklyReport(logs, t);
 
+  // ── Share handler — §8 Viral (placed before early returns for rules-of-hooks) ──
+  const [sharing, setSharing] = useState(false);
+  const handleShareReport = useCallback(async () => {
+    setSharing(true);
+    try {
+      const count = tab === "week" ? report.currentWeekCount : report.currentMonthCount;
+      const periodLabel = tab === "week" ? t("report.tabWeek") : t("report.tabMonth");
+      const totalMin = tab === "week" ? report.currentWeekTotalMinutes : report.currentMonthTotalMinutes;
+      const timeStr = totalMin > 0
+        ? (totalMin >= 60
+          ? `${Math.floor(totalMin / 60)}h${totalMin % 60 > 0 ? `${totalMin % 60}m` : ""}`
+          : `${totalMin}m`)
+        : "";
+      const text = [
+        `🥋 ${periodLabel}: ${count} ${t("report.sessions")}`,
+        timeStr ? `⏱ ${timeStr}` : "",
+        report.maxConsecutiveDays > 0 ? `🔥 ${t("report.streakValue", { n: report.maxConsecutiveDays })}` : "",
+        "",
+        "#BJJ #JiuJitsu #Training",
+        "bjj-app.net",
+      ].filter(Boolean).join("\n");
+
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share({ text });
+      } else if (typeof navigator !== "undefined" && navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+      }
+      trackEvent("monthly_share", { period: tab });
+    } catch (err) {
+      if ((err as Error).name !== "AbortError") {
+        clientLogger.error("weekly_report.share_error", {}, err);
+      }
+    } finally {
+      setSharing(false);
+    }
+  }, [tab, report, t]);
+
   // ── Loading skeleton — matches real content height to prevent layout shift ──
   if (loading) {
     return (
@@ -132,12 +169,12 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
           <h3 className="text-sm font-semibold text-white">{t("report.title")}</h3>
         </div>
         <p className="text-xs text-zinc-500 mb-3">{t("report.emptyState")}</p>
-        <a
+        <Link
           href="/records"
           className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-500 transition-colors"
         >
           {t("report.logTraining")}
-        </a>
+        </Link>
       </div>
     );
   }
