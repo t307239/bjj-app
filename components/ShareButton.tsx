@@ -179,8 +179,8 @@ export default function ShareButton({ entry }: Props) {
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({
           files: [file],
-          title: "BJJ Training Log",
-          text: "Logged a training session on BJJ App 🥋 #BJJ #JiuJitsu #Training",
+          title: t("share.nativeTitle"),
+          text: t("share.nativeText"),
         });
         trackEvent("training_shared", { method: "native_share" });
       } else {

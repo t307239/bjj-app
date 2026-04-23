@@ -607,7 +607,9 @@
     "ctaDesc": "Cadastre-se gratuitamente para sincronizar entre dispositivos, ver o calendário e acompanhar metas",
     "ctaButton": "Entrar no Tatame →",
     "ctaNote": "※ Seus dados de visitante serão migrados automaticamente após o cadastro",
-    "migrated": "🎉 {n} sessão(ões) de visitante migrada(s) para sua conta!"
+    "migrated": "🎉 {n} sessão(ões) de visitante migrada(s) para sua conta!",
+    "migrationFailed": "Falha ao migrar {n} sessão(ões)",
+    "migrationRetry": "Tentar novamente"
   },
   "login": {
     "title": "Entrar no BJJ App",
@@ -1086,7 +1088,13 @@
     "contact": "Se o problema persistir,",
     "contactLink": "entre em contato",
     "dataSafe": "Seus dados de treino estão salvos com segurança.",
-    "tryAgain": "Tentar novamente"
+    "tryAgain": "Tentar novamente",
+    "errorIdLabel": "ID do erro:",
+    "authTitle": "Falha no login",
+    "authDescription": "Ocorreu um erro durante o processo de autenticação. Tente novamente.",
+    "authBackToLogin": "Voltar ao login",
+    "inviteTitle": "Falha ao carregar o link de convite",
+    "inviteDescription": "O código de convite pode ser inválido ou ocorreu um erro temporário."
   },
   "goal": {
     "title": "🎯 Metas de Treino",
@@ -1314,7 +1322,9 @@
     "featureCurriculum": "📚 Currículo push",
     "featureQr": "📱 Convite QR",
     "waitlistInvalidEmail": "Por favor, insira um endereço de e-mail válido",
-    "csvBulkTitle": "Convite em massa por CSV"
+    "csvBulkTitle": "Convite em massa por CSV",
+    "curriculumFromGym": "De {name}",
+    "curriculumAriaOpen": "Abrir artigo do currículo: {name}"
   },
   "gymJoin": {
     "title": "Entrar em {name}",
@@ -2052,5 +2062,9 @@
     "cancel": "Cancelar",
     "submitFailed": "Falha ao enviar. Tente novamente.",
     "reviewNote": "* URLs enviadas serão revisadas antes de serem publicadas"
+  },
+  "share": {
+    "nativeTitle": "Registro de Treino de BJJ",
+    "nativeText": "Registrei um treino no BJJ App 🥋 #BJJ #JiuJitsu #Training"
   }
 }

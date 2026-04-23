@@ -585,7 +585,9 @@
     "ctaDesc": "無料登録すると複数デバイスで同期・カレンダー表示・目標管理が使えます",
     "ctaButton": "無料でアカウント登録 →",
     "ctaNote": "※ 登録後、このブラウザのデータは自動で引き継がれます",
-    "migrated": "ゲスト時の練習記録 {n}件を引き継ぎました！"
+    "migrated": "ゲスト時の練習記録 {n}件を引き継ぎました！",
+    "migrationFailed": "記録の移行に失敗しました（{n}件）",
+    "migrationRetry": "再試行"
   },
   "login": {
     "title": "BJJ App にログイン",
@@ -1028,7 +1030,13 @@
     "goHome": "ホームへ戻る",
     "contact": "問題が解決しない場合は",
     "contactLink": "お問い合わせ",
-    "dataSafe": "トレーニングデータは安全に保存されています"
+    "dataSafe": "トレーニングデータは安全に保存されています",
+    "errorIdLabel": "Error ID:",
+    "authTitle": "ログインに失敗しました",
+    "authDescription": "認証プロセスでエラーが発生しました。もう一度お試しください。",
+    "authBackToLogin": "ログインページへ",
+    "inviteTitle": "招待リンクの読み込みに失敗しました",
+    "inviteDescription": "招待コードが無効か、一時的なエラーが発生しました。"
   },
   "goal": {
     "title": "🎯 練習目標",
@@ -1256,7 +1264,9 @@
     "featureCurriculum": "📚 カリキュラム配信",
     "featureQr": "📱 QR招待",
     "waitlistInvalidEmail": "有効なメールアドレスを入力してください",
-    "csvBulkTitle": "CSV一括招待"
+    "csvBulkTitle": "CSV一括招待",
+    "curriculumFromGym": "{name}から",
+    "curriculumAriaOpen": "カリキュラム記事を開く: {name}"
   },
   "gymJoin": {
     "title": "{name} に参加する",
@@ -1993,5 +2003,9 @@
     "cancel": "キャンセル",
     "submitFailed": "送信に失敗しました。もう一度お試しください。",
     "reviewNote": "※ 送信されたURLは審査後に掲載されます"
+  },
+  "share": {
+    "nativeTitle": "BJJ Training Log",
+    "nativeText": "BJJ Appで練習記録を残しました 🥋 #BJJ #JiuJitsu #柔術 #Training"
   }
 }

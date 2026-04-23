@@ -97,7 +97,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
         <div className="flex-1 min-w-0">
           <p className="text-xs font-semibold text-zinc-400 tracking-widest mb-0.5 truncate">
             {gymName
-              ? `From ${gymName}`
+              ? t("gym.curriculumFromGym", { name: gymName })
               : t("gym.curriculumCardTitle")}
           </p>
           <a
@@ -105,7 +105,9 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm font-semibold text-white truncate hover:underline block"
-            aria-label={`Open curriculum article: ${pageName ?? curriculumUrl}`}
+            aria-label={t("gym.curriculumAriaOpen", {
+              name: pageName ?? curriculumUrl,
+            })}
           >
             {pageName ?? t("gym.curriculumCardTitle")}
           </a>

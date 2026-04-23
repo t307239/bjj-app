@@ -584,7 +584,9 @@
     "ctaDesc": "Sign up for free to sync across devices, view calendar, and track goals",
     "ctaButton": "Step on the Mat →",
     "ctaNote": "※ Your guest data will be automatically migrated after signup",
-    "migrated": "🎉 Migrated {n} guest session(s) to your account!"
+    "migrated": "🎉 Migrated {n} guest session(s) to your account!",
+    "migrationFailed": "Failed to migrate {n} session(s)",
+    "migrationRetry": "Retry"
   },
   "login": {
     "title": "Sign in to BJJ App",
@@ -1036,7 +1038,13 @@
     "goHome": "Back to Home",
     "contact": "If the problem persists,",
     "contactLink": "contact us",
-    "dataSafe": "Your training data is safely stored."
+    "dataSafe": "Your training data is safely stored.",
+    "errorIdLabel": "Error ID:",
+    "authTitle": "Login failed",
+    "authDescription": "An error occurred during the authentication process. Please try again.",
+    "authBackToLogin": "Back to login",
+    "inviteTitle": "Failed to load invite link",
+    "inviteDescription": "The invite code may be invalid or a temporary error occurred."
   },
   "goal": {
     "title": "🎯 Training Goals",
@@ -1264,7 +1272,9 @@
     "featureCurriculum": "📚 Curriculum push",
     "featureQr": "📱 QR invite",
     "waitlistInvalidEmail": "Please enter a valid email address",
-    "csvBulkTitle": "Bulk invite via CSV"
+    "csvBulkTitle": "Bulk invite via CSV",
+    "curriculumFromGym": "From {name}",
+    "curriculumAriaOpen": "Open curriculum article: {name}"
   },
   "gymJoin": {
     "title": "Join {name}",
@@ -1991,5 +2001,9 @@
     "cancel": "Cancel",
     "submitFailed": "Submission failed. Please try again.",
     "reviewNote": "* Submitted URLs are reviewed before being published"
+  },
+  "share": {
+    "nativeTitle": "BJJ Training Log",
+    "nativeText": "Logged a training session on BJJ App 🥋 #BJJ #JiuJitsu #Training"
   }
 }
