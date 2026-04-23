@@ -12,6 +12,20 @@ type Props = {
   isGymPro: boolean;
 };
 
+/**
+ * CSV 出力用のセルエスケープ。
+ * - 内部の " は "" に escape（RFC 4180）
+ * - 先頭が =, +, -, @, \t, \r の値は CSV/Excel formula injection を防ぐため '` で prefix
+ *   参考: https://owasp.org/www-community/attacks/CSV_Injection
+ * - 常に "" で囲む（値内のカンマ/改行に対して安全）
+ */
+function csvCell(value: string): string {
+  const dangerous = /^[=+\-@\t\r]/;
+  const needsPrefix = dangerous.test(value);
+  const escaped = (needsPrefix ? `'${value}` : value).replace(/"/g, '""');
+  return `"${escaped}"`;
+}
+
 export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro }: Props) {
   const { t } = useLocale();
   const [open, setOpen] = useState(false);
@@ -106,7 +120,10 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
   const downloadCsv = () => {
     const header = "name,email,invite_link,status\n";
     const body = rows
-      .map((r) => `"${r.name}","${r.email}","${inviteBase}","pending"`)
+      .map(
+        (r) =>
+          `${csvCell(r.name)},${csvCell(r.email)},${csvCell(inviteBase)},${csvCell("pending")}`,
+      )
       .join("\n");
     const blob = new Blob([header + body], { type: "text/csv" });
     const url = URL.createObjectURL(blob);

@@ -14,9 +14,10 @@ export default function GymWaitlistForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const trimmed = email.trim();
-    if (!trimmed) return;
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+    const trimmedEmail = email.trim();
+    const trimmedGymName = gymName.trim();
+    if (!trimmedEmail) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
       setErrorMsg(t("gym.waitlistInvalidEmail"));
       setState("error");
       return;
@@ -28,7 +29,7 @@ export default function GymWaitlistForm() {
       const res = await fetch("/api/gym-waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), gymName: gymName.trim() }),
+        body: JSON.stringify({ email: trimmedEmail, gymName: trimmedGymName }),
       });
       if (res.ok) {
         setState("success");
@@ -88,7 +89,16 @@ export default function GymWaitlistForm() {
         />
       </div>
       {state === "error" && (
-        <p role="alert" className="text-red-400 text-xs">{errorMsg}</p>
+        // key={errorMsg} で同じエラーが連続しても mount が切り替わり、
+        // スクリーンリーダーが role="alert" を毎回再アナウンスする
+        <p
+          key={errorMsg}
+          role="alert"
+          aria-live="assertive"
+          className="text-red-400 text-xs"
+        >
+          {errorMsg}
+        </p>
       )}
       <button
         type="submit"

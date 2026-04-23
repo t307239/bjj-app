@@ -1,21 +1,38 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { useLocale } from "@/lib/i18n";
 import { getLocalDateParts } from "@/lib/timezone";
 import type { WeekHistory, MonthHistory } from "./GoalTrackerEditor";
 
 // ── GoalWeekDayGrid ───────────────────────────────────────────────────────────
 // Shows Mon–Sun completion dots for the current week.
+// Day labels follow the current UI locale (月/Mon/Seg) for i18n parity.
+
+// Map our internal Locale codes → Intl.DateTimeFormat's BCP-47 tags.
+// pt-BR is preferred over plain pt for correct Portuguese short day names.
+const INTL_LOCALE_MAP = {
+  en: "en-US",
+  ja: "ja-JP",
+  pt: "pt-BR",
+} as const;
 
 export const GoalWeekDayGrid = memo(function GoalWeekDayGrid({
   currentWeekDayGrid,
 }: {
   currentWeekDayGrid: boolean[];
 }) {
-  const DAY_LABELS = Array.from({ length: 7 }, (_, i) =>
-    new Intl.DateTimeFormat("en", { weekday: "short" }).format(new Date(2024, 0, 1 + i))
-  );
+  const { locale } = useLocale();
+  // memo 化済み component 内で毎render再生成を避けつつ locale 連動させる。
+  // Intl.DateTimeFormat 自体がそこそこ重い ので useMemo 必須。
+  const DAY_LABELS = useMemo(() => {
+    const intlLocale = INTL_LOCALE_MAP[locale] ?? "en-US";
+    const fmt = new Intl.DateTimeFormat(intlLocale, { weekday: "short" });
+    // 2024-01-01 is a Monday → produces Mon, Tue, ... Sun.
+    return Array.from({ length: 7 }, (_, i) =>
+      fmt.format(new Date(2024, 0, 1 + i))
+    );
+  }, [locale]);
   const dowNow = getLocalDateParts().dayOfWeek; // 0=Sun
   const todayIdx = dowNow === 0 ? 6 : dowNow - 1; // Mon=0...Sun=6
 
