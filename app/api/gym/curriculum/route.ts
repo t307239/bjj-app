@@ -18,12 +18,17 @@ const CurriculumBodySchema = z.object({
     .url("Invalid URL format")
     .max(500, "URL too long")
     .refine((url) => {
+      // Defense-in-depth: z.string().url() は javascript: / data: / file: / ftp: も通す。
+      // ALLOWED_HOSTS だけだと、将来ホスト追加時に protocol を見落とすリスクがある。
+      // ここで protocol を先に絞ることで、SSRF/script injection を二重に閉じる。
       try {
-        return ALLOWED_HOSTS.includes(new URL(url).hostname);
+        const parsed = new URL(url);
+        if (parsed.protocol !== "https:") return false;
+        return ALLOWED_HOSTS.includes(parsed.hostname);
       } catch {
         return false;
       }
-    }, "Only BJJ Wiki URLs (wiki.bjj-app.net) are allowed"),
+    }, "Only HTTPS BJJ Wiki URLs (wiki.bjj-app.net) are allowed"),
 });
 
 /**

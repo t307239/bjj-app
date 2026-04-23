@@ -9,9 +9,9 @@
  * - LLMトリアージ後に承認されたURLのみ wiki_pages.video_url に反映される
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { clientLogger } from "@/lib/clientLogger";
-import { useLocale } from "@/lib/i18n";
+import { makeT, type Locale } from "@/lib/i18n";
 
 interface Props {
   slug: string;
@@ -21,6 +21,19 @@ interface Props {
 }
 
 type Status = "idle" | "submitting" | "success" | "error";
+
+/**
+ * URLパスの `lang` (e.g. "ja" / "en" / "pt") を Locale 型に正規化。
+ * 不正値は "en" フォールバック。
+ * ⚠️ `useLocale()` (cookie / localStorage / navigator) を使うと
+ * 「JA設定のユーザーが /wiki/en/... を開いた時に UI が JA になる」現象が起きる。
+ * SEO/翻訳元URL と UI が乖離するため、このコンポーネントは
+ * URL path の lang を唯一の真実として採用する。
+ */
+function normalizeLocale(lang: string): Locale {
+  if (lang === "ja" || lang === "en" || lang === "pt") return lang;
+  return "en";
+}
 
 /** YouTube URL から video ID を抽出 */
 function extractVideoId(url: string): string | null {
@@ -39,7 +52,7 @@ function extractVideoId(url: string): string | null {
 }
 
 export default function UgcVideoSubmit({ slug, lang, ugcLabel, ugcCta }: Props) {
-  const { t } = useLocale();
+  const t = useMemo(() => makeT(normalizeLocale(lang)), [lang]);
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("");
   const [status, setStatus] = useState<Status>("idle");
