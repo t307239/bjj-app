@@ -2,6 +2,41 @@
 
 ---
 
+## 2026/04/23 チェック
+
+### 新着リリース
+
+#### 🛠️ Claude Code v2.1.118（2026/04/23）
+- **Vimビジュアルモード対応**: `v`/`V`でビジュアル選択・オペレータ操作可能に
+- **カスタムテーマ機能**: `/theme`からテーマ作成・切替。`~/.claude/themes/`でJSON手動編集も可。プラグインもテーマ同梱可能
+- **`/cost`+`/stats`→`/usage`に統合**: 両コマンドはショートカットとして残存
+- **Hooks MCP直接呼び出し**: `type: "mcp_tool"`でHooksからMCPツール直接実行可能
+- **Auto Mode改善**: `"$defaults"`キーワードでビルトインルール+カスタムルール共存。「Don't ask again」オプション追加
+- **プラグイン改善**: `claude plugin tag`でリリースタグ作成、依存バージョン制約のスキップ通知が`/doctor`に表示
+- **`--continue`/`--resume`改善**: `/add-dir`で追加したディレクトリのセッション検出対応
+- **MCP OAuth修正多数**: `headersHelper`認証メニュー表示修正、トークンリフレッシュ競合修正、Keychain競合修正等
+- **`/fork`最適化**: 親会話全書き込みからポインタ方式に変更（ディスク節約）
+
+#### 🛠️ Claude Code v2.1.117（2026/04/22）
+- forked subagents外部ビルド対応、モデル選択永続化改善、ローカル+claude.ai MCP同時設定時の起動高速化
+
+#### 🛠️ Claude Code v2.1.116（2026/04/20）
+- **`/resume`大幅高速化**: 40MB+セッションで最大67%高速化。dead-fork処理改善
+- **思考スピナー改善**: インライン進捗表示（「still thinking」→「almost done thinking」）
+- **セキュリティ**: sandbox auto-allowが`/`や`$HOME`への`rm`/`rmdir`をバイパスしないよう修正
+- **VS Code/Cursor/Windsurf**: フルスクリーンスクロール改善、スクロール感度設定対応
+- Devanagari等Indicスクリプトのターミナル表示修正、API 400エラーのキャッシュTTL順序修正
+
+#### 📡 API変更
+- **Claude Haiku 3 正式リタイア**（2026/04/20）: `claude-3-haiku-20240307`へのリクエストはエラーを返す。Haiku 4.5への移行必須
+
+### 💡 BJJ Appへの影響
+- **Hooks MCP直接呼び出し（v2.1.118）**: Wiki生成やQAフローでMCPツールをHooksから直接呼び出せるようになり、自動化パイプラインの柔軟性が向上
+- **`/resume`高速化（v2.1.116）**: 長時間セッションの再開が大幅に速くなり、開発DX向上
+- **Haiku 3リタイア確認済み**: bjj-appは既にHaiku 4.5使用のため影響なし
+
+---
+
 ## 2026/04/20 チェック
 
 ### 新着リリース
