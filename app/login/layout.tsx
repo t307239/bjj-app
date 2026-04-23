@@ -4,7 +4,8 @@ const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://bjj-app.net";
 
 export const metadata: Metadata = {
-  title: "ログイン | BJJ App",
+  // root layout.tsx の template "%s | BJJ App" が自動付与するので suffix 重複回避
+  title: "ログイン",
   description:
     "BJJ App にログインして、毎日の柔術練習を記録・管理しましょう。Google / GitHub でワンクリックログイン。",
   openGraph: {

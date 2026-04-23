@@ -10,7 +10,8 @@ const SettingsSection = dynamic(() => import("@/components/profile/SettingsSecti
 });
 
 export const metadata: Metadata = {
-  title: "Settings | BJJ App",
+  // layout.tsx の template "%s | BJJ App" が自動付与するので suffix 重複回避
+  title: "Settings",
   description: "Manage your BJJ App preferences, notifications, theme, and data settings.",
   alternates: {
     canonical: "https://bjj-app.net/settings",

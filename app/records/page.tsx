@@ -53,7 +53,8 @@ const CompetitionSummaryCard = dynamic(() => import("@/components/CompetitionSum
 });
 
 export const metadata: Metadata = {
-  title: "Records | BJJ App",
+  // layout.tsx の template "%s | BJJ App" が自動付与するので suffix 重複回避
+  title: "Records",
   description: "View your BJJ training records, technique progress, competition results, and personal bests.",
   alternates: {
     canonical: "https://bjj-app.net/records",
