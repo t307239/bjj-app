@@ -8,6 +8,7 @@ import TrainingLog from "@/components/TrainingLog";
 import GoalTracker from "@/components/GoalTracker";
 import WeightGoalWidget from "@/components/WeightGoalWidget";
 import GymCurriculumCard from "@/components/GymCurriculumCard";
+import Link from "next/link";
 import GymKickBanner from "@/components/GymKickBanner";
 import RecordsTabsLayout from "@/components/records/RecordsTabsLayout";
 import {
@@ -294,7 +295,7 @@ export default async function RecordsPage() {
                 <p className="text-sm text-zinc-400 mt-1.5 max-w-xs mx-auto leading-relaxed">
                   {t("records.noStatsYet")}
                 </p>
-                <a
+                <Link
                   href="/records?tab=log"
                   className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold transition-colors active:scale-95"
                 >
@@ -302,7 +303,7 @@ export default async function RecordsPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                   </svg>
                   {t("records.noStatsCta")}
-                </a>
+                </Link>
               </div>
             )
           }

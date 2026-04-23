@@ -185,6 +185,17 @@ export default function GymRanking({ userId, gymId }: Props) {
     );
   }
 
+  // Sort by active mode (memoized to avoid re-sort on unrelated state changes)
+  // Placed before early returns to satisfy React rules-of-hooks
+  const sorted = useMemo(
+    () => [...rows].sort((a, b) =>
+      mode === "sessions"
+        ? b.total_sessions - a.total_sessions
+        : b.current_streak - a.current_streak
+    ),
+    [rows, mode],
+  );
+
   if (loading) return <Skeleton height={120} rounded="xl" className="mb-4" />;
   if (rows.length === 0) {
     return (
@@ -199,16 +210,6 @@ export default function GymRanking({ userId, gymId }: Props) {
       </div>
     );
   }
-
-  // Sort by active mode (memoized to avoid re-sort on unrelated state changes)
-  const sorted = useMemo(
-    () => [...rows].sort((a, b) =>
-      mode === "sessions"
-        ? b.total_sessions - a.total_sessions
-        : b.current_streak - a.current_streak
-    ),
-    [rows, mode],
-  );
 
   const myRankIdx = sorted.findIndex((r) => r.isMe);
   const myRank = myRankIdx >= 0 ? myRankIdx + 1 : null;
