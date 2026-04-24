@@ -1099,7 +1099,12 @@
     "close": "▲ Fechar",
     "nextPreview": "Amanhã: {category} ▼",
     "nextHint": "Dica de amanhã",
-    "peekAhead": "Prévia →"
+    "peekAhead": "Prévia →",
+    "notFoundTitle": "Página não encontrada",
+    "notFoundSwept": "Parece que essa técnica foi raspada.",
+    "notFoundBody": "A página que você procura não existe — talvez tenha batido antes de você chegar.",
+    "notFoundBack": "Voltar ao BJJ Wiki",
+    "notFoundHome": "Início do BJJ App"
   },
   "error": {
     "title": "Algo deu errado",

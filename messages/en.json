@@ -1050,7 +1050,12 @@
     "close": "▲ Close",
     "nextPreview": "Tomorrow: {category} ▼",
     "nextHint": "Tomorrow's tip",
-    "peekAhead": "Preview →"
+    "peekAhead": "Preview →",
+    "notFoundTitle": "Page Not Found",
+    "notFoundSwept": "Looks like this technique got swept.",
+    "notFoundBody": "The page you're looking for doesn't exist — maybe it tapped out before you got here.",
+    "notFoundBack": "Back to BJJ Wiki",
+    "notFoundHome": "BJJ App Home"
   },
   "error": {
     "title": "Something went wrong",

@@ -1042,7 +1042,12 @@
     "close": "▲ 閉じる",
     "nextPreview": "明日: {category} ▼",
     "nextHint": "明日のヒント",
-    "peekAhead": "先読みする →"
+    "peekAhead": "先読みする →",
+    "notFoundTitle": "ページが見つかりません",
+    "notFoundSwept": "この技は一本取られたようです。",
+    "notFoundBody": "お探しのページは存在しないか、あなたが着く前にタップアウトしたかもしれません。",
+    "notFoundBack": "BJJ Wikiに戻る",
+    "notFoundHome": "BJJ App ホーム"
   },
   "error": {
     "title": "エラーが発生しました",
