@@ -121,6 +121,11 @@ jobs:
             exit 1
           fi
 
+      # z157: i18n / locale drift 自動検出 (z140-z155 で 12 cycle 連続発見した
+      # pattern を CI で強制チェック、手動 MCP 検証ループを停止)
+      - name: Run detect_locale_drift.py
+        run: python3 scripts/detect_locale_drift.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest
