@@ -16,7 +16,7 @@ import {
   getMonthStartDate,
   getLocalDateParts,
 } from "@/lib/timezone";
-import { serverT, makeT, type Locale } from "@/lib/i18n";
+import { serverT, makeT, parseAcceptLanguage, type Locale } from "@/lib/i18n";
 import { buildBreadcrumbJsonLd } from "@/lib/breadcrumb";
 import { logger } from "@/lib/logger";
 import GuestDashboardClient from "@/components/GuestDashboardClient";
@@ -121,20 +121,24 @@ export default async function RecordsPage() {
   const m = Array.isArray(metrics) ? metrics[0] : metrics;
   const totalCount = Number(m?.total_count ?? 0);
 
-  // Locale
+  // ── Locale detection ──────────────────────────────────────────────────────
+  // dashboard/page.tsx と完全に同じ優先順位:
+  // bjj_locale cookie → profile.locale → Accept-Language → "en"
+  // 旧実装は "ja" のみをチェックしており PT 話者が JA/EN にフォールバックしていた。
   let userLocale: Locale = "en";
   const cookieStore = await cookies();
   const cookieLocale = cookieStore.get("bjj_locale")?.value;
-  if (cookieLocale === "ja") {
-    userLocale = "ja";
+  if (cookieLocale === "ja" || cookieLocale === "pt" || cookieLocale === "en") {
+    userLocale = cookieLocale as Locale;
   } else {
     const profileLocale = (profileData as { locale?: string | null })?.locale;
-    if (profileLocale === "ja") {
-      userLocale = "ja";
+    if (profileLocale === "ja" || profileLocale === "pt" || profileLocale === "en") {
+      userLocale = profileLocale as Locale;
     } else {
       const hdrs = await headers();
       const acceptLang = hdrs.get("accept-language") ?? "";
-      if (acceptLang.toLowerCase().startsWith("ja")) userLocale = "ja";
+      const detected = parseAcceptLanguage(acceptLang);
+      if (detected) userLocale = detected;
     }
   }
   const t = makeT(userLocale);
