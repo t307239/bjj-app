@@ -3,6 +3,7 @@
 import { useMemo, memo } from "react";
 import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
+import { getLocalDateString } from "@/lib/timezone";
 
 /**
  * HeatmapCalendar — GitHub-style contribution calendar for training activity.
@@ -24,10 +25,13 @@ function buildCountMap(dates: string[]): Map<string, number> {
   return map;
 }
 
-/** Generate array of dates for last N weeks ending today (JST) */
+/** Generate array of dates for last N weeks ending today (user's local TZ) */
 function generateDateGrid(weeks: number): string[] {
-  const now = new Date(Date.now() + 9 * 60 * 60 * 1000);
-  const today = now.toISOString().slice(0, 10);
+  // z158: `Date.now() + 9h` で JST 固定していた旧実装を、ユーザーの
+  // ローカル TZ を尊重する `getLocalDateString()` に置換。
+  // PT/EN ユーザーが JST 以外の地域から見た時に「今日」が前日扱いになる
+  // bug を修正 (9:00 UTC〜翌 9:00 UTC の 24h で表示ズレが発生していた)。
+  const today = getLocalDateString();
   const todayDate = new Date(today + "T00:00:00Z");
   const dayOfWeek = todayDate.getUTCDay(); // 0=Sun
 
@@ -59,8 +63,8 @@ const MONTH_LABELS_PT = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","
 
 /** Mobile: last 7 days bar chart view */
 function WeekBarChart({ countMap, locale }: { countMap: Map<string, number>; locale: string }) {
-  const now = new Date(Date.now() + 9 * 60 * 60 * 1000);
-  const todayStr = now.toISOString().slice(0, 10);
+  // z158: JST 固定 +9h を getLocalDateString() に置換 (ユーザー TZ 尊重)
+  const todayStr = getLocalDateString();
   const todayMs = new Date(todayStr + "T00:00:00Z").getTime();
 
   const days: { date: string; count: number; label: string }[] = [];

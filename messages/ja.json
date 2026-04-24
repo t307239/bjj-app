@@ -1697,7 +1697,7 @@
   },
   "body": {
     "injuryAlert": {
-      "dayCount": "Day {n}",
+      "dayCount": "{n}日目",
       "week1Injured": "怪我の記録があります。スパーリングは控え、今日は無理せずドリルに集中しませんか？",
       "week1Sore": "筋肉痛があります。今日は軽めに、回復を優先しましょう。",
       "week3": "そろそろ回復してきましたか？モビリティ・ストレッチでしっかりケアしましょう。",
@@ -2031,7 +2031,7 @@
     "reviewNote": "※ 送信されたURLは審査後に掲載されます"
   },
   "share": {
-    "nativeTitle": "BJJ Training Log",
+    "nativeTitle": "BJJ 練習記録",
     "nativeText": "BJJ Appで練習記録を残しました 🥋 #BJJ #JiuJitsu #柔術 #Training"
   }
 }
