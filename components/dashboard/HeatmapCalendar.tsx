@@ -54,6 +54,8 @@ function getIntensityClass(count: number): string {
 
 const MONTH_LABELS_EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const MONTH_LABELS_JA = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
+// pt-BR の短縮月名（JA/EN と同じ配列構造、locale drift 防止）
+const MONTH_LABELS_PT = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
 
 /** Mobile: last 7 days bar chart view */
 function WeekBarChart({ countMap, locale }: { countMap: Map<string, number>; locale: string }) {
@@ -64,7 +66,10 @@ function WeekBarChart({ countMap, locale }: { countMap: Map<string, number>; loc
   const days: { date: string; count: number; label: string }[] = [];
   const dayLabelsEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const dayLabelsJa = ["日", "月", "火", "水", "木", "金", "土"];
-  const labels = locale === "ja" ? dayLabelsJa : dayLabelsEn;
+  // pt-BR の短縮曜日名（日曜始まり）。locale drift 防止で 3 言語すべて対応。
+  const dayLabelsPt = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+  const labels =
+    locale === "ja" ? dayLabelsJa : locale === "pt" ? dayLabelsPt : dayLabelsEn;
 
   for (let i = 6; i >= 0; i--) {
     const d = new Date(todayMs - i * 86400000);
@@ -118,8 +123,14 @@ const HeatmapCalendar = memo(function HeatmapCalendar({ trainingDates }: Props) 
 
   // Month labels: detect which columns start a new month
   const monthMarkers: { col: number; label: string }[] = [];
-  const isJa = locale === "ja";
-  const labels = isJa ? MONTH_LABELS_JA : MONTH_LABELS_EN;
+  // locale drift 防止: JA/EN/PT 3 言語すべてに対応（PT 欠落で EN にフォールバック
+  // していた旧実装を修正）
+  const labels =
+    locale === "ja"
+      ? MONTH_LABELS_JA
+      : locale === "pt"
+        ? MONTH_LABELS_PT
+        : MONTH_LABELS_EN;
   let lastMonth = -1;
   for (let col = 0; col < WEEKS; col++) {
     const firstDateInCol = dateGrid[col * 7]; // Sunday of that week
