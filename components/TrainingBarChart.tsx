@@ -28,11 +28,13 @@ type Props = {
   isPro?: boolean;
 };
 
-// Locale-aware month label from YYYY-MM string
-function getMonthLabel(ym: string): string {
+// Locale-aware month label from YYYY-MM string.
+// `intlLocale` は BCP-47 tag (ja-JP / en-US / pt-BR) を受け取り、
+// X軸ラベルが UI 言語に連動する。
+function getMonthLabel(ym: string, intlLocale: string = "en-US"): string {
   const [y, m] = ym.split("-");
   const d = new Date(parseInt(y), parseInt(m) - 1, 1);
-  return new Intl.DateTimeFormat("en", { month: "short" }).format(d);
+  return new Intl.DateTimeFormat(intlLocale, { month: "short" }).format(d);
 }
 
 const TYPE_COLORS: Record<string, string> = {
@@ -55,7 +57,9 @@ const TYPE_HEX: Record<string, string> = {
 const TYPE_ORDER = ["gi", "nogi", "drilling", "competition", "open_mat"];
 
 export default function TrainingBarChart({ userId, isPro = false }: Props) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
+  const intlLocale =
+    locale === "ja" ? "ja-JP" : locale === "pt" ? "pt-BR" : "en-US";
   const TYPE_LABELS: Record<string, string> = {
     gi: t("training.gi"),
     nogi: t("training.nogi"),
@@ -112,7 +116,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
               }
             });
             return Object.entries(buckets).map(([month, val]) => {
-              return { month, label: getMonthLabel(month), ...val };
+              return { month, label: getMonthLabel(month, intlLocale), ...val };
             });
           };
 
@@ -188,7 +192,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
     ? (() => {
         const [y, m] = selectedMonth.split("-");
         const d = new Date(parseInt(y), parseInt(m) - 1, 1);
-        return new Intl.DateTimeFormat("en", { year: "numeric", month: "long" }).format(d);
+        return new Intl.DateTimeFormat(intlLocale, { year: "numeric", month: "long" }).format(d);
       })()
     : null;
 

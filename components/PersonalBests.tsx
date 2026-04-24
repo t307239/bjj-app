@@ -78,7 +78,10 @@ function IntensitySparkline({ data }: { data: { ym: string; avgSessionMin: numbe
 }
 
 export default function PersonalBests({ userId }: Props) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
+  // BCP-47 locale tag for Intl.DateTimeFormat (pt-BR 優先 for Portuguese)
+  const intlLocale =
+    locale === "ja" ? "ja-JP" : locale === "pt" ? "pt-BR" : "en-US";
   const [bests, setBests] = useState<Bests | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -216,7 +219,7 @@ export default function PersonalBests({ userId }: Props) {
     ? (() => {
         const [y, m] = bests.bestMonthKey.split("-");
         const d = new Date(parseInt(y), parseInt(m) - 1, 1);
-        return new Intl.DateTimeFormat("en", { year: "numeric", month: "long" }).format(d);
+        return new Intl.DateTimeFormat(intlLocale, { year: "numeric", month: "long" }).format(d);
       })()
     : "";
 
@@ -348,12 +351,13 @@ aria-hidden="true"           className={`w-4 h-4 text-zinc-400 transition-transf
       )}
       {/* 曜日別練習頻度ミニグラフ */}
       {bests.totalSessions >= 5 && (() => {
-        // Mon=0 … Sun=6, English narrow weekday labels (2024-01-01 is Monday) — matches TrainingChart (#146)
+        // Mon=0 … Sun=6, locale-aware narrow weekday labels (2024-01-01 is Monday)
+        // — GoalWeekDayGrid と同じパターン、locale 連動
         const DOW_LABELS = Array.from({ length: 7 }, (_, i) =>
-          new Intl.DateTimeFormat("en", { weekday: "narrow" }).format(new Date(2024, 0, 1 + i))
+          new Intl.DateTimeFormat(intlLocale, { weekday: "narrow" }).format(new Date(2024, 0, 1 + i))
         );
         const DOW_LONG = Array.from({ length: 7 }, (_, i) =>
-          new Intl.DateTimeFormat("en", { weekday: "long" }).format(new Date(2024, 0, 1 + i))
+          new Intl.DateTimeFormat(intlLocale, { weekday: "long" }).format(new Date(2024, 0, 1 + i))
         );
         const maxDow = Math.max(...bests.dowCounts, 1);
         const bestDowIdx = bests.dowCounts.indexOf(Math.max(...bests.dowCounts));

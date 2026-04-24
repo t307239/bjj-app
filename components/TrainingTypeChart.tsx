@@ -195,20 +195,21 @@ function MiniSparkline({ logs, typeValue, color }: {
   );
 }
 
-function MonthlyTrend({ logs, typeValue, typeLabel, color, trendSubtitle }: {
+function MonthlyTrend({ logs, typeValue, typeLabel, color, trendSubtitle, intlLocale }: {
   logs: { date: string; type: string }[];
   typeValue: string;
   typeLabel: string;
   color: string;
   trendSubtitle: string;
+  intlLocale: string;
 }) {
   const now = new Date();
   const months: { key: string; label: string; count: number }[] = [];
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-    // locale-aware short month label via Intl
-    const label = new Intl.DateTimeFormat("en", { month: "short" }).format(d);
+    // locale-aware short month label via Intl (ja-JP / en-US / pt-BR)
+    const label = new Intl.DateTimeFormat(intlLocale, { month: "short" }).format(d);
     months.push({ key, label, count: 0 });
   }
   logs.forEach((l) => {
