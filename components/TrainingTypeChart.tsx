@@ -255,7 +255,9 @@ function MonthlyTrend({ logs, typeValue, typeLabel, color, trendSubtitle, intlLo
 }
 
 export default function TrainingTypeChart({ userId, isPro = false }: Props) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
+  const intlLocale =
+    locale === "ja" ? "ja-JP" : locale === "pt" ? "pt-BR" : "en-US";
   const [allLogs, setAllLogs] = useState<{ date: string; type: string; duration_min: number | null }[]>([]);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<Period>("all");
@@ -437,6 +439,7 @@ aria-hidden="true"             className={`w-4 h-4 text-zinc-400 transition-tran
             typeLabel={typeDef.label}
             color={typeDef.color}
             trendSubtitle={t("chart.monthlyTrendSubtitle")}
+            intlLocale={intlLocale}
           />
         ) : null;
       })()}
