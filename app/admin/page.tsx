@@ -7,7 +7,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AdminPanel from "./AdminPanel";
 
-export const metadata = { title: "Admin — BJJ App", robots: "noindex,nofollow" };
+// layout.tsx の template "%s | BJJ App" が自動付与するので suffix 重複回避
+export const metadata = { title: "Admin", robots: "noindex,nofollow" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {

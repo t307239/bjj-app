@@ -18,7 +18,8 @@ const SkillMap = dynamic(() => import("@/components/SkillMapV2"), {
 });
 
 export const metadata: Metadata = {
-  title: "Skill Map — BJJ App",
+  // layout.tsx の template "%s | BJJ App" が自動付与するので suffix 重複回避
+  title: "Skill Map",
   description:
     "Visualize your BJJ technique connections as an interactive skill tree. Explore pathways from each position.",
   alternates: {

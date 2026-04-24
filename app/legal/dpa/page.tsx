@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Data Processing Agreement (DPA) — BJJ App",
+  // layout.tsx の template "%s | BJJ App" が自動付与するので suffix 重複回避
+  title: "Data Processing Agreement (DPA)",
   description:
     "Summary of our Data Processing Agreement pursuant to GDPR Article 28.",
   robots: { index: true, follow: true },
