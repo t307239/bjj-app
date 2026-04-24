@@ -18,6 +18,17 @@ import {
   encodeRollNotes,
 } from "@/lib/trainingLogHelpers";
 import { getLocalDateParts, getLogicalTrainingDate } from "@/lib/timezone";
+
+// z158/z159: ユーザーのローカル TZ における "N ヶ月前" の日付を YYYY-MM-DD で返す。
+// 旧実装は `Date.now() + 9 * 60 * 60 * 1000` で JST ハードコードだったため
+// PT (UTC-3) / EN (UTC-4/5/8) ユーザーでは cutoff 境界が翌日ずれていた。
+function monthsAgoLocalDate(monthsBack: number): string {
+  const todayStr = getLocalDateString();  // user's local TZ
+  const [y, m, d] = todayStr.split("-").map(Number);
+  // UTC で同じ年月日を組み立てて月減算 (月末繰越は UTC-semantics で OK)
+  const past = new Date(Date.UTC(y, m - 1 - monthsBack, d));
+  return past.toISOString().slice(0, 10);
+}
 import { trackEvent } from "@/lib/analytics";
 
 const PAGE_SIZE = 10;
@@ -202,11 +213,8 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     const loadEntries = async () => {
       setInitialLoading(true);
 
-      const oneMonthAgoDate = (() => {
-        const d = new Date(Date.now() + 9 * 60 * 60 * 1000);
-        d.setMonth(d.getMonth() - 1);
-        return d.toISOString().slice(0, 10);
-      })();
+      // z159: JST 固定 +9h → ユーザーTZ尊重 (monthsAgoLocalDate)
+      const oneMonthAgoDate = monthsAgoLocalDate(1);
 
       let logsQuery = supabase
         .from("training_logs")
@@ -303,9 +311,8 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         .eq("user_id", userId);
 
       if (!isPro) {
-        const d = new Date(Date.now() + 9 * 60 * 60 * 1000);
-        d.setMonth(d.getMonth() - 1);
-        const cutoff = d.toISOString().slice(0, 10);
+        // z159: JST 固定 → ユーザーTZ尊重
+        const cutoff = monthsAgoLocalDate(1);
         logsQuery = logsQuery.gte("date", cutoff);
         countQuery = countQuery.gte("date", cutoff);
       }
@@ -445,9 +452,8 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         .eq("user_id", userId)
         .order("date", { ascending: false });
       if (!isPro) {
-        const d = new Date(Date.now() + 9 * 60 * 60 * 1000);
-        d.setMonth(d.getMonth() - 1);
-        allLogsQuery = allLogsQuery.gte("date", d.toISOString().slice(0, 10));
+        // z159: JST 固定 → ユーザーTZ尊重
+        allLogsQuery = allLogsQuery.gte("date", monthsAgoLocalDate(1));
       }
       const { data: allLogs } = await allLogsQuery;
       const logs = allLogs ?? [];
@@ -628,9 +634,8 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       .eq("user_id", userId)
       .order("date", { ascending: false });
     if (!isPro) {
-      const d = new Date(Date.now() + 9 * 60 * 60 * 1000);
-      d.setMonth(d.getMonth() - 1);
-      query = query.gte("date", d.toISOString().slice(0, 10));
+      // z159: JST 固定 → ユーザーTZ尊重
+      query = query.gte("date", monthsAgoLocalDate(1));
     }
     // Apply server-side search filter when active
     if (debouncedSearch) {
