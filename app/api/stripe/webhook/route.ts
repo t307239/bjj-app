@@ -36,6 +36,36 @@ export async function POST(req: Request) {
     serverEnv.supabaseServiceRoleKey()
   );
 
+  // z172: Idempotency check — Stripe may deliver the same event multiple
+  // times (https://stripe.com/docs/webhooks#best-practices). The
+  // stripe_webhook_events table has a PRIMARY KEY on event_id, so a
+  // duplicate insert fails with PostgreSQL code 23505 (unique_violation).
+  // We treat that as "already processed" and return 200 immediately.
+  const { error: insertError } = await supabase
+    .from("stripe_webhook_events")
+    .insert({
+      event_id: event.id,
+      event_type: event.type,
+    });
+
+  if (insertError) {
+    // 23505 = unique_violation = duplicate event = idempotent skip.
+    if (insertError.code === "23505") {
+      logger.info("stripe.webhook.duplicate_event_skipped", {
+        eventId: event.id,
+        eventType: event.type,
+      });
+      return new Response("ok (duplicate)", { status: 200 });
+    }
+    // Other DB errors are unexpected — log but proceed (don't block legitimate
+    // webhook processing on a transient idempotency-table issue).
+    logger.error(
+      "stripe.webhook.idempotency_insert_failed",
+      { eventId: event.id, code: insertError.code },
+      insertError as Error,
+    );
+  }
+
   try {
     switch (event.type) {
       case "checkout.session.completed": {
@@ -128,11 +158,22 @@ export async function POST(req: Request) {
             });
             const hasB2cPro = activeSubs.data.some((s) => s.metadata?.plan_type === "b2c_pro");
 
-            // Deactivate gym
-            await supabase
-              .from("gyms")
-              .update({ is_active: false })
-              .eq("owner_id", (await supabase.from("profiles").select("id").eq("stripe_customer_id", customerId).single()).data?.id ?? "");
+            // z172: resolve owner profile explicitly. If the profile lookup
+            // fails (deleted user, customer ID drift), skip the gym update
+            // rather than building an invalid SQL query with `?? ""`.
+            const { data: ownerProfile } = await supabase
+              .from("profiles")
+              .select("id")
+              .eq("stripe_customer_id", customerId)
+              .single();
+            if (ownerProfile?.id) {
+              await supabase
+                .from("gyms")
+                .update({ is_active: false })
+                .eq("owner_id", ownerProfile.id);
+            } else {
+              logger.warn("stripe.webhook.b2b_cancelled_no_owner_profile", { customerId });
+            }
 
             // Downgrade is_pro only if no B2C Pro
             await supabase
