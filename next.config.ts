@@ -68,10 +68,24 @@ const nextConfig: NextConfig = {
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin",
           },
-          // Q-22: HSTS — enforce HTTPS for 1 year (Vercel already forces HTTPS but HSTS adds browser-side enforcement)
+          // Q-22 / z171: HSTS — enforce HTTPS for 1 year + preload directive
+          // Adding `preload` makes us eligible for chrome://hsts preload list
+          // submission (https://hstspreload.org/). All apex domains we own
+          // already redirect HTTP→HTTPS via Vercel, and includeSubDomains
+          // covers wiki.bjj-app.net.
           {
             key: "Strict-Transport-Security",
-            value: "max-age=31536000; includeSubDomains",
+            value: "max-age=31536000; includeSubDomains; preload",
+          },
+          // z171: Cross-Origin-Resource-Policy — defense-in-depth against
+          // Spectre-style cross-origin reads. "same-site" allows
+          // wiki.bjj-app.net ↔ bjj-app.net loads (same eTLD+1) while blocking
+          // any other origin. We don't intentionally embed our resources on
+          // 3rd-party sites, so "same-site" is the safest non-restrictive
+          // choice. Pairs with Cross-Origin-Opener-Policy above.
+          {
+            key: "Cross-Origin-Resource-Policy",
+            value: "same-site",
           },
         ],
       },
