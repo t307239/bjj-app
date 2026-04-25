@@ -278,6 +278,12 @@ PLURAL_NO_SINGULAR_WHITELIST = {
     "gym.lastSessionDays",
     "share.tatameTime", "share.streakBadge",
     "streak.protect",  # 緊急リマインダー (n>=2 想定)
+    # z167: 周辺機能で n=1 コーナーケース (将来 visible 化したら個別 fix)
+    "profile.bjjHistory",  # "Praticando BJJ há {n} meses" — bjjHistoryMonths と重複, formatBjjDuration 経由が主
+    "freeze.atRisk", "freeze.paywallTitle",  # streak freeze paywall (n>=2 想定)
+    "report.insightStreak",  # 連続記録ハイライト (n>=2 想定)
+    "insight.milestone", "insight.weekThree",  # ダッシュボード insight 文 (n>=2 想定)
+    "matTime.etaYears", "matTime.etaMonths",  # ETA 推定 (n=1 表示頻度低)
 }
 
 PLURAL_KEYWORDS_EN = re.compile(r"\b(years|months|days|hours|sessions|stripes|techniques|people|users|items)\b", re.IGNORECASE)
