@@ -483,6 +483,52 @@ def scan_error_message_leak() -> list:
     return findings
 
 
+# ── Pattern 10: console.error/warn outside centralized logger (z174) ─
+# 中央集権 logger (lib/logger.ts / lib/clientLogger.ts) を経由しない
+# console.error/warn は Sentry に届かないため observability gap になる。
+# 例外: global-error.tsx (layout 自体が壊れた場合の最終手段)、JSDoc 例。
+
+LOGGER_EXEMPT_FILES = {
+    "lib/logger.ts",
+    "lib/clientLogger.ts",
+    "lib/sentryClient.ts",
+    "app/global-error.tsx",  # Sentry init 前にも動く必要がある最終 fallback
+    "lib/deploymentGuard.ts",  # JSDoc 例として登場のみ
+}
+
+
+def scan_console_outside_logger() -> list:
+    findings = []
+    pat = re.compile(r"console\.(error|warn)\s*\(", re.MULTILINE)
+    for fp in iter_tsx_files():
+        rel = fp.relative_to(ROOT).as_posix()
+        if rel in LOGGER_EXEMPT_FILES:
+            continue
+        try:
+            c = fp.read_text(encoding="utf-8", errors="ignore")
+        except Exception:
+            continue
+        # Strip block comments
+        c_stripped = re.sub(r"/\*[\s\S]*?\*/", "", c)
+        for m in pat.finditer(c_stripped):
+            # Skip if inside JSDoc / line comment
+            line_start = c_stripped.rfind("\n", 0, m.start()) + 1
+            line_text = c_stripped[line_start:m.start()]
+            if line_text.strip().startswith("//"):
+                continue
+            ln = c_stripped[:m.start()].count("\n") + 1
+            findings.append({
+                "id": "CONSOLE_OUTSIDE_LOGGER",
+                "severity": "🟡",
+                "file": rel,
+                "line": ln,
+                "text": (c.splitlines()[ln-1].strip() if ln-1 < len(c.splitlines()) else "")[:120],
+                "description": f"console.{m.group(1)} は Sentry に届かない — logger.error / clientLogger.error を使うこと",
+                "z": "z174",
+            })
+    return findings
+
+
 # ── Main ───────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -501,6 +547,7 @@ def main() -> int:
     all_findings.extend(scan_security_regressions())
     all_findings.extend(scan_cron_fail_open())
     all_findings.extend(scan_error_message_leak())
+    all_findings.extend(scan_console_outside_logger())
 
     criticals = [f for f in all_findings if f["severity"] == "🔴"]
     warnings = [f for f in all_findings if f["severity"] == "🟡"]

@@ -19,6 +19,7 @@ import {
 } from "@xyflow/react";
 import { createClient } from "@/lib/supabase/client";
 import { useOnlineStatus } from "@/lib/useOnlineStatus";
+import { clientLogger } from "@/lib/clientLogger";
 import {
   wouldCreateCycle,
   getLayoutedNodes,
@@ -95,7 +96,13 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
         }
       }
     } catch (e) {
-      console.error("[SkillMap] loadData error:", e);
+      // z174: route via clientLogger so SkillMap load failures hit Sentry,
+      // not just devtools (silent in production for non-admin users).
+      clientLogger.error(
+        "skillmap.load_data_failed",
+        { userId },
+        e instanceof Error ? e : new Error(String(e)),
+      );
     } finally {
       setLoading(false);
     }
