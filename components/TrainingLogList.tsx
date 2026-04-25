@@ -161,7 +161,10 @@ const TrainingLogList = memo(function TrainingLogList({
   today,
   onShowForm,
 }: Props) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
+  // BCP-47 locale tag for Intl.DateTimeFormat (pt-BR 優先 for Portuguese)
+  const intlLocale =
+    locale === "ja" ? "ja-JP" : locale === "pt" ? "pt-BR" : "en-US";
 
   // ── Loading skeleton (CLS防止: 実カードと同形状のダミーブロック) ──────────
   if (initialLoading) {
@@ -382,7 +385,7 @@ const TrainingLogList = memo(function TrainingLogList({
                         {TRAINING_TYPES.find((t) => t.value === entry.type)?.label || entry.type}
                       </span>
                     </span>
-                    <span className="text-zinc-400 text-xs whitespace-nowrap">{formatRelativeDate(entry.date, t)}</span>
+                    <span className="text-zinc-400 text-xs whitespace-nowrap">{formatRelativeDate(entry.date, t, intlLocale)}</span>
                   </div>
                   {/* Right: duration + action buttons */}
                   <div className="flex items-center gap-0.5 ml-2 flex-shrink-0">
