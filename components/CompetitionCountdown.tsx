@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { formatDateShort } from "@/lib/formatDate";
 import { clientLogger } from "@/lib/clientLogger";
+import { getLocalDateString } from "@/lib/timezone";
 
 type CompGoal = {
   id: string;
@@ -148,9 +149,14 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
           .from("training_logs")
           .select("date", { count: "exact", head: true })
           .eq("user_id", userId)
+          // z161: ユーザーTZ尊重 (旧 `Date.now() - 28d` は UTC 基準で
+          // PT/EN ユーザーで境界日付が翌日ずれていた)
           .gte(
             "date",
-            new Date(Date.now() - 28 * 86400000).toISOString().slice(0, 10)
+            (() => {
+              const todayMs = new Date(getLocalDateString() + "T00:00:00Z").getTime();
+              return new Date(todayMs - 28 * 86400000).toISOString().slice(0, 10);
+            })()
           ),
       ]);
 
@@ -315,7 +321,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
                 type="date"
                 value={dateInput}
                 onChange={(e) => setDateInput(e.target.value)}
-                min={new Date().toISOString().slice(0, 10)}
+                min={getLocalDateString()}
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400/50"
               />
             </div>
