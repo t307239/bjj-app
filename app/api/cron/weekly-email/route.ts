@@ -13,6 +13,7 @@
  */
 
 import { NextResponse } from "next/server";
+import { verifyCronAuth } from "@/lib/cronAuth";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
 
@@ -24,11 +25,7 @@ const FROM_EMAIL = process.env.EMAIL_FROM ?? "noreply@bjj-app.net";
 
 // ── Auth ────────────────────────────────────────────────────────────────────
 
-function verifyCronSecret(req: Request): boolean {
-  const auth = req.headers.get("authorization");
-  const secret = process.env.CRON_SECRET;
-  if (!secret) return false;
-  return auth === `Bearer ${secret}`;
+`;
 }
 
 // ── Types ───────────────────────────────────────────────────────────────────
@@ -96,9 +93,9 @@ function buildEmailHtml(summary: WeeklySummary): string {
 // ── Main handler ────────────────────────────────────────────────────────────
 
 export async function GET(req: Request) {
-  if (!verifyCronSecret(req)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  // z169: fail-closed CRON_SECRET
+  const __cronAuth = verifyCronAuth(req);
+  if (!__cronAuth.ok) return __cronAuth.response;
 
   if (!RESEND_API_KEY) {
     logger.warn("weekly-email: RESEND_API_KEY not set, skipping");

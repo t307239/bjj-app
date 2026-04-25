@@ -16,6 +16,7 @@
  */
 
 import { NextResponse } from "next/server";
+import { verifyCronAuth } from "@/lib/cronAuth";
 import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
@@ -35,16 +36,9 @@ const DB_SIZE_CRIT_MB = 475;
 const ROW_COUNT_WARN = 80_000;
 const DAILY_ACTIVE_WARN = 500;
 
-export async function GET(request: Request) {
-  // ── Auth ──────────────────────────────────────────────────────────────────
-  const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret) {
-    const authHeader = request.headers.get("authorization");
-    if (authHeader !== `Bearer ${cronSecret}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-  }
-
+export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail-closed via verifyCronAuth z169) ─────────────
+  const auth = verifyCronAuth(request);
+  if (!auth.ok) return auth.response;
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!supabaseUrl || !supabaseServiceKey) {

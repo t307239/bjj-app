@@ -16,6 +16,7 @@
  */
 
 import { NextResponse } from "next/server";
+import { verifyCronAuth } from "@/lib/cronAuth";
 import webpush from "web-push";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { filterSendableSubscriptions } from "@/lib/notificationSafeHours";
@@ -59,16 +60,9 @@ type SubWithActivity = {
   last_trained: string | null;
 };
 
-export async function GET(request: Request) {
-  // ── Auth: CRON_SECRET ─────────────────────────────────────────────────────
-  const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret) {
-    const authHeader = request.headers.get("authorization");
-    if (authHeader !== `Bearer ${cronSecret}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-  }
-
+export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail-closed via verifyCronAuth z169) ─────────────
+  const auth = verifyCronAuth(request);
+  if (!auth.ok) return auth.response;
   // ── VAPID check ───────────────────────────────────────────────────────────
   if (!VAPID_SUBJECT || !VAPID_PRIVATE || !VAPID_PUBLIC) {
     return NextResponse.json({ error: "VAPID not configured" }, { status: 503 });
