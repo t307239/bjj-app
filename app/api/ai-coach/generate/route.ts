@@ -344,7 +344,7 @@ export async function POST(req: NextRequest) {
     .single();
   if (profileError) {
     logger.error("ai_coach.profile_query", { userId: user.id }, profileError as Error);
-    return NextResponse.json({ error: profileError.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 
   if (!profile?.is_pro) {
@@ -407,7 +407,7 @@ export async function POST(req: NextRequest) {
 
   if (logsRes.error) {
     logger.error("ai_coach.training_logs_query", { userId: user.id }, logsRes.error as Error);
-    return NextResponse.json({ error: logsRes.error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 
   const sessions = logsRes.data ?? [];

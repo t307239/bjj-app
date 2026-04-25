@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     .single();
   if (error) {
     logger.error("gym.kick_owner_query", { userId: user.id }, error as Error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 
   if (!ownerProfile?.is_gym_owner || !ownerProfile.gym_id) {
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
     .single();
   if (memberError) {
     logger.error("gym.kick_member_query", { memberId, gymId: ownerProfile.gym_id }, memberError as Error);
-    return NextResponse.json({ error: memberError.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 
   if (!memberProfile || memberProfile.gym_id !== ownerProfile.gym_id) {

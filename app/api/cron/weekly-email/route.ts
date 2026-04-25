@@ -113,7 +113,7 @@ export async function GET(req: Request) {
 
   if (logsErr) {
     log.error("Failed to fetch training logs", { error: logsErr.message });
-    return NextResponse.json({ error: logsErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 
   if (!logs || logs.length === 0) {
@@ -136,7 +136,7 @@ export async function GET(req: Request) {
   const { data: authData, error: authErr } = await supabase.auth.admin.listUsers({ perPage: 1000 });
   if (authErr) {
     log.error("Failed to list auth users", { error: authErr.message });
-    return NextResponse.json({ error: authErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 
   const emailMap = new Map<string, string>();

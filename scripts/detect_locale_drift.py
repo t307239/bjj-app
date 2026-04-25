@@ -448,6 +448,41 @@ def scan_cron_fail_open() -> list:
     return findings
 
 
+# ── Pattern 9: error.message leak in API responses (z169) ────────────
+# `NextResponse.json({ error: error.message })` で Supabase / 外部エラー文を
+# クライアントに返すと、schema 名 / policy 名 / 内部パス等が漏洩する。
+# logger.error(...) で内部記録 + クライアントには generic message を返すこと。
+
+def scan_error_message_leak() -> list:
+    findings = []
+    api = ROOT / "app" / "api"
+    if not api.exists():
+        return findings
+    pat = re.compile(
+        r"NextResponse\.json\(\s*\{\s*[^}]*?error:\s*[a-zA-Z_$.\[\]]+(?:\.error)?\.message"
+        r"|NextResponse\.json\(\s*\{\s*[^}]*?error:\s*err\s+instanceof\s+Error\s*\?\s*err\.message",
+        re.MULTILINE,
+    )
+    for fp in api.rglob("route.ts"):
+        try:
+            c = fp.read_text(encoding="utf-8", errors="ignore")
+        except Exception:
+            continue
+        rel = fp.relative_to(ROOT).as_posix()
+        for m in pat.finditer(c):
+            ln = c[:m.start()].count("\n") + 1
+            findings.append({
+                "id": "ERROR_MESSAGE_LEAK",
+                "severity": "🟡",
+                "file": rel,
+                "line": ln,
+                "text": c.splitlines()[ln-1].strip()[:120] if ln-1 < len(c.splitlines()) else "",
+                "description": "error.message returned to client — leaks schema/policy. log internally, return generic message",
+                "z": "z169",
+            })
+    return findings
+
+
 # ── Main ───────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -465,6 +500,7 @@ def main() -> int:
     all_findings.extend(scan_plural_without_singular())
     all_findings.extend(scan_security_regressions())
     all_findings.extend(scan_cron_fail_open())
+    all_findings.extend(scan_error_message_leak())
 
     criticals = [f for f in all_findings if f["severity"] == "🔴"]
     warnings = [f for f in all_findings if f["severity"] == "🟡"]

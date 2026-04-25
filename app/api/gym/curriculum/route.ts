@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
     .single();
   if (error) {
     logger.error("gym.curriculum_profile_query", { userId: user.id }, error as Error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 
   if (!ownerProfile?.is_gym_owner || !ownerProfile.gym_id) {
@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
     .single();
   if (gymError) {
     logger.error("gym.curriculum_gym_query", { gymId: ownerProfile.gym_id }, gymError as Error);
-    return NextResponse.json({ error: gymError.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 
   if (!gym?.is_active) {

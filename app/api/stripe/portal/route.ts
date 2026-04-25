@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     .single();
   if (error) {
     logger.error("stripe.portal_profile_query", { userId: user.id }, error as Error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 
   if (!profile?.stripe_customer_id) {

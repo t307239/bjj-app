@@ -13,6 +13,7 @@
 
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/logger";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -30,8 +31,11 @@ export async function GET() {
     const dbLatencyMs = Date.now() - t0;
 
     if (error) {
+      // z169: don't leak Supabase error.message (could expose schema/policies);
+      // log internally and return only a stable error code to public callers.
+      logger.error("health.db_check_failed", { dbLatencyMs }, error as Error);
       return NextResponse.json(
-        { status: "degraded", db: "error", error: error.message, uptime: uptimeSeconds, timestamp: new Date().toISOString() },
+        { status: "degraded", db: "error", code: "DB_QUERY_FAILED", uptime: uptimeSeconds, timestamp: new Date().toISOString() },
         { status: 503 },
       );
     }
@@ -53,8 +57,9 @@ export async function GET() {
       { status: 200, headers: { "Cache-Control": "no-store", "Server-Timing": `db;dur=${dbLatencyMs}` } },
     );
   } catch (err) {
+    logger.error("health.db_check_threw", {}, err instanceof Error ? err : new Error(String(err)));
     return NextResponse.json(
-      { status: "degraded", db: "error", error: err instanceof Error ? err.message : "Unknown", uptime: uptimeSeconds, timestamp: new Date().toISOString() },
+      { status: "degraded", db: "error", code: "DB_CHECK_EXCEPTION", uptime: uptimeSeconds, timestamp: new Date().toISOString() },
       { status: 503 },
     );
   }
