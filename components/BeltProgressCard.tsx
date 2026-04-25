@@ -67,7 +67,10 @@ export default function BeltProgressCard({
   className = "",
   onEditClick,
 }: Props) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
+  // BCP-47 locale tag for Intl.DateTimeFormat (pt-BR 優先 for Portuguese)
+  const intlLocale =
+    locale === "ja" ? "ja-JP" : locale === "pt" ? "pt-BR" : "en-US";
 
   const BELT_LABELS: Record<string, string> = {
     white: t("dashboard.beltWhite"),
@@ -207,8 +210,21 @@ export default function BeltProgressCard({
               {(() => {
                 const yrs = Math.floor(monthsAtBelt / 12);
                 const mos = monthsAtBelt % 12;
-                if (yrs === 0) return t("profile.bjjHistoryMonths", { n: mos || 1 });
-                if (mos === 0) return t("profile.bjjHistoryYears", { n: yrs });
+                // months only
+                if (yrs === 0) {
+                  const n = mos || 1;
+                  if (n === 1) return t("profile.bjjHistoryMonthOne");
+                  return t("profile.bjjHistoryMonths", { n });
+                }
+                // years only
+                if (mos === 0) {
+                  if (yrs === 1) return t("profile.bjjHistoryYearOne");
+                  return t("profile.bjjHistoryYears", { n: yrs });
+                }
+                // years + months — locale-aware singular handling
+                if (yrs === 1 && mos === 1) return t("profile.bjjHistoryOneYearOneMonth");
+                if (yrs === 1) return t("profile.bjjHistoryOneYearMonths", { m: mos });
+                if (mos === 1) return t("profile.bjjHistoryYearsOneMonth", { y: yrs });
                 return t("profile.bjjHistoryYearsMonths", { y: yrs, m: mos });
               })()}
             </span>
@@ -226,7 +242,15 @@ export default function BeltProgressCard({
             {sortedHistory.map((entry) => {
               const entryLabel = BELT_LABELS[entry.belt] || entry.belt;
               const date = new Date(entry.promoted_at);
-              const dateStr = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}`;
+              // locale-aware short date: ja-JP "2024/06", en-US "06/2024", pt-BR "06/2024"
+              // (JA convention is Y/M; EN/PT use M/Y for compact promotion month display)
+              let dateStr: string;
+              try {
+                const fmt = new Intl.DateTimeFormat(intlLocale, { year: "numeric", month: "2-digit" });
+                dateStr = fmt.format(date);
+              } catch {
+                dateStr = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}`;
+              }
               return (
                 <div key={entry.belt} className="flex items-center gap-2 text-xs">
                   <div

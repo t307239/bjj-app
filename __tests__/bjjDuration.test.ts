@@ -62,6 +62,11 @@ describe("formatBjjDuration", () => {
 
   const mockT = (key: string, vars?: Record<string, string | number>) => {
     if (key === "profile.bjjHistoryJustStarted") return "Just started";
+    if (key === "profile.bjjHistoryMonthOne") return "1 month";
+    if (key === "profile.bjjHistoryYearOne") return "1 year";
+    if (key === "profile.bjjHistoryOneYearOneMonth") return "1 year 1 month";
+    if (key === "profile.bjjHistoryOneYearMonths") return `1 year ${vars?.m} months`;
+    if (key === "profile.bjjHistoryYearsOneMonth") return `${vars?.y} years 1 month`;
     if (key === "profile.bjjHistoryMonths") return `${vars?.n} months`;
     if (key === "profile.bjjHistoryYears") return `${vars?.n} years`;
     if (key === "profile.bjjHistoryYearsMonths")
@@ -81,15 +86,45 @@ describe("formatBjjDuration", () => {
     expect(formatBjjDuration("2026-01-01", mockT)).toBe("3 months");
   });
 
+  it("returns singular month when exactly 1 month", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-04-15"));
+    expect(formatBjjDuration("2026-03-01", mockT)).toBe("1 month");
+  });
+
   it("returns years only when months remainder is 0", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-04-15"));
     expect(formatBjjDuration("2024-04-01", mockT)).toBe("2 years");
   });
 
+  it("returns singular year when exactly 1 year, 0 months", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-04-15"));
+    expect(formatBjjDuration("2025-04-01", mockT)).toBe("1 year");
+  });
+
   it("returns years and months combined", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-04-15"));
-    expect(formatBjjDuration("2024-06-01", mockT)).toBe("1 years 10 months");
+    expect(formatBjjDuration("2023-06-01", mockT)).toBe("2 years 10 months");
+  });
+
+  it("returns '1 year N months' when years=1 and months>1", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-04-15"));
+    expect(formatBjjDuration("2024-06-01", mockT)).toBe("1 year 10 months");
+  });
+
+  it("returns 'N years 1 month' when years>1 and months=1", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-04-15"));
+    expect(formatBjjDuration("2024-03-01", mockT)).toBe("2 years 1 month");
+  });
+
+  it("returns '1 year 1 month' for the exact singular case", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-04-15"));
+    expect(formatBjjDuration("2025-03-01", mockT)).toBe("1 year 1 month");
   });
 });

@@ -570,7 +570,12 @@
     "logoutBtn": "Sair",
     "helpDesc": "FAQ, solução de problemas e contato",
     "dataOwnership": "Seus dados pertencem a você. Exporte a qualquer momento — sem restrições.",
-    "emailPlaceholder": "new@example.com"
+    "emailPlaceholder": "new@example.com",
+    "bjjHistoryYearOne": "1 ano",
+    "bjjHistoryMonthOne": "1 mês",
+    "bjjHistoryOneYearMonths": "1 ano {m} meses",
+    "bjjHistoryYearsOneMonth": "{y} anos 1 mês",
+    "bjjHistoryOneYearOneMonth": "1 ano 1 mês"
   },
   "competition": {
     "title": "Histórico de Lutas",

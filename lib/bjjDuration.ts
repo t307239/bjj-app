@@ -48,7 +48,19 @@ export function formatBjjDuration(
 ): string {
   const { years, months } = calcBjjDuration(startDate);
   if (years === 0 && months === 0) return t("profile.bjjHistoryJustStarted");
-  if (years === 0) return t("profile.bjjHistoryMonths", { n: months });
-  if (months === 0) return t("profile.bjjHistoryYears", { n: years });
+  // months only
+  if (years === 0) {
+    if (months === 1) return t("profile.bjjHistoryMonthOne");
+    return t("profile.bjjHistoryMonths", { n: months });
+  }
+  // years only
+  if (months === 0) {
+    if (years === 1) return t("profile.bjjHistoryYearOne");
+    return t("profile.bjjHistoryYears", { n: years });
+  }
+  // years + months — locale-aware singular handling for both parts
+  if (years === 1 && months === 1) return t("profile.bjjHistoryOneYearOneMonth");
+  if (years === 1) return t("profile.bjjHistoryOneYearMonths", { m: months });
+  if (months === 1) return t("profile.bjjHistoryYearsOneMonth", { y: years });
   return t("profile.bjjHistoryYearsMonths", { y: years, m: months });
 }

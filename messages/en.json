@@ -547,7 +547,12 @@
     "pushPrefWeeklyEmail": "Weekly summary email",
     "helpDesc": "FAQ, troubleshooting & contact",
     "dataOwnership": "Your data belongs to you. Export anytime — no lock-in, no restrictions.",
-    "emailPlaceholder": "new@example.com"
+    "emailPlaceholder": "new@example.com",
+    "bjjHistoryYearOne": "1 year",
+    "bjjHistoryMonthOne": "1 month",
+    "bjjHistoryOneYearMonths": "1 year {m} months",
+    "bjjHistoryYearsOneMonth": "{y} years 1 month",
+    "bjjHistoryOneYearOneMonth": "1 year 1 month"
   },
   "competition": {
     "title": "Match Record",

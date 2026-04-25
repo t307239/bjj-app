@@ -548,7 +548,12 @@
     "pushPrefWeeklyEmail": "週報メール",
     "helpDesc": "よくある質問・トラブル対応・お問い合わせ",
     "dataOwnership": "あなたのデータはあなたのものです。いつでもエクスポート可能 — ロックインなし。",
-    "emailPlaceholder": "new@example.com"
+    "emailPlaceholder": "new@example.com",
+    "bjjHistoryYearOne": "1年",
+    "bjjHistoryMonthOne": "1ヶ月",
+    "bjjHistoryOneYearMonths": "1年{m}ヶ月",
+    "bjjHistoryYearsOneMonth": "{y}年1ヶ月",
+    "bjjHistoryOneYearOneMonth": "1年1ヶ月"
   },
   "competition": {
     "title": "試合戦績",
