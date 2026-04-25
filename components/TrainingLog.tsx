@@ -11,6 +11,7 @@ import FirstRollCelebration from "./FirstRollCelebration";
 import { useTrainingLog } from "@/hooks/useTrainingLog";
 import { decodeCompNotes } from "@/lib/trainingLogHelpers";
 import { clientLogger } from "@/lib/clientLogger";
+import { getLocalDateString } from "@/lib/timezone";
 
 type Props = {
   userId: string;
@@ -62,8 +63,10 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
         const { comp, userNotes } = decodeCompNotes(l.notes ?? "");
         return [l.date, l.type, l.duration_min ?? "", comp?.result ?? "", comp?.opponent ?? "", comp?.finish ?? "", comp?.event ?? "", (userNotes ?? "").replace(/"/g, '""')];
       });
+      // z163: UTC 日付 → user local TZ (CSV ファイル名が JST 23時で翌日に
+      // なる bug を解消、PT/EN ユーザーも local 日付で保存される)
       downloadCsv([headers, ...rows].map((r) => r.map((c) => `"${c}"`).join(",")).join("\r\n"),
-        `bjj_training_${new Date().toISOString().slice(0,10)}.csv`);
+        `bjj_training_${getLocalDateString()}.csv`);
     } finally { setLoadingLogs(false); }
   };
 
@@ -77,8 +80,9 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
       const headers = ["Technique","Category","Mastery","Notes"];
       const rows = (techs as { name: string; category: string; mastery_level: number; notes: string }[]).map((t) =>
         [t.name ?? "", t.category ?? "", t.mastery_level ?? "", (t.notes ?? "").replace(/"/g, '""')]);
+      // z163: UTC 日付 → user local TZ
       downloadCsv([headers, ...rows].map((r) => r.map((c) => `"${c}"`).join(",")).join("\r\n"),
-        `bjj_techniques_${new Date().toISOString().slice(0,10)}.csv`);
+        `bjj_techniques_${getLocalDateString()}.csv`);
     } finally { setLoadingTech(false); }
   };
 
