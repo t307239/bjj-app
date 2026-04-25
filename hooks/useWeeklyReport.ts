@@ -7,6 +7,7 @@
  */
 
 import { useMemo } from "react";
+import { getLocalDateString } from "@/lib/timezone";
 
 export type TrainingType = "gi" | "nogi" | "drilling" | "competition" | "open_mat" | "recovery";
 
@@ -111,9 +112,9 @@ export function useWeeklyReport(
       };
     }
 
-    // Current date (today)
-    const now = new Date();
-    const todayStr = now.toISOString().slice(0, 10);
+    // Current date (today) — z160: ユーザー TZ 尊重 (旧 `new Date().toISOString()`
+    // は UTC 今日を返すため PT/EN ユーザーの 0:00 UTC 付近で前日扱いになる bug)
+    const todayStr = getLocalDateString();
     const currentMonday = getMonday(todayStr);
     const currentMonthStart = getMonthStart(todayStr);
 
