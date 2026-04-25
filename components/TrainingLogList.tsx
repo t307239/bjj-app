@@ -19,7 +19,11 @@ import {
 
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120, 150, 180];
 
-function formatRelativeDate(dateStr: string, t: (key: string, vars?: Record<string, string | number>) => string): string {
+function formatRelativeDate(
+  dateStr: string,
+  t: (key: string, vars?: Record<string, string | number>) => string,
+  intlLocale: string,
+): string {
   // dateStr is "YYYY-MM-DD" (local date)
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
@@ -34,9 +38,17 @@ function formatRelativeDate(dateStr: string, t: (key: string, vars?: Record<stri
   const diffMs = today.setHours(0, 0, 0, 0) - logDate.setHours(0, 0, 0, 0);
   const diffDays = Math.round(diffMs / 86400000);
   if (diffDays < 7) return t("gym.daysAgo", { n: diffDays });
-  // Compact format: "3/26" or "3/26/24" for >1 year — short enough for 320px screens
-  const shortYear = diffDays > 365 ? `/${String(logDate.getFullYear()).slice(2)}` : "";
-  return `${logDate.getMonth() + 1}/${logDate.getDate()}${shortYear}`;
+  // Compact locale-aware format: en-US "3/26", pt-BR "26/3", ja-JP "3/26"
+  // (Intl.DateTimeFormat picks the right d/m order per locale, short enough for 320px screens)
+  try {
+    const fmt = new Intl.DateTimeFormat(intlLocale, { month: "numeric", day: "numeric" });
+    const base = fmt.format(logDate);
+    const shortYear = diffDays > 365 ? `/${String(logDate.getFullYear()).slice(2)}` : "";
+    return `${base}${shortYear}`;
+  } catch {
+    const shortYear = diffDays > 365 ? `/${String(logDate.getFullYear()).slice(2)}` : "";
+    return `${logDate.getMonth() + 1}/${logDate.getDate()}${shortYear}`;
+  }
 }
 
 function formatDuration(min: number): string {
