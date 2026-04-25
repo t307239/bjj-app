@@ -23,11 +23,6 @@ export const dynamic = "force-dynamic";
 const RESEND_API_KEY = process.env.RESEND_API_KEY ?? "";
 const FROM_EMAIL = process.env.EMAIL_FROM ?? "noreply@bjj-app.net";
 
-// ── Auth ────────────────────────────────────────────────────────────────────
-
-`;
-}
-
 // ── Types ───────────────────────────────────────────────────────────────────
 
 type WeeklySummary = {

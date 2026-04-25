@@ -404,6 +404,50 @@ def scan_security_regressions() -> list:
     return findings
 
 
+# ── Pattern 8: cron fail-open (z169) ─────────────────────────────────
+# CRON_SECRET 未設定時に誰でも cron を呼べてしまう "fail-open" の検出。
+# `if (cronSecret) {check}` パターンは脆弱 — verifyCronAuth() helper を
+# 使うか、`if (!cronSecret) return error` の fail-closed にすること。
+
+def scan_cron_fail_open() -> list:
+    findings = []
+    cron_dir = ROOT / "app" / "api" / "cron"
+    if not cron_dir.exists():
+        return findings
+    for fp in cron_dir.rglob("route.ts"):
+        try:
+            c = fp.read_text(encoding="utf-8", errors="ignore")
+        except Exception:
+            continue
+        rel = fp.relative_to(ROOT).as_posix()
+        # OK if uses verifyCronAuth helper
+        if "verifyCronAuth" in c:
+            continue
+        # Bad: `if (cronSecret) {` block (fail-open)
+        if re.search(r"if\s*\(\s*cronSecret\s*\)\s*\{", c):
+            findings.append({
+                "id": "CRON_FAIL_OPEN",
+                "severity": "🔴",
+                "file": rel,
+                "line": 0,
+                "text": "if (cronSecret) {...} block — fail-open if env var unset",
+                "description": "Use verifyCronAuth() helper; never gate auth check on env var presence",
+                "z": "z169",
+            })
+        # Also flag if no CRON_SECRET reference at all in cron route (forgot auth entirely)
+        elif "CRON_SECRET" not in c and "verifyCronAuth" not in c:
+            findings.append({
+                "id": "CRON_NO_AUTH",
+                "severity": "🔴",
+                "file": rel,
+                "line": 0,
+                "text": "no CRON_SECRET / verifyCronAuth reference",
+                "description": "cron endpoint has no auth — anyone can trigger it",
+                "z": "z169",
+            })
+    return findings
+
+
 # ── Main ───────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -420,6 +464,7 @@ def main() -> int:
     all_findings.extend(scan_title_double_suffix())
     all_findings.extend(scan_plural_without_singular())
     all_findings.extend(scan_security_regressions())
+    all_findings.extend(scan_cron_fail_open())
 
     criticals = [f for f in all_findings if f["severity"] == "🔴"]
     warnings = [f for f in all_findings if f["severity"] == "🟡"]
