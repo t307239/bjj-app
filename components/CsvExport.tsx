@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { decodeCompNotes } from "@/lib/trainingLogHelpers";
 import { trackEvent } from "@/lib/analytics";
+import { getLocalDateString } from "@/lib/timezone";
 // ProGate import removed — CSV is now free for all users (CCPA/GDPR data portability)
 
 type Props = {
@@ -121,7 +122,8 @@ export default function CsvExport({ userId }: Props) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `bjj_training_logs_${new Date().toISOString().slice(0, 10)}.csv`;
+      // z164: UTC 日付 → user local TZ (z163 同型)
+      a.download = `bjj_training_logs_${getLocalDateString()}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -178,7 +180,8 @@ export default function CsvExport({ userId }: Props) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `bjj_techniques_${new Date().toISOString().slice(0, 10)}.csv`;
+      // z164: UTC 日付 → user local TZ
+      a.download = `bjj_techniques_${getLocalDateString()}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

@@ -7,6 +7,7 @@ import PushNotificationSection from "../PushNotificationSection";
 import CsvExport from "../CsvExport";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { clientLogger } from "@/lib/clientLogger";
+import { getLocalDateString } from "@/lib/timezone";
 
 // Stripe Customer Portal URL — configure in .env.local (Stripe Dashboard > Customer Portal)
 const CUSTOMER_PORTAL_URL = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL ?? "";
@@ -98,7 +99,8 @@ export default function AccountSection({ userId, supabase }: Props) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `bjjapp-logs-${new Date().toISOString().slice(0, 10)}.csv`;
+      // z164: UTC 日付 → user local TZ (z163 と同型 CSV ファイル名)
+      a.download = `bjjapp-logs-${getLocalDateString()}.csv`;
       a.click();
       URL.revokeObjectURL(url);
     }
