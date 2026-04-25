@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { safeJsonLd } from "@/lib/safeJsonLd";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/server";
@@ -171,11 +172,11 @@ export default async function Home() {
     <>
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
     />
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd) }}
     />
     <main className="min-h-[100dvh] flex flex-col">
       {/* ナビゲーション — Fix 3: BETA badge + Get Started CTA */}

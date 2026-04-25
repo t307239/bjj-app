@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { safeJsonLd } from "@/lib/safeJsonLd";
 import LoginClient from "./LoginClient";
 
 const BASE_URL =
@@ -41,7 +42,7 @@ export default function LoginPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <LoginClient />
     </>

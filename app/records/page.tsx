@@ -1,5 +1,6 @@
 // Phase 5: Tab-based IA redesign — Records (2 tabs: ログ / 統計)
 import type { Metadata } from "next";
+import { safeJsonLd } from "@/lib/safeJsonLd";
 import { cookies, headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import dynamic from "next/dynamic";
@@ -179,7 +180,7 @@ export default async function RecordsPage() {
     <div className="min-h-[100dvh] bg-zinc-950 pb-20 sm:pb-0">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
       <NavBar displayName={displayName} avatarUrl={avatarUrl} isPro={isPro} />
 

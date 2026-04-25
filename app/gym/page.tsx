@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { safeJsonLd } from "@/lib/safeJsonLd";
 import Link from "next/link";
 import GymWaitlistForm from "@/components/GymWaitlistForm";
 import { detectServerLocale, makeT } from "@/lib/i18n";
@@ -54,11 +55,11 @@ export default async function GymPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd) }}
       />
       <main className="min-h-[100dvh] flex flex-col bg-zinc-950">
         {/* Navigation */}

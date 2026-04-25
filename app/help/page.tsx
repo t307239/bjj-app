@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { safeJsonLd } from "@/lib/safeJsonLd";
 import Link from "next/link";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import { buildBreadcrumbJsonLd } from "@/lib/breadcrumb";
@@ -68,11 +69,11 @@ export default async function HelpPage() {
     <div className="min-h-[100dvh] bg-zinc-950 text-white">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
       <div className="max-w-2xl md:max-w-3xl mx-auto px-4 py-12">
         {/* Back link */}

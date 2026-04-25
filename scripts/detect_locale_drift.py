@@ -353,6 +353,57 @@ def scan_plural_without_singular() -> list:
     return findings
 
 
+# ── Pattern 7: security regressions (z168) ───────────────────────────
+# JSON-LD scripts must use safeJsonLd() not raw JSON.stringify (XSS via </script>).
+# auth/callback の next パラメータは safeNextPath() で validate 済みかチェック。
+
+def scan_security_regressions() -> list:
+    findings = []
+    # 7a: dangerouslySetInnerHTML + JSON.stringify (without safeJsonLd) — z168
+    pat_unsafe_jsonld = re.compile(
+        r'dangerouslySetInnerHTML\s*=\s*\{\s*\{\s*__html\s*:\s*JSON\.stringify\(',
+        re.MULTILINE,
+    )
+    for fp in (APP,):
+        for tsx in fp.rglob("*.tsx"):
+            try:
+                c = tsx.read_text(encoding="utf-8", errors="ignore")
+            except Exception:
+                continue
+            for m in pat_unsafe_jsonld.finditer(c):
+                ln = c[:m.start()].count("\n") + 1
+                findings.append({
+                    "id": "UNSAFE_JSONLD",
+                    "severity": "🔴",
+                    "file": tsx.relative_to(ROOT).as_posix(),
+                    "line": ln,
+                    "text": c.splitlines()[ln-1].strip()[:120] if ln-1 < len(c.splitlines()) else "",
+                    "description": "JSON.stringify in dangerouslySetInnerHTML — use safeJsonLd() to escape </script>",
+                    "z": "z168",
+                })
+    # 7b: auth/callback NextResponse.redirect with raw `${origin}${next}` (open redirect)
+    cb = ROOT / "app" / "auth" / "callback" / "route.ts"
+    if cb.exists():
+        try:
+            c = cb.read_text(encoding="utf-8", errors="ignore")
+            # Look for redirect with `${origin}${next}` pattern (raw, not via safeNextPath)
+            if re.search(r'NextResponse\.redirect\(\s*`\$\{origin\}\$\{next\}', c):
+                # Verify safeNextPath is NOT defined (or NOT applied)
+                if "safeNextPath" not in c:
+                    findings.append({
+                        "id": "OPEN_REDIRECT",
+                        "severity": "🔴",
+                        "file": cb.relative_to(ROOT).as_posix(),
+                        "line": 0,
+                        "text": "auth/callback redirect uses raw `next` query param",
+                        "description": "next param must be validated via safeNextPath() — open redirect vector",
+                        "z": "z168",
+                    })
+        except Exception:
+            pass
+    return findings
+
+
 # ── Main ───────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -368,6 +419,7 @@ def main() -> int:
     all_findings.extend(scan_pt_stale_placeholder())
     all_findings.extend(scan_title_double_suffix())
     all_findings.extend(scan_plural_without_singular())
+    all_findings.extend(scan_security_regressions())
 
     criticals = [f for f in all_findings if f["severity"] == "🔴"]
     warnings = [f for f in all_findings if f["severity"] == "🟡"]

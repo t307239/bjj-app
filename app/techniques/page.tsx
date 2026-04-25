@@ -1,5 +1,6 @@
 // Phase 5: Tab-based IA redesign — Techniques (3 tabs: ジャーナル / スキルマップ / Wiki)
 import type { Metadata } from "next";
+import { safeJsonLd } from "@/lib/safeJsonLd";
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -166,12 +167,12 @@ export default async function TechniquesPage() {
     <div className="min-h-[100dvh] bg-zinc-950 pb-20 sm:pb-0">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(buildBreadcrumbJsonLd([
+          __html: safeJsonLd(buildBreadcrumbJsonLd([
             { name: "BJJ App", url: "https://bjj-app.net" },
             { name: "Techniques", url: "https://bjj-app.net/techniques" },
           ])),

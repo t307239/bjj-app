@@ -1,5 +1,6 @@
 // Phase 5: Tab-based IA redesign — Profile(3 tabs) + Settings separated
 import type { Metadata } from "next";
+import { safeJsonLd } from "@/lib/safeJsonLd";
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -168,11 +169,11 @@ export default async function ProfilePage() {
     <div className="min-h-[100dvh] bg-zinc-950 pb-20 sm:pb-0">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
       <NavBar displayName={displayName} avatarUrl={avatarUrl} isPro={isPro} />
 

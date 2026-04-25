@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { safeJsonLd } from "@/lib/safeJsonLd";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { formatDateShort } from "@/lib/formatDate";
@@ -682,11 +683,11 @@ export default async function WikiPage({
       {/* #19: JSON-LD 構造化データ */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(articleJsonLd) }}
       />
 
       {/* #16: スクロール進捗バー（クライアント）*/}
