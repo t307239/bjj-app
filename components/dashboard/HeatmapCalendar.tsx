@@ -161,7 +161,9 @@ const HeatmapCalendar = memo(function HeatmapCalendar({ trainingDates }: Props) 
           href="/records?tab=stats"
           className="text-xs text-zinc-500 tabular-nums hover:text-zinc-300 transition-colors"
         >
-          {t("home.heatmapDays", { n: totalDaysInPeriod })}
+          {totalDaysInPeriod === 1
+            ? t("home.heatmapDaysOne")
+            : t("home.heatmapDays", { n: totalDaysInPeriod })}
           <span className="ml-1 text-zinc-600">›</span>
         </Link>
       </div>

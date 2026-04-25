@@ -217,7 +217,9 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
                 </span>
                 {daysRemaining != null && daysRemaining > 0 && (
                   <span className="text-xs text-zinc-400">
-                    {t("body.targetDaysLeft").replace("{n}", String(daysRemaining))}
+                    {daysRemaining === 1
+                      ? t("body.targetDaysLeftOne")
+                      : t("body.targetDaysLeft").replace("{n}", String(daysRemaining))}
                   </span>
                 )}
                 {daysRemaining != null && daysRemaining <= 0 && targetDate && (

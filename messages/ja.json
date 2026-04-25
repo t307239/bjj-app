@@ -12,7 +12,9 @@
     "proLabel": "Pro",
     "upgradeToPro": "Proにアップグレード",
     "records": "記録",
-    "mypage": "マイページ"
+    "mypage": "マイページ",
+    "streakDaysOne": "1日",
+    "streakBadgeOne": "🔥1日連続"
   },
   "dashboard": {
     "welcomeBack": "おかえり、{name} 👋",
@@ -395,7 +397,8 @@
     "rustyReview": "ジャーナルで確認",
     "freeCounter": "📝 {count}/{limit} テクニック（無料プラン）",
     "freeLimitReachedShort": "🔒 無料上限に達しました — {limit}/{limit} テクニック",
-    "emptyCta": "最初のテクニックを追加"
+    "emptyCta": "最初のテクニックを追加",
+    "addedDaysAgoOne": "1日前"
   },
   "profile": {
     "title": "プロフィール",
@@ -761,7 +764,8 @@
     "emptySubtitle": "練習した日のカレンダーがここに表示されます",
     "emptyButton": "練習を記録",
     "calendarTab": "カレンダー",
-    "typeTab": "種類"
+    "typeTab": "種類",
+    "sessionsFmtOne": "1セッション"
   },
   "install": {
     "ios": "ホーム画面に追加して、アプリとして使えます！",
@@ -1297,7 +1301,8 @@
     "waitlistInvalidEmail": "有効なメールアドレスを入力してください",
     "csvBulkTitle": "CSV一括招待",
     "curriculumFromGym": "{name}から",
-    "curriculumAriaOpen": "カリキュラム記事を開く: {name}"
+    "curriculumAriaOpen": "カリキュラム記事を開く: {name}",
+    "daysAgoOne": "1日前"
   },
   "gymJoin": {
     "title": "{name} に参加する",
@@ -1451,7 +1456,9 @@
     "unlockTip": "Gi / No-Giのセッション記録時にパートナー欄に@ユーザー名を入力してください",
     "insights": "相性分析",
     "mostFrequentInsight": "@{partner}さんとの練習が最多（{count}回 / 全パートナーセッションの{pct}%）",
-    "diversityInsight": "{n}人の異なるパートナーと練習済み！多様な相手と練習することで適応力が鍛えられます"
+    "diversityInsight": "{n}人の異なるパートナーと練習済み！多様な相手と練習することで適応力が鍛えられます",
+    "rolledWithOne": "1セッション",
+    "unlockHintOne": "1セッションでパートナー統計が解放されます"
   },
   "rollAnalytics": {
     "title": "練習分析",
@@ -1771,7 +1778,8 @@
     "viewFront": "前面",
     "viewBack": "背面",
     "weightPlaceholder": "75.5",
-    "targetWeightPlaceholder": "70.0"
+    "targetWeightPlaceholder": "70.0",
+    "targetDaysLeftOne": "残り1日"
   },
   "ageGate": {
     "title": "年齢制限",
@@ -1841,7 +1849,8 @@
     "bjjDuration": "柔術歴 {duration}",
     "weekLabel": "今週",
     "streakLabel": "連続記録",
-    "emptyWeekStat": "今週: {n}回。最初の練習を記録しよう！"
+    "emptyWeekStat": "今週: {n}回。最初の練習を記録しよう！",
+    "heatmapDaysOne": "1日練習"
   },
   "report": {
     "title": "練習まとめ",
@@ -1863,7 +1872,8 @@
     "insightLowDrilling": "今週はドリリングの割合が低いです。技術練習を意識してみましょう。",
     "insightStreak": "最長{n}日連続練習 — 素晴らしい継続力です！",
     "share": "シェア",
-    "logTraining": "練習を記録する"
+    "logTraining": "練習を記録する",
+    "streakValueOne": "1日"
   },
   "pricing": {
     "title": "シンプルな料金体系",

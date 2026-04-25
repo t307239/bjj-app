@@ -238,6 +238,115 @@ def scan_title_double_suffix() -> list:
     return findings
 
 
+# ── Pattern 6: plural template without singular (`*One`) sibling ──────
+# z167: "1 anos 10 meses" / "1 dias seguidos" 等の PT/EN 複数形誤用を防止。
+# {n}/{m}/{y} + 複数形キーワードを含むキーには <key>One シブリングが必須。
+
+# プレースホルダ込みでも n=1 到達不可能と確認済みのキー (call site で n>=2 などガード済み)。
+# 新たに追加する際は、根拠となる guard 場所を comment で記載すること。
+PLURAL_NO_SINGULAR_WHITELIST = {
+    # NavBar — currentStreak >= 7 || >= 30 ガードで n=1 不可 (NavBar.tsx:125,129,219,223)
+    "nav.streakBadge", "nav.streakDays", "nav.streakDaysStraight",
+    # streakMsg* — 数値 suffix が下限 (Msg3=>n>=3, Msg7, Msg14, Msg30) なので n=1 不可
+    # （正規表現で自動除外もできるが明示する）
+    "dashboard.streakMsg3", "dashboard.streakMsg7", "dashboard.streakMsg14", "dashboard.streakMsg30",
+    "dashboard.streakMilestoneShareText",
+    # gym.daysAgo — days===0/1 ガード済 (MemberCard.tsx:45-46, CurriculumDispatch.tsx 同型)
+    "gym.daysAgo", "gym.sentDaysAgo",
+    # techniques.added*Ago — 各 helper で diffDays===0/===1 ガード済 (techniqueLogTypes.tsx:75-77)
+    "techniques.addedDaysAgo", "techniques.addedWeeksAgo", "techniques.addedMonthsAgo",
+    "techniques.addedYearsAgo",
+    # その他 n=1 が業務上ありえない or 数値=複数前提 (template の仕様上)
+    "techniques.freePlanLimit",  # n は固定 LIMIT (現状 50)
+    "partnerStats.rolledWith",  # totalWithPartner >= UNLOCK_AT(=5) ガード
+    "chart.pastMonths",  # n は range で 3/6/12 のみ
+    "chart.past84Days",  # 期間文言。n=1 想定外
+    "achievement.shareText",  # マイルストーン (10/50/100 等)
+    "guest.ctaRecorded",  # ゲスト累計 1 はあり得るが共有 CTA で重要度低
+    "milestones.nextBadge",  # 次バッジ閾値 (5/10/25...)
+    "goal.monthsAchieved", "goal.monthsHabit", "goal.monthsInRow", "goal.consecutiveMonths",
+    "goal.zeroDaysLeft",  # n は不足セッション数 (ほぼ複数)
+    "goal.currentDone",  # n は累計 (>= 1 だが大半 >1 想定)
+    "home.emptyWeekStat",  # n=0 想定の case
+    "insights.longestStreak",  # 連続記録 (>=2 想定、=1 は表示頻度低)
+    "dashboard.bentoDaysLeft", "dashboard.weeklyMoreSessionsPlural",
+    "dashboard.motivationGapDays",
+    "techniques.addedBulk",  # CSV 一括追加 (大半 >1)
+    "beltProgress.stripesOf4",  # 0-4 範囲、n=1 で「1 / 4 listras」許容
+    "report.sessions", "report.totalTime", "report.belt",  # KPI ラベル汎用
+    "gym.sessionsPerMonth",  # ジムカード集計
+    "gym.lastSessionDays",
+    "share.tatameTime", "share.streakBadge",
+    "streak.protect",  # 緊急リマインダー (n>=2 想定)
+}
+
+PLURAL_KEYWORDS_EN = re.compile(r"\b(years|months|days|hours|sessions|stripes|techniques|people|users|items)\b", re.IGNORECASE)
+PLURAL_KEYWORDS_PT = re.compile(r"\b(anos|meses|dias|horas|sessões|listras|técnicas|pessoas|usuários|itens|treinos|minutos|segundos)\b", re.IGNORECASE)
+PLACEHOLDER = re.compile(r"\{[ynm]\}")
+
+
+def scan_plural_without_singular() -> list:
+    findings = []
+    # gather sections (key paths) that have a plural-y template
+    for loc in ("en", "pt"):
+        p = MESSAGES / f"{loc}.json"
+        if not p.exists():
+            continue
+        try:
+            data = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+
+        plural_re = PLURAL_KEYWORDS_EN if loc == "en" else PLURAL_KEYWORDS_PT
+
+        def walk(prefix: str, obj):
+            if isinstance(obj, dict):
+                for k, v in obj.items():
+                    walk(f"{prefix}.{k}" if prefix else k, v)
+            elif isinstance(obj, str):
+                if not PLACEHOLDER.search(obj):
+                    return
+                if not plural_re.search(obj):
+                    return
+                # If key already endswith "One" or contains "OneYear"/"OneMonth"/"OneStripe"/"OneSession", skip (it IS a singular)
+                last = prefix.split(".")[-1]
+                if last.endswith("One") or "OneYear" in last or "OneMonth" in last or "OneStripe" in last:
+                    return
+                # If whitelisted, skip
+                if prefix in PLURAL_NO_SINGULAR_WHITELIST:
+                    return
+                # Check if sibling singular variant exists. Accept multiple naming conventions:
+                #   - <key>One         (e.g., bjjHistoryMonthsOne)
+                #   - <key-strip-s>One (e.g., bjjHistoryMonthOne — singular form already strips "s")
+                #   - <key>+OneYear/OneMonth/OneYearMonths/YearsOneMonth/OneYearOneMonth
+                #     (z166 multi-arg pluralization split: y+m combos)
+                section = data.get(prefix.split(".")[0], {})
+                if not isinstance(section, dict):
+                    return
+                candidates = {last + "One", last.rstrip("s") + "One"}
+                # z166 multi-arg pattern: bjjHistoryYearsMonths → split into 3 sibling keys
+                if "Years" in last and "Months" in last:
+                    base = last.replace("Years", "").replace("Months", "").rstrip("YearsMonths") or "bjjHistory"
+                    # Heuristic: if base prefix has OneYear/YearsOne/OneYearOne keys, count as covered
+                    if any(k.startswith(last.replace("Months", "")) and "One" in k for k in section.keys()):
+                        return
+                if any(c in section for c in candidates):
+                    return  # has singular variant
+                findings.append({
+                    "id": "PLURAL_NO_SINGULAR",
+                    "severity": "🟡",
+                    "file": f"messages/{loc}.json",
+                    "line": 0,
+                    "text": f"{prefix}: {obj[:80]}",
+                    "description": f"plural template に {last}One sibling 欠落 (n=1 で誤用) — "
+                                   f"call site で n=1 ガード済なら PLURAL_NO_SINGULAR_WHITELIST に追加",
+                    "z": "z167",
+                })
+
+        walk("", data)
+    return findings
+
+
 # ── Main ───────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -252,6 +361,7 @@ def main() -> int:
     all_findings.extend(scan_month_labels_drift())
     all_findings.extend(scan_pt_stale_placeholder())
     all_findings.extend(scan_title_double_suffix())
+    all_findings.extend(scan_plural_without_singular())
 
     criticals = [f for f in all_findings if f["severity"] == "🔴"]
     warnings = [f for f in all_findings if f["severity"] == "🟡"]

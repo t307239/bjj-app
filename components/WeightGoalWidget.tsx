@@ -43,7 +43,9 @@ export default function WeightGoalWidget({ targetWeight, targetDate, latestWeigh
       </div>
       {daysRemaining != null && daysRemaining > 0 && (
         <span className="text-xs text-zinc-400 flex-shrink-0 tabular-nums whitespace-nowrap">
-          {t("body.targetDaysLeft").replace("{n}", String(daysRemaining))}
+          {daysRemaining === 1
+            ? t("body.targetDaysLeftOne")
+            : t("body.targetDaysLeft").replace("{n}", String(daysRemaining))}
         </span>
       )}
       {daysRemaining != null && daysRemaining <= 0 && (

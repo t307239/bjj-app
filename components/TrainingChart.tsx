@@ -354,7 +354,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
                   <div
                     className="w-full rounded-t-sm bg-green-600/80 hover:bg-green-500 transition-colors"
                     style={{ height: `${Math.max(heightPct, m.count > 0 ? 4 : 0)}%` }}
-                    title={`${m.ym}: ${t("chart.sessionsFmt", { n: m.count })} / ${
+                    title={`${m.ym}: ${m.count === 1 ? t("chart.sessionsFmtOne") : t("chart.sessionsFmt", { n: m.count })} / ${
                       m.minutes >= 60
                         ? `${Math.floor(m.minutes / 60)}h${m.minutes % 60 > 0 ? `${m.minutes % 60}m` : ""}`
                         : `${m.minutes}m`
@@ -372,7 +372,10 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
             ))}
           </div>
           <div className="text-xs text-zinc-400 text-right mt-1">
-            {t("chart.past6Months")}: {t("chart.sessionsFmt", { n: monthData.reduce((s, m) => s + m.count, 0) })}
+            {t("chart.past6Months")}: {(() => {
+              const total = monthData.reduce((s, m) => s + m.count, 0);
+              return total === 1 ? t("chart.sessionsFmtOne") : t("chart.sessionsFmt", { n: total });
+            })()}
           </div>
         </>
       )}

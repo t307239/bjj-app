@@ -100,7 +100,13 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
       const text = [
         `🥋 ${periodLabel}: ${count} ${t("report.sessions")}`,
         timeStr ? `⏱ ${timeStr}` : "",
-        report.maxConsecutiveDays > 0 ? `🔥 ${t("report.streakValue", { n: report.maxConsecutiveDays })}` : "",
+        report.maxConsecutiveDays > 0
+          ? `🔥 ${
+              report.maxConsecutiveDays === 1
+                ? t("report.streakValueOne")
+                : t("report.streakValue", { n: report.maxConsecutiveDays })
+            }`
+          : "",
         "",
         "#BJJ #JiuJitsu #Training",
         "bjj-app.net",
@@ -277,7 +283,11 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
         {report.maxConsecutiveDays > 0 && (
           <KPIItem
             label={t("report.maxStreak")}
-            value={t("report.streakValue", { n: report.maxConsecutiveDays })}
+            value={
+              report.maxConsecutiveDays === 1
+                ? t("report.streakValueOne")
+                : t("report.streakValue", { n: report.maxConsecutiveDays })
+            }
           />
         )}
       </div>

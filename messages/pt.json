@@ -12,7 +12,9 @@
     "proLabel": "Pro",
     "upgradeToPro": "Upgrade para Pro",
     "records": "Registros",
-    "mypage": "Minha Página"
+    "mypage": "Minha Página",
+    "streakDaysOne": "1 dia",
+    "streakBadgeOne": "🔥 1 dia seguido"
   },
   "dashboard": {
     "welcomeBack": "Bem-vindo de volta, {name} 🙌",
@@ -415,7 +417,8 @@
     "rustyReview": "Revisar no Diário",
     "freeCounter": "📝 {count}/{limit} técnicas (plano gratuito)",
     "freeLimitReachedShort": "🔒 Limite atingido — {limit}/{limit} técnicas",
-    "emptyCta": "Adicione Sua Primeira Técnica"
+    "emptyCta": "Adicione Sua Primeira Técnica",
+    "addedDaysAgoOne": "1 dia atrás"
   },
   "profile": {
     "title": "Perfil",
@@ -783,7 +786,8 @@
     "emptySubtitle": "Seu mapa de atividades aparecerá aqui",
     "emptyButton": "Registrar um Rola",
     "calendarTab": "Calendário",
-    "typeTab": "Tipo"
+    "typeTab": "Tipo",
+    "sessionsFmtOne": "1 sessão"
   },
   "install": {
     "ios": "Adicione à Tela Inicial para usar como app!",
@@ -1355,7 +1359,8 @@
     "waitlistInvalidEmail": "Por favor, insira um endereço de e-mail válido",
     "csvBulkTitle": "Convite em massa por CSV",
     "curriculumFromGym": "De {name}",
-    "curriculumAriaOpen": "Abrir artigo do currículo: {name}"
+    "curriculumAriaOpen": "Abrir artigo do currículo: {name}",
+    "daysAgoOne": "1 dia atrás"
   },
   "gymJoin": {
     "title": "Entrar em {name}",
@@ -1511,7 +1516,9 @@
     "unlockTip": "Adicione um @usuário no campo parceiro ao registrar sessões Gi / No-Gi",
     "insights": "Insights de Compatibilidade",
     "mostFrequentInsight": "Você treina mais com @{partner} — {count} sessões ({pct}% dos rolls com parceiro registrados)",
-    "diversityInsight": "Você treinou com {n} parceiros diferentes — ótimo para desenvolver adaptabilidade!"
+    "diversityInsight": "Você treinou com {n} parceiros diferentes — ótimo para desenvolver adaptabilidade!",
+    "rolledWithOne": "1 sessão",
+    "unlockHintOne": "Registre 1 sessão a mais com um parceiro para desbloquear suas estatísticas"
   },
   "rollAnalytics": {
     "title": "Análise de Rolls",
@@ -1641,7 +1648,8 @@
     "viewFront": "Frente",
     "viewBack": "Costas",
     "weightPlaceholder": "75.5",
-    "targetWeightPlaceholder": "70.0"
+    "targetWeightPlaceholder": "70.0",
+    "targetDaysLeftOne": "1 dia restante"
   },
   "gymLanding": {
     "navIndividuals": "Para Indivíduos",
@@ -1895,7 +1903,8 @@
     "bjjDuration": "Treinando há {duration}",
     "weekLabel": "Esta Semana",
     "streakLabel": "Sequência",
-    "emptyWeekStat": "Esta semana: {n} sessões. Comece a primeira!"
+    "emptyWeekStat": "Esta semana: {n} sessões. Comece a primeira!",
+    "heatmapDaysOne": "1 dia treinado"
   },
   "report": {
     "title": "Relatório de Desempenho",
@@ -1917,7 +1926,8 @@
     "insightLowDrilling": "Sua proporção de drill está baixa esta semana. Considere adicionar sessões focadas em técnica.",
     "insightStreak": "Sua melhor sequência é de {n} dias consecutivos — consistência impressionante!",
     "share": "Compartilhar",
-    "logTraining": "Registrar Treino"
+    "logTraining": "Registrar Treino",
+    "streakValueOne": "1 dia"
   },
   "pricing": {
     "title": "Preços Simples",

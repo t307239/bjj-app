@@ -127,7 +127,12 @@ export default function PartnerStatsCard({ userId }: { userId: string }) {
         /* Unlock hint */
         <div className="text-center py-4">
           <p className="text-xs text-zinc-400 mb-1">
-            {t("partnerStats.unlockHint", { n: String(UNLOCK_AT - totalWithPartner) })}
+            {(() => {
+              const remaining = UNLOCK_AT - totalWithPartner;
+              return remaining === 1
+                ? t("partnerStats.unlockHintOne")
+                : t("partnerStats.unlockHint", { n: String(remaining) });
+            })()}
           </p>
           <p className="text-[11px] text-zinc-600">
             {t("partnerStats.unlockTip")}

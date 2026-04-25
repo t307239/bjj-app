@@ -12,7 +12,9 @@
     "proLabel": "Pro",
     "upgradeToPro": "Upgrade to Pro",
     "records": "Records",
-    "mypage": "My Page"
+    "mypage": "My Page",
+    "streakDaysOne": "1 day",
+    "streakBadgeOne": "🔥 1 day straight"
   },
   "dashboard": {
     "welcomeBack": "Welcome back, {name} 👋",
@@ -394,7 +396,8 @@
     "rustyReview": "Review in Journal",
     "freeCounter": "📝 {count}/{limit} techniques (free plan)",
     "freeLimitReachedShort": "🔒 Free limit reached — {limit}/{limit} techniques",
-    "emptyCta": "Add Your First Technique"
+    "emptyCta": "Add Your First Technique",
+    "addedDaysAgoOne": "1 day ago"
   },
   "profile": {
     "title": "Profile",
@@ -760,7 +763,8 @@
     "emptySubtitle": "Your activity heatmap will appear here",
     "emptyButton": "Log a Roll",
     "calendarTab": "Calendar",
-    "typeTab": "Type"
+    "typeTab": "Type",
+    "sessionsFmtOne": "1 session"
   },
   "install": {
     "ios": "Add to Home Screen to use as app!",
@@ -1305,7 +1309,8 @@
     "waitlistInvalidEmail": "Please enter a valid email address",
     "csvBulkTitle": "Bulk invite via CSV",
     "curriculumFromGym": "From {name}",
-    "curriculumAriaOpen": "Open curriculum article: {name}"
+    "curriculumAriaOpen": "Open curriculum article: {name}",
+    "daysAgoOne": "1 day ago"
   },
   "gymJoin": {
     "title": "Join {name}",
@@ -1459,7 +1464,9 @@
     "unlockTip": "Add a @username in the partner field when logging Gi / No-Gi sessions",
     "insights": "Compatibility Insights",
     "mostFrequentInsight": "You train most with @{partner} — {count} sessions ({pct}% of logged partner rolls)",
-    "diversityInsight": "You've rolled with {n} different partners — great for developing adaptability!"
+    "diversityInsight": "You've rolled with {n} different partners — great for developing adaptability!",
+    "rolledWithOne": "1 session",
+    "unlockHintOne": "Log 1 more session with a partner to unlock your stats"
   },
   "rollAnalytics": {
     "title": "Roll Analytics",
@@ -1589,7 +1596,8 @@
     "viewFront": "Front",
     "viewBack": "Back",
     "weightPlaceholder": "75.5",
-    "targetWeightPlaceholder": "70.0"
+    "targetWeightPlaceholder": "70.0",
+    "targetDaysLeftOne": "1 day left"
   },
   "gymLanding": {
     "navIndividuals": "For Individuals",
@@ -1839,7 +1847,8 @@
     "bjjDuration": "Training for {duration}",
     "weekLabel": "This Week",
     "streakLabel": "Streak",
-    "emptyWeekStat": "This week: {n} sessions. Start your first one!"
+    "emptyWeekStat": "This week: {n} sessions. Start your first one!",
+    "heatmapDaysOne": "1 day trained"
   },
   "report": {
     "title": "Performance Report",
@@ -1861,7 +1870,8 @@
     "insightLowDrilling": "Your drilling ratio is low this week. Consider adding technique-focused sessions.",
     "insightStreak": "Your best streak is {n} consecutive days — impressive consistency!",
     "share": "Share",
-    "logTraining": "Log Training"
+    "logTraining": "Log Training",
+    "streakValueOne": "1 day"
   },
   "pricing": {
     "title": "Simple Pricing",
