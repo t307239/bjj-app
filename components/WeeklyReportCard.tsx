@@ -12,6 +12,7 @@ import { useLocale } from "@/lib/i18n";
 import { useWeeklyReport, type TrainingType } from "@/hooks/useWeeklyReport";
 import { trackEvent } from "@/lib/analytics";
 import { clientLogger } from "@/lib/clientLogger";
+import { getLocalDateString } from "@/lib/timezone";
 import Link from "next/link";
 
 type Props = {
@@ -56,9 +57,10 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
       setLoading(true);
       const supabase = createClient();
       const daysBack = isPro ? 56 : 28; // Pro: 8 weeks, Free: 4 weeks
-      const since = new Date();
-      since.setDate(since.getDate() - daysBack);
-      const sinceStr = since.toISOString().slice(0, 10);
+      // z162: ユーザー TZ 尊重 (旧 new Date() + setDate は UTC 基準で
+      // PT/EN ユーザーで cutoff 境界がずれていた)
+      const todayMs = new Date(getLocalDateString() + "T00:00:00Z").getTime();
+      const sinceStr = new Date(todayMs - daysBack * 86400000).toISOString().slice(0, 10);
 
       const { data, error } = await supabase
         .from("training_logs")
@@ -320,7 +322,8 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
             {report.weeklyTrend.map((week) => {
               const maxCount = Math.max(...report.weeklyTrend.map((w) => w.count), 1);
               const height = Math.max((week.count / maxCount) * 100, 8);
-              const isCurrentWeek = week.weekStart === getMonday(new Date().toISOString().slice(0, 10));
+              // z162: UTC 今日 → local TZ 今日
+              const isCurrentWeek = week.weekStart === getMonday(getLocalDateString());
               return (
                 <div key={week.weekStart} className="flex-1 flex flex-col items-center gap-0.5">
                   <span className="text-[10px] text-zinc-500 tabular-nums">{week.count}</span>
