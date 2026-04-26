@@ -849,7 +849,7 @@
   "pro": {
     "defaultFeature": "この機能",
     "available": "Pro プランで利用可能",
-    "upgradeButton": "Proにアップグレード",
+    "upgradeButton": "14日間 無料で試す →",
     "features": "AIが弱点を分析 · 連続記録を絶対守る · データはいつでもエクスポート可能",
     "bannerTitle": "⚡ Proにアップグレード — $9.99/月",
     "bannerFeatures": "弱点を可視化 · リカバリー管理 · 連続記録の保護",
@@ -890,9 +890,10 @@
     "compareCheck": "✓",
     "compareCross": "—",
     "urgencyBadge": "人気No.1",
-    "moneyBack": "7日間返金保証 💰",
+    "moneyBack": "トライアル中はいつでもキャンセル可 · 7日間返金保証",
     "benefitHighlight": "Proユーザーの平均練習頻度が2.3倍に向上",
-    "trialCta": "リスクなしで始める"
+    "trialCta": "リスクなしで始める",
+    "trialBadge": "🎁 14日間 無料トライアル · クレジットカード不要"
   },
   "common": {
     "close": "閉じる",

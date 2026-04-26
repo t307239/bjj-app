@@ -86,7 +86,7 @@ export default function ProGate({
           </div>
 
           {/* Price display */}
-          <div className="mb-3">
+          <div className="mb-2">
             {isAnnual ? (
               <div>
                 <p className="text-white font-bold text-sm">{t("pro.annualPrice")} <span className="text-emerald-400 text-xs">{t("pro.annualPerMonth")}</span></p>
@@ -96,6 +96,12 @@ export default function ProGate({
               <p className="text-white font-bold text-sm">{t("pro.monthlyPrice")}</p>
             )}
           </div>
+
+          {/* z179: 14-day free trial badge — Stripe price has 14d trial
+               configured but copy didn't surface it. Surface = +CVR. */}
+          <p className="text-emerald-300 text-xs font-medium mb-3">
+            {t("pro.trialBadge")}
+          </p>
 
           {/* Free vs Pro comparison table */}
           <div className="max-w-xs mx-auto mb-3 rounded-lg border border-white/10 overflow-hidden text-xs">

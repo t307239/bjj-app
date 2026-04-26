@@ -897,7 +897,7 @@
   "pro": {
     "defaultFeature": "Este recurso",
     "available": "Disponível no plano Pro",
-    "upgradeButton": "Upgrade para Pro",
+    "upgradeButton": "Testar 14 dias grátis →",
     "features": "Insights com IA para corrigir pontos fracos · Nunca perca sua sequência novamente · Seus dados, sempre exportáveis",
     "bannerTitle": "⚡ Upgrade para Pro — $9,99/mês",
     "bannerFeatures": "Encontre seus pontos fracos · Acompanhe recuperação · Proteja sua sequência",
@@ -938,9 +938,10 @@
     "compareCheck": "✓",
     "compareCross": "—",
     "urgencyBadge": "Mais popular",
-    "moneyBack": "Garantia de 7 dias 💰",
+    "moneyBack": "Cancele a qualquer momento durante o teste · Garantia de 7 dias depois",
     "benefitHighlight": "Usuários Pro treinam 2,3x mais em média",
-    "trialCta": "Comece sem risco"
+    "trialCta": "Comece sem risco",
+    "trialBadge": "🎁 14 dias grátis · Sem cartão de crédito"
   },
   "beltPromo": {
     "congrats": "Parabéns! 🎉",

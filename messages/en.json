@@ -848,7 +848,7 @@
   "pro": {
     "defaultFeature": "This feature",
     "available": "Available in Pro plan",
-    "upgradeButton": "Upgrade to Pro",
+    "upgradeButton": "Start 14-day free trial →",
     "features": "AI-powered insights to fix weak spots · Never lose your streak again · Your data, always exportable",
     "bannerTitle": "⚡ Upgrade to Pro — $9.99/month",
     "bannerFeatures": "Find your weak spots · Track recovery · Protect your streak",
@@ -889,9 +889,10 @@
     "compareCheck": "✓",
     "compareCross": "—",
     "urgencyBadge": "Most popular",
-    "moneyBack": "7-day money-back guarantee 💰",
+    "moneyBack": "Cancel anytime during trial · 7-day money-back after",
     "benefitHighlight": "Pro users train 2.3x more on average",
-    "trialCta": "Start risk-free"
+    "trialCta": "Start risk-free",
+    "trialBadge": "🎁 14-day free trial · No credit card required"
   },
   "beltPromo": {
     "congrats": "Congratulations! 🎉",
