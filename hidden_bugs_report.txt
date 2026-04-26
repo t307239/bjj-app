@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 389 files
+TS/TSX Scanned: 390 files
 CRITICAL: 0
 WARNING: 0
-INFO: 106
-Total: 106
+INFO: 109
+Total: 109
 
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/gym-outreach/route.ts: L203: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
@@ -43,6 +43,10 @@ Total: 106
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L472: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [DANGEROUS_HTML] app/pricing/page.tsx: L227: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
+[INFO] [SUPABASE_NO_ERROR] app/pricing/page.tsx: L215: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [DANGEROUS_HTML] app/profile/page.tsx: L172: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/profile/page.tsx: L176: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
@@ -217,3 +221,5 @@ Total: 106
   FIX: 修正済みなら削除、未着手ならBACKLOGへ移動
 [INFO] [CONSOLE_LOG] lib/styleAuditor.ts: console.log() が 1 件残存
   FIX: 本番前に削除
+[INFO] [MISSING_LOADING] app/pricing: loading.tsx が存在しない — ページ遷移時にローディングUIなし
+  FIX: app/pricing/loading.tsx を作成。Skeleton or スピナーで CLS を防止
