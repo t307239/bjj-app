@@ -41,6 +41,14 @@ interface AttributionRow {
   pro_conversion_pct: number;
 }
 
+// z192: separate paid attribution (paid_ref ≠ signup_source の可能性あり)
+interface PaidAttributionRow {
+  paid_ref: string;
+  paid_count: number;
+  b2c_pro: number;
+  b2b_gym: number;
+}
+
 export async function GET(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   if (!adminLimiter.check(ip)) {
@@ -75,7 +83,7 @@ export async function GET(req: NextRequest) {
 
   const { data: profiles, error } = await service
     .from("profiles")
-    .select("id, signup_source, is_pro, updated_at")
+    .select("id, signup_source, is_pro, updated_at, paid_ref, paid_plan, paid_at")
     .is("deleted_at", null);
 
   if (error) {
@@ -115,17 +123,39 @@ export async function GET(req: NextRequest) {
     (a, b) => b.signups_total - a.signups_total,
   );
 
-  // 5. Total summary
+  // 5. z192: Paid attribution (paid_ref ベース)
+  const paidMap = new Map<string, PaidAttributionRow>();
+  for (const p of profiles ?? []) {
+    if (!p.paid_ref || !p.is_pro) continue;
+    const ref = p.paid_ref;
+    const r = paidMap.get(ref) ?? {
+      paid_ref: ref,
+      paid_count: 0,
+      b2c_pro: 0,
+      b2b_gym: 0,
+    };
+    r.paid_count += 1;
+    if (p.paid_plan === "b2b_gym") r.b2b_gym += 1;
+    else r.b2c_pro += 1;
+    paidMap.set(ref, r);
+  }
+  const paidRows = Array.from(paidMap.values()).sort(
+    (a, b) => b.paid_count - a.paid_count,
+  );
+
+  // 6. Total summary
   const total = {
     signups_all_sources: profiles?.length ?? 0,
     pro_all_sources: profiles?.filter((p) => p.is_pro).length ?? 0,
     sources_count: rows.length,
+    paid_sources_count: paidRows.length,
   };
 
   return NextResponse.json({
     ok: true,
     total,
     rows,
+    paid_rows: paidRows,
     fetched_at: new Date().toISOString(),
   });
 }

@@ -20,10 +20,23 @@ interface AttributionRow {
   pro_conversion_pct: number;
 }
 
+interface PaidAttributionRow {
+  paid_ref: string;
+  paid_count: number;
+  b2c_pro: number;
+  b2b_gym: number;
+}
+
 interface AttributionResponse {
   ok: boolean;
-  total: { signups_all_sources: number; pro_all_sources: number; sources_count: number };
+  total: {
+    signups_all_sources: number;
+    pro_all_sources: number;
+    sources_count: number;
+    paid_sources_count?: number;
+  };
   rows: AttributionRow[];
+  paid_rows?: PaidAttributionRow[];
   fetched_at: string;
 }
 
@@ -152,6 +165,54 @@ export default function AttributionTable() {
           </tbody>
         </table>
       </div>
+
+      {/* z192: Paid attribution (paid_ref, post-conversion) */}
+      {data.paid_rows && data.paid_rows.length > 0 && (
+        <div className="mt-6 pt-4 border-t border-white/10">
+          <h3 className="text-xs font-semibold text-emerald-400 mb-2">
+            💰 Paid Conversion Source (z192)
+          </h3>
+          <table className="w-full text-xs tabular-nums">
+            <thead className="border-b border-white/10">
+              <tr>
+                <th className="text-left py-2 px-2 text-zinc-400 font-normal">
+                  paid_ref
+                </th>
+                <th className="text-right py-2 px-2 text-zinc-400 font-normal">
+                  Total
+                </th>
+                <th className="text-right py-2 px-2 text-zinc-400 font-normal">
+                  B2C
+                </th>
+                <th className="text-right py-2 px-2 text-zinc-400 font-normal">
+                  B2B
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.paid_rows.map((r) => (
+                <tr
+                  key={r.paid_ref}
+                  className="border-b border-white/5 hover:bg-white/5"
+                >
+                  <td className="py-2 px-2 text-zinc-200 font-mono">
+                    {r.paid_ref}
+                  </td>
+                  <td className="py-2 px-2 text-right text-emerald-400 font-semibold">
+                    {r.paid_count}
+                  </td>
+                  <td className="py-2 px-2 text-right text-yellow-400">
+                    {r.b2c_pro > 0 ? r.b2c_pro : "—"}
+                  </td>
+                  <td className="py-2 px-2 text-right text-blue-400">
+                    {r.b2b_gym > 0 ? r.b2b_gym : "—"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       <p className="text-[11px] text-zinc-600 mt-3 text-center">
         Last updated: {new Date(data.fetched_at).toLocaleTimeString()}

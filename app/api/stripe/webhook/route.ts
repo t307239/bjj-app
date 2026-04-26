@@ -79,6 +79,25 @@ export async function POST(req: Request) {
 
         const planType = session.metadata?.plan_type ?? "b2c_pro";
 
+        // z192: Retrieve subscription metadata.ref for paid attribution
+        // (z181 で checkout 時に subscription_data.metadata.ref を渡してるので
+        // subscription object に保存されてる)
+        let paidRef: string | null = null;
+        if (session.subscription) {
+          try {
+            const subscriptionId = typeof session.subscription === "string"
+              ? session.subscription
+              : session.subscription.id;
+            const sub = await stripe.subscriptions.retrieve(subscriptionId);
+            paidRef = sub.metadata?.ref ?? null;
+          } catch (err) {
+            logger.warn("stripe.webhook.subscription_retrieve_failed", {
+              sessionId: session.id,
+              error: err instanceof Error ? err.message : String(err),
+            });
+          }
+        }
+
         if (userId) {
           if (planType === "b2b_gym") {
             // B2B Gym plan: activate gym + mark owner as Pro + cancel any existing B2C Pro sub
@@ -98,6 +117,19 @@ export async function POST(req: Request) {
             }
 
             // B2B includes B2C Pro — ensure is_pro = true
+            // z192: paid attribution (only set on first conversion via paid_at IS NULL)
+            await supabase
+              .from("profiles")
+              .update({
+                is_pro: true,
+                stripe_customer_id: customerId,
+                paid_ref: paidRef ?? "direct",
+                paid_at: new Date().toISOString(),
+                paid_plan: "b2b_gym",
+              })
+              .eq("id", userId)
+              .is("paid_at", null);
+            // separately ensure is_pro/customer_id always synced (even on re-conversion)
             await supabase
               .from("profiles")
               .update({ is_pro: true, stripe_customer_id: customerId })
@@ -119,6 +151,19 @@ export async function POST(req: Request) {
             logger.info("stripe.webhook.b2b_checkout_completed", { userId });
           } else {
             // B2C Pro plan
+            // z192: paid attribution (first-conversion only)
+            await supabase
+              .from("profiles")
+              .update({
+                is_pro: true,
+                stripe_customer_id: customerId,
+                paid_ref: paidRef ?? "direct",
+                paid_at: new Date().toISOString(),
+                paid_plan: "b2c_pro",
+              })
+              .eq("id", userId)
+              .is("paid_at", null);
+            // separately keep is_pro/customer_id synced on re-conversion
             const { error } = await supabase
               .from("profiles")
               .update({
@@ -129,7 +174,7 @@ export async function POST(req: Request) {
             if (error) {
               logger.error("stripe.webhook.b2c_upgrade_failed", { userId, customerId }, error as Error);
             } else {
-              logger.info("stripe.webhook.b2c_upgraded", { userId, customerId });
+              logger.info("stripe.webhook.b2c_upgraded", { userId, customerId, paidRef });
             }
           }
         } else {

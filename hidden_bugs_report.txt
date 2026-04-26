@@ -9,7 +9,7 @@ Total: 111
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/onboarding-email/route.ts: L249: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [SUPABASE_NO_ERROR] app/api/stripe/webhook/route.ts: L164: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] app/api/stripe/webhook/route.ts: L209: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
