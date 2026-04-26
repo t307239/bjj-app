@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
 import ReferralSection from "@/components/ReferralSection";
 import PushNotificationSection from "@/components/PushNotificationSection";
+import EmailPreferenceSection from "@/components/profile/EmailPreferenceSection";
 import CsvExport from "@/components/CsvExport";
 import { trackEvent } from "@/lib/analytics";
 import { clientLogger } from "@/lib/clientLogger";
@@ -105,6 +106,9 @@ export default function SettingsSection({
 
       {/* Push Notifications */}
       <PushNotificationSection />
+
+      {/* z188: Marketing Email Preference (GDPR Art 7-3 容易な withdrawal) */}
+      <EmailPreferenceSection />
 
       {/* Timezone Display */}
       <div className="bg-zinc-900/60 border border-white/8 rounded-xl px-4 py-3">

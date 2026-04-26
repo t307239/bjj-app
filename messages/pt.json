@@ -2110,5 +2110,10 @@
   "share": {
     "nativeTitle": "Registro de Treino de BJJ",
     "nativeText": "Registrei um treino no BJJ App 🥋 #BJJ #JiuJitsu #Training"
+  },
+  "settings": {
+    "emailPrefTitle": "E-mails de Marketing",
+    "emailPrefDesc": "Dicas, novos recursos, ofertas Pro ocasionais. Nunca compartilhamos seu e-mail. E-mails de serviço (relatório semanal etc.) são gerenciados separadamente.",
+    "emailPrefToggle": "Ativar/desativar e-mails de marketing"
   }
 }

@@ -2049,5 +2049,10 @@
   "share": {
     "nativeTitle": "BJJ Training Log",
     "nativeText": "Logged a training session on BJJ App 🥋 #BJJ #JiuJitsu #Training"
+  },
+  "settings": {
+    "emailPrefTitle": "Marketing Emails",
+    "emailPrefDesc": "Tips, new features, occasional Pro offers. We never share your email. Service emails (weekly reports etc.) are managed separately.",
+    "emailPrefToggle": "Toggle marketing email subscription"
   }
 }

@@ -2051,5 +2051,10 @@
   "share": {
     "nativeTitle": "BJJ 練習記録",
     "nativeText": "BJJ Appで練習記録を残しました 🥋 #BJJ #JiuJitsu #柔術 #Training"
+  },
+  "settings": {
+    "emailPrefTitle": "マーケティングメール",
+    "emailPrefDesc": "Tips・新機能案内・時々Pro案内。メアドは外部共有しません。サービスメール (週次レポート等) は別管理。",
+    "emailPrefToggle": "マーケティングメールの ON/OFF"
   }
 }
