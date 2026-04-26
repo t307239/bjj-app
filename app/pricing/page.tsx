@@ -22,6 +22,7 @@ import { createClient } from "@/lib/supabase/server";
 import NavBar from "@/components/NavBar";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import { safeJsonLd } from "@/lib/safeJsonLd";
+import { GYM_VALUE_PROPS, TRIAL_BADGE, GYM_TIER, pickLocale } from "@/lib/copy/funnel";
 
 const PricingSection = dynamic(() => import("@/components/PricingSection"), {
   loading: () => (
@@ -49,19 +50,7 @@ const COPY = {
     heroTitle: "シンプルな料金体系",
     heroSub: "個人ユーザーは永久無料。本格分析は Pro、道場管理は Gym Pro。",
     gymTier: "Gym Pro",
-    gymPrice: "$99",
-    gymPer: "/月",
     gymTagline: "道場全体を管理",
-    gymCta: "14日間 無料で試す →",
-    gymFeatures: [
-      "📊 全生徒の練習頻度を一覧",
-      "🚨 2週間来ない生徒を自動アラート",
-      "📚 今週のテーマを全員に固定",
-      "🎯 帯昇格が近い生徒をAI提案",
-      "📥 CSVで生徒を一括招待",
-      "🔒 個人メモは秘匿",
-    ],
-    gymTrialBadge: "🎁 14日間 無料 · クレジットカード不要",
     faqTitle: "よくある質問",
     faqs: [
       {
@@ -87,19 +76,7 @@ const COPY = {
     heroSub:
       "Grátis para sempre para usuários individuais. Pro para análise séria. Gym Pro para dojos.",
     gymTier: "Gym Pro",
-    gymPrice: "$99",
-    gymPer: "/mês",
     gymTagline: "Gerencie todo o dojo",
-    gymCta: "Testar 14 dias grátis →",
-    gymFeatures: [
-      "📊 Frequência de treino de todos os alunos",
-      "🚨 Alerta quando aluno some 2 semanas",
-      "📚 Fixe tema da semana para todos",
-      "🎯 IA sugere alunos prontos para promoção",
-      "📥 Convide alunos em massa via CSV",
-      "🔒 Notas pessoais ficam privadas",
-    ],
-    gymTrialBadge: "🎁 14 dias grátis · Sem cartão de crédito",
     faqTitle: "Perguntas frequentes",
     faqs: [
       {
@@ -124,19 +101,7 @@ const COPY = {
     heroTitle: "Simple pricing",
     heroSub: "Free forever for individuals. Pro for serious analytics. Gym Pro for dojos.",
     gymTier: "Gym Pro",
-    gymPrice: "$99",
-    gymPer: "/mo",
     gymTagline: "Manage your whole dojo",
-    gymCta: "Start 14-day free trial →",
-    gymFeatures: [
-      "📊 See every student's training frequency",
-      "🚨 Auto-alert when a student vanishes 2+ weeks",
-      "📚 Pin this week's focus to every dashboard",
-      "🎯 AI suggests students ready for promotion",
-      "📥 Bulk-invite students via CSV",
-      "🔒 Personal notes stay private",
-    ],
-    gymTrialBadge: "🎁 14-day free trial · No credit card",
     faqTitle: "Frequently asked questions",
     faqs: [
       {
@@ -200,6 +165,11 @@ export default async function PricingPage() {
   const locale = await detectServerLocale();
   const t = makeT(locale);
   const c = COPY[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
+  // z190: 一元化された value props を pull
+  const gymProps = pickLocale(GYM_VALUE_PROPS, locale);
+  const gymTrialBadge = pickLocale(TRIAL_BADGE, locale);
+  const gymPer = pickLocale(GYM_TIER.perMonth, locale);
+  const gymCta = pickLocale(GYM_TIER.trialCta, locale);
 
   const displayName =
     user?.user_metadata?.full_name ||
@@ -251,16 +221,16 @@ export default async function PricingPage() {
             <p className="text-zinc-300 text-sm mb-3">{c.gymTagline}</p>
             <div className="flex items-baseline justify-center gap-1 mb-1">
               <span className="text-5xl font-bold text-white tabular-nums">
-                {c.gymPrice}
+                {GYM_TIER.price}
               </span>
-              <span className="text-zinc-400 text-lg">{c.gymPer}</span>
+              <span className="text-zinc-400 text-lg">{gymPer}</span>
             </div>
             <div className="text-emerald-300 text-sm mb-6">
-              {c.gymTrialBadge}
+              {gymTrialBadge}
             </div>
 
             <ul className="grid sm:grid-cols-2 gap-2 mb-6 text-left">
-              {c.gymFeatures.map((f, i) => (
+              {gymProps.map((f, i) => (
                 <li
                   key={i}
                   className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-lg px-3 py-2 text-sm text-zinc-200"
@@ -274,7 +244,7 @@ export default async function PricingPage() {
               href={user ? "/gym/upgrade?ref=pricing" : "/login?next=/gym/upgrade?ref=pricing"}
               className="inline-block bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-3.5 px-8 rounded-xl"
             >
-              {c.gymCta}
+              {gymCta}
             </Link>
           </div>
         </section>
