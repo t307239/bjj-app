@@ -21,6 +21,7 @@ import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import GymUpgradeCheckoutButton from "@/components/gym/GymUpgradeCheckoutButton";
+import { GYM_VALUE_PROPS, TRIAL_BADGE, TRUST_SIGNALS, GYM_TIER, pickLocale, type Locale } from "@/lib/copy/funnel";
 
 export const dynamic = "force-dynamic";
 
@@ -49,22 +50,6 @@ const COPY = {
     heroSub: "$99/月 で道場全体を管理。指導の浸透・離脱防止・帯昇格をデータで支援。",
     heroSubWithGym: "Gym Pro で全員のダッシュボードを統合管理できます。",
     valueTitle: "Gym Pro でできること",
-    values: [
-      "📊 全生徒の練習頻度を一覧表示",
-      "🚨 2 週間来ない生徒を自動アラート (離脱率 50% 改善実績)",
-      "📚 今週のテーマを全員のダッシュボードに固定",
-      "🎯 帯昇格が近い生徒を AI が提案",
-      "🔒 個人メモは秘匿、統計のみ可視化",
-      "📥 CSV で生徒を一括招待",
-    ],
-    pricingTitle: "Gym Pro",
-    pricingPrice: "$99",
-    pricingPer: "/月",
-    pricingTrial: "14 日間 無料トライアル",
-    cta: "14 日間 無料で試す →",
-    trustNoCard: "クレジットカード不要",
-    trustCancel: "いつでもキャンセル可",
-    trustNoAuto: "個人プランへの自動切替なし",
     backLink: "← Gym ダッシュボードへ戻る",
     notOwnerTitle: "ジムオーナーアカウントが必要です",
     notOwnerSub: "Gym Pro のアップグレードは道場のオーナーのみ可能です。先にジムを作成してください。",
@@ -78,22 +63,6 @@ const COPY = {
       "$99/mês para gerenciar todo o dojo. Reforço de ensino, prevenção de evasão e promoções com dados.",
     heroSubWithGym: "Com Gym Pro, gerencie o dashboard de todos em um só lugar.",
     valueTitle: "O que o Gym Pro oferece",
-    values: [
-      "📊 Frequência de treino de todos os alunos",
-      "🚨 Alerta automático quando aluno some 2 semanas (-50% evasão)",
-      "📚 Fixe o tema da semana no dashboard de todos",
-      "🎯 IA sugere alunos prontos para promoção",
-      "🔒 Notas pessoais ficam privadas, só estatísticas visíveis",
-      "📥 Convide alunos em massa via CSV",
-    ],
-    pricingTitle: "Gym Pro",
-    pricingPrice: "$99",
-    pricingPer: "/mês",
-    pricingTrial: "Teste grátis 14 dias",
-    cta: "Testar 14 dias grátis →",
-    trustNoCard: "Sem cartão de crédito",
-    trustCancel: "Cancele a qualquer momento",
-    trustNoAuto: "Sem cobrança automática",
     backLink: "← Voltar ao dashboard do Gym",
     notOwnerTitle: "Conta de proprietário de gym necessária",
     notOwnerSub:

@@ -33,6 +33,7 @@ import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
 import { signUnsubscribeToken } from "@/lib/unsubscribeToken";
 import { canSendEmail, recordEmailSent } from "@/lib/emailRateLimit";
+import { GYM_VALUE_PROPS, TRUST_SIGNALS, GYM_TIER, pickLocale, type Locale } from "@/lib/copy/funnel";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -68,52 +69,29 @@ function buildEmailHtml(gym: GymRow): { subject: string; html: string; unsubscri
 
   const trialUrl = `https://bjj-app.net/gym/upgrade?ref=plg_email&gym_id=${gym.id}`;
 
+  // z190b: page-specific text (subject/title/lead) は file-local だが、
+  // valueProps/ctaLabel/footer は lib/copy/funnel.ts から pull (1 source of truth)
+  const locale: Locale = isJa ? "ja" : isPt ? "pt" : "en";
+  const valueProps = pickLocale(GYM_VALUE_PROPS, locale);
+  const ctaLabel = pickLocale(GYM_TIER.trialCta, locale);
+  const footer = pickLocale(TRUST_SIGNALS, locale).join(" · ");
+
   let subject: string;
   let title: string;
   let lead: string;
-  let valueProps: string[];
-  let ctaLabel: string;
-  let footer: string;
 
   if (isJa) {
     subject = `🥋 ${gym.name} の生徒 ${gym.member_count} 人が BJJ App を使用中`;
     title = `${gym.member_count} 人があなたのジムから記録を開始しました`;
     lead = `${gym.name} の生徒 ${gym.member_count} 人が BJJ App でトレーニングを記録しています。\n\nGym Premium ($99/月) なら、彼らの練習頻度・離脱リスク・帯昇格タイミングを一目で把握できます。`;
-    valueProps = [
-      "📊 全生徒の練習頻度を一覧表示",
-      "🚨 2 週間来ない生徒を自動アラート (離脱率 50% 改善実績)",
-      "📚 今週のテーマを全員のダッシュボードに固定",
-      "🎯 帯昇格が近い生徒を AI が提案",
-      "🔒 個人メモは秘匿、統計のみ可視化",
-    ];
-    ctaLabel = "14 日間 無料で試す →";
-    footer = "クレジットカード不要 · いつでもキャンセル可 · 個人プランへの自動切替なし";
   } else if (isPt) {
     subject = `🥋 ${gym.member_count} alunos da ${gym.name} estão usando BJJ App`;
     title = `${gym.member_count} alunos do seu dojo começaram a registrar treinos`;
     lead = `${gym.member_count} alunos da ${gym.name} estão registrando treinos no BJJ App.\n\nCom Gym Premium ($99/mês), você vê a frequência, risco de evasão e momento de promoção de cada aluno.`;
-    valueProps = [
-      "📊 Frequência de treino de todos os alunos",
-      "🚨 Alerta automático quando aluno some 2 semanas (-50% evasão)",
-      "📚 Fixe o tema da semana no dashboard de todos",
-      "🎯 IA sugere alunos prontos para promoção",
-      "🔒 Notas pessoais ficam privadas, só estatísticas visíveis",
-    ];
-    ctaLabel = "Testar 14 dias grátis →";
-    footer = "Sem cartão de crédito · Cancele a qualquer momento · Sem cobrança automática";
   } else {
     subject = `🥋 ${gym.member_count} students from ${gym.name} are tracking on BJJ App`;
     title = `${gym.member_count} students from your dojo started logging training`;
     lead = `${gym.member_count} students from ${gym.name} are logging training on BJJ App.\n\nWith Gym Premium ($99/mo), see frequency, churn risk, and promotion timing for every student.`;
-    valueProps = [
-      "📊 See every student's training frequency",
-      "🚨 Auto-alert when a student vanishes 2+ weeks (-50% churn)",
-      "📚 Pin this week's focus to every dashboard",
-      "🎯 AI suggests students ready for promotion",
-      "🔒 Personal notes stay private — only stats visible",
-    ];
-    ctaLabel = "Start 14-day free trial →";
-    footer = "No credit card · Cancel anytime · No auto-charge";
   }
 
   const valueHtml = valueProps
