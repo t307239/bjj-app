@@ -14,7 +14,11 @@
     "records": "Registros",
     "mypage": "Minha Página",
     "streakDaysOne": "1 dia",
-    "streakBadgeOne": "🔥 1 dia seguido"
+    "streakBadgeOne": "🔥 1 dia seguido",
+    "pricing": "Preços",
+    "help": "Ajuda",
+    "privacy": "Privacidade",
+    "terms": "Termos"
   },
   "dashboard": {
     "welcomeBack": "Bem-vindo de volta, {name} 🙌",

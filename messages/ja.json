@@ -14,7 +14,11 @@
     "records": "記録",
     "mypage": "マイページ",
     "streakDaysOne": "1日",
-    "streakBadgeOne": "🔥1日連続"
+    "streakBadgeOne": "🔥1日連続",
+    "pricing": "料金プラン",
+    "help": "ヘルプ",
+    "privacy": "プライバシー",
+    "terms": "利用規約"
   },
   "dashboard": {
     "welcomeBack": "おかえり、{name} 👋",

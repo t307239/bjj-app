@@ -6,6 +6,7 @@ import CookieConsent from "@/components/CookieConsent";
 import WebVitalsReporter from "@/components/WebVitalsReporter";
 import AgeGate from "@/components/AgeGate";
 import KeyboardShortcutProvider from "@/components/KeyboardShortcutProvider";
+import SiteFooter from "@/components/SiteFooter";
 import LocaleProvider from "@/components/LocaleProvider";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import "./globals.css";
@@ -136,6 +137,8 @@ export default async function RootLayout({
           <main id="main-content">
             {children}
           </main>
+          {/* z185: Global footer with Pricing / Help / Wiki / Privacy / Terms */}
+          <SiteFooter />
           <CookieConsent />
           <KeyboardShortcutProvider />
           <Analytics />
