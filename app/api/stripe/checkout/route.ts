@@ -8,6 +8,14 @@ import { createRateLimiter } from "@/lib/rateLimit";
 
 const CheckoutBodySchema = z.object({
   plan: z.enum(["monthly", "annual", "gym"]).default("monthly"),
+  // z181: attribution source for funnel analysis (Stripe metadata に保存)
+  // 既知の値: plg_email | wiki | direct | reddit | (将来) productHunt 等
+  // 任意 string を許可するが [a-z_]+ に制限 (XSS / log injection 防止)
+  ref: z
+    .string()
+    .max(50)
+    .regex(/^[a-z][a-z0-9_]*$/, "ref must be [a-z0-9_], lowercase, start with letter")
+    .optional(),
 });
 
 export const runtime = "nodejs";
@@ -65,6 +73,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid plan", issues: parsed.error.issues }, { status: 400 });
   }
   const plan = parsed.data.plan;
+  const refSource = parsed.data.ref ?? "direct";  // z181: attribution
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://bjj-app.net";
 
   // ── B2B Gym plan ─────────────────────────────────────────────────────────────
@@ -108,6 +117,7 @@ export async function POST(req: NextRequest) {
           metadata: {
             plan_type: "b2b_gym",
             gym_id: gym.id,
+            ref: refSource,  // z181: attribution
           },
         },
         client_reference_id: user.id,
@@ -147,7 +157,7 @@ export async function POST(req: NextRequest) {
       line_items: [{ price: priceId, quantity: 1 }],
       subscription_data: {
         trial_period_days: 14,
-        metadata: { plan_type: "b2c_pro" },
+        metadata: { plan_type: "b2c_pro", ref: refSource },  // z181: attribution
       },
       client_reference_id: user.id,
       success_url: `${appUrl}/dashboard?upgraded=1`,

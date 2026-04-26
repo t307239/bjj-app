@@ -37,10 +37,13 @@ export default function GymUpgradeCheckoutButton({ ctaLabel, refSource }: Props)
         ref: refSource,
       });
 
+      // z181: pass attribution ref to Stripe checkout (saved as metadata.ref).
+      // Sanitize: ref must be [a-z0-9_], else server rejects with 400.
+      const safeRef = /^[a-z][a-z0-9_]{0,49}$/.test(refSource) ? refSource : "direct";
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: "gym" }),
+        body: JSON.stringify({ plan: "gym", ref: safeRef }),
       });
       const data = (await res.json()) as { url?: string; error?: string };
       if (!res.ok || !data.url) {
