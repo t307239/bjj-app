@@ -30,6 +30,7 @@ import { verifyCronAuth } from "@/lib/cronAuth";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
 import { signUnsubscribeToken } from "@/lib/unsubscribeToken";
+import { canSendEmail, recordEmailSent } from "@/lib/emailRateLimit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -296,6 +297,14 @@ export async function GET(req: Request) {
       is_pro: profile.is_pro ?? false,
     };
 
+    // z189: 24h frequency cap (全 cron 横断、spam ban 防止)
+    const allowed = await canSendEmail(supabase, u.id, `onboarding_${marker}`);
+    if (!allowed) {
+      logger.info("onboarding-email.skipped_rate_limit", { userId: u.id, marker });
+      skipped++;
+      continue;
+    }
+
     // Idempotency check via INSERT — relies on UNIQUE (user_id, day_marker)
     const { error: insertErr } = await supabase
       .from("onboarding_emails_log")
@@ -363,6 +372,10 @@ export async function GET(req: Request) {
         continue;
       }
       sent++;
+      // z189: 全 cron 横断 frequency cap 用に記録
+      await recordEmailSent(supabase, u.id, `onboarding_${marker}`, u.email, {
+        locale: userRow.locale,
+      });
       logger.info("onboarding-email.sent", {
         userId: u.id,
         marker,

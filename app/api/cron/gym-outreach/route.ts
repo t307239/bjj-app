@@ -32,6 +32,7 @@ import { verifyCronAuth } from "@/lib/cronAuth";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
 import { signUnsubscribeToken } from "@/lib/unsubscribeToken";
+import { canSendEmail, recordEmailSent } from "@/lib/emailRateLimit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -220,6 +221,14 @@ export async function GET(req: Request) {
       continue;
     }
 
+    // z189: 24h frequency cap (全 cron 横断、spam ban 防止)
+    const allowed = await canSendEmail(supabase, gym.owner_id, "gym_outreach");
+    if (!allowed) {
+      logger.info("gym-outreach.skipped_rate_limit", { gymId: gym.id });
+      skipped++;
+      continue;
+    }
+
     const gymRow: GymRow = {
       id: gym.id,
       name: gym.name,
@@ -267,6 +276,11 @@ export async function GET(req: Request) {
         continue;
       }
       sent++;
+      // z189: 全 cron 横断 frequency cap 用に記録
+      await recordEmailSent(supabase, gym.owner_id, "gym_outreach", ownerUser.email!, {
+        gymId: gym.id,
+        memberCount,
+      });
       // Mark as sent (idempotency for next 30 days)
       await supabase
         .from("gyms")

@@ -652,6 +652,65 @@ def scan_message_key_parity() -> list:
     return findings
 
 
+# ── Pattern 11: email send without rate limit (z189) ────────────────
+# 7 cron が独立に Resend 送信するため、新規 user に同日 4 emails 着くなど
+# spam ban リスクがあった。本 lint は Resend send call の周辺で
+# canSendEmail / recordEmailSent helper の呼び出しが無ければ 🔴 fail。
+
+EMAIL_RATE_LIMIT_EXEMPT = {
+    # weekly-email: 既存で notification_preferences.weekly_email opt-out あり、
+    # かつ「週1回 active user 限定」で frequency 設計済 (低リスク)。
+    # 将来 z189 helper に移行予定だが今は exempt。
+    "app/api/cron/weekly-email/route.ts",
+    # weekly-goal: 同上、月曜のみ goal 設定済み user 限定
+    "app/api/cron/weekly-goal/route.ts",
+    # gym-milestone: gym 全体 1 通 / 月、低リスク
+    "app/api/cron/gym-milestone/route.ts",
+    # usage-alert: admin / pro 限定の運営アラート、user 体験影響なし
+    "app/api/cron/usage-alert/route.ts",
+    # reengagement: push 通知のみ、email でない
+    "app/api/cron/reengagement/route.ts",
+}
+
+
+def scan_email_send_without_rate_limit() -> list:
+    findings = []
+    api = ROOT / "app" / "api"
+    if not api.exists():
+        return findings
+    pat_send = re.compile(r'fetch\(\s*["\']https://api\.resend\.com/emails["\']')
+    pat_helper = re.compile(r'\b(canSendEmail|recordEmailSent)\s*\(')
+
+    for fp in api.rglob("route.ts"):
+        rel = fp.relative_to(ROOT).as_posix()
+        if rel in EMAIL_RATE_LIMIT_EXEMPT:
+            continue
+        try:
+            c = fp.read_text(encoding="utf-8", errors="ignore")
+        except Exception:
+            continue
+        if not pat_send.search(c):
+            continue
+        # send call exists — 同じファイル内で helper 呼んでるか?
+        if pat_helper.search(c):
+            continue
+        findings.append({
+            "id": "EMAIL_SEND_NO_RATE_LIMIT",
+            "severity": "🔴",
+            "file": rel,
+            "line": 0,
+            "text": "Resend send without canSendEmail / recordEmailSent",
+            "description": (
+                "Resend 送信 call があるが lib/emailRateLimit.ts の helper を "
+                "呼んでない → spam ban リスク。canSendEmail で send 前 check, "
+                "recordEmailSent で send 後 record。意図的な exempt は "
+                "EMAIL_RATE_LIMIT_EXEMPT に追加。"
+            ),
+            "z": "z189",
+        })
+    return findings
+
+
 # ── Main ───────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -672,6 +731,7 @@ def main() -> int:
     all_findings.extend(scan_cron_fail_open())
     all_findings.extend(scan_error_message_leak())
     all_findings.extend(scan_console_outside_logger())
+    all_findings.extend(scan_email_send_without_rate_limit())
 
     criticals = [f for f in all_findings if f["severity"] == "🔴"]
     warnings = [f for f in all_findings if f["severity"] == "🟡"]
