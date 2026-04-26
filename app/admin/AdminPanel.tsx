@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { formatDateShort } from "@/lib/formatDate";
+import AttributionTable from "@/components/admin/AttributionTable";
 
 type AdminUser = {
   id: string;
@@ -201,6 +202,9 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
             </div>
           </div>
         )}
+
+        {/* z182: Attribution by signup_source */}
+        <AttributionTable />
 
         {/* Search */}
         <div className="mb-4">

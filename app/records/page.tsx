@@ -69,7 +69,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RecordsPage() {
+export default async function RecordsPage({
+  searchParams,
+}: {
+  // z183: ?welcome=1 で TrainingLog form を初期 open (auth/callback 経由)
+  searchParams?: Promise<{ welcome?: string }>;
+}) {
+  const sp = searchParams ? await searchParams : {};
+  const welcomeMode = sp.welcome === "1";
   const supabase = await createClient();
   const {
     data: { user },
@@ -196,7 +203,7 @@ export default async function RecordsPage() {
             <>
               {/* Training Log (full list, search, filters) */}
               <section className="mb-7">
-                <TrainingLog userId={user.id} isPro={isPro} />
+                <TrainingLog userId={user.id} isPro={isPro} initialOpen={welcomeMode} />
               </section>
 
               {/* Competition Summary */}

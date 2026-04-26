@@ -55,7 +55,9 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
     {
       id: "first_log",
       label: t("onboarding.step.firstLog"),
-      href: "#training-log",
+      // z183: 旧 "#training-log" は dashboard 内アンカーで存在せず broken だった。
+      // /records に form があるので /records?welcome=1 で初期 open に飛ばす。
+      href: "/records?welcome=1",
       done: hasFirstLog,
       emoji: "🥋",
     },
