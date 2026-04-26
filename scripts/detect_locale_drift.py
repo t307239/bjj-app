@@ -529,6 +529,129 @@ def scan_console_outside_logger() -> list:
     return findings
 
 
+# ── Pattern 11: message key parity (z176d) ───────────────────────────
+# en/ja/pt の JSON 構造が揃っているかを strict 検査:
+#   1. 全 key set が一致 (一方にあって他方にない key を 🔴 fail)
+#   2. 各 value が non-empty string (空文字を 🟡 warning)
+#   3. placeholder 数が一致 ({n} を持つ EN が JA で {n} を持っていない等)
+# z150/z151/z167 等で繰り返し見つけた drift class を strict 化。
+
+def scan_message_key_parity() -> list:
+    findings = []
+    paths = {
+        loc: MESSAGES / f"{loc}.json"
+        for loc in ("en", "ja", "pt")
+    }
+    if not all(p.exists() for p in paths.values()):
+        return findings
+
+    def flatten(d: dict, prefix: str = "") -> dict:
+        out = {}
+        for k, v in d.items():
+            full = f"{prefix}.{k}" if prefix else k
+            if isinstance(v, dict):
+                out.update(flatten(v, full))
+            else:
+                out[full] = v
+        return out
+
+    flat = {
+        loc: flatten(json.loads(p.read_text(encoding="utf-8")))
+        for loc, p in paths.items()
+    }
+    en_keys = set(flat["en"].keys())
+    ja_keys = set(flat["ja"].keys())
+    pt_keys = set(flat["pt"].keys())
+
+    # 1. Missing key detection
+    for missing_key in (en_keys - ja_keys):
+        findings.append({
+            "id": "MESSAGE_KEY_MISSING_JA",
+            "severity": "🔴",
+            "file": "messages/ja.json",
+            "line": 0,
+            "text": f"{missing_key} = {flat['en'][missing_key]!r}"[:120],
+            "description": f"key '{missing_key}' は en.json にあるが ja.json に欠落",
+            "z": "z176d",
+        })
+    for missing_key in (en_keys - pt_keys):
+        findings.append({
+            "id": "MESSAGE_KEY_MISSING_PT",
+            "severity": "🔴",
+            "file": "messages/pt.json",
+            "line": 0,
+            "text": f"{missing_key} = {flat['en'][missing_key]!r}"[:120],
+            "description": f"key '{missing_key}' は en.json にあるが pt.json に欠落",
+            "z": "z176d",
+        })
+    for extra_key in (ja_keys - en_keys):
+        findings.append({
+            "id": "MESSAGE_KEY_EXTRA_JA",
+            "severity": "🟡",
+            "file": "messages/ja.json",
+            "line": 0,
+            "text": f"{extra_key} = {flat['ja'][extra_key]!r}"[:120],
+            "description": f"key '{extra_key}' は ja.json にあるが en.json に欠落 (dead key 候補)",
+            "z": "z176d",
+        })
+    for extra_key in (pt_keys - en_keys):
+        findings.append({
+            "id": "MESSAGE_KEY_EXTRA_PT",
+            "severity": "🟡",
+            "file": "messages/pt.json",
+            "line": 0,
+            "text": f"{extra_key} = {flat['pt'][extra_key]!r}"[:120],
+            "description": f"key '{extra_key}' は pt.json にあるが en.json に欠落 (dead key 候補)",
+            "z": "z176d",
+        })
+
+    # 2. Empty value detection (期待値 non-empty なのに空文字)
+    INTENTIONAL_EMPTY = {
+        # language-specific concatenation: EN 側だけ suffix を持つ等は intentional
+        "beltProgress.beltSuffix",  # JA/PT は color 名に既に含む
+        "chart.timesUnit",  # JA のみ "回" / EN/PT は "" (concat 不要)
+    }
+    placeholder_re = re.compile(r"\{[a-zA-Z]\w*\}")
+    for loc, kv in flat.items():
+        for k, v in kv.items():
+            if k in INTENTIONAL_EMPTY:
+                continue
+            if isinstance(v, str) and not v.strip():
+                findings.append({
+                    "id": f"MESSAGE_EMPTY_VALUE_{loc.upper()}",
+                    "severity": "🟡",
+                    "file": f"messages/{loc}.json",
+                    "line": 0,
+                    "text": k,
+                    "description": f"key '{k}' の値が空文字 (intentional なら INTENTIONAL_EMPTY に追加)",
+                    "z": "z176d",
+                })
+
+    # 3. Placeholder count parity
+    common_keys = en_keys & ja_keys & pt_keys
+    for k in common_keys:
+        en_v = flat["en"][k]
+        ja_v = flat["ja"][k]
+        pt_v = flat["pt"][k]
+        if not all(isinstance(v, str) for v in (en_v, ja_v, pt_v)):
+            continue
+        en_ph = set(placeholder_re.findall(en_v))
+        ja_ph = set(placeholder_re.findall(ja_v))
+        pt_ph = set(placeholder_re.findall(pt_v))
+        if en_ph != ja_ph or en_ph != pt_ph:
+            findings.append({
+                "id": "MESSAGE_PLACEHOLDER_DRIFT",
+                "severity": "🔴",
+                "file": "messages/*.json",
+                "line": 0,
+                "text": f"{k}: en={sorted(en_ph)} ja={sorted(ja_ph)} pt={sorted(pt_ph)}"[:120],
+                "description": f"placeholder ({{n}} 等) が locale 間で不一致 — z150 (PT カテゴリ漏れ)/z167 (plural) と同型",
+                "z": "z176d",
+            })
+
+    return findings
+
+
 # ── Main ───────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -542,6 +665,7 @@ def main() -> int:
     all_findings.extend(scan_locale_ja_only())
     all_findings.extend(scan_month_labels_drift())
     all_findings.extend(scan_pt_stale_placeholder())
+    all_findings.extend(scan_message_key_parity())
     all_findings.extend(scan_title_double_suffix())
     all_findings.extend(scan_plural_without_singular())
     all_findings.extend(scan_security_regressions())
