@@ -78,22 +78,6 @@ const COPY = {
     heroSubWithGym:
       "With Gym Pro, manage every student's dashboard from one place.",
     valueTitle: "What you get with Gym Pro",
-    values: [
-      "📊 See every student's training frequency",
-      "🚨 Auto-alert when a student vanishes 2+ weeks (-50% churn)",
-      "📚 Pin this week's focus to every dashboard",
-      "🎯 AI suggests students ready for promotion",
-      "🔒 Personal notes stay private — only stats visible",
-      "📥 Bulk-invite students via CSV",
-    ],
-    pricingTitle: "Gym Pro",
-    pricingPrice: "$99",
-    pricingPer: "/mo",
-    pricingTrial: "14-day free trial",
-    cta: "Start 14-day free trial →",
-    trustNoCard: "No credit card",
-    trustCancel: "Cancel anytime",
-    trustNoAuto: "No auto-charge to personal plan",
     backLink: "← Back to Gym dashboard",
     notOwnerTitle: "Gym owner account required",
     notOwnerSub:
@@ -119,6 +103,12 @@ export default async function GymUpgradePage({
   const locale = await detectServerLocale();
   const t = makeT(locale);
   const c = COPY[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
+  // z190b: 一元化された value props/trust/CTA を pull
+  const gymProps = pickLocale(GYM_VALUE_PROPS, locale as Locale);
+  const trialBadge = pickLocale(TRIAL_BADGE, locale as Locale);
+  const trustSignals = pickLocale(TRUST_SIGNALS, locale as Locale);
+  const gymPer = pickLocale(GYM_TIER.perMonth, locale as Locale);
+  const gymCta = pickLocale(GYM_TIER.trialCta, locale as Locale);
 
   // Look up the user's gym (must be owner)
   const { data: ownerProfile } = await supabase
@@ -206,7 +196,7 @@ export default async function GymUpgradePage({
             {c.valueTitle}
           </h2>
           <ul className="grid sm:grid-cols-2 gap-3 max-w-2xl mx-auto">
-            {c.values.map((v, i) => (
+            {gymProps.map((v, i) => (
               <li
                 key={i}
                 className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-xl px-4 py-3 text-sm text-zinc-200"
@@ -217,27 +207,27 @@ export default async function GymUpgradePage({
           </ul>
         </section>
 
-        {/* Pricing card + CTA */}
+        {/* Pricing card + CTA — z190b: 一元化 lib/copy/funnel.ts */}
         <section className="bg-gradient-to-br from-emerald-950/40 to-zinc-900/60 ring-1 ring-emerald-500/30 rounded-2xl p-7 sm:p-9 max-w-md mx-auto text-center">
           <div className="text-emerald-400 font-semibold text-sm tracking-widest uppercase mb-2">
-            {c.pricingTitle}
+            Gym Pro
           </div>
           <div className="flex items-baseline justify-center gap-1 mb-1">
             <span className="text-5xl font-bold text-white tabular-nums">
-              {c.pricingPrice}
+              {GYM_TIER.price}
             </span>
             <span className="text-zinc-400 text-lg whitespace-nowrap">
-              {c.pricingPer}
+              {gymPer}
             </span>
           </div>
-          <div className="text-emerald-300 text-sm mb-6">🎁 {c.pricingTrial}</div>
+          <div className="text-emerald-300 text-sm mb-6">{trialBadge}</div>
 
-          <GymUpgradeCheckoutButton ctaLabel={c.cta} refSource={_refSource} />
+          <GymUpgradeCheckoutButton ctaLabel={gymCta} refSource={_refSource} />
 
           <div className="mt-5 text-xs text-zinc-500 space-y-1">
-            <div>✓ {c.trustNoCard}</div>
-            <div>✓ {c.trustCancel}</div>
-            <div>✓ {c.trustNoAuto}</div>
+            {trustSignals.map((sig, i) => (
+              <div key={i}>✓ {sig}</div>
+            ))}
           </div>
         </section>
 

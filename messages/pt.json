@@ -110,15 +110,7 @@
     "mockDashboardMonthlyGoal": "Objetivo Mensal",
     "mockDashboardMonthlyDone": "✓ Pronto!",
     "mockDashboardMonthlySessions": "12 / 12 sessões",
-    "mockDashboardRecentSessions": "Sessões Recentes",
-    "title": "Bem-vindo de volta",
-    "subtitle": "Seu painel de treinamento BJJ",
-    "totalSessions": "Total de treinos",
-    "thisMonth": "Este mês",
-    "days": "dias",
-    "logTraining": "Registrar Treino",
-    "noLogs": "Nenhum treino ainda",
-    "proFeature": "Recurso Pro"
+    "mockDashboardRecentSessions": "Sessões Recentes"
   },
   "trainingLog": {
     "totalLabel": "total",
@@ -143,8 +135,7 @@
     "addPromotion": "Adicionar promoção",
     "savePromotion": "Salvar",
     "editHistory": "Editar",
-    "noHistory": "Nenhum histórico de promoção ainda. Adicione suas faixas anteriores com \"Adicionar promoção\".",
-    "almostThere": "Quase lá!"
+    "noHistory": "Nenhum histórico de promoção ainda. Adicione suas faixas anteriores com \"Adicionar promoção\"."
   },
   "training": {
     "title": "Registro de Treino",
@@ -276,19 +267,7 @@
     "toggleGoalTracker": "Alternar rastreador de metas",
     "toggleDetailCharts": "Alternar gráficos detalhados",
     "toggleBadges": "Alternar medalhas",
-    "searchResultCount": "{count} resultados encontrados",
-    "logTitle": "Registrar Treino",
-    "logButton": "Salvar Treino",
-    "notes": "Anotações",
-    "error": "Erro ao salvar. Tente novamente.",
-    "deleteConfirm": "Excluir este treino?",
-    "deleteBtn": "Excluir",
-    "editBtn": "Editar",
-    "partner": "Parceiro de treino",
-    "deleteTitle": "Excluir Treino",
-    "deleteDesc": "Esta ação não pode ser desfeita.",
-    "deleteCancelBtn": "Cancelar",
-    "deleteConfirmBtn": "Sim, excluir"
+    "searchResultCount": "{count} resultados encontrados"
   },
   "techniques": {
     "mastery1": "Conheço",
@@ -571,8 +550,6 @@
     "pushPrefWeeklyGoal": "Progresso da meta semanal",
     "pushPrefMilestone": "Marcos de treino",
     "pushPrefWeeklyEmail": "E-mail resumo semanal",
-    "stripes": "Listras",
-    "logoutBtn": "Sair",
     "helpDesc": "FAQ, solução de problemas e contato",
     "dataOwnership": "Seus dados pertencem a você. Exporte a qualquer momento — sem restrições.",
     "emailPlaceholder": "new@example.com",
@@ -1126,7 +1103,6 @@
     "contact": "Se o problema persistir,",
     "contactLink": "entre em contato",
     "dataSafe": "Seus dados de treino estão salvos com segurança.",
-    "tryAgain": "Tentar novamente",
     "errorIdLabel": "ID do erro:",
     "authTitle": "Falha no login",
     "authDescription": "Ocorreu um erro durante o processo de autenticação. Tente novamente.",
@@ -1840,11 +1816,7 @@
     "socialProofProSubscribersLabel": "Membros Pro",
     "proFeatures": "Recursos Pro",
     "engPillWeight": "Gestão de Peso",
-    "engPillBelt": "Progresso de Faixa",
-    "hero": "Seu treinamento de BJJ, elevado",
-    "heroSub": "Registre treinos, acompanhe técnicas e visualize seu progresso com o melhor aplicativo de jiu-jitsu.",
-    "ctaStart": "Começar Gratuitamente",
-    "ctaLearn": "Saiba mais"
+    "engPillBelt": "Progresso de Faixa"
   },
   "ageGate": {
     "title": "Restrição de Idade",
@@ -2085,11 +2057,7 @@
     "techniques": "Ir para Técnicas",
     "profile": "Ir para Perfil"
   },
-  "common_error": {
-    "title": "Algo deu errado",
-    "retry": "Tentar novamente",
-    "goHome": "Voltar ao início"
-  },
+  "common_error": {},
   "milestoneShare": {
     "shareTitle": "Marco do BJJ",
     "shareText": "{value} — {label} no BJJ App!",
