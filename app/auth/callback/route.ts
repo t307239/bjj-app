@@ -23,7 +23,11 @@ function isUserReferralCode(ref: string): boolean {
  * server-relative path.
  */
 function safeNextPath(next: string | null, origin: string): string {
-  const FALLBACK = "/dashboard?welcome=1";
+  // z183: 新規ユーザーは /records?welcome=1 へ。 dashboard より records の
+  // ほうが TrainingLog form が常駐するため、welcome=1 → 自動オープンで
+  // 「最初の1件を記録」体験に直結する。 dashboard は記録 0 件だと寂しいため、
+  // 先に form 体験 → 戻ってきた時に dashboard が満たされている方が良い。
+  const FALLBACK = "/records?welcome=1";
   if (!next) return FALLBACK;
   // Must be a server-relative path: starts with exactly one `/`.
   if (!next.startsWith("/")) return FALLBACK;

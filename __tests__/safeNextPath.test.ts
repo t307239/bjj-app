@@ -9,7 +9,7 @@
 import { describe, it, expect } from "vitest";
 
 const ORIGIN = "https://bjj-app.net";
-const FALLBACK = "/dashboard?welcome=1";
+const FALLBACK = "/records?welcome=1";  // z183: 新規ユーザーは form ある records へ
 
 // ─── ロジックは route.ts と同じ実装を再現 ───
 function safeNextPath(next: string | null, origin: string): string {
