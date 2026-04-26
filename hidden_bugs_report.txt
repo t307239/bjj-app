@@ -1,13 +1,13 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 392 files
+TS/TSX Scanned: 395 files
 CRITICAL: 0
 WARNING: 0
-INFO: 110
-Total: 110
+INFO: 111
+Total: 111
 
-[INFO] [SUPABASE_NO_ERROR] app/api/cron/gym-outreach/route.ts: L203: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] app/api/cron/gym-outreach/route.ts: L210: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [SUPABASE_NO_ERROR] app/api/cron/onboarding-email/route.ts: L237: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] app/api/cron/onboarding-email/route.ts: L248: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/api/stripe/webhook/route.ts: L164: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
@@ -223,5 +223,7 @@ Total: 110
   FIX: 修正済みなら削除、未着手ならBACKLOGへ移動
 [INFO] [CONSOLE_LOG] lib/styleAuditor.ts: console.log() が 1 件残存
   FIX: 本番前に削除
+[INFO] [MISSING_LOADING] app/unsubscribe: loading.tsx が存在しない — ページ遷移時にローディングUIなし
+  FIX: app/unsubscribe/loading.tsx を作成。Skeleton or スピナーで CLS を防止
 [INFO] [MISSING_LOADING] app/pricing: loading.tsx が存在しない — ページ遷移時にローディングUIなし
   FIX: app/pricing/loading.tsx を作成。Skeleton or スピナーで CLS を防止

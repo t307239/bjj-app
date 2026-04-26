@@ -29,6 +29,7 @@ import { NextResponse } from "next/server";
 import { verifyCronAuth } from "@/lib/cronAuth";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
+import { signUnsubscribeToken } from "@/lib/unsubscribeToken";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -157,8 +158,15 @@ const COPY = {
 function buildEmailHtml(
   user: UserRow,
   marker: DayMarker,
-): { subject: string; html: string } {
+): { subject: string; html: string; unsubscribeUrl: string } {
   const c = COPY[user.locale][marker];
+  // z187: 1-click unsubscribe link (HMAC-signed token, 1 year TTL)
+  const unsubToken = signUnsubscribeToken(user.id);
+  const unsubscribeUrl = `https://bjj-app.net/api/unsubscribe?token=${unsubToken}`;
+  const unsubLabel =
+    user.locale === "ja" ? "配信停止"
+    : user.locale === "pt" ? "Cancelar inscrição"
+    : "Unsubscribe";
 
   const html = `<!DOCTYPE html>
 <html lang="${user.locale}">
@@ -168,12 +176,13 @@ function buildEmailHtml(
     <h1 style="font-size:22px;line-height:1.3;margin:0 0 18px;color:#10b981">${c.title}</h1>
     <p style="font-size:15px;line-height:1.6;color:#e2e8f0;margin:0 0 24px">${c.lead}</p>
     <a href="${c.ctaUrl}" style="display:block;text-align:center;background:#10b981;color:#fff;padding:14px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin-bottom:14px">${c.cta}</a>
-    <p style="font-size:11px;color:#64748b;text-align:center;margin:24px 0 0">${c.footer}</p>
+    <p style="font-size:11px;color:#64748b;text-align:center;margin:24px 0 8px">${c.footer}</p>
+    <p style="font-size:11px;color:#64748b;text-align:center;margin:0"><a href="${unsubscribeUrl}" style="color:#64748b;text-decoration:underline">${unsubLabel}</a></p>
   </div>
 </body>
 </html>`;
 
-  return { subject: c.subject, html };
+  return { subject: c.subject, html, unsubscribeUrl };
 }
 
 // ── Day from created_at ────────────────────────────────────────────────────
@@ -226,12 +235,14 @@ export async function GET(req: Request) {
   }
 
   // 2. Bulk fetch profiles + log counts
+  // z187: email_marketing_opted_out=true は除外
   const userIds = recentUsers.map((u) => u.id);
   const { data: profiles } = await supabase
     .from("profiles")
-    .select("id, locale, is_pro")
+    .select("id, locale, is_pro, email_marketing_opted_out")
     .in("id", userIds)
-    .is("deleted_at", null);
+    .is("deleted_at", null)
+    .eq("email_marketing_opted_out", false);
   const profileMap = new Map(profiles?.map((p) => [p.id, p]) ?? []);
 
   const { data: logCounts } = await supabase
@@ -311,7 +322,7 @@ export async function GET(req: Request) {
     }
 
     // Send via Resend
-    const { subject, html } = buildEmailHtml(userRow, marker);
+    const { subject, html, unsubscribeUrl } = buildEmailHtml(userRow, marker);
     try {
       const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
@@ -324,6 +335,12 @@ export async function GET(req: Request) {
           to: u.email,
           subject,
           html,
+          // z187: RFC 8058 List-Unsubscribe + List-Unsubscribe-Post headers
+          // (Gmail/Yahoo bulk sender requirement, 2024-)
+          headers: {
+            "List-Unsubscribe": `<${unsubscribeUrl}>`,
+            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+          },
           tags: [
             { name: "type", value: "onboarding_sequence" },
             { name: "day", value: marker },

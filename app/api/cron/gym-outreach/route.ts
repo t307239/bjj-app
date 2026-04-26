@@ -31,6 +31,7 @@ import { NextResponse } from "next/server";
 import { verifyCronAuth } from "@/lib/cronAuth";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
+import { signUnsubscribeToken } from "@/lib/unsubscribeToken";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -60,7 +61,7 @@ type GymRow = {
 
 // ── Email HTML builder (locale-aware) ──────────────────────────────────────
 
-function buildEmailHtml(gym: GymRow): { subject: string; html: string } {
+function buildEmailHtml(gym: GymRow): { subject: string; html: string; unsubscribeUrl: string } {
   const isJa = (gym.owner_locale ?? "en") === "ja";
   const isPt = (gym.owner_locale ?? "en") === "pt";
 
@@ -121,6 +122,11 @@ function buildEmailHtml(gym: GymRow): { subject: string; html: string } {
     )
     .join("");
 
+  // z187: 1-click unsubscribe link
+  const unsubToken = signUnsubscribeToken(gym.owner_id);
+  const unsubscribeUrl = `https://bjj-app.net/api/unsubscribe?token=${unsubToken}`;
+  const unsubLabel = isJa ? "配信停止" : isPt ? "Cancelar inscrição" : "Unsubscribe";
+
   const html = `<!DOCTYPE html>
 <html lang="${gym.owner_locale ?? "en"}">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -130,12 +136,13 @@ function buildEmailHtml(gym: GymRow): { subject: string; html: string } {
     <p style="font-size:15px;line-height:1.6;color:#e2e8f0;white-space:pre-line;margin:0 0 24px">${lead}</p>
     <ul style="background:#1e293b;border-radius:12px;padding:18px 22px;margin:0 0 28px">${valueHtml}</ul>
     <a href="${trialUrl}" style="display:block;text-align:center;background:#10b981;color:#fff;padding:14px;border-radius:10px;text-decoration:none;font-weight:700;font-size:16px;margin-bottom:14px">${ctaLabel}</a>
-    <p style="font-size:12px;color:#64748b;text-align:center;margin:0">${footer}</p>
+    <p style="font-size:12px;color:#64748b;text-align:center;margin:0 0 8px">${footer}</p>
+    <p style="font-size:11px;color:#64748b;text-align:center;margin:0"><a href="${unsubscribeUrl}" style="color:#64748b;text-decoration:underline">${unsubLabel}</a></p>
   </div>
 </body>
 </html>`;
 
-  return { subject, html };
+  return { subject, html, unsubscribeUrl };
 }
 
 // ── Main handler ────────────────────────────────────────────────────────────
@@ -202,9 +209,16 @@ export async function GET(req: Request) {
     }
     const { data: ownerProfile } = await supabase
       .from("profiles")
-      .select("locale")
+      .select("locale, email_marketing_opted_out")
       .eq("id", gym.owner_id)
       .single();
+
+    // z187: opted-out user は send skip
+    if (ownerProfile?.email_marketing_opted_out) {
+      logger.info("gym-outreach.skipped_opted_out", { gymId: gym.id });
+      skipped++;
+      continue;
+    }
 
     const gymRow: GymRow = {
       id: gym.id,
@@ -217,7 +231,7 @@ export async function GET(req: Request) {
       owner_locale: ownerProfile?.locale ?? "en",
     };
 
-    const { subject, html } = buildEmailHtml(gymRow);
+    const { subject, html, unsubscribeUrl } = buildEmailHtml(gymRow);
 
     // Send via Resend
     try {
@@ -232,6 +246,11 @@ export async function GET(req: Request) {
           to: ownerUser.email,
           subject,
           html,
+          // z187: RFC 8058 (Gmail/Yahoo bulk sender 2024 要件)
+          headers: {
+            "List-Unsubscribe": `<${unsubscribeUrl}>`,
+            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+          },
           tags: [
             { name: "type", value: "gym_outreach_plg" },
             { name: "gym_id", value: gym.id },
