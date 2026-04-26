@@ -1,11 +1,13 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 391 files
+TS/TSX Scanned: 392 files
 CRITICAL: 0
 WARNING: 0
-INFO: 109
-Total: 109
+INFO: 110
+Total: 110
 
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/gym-outreach/route.ts: L203: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] app/api/cron/onboarding-email/route.ts: L237: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/api/stripe/webhook/route.ts: L164: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
