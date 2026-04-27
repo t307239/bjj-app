@@ -857,6 +857,60 @@ def scan_sitemap_missing_route() -> list:
     return findings
 
 
+# ── Pattern 14: .ts file imports from .tsx component (z210) ─────────
+# z209 で lib/analytics.ts → components/CookieConsent.tsx import が
+# vitest の TSX transform cascade を起こし 14 tests が失敗していた。
+# .ts (純粋ロジック想定) が .tsx (JSX 含) を pull するのは
+# 構造上の anti-pattern。pure helper は lib/*.ts に extract が原則。
+#
+# 検出: lib/**/*.ts (非 .tsx) の中から `from "@/components/X"` または
+# 相対 import "./X" でかつ X.tsx が実在するファイル → 🟡 警告。
+
+TSX_CASCADE_EXEMPT: set[str] = set()
+
+
+def scan_ts_imports_tsx() -> list:
+    findings = []
+    lib_dir = ROOT / "lib"
+    if not lib_dir.exists():
+        return findings
+    components_dir = ROOT / "components"
+    pat_import = re.compile(
+        r'from\s+["\'](?:@/components/([\w/-]+)|\.{1,2}/([\w/-]+))["\']'
+    )
+    for fp in lib_dir.rglob("*.ts"):
+        rel = fp.relative_to(ROOT).as_posix()
+        if rel in TSX_CASCADE_EXEMPT:
+            continue
+        try:
+            src = fp.read_text(encoding="utf-8", errors="ignore")
+        except Exception:
+            continue
+        for m in pat_import.finditer(src):
+            name = m.group(1) or m.group(2)
+            if not name:
+                continue
+            # @/components/X 形式 → components/X.tsx を check
+            if m.group(1):
+                tsx_path = components_dir / f"{name}.tsx"
+                if tsx_path.exists():
+                    line = src[: m.start()].count("\n") + 1
+                    findings.append({
+                        "id": "TS_IMPORTS_TSX",
+                        "severity": "🟡",
+                        "file": rel,
+                        "line": line,
+                        "text": f'.ts imports from .tsx: @/components/{name}',
+                        "description": (
+                            f".ts (lib/) から @/components/{name}.tsx を import。"
+                            "vitest の TSX transform cascade で test 14件 fall した z209 と同種。"
+                            "純粋ロジックは lib/*.ts に extract し、.tsx は import しない。"
+                        ),
+                        "z": "z210",
+                    })
+    return findings
+
+
 # ── Main ───────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -880,6 +934,7 @@ def main() -> int:
     all_findings.extend(scan_email_send_without_rate_limit())
     all_findings.extend(scan_anon_rate_limit_fail_open())
     all_findings.extend(scan_sitemap_missing_route())
+    all_findings.extend(scan_ts_imports_tsx())
 
     criticals = [f for f in all_findings if f["severity"] == "🔴"]
     warnings = [f for f in all_findings if f["severity"] == "🟡"]
