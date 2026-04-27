@@ -19,7 +19,8 @@
     "help": "ヘルプ",
     "privacy": "プライバシー",
     "terms": "利用規約",
-    "changelog": "更新履歴"
+    "changelog": "更新履歴",
+    "tour": "機能ツアー"
   },
   "dashboard": {
     "welcomeBack": "おかえり、{name} 👋",

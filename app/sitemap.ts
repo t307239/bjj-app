@@ -46,6 +46,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",  // 月初更新方針 (z203 commit msg)
       priority: 0.8,  // indie 活発さ証明、SEO 寄与あり
     },
+    {
+      url: `${BASE_URL}/tour`,
+      changeFrequency: "monthly",  // 機能追加時のみ更新
+      priority: 0.9,  // signup 前 conversion gateway、優先度高 (z213)
+    },
     // terms, privacy, tokushoho は robots noindex のためサイトマップから除外
   ];
 

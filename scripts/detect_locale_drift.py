@@ -52,7 +52,7 @@ STALE_WHITELIST = {
     # 固有名詞
     "Triangle BJJ Academy", "Triangle Choke", "Armbar", "Rear Naked Choke",
     # 短い tech label
-    "Popular", "Starter", "Log", "Add", "Skill Map", "Wiki",
+    "Popular", "Starter", "Log", "Add", "Skill Map", "Wiki", "Tour",
     # 帯色（BJJ 文脈では両言語共通）
     "White", "Blue", "Purple", "Brown", "Black",
     "White Belt", "Blue Belt", "Purple Belt", "Brown Belt", "Black Belt",
@@ -783,7 +783,7 @@ def scan_anon_rate_limit_fail_open() -> list:
 
 # 公開 (no-auth) で SEO 価値のある route のみここに列挙。新規追加時はここに足す。
 SITEMAP_PUBLIC_ROUTES = {
-    "pricing", "changelog", "help", "login", "gym",
+    "pricing", "changelog", "help", "login", "gym", "tour",
 }
 # サイトマップ意図的除外 (robots noindex / auth 必須 / 一時 page 等)
 SITEMAP_EXEMPT_ROUTES = {

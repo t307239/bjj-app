@@ -19,7 +19,8 @@
     "help": "Ajuda",
     "privacy": "Privacidade",
     "terms": "Termos",
-    "changelog": "Atualizações"
+    "changelog": "Atualizações",
+    "tour": "Tour"
   },
   "dashboard": {
     "welcomeBack": "Bem-vindo de volta, {name} 🙌",

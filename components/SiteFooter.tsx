@@ -19,6 +19,7 @@ export default function SiteFooter() {
   const year = new Date().getFullYear();
 
   const links = [
+    { href: "/tour", label: t("nav.tour") },          // z213: signup 前の機能ツアー
     { href: "/pricing", label: t("nav.pricing") },
     { href: "/changelog", label: t("nav.changelog") }, // z203: indie 活発さ証明
     { href: "/help", label: t("nav.help") },

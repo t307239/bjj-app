@@ -234,12 +234,14 @@ export default async function Home() {
               {t("landing.heroCta")}
               <IconArrowRight className="w-5 h-5" />
             </IABSafeLink>
-            <a
-              href="#preview"
+            {/* z213: 旧 #preview anchor (page 内 scroll) → /tour route で詳細
+                feature 説明。signup 前の visitor 向け conversion gateway。 */}
+            <Link
+              href="/tour?ref=lp_hero"
               className="inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-white/5 active:scale-95 text-zinc-300 font-medium py-4 px-8 rounded-full text-lg transition-all border border-white/10"
             >
               {t("landing.heroSeeApp")}
-            </a>
+            </Link>
           </div>
 
           <p className="text-zinc-400 text-sm">
