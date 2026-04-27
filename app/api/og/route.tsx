@@ -11,15 +11,64 @@ const BELT_COLORS: Record<string, { bg: string; text: string; label: string; lab
   black:  { bg: "#111827", text: "#ffffff", label: "黒帯",  labelEn: "Black Belt" },
 };
 
+// z195 (F-1): locale-aware tagline + mode-based copy variant
+type Mode = "user" | "lp" | "wiki" | "reddit";
+type Lang = "ja" | "en" | "pt";
+
+const TAGLINES: Record<Mode, Record<Lang, string>> = {
+  user: {
+    en: "Track Your BJJ Journey",
+    ja: "あなたのBJJを記録",
+    pt: "Acompanhe sua jornada no BJJ",
+  },
+  lp: {
+    en: "The free BJJ training tracker",
+    ja: "無料のBJJ練習トラッカー",
+    pt: "O rastreador grátis de treino de BJJ",
+  },
+  wiki: {
+    en: "BJJ encyclopedia + free training tracker",
+    ja: "BJJ百科事典 + 無料練習トラッカー",
+    pt: "Enciclopédia de BJJ + rastreador grátis",
+  },
+  reddit: {
+    // z195: indie signal for Reddit / community
+    en: "Built by a blue belt — track every roll, free",
+    ja: "青帯が作った — ロール全部記録、無料",
+    pt: "Feito por um faixa azul — registre cada rola, grátis",
+  },
+};
+
+const STAT_LABELS: Record<Lang, { sessions: string; streak: string; bjjAge: string }> = {
+  en: { sessions: "Sessions", streak: "Day Streak", bjjAge: "Months of BJJ" },
+  ja: { sessions: "セッション", streak: "連続日数", bjjAge: "BJJ歴 (月)" },
+  pt: { sessions: "Sessões", streak: "Dias seguidos", bjjAge: "Meses de BJJ" },
+};
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const belt   = searchParams.get("belt")   ?? "white";
   const streak = searchParams.get("streak") ?? "0";
   const count  = searchParams.get("count")  ?? "0";
   const months = searchParams.get("months") ?? "0";
-  const beltInfo = BELT_COLORS[belt] ?? BELT_COLORS.white;
+  // z195: mode + sub (override tagline) + lang
+  const modeParam = (searchParams.get("mode") ?? "user") as Mode;
+  const mode: Mode = ["user", "lp", "wiki", "reddit"].includes(modeParam) ? modeParam : "user";
+  const langParam = (searchParams.get("lang") ?? "en") as Lang;
+  const lang: Lang = ["ja", "en", "pt"].includes(langParam) ? langParam : "en";
+  const subOverride = searchParams.get("sub")?.slice(0, 80) ?? null; // 80 char limit
 
-  const labels = { belt: beltInfo.labelEn, sessions: "Sessions", streak: "Day Streak", bjjAge: "Months of BJJ", tagline: "Track Your BJJ Journey" };
+  const beltInfo = BELT_COLORS[belt] ?? BELT_COLORS.white;
+  const beltLabel = lang === "ja" ? beltInfo.label : beltInfo.labelEn;
+  const stats = STAT_LABELS[lang];
+  const tagline = subOverride ?? TAGLINES[mode][lang];
+  const labels = {
+    belt: beltLabel,
+    sessions: stats.sessions,
+    streak: stats.streak,
+    bjjAge: stats.bjjAge,
+    tagline,
+  };
 
   return new ImageResponse(
     (
