@@ -18,6 +18,9 @@ import { createClient } from "@/lib/supabase/server";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import { safeJsonLd } from "@/lib/safeJsonLd";
 
+// z204: indie signal の OG image (Reddit/community 共有時に「Built by blue belt」表示)
+const CHANGELOG_OG = "https://bjj-app.net/api/og?mode=reddit&lang=en&belt=blue&count=1500&streak=14&months=14";
+
 export const metadata: Metadata = {
   title: "Changelog",
   description:
@@ -29,6 +32,13 @@ export const metadata: Metadata = {
     siteName: "BJJ App",
     title: "BJJ App Changelog — what we shipped",
     description: "Indie BJJ project. Recent updates and new features.",
+    images: [{ url: CHANGELOG_OG, width: 1200, height: 630, alt: "BJJ App Changelog" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "BJJ App Changelog — what we shipped",
+    description: "Indie BJJ project. Recent updates and new features.",
+    images: [CHANGELOG_OG],
   },
 };
 

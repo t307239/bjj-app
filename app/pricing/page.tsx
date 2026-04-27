@@ -30,6 +30,9 @@ const PricingSection = dynamic(() => import("@/components/PricingSection"), {
   ),
 });
 
+// z204: indie tagline 入り OG image (z195 で動的化済の /api/og を mode=lp で叩く)
+const PRICING_OG = "https://bjj-app.net/api/og?mode=lp&lang=en&belt=blue&count=1500&streak=14&months=14";
+
 export const metadata: Metadata = {
   title: "Pricing",
   description:
@@ -42,6 +45,13 @@ export const metadata: Metadata = {
     title: "BJJ App Pricing — Free / Pro $9.99 / Gym $99",
     description:
       "Track BJJ training free forever. Pro for analytics. Gym Pro for dojos.",
+    images: [{ url: PRICING_OG, width: 1200, height: 630, alt: "BJJ App Pricing" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "BJJ App Pricing — Free / Pro $9.99 / Gym $99",
+    description: "Track BJJ training free forever. Pro for analytics. Gym Pro for dojos.",
+    images: [PRICING_OG],
   },
 };
 
