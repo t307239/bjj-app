@@ -783,7 +783,7 @@ def scan_anon_rate_limit_fail_open() -> list:
 
 # 公開 (no-auth) で SEO 価値のある route のみここに列挙。新規追加時はここに足す。
 SITEMAP_PUBLIC_ROUTES = {
-    "pricing", "changelog", "help", "login", "gym", "tour",
+    "pricing", "changelog", "help", "login", "gym", "tour", "compare",
 }
 # サイトマップ意図的除外 (robots noindex / auth 必須 / 一時 page 等)
 SITEMAP_EXEMPT_ROUTES = {

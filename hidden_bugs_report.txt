@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 406 files
+TS/TSX Scanned: 407 files
 CRITICAL: 0
-WARNING: 0
-INFO: 119
-Total: 119
+WARNING: 6
+INFO: 122
+Total: 128
 
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/gym-outreach/route.ts: L189: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
@@ -16,6 +16,22 @@ Total: 119
 [INFO] [DANGEROUS_HTML] app/changelog/page.tsx: L184: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [SUPABASE_NO_ERROR] app/changelog/page.tsx: L172: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [DANGEROUS_HTML] app/compare/page.tsx: L281: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
+[WARNING] [JSX_HARDCODED_ENGLISH] app/compare/page.tsx: L324: JSX内に英語テキスト直書き: "+ Good at"
+  FIX: t() キーを追加して多言語対応
+[WARNING] [JSX_HARDCODED_ENGLISH] app/compare/page.tsx: L328: JSX内に英語テキスト直書き: "− Not so good"
+  FIX: t() キーを追加して多言語対応
+[WARNING] [JSX_HARDCODED_ENGLISH] app/compare/page.tsx: L332: JSX内に英語テキスト直書き: "Pick if"
+  FIX: t() キーを追加して多言語対応
+[WARNING] [JSX_HARDCODED_ENGLISH] app/compare/page.tsx: L352: JSX内に英語テキスト直書き: "BJJBuddy"
+  FIX: t() キーを追加して多言語対応
+[WARNING] [JSX_HARDCODED_ENGLISH] app/compare/page.tsx: L353: JSX内に英語テキスト直書き: "BJJ Notes"
+  FIX: t() キーを追加して多言語対応
+[WARNING] [JSX_HARDCODED_ENGLISH] app/compare/page.tsx: L354: JSX内に英語テキスト直書き: "MatTime"
+  FIX: t() キーを追加して多言語対応
+[INFO] [SUPABASE_NO_ERROR] app/compare/page.tsx: L267: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -239,6 +255,8 @@ Total: 119
   FIX: app/changelog/loading.tsx を作成。Skeleton or スピナーで CLS を防止
 [INFO] [MISSING_LOADING] app/unsubscribe: loading.tsx が存在しない — ページ遷移時にローディングUIなし
   FIX: app/unsubscribe/loading.tsx を作成。Skeleton or スピナーで CLS を防止
+[INFO] [MISSING_LOADING] app/compare: loading.tsx が存在しない — ページ遷移時にローディングUIなし
+  FIX: app/compare/loading.tsx を作成。Skeleton or スピナーで CLS を防止
 [INFO] [MISSING_LOADING] app/tour: loading.tsx が存在しない — ページ遷移時にローディングUIなし
   FIX: app/tour/loading.tsx を作成。Skeleton or スピナーで CLS を防止
 [INFO] [MISSING_LOADING] app/pricing: loading.tsx が存在しない — ページ遷移時にローディングUIなし

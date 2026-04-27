@@ -20,7 +20,8 @@
     "privacy": "Privacidade",
     "terms": "Termos",
     "changelog": "Atualizações",
-    "tour": "Tour"
+    "tour": "Tour",
+    "compare": "Comparar"
   },
   "dashboard": {
     "welcomeBack": "Bem-vindo de volta, {name} 🙌",

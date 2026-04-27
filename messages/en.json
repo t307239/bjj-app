@@ -20,7 +20,8 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "changelog": "Changelog",
-    "tour": "Tour"
+    "tour": "Tour",
+    "compare": "Compare"
   },
   "dashboard": {
     "welcomeBack": "Welcome back, {name} 👋",

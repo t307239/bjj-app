@@ -21,6 +21,7 @@ export default function SiteFooter() {
   const links = [
     { href: "/tour", label: t("nav.tour") },          // z213: signup 前の機能ツアー
     { href: "/pricing", label: t("nav.pricing") },
+    { href: "/compare", label: t("nav.compare") },    // z221: 競合比較 SEO
     { href: "/changelog", label: t("nav.changelog") }, // z203: indie 活発さ証明
     { href: "/help", label: t("nav.help") },
     { href: "https://wiki.bjj-app.net", label: "BJJ Wiki", external: true },

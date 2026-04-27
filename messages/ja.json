@@ -20,7 +20,8 @@
     "privacy": "プライバシー",
     "terms": "利用規約",
     "changelog": "更新履歴",
-    "tour": "機能ツアー"
+    "tour": "機能ツアー",
+    "compare": "比較"
   },
   "dashboard": {
     "welcomeBack": "おかえり、{name} 👋",

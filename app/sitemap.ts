@@ -51,6 +51,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",  // 機能追加時のみ更新
       priority: 0.9,  // signup 前 conversion gateway、優先度高 (z213)
     },
+    {
+      url: `${BASE_URL}/compare`,
+      changeFrequency: "monthly",  // 競合比較は数月ごと更新
+      priority: 0.8,  // SEO「bjj app vs」捕捉 (z221)
+    },
     // terms, privacy, tokushoho は robots noindex のためサイトマップから除外
   ];
 
