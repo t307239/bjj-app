@@ -35,6 +35,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    // z206: z184 (/pricing) / z203 (/changelog) 追加時の sitemap 漏れ修正
+    {
+      url: `${BASE_URL}/pricing`,
+      changeFrequency: "monthly",
+      priority: 0.9,  // conversion page、優先度高
+    },
+    {
+      url: `${BASE_URL}/changelog`,
+      changeFrequency: "weekly",  // 月初更新方針 (z203 commit msg)
+      priority: 0.8,  // indie 活発さ証明、SEO 寄与あり
+    },
     // terms, privacy, tokushoho は robots noindex のためサイトマップから除外
   ];
 

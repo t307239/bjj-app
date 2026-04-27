@@ -773,6 +773,90 @@ def scan_anon_rate_limit_fail_open() -> list:
     return findings
 
 
+# ── Pattern 13: public route added without sitemap update (z206) ────
+# z206 で /pricing (z184) と /changelog (z203) が sitemap.ts 未登録だった
+# のを修正。次回 public page 追加時に sitemap 漏れを CI で止める。
+#
+# 検出条件: app/<route>/page.tsx が存在する PUBLIC_ROUTES の各 route について、
+#   sitemap.ts に "/<route>" 文字列が現れない場合 🔴。
+# auth-required な routes は SITEMAP_EXEMPT_ROUTES で除外。
+
+# 公開 (no-auth) で SEO 価値のある route のみここに列挙。新規追加時はここに足す。
+SITEMAP_PUBLIC_ROUTES = {
+    "pricing", "changelog", "help", "login", "gym",
+}
+# サイトマップ意図的除外 (robots noindex / auth 必須 / 一時 page 等)
+SITEMAP_EXEMPT_ROUTES = {
+    "admin", "api", "auth", "dashboard", "profile", "records", "settings",
+    "account-deleted", "invite", "unsubscribe", "techniques", "wiki",
+    "robots.txt", "privacy", "terms", "legal",  # legal は noindex 方針
+}
+
+
+def scan_sitemap_missing_route() -> list:
+    findings = []
+    sitemap = ROOT / "app" / "sitemap.ts"
+    if not sitemap.exists():
+        # sitemap.ts そのものが無い → critical
+        return [{
+            "id": "SITEMAP_FILE_MISSING",
+            "severity": "🔴",
+            "file": "app/sitemap.ts",
+            "line": 0,
+            "text": "app/sitemap.ts not found",
+            "description": "robots.txt は /sitemap.xml を宣言するが sitemap.ts が無い。SEO indexing 不可。",
+            "z": "z206",
+        }]
+    try:
+        sitemap_src = sitemap.read_text(encoding="utf-8", errors="ignore")
+    except Exception:
+        return findings
+
+    app_dir = ROOT / "app"
+    for child in app_dir.iterdir():
+        if not child.is_dir():
+            continue
+        name = child.name
+        if name.startswith("_") or name.startswith("(") or name.startswith("."):
+            continue
+        if name in SITEMAP_EXEMPT_ROUTES:
+            continue
+        if not (child / "page.tsx").exists():
+            continue
+        # 公開対象として登録すべき
+        if name not in SITEMAP_PUBLIC_ROUTES:
+            # ホワイトリスト未登録 → 判断不能、通知のみ (warning)
+            findings.append({
+                "id": "SITEMAP_UNKNOWN_ROUTE",
+                "severity": "🟡",
+                "file": f"app/{name}/page.tsx",
+                "line": 0,
+                "text": f"public route /{name} not classified in SITEMAP_PUBLIC_ROUTES or SITEMAP_EXEMPT_ROUTES",
+                "description": (
+                    f"app/{name}/page.tsx が存在するが detect_locale_drift.py の "
+                    "SITEMAP_PUBLIC_ROUTES にも SITEMAP_EXEMPT_ROUTES にも未分類。"
+                    "公開予定なら PUBLIC、auth 必須/noindex なら EXEMPT に追加。"
+                ),
+                "z": "z206",
+            })
+            continue
+        # 登録すべき route が sitemap.ts に現れていない → critical
+        if f'"/{name}"' not in sitemap_src and f"`/{name}`" not in sitemap_src and f"/{name}\"" not in sitemap_src and f"/{name}`" not in sitemap_src and f"BASE_URL}}/{name}" not in sitemap_src:
+            findings.append({
+                "id": "SITEMAP_MISSING_ROUTE",
+                "severity": "🔴",
+                "file": f"app/{name}/page.tsx",
+                "line": 0,
+                "text": f"public route /{name} missing from sitemap.ts",
+                "description": (
+                    f"app/{name}/page.tsx は public route として登録予定だが "
+                    "app/sitemap.ts に entry が無い。SEO indexing が遅れる。"
+                ),
+                "z": "z206",
+            })
+    return findings
+
+
 # ── Main ───────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -795,6 +879,7 @@ def main() -> int:
     all_findings.extend(scan_console_outside_logger())
     all_findings.extend(scan_email_send_without_rate_limit())
     all_findings.extend(scan_anon_rate_limit_fail_open())
+    all_findings.extend(scan_sitemap_missing_route())
 
     criticals = [f for f in all_findings if f["severity"] == "🔴"]
     warnings = [f for f in all_findings if f["severity"] == "🟡"]
