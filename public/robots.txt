@@ -1,7 +1,21 @@
 # BJJ App — robots.txt
+#
+# z212: app/robots.txt/route.ts (dynamic) と内容を完全同期。Vercel は public/*
+# をエッジで優先 serve する可能性があり、どちらが提供されても挙動が変わらない
+# ようにする防衛的な統一。app/robots.txt/route.ts を編集する時はここも更新。
 User-agent: *
-Allow: /
 Disallow: /api/
-Disallow: /auth/
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /techniques
+Disallow: /profile
+Disallow: /admin
+Disallow: /settings
+Disallow: /records
+Disallow: /gym
+Disallow: /invite
+Disallow: /unsubscribe
+Disallow: /account-deleted
+Allow: /
 
 Sitemap: https://bjj-app.net/sitemap.xml

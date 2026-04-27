@@ -911,6 +911,51 @@ def scan_ts_imports_tsx() -> list:
     return findings
 
 
+# ── Pattern 15: dual robots.txt drift (z212) ────────────────────────
+# z212 で public/robots.txt と app/robots.txt/route.ts の Disallow リストが
+# 食い違っていて /api/ disallow 漏れバグがあった。両方の Disallow セットが
+# 一致しているかを CI で守る。
+
+def _extract_disallow(text: str) -> set[str]:
+    return {
+        line.split(":", 1)[1].strip()
+        for line in text.splitlines()
+        if line.strip().lower().startswith("disallow:")
+    }
+
+
+def scan_robots_drift() -> list:
+    findings = []
+    static_path = ROOT / "public" / "robots.txt"
+    dynamic_path = ROOT / "app" / "robots.txt" / "route.ts"
+    if not static_path.exists() or not dynamic_path.exists():
+        return findings  # どちらか不在ならこの check 対象外
+    try:
+        static_src = static_path.read_text(encoding="utf-8", errors="ignore")
+        dynamic_src = dynamic_path.read_text(encoding="utf-8", errors="ignore")
+    except Exception:
+        return findings
+    static_set = _extract_disallow(static_src)
+    dynamic_set = _extract_disallow(dynamic_src)
+    if static_set != dynamic_set:
+        only_static = static_set - dynamic_set
+        only_dynamic = dynamic_set - static_set
+        findings.append({
+            "id": "ROBOTS_DRIFT",
+            "severity": "🔴",
+            "file": "public/robots.txt",
+            "line": 0,
+            "text": f"Disallow drift: only-static={sorted(only_static)} only-dynamic={sorted(only_dynamic)}",
+            "description": (
+                "public/robots.txt と app/robots.txt/route.ts の Disallow リストが食い違う。"
+                "Vercel エッジ優先順序によってどちらが serve されるか不明のため両方同期必須。"
+                "z212 で /api/ disallow 漏れバグが起きた構造的問題。"
+            ),
+            "z": "z212",
+        })
+    return findings
+
+
 # ── Main ───────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -935,6 +980,7 @@ def main() -> int:
     all_findings.extend(scan_anon_rate_limit_fail_open())
     all_findings.extend(scan_sitemap_missing_route())
     all_findings.extend(scan_ts_imports_tsx())
+    all_findings.extend(scan_robots_drift())
 
     criticals = [f for f in all_findings if f["severity"] == "🔴"]
     warnings = [f for f in all_findings if f["severity"] == "🟡"]
