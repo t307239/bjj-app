@@ -245,11 +245,18 @@ export default async function Home() {
           <p className="text-zinc-400 text-sm">
             {t("landing.heroSubtext")}
           </p>
-          {/* Fix 7: arrow → (not ↓) */}
+          {/* z208: 「登録なしで試す」 broken link 修正 (旧 /dashboard は auth 必須で
+              redirect されてバイト&スイッチ状態だった)。
+              Wiki = 実際の no-signup 体験 (1,500+ ページ無料閲覧)。
+              locale-aware で wiki.bjj-app.net/{en,ja,pt} に分岐。 */}
           <p className="text-zinc-400 text-xs mt-3">
-            <Link href="/dashboard" className="hover:text-zinc-300 underline transition-colors">
+            <a
+              href={`https://wiki.bjj-app.net/${locale}/?ref=lp_hero_guest`}
+              className="hover:text-zinc-300 underline transition-colors"
+              rel="noopener"
+            >
               {t("landing.heroGuest")}
-            </Link>
+            </a>
           </p>
 
           {/* Hero mockup placeholder — replace with actual screenshot when available */}
