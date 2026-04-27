@@ -711,6 +711,68 @@ def scan_email_send_without_rate_limit() -> list:
     return findings
 
 
+# ── Pattern 12: anon client rate-limit fail-open (z199) ─────────────
+# 旧 /api/wiki/submit-video が anon (createServerClient + ANON_KEY) で
+# count: "exact" SELECT → 429 guard していたが、anon RLS で SELECT 不可
+# のため count = 0 で fail-open。攻撃者が無制限 spam 可能だった。
+#
+# 検出条件 (3 つ全て満たす API route):
+#   1. anon client 生成: createServerClient( OR NEXT_PUBLIC_SUPABASE_ANON_KEY
+#   2. count: "exact" (rate-limit 用 SELECT の signature)
+#   3. status code 429 を返す (rate-limit 用 guard の signature)
+#   AND  createAdminClient ( がファイル内に無い (= anon でしか SELECT してない)
+
+ANON_RATE_LIMIT_EXEMPT: set[str] = {
+    # 例: rate limit を意図的に anon で行い、RLS で SELECT 許可済の route
+    # (現状なし)
+}
+
+
+def scan_anon_rate_limit_fail_open() -> list:
+    findings = []
+    api = ROOT / "app" / "api"
+    if not api.exists():
+        return findings
+    pat_anon = re.compile(r"createServerClient\(|NEXT_PUBLIC_SUPABASE_ANON_KEY")
+    pat_count = re.compile(r"count:\s*[\"']exact[\"']")
+    pat_429 = re.compile(r"\b429\b")
+    # service_role client signals (どれか 1 つでもあれば service_role が参加 → false positive 回避)
+    pat_admin = re.compile(
+        r"createAdminClient\s*\(|"
+        r"createServiceClient\s*\(|"
+        r"SUPABASE_SERVICE_ROLE_KEY|"
+        r"supabaseServiceRoleKey"
+    )
+
+    for fp in api.rglob("route.ts"):
+        rel = fp.relative_to(ROOT).as_posix()
+        if rel in ANON_RATE_LIMIT_EXEMPT:
+            continue
+        try:
+            c = fp.read_text(encoding="utf-8", errors="ignore")
+        except Exception:
+            continue
+        if not (pat_anon.search(c) and pat_count.search(c) and pat_429.search(c)):
+            continue
+        if pat_admin.search(c):
+            continue  # service_role 由来の client が参加 → rate limit は service_role 経由
+        findings.append({
+            "id": "ANON_RATE_LIMIT_FAIL_OPEN",
+            "severity": "🔴",
+            "file": rel,
+            "line": 0,
+            "text": "anon client + count select + 429 guard without createAdminClient",
+            "description": (
+                "anon Supabase client で rate-limit 用の count SELECT を行い "
+                "429 を返している。anon が RLS で SELECT 不可なら count=0 で "
+                "fail-open する。createAdminClient (service_role) 経由で SELECT "
+                "するか、意図的なら ANON_RATE_LIMIT_EXEMPT に追加。"
+            ),
+            "z": "z199",
+        })
+    return findings
+
+
 # ── Main ───────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -732,6 +794,7 @@ def main() -> int:
     all_findings.extend(scan_error_message_leak())
     all_findings.extend(scan_console_outside_logger())
     all_findings.extend(scan_email_send_without_rate_limit())
+    all_findings.extend(scan_anon_rate_limit_fail_open())
 
     criticals = [f for f in all_findings if f["severity"] == "🔴"]
     warnings = [f for f in all_findings if f["severity"] == "🟡"]
