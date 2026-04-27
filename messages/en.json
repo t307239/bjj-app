@@ -2048,5 +2048,11 @@
     "emailPrefTitle": "Marketing Emails",
     "emailPrefDesc": "Tips, new features, occasional Pro offers. We never share your email. Service emails (weekly reports etc.) are managed separately.",
     "emailPrefToggle": "Toggle marketing email subscription"
+  },
+  "firstLogHero": {
+    "title": "Log your first session",
+    "sub": "Tap below to record today's roll. Once you log one, your streak, heatmap, and weekly report come alive.",
+    "cta": "Log my first session",
+    "duration": "Takes about 10 seconds — no setup required"
   }
 }

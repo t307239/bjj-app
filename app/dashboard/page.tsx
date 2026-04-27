@@ -7,6 +7,7 @@ import GuestMigration from "@/components/GuestMigration";
 import AchievementBadge from "@/components/AchievementBadge";
 import InstallBanner from "@/components/InstallBanner";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
+import FirstLogHero from "@/components/FirstLogHero";  // z214: 0-log activation
 import {
   getWeekStartDate,
   getMonthStartDate,
@@ -336,6 +337,9 @@ export default async function DashboardPage({
       <AchievementBadge userId={user.id} totalCount={totalCount ?? 0} />
 
       <main className="max-w-4xl mx-auto px-4 py-5">
+
+        {/* z214: 0-log activation hero (first log 未完なら最上部に dominant CTA) */}
+        {!hasFirstLog && <FirstLogHero />}
 
         {/* ── Onboarding checklist (until all steps complete) ── */}
         {!onboardingComplete && (

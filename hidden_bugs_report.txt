@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 403 files
+TS/TSX Scanned: 404 files
 CRITICAL: 0
 WARNING: 0
-INFO: 118
-Total: 118
+INFO: 119
+Total: 119
 
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/gym-outreach/route.ts: L189: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
@@ -128,6 +128,8 @@ Total: 118
 [INFO] [INLINE_STYLE_OBJECT] components/CompetitionSummaryCard.tsx: L302: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/ExtendedBadgeGrid.tsx: L89: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [INLINE_STYLE_OBJECT] components/FirstLogHero.tsx: L29: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/GoalTrackerEditor.tsx: L57: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換

@@ -2077,5 +2077,11 @@
     "emailPrefTitle": "E-mails de Marketing",
     "emailPrefDesc": "Dicas, novos recursos, ofertas Pro ocasionais. Nunca compartilhamos seu e-mail. E-mails de serviço (relatório semanal etc.) são gerenciados separadamente.",
     "emailPrefToggle": "Ativar/desativar e-mails de marketing"
+  },
+  "firstLogHero": {
+    "title": "Registre seu primeiro treino",
+    "sub": "Toque abaixo para registrar a rola de hoje. Com 1 registro, sua sequência, heatmap e relatório semanal ganham vida.",
+    "cta": "Registrar meu primeiro treino",
+    "duration": "Cerca de 10 segundos — sem configuração"
   }
 }
