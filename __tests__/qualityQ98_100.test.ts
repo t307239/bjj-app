@@ -77,31 +77,38 @@ describe("Q-98: fetchWithRetry utility", () => {
 // ── Q-99: Legal improvements ───────────────────────────────────────────────
 
 describe("Q-99: CookieConsent granular categories", () => {
-  const source = fs.readFileSync(
+  // z209: getCookiePreferences / CookiePreferences は lib/cookiePreferences.ts に
+  // extract 済 (CookieConsent.tsx は re-export のみ)。両方を読んで assertion する。
+  const componentSrc = fs.readFileSync(
     path.join(COMPONENTS_DIR, "CookieConsent.tsx"),
+    "utf-8"
+  );
+  const libSrc = fs.readFileSync(
+    path.join(__dirname, "..", "lib/cookiePreferences.ts"),
     "utf-8"
   );
 
   it("has essential/analytics/marketing categories", () => {
-    expect(source).toContain("essential");
-    expect(source).toContain("analytics");
-    expect(source).toContain("marketing");
+    expect(componentSrc + libSrc).toContain("essential");
+    expect(componentSrc + libSrc).toContain("analytics");
+    expect(componentSrc + libSrc).toContain("marketing");
   });
 
   it("exports CookiePreferences type", () => {
-    expect(source).toContain("export type CookiePreferences");
+    // 後方互換 re-export または lib 元実装どちらかにあれば OK
+    expect(componentSrc + libSrc).toMatch(/export type CookiePreferences|export type \{ CookiePreferences \}|export type \{[^}]*CookiePreferences/);
   });
 
   it("exports getCookiePreferences function", () => {
-    expect(source).toContain("export function getCookiePreferences");
+    expect(componentSrc + libSrc).toMatch(/export function getCookiePreferences|export \{[^}]*getCookiePreferences/);
   });
 
   it("has customize button", () => {
-    expect(source).toContain("cookieCustomize");
+    expect(componentSrc).toContain("cookieCustomize");
   });
 
   it("has save preferences button", () => {
-    expect(source).toContain("cookieSavePreferences");
+    expect(componentSrc).toContain("cookieSavePreferences");
   });
 
   it("cookie i18n keys exist in all 3 languages", () => {
@@ -120,8 +127,9 @@ describe("Q-99: CookieConsent granular categories", () => {
 
   it("handles legacy consent values", () => {
     // getCookiePreferences should handle "accepted"/"declined" strings
-    expect(source).toContain('"accepted"');
-    expect(source).toContain('"declined"');
+    // (実装は lib/cookiePreferences.ts に移動済)
+    expect(libSrc).toContain('"accepted"');
+    expect(libSrc).toContain('"declined"');
   });
 });
 
@@ -172,8 +180,8 @@ describe("Q-100: usage-alert cron", () => {
 
   it("has CRON_SECRET auth", () => {
     const source = fs.readFileSync(cronPath, "utf-8");
-    expect(source).toContain("CRON_SECRET");
-    expect(source).toContain("Unauthorized");
+    // z169: auth 集約 lib/cronAuth.ts (verifyCronAuth)
+    expect(source).toContain("verifyCronAuth");
   });
 
   it("checks database size", () => {

@@ -120,8 +120,8 @@ describe("weekly-goal cron route", () => {
 
   it("requires CRON_SECRET auth", () => {
     const source = fs.readFileSync(ROUTE_PATH, "utf-8");
-    expect(source).toContain("CRON_SECRET");
-    expect(source).toContain("401");
+    // z169: auth 集約 lib/cronAuth.ts (verifyCronAuth)
+    expect(source).toContain("verifyCronAuth");
   });
 
   it("fetches push subscriptions with weekly_goal", () => {

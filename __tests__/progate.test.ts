@@ -46,7 +46,9 @@ describe("ProGate paywall component", () => {
   });
 
   it("billing toggle has aria-label for screen readers", () => {
-    expect(source).toContain('aria-label="Toggle billing period"');
+    // i18n 化済 (common.toggleBillingPeriod を 3 locale に持つ) — hardcoded 文字列ではなく
+    // t() 経由で aria-label が付与されていることを assert。
+    expect(source).toMatch(/aria-label=\{t\(["']common\.toggleBillingPeriod["']\)\}/);
   });
 });
 

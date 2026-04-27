@@ -113,8 +113,8 @@ describe("Q-126: Data — dataExport + backup-verify", () => {
 
   it("backup-verify has CRON_SECRET auth", () => {
     const source = fs.readFileSync(path.resolve(ROOT, "app/api/cron/backup-verify/route.ts"), "utf-8");
-    expect(source).toContain("CRON_SECRET");
-    expect(source).toContain("Bearer");
+    // z169: auth 集約 lib/cronAuth.ts (verifyCronAuth)
+    expect(source).toContain("verifyCronAuth");
   });
 
   it("backup-verify checks key tables", () => {

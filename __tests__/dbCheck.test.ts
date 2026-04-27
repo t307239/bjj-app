@@ -21,9 +21,9 @@ describe("db-check cron route", () => {
 
   it("requires CRON_SECRET auth", () => {
     const source = fs.readFileSync(ROUTE_PATH, "utf-8");
-    expect(source).toContain("CRON_SECRET");
-    expect(source).toContain('Bearer');
-    expect(source).toContain("401");
+    // z169: auth ロジックは lib/cronAuth.ts (verifyCronAuth) に集約済。
+    // 401 / Bearer / fail-closed は helper 内 (cronAuth.test.ts でカバー)。
+    expect(source).toContain("verifyCronAuth");
   });
 
   it("checks orphan training logs", () => {

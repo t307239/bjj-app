@@ -2,28 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { useLocale } from "@/lib/i18n";
+// z209: type/helper は lib/cookiePreferences.ts に移動 (vitest TSX cascade 防止)
+import {
+  STORAGE_KEY,
+  getCookiePreferences,
+  type CookiePreferences,
+} from "@/lib/cookiePreferences";
 
-const STORAGE_KEY = "bjj_cookie_consent";
-
-export type CookiePreferences = {
-  essential: true; // always true — cannot be disabled
-  analytics: boolean;
-  marketing: boolean;
-};
-
-/** Read stored cookie preferences. Returns null if user hasn't chosen yet. */
-export function getCookiePreferences(): CookiePreferences | null {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    // Legacy: "accepted" or "declined" string
-    if (raw === "accepted") return { essential: true, analytics: true, marketing: true };
-    if (raw === "declined") return { essential: true, analytics: false, marketing: false };
-    return JSON.parse(raw) as CookiePreferences;
-  } catch {
-    return null;
-  }
-}
+// 後方互換: 既存 import "@/components/CookieConsent" が getCookiePreferences/CookiePreferences
+// を利用するなら通る (ただし新規は lib/cookiePreferences から直接 import 推奨)
+export { getCookiePreferences };
+export type { CookiePreferences };
 
 export default function CookieConsent() {
   const { t } = useLocale();

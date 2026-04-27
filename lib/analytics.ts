@@ -6,7 +6,9 @@
  * Respects user cookie preferences — analytics events are suppressed when
  * the user has declined analytics cookies (GDPR/CCPA compliance).
  */
-import { getCookiePreferences } from "@/components/CookieConsent";
+// z209: import from non-JSX lib to avoid pulling CookieConsent.tsx through
+// vitest's TSX transform (was causing 14 unrelated test failures via barrel)
+import { getCookiePreferences } from "@/lib/cookiePreferences";
 
 type KpiEvent =
   | "training_logged"          // DAU / retention
