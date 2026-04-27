@@ -817,7 +817,11 @@
     "milestone.1000.text": "1,000 sessions achieved!",
     "milestone.1000.subtext": "BJJ legend-level commitment!",
     "shareButton": "Share on X",
-    "shareText": "Just hit {n} training sessions on BJJ App! 🥋 {text} #BJJ #ConsistencyWins #BrazilianJiuJitsu"
+    "shareText": "Just hit {n} training sessions on BJJ App! 🥋 {text} #BJJ #ConsistencyWins #BrazilianJiuJitsu",
+    "streakShareText": "🔥 {n}-day BJJ training streak! Tracked on bjj-app.net (free indie BJJ tracker, built by a blue belt).",
+    "streakTitle": "{n} Day Streak 🔥",
+    "streakSubtitle": "Showing up matters. Keep rolling.",
+    "copyLink": "Copy link"
   },
   "csv": {
     "exportFailed": "Export failed",

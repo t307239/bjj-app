@@ -839,7 +839,11 @@
         "text": "Primeiro treino registrado!",
         "subtext": "Sua jornada no BJJ começa!"
       }
-    }
+    },
+    "streakShareText": "🔥 {n} dias seguidos treinando BJJ! Registrado em bjj-app.net (rastreador grátis indie, feito por faixa azul).",
+    "streakTitle": "{n} Dias seguidos 🔥",
+    "streakSubtitle": "Constância é tudo. Próximo treino.",
+    "copyLink": "Copiar link"
   },
   "csv": {
     "exportFailed": "Falha na exportação",

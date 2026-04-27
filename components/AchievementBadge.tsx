@@ -43,7 +43,7 @@ export default function AchievementBadge({
   streak = 0,
   belt = "white",
 }: AchievementBadgeProps) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [showBadge, setShowBadge] = useState(false);
   const [milestone, setMilestone] = useState<number | null>(null);
   // z222: どの type の achievement か判別 (image/share text 切替に使用)
@@ -100,8 +100,8 @@ export default function AchievementBadge({
   // 現状 fallback: text share + LP URL (LP の OG が表示される)
   // 完璧版は後で別 share landing page で対応 (achievement-specific OG)
 
-  // 表示用 (modal 内に preview する画像)
-  const previewImageUrl = `/api/og?mode=achievement&type=${aType}&value=${milestone}&belt=${belt}&lang=${t("__locale_code") || "en"}`;
+  // 表示用 (modal 内に preview する画像) — z222 OG 拡張済 endpoint
+  const previewImageUrl = `/api/og?mode=achievement&type=${aType}&value=${milestone}&belt=${belt}&lang=${locale}`;
 
   const milestoneText = aType === "sessions"
     ? t(`achievement.milestone.${milestone}.text`)

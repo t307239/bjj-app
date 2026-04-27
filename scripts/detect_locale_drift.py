@@ -262,6 +262,8 @@ PLURAL_NO_SINGULAR_WHITELIST = {
     "chart.pastMonths",  # n は range で 3/6/12 のみ
     "chart.past84Days",  # 期間文言。n=1 想定外
     "achievement.shareText",  # マイルストーン (10/50/100 等)
+    # z222: streak share text/title — STREAK_MILESTONES = [7,14,30,60,100,180,365] で n=1 含まないガード済
+    "achievement.streakShareText", "achievement.streakTitle",
     "guest.ctaRecorded",  # ゲスト累計 1 はあり得るが共有 CTA で重要度低
     "milestones.nextBadge",  # 次バッジ閾値 (5/10/25...)
     "goal.monthsAchieved", "goal.monthsHabit", "goal.monthsInRow", "goal.consecutiveMonths",

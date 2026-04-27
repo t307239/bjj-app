@@ -66,7 +66,10 @@ const ACHIEVEMENT_TAGLINE: Record<Lang, string> = {
   pt: "Registrado em bjj-app.net · projeto indie de BJJ",
 };
 
-const TAGLINES: Record<Mode, Record<Lang, string>> = {
+// z222: TAGLINES は achievement mode では使わない (early return) ので
+// achievement key は追加せず、Mode 型から TAGLINES の key 集合を分離。
+type StatsMode = Exclude<Mode, "achievement">;
+const TAGLINES: Record<StatsMode, Record<Lang, string>> = {
   user: {
     en: "Track Your BJJ Journey",
     ja: "あなたのBJJを記録",
@@ -192,7 +195,8 @@ export async function GET(req: NextRequest) {
   const beltInfo = BELT_COLORS[belt] ?? BELT_COLORS.white;
   const beltLabel = lang === "ja" ? beltInfo.label : beltInfo.labelEn;
   const stats = STAT_LABELS[lang];
-  const tagline = subOverride ?? TAGLINES[mode][lang];
+  // achievement branch は上で early-return 済 (TS narrow しないので明示 cast)
+  const tagline = subOverride ?? TAGLINES[mode as StatsMode][lang];
   const labels = {
     belt: beltLabel,
     sessions: stats.sessions,

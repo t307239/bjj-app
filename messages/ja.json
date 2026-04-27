@@ -817,7 +817,11 @@
     "milestone.1000.text": "1,000回達成！",
     "milestone.1000.subtext": "BJJレジェンド級の継続力！",
     "shareButton": "Xでシェア",
-    "shareText": "BJJアプリで{n}回目の練習記録達成！🥋 {text} #BJJ #ブラジリアン柔術 #続ける力"
+    "shareText": "BJJアプリで{n}回目の練習記録達成！🥋 {text} #BJJ #ブラジリアン柔術 #続ける力",
+    "streakShareText": "🔥 BJJ {n}日連続練習! bjj-app.net で記録中 (青帯が個人開発した無料の柔術トラッカー)",
+    "streakTitle": "{n}日連続 🔥",
+    "streakSubtitle": "続けることが全て。次の roll へ。",
+    "copyLink": "リンクをコピー"
   },
   "csv": {
     "exportFailed": "エクスポートに失敗しました",
