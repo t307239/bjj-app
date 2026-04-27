@@ -18,7 +18,8 @@
     "pricing": "Preços",
     "help": "Ajuda",
     "privacy": "Privacidade",
-    "terms": "Termos"
+    "terms": "Termos",
+    "changelog": "Atualizações"
   },
   "dashboard": {
     "welcomeBack": "Bem-vindo de volta, {name} 🙌",

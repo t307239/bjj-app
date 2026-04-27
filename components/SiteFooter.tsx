@@ -20,6 +20,7 @@ export default function SiteFooter() {
 
   const links = [
     { href: "/pricing", label: t("nav.pricing") },
+    { href: "/changelog", label: t("nav.changelog") }, // z203: indie 活発さ証明
     { href: "/help", label: t("nav.help") },
     { href: "https://wiki.bjj-app.net", label: "BJJ Wiki", external: true },
     { href: "/privacy", label: t("nav.privacy") },

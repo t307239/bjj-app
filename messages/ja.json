@@ -18,7 +18,8 @@
     "pricing": "料金プラン",
     "help": "ヘルプ",
     "privacy": "プライバシー",
-    "terms": "利用規約"
+    "terms": "利用規約",
+    "changelog": "更新履歴"
   },
   "dashboard": {
     "welcomeBack": "おかえり、{name} 👋",

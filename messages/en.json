@@ -18,7 +18,8 @@
     "pricing": "Pricing",
     "help": "Help",
     "privacy": "Privacy",
-    "terms": "Terms"
+    "terms": "Terms",
+    "changelog": "Changelog"
   },
   "dashboard": {
     "welcomeBack": "Welcome back, {name} 👋",
