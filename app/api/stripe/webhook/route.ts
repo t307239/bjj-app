@@ -3,6 +3,12 @@ import { createClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { logger } from "@/lib/logger";
 import { serverEnv } from "@/lib/env";
+import { buildTrialReminderEmail, type Locale } from "@/lib/trialReminderEmail";
+import { canSendEmail, recordEmailSent } from "@/lib/emailRateLimit";
+
+const RESEND_API_KEY = process.env.RESEND_API_KEY ?? "";
+const FROM_EMAIL = process.env.EMAIL_FROM ?? "noreply@bjj-app.net";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://bjj-app.net";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -249,6 +255,102 @@ export async function POST(req: Request) {
             .update({ subscription_status: "past_due" })
             .eq("stripe_customer_id", customerId);
           logger.warn("stripe.webhook.payment_failed", { customerId });
+        }
+        break;
+      }
+
+      case "customer.subscription.trial_will_end": {
+        // z194 (F-3): Stripe fires 3 days before trial_end_date.
+        // Send reminder email so user can decide to continue or cancel.
+        const subscription = event.data.object as Stripe.Subscription;
+        const customerId =
+          typeof subscription.customer === "string"
+            ? subscription.customer
+            : (subscription.customer as Stripe.Customer | null)?.id ?? null;
+        if (!customerId) {
+          logger.warn("stripe.webhook.trial_will_end_no_customer", { subId: subscription.id });
+          break;
+        }
+        if (!RESEND_API_KEY) {
+          logger.warn("stripe.webhook.trial_will_end_no_resend_key");
+          break;
+        }
+        // Look up user
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("id, locale, email_marketing_opted_out")
+          .eq("stripe_customer_id", customerId)
+          .single();
+        if (!profile) {
+          logger.warn("stripe.webhook.trial_will_end_no_profile", { customerId });
+          break;
+        }
+        // Get email
+        const { data: { user: authUser } } = await supabase.auth.admin.getUserById(profile.id);
+        if (!authUser?.email) {
+          logger.warn("stripe.webhook.trial_will_end_no_email", { userId: profile.id });
+          break;
+        }
+        // z189: 24h frequency cap (cross-cron)
+        const allowed = await canSendEmail(supabase, profile.id, "trial_will_end");
+        if (!allowed) {
+          logger.info("stripe.webhook.trial_will_end_skipped_rate_limit", { userId: profile.id });
+          break;
+        }
+        // Build Stripe Customer Portal URL via existing /stripe/portal endpoint helper
+        // (For now, link to /pricing — user can resubscribe / cancel via /api/stripe/portal)
+        const manageUrl = `${APP_URL}/pricing?from=trial_reminder`;
+        const trialEndDate = subscription.trial_end
+          ? new Date(subscription.trial_end * 1000)
+          : new Date(Date.now() + 3 * 86400000);
+        const locale: Locale = (profile.locale as Locale) ?? "en";
+        const { subject, html } = buildTrialReminderEmail({
+          userId: profile.id,
+          email: authUser.email,
+          locale,
+          trialEndDate,
+          manageUrl,
+        });
+        try {
+          const res = await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${RESEND_API_KEY}`,
+            },
+            body: JSON.stringify({
+              from: FROM_EMAIL,
+              to: authUser.email,
+              subject,
+              html,
+              tags: [
+                { name: "type", value: "trial_will_end" },
+                { name: "subscription_id", value: subscription.id },
+              ],
+            }),
+          });
+          if (!res.ok) {
+            logger.error(
+              "stripe.webhook.trial_will_end_send_failed",
+              { userId: profile.id, statusCode: res.status },
+              new Error(`Resend HTTP ${res.status}`),
+            );
+            break;
+          }
+          await recordEmailSent(supabase, profile.id, "trial_will_end", authUser.email, {
+            subscriptionId: subscription.id,
+          });
+          logger.info("stripe.webhook.trial_will_end_sent", {
+            userId: profile.id,
+            customerId,
+            trialEnd: trialEndDate.toISOString(),
+          });
+        } catch (err) {
+          logger.error(
+            "stripe.webhook.trial_will_end_threw",
+            { userId: profile.id },
+            err instanceof Error ? err : new Error(String(err)),
+          );
         }
         break;
       }
