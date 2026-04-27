@@ -13,7 +13,8 @@ const BELT_COLORS: Record<string, { bg: string; text: string; label: string; lab
 
 // z195 (F-1): locale-aware tagline + mode-based copy variant
 // z222: + "achievement" mode for viral share cards (streak / sessions / belt)
-type Mode = "user" | "lp" | "wiki" | "reddit" | "achievement";
+// z223: + "technique" mode for Wiki page OG images (per-technique visual card)
+type Mode = "user" | "lp" | "wiki" | "reddit" | "achievement" | "technique";
 type Lang = "ja" | "en" | "pt";
 
 // z222: Achievement type configuration for share card layout
@@ -66,9 +67,48 @@ const ACHIEVEMENT_TAGLINE: Record<Lang, string> = {
   pt: "Registrado em bjj-app.net · projeto indie de BJJ",
 };
 
-// z222: TAGLINES は achievement mode では使わない (early return) ので
-// achievement key は追加せず、Mode 型から TAGLINES の key 集合を分離。
-type StatsMode = Exclude<Mode, "achievement">;
+// z223: Wiki technique OG card config
+type TechniqueCategory = "technique" | "athlete" | "history" | "rules" | "training";
+const TECHNIQUE_CONFIG: Record<
+  TechniqueCategory,
+  { emoji: string; gradient: [string, string, string]; labels: Record<Lang, string> }
+> = {
+  technique: {
+    emoji: "🥋",
+    gradient: ["#0f172a", "#1e3a8a", "#1d4ed8"], // dark blue
+    labels: { en: "Technique", ja: "テクニック", pt: "Técnica" },
+  },
+  athlete: {
+    emoji: "🏆",
+    gradient: ["#451a03", "#7c2d12", "#b45309"], // amber-bronze
+    labels: { en: "Athlete", ja: "選手", pt: "Atleta" },
+  },
+  history: {
+    emoji: "📜",
+    gradient: ["#1c1917", "#44403c", "#78716c"], // stone
+    labels: { en: "History", ja: "歴史", pt: "História" },
+  },
+  rules: {
+    emoji: "📋",
+    gradient: ["#064e3b", "#065f46", "#047857"], // emerald
+    labels: { en: "Rules", ja: "ルール", pt: "Regras" },
+  },
+  training: {
+    emoji: "💪",
+    gradient: ["#581c87", "#6b21a8", "#7e22ce"], // purple
+    labels: { en: "Training", ja: "練習", pt: "Treino" },
+  },
+};
+
+const WIKI_TAGLINE: Record<Lang, string> = {
+  en: "BJJ Wiki · 1,500+ free pages · bjj-app.net",
+  ja: "BJJ Wiki · 1,500+ 無料解説 · bjj-app.net",
+  pt: "Wiki BJJ · 1.500+ páginas grátis · bjj-app.net",
+};
+
+// z222/z223: TAGLINES は achievement / technique mode では使わない (early return) ので
+// 両 key は追加せず、Mode 型から TAGLINES の key 集合を分離。
+type StatsMode = Exclude<Mode, "achievement" | "technique">;
 const TAGLINES: Record<StatsMode, Record<Lang, string>> = {
   user: {
     en: "Track Your BJJ Journey",
@@ -108,7 +148,7 @@ export async function GET(req: NextRequest) {
   // z195: mode + sub (override tagline) + lang
   // z222: + "achievement" mode for share cards
   const modeParam = (searchParams.get("mode") ?? "user") as Mode;
-  const mode: Mode = ["user", "lp", "wiki", "reddit", "achievement"].includes(modeParam) ? modeParam : "user";
+  const mode: Mode = ["user", "lp", "wiki", "reddit", "achievement", "technique"].includes(modeParam) ? modeParam : "user";
   const langParam = (searchParams.get("lang") ?? "en") as Lang;
   const lang: Lang = ["ja", "en", "pt"].includes(langParam) ? langParam : "en";
   const subOverride = searchParams.get("sub")?.slice(0, 80) ?? null; // 80 char limit
@@ -190,6 +230,82 @@ export async function GET(req: NextRequest) {
     );
   }
   // ── /achievement branch ──────────────────────────────────────────
+
+  // ── z223: Technique card branch (Wiki page OG) ───────────────────
+  if (mode === "technique") {
+    const catParam = (searchParams.get("category") ?? "technique") as TechniqueCategory;
+    const cat: TechniqueCategory = ["technique","athlete","history","rules","training"].includes(catParam) ? catParam : "technique";
+    const titleRaw = searchParams.get("title") ?? "BJJ Technique";
+    const title = titleRaw.slice(0, 60); // 60 char cap で overflow 防止
+    const cfg = TECHNIQUE_CONFIG[cat];
+    const catLabel = cfg.labels[lang];
+    const wTagline = WIKI_TAGLINE[lang];
+
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            width: "100%",
+            height: "100%",
+            background: `linear-gradient(135deg, ${cfg.gradient[0]} 0%, ${cfg.gradient[1]} 50%, ${cfg.gradient[2]} 100%)`,
+            padding: "56px 64px",
+            fontFamily: "sans-serif",
+            color: "#ffffff",
+          }}
+        >
+          {/* Header: brand + category */}
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            <div style={{ fontSize: "44px" }}>🥋</div>
+            <div style={{ fontSize: "28px", fontWeight: "bold", letterSpacing: "-0.5px" }}>
+              BJJ Wiki
+            </div>
+            <div
+              style={{
+                marginLeft: "auto",
+                backgroundColor: "rgba(255,255,255,0.18)",
+                color: "#ffffff",
+                borderRadius: "10px",
+                padding: "6px 22px",
+                fontSize: "20px",
+                fontWeight: "600",
+                textTransform: "uppercase",
+                letterSpacing: "1.5px",
+              }}
+            >
+              {catLabel}
+            </div>
+          </div>
+
+          {/* Hero: emoji + title */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+            <div style={{ fontSize: "120px", lineHeight: 1, marginBottom: "16px" }}>{cfg.emoji}</div>
+            <div
+              style={{
+                fontSize: title.length > 30 ? "64px" : "84px",
+                fontWeight: "bold",
+                lineHeight: 1.1,
+                letterSpacing: "-1px",
+                maxWidth: "100%",
+              }}
+            >
+              {title}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", opacity: 0.85 }}>
+            <div style={{ fontSize: "20px" }}>{wTagline}</div>
+            <div style={{ fontSize: "20px" }}>wiki.bjj-app.net</div>
+          </div>
+        </div>
+      ),
+      { width: 1200, height: 630 },
+    );
+  }
+  // ── /technique branch ────────────────────────────────────────────
 
 
   const beltInfo = BELT_COLORS[belt] ?? BELT_COLORS.white;
