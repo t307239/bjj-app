@@ -66,6 +66,8 @@ const COPY = {
       "📚 1,500+ ページの無料テクニック解説",
       "🚫 広告なし・スパムなし・データ販売なし",
     ],
+    // z207: indie 主張の証拠リンク (/changelog で活発さを示す)
+    trustProofLink: "今月の更新履歴を見る →",
     gymTier: "Gym Pro",
     gymTagline: "道場全体を管理",
     faqTitle: "よくある質問",
@@ -93,7 +95,7 @@ const COPY = {
       },
       {
         q: "VC や投資家は入っていますか?",
-        a: "入っていません。青帯による完全な個人開発です。ユーザーが望む機能だけを作り、収益化の圧力でデータを売る必要もありません。",
+        a: "入っていません。青帯による完全な個人開発です。ユーザーが望む機能だけを作り、収益化の圧力でデータを売る必要もありません。実際の出荷ペースは更新履歴で公開しています。",
       },
       {
         q: "自分のデータをエクスポートできますか?",
@@ -115,6 +117,8 @@ const COPY = {
       "📚 1.500+ páginas wiki grátis sobre cada técnica",
       "🚫 Sem anúncios, spam ou venda de dados",
     ],
+    // z207: link para evidência (changelog)
+    trustProofLink: "Ver atualizações deste mês →",
     gymTier: "Gym Pro",
     gymTagline: "Gerencie todo o dojo",
     faqTitle: "Perguntas frequentes",
@@ -142,7 +146,7 @@ const COPY = {
       },
       {
         q: "Têm VC ou investidores?",
-        a: "Não. Projeto totalmente indie feito por um faixa azul. Construímos o que os usuários querem, sem pressão de monetização para vender dados.",
+        a: "Não. Projeto totalmente indie feito por um faixa azul. Construímos o que os usuários querem, sem pressão de monetização para vender dados. Veja o ritmo real de atualizações no changelog.",
       },
       {
         q: "Posso exportar meus dados?",
@@ -163,6 +167,8 @@ const COPY = {
       "📚 1,500+ free wiki pages on every technique",
       "🚫 No ads, no spam, no data sold",
     ],
+    // z207: link to evidence (changelog)
+    trustProofLink: "See what we shipped this month →",
     gymTier: "Gym Pro",
     gymTagline: "Manage your whole dojo",
     faqTitle: "Frequently asked questions",
@@ -190,7 +196,7 @@ const COPY = {
       },
       {
         q: "Are you VC-funded?",
-        a: "No. This is a 100% indie project by a blue belt. We build what users want — no monetization pressure to sell your data.",
+        a: "No. This is a 100% indie project by a blue belt. We build what users want — no monetization pressure to sell your data. See the actual shipping pace on the changelog.",
       },
       {
         q: "Can I export my data?",
@@ -289,7 +295,8 @@ export default async function PricingPage() {
           </p>
         </section>
 
-        {/* z201: Honest indie trust signals (replaces fake "15+ countries" claim) */}
+        {/* z201: Honest indie trust signals (replaces fake "15+ countries" claim)
+            z207: + 「証拠」link で /changelog へ誘導 (indie 主張の裏付け) */}
         <section className="mb-12 max-w-3xl mx-auto">
           <ul className="grid sm:grid-cols-3 gap-3 text-center">
             {c.trustItems.map((item, i) => (
@@ -301,6 +308,14 @@ export default async function PricingPage() {
               </li>
             ))}
           </ul>
+          <div className="text-center mt-4">
+            <Link
+              href="/changelog"
+              className="inline-block text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
+            >
+              {c.trustProofLink}
+            </Link>
+          </div>
         </section>
 
         {/* B2C tiers (Free + Pro, with monthly/annual toggle) */}
