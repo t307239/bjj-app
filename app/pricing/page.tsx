@@ -47,8 +47,15 @@ export const metadata: Metadata = {
 
 const COPY = {
   ja: {
-    heroTitle: "シンプルな料金体系",
+    // z201: positional headline (旧 generic "シンプルな料金体系" → 「無料」を先に)
+    heroTitle: "BJJ を記録、永久無料。",
     heroSub: "個人ユーザーは永久無料。本格分析は Pro、道場管理は Gym Pro。",
+    // z201: honest indie signal (実数 1566 ページ / 3 言語 / 個人開発)
+    trustItems: [
+      "🥋 青帯による個人開発",
+      "📚 1,500+ ページの無料テクニック解説",
+      "🚫 広告なし・スパムなし・データ販売なし",
+    ],
     gymTier: "Gym Pro",
     gymTagline: "道場全体を管理",
     faqTitle: "よくある質問",
@@ -72,9 +79,15 @@ const COPY = {
     ],
   },
   pt: {
-    heroTitle: "Preços simples",
+    // z201: positional headline (lead with free, not "simple pricing")
+    heroTitle: "Registre seu BJJ. Grátis, para sempre.",
     heroSub:
       "Grátis para sempre para usuários individuais. Pro para análise séria. Gym Pro para dojos.",
+    trustItems: [
+      "🥋 Feito por faixa azul indie",
+      "📚 1.500+ páginas wiki grátis sobre cada técnica",
+      "🚫 Sem anúncios, spam ou venda de dados",
+    ],
     gymTier: "Gym Pro",
     gymTagline: "Gerencie todo o dojo",
     faqTitle: "Perguntas frequentes",
@@ -98,8 +111,14 @@ const COPY = {
     ],
   },
   en: {
-    heroTitle: "Simple pricing",
+    // z201: positional headline (lead with free, not "simple pricing")
+    heroTitle: "Track your BJJ. Free, forever.",
     heroSub: "Free forever for individuals. Pro for serious analytics. Gym Pro for dojos.",
+    trustItems: [
+      "🥋 Built by an indie blue belt",
+      "📚 1,500+ free wiki pages on every technique",
+      "🚫 No ads, no spam, no data sold",
+    ],
     gymTier: "Gym Pro",
     gymTagline: "Manage your whole dojo",
     faqTitle: "Frequently asked questions",
@@ -200,13 +219,27 @@ export default async function PricingPage() {
 
       <main className="max-w-5xl mx-auto px-4 py-10 sm:py-16">
         {/* Hero */}
-        <section className="text-center mb-12">
+        <section className="text-center mb-8">
           <h1 className="text-3xl sm:text-5xl font-bold text-white mb-4">
             {c.heroTitle}
           </h1>
           <p className="text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto">
             {c.heroSub}
           </p>
+        </section>
+
+        {/* z201: Honest indie trust signals (replaces fake "15+ countries" claim) */}
+        <section className="mb-12 max-w-3xl mx-auto">
+          <ul className="grid sm:grid-cols-3 gap-3 text-center">
+            {c.trustItems.map((item, i) => (
+              <li
+                key={i}
+                className="bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-xl px-4 py-3 text-sm text-zinc-300"
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
         </section>
 
         {/* B2C tiers (Free + Pro, with monthly/annual toggle) */}

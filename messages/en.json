@@ -857,7 +857,6 @@
     "bannerTitle": "⚡ Upgrade to Pro — $9.99/month",
     "bannerFeatures": "Find your weak spots · Track recovery · Protect your streak",
     "bannerCta": "Unlock Pro",
-    "socialProof": "Join 500+ BJJ athletes training smarter",
     "paymentIssueTitle": "Payment issue — Pro features paused",
     "paymentIssueDesc": "Your last payment failed. Update your billing info to continue.",
     "fixNow": "Fix now",
@@ -896,7 +895,8 @@
     "moneyBack": "Cancel anytime during trial · 7-day money-back after",
     "benefitHighlight": "Pro users train 2.3x more on average",
     "trialCta": "Start risk-free",
-    "trialBadge": "🎁 14-day free trial · No credit card required"
+    "trialBadge": "🎁 14-day free trial · No credit card required",
+    "socialProof": "🥋 Built by an indie blue belt — for the BJJ community, not VCs"
   },
   "beltPromo": {
     "congrats": "Congratulations! 🎉",
@@ -1697,16 +1697,10 @@
     "engCta": "Start Tracking for Free",
     "engGuest": "Try without signing up",
     "engSubtext": "No credit card. Sign in with GitHub or Google. Takes 30 seconds.",
-    "proofBadge": "✓ Trusted by grapplers worldwide",
-    "proofTitle": "Real training data",
-    "proofSessions": "50,000+",
-    "proofSessionsLabel": "Sessions logged",
-    "proofTechniques": "1,200+",
-    "proofTechniquesLabel": "Techniques saved",
-    "proofStreak": "30+",
-    "proofStreakLabel": "Longest streak (days)",
-    "proofFree": "Free",
-    "proofFreeLabel": "All core features",
+    "proofBadge": "✓ Indie BJJ project — no VC, no ads, no data tracking",
+    "proofTitle": "Honest, indie, free",
+    "proofFree": "100%",
+    "proofFreeLabel": "Free core features, forever",
     "stepsTitle": "3 steps to visible progress",
     "step1Title": "Log",
     "step1Desc": "Record every session. Date, duration, type, and notes in seconds. Works great on mobile.",
@@ -1778,17 +1772,15 @@
     "proGoalWeightTitle": "Target Weight Tracking (Pro)",
     "proGoalWeightDesc": "Set a target weight with visual progress line. Pro feature included in monthly/annual plan.",
     "socialProofTitle": "Trusted by the BJJ Community",
-    "socialProofUsers": "2,500+",
-    "socialProofUsersLabel": "Active users",
-    "socialProofWiki": "1,500+",
-    "socialProofWikiLabel": "Wiki pages",
-    "socialProofAvgStreak": "25+",
-    "socialProofAvgStreakLabel": "Average streak (days)",
-    "socialProofProSubscribers": "300+",
-    "socialProofProSubscribersLabel": "Pro members",
     "proFeatures": "Pro Features",
     "engPillWeight": "Weight Management",
-    "engPillBelt": "Belt Progress"
+    "engPillBelt": "Belt Progress",
+    "proofWikiPages": "1,500+",
+    "proofWikiPagesLabel": "Free wiki pages on every technique",
+    "proofLanguages": "3",
+    "proofLanguagesLabel": "Languages: EN / JA / PT",
+    "proofAds": "0",
+    "proofAdsLabel": "Ads, spam, or trackers"
   },
   "ageGate": {
     "title": "Age Restriction",
@@ -1921,7 +1913,7 @@
     "benefitHighlight": "Pro users train 2.3x more on average",
     "freeUpsell": "Want advanced analytics & streak protection? Go Pro →",
     "proTrialHint": "7-day money-back guarantee included",
-    "socialProof": "Trusted by BJJ practitioners in 15+ countries — from white belts to black belts"
+    "socialProof": "Independent indie BJJ project — no VC, no ads, no data tracking"
   },
   "weightCut": {
     "title": "Weight Cut Planner",

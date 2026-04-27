@@ -47,7 +47,8 @@ describe("Q-91: Weekly email cron", () => {
 
   it("verifies CRON_SECRET", () => {
     expect(source).toContain("CRON_SECRET");
-    expect(source).toContain("verifyCronSecret");
+    // z169: verifyCronSecret → verifyCronAuth (lib/cronAuth.ts) に refactor 済
+    expect(source).toContain("verifyCronAuth");
   });
 
   it("checks RESEND_API_KEY", () => {

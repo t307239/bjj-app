@@ -857,7 +857,6 @@
     "bannerTitle": "⚡ Proにアップグレード — $9.99/月",
     "bannerFeatures": "弱点を可視化 · リカバリー管理 · 連続記録の保護",
     "bannerCta": "Proを解放",
-    "socialProof": "500人以上のBJJ選手が使っています",
     "paymentIssueTitle": "お支払いに問題があります — Pro機能が一時停止中",
     "paymentIssueDesc": "最後のお支払いが失敗しました。請求情報を更新してください。",
     "fixNow": "今すぐ修正",
@@ -896,7 +895,8 @@
     "moneyBack": "トライアル中はいつでもキャンセル可 · 7日間返金保証",
     "benefitHighlight": "Proユーザーの平均練習頻度が2.3倍に向上",
     "trialCta": "リスクなしで始める",
-    "trialBadge": "🎁 14日間 無料トライアル · クレジットカード不要"
+    "trialBadge": "🎁 14日間 無料トライアル · クレジットカード不要",
+    "socialProof": "🥋 青帯による個人開発 — 柔術コミュニティのために"
   },
   "common": {
     "close": "閉じる",
@@ -1615,16 +1615,10 @@
     "engCta": "無料でトラッキング開始",
     "engGuest": "登録なしで試す",
     "engSubtext": "クレジットカード不要。GitHub/Googleで30秒でサインイン。",
-    "proofBadge": "✓ 世界中の柔術家に利用されています",
-    "proofTitle": "リアルなトレーニングデータ",
-    "proofSessions": "50,000+",
-    "proofSessionsLabel": "記録されたセッション",
-    "proofTechniques": "1,200+",
-    "proofTechniquesLabel": "保存されたテクニック",
-    "proofStreak": "30+",
-    "proofStreakLabel": "最長連続記録（日）",
-    "proofFree": "無料",
-    "proofFreeLabel": "すべての基本機能",
+    "proofBadge": "✓ 個人開発の柔術プロジェクト · 広告なし・データトラッキングなし",
+    "proofTitle": "嘘なし・個人開発・永久無料",
+    "proofFree": "100%",
+    "proofFreeLabel": "コア機能は永久無料",
     "stepsTitle": "3ステップで成長を実感",
     "step1Title": "記録",
     "step1Desc": "すべてのセッションを記録。日付・時間・種類・メモを数秒で。モバイルでも快適。",
@@ -1696,17 +1690,15 @@
     "proGoalWeightTitle": "目標体重トラッキング（Pro）",
     "proGoalWeightDesc": "目標体重を設定して、ビジュアル進捗ラインを表示。月額・年額プランに含まれる。",
     "socialProofTitle": "柔術コミュニティに信頼されるアプリ",
-    "socialProofUsers": "2,500+",
-    "socialProofUsersLabel": "アクティブユーザー",
-    "socialProofWiki": "1,500+",
-    "socialProofWikiLabel": "Wiki ページ",
-    "socialProofAvgStreak": "25+",
-    "socialProofAvgStreakLabel": "平均連続記録（日数）",
-    "socialProofProSubscribers": "300+",
-    "socialProofProSubscribersLabel": "Pro会員",
     "proFeatures": "プロ機能",
     "engPillWeight": "体重管理",
-    "engPillBelt": "帯の進捗"
+    "engPillBelt": "帯の進捗",
+    "proofWikiPages": "1,500+",
+    "proofWikiPagesLabel": "無料テクニック解説ページ",
+    "proofLanguages": "3",
+    "proofLanguagesLabel": "対応言語: EN / JA / PT",
+    "proofAds": "0",
+    "proofAdsLabel": "広告・スパム・トラッカー"
   },
   "body": {
     "injuryAlert": {
@@ -1921,7 +1913,7 @@
     "benefitHighlight": "Proユーザーは平均2.3倍多く練習しています",
     "freeUpsell": "さらに高度な分析や連続記録の保護が欲しい方はProへ →",
     "proTrialHint": "7日間返金保証付きで安心",
-    "socialProof": "世界15カ国以上の柔術家が利用中 — 白帯から黒帯まで"
+    "socialProof": "個人開発の柔術プロジェクト — VC・広告・トラッキング 一切なし"
   },
   "weightCut": {
     "title": "減量プランナー",

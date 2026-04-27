@@ -338,38 +338,25 @@ export default async function Home() {
               {t("landing.proofTitle")}
             </h2>
           </div>
+          {/* z201: Honest 4-card stats only (旧 8 cards のうち 4 つは fake stats だった
+              50K sessions/2.5K users/25 avg streak/300 Pro = 実数比 50-550x の inflation。
+              景表法/FTC 違反リスクのため honest indie + true wiki count のみに統一) */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
-              <div className="text-3xl font-bold text-white mb-1">{t("landing.proofSessions")}</div>
-              <p className="text-zinc-400 text-xs">{t("landing.proofSessionsLabel")}</p>
-            </div>
-            <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
-              <div className="text-3xl font-bold text-white mb-1">{t("landing.proofTechniques")}</div>
-              <p className="text-zinc-400 text-xs">{t("landing.proofTechniquesLabel")}</p>
-            </div>
-            <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
-              <div className="text-3xl font-bold text-white mb-1">{t("landing.proofStreak")}</div>
-              <p className="text-zinc-400 text-xs">{t("landing.proofStreakLabel")}</p>
-            </div>
-            <div className="bg-zinc-900 rounded-2xl p-6 border border-white/10 text-center">
-              <div className="text-3xl font-bold text-white mb-1">{t("landing.proofFree")}</div>
-              <p className="text-zinc-400 text-xs">{t("landing.proofFreeLabel")}</p>
+            <div className="bg-zinc-900 rounded-2xl p-6 border border-purple-500/30 text-center">
+              <div className="text-3xl font-bold text-purple-400 mb-1">{t("landing.proofWikiPages")}</div>
+              <p className="text-zinc-400 text-xs">{t("landing.proofWikiPagesLabel")}</p>
             </div>
             <div className="bg-zinc-900 rounded-2xl p-6 border border-emerald-500/30 text-center">
-              <div className="text-3xl font-bold text-emerald-400 mb-1">{t("landing.socialProofUsers")}</div>
-              <p className="text-zinc-400 text-xs">{t("landing.socialProofUsersLabel")}</p>
+              <div className="text-3xl font-bold text-emerald-400 mb-1">{t("landing.proofFree")}</div>
+              <p className="text-zinc-400 text-xs">{t("landing.proofFreeLabel")}</p>
             </div>
-            <div className="bg-zinc-900 rounded-2xl p-6 border border-purple-500/30 text-center">
-              <div className="text-3xl font-bold text-purple-400 mb-1">{t("landing.socialProofWiki")}</div>
-              <p className="text-zinc-400 text-xs">{t("landing.socialProofWikiLabel")}</p>
-            </div>
-            <div className="bg-zinc-900 rounded-2xl p-6 border border-orange-500/30 text-center">
-              <div className="text-3xl font-bold text-orange-400 mb-1">{t("landing.socialProofAvgStreak")}</div>
-              <p className="text-zinc-400 text-xs">{t("landing.socialProofAvgStreakLabel")}</p>
+            <div className="bg-zinc-900 rounded-2xl p-6 border border-blue-500/30 text-center">
+              <div className="text-3xl font-bold text-blue-400 mb-1">{t("landing.proofLanguages")}</div>
+              <p className="text-zinc-400 text-xs">{t("landing.proofLanguagesLabel")}</p>
             </div>
             <div className="bg-zinc-900 rounded-2xl p-6 border border-pink-500/30 text-center">
-              <div className="text-3xl font-bold text-pink-400 mb-1">{t("landing.socialProofProSubscribers")}</div>
-              <p className="text-zinc-400 text-xs">{t("landing.socialProofProSubscribersLabel")}</p>
+              <div className="text-3xl font-bold text-pink-400 mb-1">{t("landing.proofAds")}</div>
+              <p className="text-zinc-400 text-xs">{t("landing.proofAdsLabel")}</p>
             </div>
           </div>
         </div>

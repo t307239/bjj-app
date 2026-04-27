@@ -883,7 +883,6 @@
     "bannerTitle": "⚡ Upgrade para Pro — $9,99/mês",
     "bannerFeatures": "Encontre seus pontos fracos · Acompanhe recuperação · Proteja sua sequência",
     "bannerCta": "Desbloquear Pro",
-    "socialProof": "Junte-se a mais de 500 atletas de BJJ treinando de forma mais inteligente",
     "paymentIssueTitle": "Problema no pagamento — recursos Pro pausados",
     "paymentIssueDesc": "Seu último pagamento falhou. Atualize suas informações de cobrança para continuar.",
     "fixNow": "Corrigir agora",
@@ -922,7 +921,8 @@
     "moneyBack": "Cancele a qualquer momento durante o teste · Garantia de 7 dias depois",
     "benefitHighlight": "Usuários Pro treinam 2,3x mais em média",
     "trialCta": "Comece sem risco",
-    "trialBadge": "🎁 14 dias grátis · Sem cartão de crédito"
+    "trialBadge": "🎁 14 dias grátis · Sem cartão de crédito",
+    "socialProof": "🥋 Feito por faixa azul indie — para a comunidade de BJJ, não para VCs"
   },
   "beltPromo": {
     "congrats": "Parabéns! 🎉",
@@ -1725,16 +1725,10 @@
     "engCta": "Começar a Registrar Grátis",
     "engGuest": "Experimentar sem cadastro",
     "engSubtext": "Sem cartão de crédito. Entre com GitHub ou Google. Leva 30 segundos.",
-    "proofBadge": "✅ Confiado por lutadores no mundo todo",
-    "proofTitle": "Dados reais de treino",
-    "proofSessions": "50.000+",
-    "proofSessionsLabel": "Sessões registradas",
-    "proofTechniques": "1.200+",
-    "proofTechniquesLabel": "Técnicas salvas",
-    "proofStreak": "30+",
-    "proofStreakLabel": "Maior sequência (dias)",
-    "proofFree": "Grátis",
-    "proofFreeLabel": "Todos os recursos principais",
+    "proofBadge": "✓ Projeto BJJ indie — sem VC, sem anúncios, sem rastreamento",
+    "proofTitle": "Honesto, indie, grátis",
+    "proofFree": "100%",
+    "proofFreeLabel": "Recursos principais grátis, para sempre",
     "stepsTitle": "3 passos para progresso visível",
     "step1Title": "Registre",
     "step1Desc": "Registre cada sessão. Data, duração, tipo e notas em segundos. Funciona perfeitamente no celular.",
@@ -1806,17 +1800,15 @@
     "proGoalWeightTitle": "Rastreamento de Peso Alvo (Pro)",
     "proGoalWeightDesc": "Defina um peso alvo com linha de progresso visual. Recurso Pro incluído no plano mensal/anual.",
     "socialProofTitle": "Confiado pela Comunidade de BJJ",
-    "socialProofUsers": "2,500+",
-    "socialProofUsersLabel": "Usuários ativos",
-    "socialProofWiki": "1,500+",
-    "socialProofWikiLabel": "Páginas da Wiki",
-    "socialProofAvgStreak": "25+",
-    "socialProofAvgStreakLabel": "Sequência média (dias)",
-    "socialProofProSubscribers": "300+",
-    "socialProofProSubscribersLabel": "Membros Pro",
     "proFeatures": "Recursos Pro",
     "engPillWeight": "Gestão de Peso",
-    "engPillBelt": "Progresso de Faixa"
+    "engPillBelt": "Progresso de Faixa",
+    "proofWikiPages": "1.500+",
+    "proofWikiPagesLabel": "Páginas wiki grátis sobre cada técnica",
+    "proofLanguages": "3",
+    "proofLanguagesLabel": "Idiomas: EN / JA / PT",
+    "proofAds": "0",
+    "proofAdsLabel": "Anúncios, spam ou rastreadores"
   },
   "ageGate": {
     "title": "Restrição de Idade",
@@ -1949,7 +1941,7 @@
     "benefitHighlight": "Usuários Pro treinam 2,3x mais em média",
     "freeUpsell": "Quer análises avançadas e proteção de streak? Vá Pro →",
     "proTrialHint": "Garantia de reembolso de 7 dias incluída",
-    "socialProof": "Usado por praticantes de BJJ em mais de 15 países — de faixa branca a preta"
+    "socialProof": "Projeto indie de BJJ — sem VC, sem anúncios, sem rastreamento"
   },
   "weightCut": {
     "title": "Planejador de Corte de Peso",
