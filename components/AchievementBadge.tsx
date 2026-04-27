@@ -3,69 +3,158 @@
 import { useEffect, useState } from "react";
 import { useLocale } from "@/lib/i18n";
 
+/**
+ * AchievementBadge — z222 enhanced:
+ *   - 旧 (z154): session count (totalCount) milestone のみ、text share のみ
+ *   - 新 (z222): + streak milestone (30/100/365日) 検出
+ *               + /api/og?mode=achievement で beautiful share card 画像
+ *               + X/Threads/Bluesky button (Facebook 削除、BJJ audience なし)
+ *               + URL に ?ref=achievement_share で attribution
+ *
+ * 設計:
+ *   - 1 user の share = 数十-数百 reach の viral loop 起動
+ *   - share image は OG card そのまま (Twitter etc. が auto preview)
+ *   - localStorage で重複表示防止 (sessions / streak 別 key)
+ */
+
+type AchievementType = "sessions" | "streak";
+
 interface AchievementBadgeProps {
   userId: string;
   totalCount: number;
+  /** z222: 現在の連続日数 (dashboard で計算済を渡す) */
+  streak?: number;
+  /** z222: ユーザーの帯 (share image の color に使用) */
+  belt?: string;
 }
 
-const MILESTONES = [
+const SESSION_MILESTONES = [
   1, 7, 10, 30, 50, 100, 200, 365, 500, 1000,
 ] as const;
 
+// z222: streak 連続日数の milestone (虚栄心が刺激される丸数字)
+const STREAK_MILESTONES = [
+  7, 14, 30, 60, 100, 180, 365,
+] as const;
+
 export default function AchievementBadge({
-  userId,
+  userId: _userId,
   totalCount,
+  streak = 0,
+  belt = "white",
 }: AchievementBadgeProps) {
   const { t } = useLocale();
   const [showBadge, setShowBadge] = useState(false);
   const [milestone, setMilestone] = useState<number | null>(null);
+  // z222: どの type の achievement か判別 (image/share text 切替に使用)
+  const [aType, setAType] = useState<AchievementType>("sessions");
 
   useEffect(() => {
-    if (totalCount === 0) return;
-
-    // Check if totalCount matches a milestone
-    const matchedMilestone = MILESTONES.find((m) => m === totalCount);
-    if (!matchedMilestone) return;
-
-    // Check if this milestone has been shown before
-    const shown = localStorage.getItem("bjj_shown_milestones");
-    const shownMilestones = shown ? JSON.parse(shown) : [];
-
-    if (!shownMilestones.includes(matchedMilestone)) {
-      // Mark milestone as shown
-      shownMilestones.push(matchedMilestone);
-      localStorage.setItem("bjj_shown_milestones", JSON.stringify(shownMilestones));
-
-      setMilestone(matchedMilestone);
-      setShowBadge(true);
+    // ── Sessions milestone (旧) ──
+    if (totalCount > 0) {
+      const matched = SESSION_MILESTONES.find((m) => m === totalCount);
+      if (matched) {
+        const shown = localStorage.getItem("bjj_shown_milestones");
+        const list = shown ? JSON.parse(shown) : [];
+        if (!list.includes(matched)) {
+          list.push(matched);
+          localStorage.setItem("bjj_shown_milestones", JSON.stringify(list));
+          setAType("sessions");
+          setMilestone(matched);
+          setShowBadge(true);
+          return;
+        }
+      }
     }
-  }, [totalCount]);
+    // ── z222: Streak milestone (新) ──
+    if (streak > 0) {
+      const matched = STREAK_MILESTONES.find((m) => m === streak);
+      if (matched) {
+        const shown = localStorage.getItem("bjj_shown_streak_milestones");
+        const list = shown ? JSON.parse(shown) : [];
+        if (!list.includes(matched)) {
+          list.push(matched);
+          localStorage.setItem("bjj_shown_streak_milestones", JSON.stringify(list));
+          setAType("streak");
+          setMilestone(matched);
+          setShowBadge(true);
+        }
+      }
+    }
+  }, [totalCount, streak]);
 
   if (!showBadge || !milestone) return null;
 
-  const milestoneText = t(`achievement.milestone.${milestone}.text`);
-  const milestoneSubtext = t(`achievement.milestone.${milestone}.subtext`);
+  // ── z222: share text + image URL を type 別に組立 ──
+  const shareUrl = `https://bjj-app.net/?ref=achievement_share&kind=${aType}${milestone}`;
+  // share text: streak は emoji 強め、sessions は milestone.text の i18n key を使用
+  const shareText = aType === "streak"
+    ? t("achievement.streakShareText", { n: milestone })
+    : t("achievement.shareText", {
+        n: milestone,
+        text: t(`achievement.milestone.${milestone}.text`),
+      });
+  // /api/og?mode=achievement&type=streak&value=30&belt=blue&lang=en
+  // Twitter/X 等は OG meta から auto preview するため shareUrl 経由で OG image が取得される
+  // ただし shareUrl は LP なので OG が違う → 直接 image URL を渡す path も用意
+  // 現状 fallback: text share + LP URL (LP の OG が表示される)
+  // 完璧版は後で別 share landing page で対応 (achievement-specific OG)
 
-  const shareText = t("achievement.shareText", {
-    n: milestone,
-    text: milestoneText,
-  });
-  const shareUrl = "https://bjj-app.net";
+  // 表示用 (modal 内に preview する画像)
+  const previewImageUrl = `/api/og?mode=achievement&type=${aType}&value=${milestone}&belt=${belt}&lang=${t("__locale_code") || "en"}`;
 
+  const milestoneText = aType === "sessions"
+    ? t(`achievement.milestone.${milestone}.text`)
+    : t("achievement.streakTitle", { n: milestone });
+  const milestoneSubtext = aType === "sessions"
+    ? t(`achievement.milestone.${milestone}.subtext`)
+    : t("achievement.streakSubtitle");
+  const milestoneEmoji = aType === "streak"
+    ? "🔥"
+    : t(`achievement.milestone.${milestone}.emoji`);
+
+  // z222: native share sheet (mobile)
   const handleShare = async () => {
-    // Use native share sheet on mobile (Instagram, WhatsApp, Line, etc.)
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({ text: shareText, url: shareUrl });
         return;
-      } catch { /* user cancelled or not supported */ }
+      } catch { /* user cancelled */ }
     }
-    // Fallback: open Twitter
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, "_blank");
+    // fallback: X/Twitter
+    handleShareX();
   };
 
-  const handleShareFacebook = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`, "_blank");
+  const handleShareX = () => {
+    window.open(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+  };
+
+  const handleShareThreads = () => {
+    // Threads share intent (公式 intent URL)
+    window.open(
+      `https://www.threads.net/intent/post?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+  };
+
+  const handleShareBluesky = () => {
+    // Bluesky compose intent
+    window.open(
+      `https://bsky.app/intent/compose?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+    } catch { /* clipboard 失敗時は無視 */ }
   };
 
   return (
@@ -100,33 +189,69 @@ export default function AchievementBadge({
           {/* Main content */}
           <div className="relative z-10">
             <div className="text-8xl mb-4 drop-shadow-lg">
-              {t(`achievement.milestone.${milestone}.emoji`)}
+              {milestoneEmoji}
             </div>
             <h2 className="text-3xl font-bold text-white mb-2">
               {milestoneText}
             </h2>
-            <p className="text-lg text-white font-semibold mb-6">{milestoneSubtext}</p>
+            <p className="text-lg text-white font-semibold mb-4">{milestoneSubtext}</p>
+
+            {/* z222: Share card preview image (auto-generated by /api/og) */}
+            <div className="mb-5 mx-auto max-w-[260px] rounded-lg overflow-hidden ring-2 ring-white/30 shadow-lg">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={previewImageUrl}
+                alt={`${milestone} ${aType}`}
+                className="w-full h-auto block"
+                loading="lazy"
+              />
+            </div>
 
             {/* Buttons */}
             <div className="flex flex-col gap-2 items-center">
               <button type="button"
                 onClick={handleShare}
-                className="bg-white text-violet-600 px-6 py-2.5 rounded-lg font-bold hover:bg-gray-100 transition-colors min-h-[44px] w-full max-w-[220px]"
+                className="bg-white text-violet-600 px-6 py-2.5 rounded-lg font-bold hover:bg-gray-100 transition-colors min-h-[44px] w-full max-w-[260px]"
               >
                 {t("achievement.shareButton")}
               </button>
-              <div className="flex gap-2">
+              {/* z222: SNS-specific share buttons (X / Threads / Bluesky / Copy)
+                  旧 Facebook 削除 (BJJ audience 上の engagement なし) */}
+              <div className="flex gap-2 flex-wrap justify-center">
                 <button type="button"
-                  onClick={handleShareFacebook}
-                  className="bg-[#1877F2] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#166FE5] transition-colors min-h-[40px]"
+                  onClick={handleShareX}
+                  className="bg-black text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-zinc-800 transition-colors min-h-[40px]"
+                  aria-label="Share on X"
                 >
-                  Facebook
+                  𝕏
+                </button>
+                <button type="button"
+                  onClick={handleShareThreads}
+                  className="bg-zinc-900 text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-zinc-700 transition-colors min-h-[40px]"
+                  aria-label="Share on Threads"
+                >
+                  Threads
+                </button>
+                <button type="button"
+                  onClick={handleShareBluesky}
+                  className="bg-[#1185FE] text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-[#0d6fda] transition-colors min-h-[40px]"
+                  aria-label="Share on Bluesky"
+                >
+                  Bluesky
+                </button>
+                <button type="button"
+                  onClick={handleCopyLink}
+                  className="bg-purple-700 text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-purple-800 transition-colors min-h-[40px]"
+                  aria-label={t("achievement.copyLink")}
+                >
+                  📋
                 </button>
                 <button type="button"
                   onClick={() => setShowBadge(false)}
-                  className="bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-800 transition-colors border border-white border-opacity-30 min-h-[40px]"
+                  className="bg-purple-900 text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-purple-950 transition-colors border border-white/30 min-h-[40px]"
+                  aria-label={t("common.close")}
                 >
-                  ✕ {t("common.close")}
+                  ✕
                 </button>
               </div>
             </div>

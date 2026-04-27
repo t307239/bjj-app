@@ -12,8 +12,59 @@ const BELT_COLORS: Record<string, { bg: string; text: string; label: string; lab
 };
 
 // z195 (F-1): locale-aware tagline + mode-based copy variant
-type Mode = "user" | "lp" | "wiki" | "reddit";
+// z222: + "achievement" mode for viral share cards (streak / sessions / belt)
+type Mode = "user" | "lp" | "wiki" | "reddit" | "achievement";
 type Lang = "ja" | "en" | "pt";
+
+// z222: Achievement type configuration for share card layout
+type AchievementType = "streak" | "sessions" | "belt" | "hours";
+const ACHIEVEMENT_CONFIG: Record<
+  AchievementType,
+  { emoji: string; gradient: [string, string, string]; labels: Record<Lang, string> }
+> = {
+  streak: {
+    emoji: "🔥",
+    gradient: ["#7c2d12", "#b45309", "#d97706"], // orange-red flame
+    labels: {
+      en: "Day Streak",
+      ja: "連続日数",
+      pt: "Dias seguidos",
+    },
+  },
+  sessions: {
+    emoji: "💪",
+    gradient: ["#064e3b", "#065f46", "#047857"], // emerald
+    labels: {
+      en: "Sessions Logged",
+      ja: "練習記録",
+      pt: "Sessões registradas",
+    },
+  },
+  belt: {
+    emoji: "🥋",
+    gradient: ["#1e3a8a", "#1e40af", "#1d4ed8"], // blue (overridden by belt color)
+    labels: {
+      en: "Belt Promotion",
+      ja: "昇帯",
+      pt: "Promoção de faixa",
+    },
+  },
+  hours: {
+    emoji: "⏱",
+    gradient: ["#581c87", "#6b21a8", "#7e22ce"], // purple
+    labels: {
+      en: "Hours on the Mat",
+      ja: "練習時間",
+      pt: "Horas no tatame",
+    },
+  },
+};
+
+const ACHIEVEMENT_TAGLINE: Record<Lang, string> = {
+  en: "Tracked on bjj-app.net · indie blue belt project",
+  ja: "bjj-app.net で記録 · 個人開発の柔術プロジェクト",
+  pt: "Registrado em bjj-app.net · projeto indie de BJJ",
+};
 
 const TAGLINES: Record<Mode, Record<Lang, string>> = {
   user: {
@@ -52,11 +103,91 @@ export async function GET(req: NextRequest) {
   const count  = searchParams.get("count")  ?? "0";
   const months = searchParams.get("months") ?? "0";
   // z195: mode + sub (override tagline) + lang
+  // z222: + "achievement" mode for share cards
   const modeParam = (searchParams.get("mode") ?? "user") as Mode;
-  const mode: Mode = ["user", "lp", "wiki", "reddit"].includes(modeParam) ? modeParam : "user";
+  const mode: Mode = ["user", "lp", "wiki", "reddit", "achievement"].includes(modeParam) ? modeParam : "user";
   const langParam = (searchParams.get("lang") ?? "en") as Lang;
   const lang: Lang = ["ja", "en", "pt"].includes(langParam) ? langParam : "en";
   const subOverride = searchParams.get("sub")?.slice(0, 80) ?? null; // 80 char limit
+
+  // ── z222: Achievement card branch (early return) ─────────────────
+  if (mode === "achievement") {
+    const typeParam = (searchParams.get("type") ?? "streak") as AchievementType;
+    const aType: AchievementType = ["streak", "sessions", "belt", "hours"].includes(typeParam)
+      ? typeParam
+      : "streak";
+    const value = (searchParams.get("value") ?? "0").slice(0, 8); // numeric or short text
+    const cfg = ACHIEVEMENT_CONFIG[aType];
+    const beltInfoA = BELT_COLORS[belt] ?? BELT_COLORS.white;
+    const beltLabelA = lang === "ja" ? beltInfoA.label : beltInfoA.labelEn;
+    const aLabel = cfg.labels[lang];
+    const aTagline = ACHIEVEMENT_TAGLINE[lang];
+
+    // Belt 達成は belt color を gradient に
+    const grad = aType === "belt"
+      ? [beltInfoA.bg, beltInfoA.bg, beltInfoA.bg]
+      : cfg.gradient;
+
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            width: "100%",
+            height: "100%",
+            background: `linear-gradient(135deg, ${grad[0]} 0%, ${grad[1]} 50%, ${grad[2]} 100%)`,
+            padding: "56px 64px",
+            fontFamily: "sans-serif",
+            color: "#ffffff",
+          }}
+        >
+          {/* Header: brand + belt */}
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            <div style={{ fontSize: "44px" }}>🥋</div>
+            <div style={{ fontSize: "28px", fontWeight: "bold", letterSpacing: "-0.5px" }}>
+              BJJ App
+            </div>
+            <div
+              style={{
+                marginLeft: "auto",
+                backgroundColor: beltInfoA.bg,
+                color: beltInfoA.text,
+                borderRadius: "10px",
+                padding: "6px 22px",
+                fontSize: "22px",
+                fontWeight: "bold",
+                border: belt === "white" ? "2px solid #374151" : "none",
+              }}
+            >
+              {beltLabelA}
+            </div>
+          </div>
+
+          {/* Hero: emoji + value + label */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+            <div style={{ fontSize: "120px", lineHeight: 1 }}>{cfg.emoji}</div>
+            <div style={{ fontSize: "180px", fontWeight: "bold", lineHeight: 1, marginTop: "16px" }}>
+              {value}
+            </div>
+            <div style={{ fontSize: "36px", fontWeight: "600", marginTop: "8px", opacity: 0.95, textTransform: "uppercase", letterSpacing: "2px" }}>
+              {aLabel}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", opacity: 0.9 }}>
+            <div style={{ fontSize: "20px" }}>{aTagline}</div>
+            <div style={{ fontSize: "20px" }}>bjj-app.net</div>
+          </div>
+        </div>
+      ),
+      { width: 1200, height: 630 },
+    );
+  }
+  // ── /achievement branch ──────────────────────────────────────────
+
 
   const beltInfo = BELT_COLORS[belt] ?? BELT_COLORS.white;
   const beltLabel = lang === "ja" ? beltInfo.label : beltInfo.labelEn;

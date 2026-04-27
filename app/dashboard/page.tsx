@@ -334,7 +334,12 @@ export default async function DashboardPage({
       <NavBar displayName={displayName} avatarUrl={avatarUrl} isPro={isPro} />
       <ProStatusBanner subscriptionStatus={subscriptionStatus} />
       <GuestMigration userId={user.id} />
-      <AchievementBadge userId={user.id} totalCount={totalCount ?? 0} />
+      <AchievementBadge
+        userId={user.id}
+        totalCount={totalCount ?? 0}
+        streak={streak}
+        belt={profileData?.belt ?? "white"}
+      />
 
       <main className="max-w-4xl mx-auto px-4 py-5">
 
