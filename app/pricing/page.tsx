@@ -76,6 +76,23 @@ const COPY = {
         q: "支払い方法は?",
         a: "Stripe 経由でクレジットカード/デビットカードに対応。トライアル中はカード情報不要です。",
       },
+      // z202: trust-gap killer FAQs
+      {
+        q: "データを第三者に販売したり、広告に使ったりしませんか?",
+        a: "一切しません。練習データは販売目的でも広告目的でも使いません。第三者トラッカーも非搭載です。Stripe (決済) と Supabase (データ保管) のみ利用しています。",
+      },
+      {
+        q: "VC や投資家は入っていますか?",
+        a: "入っていません。青帯による完全な個人開発です。ユーザーが望む機能だけを作り、収益化の圧力でデータを売る必要もありません。",
+      },
+      {
+        q: "自分のデータをエクスポートできますか?",
+        a: "はい。Settings 画面から練習ログを CSV 形式で全件エクスポート可能です。ロックインなしで、いつでも持ち出せます。",
+      },
+      {
+        q: "もしサービスが終了したらデータはどうなりますか?",
+        a: "事前告知の上で CSV エクスポート期間を設けます。データはあなたのものです。Pro/Gym Pro 課金中の方には未使用期間分を返金します。",
+      },
     ],
   },
   pt: {
@@ -108,6 +125,23 @@ const COPY = {
         q: "Quais formas de pagamento?",
         a: "Cartão de crédito/débito via Stripe. Sem cartão durante o teste.",
       },
+      // z202: trust-gap killer FAQs
+      {
+        q: "Vocês vendem ou usam meus dados para anúncios?",
+        a: "Nunca. Seus dados de treino não são vendidos nem usados para anúncios. Não usamos rastreadores de terceiros. Apenas Stripe (pagamento) e Supabase (armazenamento).",
+      },
+      {
+        q: "Têm VC ou investidores?",
+        a: "Não. Projeto totalmente indie feito por um faixa azul. Construímos o que os usuários querem, sem pressão de monetização para vender dados.",
+      },
+      {
+        q: "Posso exportar meus dados?",
+        a: "Sim. Exporte todos seus logs de treino em CSV pela tela de Settings, a qualquer momento. Sem lock-in.",
+      },
+      {
+        q: "E se o serviço encerrar, o que acontece com meus dados?",
+        a: "Avisamos com antecedência e abrimos um período de exportação CSV. Seus dados são seus. Para assinantes Pro/Gym Pro, reembolsamos o período não usado.",
+      },
     ],
   },
   en: {
@@ -138,6 +172,23 @@ const COPY = {
       {
         q: "What payment methods?",
         a: "Credit/debit card via Stripe. No card required during trial.",
+      },
+      // z202: trust-gap killer FAQs
+      {
+        q: "Will you sell my data or use it for ads?",
+        a: "Never. Your training data is never sold or used for advertising. No third-party trackers. We only use Stripe (payments) and Supabase (storage).",
+      },
+      {
+        q: "Are you VC-funded?",
+        a: "No. This is a 100% indie project by a blue belt. We build what users want — no monetization pressure to sell your data.",
+      },
+      {
+        q: "Can I export my data?",
+        a: "Yes. Export all your training logs to CSV from the Settings screen anytime. No lock-in.",
+      },
+      {
+        q: "What happens to my data if you shut down?",
+        a: "We give advance notice and open a CSV export window. Your data is yours. Active Pro/Gym Pro subscribers get a refund for unused time.",
       },
     ],
   },
