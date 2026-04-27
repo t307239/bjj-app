@@ -7,13 +7,17 @@
  * - wiki_pages.video_url への直接反映は行わない（AI トリアージ後に ugc_triage.py が更新）
  *
  * 認証不要（anonymous 投稿可）。
- * RLS: anon に INSERT のみ許可済み（20260326_ugc_video_submissions.sql 参照）。
+ *
+ * z199 (security): server-side で service_role client を使用。
+ *   - anon は INSERT 不可 (20260427_revoke_ugc_anon_insert.sql で REVOKE)
+ *   - rate limit (5 / 10min / IP) は service_role の SELECT で実際に効く
+ *     (旧実装は anon RLS で SELECT 不可だったため count=0 で fail-open していた)
+ *   - Zod 検証 + 多層防衛として保持
  */
 
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -37,24 +41,28 @@ export async function POST(req: NextRequest) {
     req.headers.get("x-real-ip") ??
     "unknown";
 
-  // ── Supabase クライアント（anon key — レート制限チェック + 挿入共用）────
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
-  );
+  // ── Supabase クライアント (service_role — RLS bypass で rate limit + INSERT)──
+  const supabase = createAdminClient();
 
   // ── DB ベースレート制限（cold start を跨いでも有効）──────────────────
-  // ugc_video_submissions.submitter_ip を使って直近 10 分の投稿件数を確認。
-  // NOTE: anon RLS が SELECT を許可していない場合は count = 0 扱いでスキップ。
-  {
+  // service_role は RLS bypass するため SELECT count が実際に取れる。
+  // unknown IP (取得失敗時) は rate limit を skip — 全 unknown を 1 つの bucket に
+  // 入れると共有 NAT 等で誤 ban が起きるため。
+  if (ip !== "unknown") {
     const windowStart = new Date(Date.now() - RATE_LIMIT_WINDOW_MINS * 60 * 1000).toISOString();
-    const { count } = await supabase
+    const { count, error: rateErr } = await supabase
       .from("ugc_video_submissions")
       .select("*", { count: "exact", head: true })
       .eq("submitter_ip", ip)
       .gte("created_at", windowStart);
+    if (rateErr) {
+      // rate limit 自体が失敗した場合 fail-closed (spam 対策優先)
+      logger.error("wiki.submit_video_rate_limit_error", { ip }, rateErr as Error);
+      return NextResponse.json(
+        { error: "Service temporarily unavailable." },
+        { status: 503 }
+      );
+    }
     if ((count ?? 0) >= RATE_LIMIT_MAX) {
       return NextResponse.json(
         { error: "Too many submissions. Please try again later." },
