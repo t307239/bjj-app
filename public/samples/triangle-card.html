@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三角絞め | BJJ App</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:-apple-system,sans-serif}
+.wrap{width:340px}
+.card{background:#111;border-radius:16px;overflow:hidden;aspect-ratio:9/16;max-height:520px;position:relative;display:flex;flex-direction:column}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transition:opacity 0.4s;pointer-events:none}
+.slide.active{opacity:1;pointer-events:auto}
+.top-bar{padding:16px 16px 0;display:flex;justify-content:space-between;align-items:center}
+.tag{background:#E24B4A;color:#fff;font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;letter-spacing:0.5px}
+.step-label{color:rgba(255,255,255,0.5);font-size:11px}
+.fig-area{flex:1;display:flex;align-items:center;justify-content:center;padding:8px}
+.bottom{padding:16px;background:linear-gradient(to top,rgba(0,0,0,0.9),transparent)}
+.tech-name{color:#fff;font-size:20px;font-weight:600;line-height:1.2;margin-bottom:4px}
+.desc{color:rgba(255,255,255,0.65);font-size:12px;line-height:1.5}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.3);transition:all 0.3s;display:inline-block;margin:0 3px}
+.dot.active{background:#E24B4A;width:18px;border-radius:3px}
+.progress{position:absolute;top:0;left:0;height:3px;background:#E24B4A;transition:width 3s linear}
+.logo{position:absolute;top:16px;right:16px;color:rgba(255,255,255,0.4);font-size:10px;letter-spacing:1px}
+.dots-bar{position:absolute;bottom:6px;width:100%;display:flex;justify-content:center}
+.cta{background:#E24B4A;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;width:100%;cursor:pointer;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" id="card">
+    <div class="progress" id="prog"></div>
+
+    <div class="slide active" id="s0">
+      <div class="top-bar"><div class="tag">TECHNIQUE</div><div class="step-label">1 / 4</div></div>
+      <div class="fig-area">
+        <svg viewBox="0 0 260 200" width="260" height="200">
+          <circle cx="130" cy="100" r="90" fill="#E24B4A" opacity="0.15"/>
+          <!-- 上 (passer) -->
+          <g fill="#fff" opacity="0.9">
+            <circle cx="130" cy="55" r="14"/>
+            <rect x="116" y="72" width="28" height="55" rx="8"/>
+            <rect x="88" y="80" width="32" height="12" rx="6"/>
+            <rect x="140" y="80" width="32" height="12" rx="6"/>
+          </g>
+          <!-- 下 (guard player) -->
+          <g fill="#E24B4A" opacity="0.85">
+            <ellipse cx="130" cy="178" rx="55" ry="14"/>
+            <circle cx="130" cy="135" r="14"/>
+            <rect x="118" y="148" width="24" height="32" rx="8"/>
+            <!-- 足 (closed guard) -->
+            <path d="M105 165 Q90 145 95 125 Q100 105 130 100 Q160 105 165 125 Q170 145 155 165" stroke="#E24B4A" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.9"/>
+          </g>
+          <text x="130" y="196" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="10">クローズドガード</text>
+        </svg>
+      </div>
+      <div class="bottom">
+        <div class="tech-name">三角絞め</div>
+        <div class="desc">クローズドガードから足で相手の首と片腕を挟む基本サブミッション。</div>
+      </div>
+    </div>
+
+    <div class="slide" id="s1">
+      <div class="top-bar"><div class="tag">STEP 1</div><div class="step-label">2 / 4</div></div>
+      <div class="fig-area">
+        <svg viewBox="0 0 260 200" width="260" height="200">
+          <circle cx="130" cy="100" r="90" fill="#378ADD" opacity="0.12"/>
+          <g fill="#fff" opacity="0.9">
+            <circle cx="130" cy="55" r="14"/>
+            <rect x="116" y="72" width="28" height="50" rx="8"/>
+            <rect x="86" y="80" width="36" height="12" rx="6" transform="rotate(-15,86,80)"/>
+            <rect x="138" y="78" width="38" height="12" rx="6" transform="rotate(15,138,78)"/>
+          </g>
+          <g fill="#378ADD" opacity="0.85">
+            <ellipse cx="130" cy="178" rx="55" ry="14"/>
+            <circle cx="130" cy="135" r="14"/>
+            <rect x="118" y="148" width="24" height="32" rx="8"/>
+          </g>
+          <!-- 足 三角作成中 -->
+          <path d="M115 162 Q90 130 90 90 Q95 65 130 60" stroke="#E24B4A" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.9"/>
+          <path d="M145 162 Q170 130 170 100 Q165 80 150 70" stroke="#E24B4A" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.9"/>
+          <text x="40" y="80" fill="#E24B4A" font-size="10">片腕を引き入れる</text>
+        </svg>
+      </div>
+      <div class="bottom">
+        <div class="tech-name">片腕を引き入れる</div>
+        <div class="desc">相手の片腕を自分の体の中央へ。もう片方は外へ流す。両腕の差を作る。</div>
+      </div>
+    </div>
+
+    <div class="slide" id="s2">
+      <div class="top-bar"><div class="tag">STEP 2</div><div class="step-label">3 / 4</div></div>
+      <div class="fig-area">
+        <svg viewBox="0 0 260 200" width="260" height="200">
+          <circle cx="130" cy="100" r="90" fill="#1D9E75" opacity="0.12"/>
+          <g fill="#fff" opacity="0.9">
+            <circle cx="120" cy="55" r="14"/>
+            <rect x="106" y="72" width="28" height="50" rx="8"/>
+            <rect x="76" y="80" width="36" height="12" rx="6" transform="rotate(-25,76,80)"/>
+          </g>
+          <g fill="#1D9E75" opacity="0.85">
+            <ellipse cx="130" cy="178" rx="55" ry="14"/>
+            <circle cx="130" cy="135" r="14"/>
+            <rect x="118" y="148" width="24" height="32" rx="8"/>
+          </g>
+          <!-- 三角形成 -->
+          <path d="M105 145 Q92 105 132 70 L150 100 L125 145 Z" fill="#E24B4A" opacity="0.6" stroke="#E24B4A" stroke-width="2"/>
+          <path d="M150 100 Q165 90 178 110" stroke="#E24B4A" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.9"/>
+          <text x="170" y="65" fill="#E24B4A" font-size="10">膝裏に足を</text>
+          <text x="170" y="78" fill="#E24B4A" font-size="10">かける</text>
+        </svg>
+      </div>
+      <div class="bottom">
+        <div class="tech-name">三角形を作る</div>
+        <div class="desc">片足を相手の首に回し、もう片方の足の膝裏にかけて閉じる。三角の形に。</div>
+      </div>
+    </div>
+
+    <div class="slide" id="s3">
+      <div class="top-bar"><div class="tag">FINISH</div><div class="step-label">4 / 4</div></div>
+      <div class="fig-area">
+        <svg viewBox="0 0 260 200" width="260" height="200">
+          <circle cx="130" cy="100" r="90" fill="#E24B4A" opacity="0.18"/>
+          <g fill="#555" opacity="0.7">
+            <circle cx="120" cy="65" r="14"/>
+            <rect x="106" y="82" width="28" height="48" rx="8"/>
+            <rect x="76" y="90" width="36" height="12" rx="6" transform="rotate(-25,76,90)"/>
+          </g>
+          <g fill="#E24B4A" opacity="0.95">
+            <ellipse cx="130" cy="178" rx="55" ry="14"/>
+            <circle cx="130" cy="135" r="14"/>
+            <rect x="118" y="148" width="24" height="32" rx="8"/>
+          </g>
+          <path d="M100 145 Q88 100 130 70 L155 102 L120 145 Z" fill="#E24B4A" opacity="0.7" stroke="#E24B4A" stroke-width="3"/>
+          <circle cx="120" cy="65" r="22" fill="none" stroke="#E24B4A" stroke-width="3" stroke-dasharray="8 4" opacity="0.9"/>
+          <text x="130" y="38" text-anchor="middle" fill="#E24B4A" font-size="11" font-weight="500">TAP!</text>
+        </svg>
+      </div>
+      <div class="bottom">
+        <div class="tech-name">頭を引きつけて極める</div>
+        <div class="desc">両手で相手の頭を抱えて引きつけ、足で締め上げる。腰を上げて圧力を加える。</div>
+        <a href="https://bjj-app.net" style="display:block"><button class="cta">BJJ Appで練習する</button></a>
+      </div>
+    </div>
+
+    <div class="logo">BJJ APP</div>
+    <div class="dots-bar" id="dots">
+      <span class="dot active" id="d0"></span>
+      <span class="dot" id="d1"></span>
+      <span class="dot" id="d2"></span>
+      <span class="dot" id="d3"></span>
+    </div>
+  </div>
+</div>
+<script>
+let cur=0,timer=null;
+const slides=document.querySelectorAll('.slide');
+const dots=document.querySelectorAll('.dot');
+const prog=document.getElementById('prog');
+function go(n){slides[cur].classList.remove('active');dots[cur].classList.remove('active');cur=((n%4)+4)%4;slides[cur].classList.add('active');dots[cur].classList.add('active');prog.style.transition='none';prog.style.width='0%';requestAnimationFrame(()=>{requestAnimationFrame(()=>{prog.style.transition='width 3s linear';prog.style.width='100%';});});}
+function start(){clearInterval(timer);timer=setInterval(()=>go(cur+1),3000);}
+document.getElementById('card').addEventListener('click',e=>{const x=e.clientX,rect=e.currentTarget.getBoundingClientRect();if(x-rect.left>rect.width/2)go(cur+1);else go(cur-1);start();});
+go(0);start();
+</script>
+</body>
+</html>

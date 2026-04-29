@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>キムラ | BJJ App</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:-apple-system,sans-serif}
+.wrap{width:340px}
+.card{background:linear-gradient(135deg,#0a1628 0%,#0f2438 50%,#0a1628 100%);border-radius:20px;overflow:hidden;aspect-ratio:9/16;max-height:520px;position:relative;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,212,255,0.15)}
+.card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(0,212,255,0.08),transparent 70%);pointer-events:none}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transform:translateY(8px) scale(0.99);transition:all 0.5s cubic-bezier(0.4,0,0.2,1);pointer-events:none}
+.slide.active{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.top-bar{padding:20px 20px 0;display:flex;justify-content:space-between;align-items:center;z-index:2}
+.tag{background:rgba(0,212,255,0.15);color:#00D4FF;font-size:10px;font-weight:600;padding:5px 12px;border-radius:4px;letter-spacing:1.5px;border:1px solid rgba(0,212,255,0.3)}
+.step-label{color:rgba(255,255,255,0.4);font-size:10px;letter-spacing:1px;font-weight:500}
+.fig-area{flex:1;display:flex;align-items:center;justify-content:center;padding:8px;position:relative}
+.fig-area::after{content:'';position:absolute;inset:30% 10%;background:radial-gradient(circle,rgba(0,212,255,0.1),transparent 60%);filter:blur(20px);pointer-events:none}
+.bottom{padding:18px 20px 24px;background:linear-gradient(to top,rgba(0,0,0,0.95) 50%,transparent);position:relative;z-index:2}
+.tech-name{color:#fff;font-size:22px;font-weight:700;line-height:1.2;margin-bottom:6px;letter-spacing:0.3px}
+.desc{color:rgba(255,255,255,0.6);font-size:12px;line-height:1.6;font-weight:400}
+.dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.2);transition:all 0.4s;display:inline-block;margin:0 3px}
+.dot.active{background:#00D4FF;width:20px;border-radius:3px;box-shadow:0 0 8px rgba(0,212,255,0.6)}
+.progress{position:absolute;top:0;left:0;height:2px;background:linear-gradient(90deg,#00D4FF,#0099CC);transition:width 3s linear;box-shadow:0 0 8px rgba(0,212,255,0.5);z-index:3}
+.logo{position:absolute;top:18px;right:20px;color:rgba(255,255,255,0.3);font-size:9px;letter-spacing:2px;font-weight:600}
+.dots-bar{position:absolute;bottom:8px;width:100%;display:flex;justify-content:center;z-index:2}
+.cta{background:linear-gradient(90deg,#00D4FF,#0099CC);color:#001528;border:none;border-radius:6px;padding:12px 20px;font-size:13px;font-weight:700;width:100%;cursor:pointer;margin-top:12px;letter-spacing:0.5px;box-shadow:0 4px 12px rgba(0,212,255,0.3)}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.04) 1px,transparent 1px);background-size:20px 20px;pointer-events:none;mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" id="card">
+    <div class="grid-bg"></div>
+    <div class="progress" id="prog"></div>
+
+    <div class="slide active" id="s0">
+      <div class="top-bar"><div class="tag">TECHNIQUE</div><div class="step-label">01 / 04</div></div>
+      <div class="fig-area">
+        <svg viewBox="0 0 260 200" width="260" height="200">
+          <defs>
+            <radialGradient id="glow1"><stop offset="0%" stop-color="#00D4FF" stop-opacity="0.4"/><stop offset="100%" stop-color="#00D4FF" stop-opacity="0"/></radialGradient>
+          </defs>
+          <ellipse cx="130" cy="120" rx="100" ry="60" fill="url(#glow1)"/>
+          <!-- 上 (attacker) -->
+          <g fill="#fff" opacity="0.95">
+            <circle cx="100" cy="60" r="13"/>
+            <rect x="86" y="76" width="28" height="50" rx="8"/>
+            <rect x="60" y="86" width="35" height="11" rx="5"/>
+            <rect x="115" y="84" width="38" height="11" rx="5"/>
+          </g>
+          <!-- 下 (defender on back) -->
+          <g fill="#00D4FF" opacity="0.7">
+            <ellipse cx="155" cy="155" rx="55" ry="13"/>
+            <circle cx="180" cy="115" r="12"/>
+            <rect x="168" y="127" width="24" height="35" rx="7"/>
+            <rect x="135" y="135" width="35" height="11" rx="5"/>
+          </g>
+          <!-- グリップ示唆 -->
+          <circle cx="120" cy="92" r="8" fill="none" stroke="#00D4FF" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.7"/>
+          <text x="130" y="190" text-anchor="middle" fill="rgba(0,212,255,0.5)" font-size="9" letter-spacing="2">SIDE CONTROL</text>
+        </svg>
+      </div>
+      <div class="bottom">
+        <div class="tech-name">キムラ</div>
+        <div class="desc">サイドコントロールから相手の肩関節を極める基本サブミッション。</div>
+      </div>
+    </div>
+
+    <div class="slide" id="s1">
+      <div class="top-bar"><div class="tag">STEP 01</div><div class="step-label">02 / 04</div></div>
+      <div class="fig-area">
+        <svg viewBox="0 0 260 200" width="260" height="200">
+          <ellipse cx="130" cy="120" rx="100" ry="60" fill="url(#glow1)"/>
+          <g fill="#fff" opacity="0.95">
+            <circle cx="100" cy="60" r="13"/>
+            <rect x="86" y="76" width="28" height="50" rx="8"/>
+          </g>
+          <g fill="#00D4FF" opacity="0.7">
+            <ellipse cx="155" cy="155" rx="55" ry="13"/>
+            <circle cx="180" cy="115" r="12"/>
+            <rect x="168" y="127" width="24" height="35" rx="7"/>
+          </g>
+          <!-- Figure-4 grip 描写 -->
+          <path d="M115 95 Q140 75 165 95 Q180 100 175 115" stroke="#00D4FF" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.9"/>
+          <path d="M85 100 Q105 85 125 95" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.9"/>
+          <circle cx="160" cy="92" r="6" fill="#00D4FF" opacity="0.9"/>
+          <circle cx="125" cy="95" r="6" fill="#fff" opacity="0.95"/>
+          <text x="60" y="50" fill="#00D4FF" font-size="10" letter-spacing="1">FIGURE-4</text>
+          <line x1="60" y1="55" x2="120" y2="90" stroke="#00D4FF" stroke-width="1" stroke-dasharray="2 2" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="bottom">
+        <div class="tech-name">フィギュア4 グリップ</div>
+        <div class="desc">相手の手首を片手で掴み、もう片方の腕を相手の腕の下に通して自分の手首を握る。</div>
+      </div>
+    </div>
+
+    <div class="slide" id="s2">
+      <div class="top-bar"><div class="tag">STEP 02</div><div class="step-label">03 / 04</div></div>
+      <div class="fig-area">
+        <svg viewBox="0 0 260 200" width="260" height="200">
+          <ellipse cx="130" cy="120" rx="100" ry="60" fill="url(#glow1)"/>
+          <g fill="#fff" opacity="0.95">
+            <circle cx="100" cy="50" r="13"/>
+            <rect x="86" y="66" width="28" height="50" rx="8"/>
+          </g>
+          <g fill="#00D4FF" opacity="0.7">
+            <ellipse cx="155" cy="160" rx="55" ry="13"/>
+            <circle cx="175" cy="120" r="12"/>
+            <rect x="163" y="132" width="24" height="35" rx="7"/>
+          </g>
+          <!-- 90度回転矢印 -->
+          <path d="M125 130 Q90 120 70 90" stroke="#00D4FF" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.9" stroke-dasharray="4 3"/>
+          <polygon points="68,87 78,93 73,80" fill="#00D4FF"/>
+          <!-- 引き上げる腕 -->
+          <path d="M115 95 Q140 75 165 110" stroke="#00D4FF" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.9"/>
+          <path d="M85 90 Q105 75 125 95" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.95"/>
+          <text x="40" y="50" fill="#00D4FF" font-size="10" letter-spacing="1">ROTATE 90°</text>
+        </svg>
+      </div>
+      <div class="bottom">
+        <div class="tech-name">90°角度を作る</div>
+        <div class="desc">頭側へ歩き、相手の腕を体から離して脇に挟む。北南ポジションへ移動。</div>
+      </div>
+    </div>
+
+    <div class="slide" id="s3">
+      <div class="top-bar"><div class="tag">FINISH</div><div class="step-label">04 / 04</div></div>
+      <div class="fig-area">
+        <svg viewBox="0 0 260 200" width="260" height="200">
+          <ellipse cx="130" cy="120" rx="100" ry="60" fill="url(#glow1)"/>
+          <g fill="#fff" opacity="0.95">
+            <circle cx="105" cy="50" r="13"/>
+            <rect x="91" y="66" width="28" height="50" rx="8"/>
+          </g>
+          <g fill="#555" opacity="0.65">
+            <ellipse cx="155" cy="160" rx="55" ry="13"/>
+            <circle cx="175" cy="120" r="12"/>
+            <rect x="163" y="132" width="24" height="35" rx="7"/>
+          </g>
+          <!-- 極めた瞬間 -->
+          <path d="M115 90 Q150 60 175 95 Q190 105 175 120" stroke="#00D4FF" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="1"/>
+          <circle cx="178" cy="110" r="22" fill="none" stroke="#00D4FF" stroke-width="2.5" stroke-dasharray="6 3" opacity="0.95">
+            <animate attributeName="r" from="18" to="26" dur="1.2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" from="1" to="0.3" dur="1.2s" repeatCount="indefinite"/>
+          </circle>
+          <text x="130" y="35" text-anchor="middle" fill="#00D4FF" font-size="13" font-weight="700" letter-spacing="3">TAP</text>
+        </svg>
+      </div>
+      <div class="bottom">
+        <div class="tech-name">肩関節を極める</div>
+        <div class="desc">相手の手首を背中側へ押し上げる。肩がねじれ、極まる。ゆっくり圧をかける。</div>
+        <a href="https://bjj-app.net" style="display:block"><button class="cta">BJJ APP で練習する</button></a>
+      </div>
+    </div>
+
+    <div class="logo">BJJ APP</div>
+    <div class="dots-bar" id="dots">
+      <span class="dot active" id="d0"></span>
+      <span class="dot" id="d1"></span>
+      <span class="dot" id="d2"></span>
+      <span class="dot" id="d3"></span>
+    </div>
+  </div>
+</div>
+<script>
+let cur=0,timer=null;
+const slides=document.querySelectorAll('.slide');
+const dots=document.querySelectorAll('.dot');
+const prog=document.getElementById('prog');
+function go(n){slides[cur].classList.remove('active');dots[cur].classList.remove('active');cur=((n%4)+4)%4;slides[cur].classList.add('active');dots[cur].classList.add('active');prog.style.transition='none';prog.style.width='0%';requestAnimationFrame(()=>{requestAnimationFrame(()=>{prog.style.transition='width 3s linear';prog.style.width='100%';});});}
+function start(){clearInterval(timer);timer=setInterval(()=>go(cur+1),3000);}
+document.getElementById('card').addEventListener('click',e=>{const x=e.clientX,rect=e.currentTarget.getBoundingClientRect();if(x-rect.left>rect.width/2)go(cur+1);else go(cur-1);start();});
+go(0);start();
+</script>
+</body>
+</html>

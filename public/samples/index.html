@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNS Samples | BJJ App</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0a;color:#fff;font-family:-apple-system,sans-serif;padding:32px 16px;min-height:100vh}
+.container{max-width:1200px;margin:0 auto}
+h1{font-size:24px;margin-bottom:8px}
+.sub{color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:32px;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+.card-link{background:#161616;border-radius:12px;padding:20px;border:1px solid rgba(255,255,255,0.06);transition:transform 0.2s;text-decoration:none;color:#fff;display:block}
+.card-link:hover{transform:translateY(-2px);border-color:rgba(0,212,255,0.3)}
+.iframe-wrap{aspect-ratio:9/16;background:#000;border-radius:8px;overflow:hidden;margin-bottom:14px;position:relative}
+iframe{width:100%;height:100%;border:0;pointer-events:none;transform:scale(0.85);transform-origin:top center}
+.title{font-size:16px;font-weight:600;margin-bottom:4px}
+.style{color:rgba(255,255,255,0.5);font-size:12px;line-height:1.5}
+.tag-style{display:inline-block;font-size:10px;padding:3px 8px;border-radius:4px;margin-top:8px;letter-spacing:0.5px}
+.tag-classic{background:rgba(226,75,74,0.15);color:#E24B4A;border:1px solid rgba(226,75,74,0.3)}
+.tag-modern{background:rgba(0,212,255,0.15);color:#00D4FF;border:1px solid rgba(0,212,255,0.3)}
+.notes{margin-top:40px;padding:24px;background:#0f1929;border-radius:12px;border:1px solid rgba(0,212,255,0.2)}
+.notes h2{font-size:16px;margin-bottom:12px;color:#00D4FF}
+.notes p{color:rgba(255,255,255,0.7);font-size:13px;line-height:1.7;margin-bottom:8px}
+.notes ul{padding-left:20px;color:rgba(255,255,255,0.7);font-size:13px;line-height:1.8}
+.full-link{display:inline-block;margin-top:12px;color:#00D4FF;font-size:12px;text-decoration:underline;font-weight:500}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📲 SNS スライドカード サンプル</h1>
+  <p class="sub">技 Reels 量産 pipeline (z234) の prototype 比較。9:16 縦型・4 slide auto-progress (3秒ごと)・タップで前後移動。</p>
+
+  <div class="grid">
+    <a href="armbar-card.html" target="_blank" class="card-link">
+      <div class="iframe-wrap"><iframe src="armbar-card.html" loading="lazy"></iframe></div>
+      <div class="title">アームバー</div>
+      <div class="style">Classic スタイル — フラット赤ベース、シンプル直線的</div>
+      <div class="tag-style tag-classic">CLASSIC</div>
+      <div class="full-link">→ フル画面で見る</div>
+    </a>
+
+    <a href="triangle-card.html" target="_blank" class="card-link">
+      <div class="iframe-wrap"><iframe src="triangle-card.html" loading="lazy"></iframe></div>
+      <div class="title">三角絞め</div>
+      <div class="style">Classic スタイル (同 template の scale test) — 異なる技で再現性確認</div>
+      <div class="tag-style tag-classic">CLASSIC</div>
+      <div class="full-link">→ フル画面で見る</div>
+    </a>
+
+    <a href="kimura-card.html" target="_blank" class="card-link">
+      <div class="iframe-wrap"><iframe src="kimura-card.html" loading="lazy"></iframe></div>
+      <div class="title">キムラ</div>
+      <div class="style">Cinematic スタイル — ダーク+シアン、グリッド背景、グロー効果、アニメーション強化</div>
+      <div class="tag-style tag-modern">CINEMATIC</div>
+      <div class="full-link">→ フル画面で見る</div>
+    </a>
+  </div>
+
+  <div class="notes">
+    <h2>💭 評価ポイント</h2>
+    <ul>
+      <li><b>format</b>: 9:16 縦型 30秒 (4 slides × 3秒) は Reels/Shorts/TikTok にそのまま使える</li>
+      <li><b>scale 性</b>: armbar / triangle / kimura で同 template が動くことを確認 = 1,500 技で量産可能</li>
+      <li><b>visual 選択</b>: Classic (シンプル直球) vs Cinematic (高級感、modern)、好み次第</li>
+      <li><b>無顔出し</b>: 全部シルエット SVG なので Toshiki 顔出し不要</li>
+      <li><b>著作権 safe</b>: 自前 wiki 内容 + 自製 SVG、Content ID リスクなし</li>
+    </ul>
+    <h2 style="margin-top:24px">🚀 OK なら次のステップ</h2>
+    <ul>
+      <li>① 好みの style 選定 (Classic / Cinematic / 折衷)</li>
+      <li>② <code>scripts/generate_technique_card.py</code> で template 化、wiki data から自動生成</li>
+      <li>③ Playwright + ffmpeg で MP4 化、9:16 30秒 video 出力</li>
+      <li>④ 既存 SNS auto-post に video attach、YouTube Shorts も同時投稿 (z232 OAuth 流用)</li>
+      <li>⑤ 50 技/日 cron で量産、30日で全 1,500 技カバー</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>
