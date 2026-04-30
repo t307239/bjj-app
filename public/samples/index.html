@@ -9,23 +9,46 @@
 body{background:#0a0a0a;color:#fff;font-family:-apple-system,sans-serif;padding:32px 16px;min-height:100vh}
 .container{max-width:1100px;margin:0 auto}
 h1{font-size:24px;margin-bottom:8px}
-.sub{color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:32px;line-height:1.6}
+.sub{color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:32px;line-height:1.7}
+.kicker{display:inline-block;font-size:10px;font-weight:700;letter-spacing:2px;padding:4px 10px;border-radius:4px;margin-bottom:12px}
+.kicker-rec{background:rgba(0,212,127,0.15);color:#00D47F;border:1px solid rgba(0,212,127,0.3)}
+.kicker-rej{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.1)}
+.section-head{margin:40px 0 20px;font-size:14px;font-weight:700;color:rgba(255,255,255,0.85);letter-spacing:0.5px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
 .card-link{background:#161616;border-radius:12px;padding:24px;border:1px solid rgba(255,255,255,0.06);transition:all 0.2s;text-decoration:none;color:#fff;display:block;position:relative;overflow:hidden}
-.card-link:hover{transform:translateY(-2px);border-color:rgba(0,212,255,0.3)}
-.card-link.classic:hover{border-color:rgba(226,75,74,0.4)}
-.preview{aspect-ratio:9/16;background:#000;border-radius:8px;margin-bottom:16px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.preview-classic{background:#111}
-.preview-modern{background:linear-gradient(135deg,#0a1628 0%,#0f2438 50%,#0a1628 100%);box-shadow:inset 0 0 30px rgba(0,212,255,0.15)}
-.preview-modern::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.06) 1px,transparent 1px);background-size:18px 18px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%)}
-.preview-text{font-size:50px;font-weight:700;letter-spacing:2px;z-index:1}
-.preview-classic .preview-text{color:#E24B4A}
-.preview-modern .preview-text{color:#00D4FF;text-shadow:0 0 12px rgba(0,212,255,0.6)}
-.preview-sub{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.3)}
+.card-link:hover{transform:translateY(-2px);border-color:rgba(0,212,127,0.4)}
+.card-link.rej{opacity:0.55}
+.card-link.rej:hover{transform:none;border-color:rgba(255,255,255,0.1)}
+.preview{aspect-ratio:9/16;border-radius:8px;margin-bottom:16px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:30px}
+/* quote */
+.preview-quote{background:#0d0d0d;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.025) 0px,rgba(255,255,255,0.025) 1px,transparent 1px,transparent 5px),radial-gradient(ellipse at top,rgba(180,40,40,0.18),transparent 70%)}
+.preview-quote .qmark{font-size:60px;color:rgba(180,40,40,0.4);font-family:Georgia,serif;align-self:flex-start;line-height:0.6}
+.preview-quote .qbody{font-size:18px;color:#fff;font-weight:800;text-align:left;line-height:1.3;margin:14px 0 auto}
+.preview-quote .qauth{font-size:11px;color:#fff;font-weight:700;align-self:flex-start;border-top:2px solid rgba(180,40,40,0.95);padding-top:8px;margin-top:14px}
+/* aruaru */
+.preview-aruaru{background:#FFE066;color:#000}
+.preview-aruaru .atag{background:#000;color:#FFE066;font-size:9px;font-weight:800;padding:5px 10px;border-radius:30px;letter-spacing:1px;align-self:flex-start;margin-bottom:auto}
+.preview-aruaru .atext{font-size:24px;font-weight:900;color:#000;line-height:1.2;letter-spacing:-1px;margin-bottom:auto}
+.preview-aruaru .aemoji{font-size:60px;text-align:center;align-self:center}
+/* stats */
+.preview-stats{background:#fff;color:#000}
+.preview-stats .stag{font-size:9px;font-weight:700;color:#0066FF;letter-spacing:2px;align-self:flex-start;margin-bottom:auto}
+.preview-stats .snum{font-size:60px;color:#0066FF;font-weight:900;letter-spacing:-2px;line-height:1}
+.preview-stats .scap{font-size:11px;color:rgba(0,0,0,0.55);text-align:center;line-height:1.5;margin-top:6px;font-weight:500;margin-bottom:auto}
+.preview-stats .sunit{font-size:18px;color:#0066FF;font-weight:700;vertical-align:top}
+/* tech rejected */
+.preview-classic{background:#111;display:flex;align-items:center;justify-content:center;padding:0}
+.preview-classic .ptext{font-size:36px;font-weight:700;color:#E24B4A;letter-spacing:1px;text-align:center}
+.preview-modern{background:linear-gradient(135deg,#0a1628 0%,#0f2438 50%,#0a1628 100%);box-shadow:inset 0 0 30px rgba(0,212,255,0.15);display:flex;align-items:center;justify-content:center}
+.preview-modern .ptext{font-size:36px;color:#00D4FF;text-shadow:0 0 12px rgba(0,212,255,0.6);font-weight:700}
+
 .title{font-size:18px;font-weight:700;margin-bottom:6px}
-.style-desc{color:rgba(255,255,255,0.55);font-size:12px;line-height:1.6;margin-bottom:14px;min-height:38px}
+.style-desc{color:rgba(255,255,255,0.55);font-size:12px;line-height:1.6;margin-bottom:14px;min-height:54px}
 .bottom-row{display:flex;align-items:center;justify-content:space-between}
 .tag-style{display:inline-block;font-size:10px;padding:4px 10px;border-radius:4px;letter-spacing:1px;font-weight:600}
+.tag-quote{background:rgba(180,40,40,0.15);color:#E24B4A;border:1px solid rgba(180,40,40,0.3)}
+.tag-aruaru{background:rgba(255,224,102,0.15);color:#FFE066;border:1px solid rgba(255,224,102,0.3)}
+.tag-stats{background:rgba(0,102,255,0.15);color:#0066FF;border:1px solid rgba(0,102,255,0.4)}
 .tag-classic{background:rgba(226,75,74,0.15);color:#E24B4A;border:1px solid rgba(226,75,74,0.3)}
 .tag-modern{background:rgba(0,212,255,0.15);color:#00D4FF;border:1px solid rgba(0,212,255,0.3)}
 .open-btn{font-size:12px;color:rgba(255,255,255,0.7);font-weight:500}
@@ -38,62 +61,76 @@ h1{font-size:24px;margin-bottom:8px}
 .swatch{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.5);margin-right:10px;margin-top:6px}
 .swatch-color{width:12px;height:12px;border-radius:3px;display:inline-block}
 .cta-row{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px}
+.warn-banner{background:#1a0e0e;border:1px solid rgba(226,75,74,0.3);border-radius:10px;padding:14px 18px;margin-bottom:24px}
+.warn-banner .wt{font-size:12px;color:#E24B4A;font-weight:700;margin-bottom:4px;letter-spacing:0.5px}
+.warn-banner .wd{font-size:12px;color:rgba(255,255,255,0.65);line-height:1.6}
 </style>
 </head>
 <body>
 <div class="container">
   <h1>📲 SNS スライドカード サンプル</h1>
-  <p class="sub">技 Reels 量産 pipeline (z234) の prototype 比較。9:16 縦型・4 slide auto-progress (3秒ごと)・タップで前後移動。各サンプルをクリックして実物確認してください。</p>
+  <p class="sub">技 Reels 量産 (Path A) は silhouette SVG では「直感的にわかりづらい」と判明 → <b>Path C: データ起点 content</b> へ pivot。<br>競合 (BJJBuddy / BJJ Notes / MatTime) が手を出してない niche を狙う。</p>
+
+  <div class="warn-banner">
+    <div class="wt">⚠️ 技解説路線 (Path A) は撤退</div>
+    <div class="wd">silhouette + arrow では BJJ の 3D 体位置を伝えられない。実写 video が無いと無理。下の「不採用」 section に残置 (参考用)。</div>
+  </div>
+
+  <div class="kicker kicker-rec">RECOMMENDED · PATH C</div>
+  <div class="section-head">📊 データ起点 content (3 種)</div>
 
   <div class="grid">
-    <a href="armbar-card.html" target="_blank" class="card-link classic">
-      <div class="preview preview-classic">
-        <div class="preview-text">アーム<br>バー</div>
-        <div class="preview-sub">CLASSIC · 4 SLIDES · 30s</div>
+    <a href="quote-card.html" target="_blank" class="card-link">
+      <div class="preview preview-quote">
+        <div class="qmark">"</div>
+        <div class="qbody">流れに身を<br>任せろ。<br>水のように。</div>
+        <div class="qauth">RICKSON GRACIE</div>
       </div>
-      <div class="title">アームバー</div>
-      <div class="style-desc">Classic スタイル — フラット黒背景、赤アクセント、シンプル直線的な切替。</div>
+      <div class="title">名言カード</div>
+      <div class="style-desc">BJJ レジェンドの言葉 + 道着織目背景。2 slide で名言→人物紹介。哲学・モチベ系の鉄板 format。</div>
       <div class="bottom-row">
-        <span class="tag-style tag-classic">CLASSIC</span>
+        <span class="tag-style tag-quote">PHILOSOPHY</span>
         <span class="open-btn">フル画面で見る</span>
       </div>
       <div class="cta-row">
-        <span class="swatch"><span class="swatch-color" style="background:#E24B4A"></span>#E24B4A</span>
+        <span class="swatch"><span class="swatch-color" style="background:#0d0d0d"></span>#0d0d0d</span>
+        <span class="swatch"><span class="swatch-color" style="background:#B42828"></span>#B42828</span>
+      </div>
+    </a>
+
+    <a href="aruaru-card.html" target="_blank" class="card-link">
+      <div class="preview preview-aruaru">
+        <div class="atag">道場あるある</div>
+        <div class="atext">スパー後、<br>携帯に手が<br>届かない。</div>
+        <div class="aemoji">😩</div>
+      </div>
+      <div class="title">道場あるあるカード</div>
+      <div class="style-desc">共感系。BJJ コミュニティで一番 engagement 取れる category。3 slide setup → 共感連打 → app pitch。</div>
+      <div class="bottom-row">
+        <span class="tag-style tag-aruaru">RELATABLE</span>
+        <span class="open-btn">フル画面で見る</span>
+      </div>
+      <div class="cta-row">
+        <span class="swatch"><span class="swatch-color" style="background:#FFE066"></span>#FFE066</span>
         <span class="swatch"><span class="swatch-color" style="background:#000"></span>#000</span>
       </div>
     </a>
 
-    <a href="triangle-card.html" target="_blank" class="card-link classic">
-      <div class="preview preview-classic">
-        <div class="preview-text">三角<br>絞め</div>
-        <div class="preview-sub">CLASSIC · 4 SLIDES · 30s</div>
+    <a href="stats-card.html" target="_blank" class="card-link">
+      <div class="preview preview-stats">
+        <div class="stag">DATA · 2026</div>
+        <div class="snum">2,000<span class="sunit">h</span></div>
+        <div class="scap">白帯から黒帯まで<br>マットでの実時間 (中央値)</div>
       </div>
-      <div class="title">三角絞め</div>
-      <div class="style-desc">Classic スタイル (template scale test) — 異なる技で同 template の再現性を確認。</div>
+      <div class="title">データ stats カード</div>
+      <div class="style-desc">3 slide で hook (質問) → reveal (大数字) → 帯別 bar chart。BJJ App が「データ起点 authority」になれる unique value。</div>
       <div class="bottom-row">
-        <span class="tag-style tag-classic">CLASSIC</span>
+        <span class="tag-style tag-stats">DATA</span>
         <span class="open-btn">フル画面で見る</span>
       </div>
       <div class="cta-row">
-        <span class="swatch"><span class="swatch-color" style="background:#E24B4A"></span>#E24B4A</span>
-        <span class="swatch"><span class="swatch-color" style="background:#000"></span>#000</span>
-      </div>
-    </a>
-
-    <a href="kimura-card.html" target="_blank" class="card-link">
-      <div class="preview preview-modern">
-        <div class="preview-text">キムラ</div>
-        <div class="preview-sub">CINEMATIC · 4 SLIDES · 30s</div>
-      </div>
-      <div class="title">キムラ</div>
-      <div class="style-desc">Cinematic スタイル — ダーク+シアン、グリッド背景、グロー効果、アニメーション強化。</div>
-      <div class="bottom-row">
-        <span class="tag-style tag-modern">CINEMATIC</span>
-        <span class="open-btn">フル画面で見る</span>
-      </div>
-      <div class="cta-row">
-        <span class="swatch"><span class="swatch-color" style="background:#00D4FF"></span>#00D4FF</span>
-        <span class="swatch"><span class="swatch-color" style="background:#0a1628"></span>#0a1628</span>
+        <span class="swatch"><span class="swatch-color" style="background:#fff;border:1px solid #ccc"></span>#FFFFFF</span>
+        <span class="swatch"><span class="swatch-color" style="background:#0066FF"></span>#0066FF</span>
       </div>
     </a>
   </div>
@@ -101,21 +138,46 @@ h1{font-size:24px;margin-bottom:8px}
   <div class="notes">
     <h2>💭 評価ポイント</h2>
     <ul>
-      <li><b>format</b>: 9:16 縦型 30秒 (4 slides × 3秒) は Reels/Shorts/TikTok にそのまま使える</li>
-      <li><b>scale 性</b>: armbar / triangle / kimura で同 template が動くことを確認 = 1,500 技で量産可能</li>
-      <li><b>visual 選択</b>: Classic (シンプル直球) vs Cinematic (高級感、modern)、好み次第</li>
-      <li><b>無顔出し</b>: 全部シルエット SVG なので Toshiki 顔出し不要</li>
-      <li><b>著作権 safe</b>: 自前 wiki 内容 + 自製 SVG、Content ID リスクなし</li>
+      <li><b>共通前提</b>: 9:16 縦型、2-3 slide auto-progress、最終 slide で BJJ App CTA、Reels/Shorts/TikTok にそのまま流せる format</li>
+      <li><b>名言</b>: Rickson / Helio / Marcelo / Gordon 等で 50+ 件量産可、毎週 月木 投稿想定</li>
+      <li><b>あるある</b>: 50+ 件のシナリオ template (スパー後 / 道着洗濯 / 試合前夜 / 黒帯マウント圧 etc)、毎週 火金 投稿</li>
+      <li><b>stats</b>: BJJ App データ + 公開統計 (IBJJF / 学術論文) で 30+ ネタ可、毎週 水土 投稿</li>
+      <li><b>頻度</b>: 週 6 投稿 = 月 24 投稿、3 carousel rotate でネタ枯渇しない</li>
     </ul>
 
-    <h2 style="margin-top:24px">🚀 OK なら次のステップ (z234)</h2>
+    <h2 style="margin-top:24px">🚀 OK なら次のステップ</h2>
     <ul>
-      <li>① 好みの style 選定 (Classic / Cinematic / 折衷)</li>
-      <li>② <code>scripts/generate_technique_card.py</code> で template 化、wiki data から自動生成</li>
-      <li>③ Playwright + ffmpeg で MP4 化、9:16 30秒 video 出力</li>
-      <li>④ 既存 SNS auto-post に video attach、YouTube Shorts も同時投稿 (z232 OAuth 流用)</li>
-      <li>⑤ 50 技/日 cron で量産、30日で全 1,500 技カバー</li>
+      <li>① <b>好きな路線投票</b>: 名言 / あるある / stats / 全部 / 別案</li>
+      <li>② 路線確定したら <code>scripts/generate_quote_card.py</code> 等で template 化</li>
+      <li>③ Playwright + ffmpeg で MP4 化 (9:16 8-12秒)</li>
+      <li>④ 既存 5 platform auto-post に video attach + YouTube Shorts (z232 流用)</li>
+      <li>⑤ 月 24 投稿 cron 化 → 競合不在 niche を確保</li>
     </ul>
+  </div>
+
+  <div class="kicker kicker-rej" style="margin-top:60px">REJECTED · PATH A</div>
+  <div class="section-head">❌ 技解説 (silhouette SVG) — 不採用</div>
+  <p class="sub" style="font-size:11px;margin-bottom:20px">参考用に残置。直感的に技が伝わらないため量産候補から除外。</p>
+
+  <div class="grid">
+    <a href="armbar-card.html" target="_blank" class="card-link rej">
+      <div class="preview preview-classic"><div class="ptext">アーム<br>バー</div></div>
+      <div class="title">アームバー</div>
+      <div class="style-desc">Classic 赤テーマ silhouette。Dispatch 作。技の動きが伝わらない。</div>
+      <div class="bottom-row"><span class="tag-style tag-classic">CLASSIC</span><span class="open-btn">フル画面</span></div>
+    </a>
+    <a href="triangle-card.html" target="_blank" class="card-link rej">
+      <div class="preview preview-classic"><div class="ptext">三角<br>絞め</div></div>
+      <div class="title">三角絞め</div>
+      <div class="style-desc">同 template scale test。同じく直感性 low。</div>
+      <div class="bottom-row"><span class="tag-style tag-classic">CLASSIC</span><span class="open-btn">フル画面</span></div>
+    </a>
+    <a href="kimura-card.html" target="_blank" class="card-link rej">
+      <div class="preview preview-modern"><div class="ptext">キムラ</div></div>
+      <div class="title">キムラ</div>
+      <div class="style-desc">Cinematic ダーク+シアン。見た目は良いが技は伝わらない。</div>
+      <div class="bottom-row"><span class="tag-style tag-modern">CINEMATIC</span><span class="open-btn">フル画面</span></div>
+    </a>
   </div>
 </div>
 </body>
