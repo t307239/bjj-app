@@ -7,54 +7,94 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0a0a0a;color:#fff;font-family:-apple-system,sans-serif;padding:32px 16px;min-height:100vh}
-.container{max-width:1200px;margin:0 auto}
+.container{max-width:1100px;margin:0 auto}
 h1{font-size:24px;margin-bottom:8px}
 .sub{color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:32px;line-height:1.6}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
-.card-link{background:#161616;border-radius:12px;padding:20px;border:1px solid rgba(255,255,255,0.06);transition:transform 0.2s;text-decoration:none;color:#fff;display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.card-link{background:#161616;border-radius:12px;padding:24px;border:1px solid rgba(255,255,255,0.06);transition:all 0.2s;text-decoration:none;color:#fff;display:block;position:relative;overflow:hidden}
 .card-link:hover{transform:translateY(-2px);border-color:rgba(0,212,255,0.3)}
-.iframe-wrap{aspect-ratio:9/16;background:#000;border-radius:8px;overflow:hidden;margin-bottom:14px;position:relative}
-iframe{width:100%;height:100%;border:0;pointer-events:none;transform:scale(0.85);transform-origin:top center}
-.title{font-size:16px;font-weight:600;margin-bottom:4px}
-.style{color:rgba(255,255,255,0.5);font-size:12px;line-height:1.5}
-.tag-style{display:inline-block;font-size:10px;padding:3px 8px;border-radius:4px;margin-top:8px;letter-spacing:0.5px}
+.card-link.classic:hover{border-color:rgba(226,75,74,0.4)}
+.preview{aspect-ratio:9/16;background:#000;border-radius:8px;margin-bottom:16px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.preview-classic{background:#111}
+.preview-modern{background:linear-gradient(135deg,#0a1628 0%,#0f2438 50%,#0a1628 100%);box-shadow:inset 0 0 30px rgba(0,212,255,0.15)}
+.preview-modern::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.06) 1px,transparent 1px);background-size:18px 18px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%)}
+.preview-text{font-size:50px;font-weight:700;letter-spacing:2px;z-index:1}
+.preview-classic .preview-text{color:#E24B4A}
+.preview-modern .preview-text{color:#00D4FF;text-shadow:0 0 12px rgba(0,212,255,0.6)}
+.preview-sub{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.3)}
+.title{font-size:18px;font-weight:700;margin-bottom:6px}
+.style-desc{color:rgba(255,255,255,0.55);font-size:12px;line-height:1.6;margin-bottom:14px;min-height:38px}
+.bottom-row{display:flex;align-items:center;justify-content:space-between}
+.tag-style{display:inline-block;font-size:10px;padding:4px 10px;border-radius:4px;letter-spacing:1px;font-weight:600}
 .tag-classic{background:rgba(226,75,74,0.15);color:#E24B4A;border:1px solid rgba(226,75,74,0.3)}
 .tag-modern{background:rgba(0,212,255,0.15);color:#00D4FF;border:1px solid rgba(0,212,255,0.3)}
-.notes{margin-top:40px;padding:24px;background:#0f1929;border-radius:12px;border:1px solid rgba(0,212,255,0.2)}
-.notes h2{font-size:16px;margin-bottom:12px;color:#00D4FF}
-.notes p{color:rgba(255,255,255,0.7);font-size:13px;line-height:1.7;margin-bottom:8px}
+.open-btn{font-size:12px;color:rgba(255,255,255,0.7);font-weight:500}
+.open-btn::after{content:' →';color:rgba(255,255,255,0.4)}
+.notes{margin-top:48px;padding:28px;background:#0f1929;border-radius:12px;border:1px solid rgba(0,212,255,0.2)}
+.notes h2{font-size:15px;margin-bottom:14px;color:#00D4FF}
 .notes ul{padding-left:20px;color:rgba(255,255,255,0.7);font-size:13px;line-height:1.8}
-.full-link{display:inline-block;margin-top:12px;color:#00D4FF;font-size:12px;text-decoration:underline;font-weight:500}
+.notes ul li{margin-bottom:4px}
+.notes b{color:#fff}
+.swatch{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.5);margin-right:10px;margin-top:6px}
+.swatch-color{width:12px;height:12px;border-radius:3px;display:inline-block}
+.cta-row{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px}
 </style>
 </head>
 <body>
 <div class="container">
   <h1>📲 SNS スライドカード サンプル</h1>
-  <p class="sub">技 Reels 量産 pipeline (z234) の prototype 比較。9:16 縦型・4 slide auto-progress (3秒ごと)・タップで前後移動。</p>
+  <p class="sub">技 Reels 量産 pipeline (z234) の prototype 比較。9:16 縦型・4 slide auto-progress (3秒ごと)・タップで前後移動。各サンプルをクリックして実物確認してください。</p>
 
   <div class="grid">
-    <a href="armbar-card.html" target="_blank" class="card-link">
-      <div class="iframe-wrap"><iframe src="armbar-card.html" loading="lazy"></iframe></div>
+    <a href="armbar-card.html" target="_blank" class="card-link classic">
+      <div class="preview preview-classic">
+        <div class="preview-text">アーム<br>バー</div>
+        <div class="preview-sub">CLASSIC · 4 SLIDES · 30s</div>
+      </div>
       <div class="title">アームバー</div>
-      <div class="style">Classic スタイル — フラット赤ベース、シンプル直線的</div>
-      <div class="tag-style tag-classic">CLASSIC</div>
-      <div class="full-link">→ フル画面で見る</div>
+      <div class="style-desc">Classic スタイル — フラット黒背景、赤アクセント、シンプル直線的な切替。</div>
+      <div class="bottom-row">
+        <span class="tag-style tag-classic">CLASSIC</span>
+        <span class="open-btn">フル画面で見る</span>
+      </div>
+      <div class="cta-row">
+        <span class="swatch"><span class="swatch-color" style="background:#E24B4A"></span>#E24B4A</span>
+        <span class="swatch"><span class="swatch-color" style="background:#000"></span>#000</span>
+      </div>
     </a>
 
-    <a href="triangle-card.html" target="_blank" class="card-link">
-      <div class="iframe-wrap"><iframe src="triangle-card.html" loading="lazy"></iframe></div>
+    <a href="triangle-card.html" target="_blank" class="card-link classic">
+      <div class="preview preview-classic">
+        <div class="preview-text">三角<br>絞め</div>
+        <div class="preview-sub">CLASSIC · 4 SLIDES · 30s</div>
+      </div>
       <div class="title">三角絞め</div>
-      <div class="style">Classic スタイル (同 template の scale test) — 異なる技で再現性確認</div>
-      <div class="tag-style tag-classic">CLASSIC</div>
-      <div class="full-link">→ フル画面で見る</div>
+      <div class="style-desc">Classic スタイル (template scale test) — 異なる技で同 template の再現性を確認。</div>
+      <div class="bottom-row">
+        <span class="tag-style tag-classic">CLASSIC</span>
+        <span class="open-btn">フル画面で見る</span>
+      </div>
+      <div class="cta-row">
+        <span class="swatch"><span class="swatch-color" style="background:#E24B4A"></span>#E24B4A</span>
+        <span class="swatch"><span class="swatch-color" style="background:#000"></span>#000</span>
+      </div>
     </a>
 
     <a href="kimura-card.html" target="_blank" class="card-link">
-      <div class="iframe-wrap"><iframe src="kimura-card.html" loading="lazy"></iframe></div>
+      <div class="preview preview-modern">
+        <div class="preview-text">キムラ</div>
+        <div class="preview-sub">CINEMATIC · 4 SLIDES · 30s</div>
+      </div>
       <div class="title">キムラ</div>
-      <div class="style">Cinematic スタイル — ダーク+シアン、グリッド背景、グロー効果、アニメーション強化</div>
-      <div class="tag-style tag-modern">CINEMATIC</div>
-      <div class="full-link">→ フル画面で見る</div>
+      <div class="style-desc">Cinematic スタイル — ダーク+シアン、グリッド背景、グロー効果、アニメーション強化。</div>
+      <div class="bottom-row">
+        <span class="tag-style tag-modern">CINEMATIC</span>
+        <span class="open-btn">フル画面で見る</span>
+      </div>
+      <div class="cta-row">
+        <span class="swatch"><span class="swatch-color" style="background:#00D4FF"></span>#00D4FF</span>
+        <span class="swatch"><span class="swatch-color" style="background:#0a1628"></span>#0a1628</span>
+      </div>
     </a>
   </div>
 
@@ -67,7 +107,8 @@ iframe{width:100%;height:100%;border:0;pointer-events:none;transform:scale(0.85)
       <li><b>無顔出し</b>: 全部シルエット SVG なので Toshiki 顔出し不要</li>
       <li><b>著作権 safe</b>: 自前 wiki 内容 + 自製 SVG、Content ID リスクなし</li>
     </ul>
-    <h2 style="margin-top:24px">🚀 OK なら次のステップ</h2>
+
+    <h2 style="margin-top:24px">🚀 OK なら次のステップ (z234)</h2>
     <ul>
       <li>① 好みの style 選定 (Classic / Cinematic / 折衷)</li>
       <li>② <code>scripts/generate_technique_card.py</code> で template 化、wiki data から自動生成</li>
