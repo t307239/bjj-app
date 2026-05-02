@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import IABSafeLink from "@/components/IABSafeLink";
 import CookieSettingsButton from "@/components/CookieSettingsButton";
+import HeroPreviewVideo from "@/components/HeroPreviewVideo";
 
 const PricingSection = dynamic(() => import("@/components/PricingSection"), {
   loading: () => <div className="px-4 py-16 bg-zinc-900/50 animate-pulse" style={{ minHeight: 400 }} />,
@@ -261,22 +262,8 @@ export default async function Home() {
             </a>
           </p>
 
-          {/* Hero mockup placeholder — replace with actual screenshot when available */}
-          <div className="mt-16 w-full max-w-4xl mx-auto rounded-t-xl border border-zinc-800/60 bg-zinc-900/40 overflow-hidden" style={{
-            maskImage: "linear-gradient(to bottom, white 40%, transparent 100%)",
-            WebkitMaskImage: "linear-gradient(to bottom, white 40%, transparent 100%)",
-          }}>
-            <div className="px-8 py-10 flex flex-col gap-3">
-              <div className="h-3 w-2/3 rounded-full bg-zinc-700/60 animate-pulse" />
-              <div className="h-3 w-1/2 rounded-full bg-zinc-700/40 animate-pulse" />
-              <div className="mt-4 grid grid-cols-3 gap-3">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="h-16 rounded-xl bg-zinc-800/60 animate-pulse" />
-                ))}
-              </div>
-              <div className="mt-4 h-32 rounded-xl bg-zinc-800/40 animate-pulse" />
-            </div>
-          </div>
+          {/* z240 (L-6): /tour-preview.mp4 があれば video、なければ既存 mockup placeholder */}
+          <HeroPreviewVideo />
         </div>
       </section>
 
