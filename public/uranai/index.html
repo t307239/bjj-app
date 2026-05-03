@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>恋愛タイプ × 副業診断 | あなたのレアタイプは? | (仮称) Side Hustle Oracle</title>
+<meta name="description" content="AI 心理テストで「恋愛タイプ × 副業適性」 を診断。128 種類のレアタイプを集めよう。launch 通知 受付中。">
+<meta property="og:title" content="あなたのレアタイプは? | 恋愛 × 副業診断">
+<meta property="og:description" content="128 種類のレアタイプを集めよう。AI 心理テスト、launch 通知 受付中。">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0612;color:#fff;font-family:-apple-system,'Hiragino Sans',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.container{max-width:480px;margin:0 auto;padding:32px 20px;min-height:100vh;display:flex;flex-direction:column}
+/* Hero */
+.hero{text-align:center;padding:24px 0 32px}
+.badge{display:inline-block;background:rgba(255,107,157,0.15);color:#ff6b9d;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;letter-spacing:1px;margin-bottom:20px;border:1px solid rgba(255,107,157,0.3)}
+h1{font-size:32px;font-weight:800;line-height:1.25;margin-bottom:14px;letter-spacing:-0.5px}
+.gradient{background:linear-gradient(135deg,#ff6b9d 0%,#a855f7 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:rgba(255,255,255,0.65);font-size:15px;line-height:1.7;margin-bottom:24px}
+/* Collection preview */
+.collection-preview{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:24px 0;padding:16px;background:rgba(255,255,255,0.03);border-radius:14px;border:1px solid rgba(255,255,255,0.06)}
+.coll-item{aspect-ratio:1;background:rgba(255,255,255,0.05);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;position:relative}
+.coll-item.locked{opacity:0.3}
+.coll-rare{position:absolute;top:2px;right:4px;font-size:7px;font-weight:800;color:#ffd700}
+/* Form */
+.form-section{background:rgba(255,255,255,0.04);border:1px solid rgba(255,107,157,0.2);border-radius:16px;padding:24px 20px;margin-bottom:24px}
+.form-title{font-size:16px;font-weight:700;margin-bottom:12px}
+input[type=email]{width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;font-size:15px;margin-bottom:12px}
+input[type=email]:focus{outline:none;border-color:#ff6b9d}
+button{width:100%;padding:14px;background:linear-gradient(135deg,#ff6b9d,#a855f7);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:0.3px}
+button:active{transform:scale(0.98)}
+.privacy{font-size:11px;color:rgba(255,255,255,0.4);text-align:center;margin-top:10px}
+/* Vote */
+.vote-section{margin-bottom:32px}
+.vote-title{font-size:14px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:14px;text-align:center}
+.vote-options{display:grid;gap:8px}
+.vote-btn{padding:12px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#fff;font-size:13px;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s}
+.vote-btn:hover{background:rgba(255,107,157,0.08);border-color:rgba(255,107,157,0.3)}
+.vote-btn.selected{background:rgba(255,107,157,0.15);border-color:#ff6b9d;color:#ff6b9d}
+.vote-count{font-size:11px;color:rgba(255,255,255,0.4);font-weight:600}
+/* Features list */
+.features{margin:24px 0;padding:0 4px}
+.feat{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6}
+.feat-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:24px 0;padding:16px;background:rgba(255,255,255,0.03);border-radius:12px}
+.stat{text-align:center}
+.stat-num{font-size:22px;font-weight:800;color:#ff6b9d;line-height:1}
+.stat-label{font-size:10px;color:rgba(255,255,255,0.5);margin-top:4px;letter-spacing:0.5px}
+/* Footer */
+.footer{margin-top:auto;padding-top:32px;text-align:center;font-size:11px;color:rgba(255,255,255,0.3)}
+.footer a{color:rgba(255,255,255,0.5)}
+/* Success */
+.success{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:14px;text-align:center;color:#34d399;font-size:13px;font-weight:600;display:none}
+.success.show{display:block}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <span class="badge">⏳ LAUNCH PREP</span>
+    <h1>あなたの<br><span class="gradient">レアタイプ</span>は?</h1>
+    <p class="sub">恋愛 × 副業 × 性格 を AI 心理テストで診断<br>128 種類のレアタイプを集めよう</p>
+  </div>
+
+  <div class="collection-preview">
+    <div class="coll-item">🐼<span class="coll-rare">B</span></div>
+    <div class="coll-item">🐯<span class="coll-rare">A</span></div>
+    <div class="coll-item">🦊<span class="coll-rare">B</span></div>
+    <div class="coll-item">🦁<span class="coll-rare">S</span></div>
+    <div class="coll-item locked">?</div>
+    <div class="coll-item locked">?</div>
+    <div class="coll-item locked">?</div>
+    <div class="coll-item locked">?</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-num">128</div><div class="stat-label">タイプ</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">診断種類</div></div>
+    <div class="stat"><div class="stat-num">30秒</div><div class="stat-label">で完了</div></div>
+  </div>
+
+  <div class="features">
+    <div class="feat"><span class="feat-icon">💕</span><div><b>恋愛タイプ</b> 8 動物 × 16 MBTI で 128 種類のレアタイプ判定</div></div>
+    <div class="feat"><span class="feat-icon">💸</span><div><b>副業適性</b> あなたに向いてる副業 top 3 + 月運勢</div></div>
+    <div class="feat"><span class="feat-icon">🎯</span><div><b>マッチング app 攻略</b> Tinder / Pairs / with で勝つ戦略</div></div>
+    <div class="feat"><span class="feat-icon">🌙</span><div><b>失恋立ち直り</b> 「次の恋」 までの再起動 plan</div></div>
+    <div class="feat"><span class="feat-icon">✨</span><div><b>友達相性</b> 生年月日で相性スコア、結果カード共有</div></div>
+  </div>
+
+  <form class="form-section" action="https://formspree.io/f/xgodoqod" method="POST" id="waitlist">
+    <div class="form-title">🚀 launch 通知を受け取る</div>
+    <input type="email" name="email" placeholder="メールアドレス" required>
+    <button type="submit">無料 launch 通知に登録</button>
+    <div class="privacy">* スパムなし、launch 通知 1 通のみ。いつでも unsubscribe 可</div>
+  </form>
+
+  <div class="success" id="success">
+    ✅ 登録完了!launch を楽しみにお待ちください 💕
+  </div>
+
+  <div class="vote-section">
+    <div class="vote-title">どの診断が一番気になる?</div>
+    <div class="vote-options" id="vote">
+      <button type="button" class="vote-btn" data-vote="love">💕 恋愛タイプ <span class="vote-count">42%</span></button>
+      <button type="button" class="vote-btn" data-vote="match">🎯 マッチング app 攻略 <span class="vote-count">28%</span></button>
+      <button type="button" class="vote-btn" data-vote="career">💸 副業適性 <span class="vote-count">15%</span></button>
+      <button type="button" class="vote-btn" data-vote="heartbreak">🌙 失恋立ち直り <span class="vote-count">10%</span></button>
+      <button type="button" class="vote-btn" data-vote="friend">✨ 友達相性 <span class="vote-count">5%</span></button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Side Hustle Oracle (仮称) — open beta launching soon</p>
+    <p style="margin-top:6px"><a href="#">privacy</a> · <a href="#">contact</a></p>
+  </div>
+</div>
+
+<script>
+// Vote UI (count は後で実 data 連動、今は static)
+document.querySelectorAll('.vote-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    // TODO: POST to backend で count update
+    const choice = btn.dataset.vote;
+    try { localStorage.setItem('uranai_vote', choice); } catch(e) {}
+  });
+});
+
+// Form submit — Formspree integration (z250)
+document.getElementById('waitlist').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = e.target;
+  const email = form.email.value;
+  // Submit to Formspree async
+  try {
+    const res = await fetch(form.action, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: new FormData(form),
+    });
+    if (res.ok) {
+      document.getElementById('success').classList.add('show');
+      form.style.display = 'none';
+      try { localStorage.setItem('uranai_waitlist', email); } catch(err) {}
+    } else {
+      alert('登録に失敗しました。再度お試しください。');
+    }
+  } catch (err) {
+    alert('ネットワークエラー。再度お試しください。');
+  }
+});
+</script>
+</body>
+</html>
