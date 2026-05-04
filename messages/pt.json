@@ -2091,5 +2091,194 @@
     "sub": "Toque abaixo para registrar a rola de hoje. Com 1 registro, sua sequência, heatmap e relatório semanal ganham vida.",
     "cta": "Registrar meu primeiro treino",
     "duration": "Cerca de 10 segundos — sem configuração"
+  },
+  "privacy": {
+    "title": "Política de Privacidade",
+    "lastUpdated": "Última atualização: Abril 2026",
+    "back": "← Voltar para BJJ App",
+    "tocLabel": "Sumário",
+    "toc": {
+      "collect": "1. Informações que Coletamos",
+      "use": "2. Como Usamos Suas Informações",
+      "storage": "3. Armazenamento de Dados",
+      "thirdParty": "4. Serviços de Terceiros",
+      "cookies": "5. Cookies e Rastreamento",
+      "sharing": "6. Compartilhamento de Dados",
+      "rights": "7. Seus Direitos",
+      "portability": "8. Portabilidade de Dados",
+      "retention": "9. Retenção de Dados",
+      "children": "10. Privacidade Infantil",
+      "securityIncident": "11. Notificação de Incidente de Segurança",
+      "ccpa": "12. Direitos de Privacidade da Califórnia (CCPA)",
+      "changes": "13. Alterações Nesta Política",
+      "contact": "14. Contato"
+    },
+    "collect": {
+      "intro": "Coletamos as seguintes informações quando você utiliza o BJJ App:",
+      "accountTitle": "Informações da conta",
+      "accountDesc": "— endereço de e-mail e nome de exibição fornecidos pelo seu provedor OAuth (Google / GitHub) ou diretamente por você",
+      "trainingTitle": "Dados de treinamento",
+      "trainingDesc": "— registros de sessões, registros de técnicas, dados de sequências, metas e notas que você insere no aplicativo",
+      "profileTitle": "Dados de perfil",
+      "profileDesc": "— faixa, nome da academia, data de início do BJJ e quaisquer outros campos de perfil que você escolher preencher",
+      "usageTitle": "Dados de uso",
+      "usageDesc": "— análises anônimas em nível de página via Vercel Analytics (sem informações de identificação pessoal)"
+    },
+    "use": {
+      "items": [
+        "Para fornecer e melhorar o Serviço",
+        "Para exibir seus dados de treinamento de volta para você no painel",
+        "Para processar pagamentos de assinatura (via Stripe)",
+        "Para enviar atualizações de produtos, caso você opte por receber notificações por e-mail",
+        "Para analisar padrões de uso agregados e melhorar recursos"
+      ]
+    },
+    "storage": "Seus dados são armazenados no Supabase (PostgreSQL), hospedado na AWS. Os dados são criptografados em repouso e em trânsito. A Segurança em Nível de Linha (RLS) garante que cada usuário só possa acessar seus próprios dados.",
+    "thirdParty": {
+      "intro": "Utilizamos os seguintes serviços de terceiros:",
+      "supabase": "Supabase — banco de dados e autenticação",
+      "vercel": "Vercel — hospedagem e implantação",
+      "stripe": "Stripe — processamento de pagamentos (assinaturas Pro)",
+      "analytics": "Vercel Analytics — análises anônimas em nível de página",
+      "outro": "Cada um desses serviços possui sua própria política de privacidade. Compartilhamos apenas o mínimo de dados necessários com cada provedor."
+    },
+    "cookies": {
+      "intro": "O BJJ App utiliza um conjunto mínimo de cookies, organizados em três categorias:",
+      "essentialTitle": "Essenciais",
+      "essentialDesc": "— cookies de sessão de autenticação (Supabase). Estes não podem ser desativados e são necessários para o funcionamento do Serviço.",
+      "analyticsTitle": "Análise",
+      "analyticsDesc": "— dados de uso anônimos em nível de página via Vercel Analytics. Nenhuma informação de identificação pessoal é coletada. Você pode optar por sair através do banner de preferências de cookies.",
+      "marketingTitle": "Marketing",
+      "marketingDesc": "— atualmente não utilizado. Se introduzirmos cookies de marketing no futuro, eles exigirão seu consentimento explícito de adesão.",
+      "outro": "Você pode gerenciar suas preferências de cookies a qualquer momento limpando os cookies do seu navegador para bjj-app.net, o que exibirá novamente o banner de consentimento na sua próxima visita. Não utilizamos cookies de publicidade, pixels de rastreamento ou técnicas de fingerprinting."
+    },
+    "sharing": "Não vendemos seus dados pessoais. Não compartilhamos seus dados individuais de treinamento com terceiros, exceto conforme exigido por lei ou para fornecer o Serviço através dos processadores listados acima.",
+    "rights": {
+      "intro": "Você tem o direito de:",
+      "items": [
+        "Acessar todos os dados que possuímos sobre você (disponível através do recurso de exportação do painel)",
+        "Corrigir dados imprecisos (editável em seu perfil)",
+        "Excluir sua conta e todos os dados associados (Perfil → Configurações → Excluir Conta)",
+        "Retirar o consentimento para newsletters a qualquer momento através do link de descadastramento em qualquer e-mail",
+        "Exportar seus dados em formato legível por máquina a qualquer momento (consulte Portabilidade de Dados abaixo)"
+      ]
+    },
+    "portability": {
+      "intro": "Você é dono dos seus dados de treinamento. O BJJ App suporta exportação gratuita de dados para todos os usuários — independentemente do nível de assinatura — nos seguintes formatos legíveis por máquina:",
+      "csv": "CSV — registros de treinamento, registros de técnicas, histórico de sequências (compatível com Excel, Google Sheets, Numbers)",
+      "pdf": "PDF — um relatório resumido imprimível com estatísticas e gráficos",
+      "outro": "A exportação está disponível no painel a qualquer momento. Mesmo que você cancele uma assinatura Pro ou exclua sua conta, você pode baixar seu conjunto completo de dados com antecedência. Isso atende ao requisito de portabilidade de dados sob o Artigo 20 do GDPR e regulamentações semelhantes."
+    },
+    "retention": {
+      "intro": "Retemos seus dados enquanto sua conta estiver ativa. Períodos de retenção específicos por categoria de dados:",
+      "tableHeader1": "Categoria de Dados",
+      "tableHeader2": "Enquanto Ativo",
+      "tableHeader3": "Após Exclusão",
+      "row1Cat": "Registros de treinamento e técnicas",
+      "row1Active": "Retidos indefinidamente",
+      "row1After": "Purgado em até 30 dias",
+      "row2Cat": "Dados de perfil e conta",
+      "row2Active": "Retidos indefinidamente",
+      "row2After": "Purgado em até 30 dias",
+      "row3Cat": "Registros de pagamento (Stripe)",
+      "row3Active": "Retidos conforme política do Stripe",
+      "row3After": "Retidos para conformidade fiscal/legal (até 7 anos)",
+      "row4Cat": "Tokens de notificação push",
+      "row4Active": "Até o descadastramento ou expiração",
+      "row4After": "Excluídos imediatamente na exclusão da conta",
+      "row5Cat": "Análises (Vercel)",
+      "row5Active": "Anonimizados, sem PII",
+      "row5After": "Não vinculados a contas individuais",
+      "outro": "Após a exclusão da conta, seus dados entram em um período de exclusão lógica de 30 dias durante o qual você pode solicitar a restauração. Após esta janela, os dados são permanentemente removidos de nosso banco de dados principal. Backups criptografados podem reter dados por 30 dias adicionais antes da purga automática."
+    },
+    "children": {
+      "p1": "O BJJ App não é direcionado a crianças menores de 13 anos (Estados Unidos, conforme COPPA) ou menores de 16 anos (Espaço Econômico Europeu, conforme GDPR). Não coletamos intencionalmente informações pessoais de indivíduos abaixo desses limites de idade.",
+      "p2_a": "Se você é um pai ou responsável e acredita que seu filho forneceu informações pessoais ao BJJ App sem o seu consentimento, entre em contato conosco em",
+      "p2_b": ". Verificaremos prontamente a solicitação e excluiremos quaisquer dados associados à conta da criança em até 48 horas.",
+      "p3": "Menores entre 13 e 16 anos (ou a idade aplicável de consentimento digital em sua jurisdição) podem usar o BJJ App somente com consentimento verificável dos pais ou responsáveis."
+    },
+    "securityIncident": {
+      "intro": "Em caso de uma violação de dados que afete suas informações pessoais, nós iremos:",
+      "items": [
+        "Notificar os usuários afetados por e-mail em até 72 horas após a descoberta confirmada, conforme exigido pelo Artigo 33 do GDPR",
+        "Descrever a natureza da violação, as categorias de dados afetados e o número aproximado de indivíduos impactados",
+        "Descrever as medidas tomadas para conter e remediar a violação",
+        "Fornecer orientações sobre as medidas que você pode tomar para se proteger"
+      ],
+      "outro": "Também mantemos medidas de segurança técnicas e organizacionais apropriadas — incluindo criptografia em repouso e em trânsito, Segurança em Nível de Linha e revisões regulares de acesso — para minimizar o risco e o impacto de incidentes de segurança."
+    },
+    "ccpa": {
+      "intro": "Se você é residente da Califórnia, a Lei de Privacidade do Consumidor da Califórnia (CCPA) concede a você direitos adicionais em relação às suas informações pessoais:",
+      "knowTitle": "Direito de Saber",
+      "knowDesc": "— você pode solicitar as categorias e os tipos específicos de informações pessoais que coletamos sobre você",
+      "deleteTitle": "Direito de Excluir",
+      "deleteDesc": "— você pode solicitar a exclusão de suas informações pessoais (disponível em Perfil → Configurações → Excluir Conta)",
+      "optOutTitle": "Direito de Opt-Out de Venda",
+      "optOutDesc": "— o BJJ App não vende, aluga ou troca suas informações pessoais a terceiros por contrapartida monetária ou outro valor. Portanto, não há necessidade de optar por sair",
+      "nonDiscTitle": "Direito de Não Discriminação",
+      "nonDiscDesc": "— não discriminaremos você por exercer quaisquer um de seus direitos CCPA",
+      "outro_a": "Para exercer qualquer um desses direitos, entre em contato conosco em",
+      "outro_b": ". Verificaremos sua identidade e responderemos em até 45 dias, conforme exigido pela CCPA."
+    },
+    "changes": "Podemos atualizar esta Política de Privacidade periodicamente. Notificaremos os usuários sobre alterações significativas por meio de um aviso no aplicativo. O uso contínuo do Serviço constitui aceitação da política atualizada.",
+    "contact_a": "Para consultas relacionadas à privacidade ou solicitações de exclusão de dados, entre em contato conosco em",
+    "contact_b": ".",
+    "footerTerms": "Termos de Serviço",
+    "footerDpa": "Acordo de Processamento de Dados",
+    "footerTokushoho": "Lei de Transações Comerciais Específicas",
+    "footerHome": "← Início"
+  },
+  "terms": {
+    "title": "Termos de Serviço",
+    "lastUpdated": "Última atualização: abril de 2026",
+    "back": "← Voltar para BJJ App",
+    "tocLabel": "Sumário",
+    "toc": {
+      "acceptance": "1. Aceitação dos Termos",
+      "description": "2. Descrição do Serviço",
+      "accounts": "3. Contas de Usuário",
+      "content": "4. Conteúdo do Usuário",
+      "subscription": "5. Assinatura Paga (Pro)",
+      "conduct": "6. Conduta Proibida",
+      "disclaimers": "7. Isenções de Responsabilidade",
+      "liability": "8. Limitação de Responsabilidade",
+      "deletion": "9. Exclusão de Conta",
+      "changes": "10. Alterações nos Termos",
+      "contact": "11. Contato",
+      "governing": "12. Lei Aplicável"
+    },
+    "acceptance": "Ao acessar ou utilizar o BJJ App (\"o Serviço\"), você concorda em cumprir estes Termos de Serviço. Se você não concordar com estes termos, por favor, não utilize o Serviço.",
+    "description": "BJJ App é um rastreador de treinos de Brazilian Jiu-Jitsu que permite aos usuários registrar sessões de treino, rastrear técnicas, monitorar sequências e visualizar seu progresso. Um nível gratuito e um nível Pro pago estão disponíveis.",
+    "accounts": {
+      "p1": "Você pode fazer login usando um provedor de terceiros (Google, GitHub) ou um email de magic-link. Você é responsável por manter a confidencialidade de sua conta e por todas as atividades que ocorrerem sob sua conta.",
+      "p2": "Você deve ter pelo menos 13 anos de idade para usar este Serviço. Ao usar o BJJ App, você declara que atende a este requisito. Se você tiver entre 13 e 17 anos de idade, deverá ter o consentimento de um pai ou responsável legal para usar este Serviço. Seu pai ou responsável concorda em se vincular a estes Termos em seu nome."
+    },
+    "content": "Você retém a propriedade de quaisquer dados de treino, notas e conteúdo que você enviar. Ao enviar conteúdo, você concede ao BJJ App uma licença limitada para armazená-lo e exibi-lo unicamente para fornecer o Serviço. Não venderemos seus dados pessoais de treino a terceiros.",
+    "subscription": {
+      "p1": "Os recursos Pro estão disponíveis mediante uma taxa de assinatura mensal (USD $9.99/mês ou $79.99/ano, impostos inclusos). Os pagamentos são processados de forma segura através da Stripe (Visa, Mastercard, American Express, JCB).",
+      "p2": "As assinaturas são renovadas automaticamente na mesma data a cada mês. Para cancelar, acesse as configurações de sua conta pelo menos 24 horas antes da próxima data de faturamento. O cancelamento entra em vigor ao final do período de faturamento atual. Não há reembolso parcial para o mês.",
+      "p3_a": "Pedidos de reembolso são aceitos apenas dentro de 7 dias após a cobrança inicial. Para solicitar um reembolso, envie um email para",
+      "p3_b": " com o endereço de email da sua conta. Nenhum reembolso está disponível para renovações mensais subsequentes.",
+      "p4": "Reservamo-nos o direito de alterar os preços com 30 dias de antecedência. As alterações de preço não se aplicam ao período de faturamento atual."
+    },
+    "conduct": {
+      "intro": "Você concorda em não:",
+      "items": [
+        "Utilizar o Serviço para qualquer finalidade ilegal",
+        "Tentar obter acesso não autorizado a qualquer parte do Serviço",
+        "Realizar engenharia reversa ou raspar o Serviço em larga escala",
+        "Carregar código malicioso ou interferir na integridade do Serviço"
+      ]
+    },
+    "disclaimers": "O Serviço é fornecido \"como está\" sem garantias de qualquer tipo. O BJJ App é um registro de treino e uma ferramenta informativa — não é um substituto para instrução qualificada. Brazilian Jiu-Jitsu é um esporte de contato que acarreta riscos inerentes de lesão física. O BJJ App não é responsável por qualquer lesão, dano ou perda resultante de atividades de treino, independentemente de tais atividades terem sido registradas ou referenciadas no Serviço. Certas técnicas (incluindo, mas não se limitando a, chaves de calcanhar, chaves de joelho e estrangulamentos cervicais) apresentam um risco particularmente alto de lesões graves. Sempre treine sob supervisão qualificada e consulte um profissional médico antes de iniciar qualquer programa de treinamento físico.",
+    "liability": "Na extensão máxima permitida por lei, o BJJ App não será responsável por quaisquer danos indiretos, incidentais ou consequentes decorrentes do seu uso do Serviço.",
+    "deletion": "Você pode excluir sua conta a qualquer momento na página de Perfil. Após a exclusão, seus dados de treino serão permanentemente removidos de nossos servidores dentro de 30 dias.",
+    "changes": "Podemos atualizar estes termos de tempos em tempos. O uso contínuo do Serviço após as alterações constitui aceitação dos novos termos. Alterações significativas serão anunciadas no aplicativo.",
+    "contact_a": "Para quaisquer dúvidas sobre estes Termos, entre em contato conosco em",
+    "contact_b": ".",
+    "governing": "Estes Termos são regidos pelas leis do Japão. Quaisquer disputas decorrentes ou em conexão com estes Termos estarão sujeitas à jurisdição exclusiva do Tribunal Distrital de Tóquio.",
+    "footerPrivacy": "Política de Privacidade",
+    "footerTokushoho": "Lei de Transações Comerciais Específicas",
+    "footerHome": "← Início"
   }
 }
