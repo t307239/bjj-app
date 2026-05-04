@@ -2251,5 +2251,136 @@
     "footerPrivacy": "Privacy Policy",
     "footerTokushoho": "Specified Commercial Transactions Act",
     "footerHome": "← Home"
+  },
+  "dpa": {
+    "title": "Data Processing Agreement (DPA)",
+    "subtitle": "Summary pursuant to GDPR Article 28 — Last updated: April 2026",
+    "back": "← Back to BJJ App",
+    "section1": {
+      "title": "1. Parties",
+      "controllerLabel": "Controller:",
+      "controllerDesc": "You, the user of BJJ App, who determines the purposes and means of processing personal data.",
+      "processorLabel": "Processor:",
+      "processorDesc": "Toshiki Terasawa (sole proprietor), operating BJJ App at bjj-app.net."
+    },
+    "section2": {
+      "title": "2. Scope of Processing",
+      "intro": "We process personal data solely to provide the BJJ App training tracker service. Categories of data processed include:",
+      "item1": "Account data (email, display name, avatar URL)",
+      "item2": "Training data (session logs, technique notes, competition records)",
+      "item3": "Body data (weight entries, injury records)",
+      "item4": "Usage data (push notification tokens, cookie preferences)"
+    },
+    "section3": {
+      "title": "3. Sub-processors",
+      "intro": "We use the following sub-processors:",
+      "headerService": "Service",
+      "headerPurpose": "Purpose",
+      "headerLocation": "Location",
+      "supabasePurpose": "Database, Auth, Storage",
+      "supabaseLocation": "US (ap-northeast-1)",
+      "vercelPurpose": "Hosting, Edge Functions",
+      "vercelLocation": "Global CDN",
+      "stripePurpose": "Payment processing",
+      "stripeLocation": "US/EU",
+      "sentryPurpose": "Error tracking",
+      "sentryLocation": "US",
+      "resendPurpose": "Transactional email",
+      "resendLocation": "US",
+      "openaiPurpose": "AI Coach (Pro only)",
+      "openaiLocation": "US"
+    },
+    "section4": {
+      "title": "4. Data Security Measures",
+      "item1": "All data encrypted in transit (TLS 1.3) and at rest (AES-256)",
+      "item2": "Row-Level Security (RLS) on all database tables",
+      "item3": "Rate limiting on all API endpoints",
+      "item4": "CSRF protection via SameSite cookies",
+      "item5": "Security headers: CSP, HSTS, X-Frame-Options, Permissions-Policy",
+      "item6": "Automated vulnerability scanning (npm audit, Dependabot)"
+    },
+    "section5": {
+      "title": "5. Data Subject Rights",
+      "intro": "We support your exercise of data subject rights under GDPR Articles 15–22:",
+      "accessLabel": "Access & Portability:",
+      "accessDesc": "Export all your data via CSV or PDF at any time (free)",
+      "erasureLabel": "Erasure:",
+      "erasureDesc": "Delete your account from Profile → Account. 30-day recovery period, then permanent deletion.",
+      "rectifyLabel": "Rectification:",
+      "rectifyDesc": "Edit any personal data directly in the app",
+      "restrictLabel": "Restriction:",
+      "restrictDesc": "Contact us to restrict processing"
+    },
+    "section6": {
+      "title": "6. Data Retention",
+      "intro_a": "See our",
+      "linkLabel": "Privacy Policy §9",
+      "intro_b": "for detailed retention periods by data category."
+    },
+    "section7": {
+      "title": "7. Breach Notification",
+      "intro_a": "In the event of a personal data breach, we will notify the relevant supervisory authority within 72 hours (GDPR Art. 33) and affected data subjects without undue delay. See",
+      "linkLabel": "Privacy Policy §11",
+      "intro_b": "for our full incident response policy."
+    },
+    "section8": {
+      "title": "8. Contact",
+      "intro": "For DPA inquiries, data subject requests, or to request a signed copy of our full DPA:"
+    },
+    "footerPrivacy": "Privacy Policy",
+    "footerTerms": "Terms of Service",
+    "footerTokushoho": "Specified Commercial Transactions Act"
+  },
+  "tokushoho": {
+    "title": "Specified Commercial Transactions Act",
+    "subtitle": "(Disclosure pursuant to Article 11 of the Act on Specified Commercial Transactions)",
+    "lastUpdated": "Last updated: March 2026",
+    "labels": {
+      "seller": "Seller (販売業者)",
+      "personInCharge": "Person in Charge (販売責任者)",
+      "address": "Address (所在地)",
+      "phone": "Phone (電話番号)",
+      "email": "Email (メールアドレス)",
+      "product": "Product / Service (商品・サービス)",
+      "price": "Price (販売価格)",
+      "feesOther": "Fees Other Than Price (商品代金以外の必要料金)",
+      "paymentMethod": "Payment Method (お支払い方法)",
+      "paymentTiming": "Payment Timing (お支払い時期)",
+      "serviceDelivery": "Service Delivery (サービス提供時期)",
+      "cancellation": "Cancellation / Refund Policy (解約・返金について)",
+      "autoRenewal": "Auto-Renewal (自動更新について)",
+      "howSubscribe": "How to Subscribe (申込方法)",
+      "contractDate": "Contract Effective Date (契約成立時期)",
+      "systemReq": "System Requirements (動作環境)"
+    },
+    "values": {
+      "sellerVal": "Toshiki Terasawa (寺澤としき) — Sole Proprietor",
+      "personInChargeVal": "Toshiki Terasawa (寺澤としき)",
+      "addressVal": "Disclosed without delay upon request. Please contact 307239t777@gmail.com",
+      "addressNote": "個人事業主のため、請求があった場合に遅滞なく開示いたします。",
+      "phoneVal": "Disclosed without delay upon request. Please contact 307239t777@gmail.com",
+      "phoneNote": "個人事業主のため、請求があった場合に遅滞なく開示いたします。",
+      "product1": "BJJ App Pro — Monthly subscription for advanced training analytics",
+      "product2": "BJJ App Gym Starter — Monthly subscription for academy management (up to 50 students)",
+      "product3": "BJJ App Gym Pro — Monthly subscription for academy management (unlimited students)",
+      "price1": "Pro: USD $9.99/month or $79.99/year (tax inclusive)",
+      "price2": "Gym Pro: USD $99/month (tax inclusive)",
+      "priceNote": "Prices are in US Dollars. Foreign exchange rates may apply for JPY charges.",
+      "feesOtherVal": "Internet connection fee and device costs are borne by the user. No additional fees are charged by BJJ App.",
+      "paymentMethodVal": "Credit card via Stripe (Visa, Mastercard, American Express, JCB, Diners Club)",
+      "paymentTimingVal": "First charge upon subscription signup. Subsequent charges on the same date each month (auto-renewal).",
+      "serviceDeliveryVal": "Immediately upon completion of payment. Pro features become accessible within your account.",
+      "cancellation1": "Cancellation: You may cancel your subscription at any time from your account settings. Cancellation takes effect at the end of the current billing period.",
+      "cancellation2": "Refund: Refund requests are accepted within 7 days of the initial charge only. Contact 307239t777@gmail.com with your account email.",
+      "cancellation3": "No refund is available for subsequent monthly charges after the initial 7-day window.",
+      "cancellation4": "No partial-month refunds are provided upon cancellation.",
+      "autoRenewalVal": "Subscriptions are automatically renewed each month. To avoid the next charge, cancel at least 24 hours before your next billing date.",
+      "howSubscribeVal": "Create an account at https://bjj-app.net/login, then upgrade to Pro from the dashboard.",
+      "contractDateVal": "The contract is established when payment is confirmed by the payment processor (Stripe).",
+      "systemReqVal": "Modern web browser (Chrome, Safari, Firefox, Edge). Internet connection required."
+    },
+    "footerTerms": "Terms of Service",
+    "footerPrivacy": "Privacy Policy",
+    "footerHome": "Home"
   }
 }

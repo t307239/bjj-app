@@ -1,5 +1,13 @@
+/**
+ * /legal/tokushoho — z255d: 3 言語対応 (EN canonical / JA / PT — translated via Gemini)
+ * 翻訳キー: messages/{en,ja,pt}.json の tokushoho.* 配下、scripts/translate_legal_pages.py で生成
+ *
+ * 注: bilingual labels (例: "Seller (販売業者)") は日本特定商取引法の慣例で
+ * EN locale でも JA 併記を保持。
+ */
 import type { Metadata } from "next";
 import Link from "next/link";
+import { detectServerLocale, makeT } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Specified Commercial Transactions Act",
@@ -8,118 +16,77 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function TokushohoPage() {
+export default async function TokushohoPage() {
+  const locale = await detectServerLocale();
+  const t = makeT(locale);
+
   return (
     <main className="min-h-[100dvh] bg-zinc-950 text-white py-12 px-4">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold mb-8">
-          Specified Commercial Transactions Act
-        </h1>
-        <p className="text-zinc-400 text-sm mb-8">
-          (Disclosure pursuant to Article 11 of the Act on Specified Commercial
-          Transactions)
-        </p>
+        <h1 className="text-2xl font-bold mb-8">{t("tokushoho.title")}</h1>
+        <p className="text-zinc-400 text-sm mb-8">{t("tokushoho.subtitle")}</p>
 
         <div className="space-y-6">
+          <Row label={t("tokushoho.labels.seller")} value={t("tokushoho.values.sellerVal")} />
+          <Row label={t("tokushoho.labels.personInCharge")} value={t("tokushoho.values.personInChargeVal")} />
           <Row
-            label="Seller (販売業者)"
-            value="Toshiki Terasawa (寺澤としき) — Sole Proprietor"
+            label={t("tokushoho.labels.address")}
+            value={t("tokushoho.values.addressVal")}
+            note={t("tokushoho.values.addressNote")}
           />
           <Row
-            label="Person in Charge (販売責任者)"
-            value="Toshiki Terasawa (寺澤としき)"
+            label={t("tokushoho.labels.phone")}
+            value={t("tokushoho.values.phoneVal")}
+            note={t("tokushoho.values.phoneNote")}
           />
-          <Row
-            label="Address (所在地)"
-            value="Disclosed without delay upon request. Please contact 307239t777@gmail.com"
-            note="個人事業主のため、請求があった場合に遅滞なく開示いたします。"
-          />
-          <Row
-            label="Phone (電話番号)"
-            value="Disclosed without delay upon request. Please contact 307239t777@gmail.com"
-            note="個人事業主のため、請求があった場合に遅滞なく開示いたします。"
-          />
-          <Row
-            label="Email (メールアドレス)"
-            value="307239t777@gmail.com"
-          />
+          <Row label={t("tokushoho.labels.email")} value="307239t777@gmail.com" />
 
           <hr className="border-white/10" />
 
           <Row
-            label="Product / Service (商品・サービス)"
+            label={t("tokushoho.labels.product")}
             values={[
-              "BJJ App Pro — Monthly subscription for advanced training analytics",
-              "BJJ App Gym Starter — Monthly subscription for academy management (up to 50 students)",
-              "BJJ App Gym Pro — Monthly subscription for academy management (unlimited students)",
+              t("tokushoho.values.product1"),
+              t("tokushoho.values.product2"),
+              t("tokushoho.values.product3"),
             ]}
           />
           <Row
-            label="Price (販売価格)"
+            label={t("tokushoho.labels.price")}
             values={[
-              "Pro: USD $9.99/month or $79.99/year (tax inclusive)",
-              "Gym Pro: USD $99/month (tax inclusive)",
+              t("tokushoho.values.price1"),
+              t("tokushoho.values.price2"),
             ]}
-            note="Prices are in US Dollars. Foreign exchange rates may apply for JPY charges."
+            note={t("tokushoho.values.priceNote")}
           />
-          <Row
-            label="Fees Other Than Price (商品代金以外の必要料金)"
-            value="Internet connection fee and device costs are borne by the user. No additional fees are charged by BJJ App."
-          />
-          <Row
-            label="Payment Method (お支払い方法)"
-            value="Credit card via Stripe (Visa, Mastercard, American Express, JCB, Diners Club)"
-          />
-          <Row
-            label="Payment Timing (お支払い時期)"
-            value="First charge upon subscription signup. Subsequent charges on the same date each month (auto-renewal)."
-          />
-          <Row
-            label="Service Delivery (サービス提供時期)"
-            value="Immediately upon completion of payment. Pro features become accessible within your account."
-          />
+          <Row label={t("tokushoho.labels.feesOther")} value={t("tokushoho.values.feesOtherVal")} />
+          <Row label={t("tokushoho.labels.paymentMethod")} value={t("tokushoho.values.paymentMethodVal")} />
+          <Row label={t("tokushoho.labels.paymentTiming")} value={t("tokushoho.values.paymentTimingVal")} />
+          <Row label={t("tokushoho.labels.serviceDelivery")} value={t("tokushoho.values.serviceDeliveryVal")} />
 
           <hr className="border-white/10" />
 
           <Row
-            label="Cancellation / Refund Policy (解約・返金について)"
+            label={t("tokushoho.labels.cancellation")}
             values={[
-              "Cancellation: You may cancel your subscription at any time from your account settings. Cancellation takes effect at the end of the current billing period.",
-              "Refund: Refund requests are accepted within 7 days of the initial charge only. Contact 307239t777@gmail.com with your account email.",
-              "No refund is available for subsequent monthly charges after the initial 7-day window.",
-              "No partial-month refunds are provided upon cancellation.",
+              t("tokushoho.values.cancellation1"),
+              t("tokushoho.values.cancellation2"),
+              t("tokushoho.values.cancellation3"),
+              t("tokushoho.values.cancellation4"),
             ]}
           />
-          <Row
-            label="Auto-Renewal (自動更新について)"
-            value="Subscriptions are automatically renewed each month. To avoid the next charge, cancel at least 24 hours before your next billing date."
-          />
-          <Row
-            label="How to Subscribe (申込方法)"
-            value="Create an account at https://bjj-app.net/login, then upgrade to Pro from the dashboard."
-          />
-          <Row
-            label="Contract Effective Date (契約成立時期)"
-            value="The contract is established when payment is confirmed by the payment processor (Stripe)."
-          />
-          <Row
-            label="System Requirements (動作環境)"
-            value="Modern web browser (Chrome, Safari, Firefox, Edge). Internet connection required."
-          />
+          <Row label={t("tokushoho.labels.autoRenewal")} value={t("tokushoho.values.autoRenewalVal")} />
+          <Row label={t("tokushoho.labels.howSubscribe")} value={t("tokushoho.values.howSubscribeVal")} />
+          <Row label={t("tokushoho.labels.contractDate")} value={t("tokushoho.values.contractDateVal")} />
+          <Row label={t("tokushoho.labels.systemReq")} value={t("tokushoho.values.systemReqVal")} />
         </div>
 
         <div className="mt-12 text-center text-zinc-400 text-xs space-y-1">
-          <p>Last updated: March 2026</p>
+          <p>{t("tokushoho.lastUpdated")}</p>
           <div className="flex justify-center gap-4">
-            <a href="/terms" className="hover:text-white transition-colors">
-              Terms of Service
-            </a>
-            <a href="/privacy" className="hover:text-white transition-colors">
-              Privacy Policy
-            </a>
-            <Link href="/" className="hover:text-white transition-colors">
-              Home
-            </Link>
+            <a href="/terms" className="hover:text-white transition-colors">{t("tokushoho.footerTerms")}</a>
+            <a href="/privacy" className="hover:text-white transition-colors">{t("tokushoho.footerPrivacy")}</a>
+            <Link href="/" className="hover:text-white transition-colors">{t("tokushoho.footerHome")}</Link>
           </div>
         </div>
       </div>
@@ -151,9 +118,7 @@ function Row({
           </ul>
         </dd>
       )}
-      {note && (
-        <dd className="text-xs text-zinc-400 mt-1 italic">{note}</dd>
-      )}
+      {note && <dd className="text-xs text-zinc-400 mt-1 italic">{note}</dd>}
     </div>
   );
 }
