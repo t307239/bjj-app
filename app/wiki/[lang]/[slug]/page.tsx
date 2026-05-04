@@ -174,9 +174,12 @@ async function getWikiPage(lang: string, slug: string) {
     return null;
   }
 
+  // z255g fix: created_at 列は wiki_translations に存在しない (updated_at のみ)、
+  // SELECT に含めると supabase が error 返して notFound() trigger していた根本 bug。
+  // 1,555 article × 3 lang × 全 user 全期間 で 404 だった重大バグ。
   const { data, error } = await supabase
     .from("wiki_translations")
-    .select("title, description, content_html, content_type, created_at, updated_at")
+    .select("title, description, content_html, content_type, updated_at")
     .eq("page_id", pageData.id)
     .eq("language_code", lang)
     .single();
@@ -666,8 +669,9 @@ export default async function WikiPage({
     description: page.description ?? "",
     url: `https://bjj-app.net/wiki/${lang}/${slug}`,
     inLanguage: lang,
-    ...(page.created_at && { datePublished: page.created_at }),
-    ...(page.updated_at && { dateModified: page.updated_at }),
+    // z255g: created_at 列が DB に無いため updated_at で代替 (SEO 上 Google は datePublished
+    // と dateModified どちらか有れば OK、両方同じでも valid)
+    ...(page.updated_at && { datePublished: page.updated_at, dateModified: page.updated_at }),
     author: {
       "@type": "Organization",
       name: "BJJ App",
