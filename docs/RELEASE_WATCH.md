@@ -2,6 +2,57 @@
 
 ---
 
+## 2026/05/04 チェック
+
+### 新着リリース
+
+#### 🛠️ Claude Code v2.1.126（2026/05/01）
+- **`/model` ピッカー gateway 対応**: `ANTHROPIC_BASE_URL` が Anthropic互換gatewayの場合、gatewayの `/v1/models` エンドポイントからモデル一覧を取得して表示
+- **`claude project purge [path]` コマンド追加**: プロジェクトのClaude Code状態（transcript、tasks、file history、config）を一括削除。`--dry-run` / `-y/--yes` / `-i/--interactive` / `--all` フラグ対応
+- **OAuth ターミナル貼り付け対応**: ブラウザコールバックがlocalhostに到達できない環境（WSL2、SSH、コンテナ）でも `claude auth login` 時にOAuthコードをターミナルに貼り付けて認証可能
+- **Mac sleep 復帰時のセッション安定化**: 長時間モデル思考中の "Stream idle timeout" 誤検知を修正、画像が2000px以上で session 壊れる問題も修正
+- **セキュリティ修正**: `allowManagedDomainsOnly` / `allowManagedReadPathsOnly` が高優先度managed-settings sourceに `sandbox` blockがない場合に無視される問題を修正
+- **Windows改善**: PowerShell 7をMicrosoft Store/MSI/.NET global tool経由でも検出、PowerShell有効時のprimary shell切替、日本語/韓国語/中国語のno-flicker mode文字化け修正
+- **Read tool マルウェア偽陽性削除**: 旧モデルでの誤refusalや「これはマルウェアではない」コメントが出る問題を解消
+
+#### 🛠️ Claude Code v2.1.121-123（2026/04/24-30）
+- **`/resume` PR URL対応**: GitHub/GitHub Enterprise/GitLab/Bitbucket のPR URLを `/resume` 検索ボックスに貼ると、そのPRを作ったセッションを発見
+- **MCP `alwaysLoad` オプション**: trueにするとそのMCP serverの全ツールがtool-search deferralをスキップ、常時利用可能に
+- **`claude plugin prune` 追加**: 孤立したauto-installed plugin依存を削除、`plugin uninstall --prune` でカスケード削除
+- **`/skills` 検索ボックス**: スキルが多くてもtype-to-filterで絞り込み可能
+- **`PostToolUse` hooks 拡張**: `hookSpecificOutput.updatedToolOutput` で全ツールの出力をhookで置換可能（従来MCPのみ）
+- **メモリリーク多数修正**: `/usage`の~2GBリーク、画像処理時のmulti-GB RSS、long-running tools失敗時のリークなどを修正
+- **`ANTHROPIC_BEDROCK_SERVICE_TIER`環境変数追加**: Bedrock service tier (`default`/`flex`/`priority`) を選択可能
+
+#### 🛠️ Claude Code v2.1.119-120 後遺症（2026/04/24）
+- v2.1.119/v2.1.120 は8件のregression発生 → v2.1.117へpin推奨だった
+- `claude --resume` がTypeErrorで停止、explicit指定 `claude-opus-4-7`（200k）が `claude-opus-4-7[1m]`（1M）に silent ルーティングされる課金/cache問題
+- v2.1.121以降で順次修正済み
+
+#### 🖥️ プロダクト
+- **Claude for Creative Work**（2026/05）: クリエイティブツールとの公式MCP connectorを大量リリース
+  - **Ableton Live/Push**: 公式ドキュメントでClaudeの回答を補強
+  - **Blender**: Blender開発者によるMCP connector公式採用、3Dシーン解析・debug・batch script生成
+  - **Affinity by Canva**: バッチ画像調整、レイヤー名変更、ファイルエクスポート等の自動化
+  - **Autodesk Fusion**: Fusion subscriptionで3Dモデルを会話で生成・修正
+  - **Resolume Arena/Avenue/Wire**: VJ・ライブビジュアル制御
+  - **SketchUp**: 部屋・家具・サイトを会話で記述→3Dモデル化
+  - **Splice**: 音楽サンプル検索
+- **Anthropic Labs拡張**: Mike Krieger（Instagram共同創業者・現AnthropicのCPO）がBen Mannと組んでLabsで実験的プロダクト構築
+
+#### 📡 API変更
+- **Memory for Claude Managed Agents**（public beta）: 標準の `managed-agents-2026-04-01` betaヘッダーで利用可能に
+
+### 💡 BJJ Appへの影響
+- **`claude project purge`**: 古いプロジェクトのClaude Code状態を整理する場合に活用可能（bjj-app/wiki両方の `.claude/` 整理）
+- **`/resume` PR URL対応**: PR作業の再開時、PR URLを貼るだけで該当セッションに復帰できる。レビュー往復が多いタスクで便利
+- **`alwaysLoad` MCP**: Supabase MCPなど頻繁に使うサーバーに `alwaysLoad: true` を設定すれば、tool-search deferralを回避してレスポンス向上
+- **メモリリーク修正**: 長時間実行する Wiki生成バッチで `/usage` 等を頻繁に開く運用なら、v2.1.121+へ更新推奨
+- **Claude for Creative Work**: BJJ Wiki の動画サムネイル生成やマーケ素材制作で、Blender/Affinity 連携の活用余地あり（ただし優先度は低い）
+- **v2.1.119/v2.1.120のregression**: もしv2.1.118から急いで上げていないなら、v2.1.121+を直接インストールが安全
+
+---
+
 ## 2026/04/23 チェック
 
 ### 新着リリース
