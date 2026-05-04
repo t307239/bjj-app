@@ -2411,5 +2411,39 @@
     "footerTerms": "Termos de Serviço",
     "footerPrivacy": "Política de Privacidade",
     "footerHome": "Início"
+  },
+  "invite": {
+    "personalBadge": "Convite Pessoal",
+    "title": "Seu parceiro de treino te convidou para o BJJ App",
+    "subtitle": "O tracker de treino #1 para atletas de BJJ. Registre sessões, construa seu mapa de habilidades e conquiste seus objetivos — totalmente grátis.",
+    "feature1": "Registro de sessões + sequências",
+    "feature2": "Mapa de habilidades — visualize sua jornada no BJJ",
+    "feature3": "Metas semanais e análise de progresso",
+    "feature4": "Diário de técnicas com níveis de domínio",
+    "ctaPrimary": "Começar Grátis — Aceitar Convite",
+    "alreadyHaveAccount": "Já tem uma conta?",
+    "signIn": "Entrar →",
+    "footer": "bjj-app.net · Grátis para sempre · Sem cartão de crédito"
+  },
+  "wikiHub": {
+    "heroDesc": "A enciclopédia completa de Brazilian Jiu-Jitsu — técnicas, conceitos, regras, biografias de atletas e mais.",
+    "articlesLabel": "artigos",
+    "categoryTechniqueLabel": "Técnicas",
+    "categoryTechniqueDesc": "Finalizações, raspagens, escapes e técnicas posicionais",
+    "categoryConceptLabel": "Conceito e Estratégia",
+    "categoryConceptDesc": "Planos de jogo, filosofia e frameworks estratégicos",
+    "categoryRuleLabel": "Regras e Competição",
+    "categoryRuleDesc": "Regras de torneio, pontuação e formatos de competição",
+    "categoryAthleteLabel": "Atletas",
+    "categoryAthleteDesc": "Biografias de campeões e linhagens de mestres",
+    "categoryEquipmentLabel": "Equipamento e Material",
+    "categoryEquipmentDesc": "Kimono, rashguards, protetores bucais e material de treino",
+    "categoryConditioningLabel": "Condicionamento e Nutrição",
+    "categoryConditioningDesc": "Força, mobilidade, recuperação e dieta",
+    "categoryDrillLabel": "Drills",
+    "categoryDrillDesc": "Progressões de drills solo e em dupla"
+  },
+  "wikiTag": {
+    "browseAll": "← Ver todos os artigos"
   }
 }

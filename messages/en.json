@@ -2382,5 +2382,39 @@
     "footerTerms": "Terms of Service",
     "footerPrivacy": "Privacy Policy",
     "footerHome": "Home"
+  },
+  "invite": {
+    "personalBadge": "Personal Invite",
+    "title": "Your training partner invited you to BJJ App",
+    "subtitle": "The #1 training tracker for BJJ athletes. Log sessions, build your skill map, and crush your goals — completely free.",
+    "feature1": "Training session log + streaks",
+    "feature2": "Skill map — visualize your BJJ journey",
+    "feature3": "Weekly goals & progress analytics",
+    "feature4": "Technique journal with mastery levels",
+    "ctaPrimary": "Start Free — Accept Invite",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in →",
+    "footer": "bjj-app.net · Free forever · No credit card required"
+  },
+  "wikiHub": {
+    "heroDesc": "The complete Brazilian Jiu-Jitsu encyclopedia — techniques, concepts, rules, athlete bios, and more.",
+    "articlesLabel": "articles",
+    "categoryTechniqueLabel": "Techniques",
+    "categoryTechniqueDesc": "Submissions, sweeps, escapes, and positional techniques",
+    "categoryConceptLabel": "Concept & Strategy",
+    "categoryConceptDesc": "Game plans, philosophy, and strategic frameworks",
+    "categoryRuleLabel": "Rules & Competition",
+    "categoryRuleDesc": "Tournament rules, scoring, and competition formats",
+    "categoryAthleteLabel": "Athletes",
+    "categoryAthleteDesc": "Champion biographies and instructor lineages",
+    "categoryEquipmentLabel": "Equipment & Gear",
+    "categoryEquipmentDesc": "Gi, rashguards, mouthguards, and training gear",
+    "categoryConditioningLabel": "Conditioning & Nutrition",
+    "categoryConditioningDesc": "Strength, mobility, recovery, and diet",
+    "categoryDrillLabel": "Drills",
+    "categoryDrillDesc": "Solo and partner drilling progressions"
+  },
+  "wikiTag": {
+    "browseAll": "← Browse all articles"
   }
 }

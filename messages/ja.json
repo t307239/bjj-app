@@ -2382,5 +2382,39 @@
     "footerTerms": "利用規約",
     "footerPrivacy": "プライバシーポリシー",
     "footerHome": "ホーム"
+  },
+  "invite": {
+    "personalBadge": "個人招待",
+    "title": "練習仲間があなたを BJJ App に招待しました",
+    "subtitle": "BJJ プレイヤーのための No.1 トレーニング記録アプリ。セッション記録、スキルマップ、目標達成 — すべて完全無料。",
+    "feature1": "練習セッション記録 + ストリーク",
+    "feature2": "スキルマップ — あなたの BJJ ジャーニーを可視化",
+    "feature3": "週間目標と進捗分析",
+    "feature4": "技術ジャーナルと習熟度管理",
+    "ctaPrimary": "無料で始める — 招待を受ける",
+    "alreadyHaveAccount": "すでにアカウントをお持ちですか?",
+    "signIn": "サインイン →",
+    "footer": "bjj-app.net · 永久無料 · クレジットカード不要"
+  },
+  "wikiHub": {
+    "heroDesc": "ブラジリアン柔術の総合百科事典 — 技術、コンセプト、ルール、選手プロフィールなど。",
+    "articlesLabel": "記事",
+    "categoryTechniqueLabel": "テクニック",
+    "categoryTechniqueDesc": "サブミッション、スイープ、エスケープ、ポジショナルテクニック",
+    "categoryConceptLabel": "コンセプト・戦略",
+    "categoryConceptDesc": "ゲームプラン、哲学、戦略的フレームワーク",
+    "categoryRuleLabel": "ルール・大会",
+    "categoryRuleDesc": "大会ルール、ポイント制、競技形式",
+    "categoryAthleteLabel": "選手",
+    "categoryAthleteDesc": "チャンピオンの伝記と指導者の系譜",
+    "categoryEquipmentLabel": "用具・ギア",
+    "categoryEquipmentDesc": "道衣、ラッシュガード、マウスピース、練習用具",
+    "categoryConditioningLabel": "コンディショニング・栄養",
+    "categoryConditioningDesc": "筋力、可動性、リカバリー、食事",
+    "categoryDrillLabel": "ドリル",
+    "categoryDrillDesc": "ソロ・パートナードリリングの進行"
+  },
+  "wikiTag": {
+    "browseAll": "← すべての記事を見る"
   }
 }
