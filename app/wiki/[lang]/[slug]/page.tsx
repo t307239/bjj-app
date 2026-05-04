@@ -169,7 +169,10 @@ async function getWikiPage(lang: string, slug: string) {
     .eq("slug", slug)
     .single();
 
-  if (pageError || !pageData) return null;
+  if (pageError || !pageData) {
+    logger.error("wiki.getWikiPage.pageNotFound", { slug, lang, errorMsg: pageError?.message ?? null }, pageError as Error | undefined);
+    return null;
+  }
 
   const { data, error } = await supabase
     .from("wiki_translations")
@@ -178,7 +181,10 @@ async function getWikiPage(lang: string, slug: string) {
     .eq("language_code", lang)
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+    logger.error("wiki.getWikiPage.translationNotFound", { slug, lang, pageId: pageData.id, errorMsg: error?.message ?? null }, error as Error | undefined);
+    return null;
+  }
 
   // video_url は別クエリで取得。
   // Supabase migration 未実行時はカラムが存在せずエラーになるが、
