@@ -7,6 +7,7 @@ import { useLocale } from "@/lib/i18n";
 import ReferralSection from "@/components/ReferralSection";
 import PushNotificationSection from "@/components/PushNotificationSection";
 import EmailPreferenceSection from "@/components/profile/EmailPreferenceSection";
+import LangToggle from "@/components/LangToggle";
 import CsvExport from "@/components/CsvExport";
 import { trackEvent } from "@/lib/analytics";
 import { clientLogger } from "@/lib/clientLogger";
@@ -103,6 +104,9 @@ export default function SettingsSection({
           </a>
         </div>
       )}
+
+      {/* z255b: Language toggle (3 locale UI 切替、Phase 2.5 で disable されてたが復活) */}
+      <LangToggle />
 
       {/* Push Notifications */}
       <PushNotificationSection />

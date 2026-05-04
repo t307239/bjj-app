@@ -1,5 +1,5 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 407 files
+TS/TSX Scanned: 408 files
 CRITICAL: 0
 WARNING: 6
 INFO: 122
@@ -55,17 +55,15 @@ Total: 128
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/login/page.tsx: L45: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/page.tsx: L175: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/page.tsx: L176: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/page.tsx: L179: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/page.tsx: L180: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L11: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L12: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L265: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L445: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L458: style={{...}} — Tailwindクラスで統一推奨
-  FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L468: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] app/page.tsx: L455: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [DANGEROUS_HTML] app/pricing/page.tsx: L283: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
@@ -148,6 +146,8 @@ Total: 128
 [INFO] [INLINE_STYLE_OBJECT] components/FirstLogHero.tsx: L29: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/GoalTrackerEditor.tsx: L57: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [INLINE_STYLE_OBJECT] components/HeroPreviewVideo.tsx: L37: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/MilestoneBadgeGrid.tsx: L179: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換

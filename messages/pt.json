@@ -560,7 +560,10 @@
     "bjjHistoryMonthOne": "1 mês",
     "bjjHistoryOneYearMonths": "1 ano {m} meses",
     "bjjHistoryYearsOneMonth": "{y} anos 1 mês",
-    "bjjHistoryOneYearOneMonth": "1 ano 1 mês"
+    "bjjHistoryOneYearOneMonth": "1 ano 1 mês",
+    "language": "Idioma",
+    "languageDesc": "Escolha seu idioma de exibição. As alterações são aplicadas imediatamente.",
+    "languageAriaLabel": "Seletor de idioma de exibição"
   },
   "competition": {
     "title": "Histórico de Lutas",

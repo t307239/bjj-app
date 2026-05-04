@@ -560,7 +560,10 @@
     "bjjHistoryMonthOne": "1ヶ月",
     "bjjHistoryOneYearMonths": "1年{m}ヶ月",
     "bjjHistoryYearsOneMonth": "{y}年1ヶ月",
-    "bjjHistoryOneYearOneMonth": "1年1ヶ月"
+    "bjjHistoryOneYearOneMonth": "1年1ヶ月",
+    "language": "言語",
+    "languageDesc": "表示言語を選択してください。変更はすぐに反映されます。",
+    "languageAriaLabel": "表示言語の選択"
   },
   "competition": {
     "title": "試合戦績",

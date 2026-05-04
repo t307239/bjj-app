@@ -560,7 +560,10 @@
     "bjjHistoryMonthOne": "1 month",
     "bjjHistoryOneYearMonths": "1 year {m} months",
     "bjjHistoryYearsOneMonth": "{y} years 1 month",
-    "bjjHistoryOneYearOneMonth": "1 year 1 month"
+    "bjjHistoryOneYearOneMonth": "1 year 1 month",
+    "language": "Language",
+    "languageDesc": "Choose your preferred display language. Changes apply immediately.",
+    "languageAriaLabel": "Display language selector"
   },
   "competition": {
     "title": "Match Record",
