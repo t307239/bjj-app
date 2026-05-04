@@ -97,10 +97,10 @@ export default async function TagArchivePage({
   const articles = await getArticlesByTag(lang, tag);
   const displayTag = decodeURIComponent(tag).replace(/-/g, " ");
 
-  const labels: Record<Lang, { back: string; empty: string; articleCount: string }> = {
-    en: { back: "BJJ Wiki", empty: "No articles found for this topic.", articleCount: "articles" },
-    ja: { back: "BJJ Wiki", empty: "このトピックの記事が見つかりません。", articleCount: "記事" },
-    pt: { back: "BJJ Wiki", empty: "Nenhum artigo encontrado para este tópico.", articleCount: "artigos" },
+  const labels: Record<Lang, { back: string; empty: string; articleCount: string; browseAll: string }> = {
+    en: { back: "BJJ Wiki", empty: "No articles found for this topic.", articleCount: "articles", browseAll: "← Browse all articles" },
+    ja: { back: "BJJ Wiki", empty: "このトピックの記事が見つかりません。", articleCount: "記事", browseAll: "← すべての記事を見る" },
+    pt: { back: "BJJ Wiki", empty: "Nenhum artigo encontrado para este tópico.", articleCount: "artigos", browseAll: "← Ver todos os artigos" },
   };
   const l = labels[lang as Lang] ?? labels.en;
 
@@ -155,7 +155,7 @@ export default async function TagArchivePage({
               href={`/wiki/${lang}`}
               className="mt-6 inline-flex items-center gap-2 text-sm text-pink-400 hover:text-pink-300 transition-colors"
             >
-              ← Browse all articles
+              {l.browseAll}
             </Link>
           </div>
         ) : (

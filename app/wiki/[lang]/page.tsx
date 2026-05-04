@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
+import { makeT, type Locale } from "@/lib/i18n";
 
 export const revalidate = 3600;
 
@@ -43,68 +44,68 @@ interface CategoryConfig {
 // カテゴリ設定 — UI_DESIGN.md準拠 SaaSスタイル
 // ─────────────────────────────────────────
 
-const CATEGORY_CONFIG: Record<ContentType, CategoryConfig> = {
-  Technique: {
-    label: "Techniques",
-    emoji: "🥋",
-    description: "Submissions, sweeps, escapes, and positional techniques",
-    // Techniqueはエメラルド（B2C primary）に統一
-    headerClass: "text-emerald-400",
-    badgeClass: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
-    dotClass: "bg-emerald-400/70",
-  },
-  Concept_Strategy: {
-    label: "Concept & Strategy",
-    emoji: "🧠",
-    description: "Game plans, philosophy, and strategic frameworks",
-    // 紫 = accent (#7c3aed) に整合
-    headerClass: "text-violet-400",
-    badgeClass: "bg-violet-500/10 text-violet-400 border border-violet-500/20",
-    dotClass: "bg-violet-400/70",
-  },
-  Drill: {
-    label: "Drills",
-    emoji: "🔁",
-    description: "Solo drills, partner drills, and warm-up routines",
-    headerClass: "text-sky-400",
-    badgeClass: "bg-sky-500/10 text-sky-400 border border-sky-500/20",
-    dotClass: "bg-sky-400/70",
-  },
-  Rule: {
-    label: "Rules & Scoring",
-    emoji: "📋",
-    description: "Competition rules, scoring systems, and regulations",
-    headerClass: "text-amber-400",
-    badgeClass: "bg-amber-500/10 text-amber-400 border border-amber-500/20",
-    dotClass: "bg-amber-400/70",
-  },
-  Athlete_Bio: {
-    label: "Athlete Profiles",
-    emoji: "🏆",
-    description: "Profiles of legendary BJJ athletes and competitors",
-    // accent2 (#e94560) に近いrose
-    headerClass: "text-rose-400",
-    badgeClass: "bg-rose-500/10 text-rose-400 border border-rose-500/20",
-    dotClass: "bg-rose-400/70",
-  },
-  Equipment_Gear: {
-    label: "Equipment & Gear",
-    emoji: "🛒",
-    description: "Gis, rash guards, training gear, and equipment reviews",
-    // オレンジは原色感が強いのでslateに落ち着かせる
-    headerClass: "text-slate-300",
-    badgeClass: "bg-slate-500/10 text-slate-300 border border-slate-500/20",
-    dotClass: "bg-slate-400/70",
-  },
-  Conditioning_Nutrition: {
-    label: "Conditioning & Nutrition",
-    emoji: "💪",
-    description: "Strength training, cardio, diet, and recovery",
-    headerClass: "text-teal-400",
-    badgeClass: "bg-teal-500/10 text-teal-400 border border-teal-500/20",
-    dotClass: "bg-teal-400/70",
-  },
-};
+// z255e: locale-aware category config (旧 hardcoded EN labels → t() で翻訳)
+function buildCategoryConfig(locale: Locale): Record<ContentType, CategoryConfig> {
+  const t = makeT(locale);
+  return {
+    Technique: {
+      label: t("wikiHub.categoryTechniqueLabel"),
+      emoji: "🥋",
+      description: t("wikiHub.categoryTechniqueDesc"),
+      headerClass: "text-emerald-400",
+      badgeClass: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
+      dotClass: "bg-emerald-400/70",
+    },
+    Concept_Strategy: {
+      label: t("wikiHub.categoryConceptLabel"),
+      emoji: "🧠",
+      description: t("wikiHub.categoryConceptDesc"),
+      headerClass: "text-violet-400",
+      badgeClass: "bg-violet-500/10 text-violet-400 border border-violet-500/20",
+      dotClass: "bg-violet-400/70",
+    },
+    Drill: {
+      label: t("wikiHub.categoryDrillLabel"),
+      emoji: "🔁",
+      description: t("wikiHub.categoryDrillDesc"),
+      headerClass: "text-sky-400",
+      badgeClass: "bg-sky-500/10 text-sky-400 border border-sky-500/20",
+      dotClass: "bg-sky-400/70",
+    },
+    Rule: {
+      label: t("wikiHub.categoryRuleLabel"),
+      emoji: "📋",
+      description: t("wikiHub.categoryRuleDesc"),
+      headerClass: "text-amber-400",
+      badgeClass: "bg-amber-500/10 text-amber-400 border border-amber-500/20",
+      dotClass: "bg-amber-400/70",
+    },
+    Athlete_Bio: {
+      label: t("wikiHub.categoryAthleteLabel"),
+      emoji: "🏆",
+      description: t("wikiHub.categoryAthleteDesc"),
+      headerClass: "text-rose-400",
+      badgeClass: "bg-rose-500/10 text-rose-400 border border-rose-500/20",
+      dotClass: "bg-rose-400/70",
+    },
+    Equipment_Gear: {
+      label: t("wikiHub.categoryEquipmentLabel"),
+      emoji: "🛒",
+      description: t("wikiHub.categoryEquipmentDesc"),
+      headerClass: "text-slate-300",
+      badgeClass: "bg-slate-500/10 text-slate-300 border border-slate-500/20",
+      dotClass: "bg-slate-400/70",
+    },
+    Conditioning_Nutrition: {
+      label: t("wikiHub.categoryConditioningLabel"),
+      emoji: "💪",
+      description: t("wikiHub.categoryConditioningDesc"),
+      headerClass: "text-teal-400",
+      badgeClass: "bg-teal-500/10 text-teal-400 border border-teal-500/20",
+      dotClass: "bg-teal-400/70",
+    },
+  };
+}
 
 // カテゴリの表示順
 const CATEGORY_ORDER: ContentType[] = [
@@ -189,6 +190,10 @@ export default async function WikiIndexPage({
     notFound();
   }
 
+  // z255e: lang param ベースで t() を作成 (path locale が source of truth)
+  const t = makeT(lang as Locale);
+  const CATEGORY_CONFIG = buildCategoryConfig(lang as Locale);
+
   const articles = await getWikiIndex(lang);
 
   if (!articles) {
@@ -262,8 +267,7 @@ export default async function WikiIndexPage({
                 </h1>
               </div>
               <p className="text-zinc-400 max-w-xl text-sm leading-relaxed">
-                The complete Brazilian Jiu-Jitsu encyclopedia — techniques,
-                concepts, rules, athlete bios, and more.
+                {t("wikiHub.heroDesc")}
               </p>
             </div>
             {/* 記事カウント — glassmorphism */}
@@ -272,7 +276,7 @@ export default async function WikiIndexPage({
                 {new Intl.NumberFormat(lang === "ja" ? "ja-JP" : lang === "pt" ? "pt-BR" : "en-US").format(totalCount)}
               </p>
               <p className="text-xs text-zinc-400 mt-0.5 uppercase tracking-widest">
-                articles
+                {t("wikiHub.articlesLabel")}
               </p>
             </div>
           </div>
