@@ -80,32 +80,29 @@ const jsonLd = {
   },
 };
 
-const WIKI_LINKS = [
-  {
-    href: "https://wiki.bjj-app.net/en/bjj-guard-passing-fundamentals.html",
-    label: "Guard Passing",
-  },
-  {
-    href: "https://wiki.bjj-app.net/en/bjj-sweep-fundamentals.html",
-    label: "Sweeps",
-  },
-  {
-    href: "https://wiki.bjj-app.net/en/bjj-triangle-choke-guide.html",
-    label: "Triangle Choke",
-  },
-  {
-    href: "https://wiki.bjj-app.net/en/bjj-leg-lock-system.html",
-    label: "Leg Locks",
-  },
-  {
-    href: "https://wiki.bjj-app.net/en/bjj-mount-system.html",
-    label: "Mount System",
-  },
-  {
-    href: "https://wiki.bjj-app.net/en/bjj-back-control-system.html",
-    label: "Back Control",
-  },
-];
+// z255i: locale-aware Wiki link で href + label を 3 言語化
+// 旧 hardcoded EN labels: Guard Passing / Sweeps / Triangle Choke / Leg Locks / Mount System / Back Control
+const WIKI_LINK_SLUGS = [
+  "bjj-guard-passing-fundamentals",
+  "bjj-sweep-fundamentals",
+  "bjj-triangle-choke-guide",
+  "bjj-leg-lock-system",
+  "bjj-mount-system",
+  "bjj-back-control-system",
+] as const;
+
+const WIKI_LINK_LABELS: Record<"en" | "ja" | "pt", string[]> = {
+  en: ["Guard Passing", "Sweeps", "Triangle Choke", "Leg Locks", "Mount System", "Back Control"],
+  ja: ["ガードパス", "スイープ", "トライアングルチョーク", "レッグロック", "マウントシステム", "バックコントロール"],
+  pt: ["Passagem de Guarda", "Raspagens", "Triângulo", "Chaves de Perna", "Sistema de Montada", "Controle de Costas"],
+};
+
+function buildWikiLinks(locale: "en" | "ja" | "pt") {
+  return WIKI_LINK_SLUGS.map((slug, i) => ({
+    href: `https://wiki.bjj-app.net/${locale}/${slug}.html`,
+    label: WIKI_LINK_LABELS[locale][i],
+  }));
+}
 
 
 export default async function TechniquesPage() {
@@ -116,6 +113,7 @@ export default async function TechniquesPage() {
 
   const locale = await detectServerLocale();
   const t = makeT(locale);
+  const wikiLinks = buildWikiLinks(locale);
 
   const displayName =
     user.user_metadata?.full_name ||
@@ -303,7 +301,7 @@ export default async function TechniquesPage() {
             <section className="mb-7">
               <div className="bg-zinc-900/40 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30 rounded-2xl p-4">
                 <div className="flex flex-wrap gap-2 mb-3">
-                  {WIKI_LINKS.map((link) => (
+                  {wikiLinks.map((link) => (
                     <a
                       key={link.href}
                       href={link.href}
