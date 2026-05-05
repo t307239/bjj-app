@@ -19,39 +19,45 @@ const COMPONENTS_DIR = path.resolve(__dirname, "../components");
 const MESSAGES_DIR = path.resolve(__dirname, "../messages");
 
 // ── Q-87: Privacy Policy Legal improvements ──────────────────────────────────
+// z255d cont: i18n 化で content を messages/en.json に移行したので、
+// test も source.tsx ではなく messages/en.json から検証する。
 describe("Q-87: Privacy Policy improvements", () => {
   const source = fs.readFileSync(
     path.join(APP_DIR, "privacy/page.tsx"),
     "utf-8"
   );
+  const en = JSON.parse(
+    fs.readFileSync(path.join(MESSAGES_DIR, "en.json"), "utf-8")
+  );
+  const privacyAll = JSON.stringify(en.privacy);
 
   it("has Data Retention table with per-category periods", () => {
     expect(source).toContain("<table");
-    expect(source).toContain("Training logs");
-    expect(source).toContain("Payment records");
-    expect(source).toContain("Push notification tokens");
-    expect(source).toContain("Analytics");
+    expect(privacyAll).toContain("Training logs");
+    expect(privacyAll).toContain("Payment records");
+    expect(privacyAll).toContain("Push notification tokens");
+    expect(privacyAll).toContain("Analytics");
   });
 
   it("has expanded Children's Privacy with COPPA and GDPR age thresholds", () => {
-    expect(source).toContain("under 13");
-    expect(source).toContain("under 16");
-    expect(source).toContain("COPPA");
-    expect(source).toContain("GDPR");
-    expect(source).toContain("48 hours");
+    expect(privacyAll).toContain("under 13");
+    expect(privacyAll).toContain("under 16");
+    expect(privacyAll).toContain("COPPA");
+    expect(privacyAll).toContain("GDPR");
+    expect(privacyAll).toContain("48 hours");
   });
 
   it("has Security Incident Notification section", () => {
-    expect(source).toContain("security-incident");
-    expect(source).toContain("Security Incident Notification");
-    expect(source).toContain("72 hours");
-    expect(source).toContain("GDPR Article 33");
+    expect(source).toContain("securityIncident");
+    expect(privacyAll).toContain("Security Incident Notification");
+    expect(privacyAll).toContain("72 hours");
+    expect(privacyAll).toContain("GDPR Article 33");
   });
 
   it("has at least 13 sections in TOC", () => {
-    const tocMatches = source.match(/{ id: "/g);
-    expect(tocMatches).not.toBeNull();
-    expect(tocMatches!.length).toBeGreaterThanOrEqual(13);
+    // z255d: TOC は en.json privacy.toc の key 数で検証
+    const tocKeys = Object.keys(en.privacy.toc ?? {});
+    expect(tocKeys.length).toBeGreaterThanOrEqual(13);
   });
 });
 

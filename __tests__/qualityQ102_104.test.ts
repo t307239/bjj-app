@@ -26,43 +26,50 @@ describe("Q-102 UI improvements", () => {
 });
 
 // ─── Q-103: Legal improvements ─────────────────────────────
+// z255d cont: i18n 化で content を messages/en.json privacy.* に移行。
+// テストも tsx + en.json 両方を見て検証する。
 describe("Q-103 Legal improvements", () => {
   const privacyPath = path.join(process.cwd(), "app/privacy/page.tsx");
   const privacySrc = fs.readFileSync(privacyPath, "utf-8");
+  const en = JSON.parse(
+    fs.readFileSync(path.join(process.cwd(), "messages/en.json"), "utf-8")
+  );
+  const privacyContent = JSON.stringify(en.privacy);
 
   test("Privacy Policy has CCPA section", () => {
     expect(privacySrc).toContain('id="ccpa"');
-    expect(privacySrc).toContain("California Consumer Privacy Act");
+    expect(privacyContent).toContain("California Consumer Privacy Act");
   });
 
   test("CCPA section covers Right to Know, Delete, Opt-Out, Non-Discrimination", () => {
-    expect(privacySrc).toContain("Right to Know");
-    expect(privacySrc).toContain("Right to Delete");
-    expect(privacySrc).toContain("Right to Opt-Out of Sale");
-    expect(privacySrc).toContain("Right to Non-Discrimination");
+    expect(privacyContent).toContain("Right to Know");
+    expect(privacyContent).toContain("Right to Delete");
+    expect(privacyContent).toContain("Right to Opt-Out of Sale");
+    expect(privacyContent).toContain("Right to Non-Discrimination");
   });
 
   test("Privacy Policy states we do not sell personal information", () => {
-    expect(privacySrc).toContain("does not sell");
+    expect(privacyContent).toContain("does not sell");
   });
 
   test("CCPA 45-day response requirement mentioned", () => {
-    expect(privacySrc).toContain("45 days");
+    expect(privacyContent).toContain("45 days");
   });
 
   test("Cookies section expanded with 3 categories", () => {
-    expect(privacySrc).toContain("Essential");
-    expect(privacySrc).toContain("Analytics");
-    expect(privacySrc).toContain("Marketing");
+    expect(privacyContent).toContain("Essential");
+    expect(privacyContent).toContain("Analytics");
+    expect(privacyContent).toContain("Marketing");
   });
 
   test("Cookies section mentions no fingerprinting", () => {
-    expect(privacySrc).toContain("fingerprinting");
+    expect(privacyContent).toContain("fingerprinting");
   });
 
   test("Privacy Policy has 14 sections in TOC", () => {
-    const tocMatches = privacySrc.match(/\{ id: "/g);
-    expect(tocMatches?.length).toBe(14);
+    // z255d: TOC は en.json privacy.toc の key 数で検証
+    const tocKeys = Object.keys(en.privacy.toc ?? {});
+    expect(tocKeys.length).toBe(14);
   });
 
   test("Privacy footer has DPA link", () => {

@@ -159,8 +159,11 @@ describe("Q-99: DPA page", () => {
   });
 
   it("has breach notification section", () => {
-    const source = fs.readFileSync(dpaPath, "utf-8");
-    expect(source).toContain("72 hours");
+    // z255d cont: 内容が messages/en.json dpa.* に移行
+    const en = JSON.parse(
+      fs.readFileSync(path.join(__dirname, "../messages/en.json"), "utf-8")
+    );
+    expect(JSON.stringify(en.dpa)).toContain("72 hours");
   });
 
   it("LP footer links to DPA", () => {
