@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 408 files
 CRITICAL: 0
-WARNING: 3
+WARNING: 0
 INFO: 122
-Total: 125
+Total: 122
 
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/gym-outreach/route.ts: L189: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
@@ -19,12 +19,6 @@ Total: 125
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [DANGEROUS_HTML] app/compare/page.tsx: L325: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[WARNING] [JSX_HARDCODED_ENGLISH] app/compare/page.tsx: L396: JSX内に英語テキスト直書き: "BJJBuddy"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/compare/page.tsx: L397: JSX内に英語テキスト直書き: "BJJ Notes"
-  FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/compare/page.tsx: L398: JSX内に英語テキスト直書き: "MatTime"
-  FIX: t() キーを追加して多言語対応
 [INFO] [SUPABASE_NO_ERROR] app/compare/page.tsx: L311: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨

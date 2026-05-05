@@ -1055,6 +1055,8 @@ BJJ_TERMS_WHITELIST = {
     # ブランド・固有名詞
     "bjj app", "bjj wiki", "vercel", "supabase", "stripe", "pro", "beta",
     "team", "wiki", "app",
+    # 競合製品名 (app/compare/page.tsx で言及、翻訳禁止のブランド)
+    "bjjbuddy", "bjj notes", "mattime", "notes",
     # HTML/CSS/コード関連（偽陽性防止）
     "null", "undefined", "true", "false", "none", "auto",
     "flex", "grid", "block", "inline", "hidden", "relative", "absolute",
