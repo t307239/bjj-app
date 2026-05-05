@@ -994,7 +994,8 @@
     "sortBy": "Ordenar por",
     "cookieSettings": "Configurações de Cookies",
     "ageVerification": "Verificação de idade",
-    "offlineDisabled": "Requer conexão com a internet"
+    "offlineDisabled": "Requer conexão com a internet",
+    "error": "Erro"
   },
   "aiCoach": {
     "title": "🤖 AI Micro-Coach",
@@ -1349,7 +1350,9 @@
     "csvBulkTitle": "Convite em massa por CSV",
     "curriculumFromGym": "De {name}",
     "curriculumAriaOpen": "Abrir artigo do currículo: {name}",
-    "daysAgoOne": "1 dia atrás"
+    "daysAgoOne": "1 dia atrás",
+    "churnAlertTitle": "{n} aluno(s) em risco de churn",
+    "churnAlertDesc": "Membros sem treinos há 14+ dias. Considere contatá-los."
   },
   "gymJoin": {
     "title": "Entrar em {name}",
@@ -1535,7 +1538,9 @@
     "insightHeavier": "💪 {pct}% dos seus rolls são contra parceiros mais pesados — seu jogo de guarda está sendo testado.",
     "insightFlowHigh": "🌊 60%+ rolls em Flow — considere incluir mais Posicional para refinar cadeias específicas.",
     "insightHardHigh": "🔥 50%+ Rolls Fortes — rounds focados em recuperação e técnica podem reduzir o risco de lesão.",
-    "insightStrong": "✅ Forte contra faixas {label} — {pct}% desses rolls foram flow/posicional/forte."
+    "insightStrong": "✅ Forte contra faixas {label} — {pct}% desses rolls foram flow/posicional/forte.",
+    "insightFlow": "Padrão de roll focado em fluxo — ótimo para evolução técnica",
+    "insightHard": "Padrão de roll de alta intensidade — priorize a recuperação"
   },
   "techniquesPage": {
     "title": "Diário de Técnicas",

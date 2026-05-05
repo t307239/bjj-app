@@ -968,7 +968,8 @@
     "sortBy": "Sort by",
     "cookieSettings": "Cookie Settings",
     "ageVerification": "Age verification",
-    "offlineDisabled": "Requires internet connection"
+    "offlineDisabled": "Requires internet connection",
+    "error": "Error"
   },
   "aiCoach": {
     "title": "AI Coach",
@@ -1323,7 +1324,9 @@
     "csvBulkTitle": "Bulk invite via CSV",
     "curriculumFromGym": "From {name}",
     "curriculumAriaOpen": "Open curriculum article: {name}",
-    "daysAgoOne": "1 day ago"
+    "daysAgoOne": "1 day ago",
+    "churnAlertTitle": "{n} member(s) at risk of leaving",
+    "churnAlertDesc": "Members who haven't trained in 14+ days. Consider reaching out."
   },
   "gymJoin": {
     "title": "Join {name}",
@@ -1507,7 +1510,9 @@
     "insightHeavier": "💪 {pct}% of your rolls are against heavier partners — your guard game is getting tested.",
     "insightFlowHigh": "🌊 60%+ Flow rolls — consider mixing in more Positional work to sharpen specific chains.",
     "insightHardHigh": "🔥 50%+ Hard Rolls — recovery and technique-focused rounds may reduce injury risk.",
-    "insightStrong": "✅ Strong vs {label} belts — {pct}% of those rolls were flow/positional/hard."
+    "insightStrong": "✅ Strong vs {label} belts — {pct}% of those rolls were flow/positional/hard.",
+    "insightFlow": "Flow-focused rolling pattern detected — great for technical improvement",
+    "insightHard": "High-intensity rolling pattern — remember to prioritize recovery"
   },
   "techniquesPage": {
     "title": "Technique Journal",

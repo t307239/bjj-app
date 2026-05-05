@@ -958,7 +958,8 @@
     "sortBy": "並び替え",
     "cookieSettings": "Cookie設定",
     "ageVerification": "年齢確認",
-    "offlineDisabled": "インターネット接続が必要です"
+    "offlineDisabled": "インターネット接続が必要です",
+    "error": "エラー"
   },
   "aiCoach": {
     "title": "AIコーチ",
@@ -1313,7 +1314,9 @@
     "csvBulkTitle": "CSV一括招待",
     "curriculumFromGym": "{name}から",
     "curriculumAriaOpen": "カリキュラム記事を開く: {name}",
-    "daysAgoOne": "1日前"
+    "daysAgoOne": "1日前",
+    "churnAlertTitle": "{n}名の生徒が離脱リスク",
+    "churnAlertDesc": "14日以上練習記録なし。声かけを推奨します。"
   },
   "gymJoin": {
     "title": "{name} に参加する",
@@ -1497,7 +1500,9 @@
     "insightHeavier": "💪 ロールの{pct}%が自分より重い相手 — ガードゲームが鍛えられています。",
     "insightFlowHigh": "🌊 フローロール60%超 — ポジショナルを増やしてチェーンを磨きましょう。",
     "insightHardHigh": "🔥 ハードロール50%超 — リカバリーと技術重視のラウンドで怪我リスクを減らしましょう。",
-    "insightStrong": "✅ {label}に強い — {pct}%がフロー/ポジショナル/ハードロールでした。"
+    "insightStrong": "✅ {label}に強い — {pct}%がフロー/ポジショナル/ハードロールでした。",
+    "insightFlow": "フロー重視のロール傾向 — 技術向上に最適です",
+    "insightHard": "高強度ロール傾向 — リカバリーを優先してください"
   },
   "techniquesPage": {
     "title": "テクニックジャーナル",
