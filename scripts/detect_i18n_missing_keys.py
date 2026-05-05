@@ -57,13 +57,86 @@ def flatten(obj: dict, prefix: str = "") -> set[str]:
     return keys
 
 
+def check_translation_quality(en_f: dict[str, str], ja_f: dict[str, str], pt_f: dict[str, str]) -> list[dict]:
+    """z255n: JA/PT が EN と完全一致 (untranslated) を検出。
+    placeholder / brand / 技術用語 / IANA tz 等の意図的同一は WHITELIST で除外。"""
+    findings: list[dict] = []
+    # 意図的に EN と同じでよい key (placeholder, technical term, brand, IANA tz)
+    INTENTIONAL_SAME = {
+        # IANA timezone names
+        "profile.timezoneAsia", "profile.timezoneAmerica",
+        "profile.timezoneBrazil", "profile.timezoneEurope",
+        # email / URL placeholder
+        "profile.emailPlaceholder", "common.youtubePlaceholder",
+        "gym.waitlistEmailPlaceholder", "gym.waitlistGymPlaceholder",
+        "profile.deleteTypePlaceholder",
+        # brand / 技術固有名詞
+        "profile.stripe", "csv.locked", "common.error",
+        "training.nogi",  # No-Gi は技術用語
+        "training.calendarDrill", "training.drilling", "training.sizeDiffSimilar",
+        "extendedBadges.gi_nogi.name",  # Gi & No-Gi
+        "techniques.nameMultiplePlaceholder",  # 技名 example list
+        "gym.curriculumTemplateLegLocks", "gym.qrTitle",
+        "gymLanding.pricingPopular",
+        "landing.wikiGuardDesc", "landing.wikiLegDesc",
+        "home.streakDays",  # 🔥{n}d template
+        "pricing.proMonthly", "pricing.proAnnual",
+        "focus.mastery2",  # Sparring
+        "privacy.cookies.marketingTitle",  # Marketing は international word
+        "tokushoho.values.personInChargeVal",
+        "tokushoho.values.addressNote", "tokushoho.values.phoneNote",
+        # 法務文書の日本独自表記
+        "gymLanding.footerTokushoho", "landing.footerTokushoho",
+        "wikiHub.categoryDrillLabel",  # Drills (国際用語)
+        "trainingLog.totalLabel", "chart.totalLabel",  # total
+        "rollAnalytics.sizeSimilar",  # Similar — (PT も同じ spell)
+        "beltProgress.timeAtBelt",  # template {belt}
+        # 技術 region code / location
+        "dpa.section3.supabaseLocation",  # US (ap-northeast-1)
+        "dpa.section3.vercelLocation",  # Global CDN
+    }
+
+    for k, en_v in en_f.items():
+        if k in INTENTIONAL_SAME:
+            continue
+        if len(en_v) <= 4:
+            continue  # too short to translate meaningfully
+        if not re.search(r"[a-z]", en_v):
+            continue  # all caps, no need translate
+        # Skip if value is mostly punctuation/numbers/braces
+        if not re.search(r"[a-zA-Z]{3,}", en_v):
+            continue
+
+        if k in ja_f and ja_f[k] == en_v:
+            findings.append({"lang": "ja", "key": k, "value": en_v[:60]})
+        if k in pt_f and pt_f[k] == en_v:
+            findings.append({"lang": "pt", "key": k, "value": en_v[:60]})
+
+    return findings
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--ci", action="store_true")
     args = ap.parse_args()
 
     en = json.load(open(REPO / "messages/en.json", encoding="utf-8"))
+    ja = json.load(open(REPO / "messages/ja.json", encoding="utf-8"))
+    pt = json.load(open(REPO / "messages/pt.json", encoding="utf-8"))
     en_keys = flatten(en)
+    ja_keys = flatten(ja)
+    pt_keys = flatten(pt)
+
+    def flat_strs(obj: dict, prefix: str = "") -> dict[str, str]:
+        out: dict[str, str] = {}
+        for k, v in obj.items():
+            full = f"{prefix}.{k}" if prefix else k
+            if isinstance(v, dict):
+                out.update(flat_strs(v, full))
+            elif isinstance(v, str):
+                out[full] = v
+        return out
+    en_f, ja_f, pt_f = flat_strs(en), flat_strs(ja), flat_strs(pt)
 
     # `t("...")` または `serverT("...")` または `makeT(...)("...")` を抽出
     T_RE = re.compile(r'\b(?:t|serverT)\(\s*[`"\']([\w.]+)[`"\']')
@@ -103,10 +176,35 @@ def main() -> int:
     print("=" * 70)
     print()
 
-    if not findings:
-        print("✅ Clean — 全 t() / serverT() の key が messages/en.json に存在")
-        print(f"\nTotal en.json keys: {len(en_keys)}")
+    # z255n: 翻訳品質 check (JA/PT が EN と同じ = untranslated)
+    quality_findings = check_translation_quality(en_f, ja_f, pt_f)
+
+    # locale parity (en/ja/pt key counts)
+    ja_missing = en_keys - ja_keys
+    pt_missing = en_keys - pt_keys
+
+    if not findings and not quality_findings and not ja_missing and not pt_missing:
+        print("✅ Clean — i18n key + 翻訳品質 + 3 locale parity 全て整合")
+        print(f"\nTotal keys: en={len(en_keys)}, ja={len(ja_keys)}, pt={len(pt_keys)}")
         return 0
+
+    if quality_findings:
+        print(f"🟡 Untranslated values ({len(quality_findings)}):")
+        for f in quality_findings[:15]:
+            print(f"  🟡 {f['lang']}.{f['key']}: {f['value']!r}")
+        print()
+    if ja_missing or pt_missing:
+        if ja_missing:
+            print(f"🟡 Keys in en but missing in ja ({len(ja_missing)}):")
+            for k in sorted(ja_missing)[:5]: print(f"     {k}")
+        if pt_missing:
+            print(f"🟡 Keys in en but missing in pt ({len(pt_missing)}):")
+            for k in sorted(pt_missing)[:5]: print(f"     {k}")
+        print()
+
+    if not findings:
+        print(f"\nTotal en.json keys: {len(en_keys)}")
+        return 1 if (args.ci and (quality_findings or ja_missing or pt_missing)) else 0
 
     print(f"🔴 Found {len(findings)} missing i18n keys:")
     print()
