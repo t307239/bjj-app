@@ -6,7 +6,7 @@
 .PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean
 
 # Run all anti-regression checks
-verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys
+verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components
 	@echo ""
 	@echo "✅ All anti-regression checks passed."
 	@echo "   Safe to commit."
@@ -20,6 +20,11 @@ schema-mismatch:
 i18n-keys:
 	@echo "→ detect_i18n_missing_keys.py..."
 	@python3 scripts/detect_i18n_missing_keys.py --ci
+
+# z255o: dead component detection (warning level, 削除候補 catch)
+dead-components:
+	@echo "→ detect_dead_components.py..."
+	@python3 scripts/detect_dead_components.py --ci
 
 typecheck:
 	@echo "→ TypeScript type check..."

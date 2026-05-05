@@ -137,6 +137,12 @@ jobs:
       - name: Run detect_i18n_missing_keys.py
         run: python3 scripts/detect_i18n_missing_keys.py --ci
 
+      # z255o: dead component detection (warning level)
+      # refactoring で残された未 import の component を可視化。
+      # KNOWN_DEAD に登録された 2 件以外の新 dead が出たら 🟡 で報告。
+      - name: Run detect_dead_components.py
+        run: python3 scripts/detect_dead_components.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest
