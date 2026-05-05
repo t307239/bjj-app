@@ -155,6 +155,12 @@ jobs:
       - name: Run detect_missing_canonical.py
         run: python3 scripts/detect_missing_canonical.py --ci
 
+      # z255ff: bjj-app → wiki cross-product URL に .html extension があるか
+      # GitHub Pages の clean URL fallback 保証なし、convention 不一致は
+      # 一部 link 404 risk + UX 不一致。
+      - name: Run detect_wiki_url_drift.py
+        run: python3 scripts/detect_wiki_url_drift.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest

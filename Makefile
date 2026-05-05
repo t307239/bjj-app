@@ -3,10 +3,10 @@
 # 「完璧」と宣言する前に必ず `make verify` を実行する。
 # 6 つの lint が全パスすれば commit 可能、1 つでも 🔴 fail なら作業未完了。
 
-.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical
+.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url
 
 # Run all anti-regression checks
-verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical
+verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url
 	@echo ""
 	@echo "✅ All anti-regression checks passed."
 	@echo "   Safe to commit."
@@ -35,6 +35,11 @@ indexable-orphans:
 missing-canonical:
 	@echo "→ detect_missing_canonical.py..."
 	@python3 scripts/detect_missing_canonical.py --ci
+
+# z255ff: bjj-app → wiki cross-product URL に .html extension があるか
+wiki-url:
+	@echo "→ detect_wiki_url_drift.py..."
+	@python3 scripts/detect_wiki_url_drift.py --ci
 
 typecheck:
 	@echo "→ TypeScript type check..."
