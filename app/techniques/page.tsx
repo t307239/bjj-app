@@ -243,7 +243,7 @@ export default async function TechniquesPage() {
           <SafetyBanner
             title={t("techniquesPage.safetyTitle")}
             description={t("techniquesPage.safetyDesc")}
-            wikiHref="https://wiki.bjj-app.net/en/heel-hook"
+            wikiHref="https://wiki.bjj-app.net/en/heel-hook.html"
             wikiLabel={t("techniquesPage.safetyWikiLink")}
           />
         )}
