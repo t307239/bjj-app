@@ -58,6 +58,21 @@ STALE_WHITELIST = {
     "White Belt", "Blue Belt", "Purple Belt", "Brown Belt", "Black Belt",
     # UI 記号 / placeholder
     "DELETE", "Similar", "Similar —", "—",
+    # z255n: 国際的に通じる technical / 法務用語
+    "Marketing",  # privacy.cookies.marketingTitle (国際英語)
+    "Drills",  # wikiHub.categoryDrillLabel (BJJ 国際用語)
+    "Toshiki Terasawa (寺澤としき)",  # tokushoho.values.personInChargeVal (固有名詞)
+    "© 2026 BJJ App. All rights reserved.",  # 著作権 EN 維持の場合用
+    "https://youtu.be/...",  # YouTube placeholder
+    "🔥{n}d",  # streak template
+    "$9.99", "$79.99",  # 価格 USD 表記
+    "🥋",  # emoji only
+    "Gi & No-Gi",  # extendedBadges
+    "Error ID:",  # 旧 z255n で JA 翻訳済、PT は EN OK
+    "Stripe",  # brand
+    "coach@yourgym.com",  # email placeholder
+    "個人事業主のため、請求があった場合に遅滞なく開示いたします。",  # 日本法務文 (PT も同じ JA 文を使用)
+    "特定商取引法に基づく表記",  # 日本法務 footer (PT も同じ JA 文 link)
 }
 
 

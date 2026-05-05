@@ -1,15 +1,25 @@
-# Makefile — z176d: bjj-app forcing function
+# Makefile — z176d (extended z255n): bjj-app forcing function
 #
 # 「完璧」と宣言する前に必ず `make verify` を実行する。
-# 4 つの lint が全パスすれば commit 可能、1 つでも 🔴 fail なら作業未完了。
+# 6 つの lint が全パスすれば commit 可能、1 つでも 🔴 fail なら作業未完了。
 
-.PHONY: verify locale-drift hidden-bugs typecheck test all clean
+.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean
 
 # Run all anti-regression checks
-verify: typecheck locale-drift hidden-bugs
+verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys
 	@echo ""
 	@echo "✅ All anti-regression checks passed."
 	@echo "   Safe to commit."
+
+# z255h: schema-code mismatch (supabase 不存在列を select で silent fail)
+schema-mismatch:
+	@echo "→ detect_schema_code_mismatch.py..."
+	@python3 scripts/detect_schema_code_mismatch.py --ci
+
+# z255m/n: i18n key reference + 翻訳品質 + 3 locale parity
+i18n-keys:
+	@echo "→ detect_i18n_missing_keys.py..."
+	@python3 scripts/detect_i18n_missing_keys.py --ci
 
 typecheck:
 	@echo "→ TypeScript type check..."

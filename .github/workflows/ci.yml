@@ -126,6 +126,17 @@ jobs:
       - name: Run detect_locale_drift.py
         run: python3 scripts/detect_locale_drift.py --ci
 
+      # z255h: schema-code mismatch (supabase select で不存在列を呼んで silent fail)
+      # z255g で /wiki/[lang]/[slug] が created_at 不存在で全 4,665 page 404 だった
+      # 重大 bug が発覚、再発防止のため CI block。
+      - name: Run detect_schema_code_mismatch.py
+        run: python3 scripts/detect_schema_code_mismatch.py --ci
+
+      # z255m/n: i18n key reference (t() の missing key + 翻訳忘れ + locale parity)
+      # makeT() の fallback で literal 表示される silent bug を CI block。
+      - name: Run detect_i18n_missing_keys.py
+        run: python3 scripts/detect_i18n_missing_keys.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest
