@@ -39,9 +39,11 @@ export default async function RecordDetailPage({
   const t = makeT(locale);
 
   // RLS-protected: only returns if user_id matches the authenticated user
+  // z255h fix: column names are instructor_name / partner_username (not instructor / partner)
+  // Bug: 旧 select は不存在列を select していたため query 全件 fail → "Detail not found" 表示
   const { data: log, error } = await supabase
     .from("training_logs")
-    .select("id, date, duration_min, type, notes, instructor, partner, created_at")
+    .select("id, date, duration_min, type, notes, instructor_name, partner_username, created_at")
     .eq("id", id)
     .single();
 
@@ -160,10 +162,10 @@ export default async function RecordDetailPage({
           )}
 
           {/* Instructor / partner */}
-          {(log.instructor || log.partner) && (
+          {(log.instructor_name || log.partner_username) && (
             <div className="flex gap-4 text-xs text-zinc-400 pt-2 border-t border-white/5">
-              {log.instructor && <span>👨‍🏫 {log.instructor}</span>}
-              {log.partner && <span>🤝 {log.partner}</span>}
+              {log.instructor_name && <span>👨‍🏫 {log.instructor_name}</span>}
+              {log.partner_username && <span>🤝 {log.partner_username}</span>}
             </div>
           )}
         </div>

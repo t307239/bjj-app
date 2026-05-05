@@ -111,9 +111,11 @@ export default async function GymUpgradePage({
   const gymCta = pickLocale(GYM_TIER.trialCta, locale as Locale);
 
   // Look up the user's gym (must be owner)
+  // z255h fix: profiles テーブルには avatar_url 列が無い (avatar は user.user_metadata.avatar_url から取得)
+  // Bug: 旧 select は不存在列を select していたため query 全件 fail → fallback CTA で "ジム作成" page へ誘導
   const { data: ownerProfile } = await supabase
     .from("profiles")
-    .select("display_name, avatar_url, is_pro, gym_id, is_gym_owner")
+    .select("display_name, is_pro, gym_id, is_gym_owner")
     .eq("id", user.id)
     .single();
 

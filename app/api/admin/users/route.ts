@@ -87,9 +87,10 @@ export async function GET(req: NextRequest) {
   const userIds = filteredAuthUsers.map((u) => u.id);
 
   // Fetch profiles for these users
+  // z255h fix: profiles テーブルに created_at 列無し (auth.users.created_at で取得済 line 127)
   const { data: profiles } = await serviceClient
     .from("profiles")
-    .select("id, belt, stripe, is_pro, gym_id, created_at")
+    .select("id, belt, stripe, is_pro, gym_id")
     .in("id", userIds.length > 0 ? userIds : ["none"]);
 
   // Fetch training log counts per user (last 30 days + total)
