@@ -11,6 +11,15 @@ export const metadata: Metadata = {
   description:
     "Summary of our Data Processing Agreement pursuant to GDPR Article 28.",
   robots: { index: true, follow: true },
+  alternates: { canonical: "https://bjj-app.net/legal/dpa" },
+  openGraph: {
+    title: "Data Processing Agreement (DPA) | BJJ App",
+    description:
+      "Summary of our Data Processing Agreement pursuant to GDPR Article 28.",
+    url: "https://bjj-app.net/legal/dpa",
+    siteName: "BJJ App",
+    type: "article",
+  },
 };
 
 export default async function DPAPage() {
