@@ -143,6 +143,12 @@ jobs:
       - name: Run detect_dead_components.py
         run: python3 scripts/detect_dead_components.py --ci
 
+      # z255dd: robots: { index: true } の static route が sitemap に含まれているか
+      # 明示 indexable な page が sitemap 漏れていると Google が orphan として
+      # 拾うが SEO 強化機会喪失。本 lint で漏れを catch。
+      - name: Run detect_indexable_orphan_routes.py
+        run: python3 scripts/detect_indexable_orphan_routes.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest
