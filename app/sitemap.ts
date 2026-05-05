@@ -56,6 +56,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",  // 競合比較は数月ごと更新
       priority: 0.8,  // SEO「bjj app vs」捕捉 (z221)
     },
+    // z255dd: /legal/dpa は robots: { index: true, follow: true } で indexable な
+    // GDPR DPA page だが sitemap 漏れていた orphan を fix
+    {
+      url: `${BASE_URL}/legal/dpa`,
+      changeFrequency: "yearly",  // legal text、年単位で更新
+      priority: 0.3,  // compliance 用 page、SEO 重要度低
+    },
     // terms, privacy, tokushoho は robots noindex のためサイトマップから除外
   ];
 

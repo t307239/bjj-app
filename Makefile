@@ -3,10 +3,10 @@
 # 「完璧」と宣言する前に必ず `make verify` を実行する。
 # 6 つの lint が全パスすれば commit 可能、1 つでも 🔴 fail なら作業未完了。
 
-.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean
+.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans
 
 # Run all anti-regression checks
-verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components
+verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans
 	@echo ""
 	@echo "✅ All anti-regression checks passed."
 	@echo "   Safe to commit."
@@ -25,6 +25,11 @@ i18n-keys:
 dead-components:
 	@echo "→ detect_dead_components.py..."
 	@python3 scripts/detect_dead_components.py --ci
+
+# z255dd: robots: { index: true } の static route が sitemap に含まれているか
+indexable-orphans:
+	@echo "→ detect_indexable_orphan_routes.py..."
+	@python3 scripts/detect_indexable_orphan_routes.py --ci
 
 typecheck:
 	@echo "→ TypeScript type check..."
