@@ -149,6 +149,12 @@ jobs:
       - name: Run detect_indexable_orphan_routes.py
         run: python3 scripts/detect_indexable_orphan_routes.py --ci
 
+      # z255ee: public indexable static page に canonical metadata があるか
+      # 欠落していると Google が tracking parameter 付き URL を canonical
+      # 採用する risk + duplicate content 判定の risk。
+      - name: Run detect_missing_canonical.py
+        run: python3 scripts/detect_missing_canonical.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest

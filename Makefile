@@ -3,10 +3,10 @@
 # 「完璧」と宣言する前に必ず `make verify` を実行する。
 # 6 つの lint が全パスすれば commit 可能、1 つでも 🔴 fail なら作業未完了。
 
-.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans
+.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical
 
 # Run all anti-regression checks
-verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans
+verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical
 	@echo ""
 	@echo "✅ All anti-regression checks passed."
 	@echo "   Safe to commit."
@@ -30,6 +30,11 @@ dead-components:
 indexable-orphans:
 	@echo "→ detect_indexable_orphan_routes.py..."
 	@python3 scripts/detect_indexable_orphan_routes.py --ci
+
+# z255ee: public indexable static page に canonical metadata があるか
+missing-canonical:
+	@echo "→ detect_missing_canonical.py..."
+	@python3 scripts/detect_missing_canonical.py --ci
 
 typecheck:
 	@echo "→ TypeScript type check..."
