@@ -80,14 +80,14 @@ export default function AttributionTable() {
   if (loading) {
     return (
       <div className="bg-zinc-900 border border-white/10 rounded-xl p-4">
-        <div className="text-sm text-zinc-400">Loading attribution data…</div>
+        <div className="text-sm text-zinc-400">流入元データを読み込み中…</div>
       </div>
     );
   }
   if (error) {
     return (
       <div className="bg-red-950/40 border border-red-500/30 rounded-xl p-4">
-        <div className="text-sm text-red-300">Attribution: {error}</div>
+        <div className="text-sm text-red-300">流入元データ取得エラー: {error}</div>
       </div>
     );
   }
@@ -113,9 +113,11 @@ export default function AttributionTable() {
   return (
     <section className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
       <div className="flex items-baseline justify-between mb-3">
-        <h2 className="text-sm font-semibold text-white">📊 Attribution by Source</h2>
+        <h2 className="text-sm font-semibold text-white" title="どの経路から登録した user が、どれくらい Pro 課金に進んだか">
+          📊 流入元別の有料転換率
+        </h2>
         <div className="text-xs text-zinc-500">
-          {data.total.sources_count} sources · {data.total.signups_all_sources} signups · {data.total.pro_all_sources} Pro
+          {data.total.sources_count} 経路 · 登録 {data.total.signups_all_sources} 名 · Pro {data.total.pro_all_sources} 名
         </div>
       </div>
 
@@ -123,11 +125,11 @@ export default function AttributionTable() {
         <table className="w-full text-xs tabular-nums">
           <thead className="border-b border-white/10">
             <tr>
-              <th className="text-left py-2 px-2 text-zinc-400 font-normal">Source</th>
-              <th className="text-right py-2 px-2">{sortBtn("signups_total", "Signups")}</th>
-              <th className="text-right py-2 px-2">{sortBtn("signups_30d", "30d")}</th>
+              <th className="text-left py-2 px-2 text-zinc-400 font-normal">流入元</th>
+              <th className="text-right py-2 px-2">{sortBtn("signups_total", "登録数")}</th>
+              <th className="text-right py-2 px-2">{sortBtn("signups_30d", "30日")}</th>
               <th className="text-right py-2 px-2">{sortBtn("pro_users", "Pro")}</th>
-              <th className="text-right py-2 px-2">{sortBtn("pro_conversion_pct", "CVR%")}</th>
+              <th className="text-right py-2 px-2">{sortBtn("pro_conversion_pct", "課金率")}</th>
             </tr>
           </thead>
           <tbody>
@@ -175,23 +177,26 @@ export default function AttributionTable() {
       {/* z192: Paid attribution (paid_ref, post-conversion) */}
       {data.paid_rows && data.paid_rows.length > 0 && (
         <div className="mt-6 pt-4 border-t border-white/10">
-          <h3 className="text-xs font-semibold text-emerald-400 mb-2">
-            💰 Paid Conversion Source (z192)
+          <h3
+            className="text-xs font-semibold text-emerald-400 mb-2"
+            title="実際に有料課金に至った user の流入元 (個人会員 Pro / 道場会員 Gym Pro 別)"
+          >
+            💰 課金に至った流入元
           </h3>
           <table className="w-full text-xs tabular-nums">
             <thead className="border-b border-white/10">
               <tr>
                 <th className="text-left py-2 px-2 text-zinc-400 font-normal">
-                  paid_ref
+                  流入元タグ
                 </th>
                 <th className="text-right py-2 px-2 text-zinc-400 font-normal">
-                  Total
+                  合計
                 </th>
-                <th className="text-right py-2 px-2 text-zinc-400 font-normal">
-                  B2C
+                <th className="text-right py-2 px-2 text-zinc-400 font-normal" title="個人 Pro 会員">
+                  個人 Pro
                 </th>
-                <th className="text-right py-2 px-2 text-zinc-400 font-normal">
-                  B2B
+                <th className="text-right py-2 px-2 text-zinc-400 font-normal" title="道場 Gym Pro 会員">
+                  道場
                 </th>
               </tr>
             </thead>
@@ -221,7 +226,7 @@ export default function AttributionTable() {
       )}
 
       <p className="text-[11px] text-zinc-600 mt-3 text-center">
-        Last updated: {new Date(data.fetched_at).toLocaleTimeString()}
+        最終更新: {new Date(data.fetched_at).toLocaleTimeString()}
       </p>
     </section>
   );
