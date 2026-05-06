@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { formatDateShort } from "@/lib/formatDate";
 import AttributionTable from "@/components/admin/AttributionTable";
+import PmfMetricsCard from "@/components/admin/PmfMetricsCard";
 
 type AdminUser = {
   id: string;
@@ -181,6 +182,9 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-6">
+        {/* z255kk: PMF Metrics — signups / D7 retention / source breakdown / WAU trend */}
+        <PmfMetricsCard />
+
         {/* Summary stats */}
         {data && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">

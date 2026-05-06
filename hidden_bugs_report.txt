@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 408 files
+TS/TSX Scanned: 409 files
 CRITICAL: 0
 WARNING: 0
-INFO: 193
-Total: 193
+INFO: 201
+Total: 201
 
 [INFO] [DATE_PARSE_NO_GUARD] app/api/ai-coach/generate/route.ts: L375: `new Date(cachedMode.at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
   FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
@@ -243,6 +243,10 @@ Total: 193
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeightCutPlanner.tsx: L190: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [INLINE_STYLE_OBJECT] components/admin/PmfMetricsCard.tsx: L208: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [INLINE_STYLE_OBJECT] components/admin/PmfMetricsCard.tsx: L245: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/dashboard/HeatmapCalendar.tsx: L101: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/dashboard/MatTimeTracker.tsx: L96: style={{...}} — Tailwindクラスで統一推奨
@@ -279,6 +283,18 @@ Total: 193
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/ui/Skeleton.tsx: L30: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [DATE_PARSE_NO_GUARD] lib/adminMetrics.ts: L124: `new Date(c.created_at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/adminMetrics.ts: L137: `new Date(c.created_at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/adminMetrics.ts: L159: `new Date(c.created_at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/adminMetrics.ts: L174: `new Date(c.created_at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/adminMetrics.ts: L178: `new Date(d).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/adminMetrics.ts: L199: `new Date(c.created_at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [DATE_PARSE_NO_GUARD] lib/adminOpsToolkit.ts: L330: `new Date(t.createdAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
   FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [DATE_PARSE_NO_GUARD] lib/adminOpsToolkit.ts: L331: `new Date(t.resolvedAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
