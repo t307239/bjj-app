@@ -1467,6 +1467,114 @@ def check_spread_into_db(filepath: Path, content: str, report: BugReport):
             )
 
 
+def check_state_spread_no_functional_updater(filepath: Path, content: str, report: BugReport):
+    """state を直接 spread した値で setState すると stale closure (z257 round 3)
+
+    問題: setX([...newRows, ...stateVar]) のように、useState の value を
+    クロージャから直接読んで spread すると、並行処理 / 楽観 UI の race で
+    setX が古い state を上書きする。
+    setX(prev => [...newRows, ...prev]) (functional updater) で root cause 修正。
+
+    検出: setX([...something, ...stateName]) で stateName が
+    `const [stateName, setStateName]` でこのファイル内で declare されている場合。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+    if filepath.suffix not in (".ts", ".tsx"):
+        return
+
+    # 1) ファイル内で declare されている state 変数を抽出
+    state_pairs = re.findall(
+        r'const\s+\[\s*(\w+)\s*,\s*set([A-Z]\w+)\s*\]\s*=\s*useState',
+        content,
+    )
+    if not state_pairs:
+        return
+
+    state_var_to_setter = {var: f"set{cap}" for var, cap in state_pairs}
+
+    lines = content.split("\n")
+    for line_no, line in enumerate(lines, 1):
+        stripped = line.strip()
+        if stripped.startswith("//") or stripped.startswith("*"):
+            continue
+
+        # set<X>([...something, ...<x>]) または set<X>([...<x>, ...]) を検出
+        for var, setter in state_var_to_setter.items():
+            # setX([..., ...var, ...])
+            pattern = re.compile(
+                rf'\b{re.escape(setter)}\s*\(\s*\['
+                rf'(?:[^]]*?\.\.\.{re.escape(var)}\b)'
+                r'[^]]*\]\s*\)'
+            )
+            if pattern.search(line):
+                report.add(
+                    "WARNING", "STATE_SPREAD_NO_FUNCTIONAL_UPDATER",
+                    str(rel),
+                    f"L{line_no}: {setter}([...{var} ...]) — stale state で並行 update を上書きする risk",
+                    f"{setter}((prev) => [...prev, ...]) の functional updater に変更",
+                )
+                break
+
+
+def check_settimeout_setstate_outside_useeffect(filepath: Path, content: str, report: BugReport):
+    """useCallback / event handler 内の setTimeout(setX, ms) が ref で track されていない (z257 round 3)
+
+    問題: showToast / handleClick 等で setTimeout(() => setX(null), 3000) を
+    bare で書くと:
+      1. component unmount 後に setX が呼ばれて React warning + memory leak
+      2. handler が連打されると複数 timer が同時に走り race
+    cleanup ref + useEffect unmount cleanup で root cause 修正。
+
+    検出: useCallback / function 直下 (= useEffect の外) で
+    setTimeout(...) が変数代入なしに置かれているケース。
+    既に check_settimeout_no_cleanup でカバーされない non-tsx (hooks/*.ts) も対象。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+    if filepath.suffix not in (".ts", ".tsx"):
+        return
+    # tsx は既存の check_settimeout_no_cleanup でカバー済 — hooks/lib (.ts) のみ scan
+    if filepath.suffix == ".tsx":
+        return
+    if "use client" not in content and "useCallback" not in content and "useState" not in content:
+        return
+
+    lines = content.split("\n")
+    has_clear = "clearTimeout" in content
+
+    in_use_effect = 0  # depth tracker for useEffect blocks (skip those)
+    brace_depth_in_useeffect = 0
+
+    for line_no, line in enumerate(lines, 1):
+        stripped = line.strip()
+        if stripped.startswith("//") or stripped.startswith("*"):
+            continue
+
+        # Track useEffect block depth (rough — won't be perfect for nested cases)
+        if "useEffect(" in line:
+            in_use_effect = 1
+            brace_depth_in_useeffect = line.count("{") - line.count("}")
+            continue
+        if in_use_effect:
+            brace_depth_in_useeffect += line.count("{") - line.count("}")
+            if brace_depth_in_useeffect <= 0:
+                in_use_effect = 0
+            continue
+
+        # bare setTimeout(() => setX(...), n)
+        if re.search(r'\bsetTimeout\s*\(\s*\(\)\s*=>\s*\{?\s*set[A-Z]', line) or \
+           re.search(r'\bsetTimeout\s*\(\s*\(\)\s*=>\s*set[A-Z]', line):
+            # 同行で変数代入されていないか確認
+            if re.search(r'(?:const|let|var|\.current\s*=)\s*\w*\s*=?\s*setTimeout', line):
+                continue
+            if not has_clear:
+                report.add(
+                    "WARNING", "SETTIMEOUT_NO_REF_IN_HOOK",
+                    str(rel),
+                    f"L{line_no}: useCallback / handler 内 bare setTimeout(setX) — unmount 後の setState で memory leak",
+                    "timerRef.current = setTimeout(...) + useEffect unmount cleanup で clearTimeout",
+                )
+
+
 # ─────────────────────────────────────────────────────
 # メインスキャナ
 # ─────────────────────────────────────────────────────
@@ -1519,6 +1627,8 @@ def scan_all() -> BugReport:
         check_promise_no_catch(fpath, content, report)        # カテゴリ18
         check_silent_catch(fpath, content, report)            # カテゴリ20
         check_spread_into_db(fpath, content, report)          # カテゴリ31
+        check_state_spread_no_functional_updater(fpath, content, report)  # カテゴリ32 (z257)
+        check_settimeout_setstate_outside_useeffect(fpath, content, report)  # カテゴリ33 (z257)
 
     # ファイル横断チェック（カテゴリ16, 19）
     check_unused_exports(source_files, report)
