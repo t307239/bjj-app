@@ -97,12 +97,14 @@ export default function PersonalBests({ userId }: Props) {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
     const load = async () => {
       const { data: logs , error } = await supabase
         .from("training_logs")
         .select("date, duration_min")
         .eq("user_id", userId)
         .order("date", { ascending: true });
+      if (cancelled) return;
       if (error) clientLogger.error("personalbests.query", {}, error);
 
       setLoaded(true);
@@ -189,9 +191,11 @@ export default function PersonalBests({ userId }: Props) {
         monthlyIntensity.push({ ym, avgSessionMin: avgMin });
       });
 
+      if (cancelled) return;
       setBests({ totalSessions, totalMinutes, maxSessionMin, longestStreak: maxStreak, bestMonthCount, bestMonthKey, bestWeekCount, avgSessionMin, avgMonthly, thisMonthCount, lastMonthCount, dowCounts: dowArr, monthlyIntensity });
     };
     load();
+    return () => { cancelled = true; };
   }, [userId, supabase]);
 
   if (!loaded) return <Skeleton height={60} rounded="xl" className="mb-4" />;

@@ -96,6 +96,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
     try {
       await navigator.clipboard.writeText(inviteBase);
       setCopiedIdx(idx);
+      if (copiedIdxTimerRef.current) clearTimeout(copiedIdxTimerRef.current);
       copiedIdxTimerRef.current = setTimeout(() => setCopiedIdx(null), 2000);
     } catch (err: unknown) {
       clientLogger.error("csv_bulk_invite.copy_link_failed", {}, err instanceof Error ? err : new Error(String(err)));
@@ -111,6 +112,7 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
     try {
       await navigator.clipboard.writeText(text);
       setCopiedAll(true);
+      if (copiedAllTimerRef.current) clearTimeout(copiedAllTimerRef.current);
       copiedAllTimerRef.current = setTimeout(() => setCopiedAll(false), 2000);
     } catch (err: unknown) {
       clientLogger.error("csv_bulk_invite.copy_all_failed", {}, err instanceof Error ? err : new Error(String(err)));

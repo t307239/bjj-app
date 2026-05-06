@@ -105,6 +105,7 @@ export default function MilestoneBadgeGrid({ totalCount }: Props) {
     } else {
       await navigator.clipboard.writeText(text).catch(() => {/* clipboard not available */});
       setCopied(true);
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
       copiedTimerRef.current = setTimeout(() => setCopied(false), 2000);
     }
     setSharePrompt(null);

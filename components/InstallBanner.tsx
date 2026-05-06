@@ -54,6 +54,7 @@ export default function InstallBanner() {
     } catch (err) {
       clientLogger.error("pwa.install_prompt_error", {}, err);
       setInstallError(true);
+      if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
       errorTimerRef.current = setTimeout(() => setInstallError(false), 3000);
     }
     finally { setIsInstalling(false); setDeferredPrompt(null); }

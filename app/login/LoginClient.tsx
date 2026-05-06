@@ -43,6 +43,7 @@ function IABWarning() {
   const copyUrl = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
       setCopied(true);
+      if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => setCopied(false), 2000);
     }).catch((err) => clientLogger.error("clipboard_copy_failed", {}, err));
   };
@@ -112,6 +113,7 @@ function LoginForm() {
   function nudgeCheckboxes() {
     setNudge(true);
     checkboxRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (nudgeTimerRef.current) clearTimeout(nudgeTimerRef.current);
     nudgeTimerRef.current = setTimeout(() => setNudge(false), 1500);
   }
 

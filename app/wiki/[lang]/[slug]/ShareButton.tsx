@@ -60,6 +60,7 @@ export default function ShareButton({ title, url, lang }: ShareButtonProps) {
       try {
         await navigator.clipboard.writeText(`${shareText}\n${url}`);
         setCopied(true);
+        if (timerRef.current) clearTimeout(timerRef.current);
         timerRef.current = setTimeout(() => setCopied(false), 2200);
       } catch {}
     }

@@ -240,6 +240,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
         has_gym: form.gym ? "yes" : "no",
         has_start_date: form.start_date ? "yes" : "no",
       });
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
       toastTimerRef.current = setTimeout(() => { setToast(null); onSave(form); }, 1200);
     } else {
       setToast({ message: t("profile.saveFailed") + ": " + (upsertError.message || upsertError.code || t("profile.saveFailedUnknown")), type: "error" });

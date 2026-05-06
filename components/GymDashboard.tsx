@@ -95,6 +95,7 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
       setCopied(true);
       // §6 Telemetry: B2B funnel — gym owner copied invite link
       trackEvent("gym_member_invited", { method: "copy_link" });
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
       copiedTimerRef.current = setTimeout(() => setCopied(false), 2000);
     } catch (err: unknown) {
       clientLogger.error("gym_invite.clipboard_copy_failed", {}, err instanceof Error ? err : new Error(String(err)));
@@ -287,6 +288,7 @@ function EmptyMembersCta({ inviteCode }: { inviteCode: string }) {
       await navigator.clipboard.writeText(url);
       setEmCopied(true);
       trackEvent("gym_member_invited", { method: "empty_state_cta" });
+      if (emTimerRef.current) clearTimeout(emTimerRef.current);
       emTimerRef.current = setTimeout(() => setEmCopied(false), 2000);
     } catch (err: unknown) { clientLogger.warn("gym_dashboard.clipboard_failed", { error: err instanceof Error ? err.message : String(err) }); }
   };

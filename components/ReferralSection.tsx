@@ -37,6 +37,7 @@ export default function ReferralSection({
       await navigator.clipboard.writeText(referralLink);
       trackEvent("referral_shared", { method: "copy" });
       setCopied(true);
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
       copiedTimerRef.current = setTimeout(() => setCopied(false), 2000);
     } catch (err: unknown) {
       clientLogger.error("referral.clipboard_failed", {}, err instanceof Error ? err : new Error(String(err)));
@@ -47,6 +48,7 @@ export default function ReferralSection({
       document.execCommand("copy");
       document.body.removeChild(input);
       setCopied(true);
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
       copiedTimerRef.current = setTimeout(() => setCopied(false), 2000);
     }
   };

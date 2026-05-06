@@ -51,6 +51,7 @@ export default function QuickWeightLog({ userId, onLogged }: Props) {
       setToast(t("body.saved"));
       onLogged?.();
     }
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     toastTimerRef.current = setTimeout(() => setToast(null), 3000);
   };
 

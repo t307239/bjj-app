@@ -71,6 +71,7 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
     if (!isHorizontal.current) return;
     const offset = offsetX;
 
+    if (animationTimerRef.current) clearTimeout(animationTimerRef.current);
     if (offset < -THRESHOLD) {
       // Committed left swipe → delete
       setAnimating(true);

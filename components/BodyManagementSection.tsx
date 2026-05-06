@@ -119,6 +119,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
       setTargetDate(targetDateInput);
       setTargetSaved(true);
       setShowTargetForm(false);
+      if (targetSavedTimerRef.current) clearTimeout(targetSavedTimerRef.current);
       targetSavedTimerRef.current = setTimeout(() => setTargetSaved(false), 2000);
     } catch (err: unknown) {
       clientLogger.error("bodymanagement.set_target_failed", {}, err instanceof Error ? err : new Error(String(err)));

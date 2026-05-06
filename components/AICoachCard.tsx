@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { useLocale } from "@/lib/i18n";
 import { clientLogger } from "@/lib/clientLogger";
@@ -121,7 +121,15 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
   const generatedAt = generatedAtMap[mode] ?? null;
   const isStale = !generatedAt || Date.now() - new Date(generatedAt).getTime() > SEVEN_DAYS_MS;
 
+  // Track in-flight request so rapid mode switches abort the stale fetch — prevents
+  // late response from one mode overwriting `loading` / `error` state for newer mode.
+  const abortRef = useRef<AbortController | null>(null);
+  useEffect(() => () => { abortRef.current?.abort(); }, []);
+
   const generate = useCallback(async (targetMode: CoachMode) => {
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
     setLoading(true);
     setError(null);
     try {
@@ -129,6 +137,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ locale, mode: targetMode }),
+        signal: controller.signal,
       });
       const data = await res.json() as {
         coaching?: string;
@@ -137,6 +146,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
         error?: string;
         mode?: string;
       };
+      if (controller.signal.aborted) return;
       if (!res.ok || data.error) {
         setError(data.error ?? t("aiCoach.error"));
         return;
@@ -146,10 +156,14 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
       setCoachingMap((prev) => ({ ...prev, [targetMode]: data.coaching ?? null }));
       setGeneratedAtMap((prev) => ({ ...prev, [targetMode]: data.generated_at ?? null }));
     } catch (err: unknown) {
+      if (err instanceof DOMException && err.name === "AbortError") return;
       clientLogger.error("ai_coach.generate_failed", {}, err instanceof Error ? err : new Error(String(err)));
-      setError(t("aiCoach.error"));
+      if (!controller.signal.aborted) setError(t("aiCoach.error"));
     } finally {
-      setLoading(false);
+      if (abortRef.current === controller) {
+        abortRef.current = null;
+        setLoading(false);
+      }
     }
   }, [locale, t]);
 

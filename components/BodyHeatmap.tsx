@@ -112,6 +112,16 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates, initi
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const noteDebounceTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
+  // Latest-state refs so click handlers see updates from clicks fired in the same
+  // React commit cycle (avoids stale-closure stomp where a 2nd click's PATCH
+  // overwrites the 1st click's optimistic body_status entry on the server).
+  const statusRef = useRef(status);
+  const statusDatesRef = useRef(statusDates);
+  const notesRef = useRef(notes);
+  useEffect(() => { statusRef.current = status; }, [status]);
+  useEffect(() => { statusDatesRef.current = statusDates; }, [statusDates]);
+  useEffect(() => { notesRef.current = notes; }, [notes]);
+
   // Sync prop changes (e.g. parent reloads profile)
   useEffect(() => {
     if (initialStatus) setStatus(initialStatus);
@@ -139,8 +149,15 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates, initi
   const handlePartClick = useCallback(async (part: PartKey) => {
     if (!isOnline) { showToast(t("body.offlineError")); return; }
 
+    // Read latest state via refs so taps fired before the previous render commits
+    // still see the freshest snapshot — without this, the second tap PATCHes a
+    // body_status that's missing the first tap's update.
+    const prevStatus = statusRef.current;
+    const prevDates = statusDatesRef.current;
+    const prevNotes = notesRef.current;
+
     // Item 18: All parts default to Healthy (green). Cycle: unset/ok → sore → injured → (reset to healthy)
-    const current = status[part];
+    const current = prevStatus[part];
     // If unset or "ok", first tap → sore. sore → injured. injured → remove (back to healthy green).
     let next: PartStatus;
     if (!current || current === "ok") {
@@ -154,7 +171,7 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates, initi
         const histKey = "bjj_injury_history";
         const raw = localStorage.getItem(histKey);
         const history: { part: string; status: string; startDate: string; endDate: string }[] = raw ? JSON.parse(raw) : [];
-        const startDate = statusDates[part] ?? toDateStr(new Date());
+        const startDate = prevDates[part] ?? toDateStr(new Date());
         history.unshift({ part, status: current, startDate, endDate: toDateStr(new Date()) });
         // Keep max 50 entries
         if (history.length > 50) history.length = 50;
@@ -162,15 +179,18 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates, initi
       } catch (err: unknown) {
         clientLogger.error("bodyheatmap.localstorage_failed", {}, err instanceof Error ? err : new Error(String(err)));
       }
-      const newStatusClean: BodyStatus = { ...status };
+      const newStatusClean: BodyStatus = { ...prevStatus };
       delete newStatusClean[part];
-      const newDatesClean = { ...statusDates };
+      const newDatesClean = { ...prevDates };
       delete newDatesClean[part];
-      const newNotesClean = { ...notes };
+      const newNotesClean = { ...prevNotes };
       delete newNotesClean[part];
       setStatus(newStatusClean);
       setStatusDates(newDatesClean);
       setNotes(newNotesClean);
+      statusRef.current = newStatusClean;
+      statusDatesRef.current = newDatesClean;
+      notesRef.current = newNotesClean;
       setActivePart(null);
       setSavingPart(part);
       const { error } = await supabase
@@ -178,17 +198,25 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates, initi
         .update({ body_status: newStatusClean, body_status_dates: newDatesClean, body_notes: newNotesClean })
         .eq("id", userId);
       setSavingPart(null);
-      if (error) { setStatus(status); setStatusDates(statusDates); setNotes(notes); showToast(t("body.saveError")); }
+      if (error) {
+        // Revert just this part on failure so concurrent taps on other parts aren't clobbered.
+        setStatus((s) => ({ ...s, [part]: current }));
+        setStatusDates((d) => prevDates[part] ? { ...d, [part]: prevDates[part] } : d);
+        if (prevNotes[part] !== undefined) setNotes((n) => ({ ...n, [part]: prevNotes[part]! }));
+        showToast(t("body.saveError"));
+      }
       return;
     }
 
     // Record first-seen date when a part is first marked sore/injured
     const today = toDateStr(new Date());
-    const newDates = statusDates[part] ? statusDates : { ...statusDates, [part]: today };
+    const newDates = prevDates[part] ? prevDates : { ...prevDates, [part]: today };
 
-    const newStatus: BodyStatus = { ...status, [part]: next };
+    const newStatus: BodyStatus = { ...prevStatus, [part]: next };
     setStatus(newStatus);
     setStatusDates(newDates);
+    statusRef.current = newStatus;
+    statusDatesRef.current = newDates;
     setActivePart(part);
     setSavingPart(part);
 
@@ -200,33 +228,39 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates, initi
     setSavingPart(null);
 
     if (error) {
-      setStatus(status);
-      setStatusDates(statusDates);
+      // Roll back only this part — other concurrent updates stay intact.
+      setStatus((s) => {
+        const r = { ...s };
+        if (current) r[part] = current; else delete r[part];
+        return r;
+      });
       showToast(t("body.saveError"));
     }
-  }, [isOnline, status, statusDates, notes, userId, supabase, showToast, t]);
+  }, [isOnline, userId, supabase, showToast, t]);
 
-  // Save note with debounce
+  // Save note with debounce — read latest notes via ref so PATCH always carries the
+  // most recent map even when the debounced fire happens after additional edits.
   const saveNote = useCallback((part: PartKey, value: string) => {
-    const newNotes = { ...notes };
+    const newNotes = { ...notesRef.current };
     if (value.trim()) {
       newNotes[part] = value.trim();
     } else {
       delete newNotes[part];
     }
     setNotes(newNotes);
+    notesRef.current = newNotes;
 
     if (noteDebounceTimer.current) clearTimeout(noteDebounceTimer.current);
     noteDebounceTimer.current = setTimeout(async () => {
       setSavingNote(true);
       const { error } = await supabase
         .from("profiles")
-        .update({ body_notes: newNotes })
+        .update({ body_notes: notesRef.current })
         .eq("id", userId);
       setSavingNote(false);
       if (error) showToast(t("body.saveError"));
     }, 800);
-  }, [notes, userId, supabase, showToast, t]);
+  }, [userId, supabase, showToast, t]);
 
   const partColor = (key: PartKey) =>
     status[key] ? STATUS_COLOR[status[key]!] : DEFAULT_COLOR;

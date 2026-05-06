@@ -47,6 +47,7 @@ export default function WikiContentEnhancer() {
   // ── #29: Heading anchor links ──
   const showToast = useCallback((msg: string) => {
     setToast(msg);
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     toastTimerRef.current = setTimeout(() => setToast(null), 2000);
   }, []);
 

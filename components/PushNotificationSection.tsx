@@ -45,25 +45,31 @@ export default function PushNotificationSection() {
       setSubState("blocked");
       return;
     }
+    let cancelled = false;
     const checkSubscription = async () => {
       try {
         const reg = await navigator.serviceWorker.ready;
         const sub = await reg.pushManager.getSubscription();
+        if (cancelled) return;
         setSubState(sub !== null);
       } catch {
+        if (cancelled) return;
         setSubState(false);
       }
     };
     checkSubscription();
+    return () => { cancelled = true; };
   }, [vapidKey]);
 
   // Fetch preferences when subscribed
   useEffect(() => {
     if (subState !== true) return;
+    let cancelled = false;
     const fetchPrefs = async () => {
       try {
         const r = await fetch("/api/push/preferences");
         const json = await r.json();
+        if (cancelled) return;
         if (json.ok && json.preferences) {
           setPrefs({
             reengagement: json.preferences.reengagement ?? true,
@@ -73,10 +79,12 @@ export default function PushNotificationSection() {
           });
         }
       } catch (err: unknown) {
+        if (cancelled) return;
         clientLogger.error("push_prefs.fetch_failed", {}, err instanceof Error ? err : new Error(String(err)));
       }
     };
     fetchPrefs();
+    return () => { cancelled = true; };
   }, [subState]);
 
   const handleToggle = async () => {
@@ -94,20 +102,21 @@ export default function PushNotificationSection() {
 
   const updatePref = useCallback(async (key: keyof NotifPrefs, value: boolean) => {
     setSavingPref(true);
-    const next = { ...prefs, [key]: value };
-    setPrefs(next);
+    setPrefs((p) => ({ ...p, [key]: value }));
     try {
-      await fetch("/api/push/preferences", {
+      const res = await fetch("/api/push/preferences", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ [key]: value }),
       });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
     } catch (err: unknown) {
       clientLogger.error("push_prefs.update_failed", {}, err instanceof Error ? err : new Error(String(err)));
-      setPrefs(prefs);
+      // Revert just this key — never blow away another channel's concurrent toggle.
+      setPrefs((p) => ({ ...p, [key]: !value }));
     }
     setSavingPref(false);
-  }, [prefs]);
+  }, []);
 
   if (subState === "unsupported") return null;
 

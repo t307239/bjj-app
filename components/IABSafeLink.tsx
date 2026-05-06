@@ -54,6 +54,7 @@ export default function IABSafeLink({
     const url = window.location.origin + href;
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
+      if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => setCopied(false), 2000);
     }).catch((err) => clientLogger.error("clipboard_copy_failed", {}, err));
   };

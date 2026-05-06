@@ -41,6 +41,7 @@ export default function EasterEgg() {
         if (next === KONAMI_CODE.length) {
           setShow(true);
           setProgress(0);
+          if (timerRef.current) clearTimeout(timerRef.current);
           timerRef.current = setTimeout(() => setShow(false), 5000);
         } else {
           setProgress(next);

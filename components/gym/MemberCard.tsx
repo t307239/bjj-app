@@ -36,6 +36,7 @@ export default function MemberCard({
     const msg = t("gym.nudgeTemplate");
     navigator.clipboard.writeText(msg).then(() => {
       setNudgeCopied(true);
+      if (nudgeCopiedTimerRef.current) clearTimeout(nudgeCopiedTimerRef.current);
       nudgeCopiedTimerRef.current = setTimeout(() => setNudgeCopied(false), 2000);
     }).catch((err) => clientLogger.error("nudge_clipboard_copy_failed", {}, err));
   };

@@ -72,6 +72,12 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
   const supabaseRef = useRef(createClient());
   const supabase = supabaseRef.current;
 
+  // Per-row sequence tokens — when the user spam-clicks mastery 1→2→3, server responses
+  // can arrive out of order; only the response matching the latest token wins so the
+  // final UI mirrors the last click instead of a random earlier one.
+  const masterySeqRef = useRef<Map<string, number>>(new Map());
+  const pinSeqRef = useRef<Map<string, number>>(new Map());
+
   // Flush pending delete on unmount so data is never lost
   const pendingTechDeleteRef = useRef(pendingTechDelete);
   pendingTechDeleteRef.current = pendingTechDelete;
@@ -345,8 +351,14 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
   };
 
   const handleQuickMastery = async (id: string, newLevel: number) => {
+    const seq = (masterySeqRef.current.get(id) ?? 0) + 1;
+    masterySeqRef.current.set(id, seq);
+
+    // Capture pre-click value of just this row so a failed save can revert it
+    // without clobbering other rows' optimistic updates (race-safe rollback).
+    const prevLevel = techniques.find((t) => t.id === id)?.mastery_level ?? newLevel;
+
     // Optimistic: update mastery immediately
-    const snapshot = techniques;
     setTechniques((prev) =>
       prev.map((t) => (t.id === id ? { ...t, mastery_level: newLevel } : t)),
     );
@@ -359,11 +371,15 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
       .eq("user_id", userId)
       .select()
       .single();
+    // Only commit / rollback if this is still the latest click for this row
+    if (masterySeqRef.current.get(id) !== seq) return;
     if (!error && data) {
       setTechniques((prev) => prev.map((t) => (t.id === id ? data : t)));
     } else {
-      // Rollback
-      setTechniques(snapshot);
+      setTechniques((prev) =>
+        prev.map((t) => (t.id === id ? { ...t, mastery_level: prevLevel } : t)),
+      );
+      setToast({ message: t("techniques.updateFailed"), type: "error" });
     }
   };
 
@@ -371,10 +387,13 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
   const handleTogglePin = async (id: string) => {
     const tech = techniques.find((t) => t.id === id);
     if (!tech) return;
-    const newPinned = !(tech.is_pinned ?? false);
+    const prevPinned = tech.is_pinned ?? false;
+    const newPinned = !prevPinned;
 
-    // Optimistic
-    const snapshot = techniques;
+    const seq = (pinSeqRef.current.get(id) ?? 0) + 1;
+    pinSeqRef.current.set(id, seq);
+
+    // Optimistic — only this row, so rapid pin toggles on different rows don't stomp.
     setTechniques((prev) =>
       prev.map((t) => (t.id === id ? { ...t, is_pinned: newPinned } : t)),
     );
@@ -387,10 +406,13 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
       .eq("user_id", userId)
       .select()
       .single();
+    if (pinSeqRef.current.get(id) !== seq) return;
     if (!error && data) {
       setTechniques((prev) => prev.map((t) => (t.id === id ? data : t)));
     } else {
-      setTechniques(snapshot);
+      setTechniques((prev) =>
+        prev.map((t) => (t.id === id ? { ...t, is_pinned: prevPinned } : t)),
+      );
       setToast({ message: t("techniques.updateFailed"), type: "error" });
     }
   };

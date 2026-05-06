@@ -170,6 +170,19 @@ export default function WeightChart({ userId, refreshKey, targetWeight, targetDa
 
   // Include targetWeight in min/max calculation so goal line is always visible
   const allForRange = targetWeight != null ? [...allWeights, targetWeight] : allWeights;
+  // Guard against empty range (data has rows but all weight values null) so Math.min/max don't return ±Infinity
+  if (allForRange.length === 0) {
+    return (
+      <div className="bg-zinc-900 rounded-xl p-4 border border-white/10">
+        <p className="text-xs text-zinc-400 font-semibold mb-2 uppercase tracking-wide">
+          {t("body.weightChart")}
+        </p>
+        <div className="flex flex-col items-center py-6 gap-3">
+          <p className="text-zinc-400 text-sm">{t("body.noData")}</p>
+        </div>
+      </div>
+    );
+  }
   const minW = Math.floor(Math.min(...allForRange) - 1);
   const maxW = Math.ceil(Math.max(...allForRange) + 1);
   const PL = padLeft(maxW); // dynamic left padding

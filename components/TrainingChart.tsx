@@ -39,6 +39,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
   const supabase = supabaseRef.current;
 
   useEffect(() => {
+    let cancelled = false;
     const load = async () => {
       try {
         // 過去12ヶ月分を取得（ヒートマップ + 月別チャート両方に対応）
@@ -58,6 +59,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
           .eq("user_id", userId)
           .gte("date", monthSinceStr)
           .order("date", { ascending: true });
+        if (cancelled) return;
         if (error) clientLogger.error("trainingchart.query", {}, error);
 
         if (logs) {
@@ -100,12 +102,14 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
           setMonthData(months);
         }
       } catch (err: unknown) {
+        if (cancelled) return;
         clientLogger.error("trainingchart.load_failed", {}, err instanceof Error ? err : new Error(String(err)));
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
     load();
+    return () => { cancelled = true; };
   }, [userId, supabase]);
 
   if (loading) return <Skeleton height={120} rounded="xl" className="mb-4" />;

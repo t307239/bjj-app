@@ -31,10 +31,11 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let cancelled = false;
     const checkToday = async () => {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (cancelled || !user) return;
       setUserId(user.id);
       // ⑨ Use logical training date: before 4AM counts as previous day
       const today = getLogicalTrainingDate();
@@ -52,6 +53,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
           .eq("id", user.id)
           .single(),
       ]);
+      if (cancelled) return;
       setTrainedToday((recentLogs ?? []).some((l: { date: string }) => l.date === today));
       setIsPro(profile?.is_pro ?? false);
       // ストリーク計算
@@ -72,6 +74,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
       }
     };
     checkToday();
+    return () => { cancelled = true; };
   }, [pathname]); // re-check after navigation (e.g. after logging a session)
 
   // Close user menu when clicking outside
