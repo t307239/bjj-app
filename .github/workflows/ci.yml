@@ -167,6 +167,18 @@ jobs:
       - name: Run detect_internal_link_drift.py
         run: python3 scripts/detect_internal_link_drift.py --ci
 
+      # z257: bare setTimeout(setState) leak
+      # CLAUDE.md rule: 必ず変数 / ref に capture して useEffect cleanup で
+      # clearTimeout すること。直接呼びはメモリリーク + unmount 後 setState 警告。
+      - name: Run detect_unsafe_settimeout.py
+        run: python3 scripts/detect_unsafe_settimeout.py --ci
+
+      # z257: JSON.parse(localStorage.getItem(...)) は try/catch 必須
+      # corrupted value (manual edit / browser bug) で throw → component が
+      # permanent crash する hazard を恒久 catch。
+      - name: Run detect_localstorage_hazards.py
+        run: python3 scripts/detect_localstorage_hazards.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest

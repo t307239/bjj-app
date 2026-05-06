@@ -42,34 +42,23 @@ export async function POST(req: Request) {
     serverEnv.supabaseServiceRoleKey()
   );
 
-  // z172: Idempotency check — Stripe may deliver the same event multiple
-  // times (https://stripe.com/docs/webhooks#best-practices). The
-  // stripe_webhook_events table has a PRIMARY KEY on event_id, so a
-  // duplicate insert fails with PostgreSQL code 23505 (unique_violation).
-  // We treat that as "already processed" and return 200 immediately.
-  const { error: insertError } = await supabase
+  // z257: Idempotency check — fast-path for duplicate events.
+  // Previous (z172) inserted the event row BEFORE processing; if processing
+  // then threw 500, Stripe retried, the retry hit 23505 (unique_violation),
+  // and we returned 200 without ever processing. The successful first run
+  // for that event never happened. Now we read-check first, then insert
+  // AFTER successful processing so retries can re-attempt failed events.
+  const { data: alreadyProcessed } = await supabase
     .from("stripe_webhook_events")
-    .insert({
-      event_id: event.id,
-      event_type: event.type,
+    .select("event_id")
+    .eq("event_id", event.id)
+    .maybeSingle();
+  if (alreadyProcessed) {
+    logger.info("stripe.webhook.duplicate_event_skipped", {
+      eventId: event.id,
+      eventType: event.type,
     });
-
-  if (insertError) {
-    // 23505 = unique_violation = duplicate event = idempotent skip.
-    if (insertError.code === "23505") {
-      logger.info("stripe.webhook.duplicate_event_skipped", {
-        eventId: event.id,
-        eventType: event.type,
-      });
-      return new Response("ok (duplicate)", { status: 200 });
-    }
-    // Other DB errors are unexpected — log but proceed (don't block legitimate
-    // webhook processing on a transient idempotency-table issue).
-    logger.error(
-      "stripe.webhook.idempotency_insert_failed",
-      { eventId: event.id, code: insertError.code },
-      insertError as Error,
-    );
+    return new Response("ok (duplicate)", { status: 200 });
   }
 
   try {
@@ -381,6 +370,21 @@ export async function POST(req: Request) {
   } catch (err) {
     logger.error("stripe.webhook.processing_error", { eventType: event.type }, err as Error);
     return new Response("Internal server error", { status: 500 });
+  }
+
+  // z257: record idempotency AFTER successful processing.
+  // 23505 here means a parallel delivery beat us — both finished, so it's
+  // safe to ignore. Any other insert error is logged but we still return 200
+  // because the actual webhook side-effect already succeeded.
+  const { error: idemErr } = await supabase
+    .from("stripe_webhook_events")
+    .insert({ event_id: event.id, event_type: event.type });
+  if (idemErr && idemErr.code !== "23505") {
+    logger.error(
+      "stripe.webhook.idempotency_record_failed",
+      { eventId: event.id, code: idemErr.code },
+      idemErr as Error,
+    );
   }
 
   return new Response("ok", { status: 200 });

@@ -106,7 +106,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
 
   const handleSaveTarget = async () => {
     const val = parseFloat(targetWeightInput);
-    if (isNaN(val) || val <= 0) return;
+    if (isNaN(val) || val <= 0 || val > 300) return;
     setTargetSaving(true);
     try {
       await supabase

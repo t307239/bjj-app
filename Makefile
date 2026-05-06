@@ -3,10 +3,10 @@
 # 「完璧」と宣言する前に必ず `make verify` を実行する。
 # 6 つの lint が全パスすれば commit 可能、1 つでも 🔴 fail なら作業未完了。
 
-.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links
+.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards
 
 # Run all anti-regression checks
-verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links
+verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards
 	@echo ""
 	@echo "✅ All anti-regression checks passed."
 	@echo "   Safe to commit."
@@ -45,6 +45,16 @@ wiki-url:
 internal-links:
 	@echo "→ detect_internal_link_drift.py..."
 	@python3 scripts/detect_internal_link_drift.py --ci
+
+# z257: bare setTimeout(setState) なし — capture id + clearTimeout in cleanup
+unsafe-settimeout:
+	@echo "→ detect_unsafe_settimeout.py..."
+	@python3 scripts/detect_unsafe_settimeout.py --ci
+
+# z257: JSON.parse(localStorage.getItem(...)) は try/catch 必須 (corrupted value crash 防止)
+localstorage-hazards:
+	@echo "→ detect_localstorage_hazards.py..."
+	@python3 scripts/detect_localstorage_hazards.py --ci
 
 typecheck:
 	@echo "→ TypeScript type check..."
