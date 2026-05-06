@@ -28,17 +28,12 @@ interface AchievementBadgeProps {
   belt?: string;
 }
 
-const SESSION_MILESTONES = [
-  1, 7, 10, 30, 50, 100, 200, 365, 500, 1000,
-] as const;
+const SESSION_MILESTONES = [1, 7, 10, 30, 50, 100, 200, 365, 500, 1000] as const;
 
 // z222: streak 連続日数の milestone (虚栄心が刺激される丸数字)
-const STREAK_MILESTONES = [
-  7, 14, 30, 60, 100, 180, 365,
-] as const;
+const STREAK_MILESTONES = [7, 14, 30, 60, 100, 180, 365] as const;
 
 export default function AchievementBadge({
-  userId: _userId,
   totalCount,
   streak = 0,
   belt = "white",
@@ -50,15 +45,35 @@ export default function AchievementBadge({
   const [aType, setAType] = useState<AchievementType>("sessions");
 
   useEffect(() => {
+    // localStorage に corrupted JSON が入っていても crash しないよう必ず try/catch
+    const loadShown = (key: string): number[] => {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return [];
+        const parsed: unknown = JSON.parse(raw);
+        return Array.isArray(parsed)
+          ? (parsed.filter((v) => typeof v === "number") as number[])
+          : [];
+      } catch {
+        return [];
+      }
+    };
+    const saveShown = (key: string, list: number[]): void => {
+      try {
+        localStorage.setItem(key, JSON.stringify(list));
+      } catch {
+        /* quota / private mode — ignore */
+      }
+    };
+
     // ── Sessions milestone (旧) ──
     if (totalCount > 0) {
       const matched = SESSION_MILESTONES.find((m) => m === totalCount);
       if (matched) {
-        const shown = localStorage.getItem("bjj_shown_milestones");
-        const list = shown ? JSON.parse(shown) : [];
+        const list = loadShown("bjj_shown_milestones");
         if (!list.includes(matched)) {
           list.push(matched);
-          localStorage.setItem("bjj_shown_milestones", JSON.stringify(list));
+          saveShown("bjj_shown_milestones", list);
           setAType("sessions");
           setMilestone(matched);
           setShowBadge(true);
@@ -70,11 +85,10 @@ export default function AchievementBadge({
     if (streak > 0) {
       const matched = STREAK_MILESTONES.find((m) => m === streak);
       if (matched) {
-        const shown = localStorage.getItem("bjj_shown_streak_milestones");
-        const list = shown ? JSON.parse(shown) : [];
+        const list = loadShown("bjj_shown_streak_milestones");
         if (!list.includes(matched)) {
           list.push(matched);
-          localStorage.setItem("bjj_shown_streak_milestones", JSON.stringify(list));
+          saveShown("bjj_shown_streak_milestones", list);
           setAType("streak");
           setMilestone(matched);
           setShowBadge(true);
@@ -88,12 +102,13 @@ export default function AchievementBadge({
   // ── z222: share text + image URL を type 別に組立 ──
   const shareUrl = `https://bjj-app.net/?ref=achievement_share&kind=${aType}${milestone}`;
   // share text: streak は emoji 強め、sessions は milestone.text の i18n key を使用
-  const shareText = aType === "streak"
-    ? t("achievement.streakShareText", { n: milestone })
-    : t("achievement.shareText", {
-        n: milestone,
-        text: t(`achievement.milestone.${milestone}.text`),
-      });
+  const shareText =
+    aType === "streak"
+      ? t("achievement.streakShareText", { n: milestone })
+      : t("achievement.shareText", {
+          n: milestone,
+          text: t(`achievement.milestone.${milestone}.text`),
+        });
   // /api/og?mode=achievement&type=streak&value=30&belt=blue&lang=en
   // Twitter/X 等は OG meta から auto preview するため shareUrl 経由で OG image が取得される
   // ただし shareUrl は LP なので OG が違う → 直接 image URL を渡す path も用意
@@ -103,15 +118,15 @@ export default function AchievementBadge({
   // 表示用 (modal 内に preview する画像) — z222 OG 拡張済 endpoint
   const previewImageUrl = `/api/og?mode=achievement&type=${aType}&value=${milestone}&belt=${belt}&lang=${locale}`;
 
-  const milestoneText = aType === "sessions"
-    ? t(`achievement.milestone.${milestone}.text`)
-    : t("achievement.streakTitle", { n: milestone });
-  const milestoneSubtext = aType === "sessions"
-    ? t(`achievement.milestone.${milestone}.subtext`)
-    : t("achievement.streakSubtitle");
-  const milestoneEmoji = aType === "streak"
-    ? "🔥"
-    : t(`achievement.milestone.${milestone}.emoji`);
+  const milestoneText =
+    aType === "sessions"
+      ? t(`achievement.milestone.${milestone}.text`)
+      : t("achievement.streakTitle", { n: milestone });
+  const milestoneSubtext =
+    aType === "sessions"
+      ? t(`achievement.milestone.${milestone}.subtext`)
+      : t("achievement.streakSubtitle");
+  const milestoneEmoji = aType === "streak" ? "🔥" : t(`achievement.milestone.${milestone}.emoji`);
 
   // z222: native share sheet (mobile)
   const handleShare = async () => {
@@ -119,7 +134,9 @@ export default function AchievementBadge({
       try {
         await navigator.share({ text: shareText, url: shareUrl });
         return;
-      } catch { /* user cancelled */ }
+      } catch {
+        /* user cancelled */
+      }
     }
     // fallback: X/Twitter
     handleShareX();
@@ -154,7 +171,9 @@ export default function AchievementBadge({
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
-    } catch { /* clipboard 失敗時は無視 */ }
+    } catch {
+      /* clipboard 失敗時は無視 */
+    }
   };
 
   return (
@@ -176,9 +195,7 @@ export default function AchievementBadge({
       >
         <div className="bg-gradient-to-b from-violet-600 to-purple-800 rounded-2xl px-8 py-12 text-center max-w-sm mx-4 shadow-2xl pointer-events-auto relative overflow-hidden">
           {/* Confetti-like background elements */}
-          <div className="absolute top-2 left-4 text-4xl opacity-30 animate-bounce">
-            ✨
-          </div>
+          <div className="absolute top-2 left-4 text-4xl opacity-30 animate-bounce">✨</div>
           <div className="absolute top-6 right-6 text-3xl opacity-30 animate-bounce delay-150">
             ⭐
           </div>
@@ -188,12 +205,8 @@ export default function AchievementBadge({
 
           {/* Main content */}
           <div className="relative z-10">
-            <div className="text-8xl mb-4 drop-shadow-lg">
-              {milestoneEmoji}
-            </div>
-            <h2 className="text-3xl font-bold text-white mb-2">
-              {milestoneText}
-            </h2>
+            <div className="text-8xl mb-4 drop-shadow-lg">{milestoneEmoji}</div>
+            <h2 className="text-3xl font-bold text-white mb-2">{milestoneText}</h2>
             <p className="text-lg text-white font-semibold mb-4">{milestoneSubtext}</p>
 
             {/* z222: Share card preview image (auto-generated by /api/og) */}
@@ -209,7 +222,8 @@ export default function AchievementBadge({
 
             {/* Buttons */}
             <div className="flex flex-col gap-2 items-center">
-              <button type="button"
+              <button
+                type="button"
                 onClick={handleShare}
                 className="bg-white text-violet-600 px-6 py-2.5 rounded-lg font-bold hover:bg-gray-100 transition-colors min-h-[44px] w-full max-w-[260px]"
               >
@@ -218,35 +232,40 @@ export default function AchievementBadge({
               {/* z222: SNS-specific share buttons (X / Threads / Bluesky / Copy)
                   旧 Facebook 削除 (BJJ audience 上の engagement なし) */}
               <div className="flex gap-2 flex-wrap justify-center">
-                <button type="button"
+                <button
+                  type="button"
                   onClick={handleShareX}
                   className="bg-black text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-zinc-800 transition-colors min-h-[40px]"
                   aria-label="Share on X"
                 >
                   𝕏
                 </button>
-                <button type="button"
+                <button
+                  type="button"
                   onClick={handleShareThreads}
                   className="bg-zinc-900 text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-zinc-700 transition-colors min-h-[40px]"
                   aria-label="Share on Threads"
                 >
                   Threads
                 </button>
-                <button type="button"
+                <button
+                  type="button"
                   onClick={handleShareBluesky}
                   className="bg-[#1185FE] text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-[#0d6fda] transition-colors min-h-[40px]"
                   aria-label="Share on Bluesky"
                 >
                   Bluesky
                 </button>
-                <button type="button"
+                <button
+                  type="button"
                   onClick={handleCopyLink}
                   className="bg-purple-700 text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-purple-800 transition-colors min-h-[40px]"
                   aria-label={t("achievement.copyLink")}
                 >
                   📋
                 </button>
-                <button type="button"
+                <button
+                  type="button"
                   onClick={() => setShowBadge(false)}
                   className="bg-purple-900 text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-purple-950 transition-colors border border-white/30 min-h-[40px]"
                   aria-label={t("common.close")}

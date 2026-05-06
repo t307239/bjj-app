@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type ToastType = "success" | "error";
 
@@ -12,13 +12,27 @@ type Props = {
   onUndo?: () => void;
 };
 
-export default function Toast({ message, type = "success", duration = 2500, onClose, onUndo }: Props) {
+export default function Toast({
+  message,
+  type = "success",
+  duration = 2500,
+  onClose,
+  onUndo,
+}: Props) {
   const [visible, setVisible] = useState(true);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setVisible(false);
-      setTimeout(onClose, 300);
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = setTimeout(onClose, 300);
     }, duration);
     return () => clearTimeout(timer);
   }, [onClose, duration]);
@@ -26,7 +40,11 @@ export default function Toast({ message, type = "success", duration = 2500, onCl
   // ── Escape key to dismiss immediately ─────────────────────────────────────
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setVisible(false); setTimeout(onClose, 300); }
+      if (e.key === "Escape") {
+        setVisible(false);
+        if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+        closeTimerRef.current = setTimeout(onClose, 300);
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -49,7 +67,8 @@ export default function Toast({ message, type = "success", duration = 2500, onCl
         {message}
       </span>
       {onUndo && (
-        <button type="button"
+        <button
+          type="button"
           onClick={() => {
             setVisible(false);
             onUndo();
