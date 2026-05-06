@@ -56,7 +56,7 @@ export default function PmfMetricsCard() {
       } catch (err) {
         if (!cancelled) {
           clientLogger.error("pmf_metrics.fetch_failed", {}, err as Error);
-          setErrorMsg("Failed to load PMF metrics.");
+          setErrorMsg("PMF 指標の読み込みに失敗しました。");
           setLoading(false);
         }
       }
@@ -72,7 +72,7 @@ export default function PmfMetricsCard() {
         className="bg-zinc-900 border border-white/10 rounded-xl p-5 mb-6 animate-pulse"
         role="status"
         aria-live="polite"
-        aria-label="Loading PMF metrics"
+        aria-label="PMF 指標を読み込み中"
       >
         <div className="h-5 w-32 bg-zinc-800 rounded mb-4" />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -91,7 +91,7 @@ export default function PmfMetricsCard() {
         className="bg-zinc-900 border border-red-500/30 rounded-xl p-5 mb-6 text-sm text-red-300"
         role="alert"
       >
-        ⚠️ {errorMsg ?? "No data."}
+        ⚠️ {errorMsg ?? "データがありません。"}
       </div>
     );
   }
@@ -100,7 +100,7 @@ export default function PmfMetricsCard() {
   if (!pmf) {
     return (
       <div className="bg-zinc-900 border border-white/10 rounded-xl p-5 mb-6 text-sm text-zinc-400">
-        PMF metrics unavailable (auth.users fetch failed).
+        PMF 指標を取得できません (auth.users 取得失敗)。
       </div>
     );
   }

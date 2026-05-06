@@ -162,7 +162,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
       <div className="border-b border-white/10 px-4 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-bold text-white">🛡️ Admin Panel</h1>
+            <h1 className="text-lg font-bold text-white">🛡️ 管理パネル</h1>
             <p className="text-xs text-zinc-400">{adminEmail}</p>
           </div>
           <div className="flex items-center gap-3">
@@ -172,10 +172,10 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
               disabled={exporting || !data}
               className="text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors border border-white/10 px-3 py-1.5 rounded-lg"
             >
-              {exporting ? "Exporting…" : "Export CSV"}
+              {exporting ? "エクスポート中…" : "CSV エクスポート"}
             </button>
             <a href="/dashboard" className="text-xs text-zinc-400 hover:text-white transition-colors">
-              ← Back to app
+              ← アプリに戻る
             </a>
           </div>
         </div>
@@ -190,19 +190,19 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-white">{data.total}</div>
-              <div className="text-xs text-zinc-400 mt-0.5">Total Users</div>
+              <div className="text-xs text-zinc-400 mt-0.5">総ユーザー数</div>
             </div>
             <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-yellow-400">{proCount}</div>
-              <div className="text-xs text-zinc-400 mt-0.5">Pro (this page)</div>
+              <div className="text-xs text-zinc-400 mt-0.5">Pro (このページ)</div>
             </div>
             <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-blue-400">{gymOwnerCount}</div>
-              <div className="text-xs text-zinc-400 mt-0.5">Gym Members</div>
+              <div className="text-xs text-zinc-400 mt-0.5">道場メンバー</div>
             </div>
             <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-green-400">{activeCount}</div>
-              <div className="text-xs text-zinc-400 mt-0.5">Active (30d)</div>
+              <div className="text-xs text-zinc-400 mt-0.5">アクティブ (30日)</div>
             </div>
           </div>
         )}
@@ -216,7 +216,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by email…"
+            placeholder="メールアドレス検索…"
             className="w-full bg-zinc-900 border border-white/10 text-white placeholder-gray-600 px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:border-white/30"
           />
         </div>
@@ -230,7 +230,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
 
         {/* User table */}
         {loading && !data ? (
-          <div className="text-center py-16 text-zinc-400 text-sm">Loading…</div>
+          <div className="text-center py-16 text-zinc-400 text-sm">読み込み中…</div>
         ) : (
           <>
             <div className="space-y-1.5">
@@ -272,29 +272,29 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
                     <div className="bg-zinc-900/60 border border-white/5 border-t-0 rounded-b-xl px-4 py-4 -mt-1 space-y-4">
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs">
                         <div>
-                          <div className="text-zinc-400 mb-0.5">User ID</div>
+                          <div className="text-zinc-400 mb-0.5">ユーザーID</div>
                           <div className="font-mono text-zinc-300 break-all">{user.id}</div>
                         </div>
                         <div>
-                          <div className="text-zinc-400 mb-0.5">Signed up</div>
+                          <div className="text-zinc-400 mb-0.5">登録日</div>
                           <div className="text-zinc-300">{fmtDate(user.created_at)}</div>
                         </div>
                         <div>
-                          <div className="text-zinc-400 mb-0.5">Last login</div>
+                          <div className="text-zinc-400 mb-0.5">最終ログイン</div>
                           <div className="text-zinc-300">{fmtDaysAgo(user.last_sign_in_at)}</div>
                         </div>
                         <div>
-                          <div className="text-zinc-400 mb-0.5">Total sessions</div>
+                          <div className="text-zinc-400 mb-0.5">総セッション数</div>
                           <div className="text-zinc-300 font-bold">{user.sessions_total}</div>
                         </div>
                         <div>
-                          <div className="text-zinc-400 mb-0.5">Stripe (belt)</div>
+                          <div className="text-zinc-400 mb-0.5">Stripe (帯)</div>
                           <div className="text-zinc-300">{user.stripe}</div>
                         </div>
                         <div>
-                          <div className="text-zinc-400 mb-0.5">Subscription</div>
+                          <div className="text-zinc-400 mb-0.5">サブスクリプション</div>
                           <div className={`font-semibold ${user.is_pro ? "text-yellow-400" : "text-zinc-500"}`}>
-                            {user.is_pro ? "Pro" : "Free"}
+                            {user.is_pro ? "Pro" : "無料"}
                           </div>
                         </div>
                       </div>
@@ -306,8 +306,8 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
                           type="button"
                           disabled={updating === user.id}
                           onClick={() => {
-                            const action = user.is_pro ? "revoke Pro from" : "grant Pro to";
-                            if (!window.confirm(`Are you sure you want to ${action} ${user.email}?`)) return;
+                            const action = user.is_pro ? "解除" : "付与";
+                            if (!window.confirm(`${user.email} の Pro を${action}しますか？`)) return;
                             updateUser(user.id, { is_pro: !user.is_pro });
                           }}
                           className={`text-xs px-3 py-1.5 rounded-lg border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
@@ -316,13 +316,13 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
                               : "border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10"
                           }`}
                         >
-                          {user.is_pro ? "Revoke Pro" : "Grant Pro"}
+                          {user.is_pro ? "Pro 解除" : "Pro 付与"}
                         </button>
 
                         {/* Belt change */}
                         <div className="flex items-center gap-1.5">
                           <label htmlFor={`belt-${user.id}`} className="text-xs text-zinc-400">
-                            Belt:
+                            帯:
                           </label>
                           <select
                             id={`belt-${user.id}`}
@@ -335,16 +335,16 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
                             }}
                             className="text-xs bg-zinc-800 border border-white/10 text-white rounded-lg px-2 py-1.5 focus:outline-none focus:border-white/30 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            <option value="white">White</option>
-                            <option value="blue">Blue</option>
-                            <option value="purple">Purple</option>
-                            <option value="brown">Brown</option>
-                            <option value="black">Black</option>
+                            <option value="white">白</option>
+                            <option value="blue">青</option>
+                            <option value="purple">紫</option>
+                            <option value="brown">茶</option>
+                            <option value="black">黒</option>
                           </select>
                         </div>
 
                         {updating === user.id && (
-                          <span className="text-xs text-zinc-500">Updating…</span>
+                          <span className="text-xs text-zinc-500">更新中…</span>
                         )}
                       </div>
                     </div>
@@ -354,7 +354,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
 
               {data?.users.length === 0 && !loading && (
                 <div className="text-center py-16 text-zinc-400 text-sm">
-                  {query ? `No users matching "${query}"` : "No users found"}
+                  {query ? `「${query}」に一致するユーザーはいません` : "ユーザーが見つかりません"}
                 </div>
               )}
             </div>
@@ -367,17 +367,17 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
                   disabled={page === 0 || loading}
                   className="text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-1.5 border border-white/10 rounded-lg"
                 >
-                  ← Previous
+                  ← 前へ
                 </button>
                 <span className="text-xs text-zinc-400">
-                  Page {page + 1} · {data.total} total
+                  {page + 1} ページ目 · 全 {data.total} 件
                 </span>
                 <button type="button"
                   onClick={() => setPage((p) => p + 1)}
                   disabled={(page + 1) * (data.limit ?? 50) >= data.total || loading}
                   className="text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-1.5 border border-white/10 rounded-lg"
                 >
-                  Next →
+                  次へ →
                 </button>
               </div>
             )}
@@ -385,7 +385,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
         )}
 
         {loading && data && (
-          <div className="text-center text-xs text-zinc-500 mt-2">Refreshing…</div>
+          <div className="text-center text-xs text-zinc-500 mt-2">更新中…</div>
         )}
       </div>
 
