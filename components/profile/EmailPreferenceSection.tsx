@@ -28,10 +28,17 @@ export default function EmailPreferenceSection() {
     (async () => {
       try {
         const res = await fetch("/api/profile/email-preferences");
+        if (cancelled) return;
+        if (!res.ok) {
+          // Read error body defensively — non-JSON 5xx must not throw here.
+          const body = await res.json().catch(() => ({})) as { error?: string };
+          if (!cancelled) setError(body.error ?? `load_failed_${res.status}`);
+          return;
+        }
         const data = (await res.json()) as { email_marketing_opted_out?: boolean; error?: string };
         if (cancelled) return;
-        if (!res.ok || data.error) {
-          setError(data.error ?? "load_failed");
+        if (data.error) {
+          setError(data.error);
           return;
         }
         setOptedOut(Boolean(data.email_marketing_opted_out));

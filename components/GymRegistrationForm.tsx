@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
+import { clientLogger } from "@/lib/clientLogger";
 
 type Props = {
   userId: string;
@@ -43,11 +44,21 @@ export default function GymRegistrationForm({ userId }: Props) {
     }
 
     // Mark user as gym owner
-    await supabase
+    const { error: profileError } = await supabase
       .from("profiles")
       .update({ is_gym_owner: true })
       .eq("id", userId);
 
+    if (profileError) {
+      // Gym row created but owner flag failed — log and surface, don't strand
+      // the user with a permanently-disabled submit button.
+      clientLogger.error("gym.register.owner_flag_failed", { gymId: gym.id }, profileError);
+      setError(t("gym.createError"));
+      setLoading(false);
+      return;
+    }
+
+    setGymName("");
     router.refresh();
   };
 

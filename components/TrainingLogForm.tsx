@@ -603,6 +603,7 @@ aria-hidden="true"               className={`w-3 h-3 flex-shrink-0 transition-tr
           onChange={(e) => setForm({ ...form, notes: e.target.value })}
           placeholder={t("training.memoFormPlaceholder")}
           rows={2}
+          maxLength={2000}
           className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 resize-none"
         />
       </div>

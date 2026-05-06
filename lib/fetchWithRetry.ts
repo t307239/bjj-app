@@ -18,6 +18,45 @@ export interface RetryOptions {
   maxDelay?: number;
 }
 
+/**
+ * fetchWithTimeout — single fetch attempt with hard timeout.
+ *
+ * Use for endpoints that should never hang (Stripe, Anthropic, billing
+ * actions). On timeout, throws an AbortError just like a user-cancelled
+ * fetch — callers can distinguish via `err.name === "AbortError"`.
+ *
+ * Honors a caller-provided AbortSignal (e.g. for unmount cancellation):
+ * the fetch aborts whichever signal fires first.
+ */
+export async function fetchWithTimeout(
+  input: RequestInfo | URL,
+  init?: RequestInit & { timeoutMs?: number },
+): Promise<Response> {
+  const timeoutMs = init?.timeoutMs ?? 15_000;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  // Compose external signal with our timeout signal.
+  if (init?.signal) {
+    if (init.signal.aborted) {
+      clearTimeout(timer);
+      controller.abort();
+    } else {
+      init.signal.addEventListener("abort", () => controller.abort(), { once: true });
+    }
+  }
+
+  try {
+    // Strip our extension fields before forwarding init to fetch.
+    const rest: RequestInit = { ...(init ?? {}) };
+    delete (rest as { timeoutMs?: number }).timeoutMs;
+    delete rest.signal;
+    return await fetch(input, { ...rest, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export async function fetchWithRetry(
   input: RequestInfo | URL,
   init?: RequestInit,

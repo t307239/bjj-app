@@ -11,6 +11,7 @@
  * or wiki or direct).
  */
 import { useState } from "react";
+import { fetchWithTimeout } from "@/lib/fetchWithRetry";
 
 declare global {
   interface Window {
@@ -40,20 +41,28 @@ export default function GymUpgradeCheckoutButton({ ctaLabel, refSource }: Props)
       // z181: pass attribution ref to Stripe checkout (saved as metadata.ref).
       // Sanitize: ref must be [a-z0-9_], else server rejects with 400.
       const safeRef = /^[a-z][a-z0-9_]{0,49}$/.test(refSource) ? refSource : "direct";
-      const res = await fetch("/api/stripe/checkout", {
+      const res = await fetchWithTimeout("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan: "gym", ref: safeRef }),
+        timeoutMs: 15_000,
       });
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({})) as { error?: string };
+        setError(errBody.error ?? `Checkout failed (HTTP ${res.status})`);
+        setLoading(false);
+        return;
+      }
       const data = (await res.json()) as { url?: string; error?: string };
-      if (!res.ok || !data.url) {
+      if (!data.url) {
         setError(data.error ?? "Checkout failed");
         setLoading(false);
         return;
       }
       window.location.href = data.url;
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
+      const isTimeout = e instanceof DOMException && e.name === "AbortError";
+      setError(isTimeout ? "Checkout timed out — please try again" : e instanceof Error ? e.message : String(e));
       setLoading(false);
     }
   };

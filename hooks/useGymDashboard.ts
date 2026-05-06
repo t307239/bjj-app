@@ -9,6 +9,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { formatMonthYear } from "@/lib/formatDate";
 import type { Locale } from "@/lib/i18n";
+import { fetchWithTimeout } from "@/lib/fetchWithRetry";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -118,11 +119,17 @@ export function useGymDashboard({ initialGym, t, locale = "en" }: UseGymDashboar
   const handleGymUpgrade = useCallback(async () => {
     setUpgrading(true);
     try {
-      const res = await fetch("/api/stripe/checkout", {
+      const res = await fetchWithTimeout("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan: "gym" }),
+        timeoutMs: 15_000,
       });
+      if (!res.ok) {
+        const errBody = (await res.json().catch(() => ({}))) as { error?: string };
+        setToast({ message: errBody.error ?? tRef.current("gym.networkError"), type: "error" });
+        return;
+      }
       const data = await res.json() as { url?: string | null; fallback?: boolean; error?: string };
       if (data.error) {
         setToast({ message: data.error, type: "error" }); return;
@@ -132,8 +139,9 @@ export function useGymDashboard({ initialGym, t, locale = "en" }: UseGymDashboar
       } else {
         setToast({ message: tRef.current("gym.stripeNotConfigured"), type: "error" });
       }
-    } catch {
-      setToast({ message: tRef.current("gym.networkError"), type: "error" });
+    } catch (err: unknown) {
+      const isTimeout = err instanceof DOMException && err.name === "AbortError";
+      setToast({ message: isTimeout ? tRef.current("gym.networkError") : tRef.current("gym.networkError"), type: "error" });
     } finally {
       setUpgrading(false);
     }

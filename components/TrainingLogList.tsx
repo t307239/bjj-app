@@ -347,6 +347,7 @@ const TrainingLogList = memo(function TrainingLogList({
                   value={editForm.notes}
                   onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
                   rows={2}
+                  maxLength={2000}
                   className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30 resize-none mb-2"
                 />
                 <div className="flex gap-2">

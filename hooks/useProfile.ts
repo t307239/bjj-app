@@ -45,17 +45,21 @@ export function useProfile({ userId }: UseProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
     const loadProfile = async () => {
       setInitialLoading(true);
+      // .maybeSingle() avoids throwing PGRST116 when a brand-new user
+      // has no profile row yet — common immediately after signup.
       const [profileRes, summaryRes, techRes] = await Promise.all([
         supabase
           .from("profiles")
           .select("belt, stripe, gym, bio, start_date")
           .eq("id", userId)
-          .single(),
+          .maybeSingle(),
         fetchTrainingSummary(supabase, userId),
         countTechniques(supabase, userId),
       ]);
+      if (!mounted) return;
       if (profileRes.data) {
         setProfile({
           belt: profileRes.data.belt || "white",
@@ -77,6 +81,7 @@ export function useProfile({ userId }: UseProfileProps) {
       setInitialLoading(false);
     };
     loadProfile();
+    return () => { mounted = false; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 

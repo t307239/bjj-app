@@ -77,7 +77,7 @@ export default function GoalTracker({ userId }: Props) {
             .from("profiles")
             .select("weekly_goal, monthly_goal, technique_goal")
             .eq("id", userId)
-            .single(),
+            .maybeSingle(),
         ]);
 
         // スキーマ未対応チェック（カラム非存在）

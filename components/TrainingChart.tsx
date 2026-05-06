@@ -267,6 +267,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
         <div className="flex bg-zinc-800 rounded-lg p-0.5">
           <button type="button"
             onClick={() => setViewMode("heatmap")}
+            aria-pressed={viewMode === "heatmap"}
             className={`text-xs px-3 py-1.5 rounded-lg transition-all ${
               viewMode === "heatmap"
                 ? "bg-zinc-600 text-white shadow-sm"
@@ -277,6 +278,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
           </button>
           <button type="button"
             onClick={() => setViewMode("monthly")}
+            aria-pressed={viewMode === "monthly"}
             className={`text-xs px-3 py-1.5 rounded-lg transition-all ${
               viewMode === "monthly"
                 ? "bg-zinc-600 text-white shadow-sm"

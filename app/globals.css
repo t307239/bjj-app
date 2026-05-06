@@ -44,17 +44,23 @@ textarea::placeholder {
   color: rgb(156 163 175); /* gray-400 */
 }
 
-/* iOS Safari: prevent auto-zoom on input focus (font-size < 16px triggers zoom) */
+/* iOS Safari: prevent auto-zoom on input focus (font-size < 16px triggers zoom).
+ * !important is intentional: Tailwind utility classes like `text-sm` (14px)
+ * applied per-input would otherwise override and re-trigger the zoom on focus. */
 @media screen and (max-width: 767px) {
   input[type="text"],
   input[type="email"],
   input[type="number"],
   input[type="date"],
+  input[type="datetime-local"],
+  input[type="time"],
+  input[type="tel"],
+  input[type="url"],
   input[type="search"],
   input[type="password"],
   textarea,
   select {
-    font-size: 16px;
+    font-size: 16px !important;
   }
 }
 

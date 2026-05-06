@@ -257,6 +257,7 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates, initi
             key={v}
             type="button"
             onClick={() => setView(v)}
+            aria-pressed={view === v}
             className={`px-4 py-1.5 min-h-[44px] rounded-lg text-xs font-medium transition-all duration-200 ${
               view === v
                 ? "bg-white/10 text-white border border-white/20"
