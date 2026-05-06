@@ -161,6 +161,12 @@ jobs:
       - name: Run detect_wiki_url_drift.py
         run: python3 scripts/detect_wiki_url_drift.py --ci
 
+      # z255gg: 内部 href の route 整合性 + anchor #frag 死活
+      # route renaming 後の dead link / 未存在 anchor の click → scroll 失敗
+      # = silent UX bug を恒久 catch。
+      - name: Run detect_internal_link_drift.py
+        run: python3 scripts/detect_internal_link_drift.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest
