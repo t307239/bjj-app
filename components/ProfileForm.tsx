@@ -329,7 +329,7 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30">
           <label className="block text-zinc-300 text-sm font-medium mb-2">{t("profile.bio")}</label>
-          <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder={t("profile.bioPlaceholder")} rows={3} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 resize-none" />
+          <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder={t("profile.bioPlaceholder")} rows={3} maxLength={500} className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-white/30 resize-none" />
         </div>
         <div className="bg-zinc-900 rounded-xl p-4 ring-1 ring-inset ring-white/[0.04] shadow-md shadow-black/30">
           <label className="block text-zinc-300 text-sm font-medium mb-1">{t("profile.timezone")}</label>

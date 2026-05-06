@@ -53,10 +53,16 @@ export default function AttributionTable() {
     (async () => {
       try {
         const res = await fetch("/api/admin/attribution");
+        if (cancelled) return;
+        if (!res.ok) {
+          const body = (await res.json().catch(() => ({}))) as { error?: string };
+          if (!cancelled) setError(body.error ?? `Failed to load (HTTP ${res.status})`);
+          return;
+        }
         const json = (await res.json()) as AttributionResponse | { error?: string };
         if (cancelled) return;
-        if (!res.ok || "error" in json) {
-          setError(("error" in json && json.error) || "Failed to load");
+        if ("error" in json) {
+          setError(json.error || "Failed to load");
           return;
         }
         setData(json as AttributionResponse);

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { clientLogger } from "@/lib/clientLogger";
+import { fetchWithTimeout } from "@/lib/fetchWithRetry";
 
 type Props = {
   onClose: () => void;
@@ -57,10 +58,11 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
   const handleCheckout = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/stripe/checkout", {
+      const res = await fetchWithTimeout("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan: isAnnual ? "annual" : "monthly" }),
+        timeoutMs: 15_000,
       });
       if (res.ok) {
         const json = await res.json() as { url?: string; fallback?: boolean };

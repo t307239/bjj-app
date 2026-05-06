@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useLocale } from "@/lib/i18n";
 import { subscribePush, unsubscribePush } from "@/lib/webpush";
 import { clientLogger } from "@/lib/clientLogger";
@@ -33,6 +33,12 @@ export default function PushNotificationSection() {
   const [toggling, setToggling] = useState(false);
   const [prefs, setPrefs] = useState<NotifPrefs>(DEFAULT_PREFS);
   const [savingPref, setSavingPref] = useState(false);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
 
   useEffect(() => {
     if (!vapidKey) { setSubState("unsupported"); return; }
@@ -49,8 +55,10 @@ export default function PushNotificationSection() {
       try {
         const reg = await navigator.serviceWorker.ready;
         const sub = await reg.pushManager.getSubscription();
+        if (!mountedRef.current) return;
         setSubState(sub !== null);
       } catch {
+        if (!mountedRef.current) return;
         setSubState(false);
       }
     };
@@ -60,10 +68,16 @@ export default function PushNotificationSection() {
   // Fetch preferences when subscribed
   useEffect(() => {
     if (subState !== true) return;
+    const ac = new AbortController();
     const fetchPrefs = async () => {
       try {
-        const r = await fetch("/api/push/preferences");
+        const r = await fetch("/api/push/preferences", { signal: ac.signal });
+        if (!r.ok) {
+          clientLogger.error("push_prefs.fetch_failed", { status: r.status });
+          return;
+        }
         const json = await r.json();
+        if (!mountedRef.current) return;
         if (json.ok && json.preferences) {
           setPrefs({
             reengagement: json.preferences.reengagement ?? true,
@@ -73,10 +87,12 @@ export default function PushNotificationSection() {
           });
         }
       } catch (err: unknown) {
+        if (err instanceof DOMException && err.name === "AbortError") return;
         clientLogger.error("push_prefs.fetch_failed", {}, err instanceof Error ? err : new Error(String(err)));
       }
     };
     fetchPrefs();
+    return () => ac.abort();
   }, [subState]);
 
   const handleToggle = async () => {
@@ -84,30 +100,36 @@ export default function PushNotificationSection() {
     setToggling(true);
     if (subState === false) {
       const ok = await subscribePush();
+      if (!mountedRef.current) return;
       setSubState(ok ? true : Notification.permission === "denied" ? "blocked" : false);
     } else if (subState === true) {
       await unsubscribePush();
+      if (!mountedRef.current) return;
       setSubState(false);
     }
+    if (!mountedRef.current) return;
     setToggling(false);
   };
 
   const updatePref = useCallback(async (key: keyof NotifPrefs, value: boolean) => {
     setSavingPref(true);
-    const next = { ...prefs, [key]: value };
-    setPrefs(next);
+    // Functional updater avoids stale-closure rollback when multiple
+    // toggles fire in quick succession (was: setPrefs(prefs) below).
+    setPrefs((prev) => ({ ...prev, [key]: value }));
     try {
-      await fetch("/api/push/preferences", {
+      const res = await fetch("/api/push/preferences", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ [key]: value }),
       });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
     } catch (err: unknown) {
       clientLogger.error("push_prefs.update_failed", {}, err instanceof Error ? err : new Error(String(err)));
-      setPrefs(prefs);
+      // Revert just this key — preserves any unrelated in-flight updates.
+      if (mountedRef.current) setPrefs((prev) => ({ ...prev, [key]: !value }));
     }
-    setSavingPref(false);
-  }, [prefs]);
+    if (mountedRef.current) setSavingPref(false);
+  }, []);
 
   if (subState === "unsupported") return null;
 

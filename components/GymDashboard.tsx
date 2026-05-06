@@ -106,11 +106,17 @@ function InviteSection({ gym, onInviteRegenerated }: { gym: Gym; onInviteRegener
     setRegenerating(true);
     try {
       const res = await fetch("/api/gym/regenerate-invite", { method: "POST" });
-      if (res.ok) {
-        const data = await res.json();
+      if (!res.ok) {
+        clientLogger.error("gym_invite.regenerate_failed", { status: res.status });
+        return;
+      }
+      const data = await res.json();
+      if (data?.invite_code) {
         setCurrentCode(data.invite_code);
         onInviteRegenerated(data.invite_code);
       }
+    } catch (err: unknown) {
+      clientLogger.error("gym_invite.regenerate_error", {}, err instanceof Error ? err : new Error(String(err)));
     } finally {
       setRegenerating(false);
     }

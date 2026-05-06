@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { useLocale } from "@/lib/i18n";
 import { clientLogger } from "@/lib/clientLogger";
+import { fetchWithTimeout } from "@/lib/fetchWithRetry";
 
 type CoachMode = "general" | "weakness" | "next_session" | "comp_prep";
 
@@ -114,22 +115,34 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
     if (!initialGeneratedAt) return {};
     return { general: initialGeneratedAt };
   });
-  const [loading, setLoading] = useState(false);
+  const [loadingMode, setLoadingMode] = useState<CoachMode | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Per-mode request id — last-write-wins guard against rapid mode switches.
+  const requestIdRef = useRef(0);
 
   const coaching = coachingMap[mode] ?? null;
   const generatedAt = generatedAtMap[mode] ?? null;
   const isStale = !generatedAt || Date.now() - new Date(generatedAt).getTime() > SEVEN_DAYS_MS;
+  const loading = loadingMode === mode;
 
   const generate = useCallback(async (targetMode: CoachMode) => {
-    setLoading(true);
+    const reqId = ++requestIdRef.current;
+    setLoadingMode(targetMode);
     setError(null);
     try {
-      const res = await fetch("/api/ai-coach/generate", {
+      const res = await fetchWithTimeout("/api/ai-coach/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ locale, mode: targetMode }),
+        timeoutMs: 30_000,
       });
+      // Drop stale response if a newer generate has started.
+      if (reqId !== requestIdRef.current) return;
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({})) as { error?: string };
+        setError(errBody.error ?? t("aiCoach.error"));
+        return;
+      }
       const data = await res.json() as {
         coaching?: string;
         generated_at?: string;
@@ -137,8 +150,8 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
         error?: string;
         mode?: string;
       };
-      if (!res.ok || data.error) {
-        setError(data.error ?? t("aiCoach.error"));
+      if (data.error) {
+        setError(data.error);
         return;
       }
       trackEvent("ai_coach_generated", { source: data.cached ? "cache_hit" : "fresh", mode: targetMode });
@@ -146,10 +159,14 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
       setCoachingMap((prev) => ({ ...prev, [targetMode]: data.coaching ?? null }));
       setGeneratedAtMap((prev) => ({ ...prev, [targetMode]: data.generated_at ?? null }));
     } catch (err: unknown) {
+      if (reqId !== requestIdRef.current) return;
       clientLogger.error("ai_coach.generate_failed", {}, err instanceof Error ? err : new Error(String(err)));
-      setError(t("aiCoach.error"));
+      const isTimeout = err instanceof DOMException && err.name === "AbortError";
+      setError(isTimeout ? t("aiCoach.error") : t("aiCoach.error"));
     } finally {
-      setLoading(false);
+      // Only the latest request clears the spinner — older ones already
+      // returned via the reqId guard above.
+      if (reqId === requestIdRef.current) setLoadingMode(null);
     }
   }, [locale, t]);
 

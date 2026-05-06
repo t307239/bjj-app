@@ -48,18 +48,19 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
   const loadProfile = useCallback(async () => {
     try {
       const [coreRes, bodyRes, weightRes] = await Promise.all([
-        // Core profile fields (guaranteed columns)
+        // Core profile fields (guaranteed columns).
+        // .maybeSingle() avoids throwing for new users with no profile row.
         supabase
           .from("profiles")
           .select("is_pro, target_weight, target_weight_date")
           .eq("id", userId)
-          .single(),
+          .maybeSingle(),
         // Body status fields (JSONB — may not exist on older schemas)
         supabase
           .from("profiles")
           .select("body_status, body_status_dates, body_notes")
           .eq("id", userId)
-          .single(),
+          .maybeSingle(),
         supabase
           .from("weight_logs")
           .select("weight")
