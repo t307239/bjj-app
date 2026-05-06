@@ -33,10 +33,26 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { filterSendableSubscriptions } from "@/lib/notificationSafeHours";
 
+// url must be either a same-origin path ("/foo", "/foo?bar=1") or an
+// absolute URL on bjj-app.net. Prevents open-redirect via push notification
+// click-through (admin compromise / leaked PUSH_SEND_SECRET scenario).
 const SendBodySchema = z.object({
   title: z.string().min(1).max(200),
   body: z.string().min(1).max(1000),
-  url: z.string().max(2048).optional().default("/"),
+  url: z
+    .string()
+    .max(2048)
+    .optional()
+    .default("/")
+    .refine((u) => {
+      if (u.startsWith("/") && !u.startsWith("//")) return true;
+      try {
+        const parsed = new URL(u);
+        return parsed.protocol === "https:" && (parsed.hostname === "bjj-app.net" || parsed.hostname === "wiki.bjj-app.net");
+      } catch {
+        return false;
+      }
+    }, "url must be a same-origin path or https://bjj-app.net URL"),
 });
 import { logger } from "@/lib/logger";
 

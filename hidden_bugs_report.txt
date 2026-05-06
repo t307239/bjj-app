@@ -2,16 +2,18 @@ BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 408 files
 CRITICAL: 0
 WARNING: 0
-INFO: 122
-Total: 122
+INFO: 123
+Total: 123
 
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/gym-outreach/route.ts: L189: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/onboarding-email/route.ts: L249: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [SUPABASE_NO_ERROR] app/api/stripe/webhook/route.ts: L215: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] app/api/stripe/webhook/route.ts: L51: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [SUPABASE_NO_ERROR] app/api/stripe/webhook/route.ts: L279: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] app/api/stripe/webhook/route.ts: L204: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+  FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [SUPABASE_NO_ERROR] app/api/stripe/webhook/route.ts: L268: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [DANGEROUS_HTML] app/changelog/page.tsx: L184: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
@@ -93,7 +95,7 @@ Total: 122
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L814: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [INLINE_STYLE_OBJECT] components/AchievementBadge.tsx: L173: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/AchievementBadge.tsx: L185: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BeltProgressCard.tsx: L133: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換

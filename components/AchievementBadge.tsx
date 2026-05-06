@@ -50,15 +50,28 @@ export default function AchievementBadge({
   const [aType, setAType] = useState<AchievementType>("sessions");
 
   useEffect(() => {
+    // Safe parse: localStorage value may be corrupted (manual edit / bug).
+    // Without try/catch a JSON.parse throw would crash this component permanently
+    // until the user clears localStorage via devtools.
+    const safeReadList = (key: string): number[] => {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed.filter((n) => typeof n === "number") : [];
+      } catch {
+        localStorage.removeItem(key);
+        return [];
+      }
+    };
     // ── Sessions milestone (旧) ──
     if (totalCount > 0) {
       const matched = SESSION_MILESTONES.find((m) => m === totalCount);
       if (matched) {
-        const shown = localStorage.getItem("bjj_shown_milestones");
-        const list = shown ? JSON.parse(shown) : [];
+        const list = safeReadList("bjj_shown_milestones");
         if (!list.includes(matched)) {
           list.push(matched);
-          localStorage.setItem("bjj_shown_milestones", JSON.stringify(list));
+          try { localStorage.setItem("bjj_shown_milestones", JSON.stringify(list)); } catch { /* quota */ }
           setAType("sessions");
           setMilestone(matched);
           setShowBadge(true);
@@ -70,11 +83,10 @@ export default function AchievementBadge({
     if (streak > 0) {
       const matched = STREAK_MILESTONES.find((m) => m === streak);
       if (matched) {
-        const shown = localStorage.getItem("bjj_shown_streak_milestones");
-        const list = shown ? JSON.parse(shown) : [];
+        const list = safeReadList("bjj_shown_streak_milestones");
         if (!list.includes(matched)) {
           list.push(matched);
-          localStorage.setItem("bjj_shown_streak_milestones", JSON.stringify(list));
+          try { localStorage.setItem("bjj_shown_streak_milestones", JSON.stringify(list)); } catch { /* quota */ }
           setAType("streak");
           setMilestone(matched);
           setShowBadge(true);
