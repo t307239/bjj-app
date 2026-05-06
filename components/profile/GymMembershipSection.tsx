@@ -69,7 +69,7 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
       // z258: was silent console-only failure → user clicked "Leave" but
       // nothing happened with no feedback. Surface the error.
       clientLogger.error("gym_membership.leave_failed", {}, error);
-      showError(t("error.title"));
+      showError(t("gym.leaveError"));
     }
     setLeaving(false);
   };
@@ -90,7 +90,7 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
     if (error) {
       setSharing(prev);
       clientLogger.error("gym_membership.toggle_sharing_failed", {}, error);
-      showError(t("error.title"));
+      showError(t("gym.toggleSharingError"));
     }
     setToggleLoading(false);
   };

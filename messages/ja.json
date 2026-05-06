@@ -824,7 +824,9 @@
     "streakShareText": "🔥 BJJ {n}日連続練習! bjj-app.net で記録中 (青帯が個人開発した無料の柔術トラッカー)",
     "streakTitle": "{n}日連続 🔥",
     "streakSubtitle": "続けることが全て。次の roll へ。",
-    "copyLink": "リンクをコピー"
+    "copyLink": "リンクをコピー",
+    "copyLinkSuccess": "リンクをコピーしました",
+    "copyLinkError": "コピーに失敗しました。手動で選択してください。"
   },
   "csv": {
     "exportFailed": "エクスポートに失敗しました",
@@ -1180,6 +1182,8 @@
     "unknownGym": "不明なジム",
     "leaveGym": "ジムを退会",
     "leaving": "退会中...",
+    "leaveError": "退会処理に失敗しました。もう一度お試しください。",
+    "toggleSharingError": "共有設定の変更に失敗しました。もう一度お試しください。",
     "leaveConfirmTitle": "{name}を退会しますか?",
     "leaveConfirmDesc": "道場主はあなたの練習データを閲覧できなくなります。新しいQRコードで再入会できます。",
     "shareData": "練習データをジムと共有",

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useLocale } from "@/lib/i18n";
 import { hapticSuccess } from "@/lib/haptics";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 type Props = {
   onDismiss: () => void;
@@ -92,6 +93,7 @@ function ConfettiCanvas() {
 
 export default function FirstRollCelebration({ onDismiss }: Props) {
   const { t } = useLocale();
+  useBodyScrollLock(true);
 
   // Auto-dismiss after 6s
   useEffect(() => {

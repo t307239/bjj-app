@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useLocale } from "@/lib/i18n";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 const STORAGE_KEY = "bjj_age_verified";
 
@@ -14,6 +15,8 @@ const STORAGE_KEY = "bjj_age_verified";
 export default function AgeGate() {
   const { t } = useLocale();
   const [status, setStatus] = useState<"loading" | "show" | "blocked" | "ok">("loading");
+  // z258: lock background scroll while the age-gate or block screen is up.
+  useBodyScrollLock(status === "show" || status === "blocked");
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);

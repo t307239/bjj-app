@@ -44,6 +44,16 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
+  // z258: Escape-key dismissal — keyboard users couldn't close the dropdown.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   const downloadCsv = (content: string, filename: string) => {
     const blob = new Blob(["\uFEFF" + content], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);

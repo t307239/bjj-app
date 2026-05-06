@@ -364,8 +364,12 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       notes: finalNotes,
       created_at: new Date().toISOString(),
     };
+    // z258: capture previous value so we can roll back on insert failure;
+    // otherwise the "trained today" indicator stays stuck on even though
+    // the row never made it to the DB.
+    const prevTrainedToday = trainedToday;
     setEntries((prev) => [optimisticEntry, ...prev]);
-    setTrainedToday(true);
+    if (form.date === getLocalDateString()) setTrainedToday(true);
     setShowForm(false);
     // I-17: Restore scroll position to top after closing form (prevents snap to bottom)
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "instant" });
@@ -429,6 +433,9 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         : `${Date.now()}-${Math.random()}`;
     } else {
       setEntries((prev) => prev.filter((e) => e.id !== optimisticId));
+      // z258: roll back the "trained today" badge along with the entry,
+      // unless another already-saved entry covers today's date.
+      setTrainedToday(prevTrainedToday);
       setShowForm(true);
       const isAuthError = error?.code === "401"
         || error?.message?.toLowerCase().includes("jwt")
@@ -599,9 +606,11 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       : editForm.notes;
 
     const prevEntry = entries.find((en) => en.id === id);
+    // z258: optimistic update only; defer success toast until DB confirms
+    // (showing "training.updated" before the await caused a false-success
+    // toast when the API later failed — user thought save worked).
     setEntries((prev) => prev.map((en) => en.id === id ? { ...en, ...editForm, notes: finalEditNotes } : en));
     setEditingId(null);
-    setToast({ message: tRef.current("training.updated"), type: "success" });
 
     // Whitelist: only DB columns
     const updatePayload = {
@@ -620,6 +629,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
 
     if (!error && data) {
       setEntries((prev) => prev.map((en) => en.id === id ? data : en));
+      setToast({ message: tRef.current("training.updated"), type: "success" });
       router.refresh();
     } else {
       if (prevEntry) setEntries((prev) => prev.map((en) => en.id === id ? prevEntry : en));

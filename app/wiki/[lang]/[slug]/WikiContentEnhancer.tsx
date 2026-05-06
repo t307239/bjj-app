@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 /**
  * WikiContentEnhancer — headless client component that progressively enhances
@@ -17,6 +18,8 @@ export default function WikiContentEnhancer() {
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  // z258: lock background scroll while the wiki image lightbox is open.
+  useBodyScrollLock(lightboxSrc !== null);
 
   useEffect(() => {
     return () => {

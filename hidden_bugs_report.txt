@@ -105,7 +105,7 @@ Total: 193
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L814: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [INLINE_STYLE_OBJECT] components/AchievementBadge.tsx: L196: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/AchievementBadge.tsx: L227: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BeltProgressCard.tsx: L133: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -121,27 +121,27 @@ Total: 193
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BeltProgressCard.tsx: L258: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BeltPromotionCelebration.tsx: L178: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BeltPromotionCelebration.tsx: L180: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BeltPromotionCelebration.tsx: L194: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BeltPromotionCelebration.tsx: L196: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BeltPromotionCelebration.tsx: L205: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BeltPromotionCelebration.tsx: L207: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BeltPromotionCelebration.tsx: L219: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BeltPromotionCelebration.tsx: L221: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BeltPromotionCelebration.tsx: L266: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BeltPromotionCelebration.tsx: L268: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L78: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L359: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L368: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L389: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L398: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L397: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L406: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [TRUNCATE_NO_TITLE] components/BodyHeatmap.tsx: L391: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+[INFO] [TRUNCATE_NO_TITLE] components/BodyHeatmap.tsx: L400: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
   FIX: title={varName} を追加 (a11y/UX)
-[INFO] [TRUNCATE_NO_TITLE] components/BodyHeatmap.tsx: L393: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+[INFO] [TRUNCATE_NO_TITLE] components/BodyHeatmap.tsx: L402: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
   FIX: title={varName} を追加 (a11y/UX)
 [INFO] [INLINE_STYLE_OBJECT] components/CompetitionSummaryCard.tsx: L302: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -225,7 +225,7 @@ Total: 193
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [TRUNCATE_NO_TITLE] components/TrainingChart.tsx: L300: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
   FIX: title={varName} を追加 (a11y/UX)
-[INFO] [TRUNCATE_NO_TITLE] components/TrainingLogForm.tsx: L506: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+[INFO] [TRUNCATE_NO_TITLE] components/TrainingLogForm.tsx: L515: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
   FIX: title={varName} を追加 (a11y/UX)
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingTypeChart.tsx: L227: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換

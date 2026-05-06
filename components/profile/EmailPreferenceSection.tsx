@@ -112,7 +112,7 @@ export default function EmailPreferenceSection() {
           aria-checked={enabled}
           aria-label={t("settings.emailPrefToggle")}
           disabled={saving}
-          onClick={() => onToggle(!enabled ? false : true)}
+          onClick={() => onToggle(enabled)}
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 mt-1 ${
             enabled ? "bg-emerald-600" : "bg-zinc-600"
           } ${saving ? "opacity-50 cursor-wait" : "cursor-pointer"}`}

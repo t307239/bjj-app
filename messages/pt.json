@@ -846,7 +846,9 @@
     "streakShareText": "🔥 {n} dias seguidos treinando BJJ! Registrado em bjj-app.net (rastreador grátis indie, feito por faixa azul).",
     "streakTitle": "{n} Dias seguidos 🔥",
     "streakSubtitle": "Constância é tudo. Próximo treino.",
-    "copyLink": "Copiar link"
+    "copyLink": "Copiar link",
+    "copyLinkSuccess": "Link copiado!",
+    "copyLinkError": "Falha ao copiar. Selecione o texto manualmente."
   },
   "csv": {
     "exportFailed": "Falha na exportação",
@@ -1216,6 +1218,8 @@
     "unknownGym": "Academia desconhecida",
     "leaveGym": "Sair da academia",
     "leaving": "Saindo...",
+    "leaveError": "Falha ao sair da academia. Tente novamente.",
+    "toggleSharingError": "Falha ao atualizar a configuração de compartilhamento. Tente novamente.",
     "leaveConfirmTitle": "Sair de {name}?",
     "leaveConfirmDesc": "O dono da academia não verá mais seus dados de treino. Você pode voltar com um novo QR code.",
     "shareData": "Compartilhar dados de treino com a academia",

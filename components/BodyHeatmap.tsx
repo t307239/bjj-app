@@ -313,7 +313,16 @@ aria-hidden="true"           viewBox="0 0 120 265"
               <g
                 key={part.key}
                 onPointerUp={(e) => { e.preventDefault(); handlePartClick(part.key); }}
-                style={{ cursor: isOnline ? "pointer" : "default", touchAction: "auto" }}
+                onKeyDown={(e) => {
+                  // z258: SVG <g> with role="button" is not focusable/activatable
+                  // by default — keyboard users couldn't toggle body parts.
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handlePartClick(part.key);
+                  }
+                }}
+                tabIndex={isOnline ? 0 : -1}
+                style={{ cursor: isOnline ? "pointer" : "default", touchAction: "auto", outline: "none" }}
                 role="button"
                 aria-label={t(part.labelKey)}
               >

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { clientLogger } from "@/lib/clientLogger";
 import { fetchWithTimeout } from "@/lib/fetchWithRetry";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 type Props = {
   onClose: () => void;
@@ -16,6 +17,7 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
   const [isLoading, setIsLoading] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  useBodyScrollLock(true);
 
   // §9 a11y: Save previous focus for restoration on close
   useEffect(() => {

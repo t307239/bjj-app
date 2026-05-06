@@ -824,7 +824,9 @@
     "streakShareText": "🔥 {n}-day BJJ training streak! Tracked on bjj-app.net (free indie BJJ tracker, built by a blue belt).",
     "streakTitle": "{n} Day Streak 🔥",
     "streakSubtitle": "Showing up matters. Keep rolling.",
-    "copyLink": "Copy link"
+    "copyLink": "Copy link",
+    "copyLinkSuccess": "Link copied!",
+    "copyLinkError": "Copy failed. Select the text manually."
   },
   "csv": {
     "exportFailed": "Export failed",
@@ -1190,6 +1192,8 @@
     "unknownGym": "Unknown gym",
     "leaveGym": "Leave gym",
     "leaving": "Leaving...",
+    "leaveError": "Failed to leave gym. Please try again.",
+    "toggleSharingError": "Failed to update sharing setting. Please try again.",
     "leaveConfirmTitle": "Leave {name}?",
     "leaveConfirmDesc": "Your gym owner will no longer see your training data. You can rejoin with a new QR code.",
     "shareData": "Share training data with gym",

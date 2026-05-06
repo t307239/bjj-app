@@ -73,6 +73,7 @@ export default function IABSafeLink({
             role="dialog"
             aria-modal="true"
             aria-label={t("login.iabWarning")}
+            onClick={(e) => e.stopPropagation()}
             className="bg-zinc-900 border border-white/10 rounded-2xl p-6 max-w-sm w-full text-center"
           >
             <div className="text-4xl mb-3">🌐</div>

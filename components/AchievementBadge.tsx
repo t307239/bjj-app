@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/lib/i18n";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 /**
  * AchievementBadge — z222 enhanced:
@@ -48,6 +49,17 @@ export default function AchievementBadge({
   const [milestone, setMilestone] = useState<number | null>(null);
   // z222: どの type の achievement か判別 (image/share text 切替に使用)
   const [aType, setAType] = useState<AchievementType>("sessions");
+  // z258: visible feedback for clipboard copy + popup-blocked share fallback
+  const [copyToast, setCopyToast] = useState<"copied" | "failed" | null>(null);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+  }, []);
+  const flashCopyToast = (kind: "copied" | "failed") => {
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    setCopyToast(kind);
+    copyTimerRef.current = setTimeout(() => setCopyToast(null), 2000);
+  };
 
   useEffect(() => {
     // Safe parse: localStorage value may be corrupted (manual edit / bug).
@@ -95,16 +107,17 @@ export default function AchievementBadge({
     }
   }, [totalCount, streak]);
 
-  // z258: dismiss modal on Escape key (was: only backdrop-click closed it →
-  // keyboard users were trapped on the celebration overlay).
+  // z258: Escape-key dismissal — overlay only listened to clicks before,
+  // keyboard users had no way to close the celebration modal.
   useEffect(() => {
     if (!showBadge) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setShowBadge(false);
     };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [showBadge]);
+  useBodyScrollLock(showBadge);
 
   if (!showBadge || !milestone) return null;
 
@@ -175,9 +188,27 @@ export default function AchievementBadge({
   };
 
   const handleCopyLink = async () => {
+    const payload = `${shareText} ${shareUrl}`;
     try {
-      await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
-    } catch { /* clipboard 失敗時は無視 */ }
+      await navigator.clipboard.writeText(payload);
+      flashCopyToast("copied");
+    } catch {
+      // z258: fallback for HTTP / iframe / older Safari where clipboard API throws
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = payload;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        flashCopyToast(ok ? "copied" : "failed");
+      } catch {
+        flashCopyToast("failed");
+      }
+    }
   };
 
   return (
@@ -277,6 +308,15 @@ export default function AchievementBadge({
                   ✕
                 </button>
               </div>
+              {copyToast && (
+                <p
+                  role="status"
+                  aria-live="polite"
+                  className={`mt-3 text-xs font-semibold ${copyToast === "copied" ? "text-emerald-300" : "text-red-300"}`}
+                >
+                  {copyToast === "copied" ? t("achievement.copyLinkSuccess") : t("achievement.copyLinkError")}
+                </p>
+              )}
             </div>
           </div>
         </div>

@@ -153,6 +153,9 @@ const TrainingLogForm = memo(function TrainingLogForm({
   const techniqueInputRef = useRef<HTMLInputElement>(null);
   const [showOptional, setShowOptional] = useState(false);
   const [showRollDetails, setShowRollDetails] = useState(false);
+  // z258: gate the inline "Quick Add technique" button so a double-click
+  // can't insert duplicate technique_node rows.
+  const [quickAdding, setQuickAdding] = useState(false);
 
   // Warn user if they try to leave with meaningful unsaved form data (notes only)
   const hasInput = form.notes.trim() !== "";
@@ -376,19 +379,25 @@ const TrainingLogForm = memo(function TrainingLogForm({
           {onQuickAddTechnique && (
             <button
               type="button"
+              disabled={quickAdding}
+              aria-busy={quickAdding}
               onClick={async () => {
+                if (quickAdding) return;
                 const val = techniqueInputRef.current?.value?.trim();
                 if (!val) return;
                 if (techniqueSuggestions.includes(val)) {
                   handleTechniqueSelect(val);
                   return;
                 }
-                const ok = await onQuickAddTechnique(val);
-                if (ok) {
-                  handleTechniqueSelect(val);
+                setQuickAdding(true);
+                try {
+                  const ok = await onQuickAddTechnique(val);
+                  if (ok) handleTechniqueSelect(val);
+                } finally {
+                  setQuickAdding(false);
                 }
               }}
-              className="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white rounded-lg text-sm font-semibold transition-all whitespace-nowrap min-h-[44px]"
+              className="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white rounded-lg text-sm font-semibold transition-all whitespace-nowrap min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed"
               title={t("training.quickAddTechnique")}
             >
               + {t("training.addShort")}
