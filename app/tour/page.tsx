@@ -26,26 +26,49 @@ import { safeJsonLd } from "@/lib/safeJsonLd";
 // z204 同様: indie tagline 入り OG (mode=lp)
 const TOUR_OG = "https://bjj-app.net/api/og?mode=lp&lang=en&belt=blue&count=1500&streak=14&months=14";
 
-export const metadata: Metadata = {
-  title: "Product Tour",
-  description:
-    "See what BJJ App tracks: training sessions, technique journal, heatmap streaks, skill map, and belt progression. Free forever.",
-  alternates: { canonical: "https://bjj-app.net/tour" },
-  openGraph: {
-    type: "website",
-    url: "https://bjj-app.net/tour",
-    siteName: "BJJ App",
-    title: "BJJ App — Product Tour",
-    description: "Track every roll. Free, indie, no ads.",
-    images: [{ url: TOUR_OG, width: 1200, height: 630, alt: "BJJ App Tour" }],
+// z255jj: locale-aware metadata (F-12)
+const TOUR_META = {
+  en: {
+    desc: "See what BJJ App tracks: training sessions, technique journal, heatmap streaks, skill map, and belt progression. Free forever.",
+    ogTitle: "BJJ App — Product Tour",
+    ogDesc: "Track every roll. Free, indie, no ads.",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "BJJ App — Product Tour",
-    description: "Track every roll. Free, indie, no ads.",
-    images: [TOUR_OG],
+  ja: {
+    desc: "BJJ App で記録できること: 練習セッション、技ジャーナル、ヒートマップ・ストリーク、スキルマップ、帯の進捗。永久無料。",
+    ogTitle: "BJJ App — プロダクトツアー",
+    ogDesc: "全てのロールを記録。永久無料、indie 開発、広告なし。",
   },
-};
+  pt: {
+    desc: "Veja o que o BJJ App registra: sessões de treino, diário de técnicas, heatmap streaks, skill map, progressão de faixa. Grátis para sempre.",
+    ogTitle: "BJJ App — Tour do Produto",
+    ogDesc: "Registre cada roll. Grátis, indie, sem anúncios.",
+  },
+} as const;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await detectServerLocale();
+  const m = TOUR_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
+  return {
+    title: "Product Tour",
+    description: m.desc,
+    alternates: { canonical: "https://bjj-app.net/tour" },
+    openGraph: {
+      type: "website",
+      url: "https://bjj-app.net/tour",
+      siteName: "BJJ App",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      images: [{ url: TOUR_OG, width: 1200, height: 630, alt: "BJJ App Tour" }],
+      locale: locale === "ja" ? "ja_JP" : locale === "pt" ? "pt_BR" : "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      images: [TOUR_OG],
+    },
+  };
+}
 
 type Feature = {
   emoji: string;
