@@ -21,6 +21,12 @@ import {
   calcProRate,
   countActiveUsers,
   calcAvgSessionsPerUser,
+  countSignupsLastDays,
+  calcSignupWow,
+  calcD7Retention,
+  calcSourceBreakdown,
+  calcWeeklyActiveTrend,
+  type SignupCohort,
 } from "@/lib/adminMetrics";
 
 const adminLimiter = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 30 });
@@ -65,9 +71,10 @@ export async function GET(req: NextRequest) {
     // Fetch all profiles. z257: cap at 100k rows so an unbounded `.select()` cannot
     // OOM the Node.js worker once user count grows. If we ever exceed this we should
     // page the query (or compute aggregates server-side via SQL view).
+    // z255kk: include id, signup_source, paid_ref for PMF cohort analysis
     const { data: profiles, error: profilesError } = await serviceClient
       .from("profiles")
-      .select("belt, is_pro")
+      .select("id, belt, is_pro, signup_source, paid_ref")
       .range(0, 99999);
     if (profilesError) throw profilesError;
 
@@ -109,6 +116,67 @@ export async function GET(req: NextRequest) {
       logger.warn("admin.metrics: push_subscriptions count failed", { error: pushError.message });
     }
 
+    // z255kk: PMF metrics — fetch auth.users for created_at (signup timestamp)
+    let pmfMetrics: {
+      signups_last_7d: number;
+      signups_last_30d: number;
+      signups_last_90d: number;
+      signup_wow_percent: number;
+      d7_retention_percent: number;
+      d7_retention_cohort_size: number;
+      source_breakdown: Record<string, number>;
+      weekly_active_trend: number[];
+    } = {
+      signups_last_7d: 0,
+      signups_last_30d: 0,
+      signups_last_90d: 0,
+      signup_wow_percent: 0,
+      d7_retention_percent: 0,
+      d7_retention_cohort_size: 0,
+      source_breakdown: {},
+      weekly_active_trend: [0, 0, 0, 0],
+    };
+    try {
+      // listUsers caps at 1000 per page; small-scale projects fit in 1 call.
+      const { data: authData, error: authError } =
+        await serviceClient.auth.admin.listUsers({ page: 1, perPage: 1000 });
+      if (authError) throw authError;
+
+      const profileBySource = new Map(
+        allProfiles.map((p) => [
+          p.id as string,
+          { signup_source: p.signup_source, paid_ref: p.paid_ref },
+        ])
+      );
+      const cohorts: SignupCohort[] = (authData?.users ?? []).map((u) => {
+        const psrc = profileBySource.get(u.id);
+        return {
+          user_id: u.id,
+          created_at: u.created_at,
+          signup_source: psrc?.signup_source ?? null,
+          paid_ref: psrc?.paid_ref ?? null,
+        };
+      });
+
+      const now = new Date();
+      const d7 = calcD7Retention(cohorts, logs, now);
+      pmfMetrics = {
+        signups_last_7d: countSignupsLastDays(cohorts, 7, now),
+        signups_last_30d: countSignupsLastDays(cohorts, 30, now),
+        signups_last_90d: countSignupsLastDays(cohorts, 90, now),
+        signup_wow_percent: calcSignupWow(cohorts, now),
+        d7_retention_percent: d7.percent,
+        d7_retention_cohort_size: d7.cohort_size,
+        source_breakdown: calcSourceBreakdown(cohorts, now),
+        weekly_active_trend: calcWeeklyActiveTrend(logs, now),
+      };
+    } catch (e) {
+      logger.warn("admin.metrics: PMF fetch failed", {
+        error: (e as Error).message,
+      });
+      // Fall through with default zeros — UI will show "—"
+    }
+
     const metrics = {
       total_users: totalUsers,
       pro_users: proUsers,
@@ -120,6 +188,8 @@ export async function GET(req: NextRequest) {
       total_sessions: totalSessions ?? 0,
       avg_sessions_per_user_30d: calcAvgSessionsPerUser(logs.length, activeUsers30d),
       push_subscribers: pushCount ?? 0,
+      // z255kk: PMF metrics
+      pmf: pmfMetrics,
       generated_at: new Date().toISOString(),
     };
 
