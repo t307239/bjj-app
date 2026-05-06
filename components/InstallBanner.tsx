@@ -30,7 +30,18 @@ export default function InstallBanner() {
     // B-03: Show install banner only after 3rd session log (dopamine moment)
     const logCount = parseInt(localStorage.getItem("bjj_log_count") ?? "0", 10);
     if (logCount < 3) { setDismissed(true); return; }
-    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) && !(window.navigator as Navigator & { standalone?: boolean }).standalone;
+    // iOS detection: iPhone/iPad/iPod + iPadOS 13+ desktop mode (UA reports Mac
+     // but maxTouchPoints > 1 indicates touchscreen iPad). Exclude already-installed
+     // (standalone mode) to avoid false positive on home-screen-launched PWA.
+    const ua = navigator.userAgent;
+    const isIPadOSDesktopMode =
+      /Macintosh/.test(ua) && navigator.maxTouchPoints > 1;
+    const isIOSUA = /iPhone|iPad|iPod/.test(ua) || isIPadOSDesktopMode;
+    const isStandalone =
+      (window.navigator as Navigator & { standalone?: boolean }).standalone === true ||
+      (typeof window.matchMedia === "function" &&
+        window.matchMedia("(display-mode: standalone)").matches);
+    const isIOS = isIOSUA && !isStandalone;
     if (isIOS) { setPlatform("ios"); setDismissed(false); return; }
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
