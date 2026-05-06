@@ -21,7 +21,8 @@
     "terms": "Termos",
     "changelog": "Atualizações",
     "tour": "Tour",
-    "compare": "Comparar"
+    "compare": "Comparar",
+    "contact": "Contato"
   },
   "dashboard": {
     "welcomeBack": "Bem-vindo de volta, {name} 🙌",
@@ -1425,7 +1426,8 @@
     "faq13Q": "Posso exportar meus dados de treino?",
     "faq13A": "Sim! Você pode exportar todo o seu histórico de treino como CSV ou PDF a qualquer momento em Configurações. Seus dados pertencem a você — sem bloqueio.",
     "faq14Q": "O que acontece com meus dados se eu cancelar o Pro?",
-    "faq14A": "Seus registros de treino estão seguros. Usuários gratuitos mantêm acesso total de leitura e capacidade de exportação. Apenas os recursos de análise avançada são pausados."
+    "faq14A": "Seus registros de treino estão seguros. Usuários gratuitos mantêm acesso total de leitura e capacidade de exportação. Apenas os recursos de análise avançada são pausados.",
+    "contactDirectMail": "E-mail direto"
   },
   "onboarding": {
     "title": "Primeiros Passos",

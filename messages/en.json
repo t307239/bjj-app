@@ -21,7 +21,8 @@
     "terms": "Terms",
     "changelog": "Changelog",
     "tour": "Tour",
-    "compare": "Compare"
+    "compare": "Compare",
+    "contact": "Contact"
   },
   "dashboard": {
     "welcomeBack": "Welcome back, {name} 👋",
@@ -1399,7 +1400,8 @@
     "faq13Q": "Can I export my training data?",
     "faq13A": "Yes! You can export your full training history as CSV or PDF anytime from Settings. Your data belongs to you — no lock-in.",
     "faq14Q": "What happens to my data if I cancel Pro?",
-    "faq14A": "Your training records are safe. Free users keep full read access and export capability. Only advanced analytics features are paused."
+    "faq14A": "Your training records are safe. Free users keep full read access and export capability. Only advanced analytics features are paused.",
+    "contactDirectMail": "Direct email"
   },
   "onboarding": {
     "title": "Getting Started",

@@ -24,6 +24,7 @@ export default function SiteFooter() {
     { href: "/compare", label: t("nav.compare") },    // z221: 競合比較 SEO
     { href: "/changelog", label: t("nav.changelog") }, // z203: indie 活発さ証明
     { href: "/help", label: t("nav.help") },
+    { href: "/contact", label: t("nav.contact") },  // z255oo: お問い合わせ / バグ報告
     { href: "https://wiki.bjj-app.net", label: "BJJ Wiki", external: true },
     { href: "/privacy", label: t("nav.privacy") },
     { href: "/terms", label: t("nav.terms") },

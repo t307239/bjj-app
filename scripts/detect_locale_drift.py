@@ -687,6 +687,10 @@ EMAIL_RATE_LIMIT_EXEMPT = {
     "app/api/cron/usage-alert/route.ts",
     # reengagement: push 通知のみ、email でない
     "app/api/cron/reengagement/route.ts",
+    # z255oo: contact form — owner inbox 行き (1 通 / submission)、
+    # 別軸 IP rate limit (createRateLimiter 5/10min) で spam 制御済。
+    # canSendEmail は user-targeted email frequency cap 用なので contact 不適。
+    "app/api/contact/route.ts",
 }
 
 
@@ -801,6 +805,7 @@ def scan_anon_rate_limit_fail_open() -> list:
 # 公開 (no-auth) で SEO 価値のある route のみここに列挙。新規追加時はここに足す。
 SITEMAP_PUBLIC_ROUTES = {
     "pricing", "changelog", "help", "login", "gym", "tour", "compare",
+    "contact",  # z255oo: お問い合わせ / バグ報告 form
 }
 # サイトマップ意図的除外 (robots noindex / auth 必須 / 一時 page 等)
 SITEMAP_EXEMPT_ROUTES = {

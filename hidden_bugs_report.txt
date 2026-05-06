@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 409 files
+TS/TSX Scanned: 412 files
 CRITICAL: 0
 WARNING: 0
-INFO: 201
-Total: 201
+INFO: 202
+Total: 202
 
 [INFO] [DATE_PARSE_NO_GUARD] app/api/ai-coach/generate/route.ts: L375: `new Date(cachedMode.at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
   FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
@@ -397,6 +397,8 @@ Total: 201
   FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [DATE_PARSE_NO_GUARD] lib/traceContext.ts: L166: `new Date(endTime).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
   FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [MISSING_LOADING] app/contact: loading.tsx が存在しない — ページ遷移時にローディングUIなし
+  FIX: app/contact/loading.tsx を作成。Skeleton or スピナーで CLS を防止
 [INFO] [MISSING_LOADING] app/changelog: loading.tsx が存在しない — ページ遷移時にローディングUIなし
   FIX: app/changelog/loading.tsx を作成。Skeleton or スピナーで CLS を防止
 [INFO] [MISSING_LOADING] app/unsubscribe: loading.tsx が存在しない — ページ遷移時にローディングUIなし
