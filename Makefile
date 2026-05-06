@@ -3,10 +3,10 @@
 # 「完璧」と宣言する前に必ず `make verify` を実行する。
 # 6 つの lint が全パスすれば commit 可能、1 つでも 🔴 fail なら作業未完了。
 
-.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url
+.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links
 
 # Run all anti-regression checks
-verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url
+verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links
 	@echo ""
 	@echo "✅ All anti-regression checks passed."
 	@echo "   Safe to commit."
@@ -40,6 +40,11 @@ missing-canonical:
 wiki-url:
 	@echo "→ detect_wiki_url_drift.py..."
 	@python3 scripts/detect_wiki_url_drift.py --ci
+
+# z255gg: 内部 href の route/anchor 整合性 (renaming 後の dead link / typo / 未存在 #frag)
+internal-links:
+	@echo "→ detect_internal_link_drift.py..."
+	@python3 scripts/detect_internal_link_drift.py --ci
 
 typecheck:
 	@echo "→ TypeScript type check..."

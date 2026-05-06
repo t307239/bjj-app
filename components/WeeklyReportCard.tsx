@@ -211,7 +211,7 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
         {/* CTA overlay */}
         <div className="absolute inset-0 flex items-center justify-center bg-zinc-950/40">
           <Link
-            href="/profile#upgrade"
+            href="/pricing"
             className="bg-amber-500 hover:bg-amber-400 active:scale-95 text-black text-xs font-semibold px-4 py-2 rounded-xl transition-all shadow-lg shadow-amber-500/20"
             onClick={() => trackEvent("pricing_upgrade_click", { feature: "weekly_report" })}
           >

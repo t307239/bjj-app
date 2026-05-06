@@ -59,7 +59,7 @@ export default function ProStatusBanner({ subscriptionStatus }: ProStatusBannerP
           </p>
         </div>
         <Link
-          href="/profile#upgrade"
+          href="/pricing"
           className="flex-shrink-0 rounded-lg bg-yellow-500 hover:bg-yellow-400 px-3 py-1.5 text-xs font-bold text-black transition-colors whitespace-nowrap"
         >
           {t("pro.rejoin")}

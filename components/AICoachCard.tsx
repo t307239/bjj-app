@@ -173,7 +173,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
             <p className="text-xs text-zinc-400 mt-0.5">{t("aiCoach.proDesc")}</p>
           </div>
           <a
-            href="/techniques#pro"
+            href="/pricing"
             className="flex-shrink-0 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black text-xs font-semibold px-3 py-2 rounded-lg transition-all"
             onClick={() => trackEvent("pro_upgrade_click", { feature: "ai_coach" })}
           >

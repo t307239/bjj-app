@@ -412,7 +412,7 @@ export default async function DashboardPage({
             ═══════════════════════════════════════════ */}
         {!isPro && hasFirstLog && (
           <Link
-            href="/profile#upgrade"
+            href="/pricing"
             className="block bg-zinc-900/40 border border-amber-500/10 hover:border-amber-500/30 rounded-2xl px-4 py-3.5 mb-5 transition-colors group"
           >
             <div className="flex items-center justify-between">
