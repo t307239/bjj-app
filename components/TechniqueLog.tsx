@@ -459,8 +459,21 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
         formError={formError}
         onSubmit={handleSubmit}
         onBulkSubmit={handleBulkSubmit}
-        onClose={() => { setShowForm(false); setFormError(null); setDangerConfirmPending(false); }}
-        onCloseBulk={() => { setShowForm(false); setBulkMode(false); setFormError(null); setBulkText(""); }}
+        onClose={() => {
+          // z255pp: Cancel/X 押下時に form state を初期値にリセット (state leak fix)
+          setShowForm(false);
+          setFormError(null);
+          setDangerConfirmPending(false);
+          setForm({ name: "", category: "guard", mastery_level: 1, notes: "" });
+        }}
+        onCloseBulk={() => {
+          // z255pp: bulk mode close 時も form リセット
+          setShowForm(false);
+          setBulkMode(false);
+          setFormError(null);
+          setBulkText("");
+          setForm({ name: "", category: "guard", mastery_level: 1, notes: "" });
+        }}
         existingNames={techniques.map((t) => t.name)}
       />
 
