@@ -63,6 +63,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",  // legal text、年単位で更新
       priority: 0.3,  // compliance 用 page、SEO 重要度低
     },
+    // z255oo: /contact お問い合わせ / バグ報告 form
+    {
+      url: `${BASE_URL}/contact`,
+      changeFrequency: "yearly",
+      priority: 0.4,
+    },
     // terms, privacy, tokushoho は robots noindex のためサイトマップから除外
   ];
 

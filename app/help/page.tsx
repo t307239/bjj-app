@@ -173,12 +173,20 @@ aria-hidden="true"                   className="w-4 h-4 text-zinc-500 shrink-0 t
         {/* Contact */}
         <div className="mt-10 bg-zinc-900/40 border border-white/10 rounded-xl p-5 text-center">
           <p className="text-sm text-zinc-300 mb-3">{t("help.contactTitle")}</p>
-          <a
-            href="mailto:307239t777@gmail.com?subject=BJJ%20App%20Support"
-            className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
-          >
-            {t("help.contactBtn")}
-          </a>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a
+              href="/contact"
+              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+            >
+              📩 {t("help.contactBtn")}
+            </a>
+            <a
+              href="mailto:307239t777@gmail.com?subject=BJJ%20App%20Support"
+              className="text-sm text-zinc-400 hover:text-zinc-200 underline underline-offset-2"
+            >
+              {t("help.contactDirectMail") || "メールで直接問い合わせ"}
+            </a>
+          </div>
         </div>
       </div>
     </div>
