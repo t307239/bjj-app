@@ -236,7 +236,7 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
       .select()
       .order("created_at", { ascending: false });
     if (!error && data) {
-      setTechniques([...data, ...techniques]);
+      setTechniques((prev) => [...data, ...prev]);
       setBulkText("");
       setBulkMode(false);
       setShowForm(false);
