@@ -135,7 +135,7 @@ export default function PmfMetricsCard() {
   return (
     <div className="bg-zinc-900 border border-white/10 rounded-xl p-5 mb-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-base font-bold text-white">📈 PMF Metrics</h2>
+        <h2 className="text-base font-bold text-white">📈 PMF 指標</h2>
         <span className="text-[10px] uppercase tracking-wider text-zinc-500">
           z255kk
         </span>
@@ -148,20 +148,20 @@ export default function PmfMetricsCard() {
             {pmf.signups_last_7d}
           </div>
           <div className="text-[11px] text-zinc-400 mt-0.5">
-            Signups (last 7d)
+            新規登録 (直近 7 日)
           </div>
           <div className={`text-[11px] mt-1 ${wowColor}`}>
-            {wowSign}
-            {pmf.signup_wow_percent}% vs prev 7d
+            前週比 {wowSign}
+            {pmf.signup_wow_percent}%
           </div>
         </div>
         <div className="bg-zinc-950 border border-white/[0.06] rounded-lg p-3">
           <div className="text-2xl font-bold text-white">
             {pmf.signups_last_30d}
           </div>
-          <div className="text-[11px] text-zinc-400 mt-0.5">Signups (30d)</div>
+          <div className="text-[11px] text-zinc-400 mt-0.5">新規登録 (30 日)</div>
           <div className="text-[11px] text-zinc-600 mt-1">
-            {pmf.signups_last_90d} in 90d
+            90 日で {pmf.signups_last_90d} 件
           </div>
         </div>
         <div className="bg-zinc-950 border border-white/[0.06] rounded-lg p-3">
@@ -171,10 +171,10 @@ export default function PmfMetricsCard() {
               : `${pmf.d7_retention_percent}%`}
           </div>
           <div className="text-[11px] text-zinc-400 mt-0.5">
-            D7 retention
+            D7 リテンション
           </div>
           <div className="text-[11px] text-zinc-600 mt-1">
-            cohort: {pmf.d7_retention_cohort_size}
+            対象: {pmf.d7_retention_cohort_size} 名
           </div>
         </div>
         <div className="bg-zinc-950 border border-white/[0.06] rounded-lg p-3">
@@ -182,10 +182,10 @@ export default function PmfMetricsCard() {
             {data.active_users_7d}
           </div>
           <div className="text-[11px] text-zinc-400 mt-0.5">
-            Active users (7d)
+            アクティブ (7 日)
           </div>
           <div className="text-[11px] text-zinc-600 mt-1">
-            {data.active_users_30d} (30d)
+            {data.active_users_30d} 名 (30 日)
           </div>
         </div>
       </div>
@@ -193,14 +193,14 @@ export default function PmfMetricsCard() {
       {/* Weekly active trend (sparkline-ish) */}
       <div className="mb-5">
         <div className="text-xs font-semibold text-zinc-300 mb-2">
-          Weekly Active Users (last 4 weeks)
+          週次アクティブユーザー (直近 4 週)
         </div>
         <div className="flex items-end gap-2 h-20">
           {pmf.weekly_active_trend.map((v, i) => (
             <div
               key={i}
               className="flex-1 flex flex-col items-center gap-1"
-              title={`Week ${i - 3}: ${v} users`}
+              title={`${["3 週前", "2 週前", "先週", "今週"][i]}: ${v} 名`}
             >
               <div className="text-[10px] text-zinc-400">{v}</div>
               <div
@@ -214,20 +214,20 @@ export default function PmfMetricsCard() {
           ))}
         </div>
         <div className="flex gap-2 mt-1 text-[10px] text-zinc-500">
-          <span className="flex-1 text-center">3w ago</span>
-          <span className="flex-1 text-center">2w ago</span>
-          <span className="flex-1 text-center">last w</span>
-          <span className="flex-1 text-center">this w</span>
+          <span className="flex-1 text-center">3 週前</span>
+          <span className="flex-1 text-center">2 週前</span>
+          <span className="flex-1 text-center">先週</span>
+          <span className="flex-1 text-center">今週</span>
         </div>
       </div>
 
       {/* Source breakdown */}
       <div>
         <div className="text-xs font-semibold text-zinc-300 mb-2">
-          Signup Source (last 90d)
+          流入元 (直近 90 日)
         </div>
         {sourceEntries.length === 0 ? (
-          <div className="text-xs text-zinc-500">No signups in last 90 days.</div>
+          <div className="text-xs text-zinc-500">直近 90 日に新規登録なし。</div>
         ) : (
           <div className="space-y-1.5">
             {sourceEntries.slice(0, 6).map(([src, count]) => {
@@ -246,7 +246,7 @@ export default function PmfMetricsCard() {
                     />
                   </div>
                   <span className="text-zinc-400 tabular-nums w-12 text-right">
-                    {count} ({pct}%)
+                    {count} 名 ({pct}%)
                   </span>
                 </div>
               );
@@ -257,8 +257,8 @@ export default function PmfMetricsCard() {
 
       {/* Interpretation hint */}
       <div className="mt-4 pt-3 border-t border-white/[0.06] text-[11px] text-zinc-500 leading-relaxed">
-        💡 D7 retention {"<"} 20% = no PMF / {"≥"} 40% = strong PMF
-        signal. Cohort: signed up 7-30 days ago, returned within first 7 days.
+        💡 D7 リテンション {"<"} 20% = PMF 未達 / {"≥"} 40% = PMF 達成 signal。
+        対象: 7-30 日前に登録した user で、最初の 7 日以内に練習記録した割合。
       </div>
     </div>
   );

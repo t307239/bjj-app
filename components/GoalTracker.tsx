@@ -247,9 +247,9 @@ export default function GoalTracker({ userId }: Props) {
     return (
       <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 ring-1 ring-inset ring-white/[0.04] mb-4 shadow-lg shadow-black/40">
         <p className="text-xs text-zinc-400 text-center">
-          To enable goal tracking, run
+          {t("goal.schemaErrorPrefix")}
           <code className="text-yellow-400 mx-1">supabase-goals-schema.sql</code>
-          in Supabase.
+          {t("goal.schemaErrorSuffix")}
         </p>
       </div>
     );

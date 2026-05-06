@@ -1142,7 +1142,9 @@
     "zeroDaysLeft": "0 days left · {n} more",
     "moreNeeded": "{needed} more · {days} days left",
     "past6Months": "Past 6 months",
-    "monthsAchieved": "{n} / 6 months achieved"
+    "monthsAchieved": "{n} / 6 months achieved",
+    "schemaErrorPrefix": "To enable goal tracking, run",
+    "schemaErrorSuffix": "in Supabase."
   },
   "gym": {
     "inviteTitle": "📎 Invite Students",

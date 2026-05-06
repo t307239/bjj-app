@@ -1132,7 +1132,9 @@
     "zeroDaysLeft": "残0日 · あと{n}回",
     "moreNeeded": "あと{needed}回 · 残{days}日",
     "past6Months": "過去6ヶ月",
-    "monthsAchieved": "{n} / 6ヶ月達成"
+    "monthsAchieved": "{n} / 6ヶ月達成",
+    "schemaErrorPrefix": "目標追跡を有効化するには、Supabase で",
+    "schemaErrorSuffix": "を実行してください。"
   },
   "gym": {
     "inviteTitle": "📎 生徒を招待",

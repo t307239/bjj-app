@@ -1168,7 +1168,9 @@
     "zeroDaysLeft": "0 dias restantes · mais {n}",
     "moreNeeded": "Faltam {needed} · {days} dias restantes",
     "past6Months": "Últimos 6 meses",
-    "monthsAchieved": "{n} / 6 meses alcançados"
+    "monthsAchieved": "{n} / 6 meses alcançados",
+    "schemaErrorPrefix": "Para ativar o rastreamento de metas, execute",
+    "schemaErrorSuffix": "no Supabase."
   },
   "gym": {
     "inviteTitle": "📎 Convidar Alunos",
