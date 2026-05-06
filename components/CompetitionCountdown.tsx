@@ -172,7 +172,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
       setWeeklySessionCount(Math.max(Math.round(totalSessions / 4), 2));
     } catch (err) {
       clientLogger.error("compgoal_loadgoals_network_error", {}, err);
-      setErrorMsg("Failed to load data");
+      setErrorMsg(t("compGoal.loadError"));
     } finally {
       setLoading(false);
     }

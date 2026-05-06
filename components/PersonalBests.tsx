@@ -7,6 +7,7 @@ import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 import { getLocalDateParts } from "@/lib/timezone";
 import { clientLogger } from "@/lib/clientLogger";
+import { parseYearMonthSafe } from "@/lib/formatDate";
 
 type Props = { userId: string };
 
@@ -217,8 +218,9 @@ export default function PersonalBests({ userId }: Props) {
 
   const bestMonthLabel = bests.bestMonthKey
     ? (() => {
-        const [y, m] = bests.bestMonthKey.split("-");
-        const d = new Date(parseInt(y), parseInt(m) - 1, 1);
+        const parsed = parseYearMonthSafe(bests.bestMonthKey);
+        if (!parsed) return "";
+        const d = new Date(parsed.year, parsed.month - 1, 1);
         return new Intl.DateTimeFormat(intlLocale, { year: "numeric", month: "long" }).format(d);
       })()
     : "";

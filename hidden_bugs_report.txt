@@ -2,13 +2,19 @@ BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 408 files
 CRITICAL: 0
 WARNING: 0
-INFO: 123
-Total: 123
+INFO: 193
+Total: 193
 
+[INFO] [DATE_PARSE_NO_GUARD] app/api/ai-coach/generate/route.ts: L375: `new Date(cachedMode.at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/gym-outreach/route.ts: L189: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/onboarding-email/route.ts: L249: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[INFO] [DATE_PARSE_NO_GUARD] app/api/cron/onboarding-email/route.ts: L191: `new Date(iso).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] app/api/cron/reengagement/route.ts: L169: `new Date(sub.last_trained).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [SUPABASE_NO_ERROR] app/api/stripe/webhook/route.ts: L51: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/api/stripe/webhook/route.ts: L204: Supabase query の戻り値で error を無視 — サイレント失敗リスク
@@ -69,6 +75,10 @@ Total: 123
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L172: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
+[INFO] [DATE_PARSE_NO_GUARD] app/techniques/page.tsx: L152: `new Date(tc.created_at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] app/techniques/page.tsx: L160: `new Date(tc.created_at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [DANGEROUS_HTML] app/tour/page.tsx: L283: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [SUPABASE_NO_ERROR] app/tour/page.tsx: L269: Supabase query の戻り値で error を無視 — サイレント失敗リスク
@@ -129,16 +139,32 @@ Total: 123
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L397: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [TRUNCATE_NO_TITLE] components/BodyHeatmap.tsx: L391: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+  FIX: title={varName} を追加 (a11y/UX)
+[INFO] [TRUNCATE_NO_TITLE] components/BodyHeatmap.tsx: L393: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+  FIX: title={varName} を追加 (a11y/UX)
 [INFO] [INLINE_STYLE_OBJECT] components/CompetitionSummaryCard.tsx: L302: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [TRUNCATE_NO_TITLE] components/CompetitionSummaryCard.tsx: L298: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+  FIX: title={varName} を追加 (a11y/UX)
 [INFO] [INLINE_STYLE_OBJECT] components/ExtendedBadgeGrid.tsx: L89: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/FirstLogHero.tsx: L29: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/GoalTrackerEditor.tsx: L57: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [TRUNCATE_NO_TITLE] components/GuestDashboard.tsx: L311: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+  FIX: title={varName} を追加 (a11y/UX)
+[INFO] [DATE_PARSE_NO_GUARD] components/GymCurriculumCard.tsx: L41: `new Date(data.curriculum_completed_at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] components/GymCurriculumCard.tsx: L42: `new Date(curriculumSetAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] components/GymCurriculumCard.tsx: L84: `new Date(curriculumSetAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [INLINE_STYLE_OBJECT] components/HeroPreviewVideo.tsx: L37: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [DATE_PARSE_NO_GUARD] components/InjuryCareAlert.tsx: L33: `new Date(b).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [INLINE_STYLE_OBJECT] components/MilestoneBadgeGrid.tsx: L179: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/OnboardingChecklist.tsx: L115: style={{...}} — Tailwindクラスで統一推奨
@@ -153,7 +179,9 @@ Total: 123
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/PartnerStatsCard.tsx: L40: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/PersonalBests.tsx: L374: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [TRUNCATE_NO_TITLE] components/PartnerStatsCard.tsx: L34: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+  FIX: title={varName} を追加 (a11y/UX)
+[INFO] [INLINE_STYLE_OBJECT] components/PersonalBests.tsx: L376: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/ReferralSection.tsx: L130: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -161,6 +189,8 @@ Total: 123
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/RollAnalyticsCard.tsx: L251: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [TRUNCATE_NO_TITLE] components/RollAnalyticsCard.tsx: L80: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+  FIX: title={varName} を追加 (a11y/UX)
 [INFO] [INLINE_STYLE_OBJECT] components/SkillMapV2.tsx: L423: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/SkillMapV2.tsx: L435: style={{...}} — Tailwindクラスで統一推奨
@@ -171,30 +201,38 @@ Total: 123
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/SwipeableCard.tsx: L154: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L283: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [DATE_PARSE_NO_GUARD] components/TechniqueLog.tsx: L415: `new Date(b.created_at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L291: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L294: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L302: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L315: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L323: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L319: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L327: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L356: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L364: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L375: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L383: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L382: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L390: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L398: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L406: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L429: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/TrainingBarChart.tsx: L437: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingChart.tsx: L358: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [TRUNCATE_NO_TITLE] components/TrainingChart.tsx: L300: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+  FIX: title={varName} を追加 (a11y/UX)
+[INFO] [TRUNCATE_NO_TITLE] components/TrainingLogForm.tsx: L506: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+  FIX: title={varName} を追加 (a11y/UX)
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingTypeChart.tsx: L227: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrainingTypeChart.tsx: L240: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [TRUNCATE_NO_TITLE] components/TrainingTypeChart.tsx: L418: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+  FIX: title={varName} を追加 (a11y/UX)
 [INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L163: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L307: style={{...}} — Tailwindクラスで統一推奨
@@ -213,6 +251,14 @@ Total: 123
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/gym/BeltDistributionChart.tsx: L43: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [TRUNCATE_NO_TITLE] components/gym/CsvBulkInvite.tsx: L240: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+  FIX: title={varName} を追加 (a11y/UX)
+[INFO] [TRUNCATE_NO_TITLE] components/gym/CsvBulkInvite.tsx: L242: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+  FIX: title={varName} を追加 (a11y/UX)
+[INFO] [DATE_PARSE_NO_GUARD] components/gym/CurriculumDispatch.tsx: L94: `new Date(lastSentAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] components/gym/MemberCard.tsx: L44: `new Date(member.last_training_date).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/AddNodePopup.tsx: L24: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/BottomDrawer.tsx: L118: style={{...}} — Tailwindクラスで統一推奨
@@ -233,14 +279,108 @@ Total: 123
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/ui/Skeleton.tsx: L30: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [DATE_PARSE_NO_GUARD] lib/adminOpsToolkit.ts: L330: `new Date(t.createdAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/adminOpsToolkit.ts: L331: `new Date(t.resolvedAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/adminOpsToolkit.ts: L410: `new Date(t.createdAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/adminOpsToolkit.ts: L411: `new Date(t.resolvedAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/alertEscalationPolicy.ts: L152: `new Date(alert.createdAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/alertEscalationPolicy.ts: L171: `new Date(alert.createdAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/alertEscalationPolicy.ts: L172: `new Date(alert.resolvedAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/alertEscalationPolicy.ts: L237: `new Date(alert.createdAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/alertEscalationPolicy.ts: L239: `new Date(alert.acknowledgedAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/alertEscalationPolicy.ts: L244: `new Date(alert.resolvedAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/backupVerificationScheduler.ts: L263: `new Date(b.timestamp).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/billingAnalyzer.ts: L133: `new Date(periodStart).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/billingAnalyzer.ts: L144: `new Date(sub.startDate).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/billingAnalyzer.ts: L151: `new Date(sub.cancelDate).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/billingAnalyzer.ts: L189: `new Date(sub.startDate).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/billingAnalyzer.ts: L191: `new Date(sub.cancelDate).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/billingAnalyzer.ts: L231: `new Date(periodStart).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/billingAnalyzer.ts: L233: `new Date(s.startDate).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/billingAnalyzer.ts: L235: `new Date(s.cancelDate).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/billingAnalyzer.ts: L242: `new Date(s.cancelDate).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [ANY_TYPE_ESCAPE] lib/codeHealthDashboard.ts: L217: `as any` 型アサーション — 適切な型に置換推奨
   FIX: 具体的な型を定義するか、unknown + 型ガードを使用
+[INFO] [DATE_PARSE_NO_GUARD] lib/cohortAnalyzer.ts: L153: `new Date(a).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/cohortAnalyzer.ts: L154: `new Date(b).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/cohortAnalyzer.ts: L167: `new Date(signupDate).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/cohortAnalyzer.ts: L172: `new Date(d).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/cohortAnalyzer.ts: L187: `new Date(signupDate).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/cohortAnalyzer.ts: L192: `new Date(d).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/dataAnomalyDetector.ts: L279: `new Date(d).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/dataRetention.ts: L196: `new Date(recordDate).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/disasterRecovery.ts: L171: `new Date(backupTimestamp).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/disasterRecovery.ts: L172: `new Date(now).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/gdprRequestAutomation.ts: L275: `new Date(to).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/incidentPlaybook.ts: L183: `new Date(resolvedAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/incidentPlaybook.ts: L222: `new Date(inc.resolvedAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/incidentPlaybook.ts: L223: `new Date(inc.createdAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/incidentTracker.ts: L198: `new Date(inc.acknowledgedAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/incidentTracker.ts: L204: `new Date(inc.resolvedAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/loyaltyTierSystem.ts: L167: `new Date(lastActionTimestamp).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [CONSOLE_LOG] lib/missingKeyDetector.ts: console.log() が 1 件残存
   FIX: 本番前に削除
+[INFO] [DATE_PARSE_NO_GUARD] lib/paymentRecoveryEngine.ts: L156: `new Date(payment.failedAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [TODO_COMMENT] lib/prReviewChecklist.ts: L44: TODO: /FIXME comment found" },
   FIX: 修正済みなら削除、未着手ならBACKLOGへ移動
+[INFO] [DATE_PARSE_NO_GUARD] lib/referralEngine.ts: L239: `new Date(a.createdAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/referralEngine.ts: L241: `new Date(sorted[i].createdAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/regulatoryChangeTracker.ts: L185: `new Date(deadlineStr).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/regulatoryChangeTracker.ts: L256: `new Date(change.effectiveDate).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/resourceUsageForecaster.ts: L136: `new Date(a.date).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/resourceUsageForecaster.ts: L138: `new Date(sorted[0].date).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/resourceUsageForecaster.ts: L140: `new Date(s.date).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [CONSOLE_LOG] lib/styleAuditor.ts: console.log() が 1 件残存
   FIX: 本番前に削除
+[INFO] [DATE_PARSE_NO_GUARD] lib/termsVersionManager.ts: L107: `new Date(userConsent.acceptedAt).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
+[INFO] [DATE_PARSE_NO_GUARD] lib/traceContext.ts: L166: `new Date(endTime).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+  FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [MISSING_LOADING] app/changelog: loading.tsx が存在しない — ページ遷移時にローディングUIなし
   FIX: app/changelog/loading.tsx を作成。Skeleton or スピナーで CLS を防止
 [INFO] [MISSING_LOADING] app/unsubscribe: loading.tsx が存在しない — ページ遷移時にローディングUIなし

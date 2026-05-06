@@ -1976,7 +1976,8 @@
     "tipBuild": "Consistent training with positional sparring. Start refining your competition game plan.",
     "tipBase": "Build your base. Technique development, conditioning, and exploring new positions.",
     "proTeaser": "Upgrade to Pro for AI training recommendations",
-    "duplicateError": "A goal with the same name and date already exists"
+    "duplicateError": "A goal with the same name and date already exists",
+    "loadError": "Failed to load data"
   },
   "records": {
     "errorTitle": "Something went wrong",

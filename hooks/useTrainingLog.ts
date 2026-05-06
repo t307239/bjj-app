@@ -377,7 +377,12 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
 
     const weightNum = form.weight !== "" ? parseFloat(form.weight) : null;
-    const weightValue = weightNum !== null && !isNaN(weightNum) && weightNum > 0 ? weightNum : null;
+    // z257: clamp to a sensible range so paste-bypass of HTML max=500 cannot
+    // store nonsense (e.g. 9999) into the weight column.
+    const weightValue =
+      weightNum !== null && !isNaN(weightNum) && weightNum > 0 && weightNum <= 500
+        ? weightNum
+        : null;
 
     // Whitelist: only DB columns — prevents PostgREST rejection from unknown fields
     const insertPayload = {

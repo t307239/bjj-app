@@ -148,3 +148,32 @@ export function formatMonthYear(
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
   }
 }
+
+/**
+ * z257: Safe parser for YYYY-MM or YYYY-MM-DD strings.
+ * Returns null if the input is malformed (instead of producing NaN/Invalid Date),
+ * so callers can render a fallback rather than display "Invalid Date" or NaN.
+ */
+export function parseYearMonthSafe(
+  ym: string | null | undefined,
+): { year: number; month: number } | null {
+  if (!ym || typeof ym !== "string") return null;
+  const match = /^(\d{4})-(\d{1,2})/.exec(ym);
+  if (!match) return null;
+  const year = parseInt(match[1], 10);
+  const month = parseInt(match[2], 10);
+  if (isNaN(year) || isNaN(month) || month < 1 || month > 12) return null;
+  return { year, month };
+}
+
+/**
+ * z257: Safe Date constructor — returns null for invalid ISO strings instead of
+ * producing an Invalid Date whose .getTime() yields NaN. Use whenever the input
+ * is user-supplied or sourced from a column that may be NULL or malformed.
+ */
+export function parseISODateSafe(iso: string | null | undefined): Date | null {
+  if (!iso || typeof iso !== "string") return null;
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return null;
+  return d;
+}

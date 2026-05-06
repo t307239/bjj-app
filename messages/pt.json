@@ -2004,7 +2004,8 @@
     "tipBuild": "Treino consistente com sparring posicional. Comece a refinar seu game plan.",
     "tipBase": "Construa sua base. Desenvolvimento técnico, condicionamento e exploração.",
     "proTeaser": "Atualize para Pro para recomendações de treino com IA",
-    "duplicateError": "Já existe uma meta com o mesmo nome e data"
+    "duplicateError": "Já existe uma meta com o mesmo nome e data",
+    "loadError": "Falha ao carregar dados"
   },
   "records": {
     "errorTitle": "Algo deu errado",

@@ -33,7 +33,9 @@ function formatRelativeDate(
   if (dateStr === todayStr) return t("gym.today");
   if (dateStr === yesterdayStr) return t("gym.yesterday");
   // diff in days
-  const [y, m, d] = dateStr.split("-").map(Number);
+  const dateParts = dateStr.split("-").map(Number);
+  if (dateParts.length < 3 || dateParts.some((n) => isNaN(n))) return dateStr;
+  const [y, m, d] = dateParts;
   const logDate = new Date(y, m - 1, d);
   const diffMs = today.setHours(0, 0, 0, 0) - logDate.setHours(0, 0, 0, 0);
   const diffDays = Math.round(diffMs / 86400000);

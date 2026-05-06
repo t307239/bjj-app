@@ -6,6 +6,7 @@ import { useLocale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 import { getMonthStartDate } from "@/lib/timezone";
 import { clientLogger } from "@/lib/clientLogger";
+import { parseYearMonthSafe } from "@/lib/formatDate";
 
 type TypeBreakdown = Record<string, number>;
 
@@ -32,8 +33,9 @@ type Props = {
 // `intlLocale` は BCP-47 tag (ja-JP / en-US / pt-BR) を受け取り、
 // X軸ラベルが UI 言語に連動する。
 function getMonthLabel(ym: string, intlLocale: string = "en-US"): string {
-  const [y, m] = ym.split("-");
-  const d = new Date(parseInt(y), parseInt(m) - 1, 1);
+  const parsed = parseYearMonthSafe(ym);
+  if (!parsed) return "—";
+  const d = new Date(parsed.year, parsed.month - 1, 1);
   return new Intl.DateTimeFormat(intlLocale, { month: "short" }).format(d);
 }
 
@@ -139,9 +141,14 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
     }
     const fetchMonth = async () => {
       setSelectedLoading(true);
+      const parsed = parseYearMonthSafe(selectedMonth);
+      if (!parsed) {
+        setSelectedLogs([]);
+        setSelectedLoading(false);
+        return;
+      }
+      const { year, month } = parsed;
       const from = `${selectedMonth}-01`;
-      const year = parseInt(selectedMonth.split("-")[0]);
-      const month = parseInt(selectedMonth.split("-")[1]);
       const nextMonth = month === 12
         ? `${year + 1}-01-01`
         : `${year}-${String(month + 1).padStart(2, "0")}-01`;
@@ -190,8 +197,9 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
 
   const selectedMonthLabel = selectedMonth
     ? (() => {
-        const [y, m] = selectedMonth.split("-");
-        const d = new Date(parseInt(y), parseInt(m) - 1, 1);
+        const parsed = parseYearMonthSafe(selectedMonth);
+        if (!parsed) return null;
+        const d = new Date(parsed.year, parsed.month - 1, 1);
         return new Intl.DateTimeFormat(intlLocale, { year: "numeric", month: "long" }).format(d);
       })()
     : null;
