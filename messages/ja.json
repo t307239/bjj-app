@@ -1796,7 +1796,8 @@
     "viewBack": "背面",
     "weightPlaceholder": "75.5",
     "targetWeightPlaceholder": "70.0",
-    "targetDaysLeftOne": "残り1日"
+    "targetDaysLeftOne": "残り1日",
+    "saveFailed": "保存に失敗しました。"
   },
   "ageGate": {
     "title": "年齢制限",

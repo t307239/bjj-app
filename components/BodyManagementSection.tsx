@@ -35,13 +35,16 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
   const [targetDateInput, setTargetDateInput] = useState("");
   const [targetSaving, setTargetSaving] = useState(false);
   const [targetSaved, setTargetSaved] = useState(false);
+  const [targetSaveError, setTargetSaveError] = useState<string | null>(null);
   const [showTargetForm, setShowTargetForm] = useState(false);
   const [latestWeight, setLatestWeight] = useState<number | null>(null);
   const targetSavedTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const targetErrorTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     return () => {
       if (targetSavedTimerRef.current) clearTimeout(targetSavedTimerRef.current);
+      if (targetErrorTimerRef.current) clearTimeout(targetErrorTimerRef.current);
     };
   }, []);
 
@@ -125,6 +128,10 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
       targetSavedTimerRef.current = setTimeout(() => setTargetSaved(false), 2000);
     } catch (err: unknown) {
       clientLogger.error("bodymanagement.set_target_failed", {}, err instanceof Error ? err : new Error(String(err)));
+      // z255mm: silent fail だった error path に user-visible feedback 追加
+      setTargetSaveError(t("body.saveFailed"));
+      if (targetErrorTimerRef.current) clearTimeout(targetErrorTimerRef.current);
+      targetErrorTimerRef.current = setTimeout(() => setTargetSaveError(null), 4000);
     } finally {
       setTargetSaving(false);
     }
@@ -232,6 +239,11 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
                 )}
                 {targetSaved && (
                   <span className="text-xs text-emerald-400 font-semibold">{t("body.targetSaved")}</span>
+                )}
+                {targetSaveError && (
+                  <span className="text-xs text-red-400 font-semibold" role="alert">
+                    ⚠️ {targetSaveError}
+                  </span>
                 )}
               </div>
             )}

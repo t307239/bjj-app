@@ -156,6 +156,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
     form, setForm,
     compForm, setCompForm,
     formError, setFormError,
+    resetForm,
     editingId, setEditingId,
     editForm, setEditForm,
     editCompForm, setEditCompForm,
@@ -224,7 +225,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         loading={loading}
         formError={formError}
         today={today}
-        onClose={() => { setShowForm(false); setFormError(null); }}
+        onClose={() => { setShowForm(false); resetForm(); }}
         compForm={compForm}
         setCompForm={setCompForm}
         techniqueSuggestions={techniqueSuggestions}

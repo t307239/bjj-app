@@ -106,8 +106,9 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
 
   // ── Form state ────────────────────────────────────────────────────────────
   const [showForm, setShowForm] = useState(initialOpen);
-  // OP1: Load last-used duration/type from localStorage for preset defaults
-  const [form, setForm] = useState(() => {
+  // z255mm: extract initial form factory so Cancel can reset state cleanly
+  // (旧: Cancel は modal 閉じるだけで form state がリーク、再 open で前回入力残留)
+  const getInitialForm = useCallback(() => {
     let lastDuration = 60;
     let lastType = "gi";
     if (typeof localStorage !== "undefined") {
@@ -133,11 +134,20 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       size_diff: "",
       gi_name: "",
     };
-  });
-  const [compForm, setCompForm] = useState<CompData>({
+  }, []);
+  const getInitialCompForm = useCallback((): CompData => ({
     result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi",
-  });
+  }), []);
+  const [form, setForm] = useState(getInitialForm);
+  const [compForm, setCompForm] = useState<CompData>(getInitialCompForm);
   const [formError, setFormError] = useState<string | null>(null);
+
+  // z255mm: Cancel button から呼ぶ form リセット
+  const resetForm = useCallback(() => {
+    setForm(getInitialForm());
+    setCompForm(getInitialCompForm());
+    setFormError(null);
+  }, [getInitialForm, getInitialCompForm]);
 
   // ── Edit state ────────────────────────────────────────────────────────────
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -746,6 +756,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     form, setForm,
     compForm, setCompForm,
     formError, setFormError,
+    resetForm,
     editingId, setEditingId,
     editForm, setEditForm,
     editCompForm, setEditCompForm,

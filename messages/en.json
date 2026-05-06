@@ -1624,7 +1624,8 @@
     "viewBack": "Back",
     "weightPlaceholder": "75.5",
     "targetWeightPlaceholder": "70.0",
-    "targetDaysLeftOne": "1 day left"
+    "targetDaysLeftOne": "1 day left",
+    "saveFailed": "Failed to save."
   },
   "gymLanding": {
     "navIndividuals": "For Individuals",

@@ -1652,7 +1652,8 @@
     "viewBack": "Costas",
     "weightPlaceholder": "75.5",
     "targetWeightPlaceholder": "70.0",
-    "targetDaysLeftOne": "1 dia restante"
+    "targetDaysLeftOne": "1 dia restante",
+    "saveFailed": "Falha ao salvar."
   },
   "gymLanding": {
     "navIndividuals": "Para Indivíduos",
