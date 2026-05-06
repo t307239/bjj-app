@@ -191,7 +191,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
               {showUserMenu && (
                 <div className="absolute right-0 top-10 w-44 bg-zinc-900 border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
                   <div className="px-3 py-2 border-b border-white/5">
-                    <p className="text-xs text-zinc-400 truncate">{displayName}</p>
+                    <p className="text-xs text-zinc-400 truncate" title={displayName}>{displayName}</p>
                   </div>
                   <Link
                     href="/profile"

@@ -15,6 +15,7 @@ import GymMembershipSection from "./profile/GymMembershipSection";
 import AccountSection from "./profile/AccountSection";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { clientLogger } from "@/lib/clientLogger";
+import { parseYearMonthSafe } from "@/lib/formatDate";
 
 type Profile = {
   belt: string;
@@ -93,8 +94,9 @@ function ProfileViewCard({ profile, stats, onEdit }: { profile: Profile; stats: 
             <span>{formatBjjDuration(profile.start_date, t)}</span>
             <span className="text-zinc-400 text-xs">
               {(() => {
-                const [y, m] = profile.start_date.split("-");
-                const d = new Date(parseInt(y), parseInt(m) - 1, 1);
+                const parsed = parseYearMonthSafe(profile.start_date);
+                if (!parsed) return "";
+                const d = new Date(parsed.year, parsed.month - 1, 1);
                 const fmt = new Intl.DateTimeFormat(undefined, { month: "short", year: "numeric" }).format(d);
                 return `(${fmt} – ${t("profile.datePresent")})`;
               })()}
@@ -319,8 +321,9 @@ function ProfileEditForm({ profile, onSave, onCancel, supabase, userId }: {
           {form.start_date && (
             <p className="text-zinc-400 text-xs mt-1">
               {(() => {
-                const [y, m] = form.start_date.split("-");
-                const d = new Date(parseInt(y), parseInt(m) - 1, 1);
+                const parsed = parseYearMonthSafe(form.start_date);
+                if (!parsed) return "";
+                const d = new Date(parsed.year, parsed.month - 1, 1);
                 const fmt = new Intl.DateTimeFormat(undefined, { year: "numeric", month: "long" }).format(d);
                 return `${fmt} → ${formatBjjDuration(form.start_date, t)}`;
               })()}

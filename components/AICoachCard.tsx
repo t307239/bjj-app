@@ -79,7 +79,9 @@ function parseCoaching(text: string, mode: CoachMode): {
 
 function fmtAge(isoDate: string | null | undefined, locale: string): string {
   if (!isoDate) return "";
-  const diffMs = new Date(isoDate).getTime() - Date.now();
+  const t = new Date(isoDate).getTime();
+  if (isNaN(t)) return "";
+  const diffMs = t - Date.now();
   const diffDays = Math.round(diffMs / 86400000);
   try {
     const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });

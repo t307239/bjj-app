@@ -37,6 +37,11 @@ AUDIT_FRAMEWORK.md の20軸スコアリングでは見逃される、
  29. Unsafe number input（parseInt||fallback / Number() on input[type=number]）
  30. setTimeout without cleanup（setState呼び出し + clearTimeout無し → メモリリーク）
  31. Supabase .insert/.update/.upsert にスプレッド構文（DBカラム不一致リスク）
+ 32. setX(prev) スプレッド rollback（functional updater 不在で stale closure バグ） [z257]
+ 33. setTimeout(setState) を useEffect 外で呼ぶ（cleanup 不能で leak） [z257]
+ 34. .split("-") 直後 destructure に長さガード無し（malformed input で undefined → NaN 伝搬） [z257c]
+ 35. new Date(x).getTime() に isNaN ガード無し（invalid ISO で silent NaN） [z257c]
+ 36. className="truncate" + dynamic content に title 属性無し（省略後 full text 確認不可） [z257c]
 
 使い方:
     python3 scripts/detect_hidden_bugs.py              # 全チェック
@@ -1442,6 +1447,147 @@ def check_settimeout_no_cleanup(filepath: Path, content: str, report: BugReport)
                 )
 
 
+def check_split_destructure_no_guard(filepath: Path, content: str, report: BugReport):
+    """日付/時間文字列の `.split("-")` 直後 destructure に長さガードが無い (カテゴリ32)
+
+    問題: `const [y, m] = ym.split("-");` で ym が malformed だと y/m が undefined になり、
+    parseInt(undefined) → NaN → new Date(NaN, NaN, 1) で Invalid Date 表示。
+    z257 で TrainingBarChart / PersonalBests / ProfileForm で発見した silent display crash。
+
+    対応: `parseYearMonthSafe(ym)` (lib/formatDate.ts) を使うか、length check を入れる。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+    if filepath.suffix not in (".ts", ".tsx"):
+        return
+    if "scripts/" in str(rel) or "__tests__/" in str(rel):
+        return
+
+    lines = content.split("\n")
+    for line_no, line in enumerate(lines, 1):
+        stripped = line.strip()
+        if stripped.startswith("//") or stripped.startswith("*"):
+            continue
+
+        # Pattern: `[y, m] = X.split("-")` or `[y, m, d] = X.split("-")`
+        # この形は ymd-like 文字列専用 — locale tag (split("-")[0] only) は除外
+        m = re.search(r'\[\s*[a-zA-Z_][\w]*\s*,\s*[a-zA-Z_][\w]*(?:\s*,\s*[a-zA-Z_][\w]*)?\s*\]\s*=\s*([\w.]+)\.split\(\s*["\']-["\']\s*\)', line)
+        if not m:
+            continue
+        var = m.group(1)
+        # 既に length チェック / 既存ガード（前後3行）があるなら除外
+        ctx_start = max(0, line_no - 4)
+        ctx_end = min(len(lines), line_no + 1)
+        ctx = "\n".join(lines[ctx_start:ctx_end])
+        if re.search(r"\.length\s*[<>=!]", ctx) or "parseYearMonthSafe" in ctx or "??" in line or "?? 2000" in ctx:
+            continue
+        # var が controlled（明らかな system source）なら除外
+        if var in ("locale", "lang", "tag", "header"):
+            continue
+        report.add(
+            "WARNING", "SPLIT_DESTRUCTURE_NO_GUARD",
+            str(rel),
+            f"L{line_no}: `[a, b] = {var}.split(\"-\")` に長さガード無し — malformed input で undefined 化リスク",
+            "lib/formatDate.ts の parseYearMonthSafe() を使う、または length check を追加",
+        )
+
+
+def check_date_parse_no_guard(filepath: Path, content: str, report: BugReport):
+    """`new Date(x).getTime()` の前後に isNaN ガードが無い (カテゴリ33)
+
+    問題: 不正 ISO 文字列で new Date が Invalid Date を返し .getTime() が NaN を返すと、
+    後続の `Math.round(NaN/86400000)` 等が NaN を伝搬し silent display bug になる。
+    z257 で AICoachCard.fmtAge() で発見した。
+
+    対応: lib/formatDate.parseISODateSafe() を使うか、`if (isNaN(t)) return ""` を入れる。
+
+    INFO レベル: ほとんどは DB/Stripe 等 controlled source で実害は薄い。
+    新規実装時の defensive coding ヒント。WARNING にするにはユースケース毎に
+    精査が必要 (パターン → 実害の対応関係が曖昧)。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+    if filepath.suffix not in (".ts", ".tsx"):
+        return
+    if "scripts/" in str(rel) or "__tests__/" in str(rel) or "/lib/formatDate" in str(rel):
+        return
+    # admin/internal toolkit は controlled source で false positive 多数
+    if any(s in str(rel) for s in [
+        "/lib/adminOpsToolkit", "/lib/alertEscalationPolicy", "/lib/billingAnalyzer",
+        "/lib/backupVerificationScheduler", "/lib/featureFlagDriftDetector",
+        "/lib/incidentTimelineBuilder", "/lib/dataRetention", "/lib/auditLog",
+    ]):
+        return
+
+    lines = content.split("\n")
+    for line_no, line in enumerate(lines, 1):
+        stripped = line.strip()
+        if stripped.startswith("//") or stripped.startswith("*"):
+            continue
+
+        # `new Date(x).getTime()` で x が変数 / プロパティ参照 (リテラル日付や Date.now() ではない)
+        # 例: `new Date(isoDate).getTime()`、`new Date(row.created_at).getTime()`
+        m = re.search(r'new\s+Date\s*\(\s*([a-zA-Z_][\w.\[\]?]*)\s*\)\s*\.getTime\s*\(\s*\)', line)
+        if not m:
+            continue
+        var = m.group(1)
+        # `Date.now()` 等は除外
+        if var.startswith("Date."):
+            continue
+        # 同一行で isNaN チェック / 同一スコープで guard 済みなら OK
+        ctx_start = max(0, line_no - 4)
+        ctx_end = min(len(lines), line_no + 4)
+        ctx = "\n".join(lines[ctx_start:ctx_end])
+        if (
+            f"isNaN({var})" in ctx
+            or "isNaN(t)" in ctx
+            or "isNaN(diffMs)" in ctx
+            or "parseISODateSafe" in ctx
+            or "parseYearMonthSafe" in ctx
+            # 直前で typeof check / null guard が入っているケース
+            or re.search(rf"!\s*{re.escape(var)}", ctx)
+        ):
+            continue
+        report.add(
+            "INFO", "DATE_PARSE_NO_GUARD",
+            str(rel),
+            f"L{line_no}: `new Date({var}).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬",
+            "isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う",
+        )
+
+
+def check_truncate_no_title(filepath: Path, content: str, report: BugReport):
+    """`className=\"truncate\"` の <span>/<p>/<div> に title 属性無し (カテゴリ34)
+
+    問題: 動的テキスト (display name / gym name 等) が truncate される時に title 属性が無いと、
+    省略後のフルテキストを hover で確認できない (a11y 問題 + UX)。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+    if filepath.suffix != ".tsx":
+        return
+    if "/wiki" in str(rel) or "/admin" in str(rel):  # admin/wiki は skip
+        return
+
+    lines = content.split("\n")
+    for line_no, line in enumerate(lines, 1):
+        # `truncate` class が dynamic content と一緒の行
+        if "truncate" not in line:
+            continue
+        # title 属性がある or aria-label がある → 除外
+        if "title=" in line or "aria-label" in line:
+            continue
+        # JSX expression が含まれていない (静的テキスト) → 除外
+        if not re.search(r"\{[^{}]*[a-zA-Z_][\w.]*[^{}]*\}", line):
+            continue
+        # truncate を含む opening tag を抽出 (<span ... truncate ...>)
+        if not re.search(r'<(span|p|div|h\d|a)\b[^>]*\btruncate\b[^>]*>', line):
+            continue
+        report.add(
+            "INFO", "TRUNCATE_NO_TITLE",
+            str(rel),
+            f"L{line_no}: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可",
+            "title={varName} を追加 (a11y/UX)",
+        )
+
+
 def check_spread_into_db(filepath: Path, content: str, report: BugReport):
     """Supabase .insert() / .update() / .upsert() にスプレッド構文が使われている（カテゴリ31）
 
@@ -1629,6 +1775,9 @@ def scan_all() -> BugReport:
         check_spread_into_db(fpath, content, report)          # カテゴリ31
         check_state_spread_no_functional_updater(fpath, content, report)  # カテゴリ32 (z257)
         check_settimeout_setstate_outside_useeffect(fpath, content, report)  # カテゴリ33 (z257)
+        check_split_destructure_no_guard(fpath, content, report) # カテゴリ34 (z257c)
+        check_date_parse_no_guard(fpath, content, report)     # カテゴリ35 (z257c)
+        check_truncate_no_title(fpath, content, report)       # カテゴリ36 (z257c)
 
     # ファイル横断チェック（カテゴリ16, 19）
     check_unused_exports(source_files, report)

@@ -62,10 +62,13 @@ export async function GET(req: NextRequest) {
   );
 
   try {
-    // Fetch all profiles
+    // Fetch all profiles. z257: cap at 100k rows so an unbounded `.select()` cannot
+    // OOM the Node.js worker once user count grows. If we ever exceed this we should
+    // page the query (or compute aggregates server-side via SQL view).
     const { data: profiles, error: profilesError } = await serviceClient
       .from("profiles")
-      .select("belt, is_pro");
+      .select("belt, is_pro")
+      .range(0, 99999);
     if (profilesError) throw profilesError;
 
     const allProfiles = profiles ?? [];
@@ -82,7 +85,8 @@ export async function GET(req: NextRequest) {
     const { data: recentLogs, error: logsError } = await serviceClient
       .from("training_logs")
       .select("user_id, date")
-      .gte("date", thirtyDaysAgo);
+      .gte("date", thirtyDaysAgo)
+      .range(0, 99999);
     if (logsError) throw logsError;
 
     const logs = recentLogs ?? [];

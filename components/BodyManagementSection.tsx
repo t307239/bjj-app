@@ -106,7 +106,9 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
 
   const handleSaveTarget = async () => {
     const val = parseFloat(targetWeightInput);
-    if (isNaN(val) || val <= 0 || val > 300) return;
+    // z257/z257c: enforce JS-side range to match HTML max="300" / min="20" (paste can
+    // bypass attribute validation by writing arbitrary numbers into state).
+    if (isNaN(val) || val < 20 || val > 300) return;
     setTargetSaving(true);
     try {
       await supabase
