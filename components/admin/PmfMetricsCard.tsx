@@ -135,57 +135,74 @@ export default function PmfMetricsCard() {
   return (
     <div className="bg-zinc-900 border border-white/10 rounded-xl p-5 mb-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-base font-bold text-white">📈 PMF 指標</h2>
-        <span className="text-[10px] uppercase tracking-wider text-zinc-500">
-          z255kk
+        <h2 className="text-base font-bold text-white">
+          📈 サービスの健康診断
+        </h2>
+        <span className="text-[10px] text-zinc-500" title="技術的に PMF metrics と呼ばれる指標">
+          PMF 指標
         </span>
       </div>
 
       {/* Top KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
-        <div className="bg-zinc-950 border border-white/[0.06] rounded-lg p-3">
+        <div
+          className="bg-zinc-950 border border-white/[0.06] rounded-lg p-3"
+          title="この 7 日間に新しく登録した人の数"
+        >
           <div className="text-2xl font-bold text-white">
             {pmf.signups_last_7d}
+            <span className="text-sm font-normal text-zinc-500 ml-1">人</span>
           </div>
           <div className="text-[11px] text-zinc-400 mt-0.5">
-            新規登録 (直近 7 日)
+            新規登録 (この 7 日)
           </div>
           <div className={`text-[11px] mt-1 ${wowColor}`}>
             前週比 {wowSign}
             {pmf.signup_wow_percent}%
           </div>
         </div>
-        <div className="bg-zinc-950 border border-white/[0.06] rounded-lg p-3">
+        <div
+          className="bg-zinc-950 border border-white/[0.06] rounded-lg p-3"
+          title="この 30 日間に新しく登録した人の数"
+        >
           <div className="text-2xl font-bold text-white">
             {pmf.signups_last_30d}
+            <span className="text-sm font-normal text-zinc-500 ml-1">人</span>
           </div>
           <div className="text-[11px] text-zinc-400 mt-0.5">新規登録 (30 日)</div>
           <div className="text-[11px] text-zinc-600 mt-1">
-            90 日で {pmf.signups_last_90d} 件
+            90 日で {pmf.signups_last_90d} 人
           </div>
         </div>
-        <div className="bg-zinc-950 border border-white/[0.06] rounded-lg p-3">
+        <div
+          className="bg-zinc-950 border border-white/[0.06] rounded-lg p-3"
+          title="登録した人のうち、最初の 1 週間で実際にアプリを使った人の割合 (定着率)。20%未満=製品が刺さってない、40%以上=ヒット商品の signal"
+        >
           <div className={`text-2xl font-bold ${d7Color}`}>
             {pmf.d7_retention_cohort_size === 0
               ? "—"
               : `${pmf.d7_retention_percent}%`}
           </div>
           <div className="text-[11px] text-zinc-400 mt-0.5">
-            D7 リテンション
+            1 週間定着率
           </div>
           <div className="text-[11px] text-zinc-600 mt-1">
-            対象: {pmf.d7_retention_cohort_size} 名
+            対象: {pmf.d7_retention_cohort_size} 人
           </div>
         </div>
-        <div className="bg-zinc-950 border border-white/[0.06] rounded-lg p-3">
+        <div
+          className="bg-zinc-950 border border-white/[0.06] rounded-lg p-3"
+          title="この 7 日間に 1 回でもアプリで練習を記録した人の数"
+        >
           <div className="text-2xl font-bold text-white">
             {data.active_users_7d}
+            <span className="text-sm font-normal text-zinc-500 ml-1">人</span>
           </div>
           <div className="text-[11px] text-zinc-400 mt-0.5">
-            アクティブ (7 日)
+            実際に使ってる人 (7 日)
           </div>
           <div className="text-[11px] text-zinc-600 mt-1">
-            {data.active_users_30d} 名 (30 日)
+            {data.active_users_30d} 人 (30 日)
           </div>
         </div>
       </div>
@@ -193,7 +210,7 @@ export default function PmfMetricsCard() {
       {/* Weekly active trend (sparkline-ish) */}
       <div className="mb-5">
         <div className="text-xs font-semibold text-zinc-300 mb-2">
-          週次アクティブユーザー (直近 4 週)
+          週ごとに実際に使った人の推移 (直近 4 週)
         </div>
         <div className="flex items-end gap-2 h-20">
           {pmf.weekly_active_trend.map((v, i) => (
@@ -224,7 +241,7 @@ export default function PmfMetricsCard() {
       {/* Source breakdown */}
       <div>
         <div className="text-xs font-semibold text-zinc-300 mb-2">
-          流入元 (直近 90 日)
+          どこから来た人か (直近 90 日)
         </div>
         {sourceEntries.length === 0 ? (
           <div className="text-xs text-zinc-500">直近 90 日に新規登録なし。</div>
@@ -257,8 +274,9 @@ export default function PmfMetricsCard() {
 
       {/* Interpretation hint */}
       <div className="mt-4 pt-3 border-t border-white/[0.06] text-[11px] text-zinc-500 leading-relaxed">
-        💡 D7 リテンション {"<"} 20% = PMF 未達 / {"≥"} 40% = PMF 達成 signal。
-        対象: 7-30 日前に登録した user で、最初の 7 日以内に練習記録した割合。
+        💡 <strong>1 週間定着率</strong>の見方: 20% 未満 = 製品がユーザーに刺さってない /
+        40% 以上 = ヒット商品の signal。<br />
+        対象: 7〜30 日前に登録した人のうち、最初の 7 日以内に練習を記録した割合。
       </div>
     </div>
   );

@@ -198,11 +198,11 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
             </div>
             <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-blue-400">{gymOwnerCount}</div>
-              <div className="text-xs text-zinc-400 mt-0.5">道場メンバー</div>
+              <div className="text-xs text-zinc-400 mt-0.5" title="道場と紐付いている user の数">道場所属</div>
             </div>
             <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 text-center">
               <div className="text-2xl font-bold text-green-400">{activeCount}</div>
-              <div className="text-xs text-zinc-400 mt-0.5">アクティブ (30日)</div>
+              <div className="text-xs text-zinc-400 mt-0.5" title="この 30 日間に 1 回以上アプリで練習を記録した人の数">使ってる人 (30 日)</div>
             </div>
           </div>
         )}
@@ -288,13 +288,13 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
                           <div className="text-zinc-300 font-bold">{user.sessions_total}</div>
                         </div>
                         <div>
-                          <div className="text-zinc-400 mb-0.5">Stripe (帯)</div>
+                          <div className="text-zinc-400 mb-0.5" title="柔術の帯のストライプ (線) の数">帯の本数</div>
                           <div className="text-zinc-300">{user.stripe}</div>
                         </div>
                         <div>
-                          <div className="text-zinc-400 mb-0.5">サブスクリプション</div>
+                          <div className="text-zinc-400 mb-0.5">プラン</div>
                           <div className={`font-semibold ${user.is_pro ? "text-yellow-400" : "text-zinc-500"}`}>
-                            {user.is_pro ? "Pro" : "無料"}
+                            {user.is_pro ? "Pro 有料会員" : "無料会員"}
                           </div>
                         </div>
                       </div>
