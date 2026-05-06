@@ -33,27 +33,51 @@ const PricingSection = dynamic(() => import("@/components/PricingSection"), {
 // z204: indie tagline 入り OG image (z195 で動的化済の /api/og を mode=lp で叩く)
 const PRICING_OG = "https://bjj-app.net/api/og?mode=lp&lang=en&belt=blue&count=1500&streak=14&months=14";
 
-export const metadata: Metadata = {
-  title: "Pricing",
-  description:
-    "Free forever for individual BJJ practitioners. Pro $9.99/mo for analytics. Gym Pro $99/mo for dojos. 14-day free trial.",
-  alternates: { canonical: "https://bjj-app.net/pricing" },
-  openGraph: {
-    type: "website",
-    url: "https://bjj-app.net/pricing",
-    siteName: "BJJ App",
-    title: "BJJ App Pricing — Free / Pro $9.99 / Gym $99",
-    description:
-      "Track BJJ training free forever. Pro for analytics. Gym Pro for dojos.",
-    images: [{ url: PRICING_OG, width: 1200, height: 630, alt: "BJJ App Pricing" }],
+// z255jj: locale-aware metadata (F-12) — generateMetadata で Accept-Language /
+// cookie ベースの locale 検出により JA/PT 検索結果でも適切な description を表示。
+// 旧: 静的英語 description が JA/PT SERP に出ていた SEO 機会損失を解消。
+const PRICING_META = {
+  en: {
+    desc: "Free forever for individual BJJ practitioners. Pro $9.99/mo for analytics. Gym Pro $99/mo for dojos. 14-day free trial.",
+    ogTitle: "BJJ App Pricing — Free / Pro $9.99 / Gym $99",
+    ogDesc: "Track BJJ training free forever. Pro for analytics. Gym Pro for dojos.",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "BJJ App Pricing — Free / Pro $9.99 / Gym $99",
-    description: "Track BJJ training free forever. Pro for analytics. Gym Pro for dojos.",
-    images: [PRICING_OG],
+  ja: {
+    desc: "個人 BJJ 練習者は永久無料。本格分析は Pro $9.99/月、道場管理は Gym Pro $99/月。14 日間無料トライアル。",
+    ogTitle: "BJJ App 料金 — 無料 / Pro $9.99 / Gym $99",
+    ogDesc: "BJJ 練習を永久無料で記録。分析は Pro、道場管理は Gym Pro。",
   },
-};
+  pt: {
+    desc: "Grátis para sempre para praticantes individuais de BJJ. Pro $9.99/mês para análises. Gym Pro $99/mês para academias. 14 dias de teste grátis.",
+    ogTitle: "Preços BJJ App — Grátis / Pro $9.99 / Gym $99",
+    ogDesc: "Registre seu BJJ grátis para sempre. Pro para análises. Gym Pro para academias.",
+  },
+} as const;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await detectServerLocale();
+  const m = PRICING_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
+  return {
+    title: "Pricing",
+    description: m.desc,
+    alternates: { canonical: "https://bjj-app.net/pricing" },
+    openGraph: {
+      type: "website",
+      url: "https://bjj-app.net/pricing",
+      siteName: "BJJ App",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      images: [{ url: PRICING_OG, width: 1200, height: 630, alt: "BJJ App Pricing" }],
+      locale: locale === "ja" ? "ja_JP" : locale === "pt" ? "pt_BR" : "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      images: [PRICING_OG],
+    },
+  };
+}
 
 const COPY = {
   ja: {

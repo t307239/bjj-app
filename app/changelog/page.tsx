@@ -21,26 +21,49 @@ import { safeJsonLd } from "@/lib/safeJsonLd";
 // z204: indie signal の OG image (Reddit/community 共有時に「Built by blue belt」表示)
 const CHANGELOG_OG = "https://bjj-app.net/api/og?mode=reddit&lang=en&belt=blue&count=1500&streak=14&months=14";
 
-export const metadata: Metadata = {
-  title: "Changelog",
-  description:
-    "Recent updates and shipped features for BJJ App. Built indie, shipping every week.",
-  alternates: { canonical: "https://bjj-app.net/changelog" },
-  openGraph: {
-    type: "website",
-    url: "https://bjj-app.net/changelog",
-    siteName: "BJJ App",
-    title: "BJJ App Changelog — what we shipped",
-    description: "Indie BJJ project. Recent updates and new features.",
-    images: [{ url: CHANGELOG_OG, width: 1200, height: 630, alt: "BJJ App Changelog" }],
+// z255jj: locale-aware metadata (F-12)
+const CHANGELOG_META = {
+  en: {
+    desc: "Recent updates and shipped features for BJJ App. Built indie, shipping every week.",
+    ogTitle: "BJJ App Changelog — what we shipped",
+    ogDesc: "Indie BJJ project. Recent updates and new features.",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "BJJ App Changelog — what we shipped",
-    description: "Indie BJJ project. Recent updates and new features.",
-    images: [CHANGELOG_OG],
+  ja: {
+    desc: "BJJ App の最新アップデートと出荷済み機能。Indie 開発、毎週 ship。",
+    ogTitle: "BJJ App Changelog — 最新の出荷履歴",
+    ogDesc: "Indie BJJ プロジェクト。最近のアップデートと新機能。",
   },
-};
+  pt: {
+    desc: "Atualizações recentes e features lançadas do BJJ App. Indie, lançando toda semana.",
+    ogTitle: "BJJ App Changelog — o que lançamos",
+    ogDesc: "Projeto BJJ indie. Atualizações recentes e novas features.",
+  },
+} as const;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await detectServerLocale();
+  const m = CHANGELOG_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
+  return {
+    title: "Changelog",
+    description: m.desc,
+    alternates: { canonical: "https://bjj-app.net/changelog" },
+    openGraph: {
+      type: "website",
+      url: "https://bjj-app.net/changelog",
+      siteName: "BJJ App",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      images: [{ url: CHANGELOG_OG, width: 1200, height: 630, alt: "BJJ App Changelog" }],
+      locale: locale === "ja" ? "ja_JP" : locale === "pt" ? "pt_BR" : "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      images: [CHANGELOG_OG],
+    },
+  };
+}
 
 type Entry = {
   emoji: string;
