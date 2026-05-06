@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocale } from "@/lib/i18n";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { clientLogger } from "@/lib/clientLogger";
@@ -19,6 +19,15 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
   const [leaving, setLeaving] = useState(false);
   const [confirmLeave, setConfirmLeave] = useState(false);
   const [toggleLoading, setToggleLoading] = useState(false);
+  // z258: surface failures to the user instead of silent console-only logs
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const errorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (errorTimer.current) clearTimeout(errorTimer.current); }, []);
+  const showError = (msg: string) => {
+    setErrorMsg(msg);
+    if (errorTimer.current) clearTimeout(errorTimer.current);
+    errorTimer.current = setTimeout(() => setErrorMsg(null), 4000);
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -46,6 +55,7 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
 
   const handleLeave = async () => {
     setLeaving(true);
+    setErrorMsg(null);
     const { error } = await supabase
       .from("profiles")
       .update({ gym_id: null, share_data_with_gym: false })
@@ -56,22 +66,31 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
       setSharing(false);
       setConfirmLeave(false);
     } else {
+      // z258: was silent console-only failure → user clicked "Leave" but
+      // nothing happened with no feedback. Surface the error.
       clientLogger.error("gym_membership.leave_failed", {}, error);
+      showError(t("error.title"));
     }
     setLeaving(false);
   };
 
   const handleToggleSharing = async () => {
-    setToggleLoading(true);
+    // z258: optimistic toggle + rollback on error (was: state diverged
+    // silently from server when update failed).
+    if (toggleLoading) return;
+    const prev = sharing;
     const next = !sharing;
+    setSharing(next);
+    setToggleLoading(true);
+    setErrorMsg(null);
     const { error } = await supabase
       .from("profiles")
       .update({ share_data_with_gym: next })
       .eq("id", userId);
-    if (!error) {
-      setSharing(next);
-    } else {
+    if (error) {
+      setSharing(prev);
       clientLogger.error("gym_membership.toggle_sharing_failed", {}, error);
+      showError(t("error.title"));
     }
     setToggleLoading(false);
   };
@@ -144,6 +163,12 @@ export default function GymMembershipSection({ userId, supabase }: Props) {
           <span className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform ${sharing ? "translate-x-6" : "translate-x-1"}`} />
         </button>
       </div>
+      {/* z258: surface error toast for leave/toggle failures */}
+      {errorMsg && (
+        <p role="alert" className="text-xs text-red-400 mt-2">
+          {errorMsg}
+        </p>
+      )}
       {/* Privacy Shield disclosure — B-33: shown when sharing is ON */}
       {sharing && (
         <div className="mt-2 bg-blue-950/20 border border-blue-500/10 rounded-lg p-2.5">

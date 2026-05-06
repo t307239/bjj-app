@@ -68,6 +68,9 @@ export default function GymRanking({ userId, gymId }: Props) {
   const [isOptedIn, setIsOptedIn] = useState<boolean | null>(null);
   const [toggling, setToggling] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const errorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (errorTimer.current) clearTimeout(errorTimer.current); }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -140,6 +143,7 @@ export default function GymRanking({ userId, gymId }: Props) {
   async function handleToggle() {
     if (toggling || isOptedIn === null) return;
     setToggling(true);
+    setErrorMsg(null);
     const next = !isOptedIn;
     const { error } = await supabase
       .from("profiles")
@@ -149,7 +153,12 @@ export default function GymRanking({ userId, gymId }: Props) {
       setIsOptedIn(next);
       setRefreshKey((k) => k + 1);
     } else {
+      // z258: was silent failure → user clicked opt-in/opt-out but UI never
+      // changed and no error shown. Surface the error.
       clientLogger.error("gym_ranking.toggle_failed", {}, error);
+      setErrorMsg(t("error.title"));
+      if (errorTimer.current) clearTimeout(errorTimer.current);
+      errorTimer.current = setTimeout(() => setErrorMsg(null), 4000);
     }
     setToggling(false);
   }
@@ -159,28 +168,42 @@ export default function GymRanking({ userId, gymId }: Props) {
     if (isOptedIn === null) return null;
     if (isOptedIn) {
       return (
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
-          <p className="text-xs text-zinc-400">{t("gym.rankingOptOutHint")}</p>
-          <button type="button"
-            onClick={handleToggle}
-            disabled={toggling}
-            className="text-xs text-zinc-400 hover:text-red-400 transition-colors disabled:opacity-40 flex-shrink-0 ml-3"
-          >
-            {toggling ? t("gym.rankingToggling") : t("gym.rankingOptOut")}
-          </button>
+        <div className="mt-3 pt-3 border-t border-white/5">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-zinc-400">{t("gym.rankingOptOutHint")}</p>
+            <button type="button"
+              onClick={handleToggle}
+              disabled={toggling}
+              className="text-xs text-zinc-400 hover:text-red-400 transition-colors disabled:opacity-40 flex-shrink-0 ml-3"
+            >
+              {toggling ? t("gym.rankingToggling") : t("gym.rankingOptOut")}
+            </button>
+          </div>
+          {errorMsg && (
+            <p role="alert" className="text-xs text-red-400 mt-2">
+              {errorMsg}
+            </p>
+          )}
         </div>
       );
     }
     return (
-      <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
-        <p className="text-xs text-zinc-400">{t("gym.rankingOptInHint")}</p>
-        <button type="button"
-          onClick={handleToggle}
-          disabled={toggling}
-          className="text-xs text-[#10B981] hover:text-[#0d9668] font-semibold transition-colors disabled:opacity-40 flex-shrink-0 ml-3"
-        >
-          {toggling ? t("gym.rankingToggling") : t("gym.rankingOptIn")}
-        </button>
+      <div className="mt-3 pt-3 border-t border-white/5">
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-zinc-400">{t("gym.rankingOptInHint")}</p>
+          <button type="button"
+            onClick={handleToggle}
+            disabled={toggling}
+            className="text-xs text-[#10B981] hover:text-[#0d9668] font-semibold transition-colors disabled:opacity-40 flex-shrink-0 ml-3"
+          >
+            {toggling ? t("gym.rankingToggling") : t("gym.rankingOptIn")}
+          </button>
+        </div>
+        {errorMsg && (
+          <p role="alert" className="text-xs text-red-400 mt-2">
+            {errorMsg}
+          </p>
+        )}
       </div>
     );
   }

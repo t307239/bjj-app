@@ -38,6 +38,9 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
   const [newBelt, setNewBelt] = useState("");
   const [newDate, setNewDate] = useState("");
   const [toast, setToast] = useState<string | null>(null);
+  // z258: track which row is currently being deleted to prevent double-click
+  // → 2 deletes (was: button has no disabled state during async delete).
+  const [deletingBelt, setDeletingBelt] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const today = getLocalDateString();
 
@@ -106,6 +109,9 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
   };
 
   const handleDelete = async (belt: string) => {
+    // z258: guard against double-click → 2 deletes
+    if (deletingBelt) return;
+    setDeletingBelt(belt);
     const { error } = await supabase
       .from("belt_history")
       .delete()
@@ -118,9 +124,16 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
       setToast(t("error.title"));
       toastTimer.current = setTimeout(() => setToast(null), 3000);
     }
+    setDeletingBelt(null);
   };
 
   const handleDateChange = async (belt: string, newDateValue: string) => {
+    // z258: optimistic UI + rollback on error (was silent failure: input
+    // appeared to save but state never updated → no error feedback).
+    const prevEntries = entries;
+    setEntries((prev) =>
+      prev.map((e) => (e.belt === belt ? { ...e, promoted_at: newDateValue } : e))
+    );
     setSaving(true);
     const { error } = await supabase
       .from("belt_history")
@@ -128,11 +141,13 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
       .eq("user_id", userId)
       .eq("belt", belt);
     if (!error) {
-      setEntries((prev) =>
-        prev.map((e) => (e.belt === belt ? { ...e, promoted_at: newDateValue } : e))
-      );
       setToast(t("profile.saved"));
       toastTimer.current = setTimeout(() => setToast(null), 2000);
+    } else {
+      setEntries(prevEntries);
+      clientLogger.error("belt_history.update_failed", {}, error);
+      setToast(t("error.title"));
+      toastTimer.current = setTimeout(() => setToast(null), 3000);
     }
     setSaving(false);
   };
@@ -215,7 +230,9 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
               />
               <button type="button"
                 onClick={() => handleDelete(entry.belt)}
-                className="text-zinc-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 p-1"
+                disabled={deletingBelt === entry.belt}
+                aria-busy={deletingBelt === entry.belt}
+                className="text-zinc-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 p-1 disabled:opacity-30"
                 title={t("training.delete")}
               >
                 <svg aria-hidden="true" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

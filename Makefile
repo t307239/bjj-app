@@ -3,10 +3,10 @@
 # 「完璧」と宣言する前に必ず `make verify` を実行する。
 # 6 つの lint が全パスすれば commit 可能、1 つでも 🔴 fail なら作業未完了。
 
-.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards
+.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback
 
 # Run all anti-regression checks
-verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards
+verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback
 	@echo ""
 	@echo "✅ All anti-regression checks passed."
 	@echo "   Safe to commit."
@@ -55,6 +55,11 @@ unsafe-settimeout:
 localstorage-hazards:
 	@echo "→ detect_localstorage_hazards.py..."
 	@python3 scripts/detect_localstorage_hazards.py --ci
+
+# z258: optimistic UI update without rollback (= silent data divergence)
+optimistic-rollback:
+	@echo "→ detect_optimistic_no_rollback.py..."
+	@python3 scripts/detect_optimistic_no_rollback.py --ci
 
 typecheck:
 	@echo "→ TypeScript type check..."

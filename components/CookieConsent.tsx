@@ -22,15 +22,35 @@ export default function CookieConsent() {
   const [marketing, setMarketing] = useState(false);
 
   useEffect(() => {
+    // z258: hydrate analytics/marketing toggles from localStorage so users
+    // re-opening "Cookie Settings" see their saved choice (was: every reopen
+    // reset to defaults analytics=true/marketing=false → silent withdrawal
+    // override violating GDPR Art 7-3 "withdrawal as easy as consent").
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (!stored) setVisible(true);
+      if (!stored) {
+        setVisible(true);
+      } else {
+        const parsed = JSON.parse(stored) as Partial<CookiePreferences>;
+        if (typeof parsed.analytics === "boolean") setAnalytics(parsed.analytics);
+        if (typeof parsed.marketing === "boolean") setMarketing(parsed.marketing);
+      }
     } catch {
-      // localStorage unavailable — don't show
+      // localStorage unavailable or corrupt JSON — don't show
     }
 
     // Allow re-opening from footer "Cookie Settings" link
     function handleReopen() {
+      // Re-read saved prefs in case they changed since mount (e.g. user
+      // accepted-all then opened settings to customize).
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored) as Partial<CookiePreferences>;
+          if (typeof parsed.analytics === "boolean") setAnalytics(parsed.analytics);
+          if (typeof parsed.marketing === "boolean") setMarketing(parsed.marketing);
+        }
+      } catch { /* noop */ }
       setVisible(true);
       setShowDetails(true);
     }

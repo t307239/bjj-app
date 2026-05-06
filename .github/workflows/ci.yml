@@ -179,6 +179,12 @@ jobs:
       - name: Run detect_localstorage_hazards.py
         run: python3 scripts/detect_localstorage_hazards.py --ci
 
+      # z258: optimistic UI update without rollback (= silent data divergence)
+      # setX(<new>) before await supabase.update/delete() で error branch に
+      # 同じ setter が無い handler を catch (data 状態 only / loading flag 除外)
+      - name: Run detect_optimistic_no_rollback.py
+        run: python3 scripts/detect_optimistic_no_rollback.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest

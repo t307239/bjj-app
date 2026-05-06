@@ -149,7 +149,7 @@ def main() -> int:
         + list(REPO.rglob("hooks/**/*.ts"))
         + list(REPO.rglob("hooks/**/*.tsx"))
     ):
-        if any(s in fp.parts for s in ("node_modules", ".next", "__tests__")):
+        if any(s in fp.parts for s in ("node_modules", ".next", "__tests__", ".claude")):
             continue
         try:
             content = fp.read_text(encoding="utf-8")

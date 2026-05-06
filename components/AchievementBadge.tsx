@@ -95,6 +95,17 @@ export default function AchievementBadge({
     }
   }, [totalCount, streak]);
 
+  // z258: dismiss modal on Escape key (was: only backdrop-click closed it →
+  // keyboard users were trapped on the celebration overlay).
+  useEffect(() => {
+    if (!showBadge) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowBadge(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [showBadge]);
+
   if (!showBadge || !milestone) return null;
 
   // ── z222: share text + image URL を type 別に組立 ──

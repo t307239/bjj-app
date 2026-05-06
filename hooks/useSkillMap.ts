@@ -117,15 +117,29 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
   useEffect(() => { loadData(); }, [loadData]);
 
   // ── Delete node handler ──────────────────────────────────────────────────
+  // z258: optimistic delete + rollback on error (was silent data divergence:
+  // node removed from UI but Supabase delete failed → ghost row on server)
   const handleDeleteNode = useCallback(
     async (nodeId: string) => {
-      setRfNodes((prev: Node[]) => prev.filter((n: Node) => n.id !== nodeId));
-      setRfEdges((prev: Edge[]) =>
-        prev.filter((e: Edge) => e.source !== nodeId && e.target !== nodeId)
-      );
-      await supabase.from("technique_nodes").delete().eq("id", nodeId);
+      let prevNodes: Node[] = [];
+      let prevEdges: Edge[] = [];
+      setRfNodes((prev: Node[]) => {
+        prevNodes = prev;
+        return prev.filter((n: Node) => n.id !== nodeId);
+      });
+      setRfEdges((prev: Edge[]) => {
+        prevEdges = prev;
+        return prev.filter((e: Edge) => e.source !== nodeId && e.target !== nodeId);
+      });
+      const { error } = await supabase.from("technique_nodes").delete().eq("id", nodeId);
+      if (error) {
+        setRfNodes(prevNodes);
+        setRfEdges(prevEdges);
+        clientLogger.error("skillmap.delete_node_failed", { nodeId }, error);
+        showToast(tRef.current("skillmap.deleteNodeError"), "error");
+      }
     },
-    [supabase, setRfNodes, setRfEdges]
+    [supabase, setRfNodes, setRfEdges, showToast]
   );
 
   // ── onConnect (drag handle to handle, PC) ────────────────────────────────
@@ -158,34 +172,59 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
   );
 
   // ── Node drag stop → persist position ───────────────────────────────────
+  // z258: log error so silent persistence failures hit Sentry instead of
+  // disappearing into the void (UI stays at dragged position regardless).
   const onNodeDragStop = useCallback(
     async (_: React.MouseEvent, node: Node) => {
-      await supabase
+      const { error } = await supabase
         .from("technique_nodes")
         .update({ pos_x: node.position.x, pos_y: node.position.y })
         .eq("id", node.id);
+      if (error) {
+        clientLogger.error("skillmap.node_drag_persist_failed", { nodeId: node.id }, error);
+      }
     },
     [supabase]
   );
 
   // ── Edge delete (keyboard Delete / click ✕ on edge) ─────────────────────
+  // z258: rollback failed deletes so UI doesn't diverge from server.
   const onEdgesDelete: OnEdgesDelete = useCallback(
     async (deleted) => {
+      const failed: Edge[] = [];
       for (const e of deleted) {
-        await supabase.from("technique_edges").delete().eq("id", e.id);
+        const { error } = await supabase.from("technique_edges").delete().eq("id", e.id);
+        if (error) {
+          clientLogger.error("skillmap.edge_delete_failed", { edgeId: e.id }, error);
+          failed.push(e);
+        }
+      }
+      if (failed.length > 0) {
+        setRfEdges((prev: Edge[]) => [...prev, ...failed]);
+        showToast(tRef.current("skillmap.deleteEdgeError"), "error");
       }
     },
-    [supabase]
+    [supabase, setRfEdges, showToast]
   );
 
   // ── Nodes delete (keyboard Delete when node selected) ───────────────────
+  // z258: rollback failed deletes so UI doesn't diverge from server.
   const onNodesDelete: OnNodesDelete = useCallback(
     async (deleted) => {
+      const failed: Node[] = [];
       for (const n of deleted) {
-        await supabase.from("technique_nodes").delete().eq("id", n.id);
+        const { error } = await supabase.from("technique_nodes").delete().eq("id", n.id);
+        if (error) {
+          clientLogger.error("skillmap.node_delete_failed", { nodeId: n.id }, error);
+          failed.push(n);
+        }
+      }
+      if (failed.length > 0) {
+        setRfNodes((prev: Node[]) => [...prev, ...failed]);
+        showToast(tRef.current("skillmap.deleteNodeError"), "error");
       }
     },
-    [supabase]
+    [supabase, setRfNodes, showToast]
   );
 
   // ── Add node (PC right-click or mobile button) ───────────────────────────
@@ -310,31 +349,48 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
   }, [rfNodes, rfEdges, fitView, supabase, setRfNodes, showToast]); // t via tRef
 
   // ── T-29: Update edge notes ───────────────────────────────────────────────
+  // z258: optimistic update + rollback on error (was silent: notes appeared
+  // saved in UI but Supabase update failed → next reload shows old notes).
   const handleUpdateEdgeNotes = useCallback(
     async (edgeId: string, notes: string) => {
-      setRfEdges((prev: Edge[]) =>
-        prev.map((e: Edge) => e.id === edgeId ? { ...e, data: { ...(e.data ?? {}), notes } } : e)
-      );
-      await supabase
+      let prevEdges: Edge[] = [];
+      setRfEdges((prev: Edge[]) => {
+        prevEdges = prev;
+        return prev.map((e: Edge) => e.id === edgeId ? { ...e, data: { ...(e.data ?? {}), notes } } : e);
+      });
+      const { error } = await supabase
         .from("technique_edges")
         .update({ notes: notes.trim() || null })
         .eq("id", edgeId);
+      if (error) {
+        setRfEdges(prevEdges);
+        clientLogger.error("skillmap.update_edge_notes_failed", { edgeId }, error);
+        showToast(tRef.current("skillmap.updateError"), "error");
+      }
     },
-    [supabase, setRfEdges]
+    [supabase, setRfEdges, showToast]
   );
 
   // ── T-29: Update node position tags ──────────────────────────────────────
+  // z258: optimistic update + rollback on error.
   const handleUpdateNodeTags = useCallback(
     async (nodeId: string, tags: string[]) => {
-      setRfNodes((prev: Node[]) =>
-        prev.map((n: Node) => n.id === nodeId ? { ...n, data: { ...n.data, tags } } : n)
-      );
-      await supabase
+      let prevNodes: Node[] = [];
+      setRfNodes((prev: Node[]) => {
+        prevNodes = prev;
+        return prev.map((n: Node) => n.id === nodeId ? { ...n, data: { ...n.data, tags } } : n);
+      });
+      const { error } = await supabase
         .from("technique_nodes")
         .update({ tags })
         .eq("id", nodeId);
+      if (error) {
+        setRfNodes(prevNodes);
+        clientLogger.error("skillmap.update_node_tags_failed", { nodeId }, error);
+        showToast(tRef.current("skillmap.updateError"), "error");
+      }
     },
-    [supabase, setRfNodes]
+    [supabase, setRfNodes, showToast]
   );
 
   return {
