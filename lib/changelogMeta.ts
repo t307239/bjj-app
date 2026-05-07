@@ -11,7 +11,7 @@
  *   定数も同時に bump (ISO date, "YYYY-MM-DD" 形式)。
  */
 
-export const CHANGELOG_LAST_UPDATED = "2026-04-27";
+export const CHANGELOG_LAST_UPDATED = "2026-05-07";
 
 /** stale と判定する閾値 (日数)。30 = 月次更新方針の grace 込み */
 export const CHANGELOG_STALE_THRESHOLD_DAYS = 30;
