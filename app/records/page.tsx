@@ -323,6 +323,7 @@ export default async function RecordsPage({
           }
         />
       </main>
+      <InstallBanner />
     </div>
   );
 }
