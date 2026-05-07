@@ -8,6 +8,8 @@ import AchievementBadge from "@/components/AchievementBadge";
 import InstallBanner from "@/components/InstallBanner";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
 import FirstLogHero from "@/components/FirstLogHero";  // z214: 0-log activation
+import TrialStatusBanner from "@/components/TrialStatusBanner";  // z255ooo: complimentary trial banner
+import { hasProAccess } from "@/lib/proAccess";  // z255ooo: trial-aware Pro check
 import {
   getWeekStartDate,
   getMonthStartDate,
@@ -46,7 +48,7 @@ const getDashboardBaseData = cache(async () => {
       supabase
         .from("profiles")
         .select(
-          "belt, stripe, start_date, is_pro, subscription_status, locale, weekly_goal, monthly_goal, technique_goal"
+          "belt, stripe, start_date, is_pro, subscription_status, complimentary_trial_until, locale, weekly_goal, monthly_goal, technique_goal"
         )
         .eq("id", user.id)
         .single(),
@@ -264,7 +266,10 @@ export default async function DashboardPage({
   }
   const t = makeT(userLocale);
 
-  const isPro = profileData?.is_pro ?? false;
+  // z255ooo: isPro now honors complimentary trial too. Use hasProAccess() helper
+  // so all dashboard surfaces (charts, gates, banners) treat trial users as Pro.
+  const isPro = hasProAccess(profileData as { is_pro?: boolean | null; complimentary_trial_until?: string | null } | null);
+  const isPaidPro = profileData?.is_pro ?? false;
   const subscriptionStatus = profileData?.subscription_status ?? "active";
   const hasFirstLog = totalCount > 0;
 
@@ -345,6 +350,11 @@ export default async function DashboardPage({
 
         {/* z214: 0-log activation hero (first log 未完なら最上部に dominant CTA) */}
         {!hasFirstLog && <FirstLogHero />}
+        {/* z255ooo: trial banner — only shown to non-paying users WITH active trial */}
+        <TrialStatusBanner
+          profile={profileData as { is_pro?: boolean | null; complimentary_trial_until?: string | null } | null}
+          isPro={isPaidPro}
+        />
 
         {/* ── Onboarding checklist (until all steps complete) ── */}
         {!onboardingComplete && (

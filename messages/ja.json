@@ -2434,5 +2434,11 @@
   },
   "wikiTag": {
     "browseAll": "← すべての記事を見る"
+  },
+  "trial": {
+    "lastDay": "🎁 Pro お試し最終日です！",
+    "daysLeft": "🎁 Pro お試し残り {n} 日",
+    "subtitle": "全 Pro 機能利用中。気に入ったら継続を",
+    "upgradeCta": "継続する"
   }
 }

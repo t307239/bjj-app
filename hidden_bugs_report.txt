@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 412 files
+TS/TSX Scanned: 414 files
 CRITICAL: 0
 WARNING: 0
-INFO: 202
-Total: 202
+INFO: 203
+Total: 203
 
 [INFO] [DATE_PARSE_NO_GUARD] app/api/ai-coach/generate/route.ts: L375: `new Date(cachedMode.at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
   FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
@@ -233,6 +233,8 @@ Total: 202
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [TRUNCATE_NO_TITLE] components/TrainingTypeChart.tsx: L418: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
   FIX: title={varName} を追加 (a11y/UX)
+[INFO] [INLINE_STYLE_OBJECT] components/TrialStatusBanner.tsx: L34: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L163: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L316: style={{...}} — Tailwindクラスで統一推奨

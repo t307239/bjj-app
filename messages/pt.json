@@ -2463,5 +2463,11 @@
   },
   "wikiTag": {
     "browseAll": "← Ver todos os artigos"
+  },
+  "trial": {
+    "lastDay": "🎁 Último dia do seu trial Pro!",
+    "daysLeft": "🎁 {n} dias restantes no trial Pro",
+    "subtitle": "Todos os recursos Pro liberados. Continue se gostar.",
+    "upgradeCta": "Continuar"
   }
 }

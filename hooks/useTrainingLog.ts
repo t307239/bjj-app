@@ -30,6 +30,7 @@ function monthsAgoLocalDate(monthsBack: number): string {
   return past.toISOString().slice(0, 10);
 }
 import { trackEvent } from "@/lib/analytics";
+import { clientLogger } from "@/lib/clientLogger";
 
 const PAGE_SIZE = 10;
 
@@ -437,7 +438,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
           trackEvent("complimentary_trial_granted", { duration_days: 7 });
         } catch (trialErr) {
           // Non-blocking: log only. Trial is bonus; missing it doesn't break first log.
-          clientLogger.warn("trial_grant_failed", {}, trialErr);
+          clientLogger.warn("trial_grant_failed", { error: String(trialErr) });
         }
       }
       setTotalCount((c) => (c !== null ? c + 1 : null));

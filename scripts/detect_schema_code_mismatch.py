@@ -53,6 +53,8 @@ SCHEMA_SNAPSHOT: dict[str, set[str]] = {
         "subscription_status", "target_weight", "target_weight_date", "timezone",
         "deleted_at", "body_status_dates", "body_notes", "email_marketing_opted_out",
         "paid_ref", "paid_at", "paid_plan",
+        # z255ooo Auto Trial: no-CC 7-day complimentary Pro trial
+        "complimentary_trial_until",
     },
     "push_subscriptions": {"id", "user_id", "endpoint", "p256dh", "auth_key", "created_at",
                           "timezone", "notification_preferences"},

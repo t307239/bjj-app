@@ -32,7 +32,8 @@ type KpiEvent =
   | "gym_member_invited"        // B2B funnel: gym owner invited member
   | "gym_joined"                // B2B funnel: student joined a gym
   | "training_shared"           // viral: training card shared/downloaded
-  | "goal_set";                 // engagement: user set/updated a goal
+  | "goal_set"                  // engagement: user set/updated a goal
+  | "complimentary_trial_granted"; // z255ooo: no-CC 7-day Pro trial granted on first log
 
 /**
  * Fire a KPI event. Safe to call on the server (no-op).

@@ -2434,5 +2434,11 @@
   },
   "wikiTag": {
     "browseAll": "← Browse all articles"
+  },
+  "trial": {
+    "lastDay": "🎁 Last day of your Pro trial!",
+    "daysLeft": "🎁 {n} days left on your Pro trial",
+    "subtitle": "All Pro features unlocked. Continue if you love it.",
+    "upgradeCta": "Continue"
   }
 }
