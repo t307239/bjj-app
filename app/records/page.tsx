@@ -21,6 +21,7 @@ import { serverT, makeT, parseAcceptLanguage, type Locale } from "@/lib/i18n";
 import { buildBreadcrumbJsonLd } from "@/lib/breadcrumb";
 import { logger } from "@/lib/logger";
 import GuestDashboardClient from "@/components/GuestDashboardClient";
+import InstallBanner from "@/components/InstallBanner";
 
 // perf: Heavy chart components lazy-loaded
 const GymRanking = dynamic(() => import("@/components/GymRanking"), {
