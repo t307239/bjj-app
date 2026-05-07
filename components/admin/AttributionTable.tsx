@@ -27,6 +27,17 @@ interface PaidAttributionRow {
   b2b_gym: number;
 }
 
+interface WikiFunnelSummary {
+  wiki_signups_total: number;
+  wiki_signups_30d: number;
+  wiki_pro_users: number;
+  wiki_pro_conversion_pct: number;
+  direct_total: number;
+  direct_pro_users: number;
+  direct_pro_conversion_pct: number;
+  top_wiki_pages: { slug: string; count: number }[];
+}
+
 interface AttributionResponse {
   ok: boolean;
   total: {
@@ -37,6 +48,8 @@ interface AttributionResponse {
   };
   rows: AttributionRow[];
   paid_rows?: PaidAttributionRow[];
+  /** z255rrr: Wiki funnel SEO ROI summary (signup_source LIKE 'wiki:%') */
+  wiki_funnel?: WikiFunnelSummary;
   fetched_at: string;
 }
 
@@ -111,6 +124,58 @@ export default function AttributionTable() {
   );
 
   return (
+    <>
+      {/* z255rrr: Wiki funnel SEO ROI summary card */}
+      {data.wiki_funnel && (
+        <section
+          className="rounded-xl p-4 mb-6 border"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(124, 106, 247, 0.08) 0%, rgba(56, 189, 248, 0.08) 100%)",
+            borderColor: "rgba(124, 106, 247, 0.25)",
+          }}
+        >
+          <div className="flex items-baseline justify-between mb-3">
+            <h2 className="text-sm font-semibold text-white" title="Wiki経由 (1,500+ ページ) からアプリ登録した人の数と Pro 化率">
+              📚 Wiki 流入 SEO ROI
+            </h2>
+            <div className="text-xs text-zinc-500">直近 30 日: {data.wiki_funnel.wiki_signups_30d} 名</div>
+          </div>
+          <div className="grid grid-cols-3 gap-3 text-center mb-3">
+            <div className="bg-zinc-900/40 rounded-lg p-2">
+              <div className="text-lg font-bold text-emerald-400 tabular-nums">{data.wiki_funnel.wiki_signups_total}</div>
+              <div className="text-[10px] text-zinc-500 mt-0.5">Wiki 経由 登録数</div>
+            </div>
+            <div className="bg-zinc-900/40 rounded-lg p-2">
+              <div className="text-lg font-bold text-yellow-400 tabular-nums">{data.wiki_funnel.wiki_pro_users}</div>
+              <div className="text-[10px] text-zinc-500 mt-0.5">Wiki 経由 Pro</div>
+            </div>
+            <div className="bg-zinc-900/40 rounded-lg p-2">
+              <div className="text-lg font-bold text-purple-400 tabular-nums">{data.wiki_funnel.wiki_pro_conversion_pct}%</div>
+              <div className="text-[10px] text-zinc-500 mt-0.5">Wiki 課金率</div>
+            </div>
+          </div>
+          <div className="text-[11px] text-zinc-400 mb-2">
+            Direct vs Wiki 課金率 比較: <span className="font-semibold text-zinc-200">{data.wiki_funnel.direct_pro_conversion_pct}%</span>
+            {" "}<span className="text-zinc-500">vs</span>{" "}
+            <span className="font-semibold text-purple-300">{data.wiki_funnel.wiki_pro_conversion_pct}%</span>
+            {data.wiki_funnel.wiki_pro_conversion_pct > data.wiki_funnel.direct_pro_conversion_pct && data.wiki_funnel.wiki_signups_total > 0 && (
+              <span className="ml-1 text-emerald-400">✓ Wiki の方が高い</span>
+            )}
+          </div>
+          {data.wiki_funnel.top_wiki_pages.length > 0 && (
+            <div className="text-[11px] text-zinc-400">
+              <span className="text-zinc-500">流入 Top 5 ページ:</span>{" "}
+              {data.wiki_funnel.top_wiki_pages.map((p) => (
+                <span key={p.slug} className="inline-block mr-2">
+                  <span className="text-zinc-300">{p.slug}</span>
+                  <span className="text-zinc-500"> ({p.count})</span>
+                </span>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
     <section className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
       <div className="flex items-baseline justify-between mb-3">
         <h2 className="text-sm font-semibold text-white" title="どの経路から登録した user が、どれくらい Pro 課金に進んだか">
@@ -229,5 +294,6 @@ export default function AttributionTable() {
         最終更新: {new Date(data.fetched_at).toLocaleTimeString()}
       </p>
     </section>
+    </>
   );
 }

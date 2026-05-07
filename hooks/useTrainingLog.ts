@@ -356,8 +356,17 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     e.preventDefault();
     setFormError(null);
 
-    if (form.date > today) { setFormError(t("training.futureDate")); return; }
-    if (form.duration_min < 1 || form.duration_min > 480) { setFormError(t("training.durationRange")); return; }
+    if (form.date > today) {
+      setFormError(t("training.futureDate"));
+      // z255qqq funnel: track validation drop-offs (helps identify form UX issues)
+      trackEvent("add_log_validation_failed", { reason: "future_date" });
+      return;
+    }
+    if (form.duration_min < 1 || form.duration_min > 480) {
+      setFormError(t("training.durationRange"));
+      trackEvent("add_log_validation_failed", { reason: "duration_range" });
+      return;
+    }
 
     const finalNotes = form.type === "competition"
       ? encodeCompNotes(compForm, form.notes)

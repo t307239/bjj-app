@@ -151,11 +151,52 @@ export async function GET(req: NextRequest) {
     paid_sources_count: paidRows.length,
   };
 
+  // z255rrr: Wiki funnel rate — aggregate all `signup_source LIKE 'wiki:%'`
+  // to surface SEO funnel ROI at a glance (not buried in per-source rows).
+  const wikiProfiles = (profiles ?? []).filter(
+    (p) => typeof p.signup_source === "string" && p.signup_source.startsWith("wiki:"),
+  );
+  const wikiTotalSignups = wikiProfiles.length;
+  const wikiPro = wikiProfiles.filter((p) => p.is_pro).length;
+  const wikiSignups30d = wikiProfiles.filter(
+    (p) => p.updated_at && p.updated_at > thirtyDaysAgo,
+  ).length;
+  const directProfiles = (profiles ?? []).filter(
+    (p) => !p.signup_source || p.signup_source === "direct",
+  );
+  const directTotal = directProfiles.length;
+  const directPro = directProfiles.filter((p) => p.is_pro).length;
+  const wiki_funnel = {
+    wiki_signups_total: wikiTotalSignups,
+    wiki_signups_30d: wikiSignups30d,
+    wiki_pro_users: wikiPro,
+    wiki_pro_conversion_pct:
+      wikiTotalSignups > 0
+        ? Math.round((wikiPro / wikiTotalSignups) * 1000) / 10
+        : 0,
+    direct_total: directTotal,
+    direct_pro_users: directPro,
+    direct_pro_conversion_pct:
+      directTotal > 0 ? Math.round((directPro / directTotal) * 1000) / 10 : 0,
+    // Top wiki pages by signup (groups wiki:X by the X portion)
+    top_wiki_pages: Object.entries(
+      wikiProfiles.reduce<Record<string, number>>((acc, p) => {
+        const slug = p.signup_source?.replace(/^wiki:/, "") ?? "unknown";
+        acc[slug] = (acc[slug] ?? 0) + 1;
+        return acc;
+      }, {}),
+    )
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([slug, count]) => ({ slug, count })),
+  };
+
   return NextResponse.json({
     ok: true,
     total,
     rows,
     paid_rows: paidRows,
+    wiki_funnel,
     fetched_at: new Date().toISOString(),
   });
 }
