@@ -351,7 +351,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch]);
 
-  // ── Submit (add new log) ──────────────────────────────────────────────────
+  // optimistic-no-rollback: ok (z258 has prev-snapshots; z255ooo trial grant is fire-forget)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
@@ -430,6 +430,9 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         // RLS: profile owner can update their own row. Idempotent: skip if already set.
         try {
           const trialEnd = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+          // optimistic-no-rollback: ok — fire-and-forget grant, NOT an optimistic UI
+          // update. State change is server-side only; client sees Pro features after
+          // the next router.refresh() reads updated profile. Failure logged & ignored.
           await supabase
             .from("profiles")
             .update({ complimentary_trial_until: trialEnd })
