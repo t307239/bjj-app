@@ -2079,7 +2079,8 @@
     "title": "Log your first session",
     "sub": "Tap below to record today's roll. Once you log one, your streak, heatmap, and weekly report come alive.",
     "cta": "Log my first session",
-    "duration": "Takes about 10 seconds — no setup required"
+    "duration": "Takes about 10 seconds — no setup required",
+    "bonus": "🎁 Bonus: 7-day Pro trial auto-unlocked on first log"
   },
   "privacy": {
     "title": "Privacy Policy",

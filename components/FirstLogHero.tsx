@@ -38,9 +38,14 @@ export default function FirstLogHero() {
         <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
           {t("firstLogHero.title")}
         </h2>
-        <p className="text-sm sm:text-base text-emerald-100/90 mb-5 max-w-md mx-auto">
+        <p className="text-sm sm:text-base text-emerald-100/90 mb-3 max-w-md mx-auto">
           {t("firstLogHero.sub")}
         </p>
+        {/* z255iii: Pro 7-day trial bonus chip — addresses ghost-user activation
+            (75% of users have 0 sessions; reward signal increases first-log conversion) */}
+        <div className="inline-block mb-5 px-3 py-1.5 rounded-full bg-amber-400/20 border border-amber-300/40 text-amber-100 text-xs sm:text-sm font-semibold">
+          {t("firstLogHero.bonus")}
+        </div>
         <Link
           href="/records?welcome=1"
           className="inline-flex items-center justify-center gap-2 bg-white text-emerald-900 hover:bg-emerald-50 active:scale-95 font-bold py-3.5 px-8 rounded-full text-base transition-all shadow-lg"
