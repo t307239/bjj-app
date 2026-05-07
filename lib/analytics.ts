@@ -33,7 +33,9 @@ type KpiEvent =
   | "gym_joined"                // B2B funnel: student joined a gym
   | "training_shared"           // viral: training card shared/downloaded
   | "goal_set"                  // engagement: user set/updated a goal
-  | "complimentary_trial_granted"; // z255ooo: no-CC 7-day Pro trial granted on first log
+  | "complimentary_trial_granted" // z255ooo: no-CC 7-day Pro trial granted on first log
+  | "add_log_modal_opened"        // z255qqq funnel: user clicked +記録を追加 (mid-funnel signal)
+  | "add_log_validation_failed";  // z255qqq funnel: form submission rejected by client validation
 
 /**
  * Fire a KPI event. Safe to call on the server (no-op).

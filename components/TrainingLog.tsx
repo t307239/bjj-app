@@ -12,6 +12,7 @@ import { useTrainingLog } from "@/hooks/useTrainingLog";
 import { decodeCompNotes } from "@/lib/trainingLogHelpers";
 import { clientLogger } from "@/lib/clientLogger";
 import { getLocalDateString } from "@/lib/timezone";
+import { trackEvent } from "@/lib/analytics";
 
 type Props = {
   userId: string;
@@ -208,7 +209,12 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
         <div className="flex items-center gap-2 flex-shrink-0 print:hidden">
           <ExportDropdown userId={userId} isPro={isPro} onPdf={handlePdfExport} pdfLoading={pdfLoading} />
           <button type="button"
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => {
+              // z255qqq funnel: track when user opens the add-log modal
+              // (mid-funnel signal between dashboard arrival and training_logged)
+              if (!showForm) trackEvent("add_log_modal_opened");
+              setShowForm(!showForm);
+            }}
             className="bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all"
           >
             {t("training.add")}
