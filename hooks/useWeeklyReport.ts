@@ -27,7 +27,12 @@ export type WeeklyReportData = {
   currentMonthCount: number;
   prevMonthCount: number;
   monthDelta: number;
+  /** All-time avg minutes per session across the fetched window (kept for backward compat) */
   avgMinutesPerSession: number;
+  /** z255eee: Avg minutes per session within current week (correct scope for 週間 KPI) */
+  currentWeekAvgMinutesPerSession: number;
+  /** z255eee: Avg minutes per session within current month (correct scope for 月間 KPI) */
+  currentMonthAvgMinutesPerSession: number;
   maxConsecutiveDays: number;
   /** Total training minutes for the current week */
   currentWeekTotalMinutes: number;
@@ -102,6 +107,8 @@ export function useWeeklyReport(
         prevMonthCount: 0,
         monthDelta: 0,
         avgMinutesPerSession: 0,
+        currentWeekAvgMinutesPerSession: 0,
+        currentMonthAvgMinutesPerSession: 0,
         maxConsecutiveDays: 0,
         currentWeekTotalMinutes: 0,
         currentMonthTotalMinutes: 0,
@@ -141,6 +148,10 @@ export function useWeeklyReport(
     let sessionsWithDuration = 0;
     let currentWeekTotalMinutes = 0;
     let currentMonthTotalMinutes = 0;
+    // z255eee: track sessions-with-duration count per scope so avg/session is
+    // computed within the same scope as count and total time (KPI consistency)
+    let currentWeekSessionsWithDuration = 0;
+    let currentMonthSessionsWithDuration = 0;
     const allDates = new Set<string>();
     const currentWeekDist = emptyDist();
 
@@ -168,6 +179,7 @@ export function useWeeklyReport(
         currentWeekCount++;
         currentWeekDist[typ]++;
         currentWeekTotalMinutes += log.duration_min ?? 0;
+        if (log.duration_min && log.duration_min > 0) currentWeekSessionsWithDuration++;
       } else if (monday === prevMonday) {
         prevWeekCount++;
       }
@@ -176,6 +188,7 @@ export function useWeeklyReport(
       if (monthStart === currentMonthStart) {
         currentMonthCount++;
         currentMonthTotalMinutes += log.duration_min ?? 0;
+        if (log.duration_min && log.duration_min > 0) currentMonthSessionsWithDuration++;
       } else if (monthStart === prevMonthStart) {
         prevMonthCount++;
       }
@@ -198,6 +211,13 @@ export function useWeeklyReport(
     const weekDelta = currentWeekCount - prevWeekCount;
     const monthDelta = currentMonthCount - prevMonthCount;
     const avgMinutesPerSession = sessionsWithDuration > 0 ? Math.round(totalMinutes / sessionsWithDuration) : 0;
+    // z255eee: scope-aware avg (matches sessions count + total time scope in UI)
+    const currentWeekAvgMinutesPerSession = currentWeekSessionsWithDuration > 0
+      ? Math.round(currentWeekTotalMinutes / currentWeekSessionsWithDuration)
+      : 0;
+    const currentMonthAvgMinutesPerSession = currentMonthSessionsWithDuration > 0
+      ? Math.round(currentMonthTotalMinutes / currentMonthSessionsWithDuration)
+      : 0;
     const maxConsecutiveDays = computeMaxConsecutiveDays([...allDates]);
 
     // At least 2 weeks of data
@@ -242,6 +262,8 @@ export function useWeeklyReport(
       prevMonthCount,
       monthDelta,
       avgMinutesPerSession,
+      currentWeekAvgMinutesPerSession,
+      currentMonthAvgMinutesPerSession,
       maxConsecutiveDays,
       currentWeekTotalMinutes,
       currentMonthTotalMinutes,

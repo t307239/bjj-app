@@ -274,12 +274,21 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
           const display = h > 0 && m > 0 ? `${h}h${m}m` : h > 0 ? `${h}h` : `${m}m`;
           return <KPIItem label={t("report.totalTime")} value={display} />;
         })()}
-        {report.avgMinutesPerSession > 0 && (
-          <KPIItem
-            label={t("report.avgTime")}
-            value={`${report.avgMinutesPerSession}${t("report.minUnit")}`}
-          />
-        )}
+        {/* z255eee: scope-aware avg/session matching the active tab (週間/月間)
+            Previously showed 8-week all-time avg next to week-scoped count and total time
+            (scope mismatch — 1 session × 90min showing as 76min avg). */}
+        {(() => {
+          const scopedAvg = tab === "week"
+            ? report.currentWeekAvgMinutesPerSession
+            : report.currentMonthAvgMinutesPerSession;
+          if (scopedAvg <= 0) return null;
+          return (
+            <KPIItem
+              label={t("report.avgTime")}
+              value={`${scopedAvg}${t("report.minUnit")}`}
+            />
+          );
+        })()}
         {report.maxConsecutiveDays > 0 && (
           <KPIItem
             label={t("report.maxStreak")}
