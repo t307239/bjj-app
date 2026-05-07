@@ -41,10 +41,11 @@ export default function FirstLogHero() {
         <p className="text-sm sm:text-base text-emerald-100/90 mb-5 max-w-md mx-auto">
           {t("firstLogHero.sub")}
         </p>
-        {/* z255kkk: bonus chip removed (Pro 7-day trial auto-ON copy was a false
-            promise — no actual trial activation mechanism exists. Honest path:
-            keep existing 3 unlocks (streak/heatmap/weekly report) in subtitle.
-            Future: implement no-CC trial DB field + ProGate check, then re-add). */}
+        {/* z255kkk: bonus chip removed (false promise without backing logic).
+            z255ooo: 14-day complimentary trial mechanism implemented (DB +
+            ProGate + auto-grant on first log). Banner moved to TrialStatusBanner
+            for activated users. FirstLogHero now only highlights the streak/
+            heatmap/weekly-report unlocks the user gets just by logging. */}
         <Link
           href="/records?welcome=1"
           className="inline-flex items-center justify-center gap-2 bg-white text-emerald-900 hover:bg-emerald-50 active:scale-95 font-bold py-3.5 px-8 rounded-full text-base transition-all shadow-lg"
