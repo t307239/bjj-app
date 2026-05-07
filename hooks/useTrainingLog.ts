@@ -424,6 +424,21 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       if (totalCount === 0) {
         setShowCelebration(true);
         trackEvent("first_training_logged", { type: form.type });
+        // z255ooo Auto Trial: grant 7-day complimentary Pro trial on first log
+        // (no CC required, fire-and-forget — failure here doesn't block the log save)
+        // RLS: profile owner can update their own row. Idempotent: skip if already set.
+        try {
+          const trialEnd = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+          await supabase
+            .from("profiles")
+            .update({ complimentary_trial_until: trialEnd })
+            .eq("id", userId)
+            .is("complimentary_trial_until", null);
+          trackEvent("complimentary_trial_granted", { duration_days: 7 });
+        } catch (trialErr) {
+          // Non-blocking: log only. Trial is bonus; missing it doesn't break first log.
+          clientLogger.warn("trial_grant_failed", {}, trialErr);
+        }
       }
       setTotalCount((c) => (c !== null ? c + 1 : null));
       if (typeof localStorage !== "undefined") {
