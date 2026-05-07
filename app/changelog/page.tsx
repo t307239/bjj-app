@@ -89,7 +89,7 @@ const COPY = {
       {
         date: "2026年 5月",
         items: [
-          { emoji: "🎁", title: "Pro 7 日間お試しを自動 ON (CC 不要)", desc: "初回練習を記録するだけで、Pro 機能を 7 日間無料で試せます。クレジットカード不要。気に入ったら継続、ダメなら自然終了で OK。" },
+          { emoji: "🎁", title: "Pro 14 日間お試しを自動 ON (クレジットカード不要)", desc: "初回練習を記録するだけで、Pro 機能を 14 日間無料で試せます。クレジットカード登録は不要。気に入ったら継続、ダメなら自然終了で OK (請求発生なし)。" },
           { emoji: "📊", title: "週間 / 月間 平均時間の計算 fix", desc: "週間 tab と月間 tab で 平均/回 が tab に応じて正しく切替わるよう修正 (旧: 8 週間 all-time avg が両 tab で表示)。" },
           { emoji: "📚", title: "/admin に Wiki 流入 SEO ROI card 追加", desc: "Wiki 1,500+ ページから何 % が登録に変換しているか、Direct vs Wiki の課金率を一目で比較。" },
           { emoji: "📱", title: "iPad PWA install 誘導 fix", desc: "iPadOS 13+ desktop mode UA でも install banner を正しく表示 (旧: Mac 偽装で漏れていた)。" },
@@ -125,7 +125,7 @@ const COPY = {
       {
         date: "Maio 2026",
         items: [
-          { emoji: "🎁", title: "Trial Pro de 7 dias ativado automaticamente (sem cartão)", desc: "Registre seu primeiro treino e desbloqueie 7 dias de Pro grátis. Sem cartão de crédito. Continue se gostar." },
+          { emoji: "🎁", title: "Trial Pro de 14 dias ativado automaticamente (sem cartão de crédito)", desc: "Registre seu primeiro treino e desbloqueie 14 dias de Pro grátis. Sem cartão de crédito. Continue se gostar, ou expira silenciosamente sem cobrança." },
           { emoji: "📊", title: "Cálculo de média semanal / mensal corrigido", desc: "A métrica 'tempo médio/sessão' agora muda corretamente entre as abas semanal e mensal." },
           { emoji: "📚", title: "Card de ROI SEO do Wiki em /admin", desc: "Veja quantos % dos visitantes do Wiki (1.500+ páginas) viram registro, e compare a taxa de conversão Direct vs Wiki." },
           { emoji: "📱", title: "Correção de install PWA no iPad", desc: "iPadOS 13+ (modo desktop) agora mostra o banner de instalação corretamente." },
@@ -161,7 +161,7 @@ const COPY = {
       {
         date: "May 2026",
         items: [
-          { emoji: "🎁", title: "7-day Pro trial auto-activated (no credit card)", desc: "Log your first training session to unlock 7 days of Pro features. No CC required. Continue if you love it, expires silently otherwise." },
+          { emoji: "🎁", title: "14-day Pro trial auto-activated (no credit card required)", desc: "Log your first training session to unlock 14 days of Pro features. No credit card required. Continue if you love it, expires silently otherwise — no surprise charges." },
           { emoji: "📊", title: "Weekly / monthly average calc fixed", desc: "Average/session metric now correctly switches scope between week and month tabs (was showing 8-week all-time avg in both)." },
           { emoji: "📚", title: "Wiki SEO ROI card on /admin", desc: "See what % of Wiki visitors (1,500+ pages) convert to signup, and compare Direct vs Wiki Pro conversion rates." },
           { emoji: "📱", title: "iPad PWA install fix", desc: "iPadOS 13+ desktop-mode UA now shows the install banner correctly (was being missed due to Mac UA spoofing)." },

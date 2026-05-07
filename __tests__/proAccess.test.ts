@@ -65,15 +65,22 @@ describe("proAccess.getTrialStatus", () => {
 });
 
 describe("proAccess.calculateTrialEnd", () => {
-  it("returns ISO string +7 days from now by default", () => {
+  // z255uuu: default bumped from 7 → 14 days to match LP copy + Stripe industry default
+  it("returns ISO string +14 days from now by default", () => {
+    const now = new Date("2026-05-07T12:00:00Z");
+    const result = calculateTrialEnd(undefined, now);
+    expect(result).toBe("2026-05-21T12:00:00.000Z");
+  });
+
+  it("respects explicit 7-day duration", () => {
     const now = new Date("2026-05-07T12:00:00Z");
     const result = calculateTrialEnd(7, now);
     expect(result).toBe("2026-05-14T12:00:00.000Z");
   });
 
-  it("respects custom duration", () => {
+  it("respects custom duration (e.g. 30 days)", () => {
     const now = new Date("2026-05-07T12:00:00Z");
-    const result = calculateTrialEnd(14, now);
-    expect(result).toBe("2026-05-21T12:00:00.000Z");
+    const result = calculateTrialEnd(30, now);
+    expect(result).toBe("2026-06-06T12:00:00.000Z");
   });
 });

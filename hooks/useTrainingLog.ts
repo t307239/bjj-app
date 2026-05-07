@@ -434,11 +434,16 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       if (totalCount === 0) {
         setShowCelebration(true);
         trackEvent("first_training_logged", { type: form.type });
-        // z255ooo Auto Trial: grant 7-day complimentary Pro trial on first log
-        // (no CC required, fire-and-forget — failure here doesn't block the log save)
+        // z255uuu Auto Trial: grant 14-day complimentary Pro trial on first log.
+        // Updated from 7 to 14 days to:
+        //   1. Match LP copy (pricing/tour/footer all promise 14日間 / 14-day / 14 dias)
+        //   2. Sync with industry default (Linear / Loom / Cal.com / Stripe = 14 days)
+        //   3. Allow user to see AI weekly report TWICE (2 weekly cycles vs 1)
+        //   4. Better habit formation runway (4-6 sessions @ 2-3x/week BJJ frequency)
+        // No credit card required, fire-and-forget — failure here doesn't block log save.
         // RLS: profile owner can update their own row. Idempotent: skip if already set.
         try {
-          const trialEnd = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+          const trialEnd = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
           // optimistic-no-rollback: ok — fire-and-forget grant, NOT an optimistic UI
           // update. State change is server-side only; client sees Pro features after
           // the next router.refresh() reads updated profile. Failure logged & ignored.
@@ -447,7 +452,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
             .update({ complimentary_trial_until: trialEnd })
             .eq("id", userId)
             .is("complimentary_trial_until", null);
-          trackEvent("complimentary_trial_granted", { duration_days: 7 });
+          trackEvent("complimentary_trial_granted", { duration_days: 14 });
         } catch (trialErr) {
           // Non-blocking: log only. Trial is bonus; missing it doesn't break first log.
           clientLogger.warn("trial_grant_failed", { error: String(trialErr) });

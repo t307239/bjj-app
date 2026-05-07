@@ -54,11 +54,12 @@ export function getTrialStatus(
 }
 
 /**
- * Server-side helper for granting trial. Returns ISO string of trial end (NOW + 7d).
+ * Server-side helper for granting trial. Returns ISO string of trial end (NOW + 14d default).
+ * z255uuu: bumped from 7 → 14 to match LP copy + Stripe industry standard + AI weekly cycle x2.
  * Call from useTrainingLog after first session save (only if trial not yet granted).
  */
 export function calculateTrialEnd(
-  durationDays: number = 7,
+  durationDays: number = 14,
   now: Date = new Date(),
 ): string {
   const end = new Date(now.getTime() + durationDays * 24 * 60 * 60 * 1000);
