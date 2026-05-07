@@ -48,8 +48,8 @@ export type DbProfile = {
   referral_code: string | null;
   stripe_customer_id: string | null;
   subscription_status: "active" | "past_due" | "canceled" | "trialing" | null;
-  /** z255ooo Auto Trial: NULL until first training log; then NOW() + 7 days.
-   *  ProGate honors this in addition to is_pro. CC not required (no-CC trial). */
+  /** z255ooo+uuu Auto Trial: NULL until first training log; then NOW() + 14 days.
+   *  ProGate honors this in addition to is_pro. クレジットカード不要 (no-CC trial). */
   complimentary_trial_until: string | null;
   is_gym_owner: boolean | null;
   ai_coach_cache: string | null;

@@ -3,7 +3,7 @@
  *
  * Combines two grants:
  *   1. is_pro: true       — Stripe subscription active (or admin-granted)
- *   2. complimentary_trial_until > NOW() — No-CC 7-day trial (auto-set on first log)
+ *   2. complimentary_trial_until > NOW() — クレジットカード不要 14-day trial (auto-set on first log; z255uuu)
  *
  * Both signals grant identical Pro feature access. Trial expiry is silent
  * (UI shows banner during, normal Free state after; user can upgrade via /pricing).

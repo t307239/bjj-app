@@ -1,7 +1,8 @@
 "use client";
 
 /**
- * TrialStatusBanner — z255ooo: shows remaining days of complimentary 7-day Pro trial.
+ * TrialStatusBanner — z255ooo: shows remaining days of complimentary 14-day Pro trial.
+ *   (z255uuu: bumped from 7 → 14 days to match LP copy + Stripe industry default)
  *
  * Renders only if:
  *   - User is NOT already a paying Pro (is_pro=false)
