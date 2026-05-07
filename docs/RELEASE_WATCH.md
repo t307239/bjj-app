@@ -2,6 +2,55 @@
 
 ---
 
+## 2026/05/07 チェック
+
+### 新着リリース
+
+#### 🛠️ Claude Code v2.1.129（2026/05/06）
+- **`--plugin-url <url>` フラグ追加**: URLからplugin .zipアーカイブをfetchして現セッションで利用可能。プロトタイプ共有や一時的なツール導入が容易に
+- **`CLAUDE_CODE_FORCE_SYNC_OUTPUT=1` 環境変数**: auto-detectionが見落とすターミナルでsynchronized outputを強制有効化
+- **`CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE`**: Homebrew/WinGetインストール時、バックグラウンドでupgrade実行→再起動promptを表示
+- **⚠️ Gateway `/v1/models` discovery がopt-inに変更**: v2.1.126〜v2.1.128では自動だったが `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` 必須に
+- **Ctrl+R履歴検索のデフォルト変更**: 全プロジェクト横断検索（v2.1.124以前と同挙動）に戻る。現プロジェクト/セッション絞込はCtrl+S
+
+#### 🛠️ Claude Code v2.1.128（2026/05/04）
+- **`/color` 引数なしでランダム色**: セッションの色を毎回変えられる
+- **`/mcp` 改善**: 接続中サーバーのツール数表示、tool 0件で接続したサーバーをflag表示
+- **`--plugin-dir` が .zip 対応**: ディレクトリだけでなくzipアーカイブのpluginを直接読み込める
+- **`--channels` がAPI key認証で動作**: console org（managed settings利用）は `channelsEnabled: true` 設定が必要
+- **`/model` picker整理**: 重複Opus 4.7エントリを統合、現Opusは「Opus 4.7」ではなく「Opus」表示
+- **🔒 サブプロセスがOTEL_*環境変数を継承しない**: Bash/hooks/MCP/LSPでOTEL-instrumented appsを呼んでもCLI自身のOTLP endpointを誤って使わない
+- **⚠️ MCP予約名 `workspace` 追加**: 既存サーバーで同名のものはwarningと共にskipされる
+- **MCP再接続時のtool list flood修正**: 再接続のたびにtool名フルリストでログを汚さず、サーバープレフィックスでサマリ表示
+
+#### 🛠️ Claude Code v2.1.127（2026/05/02-04頃）
+- **SDK / `claude -p` 改善**: `CLAUDE_CODE_FORK_SUBAGENT=1` がnon-interactiveでも動作、`--dangerously-skip-permissions` が `.claude/skills/` `.claude/agents/` `.claude/commands/` への書込でprompt不要に、`/terminal-setup` がiTerm2の "Applications in terminal may access clipboard" を有効化
+- **MCP起動の自動リトライ**: 起動時の一時エラーで切断されるのではなく最大3回まで自動retry
+- **🔒 Windows clipboardのコマンドライン露出修正**: コピー内容がprocess command-lineに見えてEDR/SIEM telemetryに漏れる問題を修正、PowerShell tool の bare `--` を `--%` stop-parsing tokenと誤判定する問題も修正
+
+#### 🖥️ プロダクト
+
+- **Financial Services Agent Templates**（2026/05/05）: 金融業務向け10種のagent template公開
+  - 内容: pitchbook作成 / KYCファイル選別 / 月次決算（month-end close）等の時間消費型業務
+  - 配布: Claude Cowork plugin / Claude Code plugin / Claude Managed Agentsのcookbookとして同時提供
+  - **Microsoft 365 add-insも実用フェーズへ**: Excel / PowerPoint / Word add-insがGA、Outlookはcoming soon。各app間でcontextが自動継承される（Excelで作ったモデルをPowerPointに渡しても再説明不要）
+  - 使い方例: Pitch agentにtarget listを渡すと、Excelでcomps model→PowerPointでpitchbook→Outlookでcover noteまで一気通貫
+  - 全paid planで利用可能、Claude Platform（public beta）でも利用可能
+
+#### 📡 API変更
+- **特になし**（Opus 4.7 / Managed Agents / Memory beta はすでに4/13・4/20のチェックで報告済み）
+
+### 💡 BJJ Appへの影響
+
+- **v2.1.129 Gateway model discovery opt-in化**: Anthropic互換gatewayを使っていない場合は影響なし。bjj-appは公式API直接利用なので無関係
+- **v2.1.128 MCP予約名 `workspace`**: bjj-appのMCP設定で `workspace` という名前のサーバーを使っていないか要確認（プロジェクト構成上未使用、影響なし）
+- **v2.1.128 `--plugin-dir` zip対応**: `bjj-app-inc.plugin` をzip化して配布する場合に活用可能
+- **v2.1.127 Windows clipboardセキュリティ修正**: bjj-app開発はmacOSのため直接影響なしだが、将来Windows環境を使う場合は注意
+- **Microsoft 365 add-ins GA**: BJJ Wikiのマーケティング素材作成（PowerPointでの提案資料、ExcelでのKPI集計）に活用余地。ただし優先度低
+- **Financial Services agent templates**: BJJ Appのドメインとは無関係。ただしagent template plugin形式は今後 `bjj-app-inc.plugin` の参考になる可能性
+
+---
+
 ## 2026/05/04 チェック
 
 ### 新着リリース
