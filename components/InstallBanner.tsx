@@ -41,6 +41,14 @@ export default function InstallBanner() {
       (window.navigator as Navigator & { standalone?: boolean }).standalone === true ||
       (typeof window.matchMedia === "function" &&
         window.matchMedia("(display-mode: standalone)").matches);
+    // z255ccc: when user is currently using the installed PWA (standalone mode),
+    // mark dismissed permanently in localStorage so other tabs/Safari sessions
+    // also skip the banner. This is a one-time auto-suppress, NOT a manual dismiss.
+    if (isStandalone) {
+      localStorage.setItem("bjj_install_dismissed", "1");
+      setDismissed(true);
+      return;
+    }
     const isIOS = isIOSUA && !isStandalone;
     if (isIOS) { setPlatform("ios"); setDismissed(false); return; }
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -49,8 +57,21 @@ export default function InstallBanner() {
       setPlatform("android");
       setDismissed(false);
     };
+    // z255ccc: Listen for `appinstalled` event (fires after Android Chrome install
+    // succeeds OR system add-to-home-screen completes). Persist dismissal so the
+    // banner never re-appears after install — even if user opens app in a new
+    // browser tab where standalone-mode detection wouldn't apply.
+    const handleAppInstalled = () => {
+      localStorage.setItem("bjj_install_dismissed", "1");
+      setDismissed(true);
+      setPlatform(null);
+    };
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-    return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", handleAppInstalled);
+    };
   }, []);
 
   const handleDismiss = () => { localStorage.setItem("bjj_install_dismissed", "1"); setDismissed(true); };
