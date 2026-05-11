@@ -2,6 +2,74 @@
 
 ---
 
+## 2026/05/11 チェック
+
+### 新着リリース
+
+#### 🛠️ Claude Code v2.1.133（2026/05/10頃）
+- **`v2.1.110` の non-streaming fallback retry cap を revert**: 一部 gateway / proxy で fallback retry が過度に制限されていた問題を解消
+- **iTerm2 + tmux のターミナル表示乱れ修正**: terminal notifications 送信時にランダム文字 / input drift が発生する問題を fix
+- **`@` ファイル候補が non-git ディレクトリで毎ターン re-scan される bug 修正**: 大規模 non-git directory での tab レスポンス改善
+- **LSP diagnostics が edit 後に遅延表示される問題を修正**
+- **`/resume` tab-completion が誤って auto-resume してしまう bug 修正**
+- **`/context` の空行 rendering / `/clear` が `/rename` 名を落とす bug 修正**
+
+#### 🛠️ Claude Code v2.1.132（2026/05/09頃）
+- **🔒 stdio MCP メモリリーク修正**: 長時間セッションで RSS が 10GB 超まで膨張する問題を解消（バッチ作業者必読）
+- **session-aware Bash 環境変数追加**: 各セッション固有のコンテキストが Bash tool に渡される
+- **alternate screen mode の terminal escape hatch 追加**: full-screen TUI app との互換性向上
+
+#### 🛠️ Claude Code v2.1.131（2026/05/08頃）
+- システムプロンプト変更なし（内部 fix のみ）
+
+#### 🛠️ Claude Code v2.1.130（2026/05/07頃）
+- **マウスホイールスクロール速度 fix**: Cursor / VS Code 1.92–1.104 で xterm.js upstream bug により異常に速かった問題を解消
+- **`/usage` Ctrl+S ハング修正**: Linux/X11 で stats screenshot を clipboard コピー時にハングする問題を fix
+- **`/terminal-setup` の Windows Terminal 矛盾エラー修正**
+- **`/effort` picker が `CLAUDE_CODE_EFFORT_LEVEL` env 上書きを反映しない bug 修正**
+- **`/status` が一部ユーザーで誤った default model を表示する bug 修正**
+- **Claude.ai connectors の deduplication**: 同一 upstream URL の connector が重複表示されていた問題を解消
+- **Vertex AI**: X.509 cert ベースの Workload Identity Federation (mTLS ADC) サポート
+
+#### 📡 API変更
+
+##### **Claude Managed Agents 4 大新機能**（2026/05/06）— public beta
+- **🌙 Dreaming（research preview）**: 過去セッションをレビューし pattern を抽出して agent を self-improve する自己改善メモリ機能。長期運用で agent の output 品質が継続向上
+- **🎯 Outcomes（public beta）**: agent の最終 deliverable を構造化して取得できる。「何を作ったか」を programmatic に取り出せる
+- **🤖 Multiagent orchestration（public beta）**: lead agent がジョブを分割し、specialist sub-agent に委譲する仕組み。各 sub-agent は独自の model / prompt / tools を持てる
+- **📨 Webhooks（GA）**: session / vault lifecycle event を HTTPS endpoint に push。長時間ジョブの完了通知を polling 不要で受信可能。Console で endpoint 登録 + signing secret 自動生成
+- **beta header**: `managed-agents-2026-04-01`（既存）
+
+##### **ant CLI launch**（2026/05 中旬）
+- Claude API 用の公式コマンドラインクライアント
+- **Claude Code との native integration**: `ant` コマンドから直接 Claude Code セッション起動可能
+- **YAML での API resource versioning**: prompt / agent / tool 定義を YAML で git 管理可能
+- ターミナル中心の dev workflow を好む開発者向け
+
+##### **Claude Haiku 3 廃止**（2026/05）
+- `claude-3-haiku-20240307` への全 request が error 返却に
+- 推奨移行先: **Claude Haiku 4.5** (`claude-haiku-4-5-20251001`)
+- **影響**: Haiku 3 を使う旧 script があれば即時更新必須
+
+##### **Claude in Amazon Bedrock がGA**（2026/05）
+- 全 Bedrock 顧客に解禁（従来は申請制）
+- Claude Opus 4.7 / Haiku 4.5 が Bedrock console から self-serve 利用可能
+- **27 AWS region** で global / regional endpoint 提供
+- Messages API endpoint: `/anthropic/v1/messages`
+
+### 💡 BJJ Appへの影響
+
+- **🔴 v2.1.132 stdio MCP メモリリーク修正は最優先で update 推奨**: BJJ Wiki の動画 batch / FAQ 注入 cron は 50-100 page 連続処理で MCP セッションが長時間化するため、10GB 級リークの影響直撃の可能性あり。`claude update` を実行
+- **v2.1.133 `@` ファイル候補 re-scan 修正**: `~/Claude/bjj-wiki/en/` 等の数千 file directory での tab 補完レスポンスが改善（体感差が出る）
+- **v2.1.130 `/usage` Ctrl+S ハング**: macOS では発症しないため bjj-app 開発に直接影響なし
+- **🟢 Managed Agents Webhooks**: `bjj-app-inc.plugin` を Managed Agents 化する場合、Wiki batch 完了通知を Telegram bot 経由で受け取る現運用と統合余地あり。ただし優先度は低（現運用の cron + Telegram で十分）
+- **🟢 Multiagent orchestration**: BJJ Wiki の翻訳 batch（EN→JA→PT）を lead+specialist 構成にすれば、各 locale 専用 agent で品質向上余地あり。ただし現状の Gemini 直接呼び出しで十分機能しており、移行コストは見合わない
+- **🟡 ant CLI**: YAML での agent 定義版管理は便利だが、bjj-app は既に `.claude/skills/` `.claude/agents/` で管理しており移行不要
+- **🔴 Haiku 3 廃止**: bjj-app / bjj-wiki で `claude-3-haiku-20240307` を直接呼び出している箇所がないか念のため確認推奨（grep ですぐ確認可能）
+- **🟢 Bedrock GA**: AWS インフラ未使用のため影響なし
+
+---
+
 ## 2026/05/07 チェック
 
 ### 新着リリース
