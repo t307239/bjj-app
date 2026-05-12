@@ -776,9 +776,9 @@
     "sessionsFmtOne": "1 session"
   },
   "install": {
-    "ios": "Add to Home Screen to use as app!",
-    "iosInstructions": "Safari → Share → \"Add to Home Screen\"",
-    "android": "Install as app to use offline!",
+    "ios": "📲 Switch to the mobile app — works offline too!",
+    "iosInstructions": "Tap Safari Share button → \"Add to Home Screen\"",
+    "android": "📲 Install the app — works offline too!",
     "button": "Install",
     "installing": "Installing...",
     "close": "Close banner",

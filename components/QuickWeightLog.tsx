@@ -7,7 +7,10 @@ import { useOnlineStatus } from "@/lib/useOnlineStatus";
 
 interface Props {
   userId: string;
-  onLogged?: () => void; // callback to refresh WeightChart
+  /** Callback after a successful save. Receives the just-logged weight (kg)
+   *  so the parent can update derived state (latestWeight, milestones, etc.)
+   *  without an extra DB round-trip. */
+  onLogged?: (weightKg?: number) => void;
 }
 
 export default function QuickWeightLog({ userId, onLogged }: Props) {
@@ -49,7 +52,7 @@ export default function QuickWeightLog({ userId, onLogged }: Props) {
       setWeight("");
       setNote("");
       setToast(t("body.saved"));
-      onLogged?.();
+      onLogged?.(w);
     }
     toastTimerRef.current = setTimeout(() => setToast(null), 3000);
   };

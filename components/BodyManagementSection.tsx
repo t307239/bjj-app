@@ -174,7 +174,15 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
       {/* ── Quick Weight Log (always visible — free users can log, just can't see chart) ── */}
       <QuickWeightLog
         userId={userId}
-        onLogged={() => setChartRefreshKey((k) => k + 1)}
+        onLogged={(newWeight) => {
+          setChartRefreshKey((k) => k + 1);
+          // Immediately update latestWeight so WeightCutPlanner (and other
+          // derived widgets) recompute interim milestones against the just-
+          // logged weight, instead of using stale data from initial load.
+          if (typeof newWeight === "number" && !isNaN(newWeight)) {
+            setLatestWeight(newWeight);
+          }
+        }}
       />
 
       {/* ── Weight Chart + Body Heatmap: Pro-gated ── */}

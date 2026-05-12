@@ -776,9 +776,9 @@
     "sessionsFmtOne": "1 sessão"
   },
   "install": {
-    "ios": "Adicione à Tela Inicial para usar como app!",
-    "iosInstructions": "Safari → Compartilhar → \"Adicionar à Tela Inicial\"",
-    "android": "Instale como app para usar offline!",
+    "ios": "📲 Mude para o app mobile — funciona offline!",
+    "iosInstructions": "Toque no botão Compartilhar do Safari → \"Adicionar à Tela Inicial\"",
+    "android": "📲 Instale o app — funciona offline!",
     "button": "Instalar",
     "installing": "Instalando...",
     "close": "Fechar banner",
