@@ -8,6 +8,7 @@
 
 import { useMemo } from "react";
 import { useLocale } from "@/lib/i18n";
+import { computeWeightCutPlan } from "@/lib/weightCutPlan";
 
 type Props = {
   currentWeight: number; // latest logged weight (kg)
@@ -33,40 +34,24 @@ export default function WeightCutPlanner({ currentWeight, targetWeight, targetDa
   const { t } = useLocale();
 
   const plan = useMemo(() => {
-    const now = new Date();
-    const compDate = new Date(targetDate + "T00:00:00");
-    const totalDays = Math.max(1, Math.ceil((compDate.getTime() - now.getTime()) / 86400000));
-    const totalWeeks = Math.max(1, Math.ceil(totalDays / 7));
-    const weightDiff = currentWeight - targetWeight;
+    // Pure milestone math lives in lib/weightCutPlan.ts (unit-tested).
+    // Returns null when target date already passed.
+    const core = computeWeightCutPlan(currentWeight, targetWeight, targetDate);
+    if (!core) return null;
 
-    // Already at or below target
-    if (weightDiff <= 0) {
-      return { totalDays, totalWeeks, weightDiff, milestones: [], phases: [], onTrack: true, alreadyDone: true };
+    // Already at or below target — show "done" state, no phase breakdown needed.
+    if (core.alreadyDone) {
+      return { ...core, phases: [], currentPhaseIdx: 0, onTrack: true };
     }
 
-    // Safety check: warn if cutting more than 10% body weight or more than 1kg/week
-    const weeklyRate = weightDiff / totalWeeks;
-    const pctCut = (weightDiff / currentWeight) * 100;
-    const isAggressive = weeklyRate > 1.0 || pctCut > 10;
-
-    // Weekly milestones: linear interpolation
-    const milestones: Milestone[] = [];
-    for (let w = 1; w <= totalWeeks; w++) {
-      const progress = w / totalWeeks;
-      const milestone: Milestone = {
-        weekNum: w,
-        date: new Date(now.getTime() + w * 7 * 86400000).toISOString().slice(0, 10),
-        targetKg: Math.round((currentWeight - weightDiff * progress) * 10) / 10,
-      };
-      milestones.push(milestone);
-    }
-
-    // Phase breakdown:
+    // Phase breakdown (locale-aware advice text — kept here because t() is
+    // React hook context):
     // Phase 1: Normal training + clean eating (most of the time)
     // Phase 2: Water loading (7-5 days before)
     // Phase 3: Water cut (3-1 days before)
     // Phase 4: Weigh-in day
     const phases: Phase[] = [];
+    const totalDays = core.totalDays;
 
     if (totalDays > 7) {
       phases.push({
@@ -103,27 +88,19 @@ export default function WeightCutPlanner({ currentWeight, targetWeight, targetDa
       color: "bg-red-500",
     });
 
-    // Current phase
-    const elapsed = 0; // from today
+    const elapsed = 0;
     const currentPhaseIdx = phases.findIndex((p) => elapsed >= p.startDay && elapsed < p.endDay);
 
     return {
-      totalDays,
-      totalWeeks,
-      weightDiff,
-      weeklyRate,
-      pctCut,
-      isAggressive,
-      milestones,
+      ...core,
       phases,
       currentPhaseIdx: currentPhaseIdx >= 0 ? currentPhaseIdx : 0,
       onTrack: true,
-      alreadyDone: false,
     };
   }, [currentWeight, targetWeight, targetDate, t]);
 
   // Past competition date
-  if (plan.totalDays <= 0) return null;
+  if (!plan) return null;
 
   // Already at target
   if (plan.alreadyDone) {
