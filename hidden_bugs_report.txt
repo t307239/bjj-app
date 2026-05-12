@@ -1,5 +1,5 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 414 files
+TS/TSX Scanned: 415 files
 CRITICAL: 0
 WARNING: 0
 INFO: 204
@@ -243,7 +243,7 @@ Total: 204
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeightChart.tsx: L139: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/WeightCutPlanner.tsx: L190: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/WeightCutPlanner.tsx: L167: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/admin/AttributionTable.tsx: L132: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
