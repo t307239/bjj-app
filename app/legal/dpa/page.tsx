@@ -5,6 +5,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { detectServerLocale, makeT } from "@/lib/i18n";
+import { safeJsonLd } from "@/lib/safeJsonLd";
 
 // z260h: locale-aware metadata + og:image
 // 旧: static EN-only → JA/PT user の SERP に英語表示、og:locale 欠落、
@@ -55,12 +56,40 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+// z260i: Article / BreadcrumbList JSON-LD で legal page を crawler に明示
+const dpaJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      headline: "Data Processing Agreement (DPA)",
+      description: "Summary of our Data Processing Agreement pursuant to GDPR Article 28.",
+      url: "https://bjj-app.net/legal/dpa",
+      author: { "@type": "Organization", name: "BJJ App Inc.", url: "https://bjj-app.net" },
+      publisher: { "@type": "Organization", name: "BJJ App Inc.", url: "https://bjj-app.net" },
+      inLanguage: ["en", "ja", "pt"],
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "BJJ App", item: "https://bjj-app.net" },
+        { "@type": "ListItem", position: 2, name: "Legal", item: "https://bjj-app.net/legal/dpa" },
+        { "@type": "ListItem", position: 3, name: "DPA", item: "https://bjj-app.net/legal/dpa" },
+      ],
+    },
+  ],
+};
+
 export default async function DPAPage() {
   const locale = await detectServerLocale();
   const t = makeT(locale);
 
   return (
     <main className="min-h-[100dvh] bg-zinc-950 text-white py-12 px-4">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(dpaJsonLd) }}
+      />
       <div className="max-w-2xl mx-auto">
         <h1 className="text-2xl font-bold mb-2">{t("dpa.title")}</h1>
         <p className="text-zinc-400 text-sm mb-8">{t("dpa.subtitle")}</p>
