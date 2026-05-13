@@ -59,6 +59,13 @@ export default function WeightChart({ userId, refreshKey, targetWeight, targetDa
 
   const [data, setData] = useState<WeightPoint[]>([]);
   const [loading, setLoading] = useState(true);
+  // z260y: mountedRef guard — refreshKey 連打 / unmount 後の setState 防止
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -109,14 +116,15 @@ export default function WeightChart({ userId, refreshKey, targetWeight, targetDa
         a.isoDate.localeCompare(b.isoDate)
       );
 
+      if (!mountedRef.current) return;
       setData(sorted);
     } catch (err: unknown) {
       clientLogger.error("weightchart.load_failed", {}, err instanceof Error ? err : new Error(String(err)));
-      setData([]);
+      if (mountedRef.current) setData([]);
     } finally {
-      setLoading(false);
+      if (mountedRef.current) setLoading(false);
     }
-  }, [userId]);
+  }, [userId, supabase]);
 
   useEffect(() => { loadData(); }, [loadData, refreshKey]);
 

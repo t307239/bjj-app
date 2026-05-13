@@ -50,6 +50,13 @@ export default function GoalTracker({ userId }: Props) {
 
   const supabaseRef = useRef(createClient());
   const supabase = supabaseRef.current;
+  // z260y: mountedRef guard — useEffect 内 async + setState を unmount から保護
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
 
   useEffect(() => {
     const load = async () => {
@@ -80,6 +87,7 @@ export default function GoalTracker({ userId }: Props) {
             .maybeSingle(),
         ]);
 
+        if (!mountedRef.current) return;
         // スキーマ未対応チェック（カラム非存在）
         if (profileRes.error && profileRes.error.code === "42703") {
           setSchemaReady(false);
@@ -125,7 +133,7 @@ export default function GoalTracker({ userId }: Props) {
               dayGrid[idx] = true;
             }
           });
-          setCurrentWeekDayGrid(dayGrid);
+          if (mountedRef.current) setCurrentWeekDayGrid(dayGrid);
 
           const wh: WeekHistory[] = [];
           for (let i = 3; i >= 0; i--) {
@@ -144,7 +152,7 @@ export default function GoalTracker({ userId }: Props) {
               isCurrent: i === 0,
             });
           }
-          setWeekHistory(wh);
+          if (mountedRef.current) setWeekHistory(wh);
         }
 
         // 過去6ヶ月の達成履歴を計算（N+1解消: 1クエリで全件取得→client側で月集計）
@@ -170,16 +178,16 @@ export default function GoalTracker({ userId }: Props) {
               achieved: hc >= mGoal,
             });
           }
-          setMonthHistory(history);
+          if (mountedRef.current) setMonthHistory(history);
         }
       } catch (err: unknown) {
         clientLogger.error("goaltracker.load_failed", {}, err instanceof Error ? err : new Error(String(err)));
       } finally {
-        setLoading(false);
+        if (mountedRef.current) setLoading(false);
       }
     };
     load();
-  }, [userId, supabase]);
+  }, [userId, supabase, t]);
 
   // Onboarding: when navigated to via #goal-tracker hash, auto-expand + open weekly goal editor
   useEffect(() => {

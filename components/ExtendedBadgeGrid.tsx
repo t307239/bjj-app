@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 
@@ -109,6 +109,13 @@ export default function ExtendedBadgeGrid({ userId }: { userId: string }) {
   const { t } = useLocale();
   const [badges, setBadges] = useState<BadgeData[]>([]);
   const [loading, setLoading] = useState(true);
+  // z260y: mountedRef guard — unmount 後の setState で React 警告 + memory leak 防止
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
 
   useEffect(() => {
     const supabase = createClient();
@@ -214,6 +221,7 @@ export default function ExtendedBadgeGrid({ userId }: { userId: string }) {
         },
       ];
 
+      if (!mountedRef.current) return;
       setBadges(
         BADGE_DEFS.map((b) => ({
           ...b,

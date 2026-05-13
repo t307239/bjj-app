@@ -31,12 +31,19 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
   const userMenuRef = useRef<HTMLDivElement>(null);
   // z260n: Google profile avatar 404/expired 時 initials fallback で隙間表示防止
   const [avatarError, setAvatarError] = useState(false);
+  // z260y: mountedRef guard — pathname 変更 / 高速 nav で unmount 後 setState 防止
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
 
   useEffect(() => {
     const checkToday = async () => {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user || !mountedRef.current) return;
       setUserId(user.id);
       // ⑨ Use logical training date: before 4AM counts as previous day
       const today = getLogicalTrainingDate();
@@ -54,6 +61,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
           .eq("id", user.id)
           .single(),
       ]);
+      if (!mountedRef.current) return;
       setTrainedToday((recentLogs ?? []).some((l: { date: string }) => l.date === today));
       setIsPro(profile?.is_pro ?? false);
       // ストリーク計算
@@ -70,7 +78,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
             break;
           }
         }
-        setCurrentStreak(streak);
+        if (mountedRef.current) setCurrentStreak(streak);
       }
     };
     checkToday();

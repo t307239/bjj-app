@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { formatDateShort } from "@/lib/formatDate";
@@ -135,6 +135,13 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
   const [saving, setSaving] = useState(false);
   const [weeklySessionCount, setWeeklySessionCount] = useState(0);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  // z260y: mountedRef guard — userId 変更/高速 nav で unmount 後 setState 防止
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
 
   const loadGoals = useCallback(async () => {
     try {
@@ -160,6 +167,7 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
           ),
       ]);
 
+      if (!mountedRef.current) return;
       if (goalsRes.error) {
         clientLogger.error("compgoal_loadgoals_error", {}, goalsRes.error.message);
         setErrorMsg(goalsRes.error.message);
@@ -172,11 +180,11 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
       setWeeklySessionCount(Math.max(Math.round(totalSessions / 4), 2));
     } catch (err) {
       clientLogger.error("compgoal_loadgoals_network_error", {}, err);
-      setErrorMsg(t("compGoal.loadError"));
+      if (mountedRef.current) setErrorMsg(t("compGoal.loadError"));
     } finally {
-      setLoading(false);
+      if (mountedRef.current) setLoading(false);
     }
-  }, [userId, supabase]);
+  }, [userId, supabase, t]);
 
   useEffect(() => {
     loadGoals();
