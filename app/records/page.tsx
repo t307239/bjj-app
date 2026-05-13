@@ -81,12 +81,19 @@ const RECORDS_META = {
 const RECORDS_OG_IMAGE = "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp";
 
 // z260k: title field を locale-aware に (旧: "Records" hardcode で JA/PT SERP に英語表示)
+// z260l: robots noindex 明示 — robots.txt で /records を Disallow しているが、
+// meta robots の default が "index, follow" のため、Google が discovery 経由
+// (e.g. backlink / sitemap orphan) で直接 URL を crawl した場合の二重防御。
+// /records は guest 時 ssr:false の GuestDashboardClient で JS content しか
+// 出ないため SEO 価値も低い (z260g の BreadcrumbList JSON-LD のみ意味あり、
+// ただし robots.txt で crawl 不可なので実質 dead weight)。
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await detectServerLocale();
   const m = RECORDS_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
   return {
     title: m.title,
     description: m.desc,
+    robots: { index: false, follow: false },
     alternates: { canonical: "https://bjj-app.net/records" },
     openGraph: {
       type: "website",
