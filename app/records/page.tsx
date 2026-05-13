@@ -120,7 +120,23 @@ export default async function RecordsPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return <GuestDashboardClient />;
+  // z260g: 未ログインの guest 向けでも JSON-LD を返す
+  // 旧: GuestDashboardClient (ssr:false) で JSON-LD ゼロ → /records SEO 損失
+  if (!user) {
+    const guestBreadcrumb = buildBreadcrumbJsonLd([
+      { name: "BJJ App", url: "https://bjj-app.net" },
+      { name: "Records", url: "https://bjj-app.net/records" },
+    ]);
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(guestBreadcrumb) }}
+        />
+        <GuestDashboardClient />
+      </>
+    );
+  }
 
   const displayName =
     user.user_metadata?.full_name ||

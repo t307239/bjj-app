@@ -4,34 +4,68 @@ import Link from "next/link";
 import GymWaitlistForm from "@/components/GymWaitlistForm";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 
-export const metadata: Metadata = {
-  title: "BJJ App for Academies - Keep Your Students Engaged",
-  description:
-    "Coach dashboard for BJJ academies. Track student engagement, send weekly curriculum, manage your team. $99/month. No setup required.",
-  keywords: [
-    "BJJ academy management",
-    "BJJ coach dashboard",
-    "student engagement tracking",
-    "BJJ gym software",
-  ],
-  alternates: {
-    canonical: "https://bjj-app.net/gym",
+// z260g: locale-aware metadata (BACKLOG F-12 続き)
+// 旧: static EN-only → JA/PT SERP に英語表示 + og:locale 欠落
+const GYM_META = {
+  en: {
+    title: "BJJ App for Academies - Keep Your Students Engaged",
+    desc: "Coach dashboard for BJJ academies. Track student engagement, send weekly curriculum, manage your team. $99/month. No setup required.",
+    ogTitle: "BJJ App for Academies",
+    ogDesc: "Keep your students engaged between classes. See who's training, push curriculum, build loyalty.",
   },
-  openGraph: {
-    type: "website",
-    title: "BJJ App for Academies",
-    description: "Keep your students engaged between classes. See who's training, push curriculum, build loyalty.",
-    url: "https://bjj-app.net/gym",
-    siteName: "BJJ App",
-    // z260e: og:image 追加
-    images: [{
-      url: "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp",
-      width: 1200,
-      height: 630,
-      alt: "BJJ App for Academies",
-    }],
+  ja: {
+    title: "道場向け BJJ App - 生徒のエンゲージメントを維持",
+    desc: "BJJ 道場向けコーチダッシュボード。生徒のエンゲージメントを追跡、週次カリキュラムを配信、チームを管理。月額 $99、セットアップ不要。",
+    ogTitle: "道場向け BJJ App",
+    ogDesc: "授業の合間も生徒のエンゲージメントを維持。誰が練習しているか把握、カリキュラム配信、ロイヤリティ向上。",
   },
-};
+  pt: {
+    title: "BJJ App para Academias - Mantenha Seus Alunos Engajados",
+    desc: "Painel de controle para academias de BJJ. Acompanhe o engajamento dos alunos, envie currículo semanal, gerencie sua equipe. $99/mês. Sem setup.",
+    ogTitle: "BJJ App para Academias",
+    ogDesc: "Mantenha seus alunos engajados entre as aulas. Veja quem está treinando, envie currículo, fidelize.",
+  },
+} as const;
+
+const GYM_OG_IMAGE = "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await detectServerLocale();
+  const m = GYM_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
+  return {
+    title: m.title,
+    description: m.desc,
+    keywords: [
+      "BJJ academy management",
+      "BJJ coach dashboard",
+      "student engagement tracking",
+      "BJJ gym software",
+    ],
+    alternates: {
+      canonical: "https://bjj-app.net/gym",
+    },
+    openGraph: {
+      type: "website",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      url: "https://bjj-app.net/gym",
+      siteName: "BJJ App",
+      images: [{
+        url: GYM_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "BJJ App for Academies",
+      }],
+      locale: locale === "ja" ? "ja_JP" : locale === "pt" ? "pt_BR" : "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      images: [GYM_OG_IMAGE],
+    },
+  };
+}
 
 export default async function GymPage() {
   const locale = await detectServerLocale();

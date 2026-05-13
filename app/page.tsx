@@ -13,35 +13,66 @@ const PricingSection = dynamic(() => import("@/components/PricingSection"), {
 });
 import { detectServerLocale, makeT } from "@/lib/i18n";
 
-export const metadata: Metadata = {
-  title: "BJJ App - Brazilian Jiu-Jitsu Training Tracker | 練習トラッカー",
-  description: "Track your BJJ training sessions, techniques, and streaks in one place. Free training log for Brazilian Jiu-Jitsu practitioners. 柔術の練習記録・テクニック管理・スキルマップ・成長の可視化。",
-  keywords: ["BJJ", "Brazilian Jiu-Jitsu", "training tracker", "BJJ app", "grappling log", "technique tracker", "skill map", "ブラジリアン柔術", "練習記録", "テクニック管理"],
-  alternates: {
-    canonical: "https://bjj-app.net",
+// z260g: locale-aware metadata (BACKLOG F-12 続き)
+// 旧: static "EN+JA bilingual" hardcode → og:locale が en_US 固定で
+//     SERP language signal が単一だった + JA/PT user に SERP description が混ざる
+const HOME_META = {
+  en: {
+    title: "BJJ App - Brazilian Jiu-Jitsu Training Tracker",
+    desc: "Track your BJJ training sessions, techniques, and streaks in one place. Free training log for Brazilian Jiu-Jitsu practitioners.",
+    ogTitle: "BJJ App - Track Your Brazilian Jiu-Jitsu Journey",
+    ogDesc: "Log every session. Track every technique. Build your skill map. Free BJJ training tracker.",
   },
-  openGraph: {
-    type: "website",
-    title: "BJJ App - Track Your Brazilian Jiu-Jitsu Journey",
-    description: "Log every session. Track every technique. Build your skill map. Free BJJ training tracker.",
-    url: "https://bjj-app.net",
-    siteName: "BJJ App",
-    images: [
-      {
-        url: "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp",
-        width: 1200,
-        height: 630,
-        alt: "BJJ App - Track Your Jiu-Jitsu Journey",
-      },
-    ],
+  ja: {
+    title: "BJJ App - 柔術練習トラッカー",
+    desc: "柔術の練習記録、テクニック管理、ストリークを 1 つのアプリで。ブラジリアン柔術練習者のための無料トレーニングログ。スキルマップで成長を可視化。",
+    ogTitle: "BJJ App - 柔術の練習を記録しよう",
+    ogDesc: "毎回の練習を記録。テクニックを管理。スキルマップを構築。無料 BJJ 練習トラッカー。",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "BJJ App - Track Your Brazilian Jiu-Jitsu Journey",
-    description: "Log every session. Track every technique. Build your skill map. Free BJJ training tracker.",
-    images: ["https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp"],
+  pt: {
+    title: "BJJ App - Rastreador de Treino de Jiu-Jitsu",
+    desc: "Acompanhe seus treinos de BJJ, técnicas e sequências em um só lugar. Registro de treino gratuito para praticantes de Jiu-Jitsu Brasileiro.",
+    ogTitle: "BJJ App - Acompanhe Sua Jornada no Jiu-Jitsu",
+    ogDesc: "Registre cada treino. Acompanhe cada técnica. Construa seu mapa de habilidades. Rastreador gratuito.",
   },
-};
+} as const;
+
+const HOME_OG_IMAGE = "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await detectServerLocale();
+  const m = HOME_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
+  return {
+    title: m.title,
+    description: m.desc,
+    keywords: ["BJJ", "Brazilian Jiu-Jitsu", "training tracker", "BJJ app", "grappling log", "technique tracker", "skill map", "ブラジリアン柔術", "練習記録", "テクニック管理"],
+    alternates: {
+      canonical: "https://bjj-app.net",
+    },
+    openGraph: {
+      type: "website",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      url: "https://bjj-app.net",
+      siteName: "BJJ App",
+      images: [
+        {
+          url: HOME_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: "BJJ App - Track Your Jiu-Jitsu Journey",
+        },
+      ],
+      locale: locale === "ja" ? "ja_JP" : locale === "pt" ? "pt_BR" : "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      images: [HOME_OG_IMAGE],
+    },
+  };
+}
 
 // JSON-LD: SoftwareApplication schema (z260).
 // IMPORTANT: Use SoftwareApplication (not Product) — Product triggers Google

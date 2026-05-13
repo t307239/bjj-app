@@ -26,26 +26,58 @@ import { safeJsonLd } from "@/lib/safeJsonLd";
 
 const COMPARE_OG = "https://bjj-app.net/api/og?mode=lp&lang=en&belt=blue&count=1500&streak=14&months=14";
 
-export const metadata: Metadata = {
-  title: "BJJ App vs BJJBuddy vs BJJ Notes vs MatTime",
-  description:
-    "Honest comparison of BJJ training tracker apps. Wiki integration, languages, pricing, native apps — what each does well.",
-  alternates: { canonical: "https://bjj-app.net/compare" },
-  openGraph: {
-    type: "website",
-    url: "https://bjj-app.net/compare",
-    siteName: "BJJ App",
-    title: "BJJ App vs the others — honest comparison",
-    description: "BJJBuddy, BJJ Notes, MatTime, BJJ App — what each does well and where each falls short.",
-    images: [{ url: COMPARE_OG, width: 1200, height: 630, alt: "BJJ App comparison" }],
+// z260g: locale-aware metadata (BACKLOG F-12 続き)
+const COMPARE_META = {
+  en: {
+    title: "BJJ App vs BJJBuddy vs BJJ Notes vs MatTime",
+    desc: "Honest comparison of BJJ training tracker apps. Wiki integration, languages, pricing, native apps — what each does well.",
+    ogTitle: "BJJ App vs the others — honest comparison",
+    ogDesc: "BJJBuddy, BJJ Notes, MatTime, BJJ App — what each does well and where each falls short.",
+    twTitle: "BJJ App vs the others",
+    twDesc: "Honest indie comparison of BJJ training tracker apps.",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "BJJ App vs the others",
-    description: "Honest indie comparison of BJJ training tracker apps.",
-    images: [COMPARE_OG],
+  ja: {
+    title: "BJJ App vs BJJBuddy / BJJ Notes / MatTime",
+    desc: "BJJ 練習トラッカーアプリの正直な比較。Wiki 統合、言語、価格、ネイティブアプリ — 各社の強みを並べました。",
+    ogTitle: "BJJ App vs 競合 — 正直な比較",
+    ogDesc: "BJJBuddy / BJJ Notes / MatTime / BJJ App — 各々の強みと弱みを並べました。",
+    twTitle: "BJJ App vs 競合",
+    twDesc: "BJJ 練習トラッカーアプリの正直な比較。",
   },
-};
+  pt: {
+    title: "BJJ App vs BJJBuddy vs BJJ Notes vs MatTime",
+    desc: "Comparação honesta de apps de treino de BJJ. Integração com Wiki, idiomas, preços, apps nativos — o que cada um faz bem.",
+    ogTitle: "BJJ App vs os outros — comparação honesta",
+    ogDesc: "BJJBuddy, BJJ Notes, MatTime, BJJ App — o que cada um faz bem e onde falha.",
+    twTitle: "BJJ App vs os outros",
+    twDesc: "Comparação indie honesta de apps de treino de BJJ.",
+  },
+} as const;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await detectServerLocale();
+  const m = COMPARE_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
+  return {
+    title: m.title,
+    description: m.desc,
+    alternates: { canonical: "https://bjj-app.net/compare" },
+    openGraph: {
+      type: "website",
+      url: "https://bjj-app.net/compare",
+      siteName: "BJJ App",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      images: [{ url: COMPARE_OG, width: 1200, height: 630, alt: "BJJ App comparison" }],
+      locale: locale === "ja" ? "ja_JP" : locale === "pt" ? "pt_BR" : "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: m.twTitle,
+      description: m.twDesc,
+      images: [COMPARE_OG],
+    },
+  };
+}
 
 type CompareRow = {
   feature: string;

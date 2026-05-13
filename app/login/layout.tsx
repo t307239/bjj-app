@@ -42,6 +42,9 @@ export async function generateMetadata(): Promise<Metadata> {
     // root layout.tsx の template "%s | BJJ App" が自動付与するので suffix 重複回避
     title: m.title,
     description: m.desc,
+    alternates: {
+      canonical: `${BASE_URL}/login`,
+    },
     openGraph: {
       title: m.ogTitle,
       description: m.ogDesc,

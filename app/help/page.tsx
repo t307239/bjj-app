@@ -4,28 +4,61 @@ import Link from "next/link";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 import { buildBreadcrumbJsonLd } from "@/lib/breadcrumb";
 
-export const metadata: Metadata = {
-  title: "Help & FAQ",
-  description:
-    "Frequently asked questions about BJJ App — training logs, technique tracking, streaks, gym features, and more.",
-  alternates: {
-    canonical: "https://bjj-app.net/help",
+// z260g: locale-aware metadata (BACKLOG F-12 続き)
+const HELP_META = {
+  en: {
+    title: "Help & FAQ",
+    desc: "Frequently asked questions about BJJ App — training logs, technique tracking, streaks, gym features, and more.",
+    ogTitle: "Help & FAQ | BJJ App",
+    ogDesc: "Frequently asked questions about BJJ App — training logs, technique tracking, streaks, gym features, and more.",
   },
-  openGraph: {
-    type: "website",
-    url: "https://bjj-app.net/help",
-    siteName: "BJJ App",
-    title: "Help & FAQ | BJJ App",
-    description: "Frequently asked questions about BJJ App — training logs, technique tracking, streaks, gym features, and more.",
-    // z260e: og:image 追加
-    images: [{
-      url: "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp",
-      width: 1200,
-      height: 630,
-      alt: "BJJ App Help & FAQ",
-    }],
+  ja: {
+    title: "ヘルプ＆FAQ",
+    desc: "BJJ App のよくある質問 — 練習記録、テクニック管理、ストリーク、道場機能などのご質問にお答えします。",
+    ogTitle: "ヘルプ＆FAQ | BJJ App",
+    ogDesc: "BJJ App のよくある質問 — 練習記録、テクニック管理、ストリーク、道場機能など。",
   },
-};
+  pt: {
+    title: "Ajuda e Perguntas Frequentes",
+    desc: "Perguntas frequentes sobre o BJJ App — registros de treino, acompanhamento de técnicas, sequências, recursos para academias e mais.",
+    ogTitle: "Ajuda e FAQ | BJJ App",
+    ogDesc: "Perguntas frequentes sobre o BJJ App — registros de treino, acompanhamento de técnicas, sequências, academias.",
+  },
+} as const;
+
+const HELP_OG_IMAGE = "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await detectServerLocale();
+  const m = HELP_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
+  return {
+    title: m.title,
+    description: m.desc,
+    alternates: {
+      canonical: "https://bjj-app.net/help",
+    },
+    openGraph: {
+      type: "website",
+      url: "https://bjj-app.net/help",
+      siteName: "BJJ App",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      images: [{
+        url: HELP_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "BJJ App Help & FAQ",
+      }],
+      locale: locale === "ja" ? "ja_JP" : locale === "pt" ? "pt_BR" : "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      images: [HELP_OG_IMAGE],
+    },
+  };
+}
 
 type FaqItem = { q: string; a: string };
 
