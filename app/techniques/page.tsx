@@ -74,7 +74,7 @@ const jsonLd = {
     "A personal record of Brazilian Jiu-Jitsu techniques, organized by position and mastery level",
   url: "https://bjj-app.net/techniques",
   isPartOf: {
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     name: "BJJ App",
     url: "https://bjj-app.net",
   },

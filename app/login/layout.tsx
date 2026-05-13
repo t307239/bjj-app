@@ -33,7 +33,7 @@ const jsonLd = {
     "BJJ App にログインして、毎日の柔術練習を記録・管理しましょう。Google / GitHub でワンクリックログイン。",
   url: `${BASE_URL}/login`,
   isPartOf: {
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     name: "BJJ App",
     url: BASE_URL,
   },
