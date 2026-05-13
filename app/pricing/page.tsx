@@ -234,13 +234,29 @@ const COPY = {
   },
 } as const;
 
-// JSON-LD: Product + Offer schema for rich snippets in search results
+// JSON-LD: SoftwareApplication schema for rich snippets in search results.
+//
+// IMPORTANT (z260): @type was "Product" which triggers Google's Merchant Listing
+// classification → requires "image" + gtin/brand/shippingDetails (all e-commerce
+// product fields, inappropriate for SaaS). GSC flagged "image missing" as a
+// critical issue (rich result blocked). Switch to SoftwareApplication which is
+// the canonical schema for SaaS — sidesteps Merchant Listing classification
+// entirely. We don't include aggregateRating/review because we have no real
+// reviews yet (CLAUDE.md rule -3: 嘘より沈黙 — no fabricated ratings).
 const pricingJsonLd = {
   "@context": "https://schema.org",
-  "@type": "Product",
+  "@type": "SoftwareApplication",
   name: "BJJ App",
   description: "Brazilian Jiu-Jitsu training tracker. Free forever for individuals.",
   url: "https://bjj-app.net/pricing",
+  image: "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp",
+  applicationCategory: "SportsApplication",
+  operatingSystem: "Web",
+  author: {
+    "@type": "Organization",
+    name: "BJJ App Inc.",
+    url: "https://bjj-app.net",
+  },
   offers: [
     {
       "@type": "Offer",

@@ -43,18 +43,29 @@ export const metadata: Metadata = {
   },
 };
 
+// JSON-LD: SoftwareApplication schema (z260).
+// IMPORTANT: Use SoftwareApplication (not Product) — Product triggers Google
+// Merchant Listing classification requiring e-commerce fields (gtin/brand/etc).
+// Added "image" + "author" + removed non-standard "billingIncrement".
+// We don't include aggregateRating/review (no real reviews yet, CLAUDE.md rule -3).
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
+  "@type": "SoftwareApplication",
   "name": "BJJ App",
   "description": "Track your Brazilian Jiu-Jitsu training sessions, techniques, and streaks. Free BJJ training log app. 柔術の練習記録・テクニック管理・成長可視化アプリ。",
   "url": "https://bjj-app.net",
+  "image": "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp",
   "applicationCategory": "SportsApplication",
   "operatingSystem": "Web",
+  "author": {
+    "@type": "Organization",
+    "name": "BJJ App Inc.",
+    "url": "https://bjj-app.net",
+  },
   "offers": [
-    { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
-    { "@type": "Offer", "name": "Pro Monthly", "price": "9.99", "priceCurrency": "USD", "billingIncrement": "P1M" },
-    { "@type": "Offer", "name": "Pro Annual", "price": "79.99", "priceCurrency": "USD", "billingIncrement": "P1Y" },
+    { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
+    { "@type": "Offer", "name": "Pro Monthly", "price": "9.99", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
+    { "@type": "Offer", "name": "Pro Annual", "price": "79.99", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
   ],
   "inLanguage": ["ja", "en", "pt"],
   "audience": { "@type": "Audience", "audienceType": "Brazilian Jiu-Jitsu practitioners" },
