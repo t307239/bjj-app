@@ -27,18 +27,22 @@ import { safeJsonLd } from "@/lib/safeJsonLd";
 const TOUR_OG = "https://bjj-app.net/api/og?mode=lp&lang=en&belt=blue&count=1500&streak=14&months=14";
 
 // z255jj: locale-aware metadata (F-12)
+// z260k: title field を locale-aware に (旧: "Product Tour" hardcode で JA/PT SERP に英語表示)
 const TOUR_META = {
   en: {
+    title: "Product Tour",
     desc: "See what BJJ App tracks: training sessions, technique journal, heatmap streaks, skill map, and belt progression. Free forever.",
     ogTitle: "BJJ App — Product Tour",
     ogDesc: "Track every roll. Free, indie, no ads.",
   },
   ja: {
+    title: "機能ツアー",
     desc: "BJJ App で記録できること: 練習セッション、技ジャーナル、ヒートマップ・ストリーク、スキルマップ、帯の進捗。永久無料。",
     ogTitle: "BJJ App — プロダクトツアー",
     ogDesc: "全てのロールを記録。永久無料、indie 開発、広告なし。",
   },
   pt: {
+    title: "Tour do Produto",
     desc: "Veja o que o BJJ App registra: sessões de treino, diário de técnicas, heatmap streaks, skill map, progressão de faixa. Grátis para sempre.",
     ogTitle: "BJJ App — Tour do Produto",
     ogDesc: "Registre cada roll. Grátis, indie, sem anúncios.",
@@ -49,7 +53,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await detectServerLocale();
   const m = TOUR_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
   return {
-    title: "Product Tour",
+    title: m.title,
     description: m.desc,
     alternates: { canonical: "https://bjj-app.net/tour" },
     openGraph: {

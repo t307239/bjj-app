@@ -59,16 +59,19 @@ const CompetitionSummaryCard = dynamic(() => import("@/components/CompetitionSum
 // 修正: detectServerLocale で cookie 優先 + Accept-Language fallback で 3 locale 出し分け
 const RECORDS_META = {
   en: {
+    title: "Records",
     desc: "View your BJJ training records, technique progress, competition results, and personal bests.",
     ogTitle: "Records | BJJ App",
     ogDesc: "View your BJJ training records, technique progress, competition results, and personal bests.",
   },
   ja: {
+    title: "練習記録",
     desc: "BJJ の練習記録、テクニック進捗、大会結果、自己ベストを一覧表示。柔術の成長を可視化します。",
     ogTitle: "練習記録 | BJJ App",
     ogDesc: "BJJ の練習記録、テクニック進捗、大会結果、自己ベストを一覧表示。",
   },
   pt: {
+    title: "Registros",
     desc: "Veja seus registros de treino de BJJ, progresso de técnicas, resultados de competições e recordes pessoais.",
     ogTitle: "Registros | BJJ App",
     ogDesc: "Veja seus registros de treino de BJJ, progresso de técnicas, resultados de competições.",
@@ -77,11 +80,12 @@ const RECORDS_META = {
 
 const RECORDS_OG_IMAGE = "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp";
 
+// z260k: title field を locale-aware に (旧: "Records" hardcode で JA/PT SERP に英語表示)
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await detectServerLocale();
   const m = RECORDS_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
   return {
-    title: "Records",
+    title: m.title,
     description: m.desc,
     alternates: { canonical: "https://bjj-app.net/records" },
     openGraph: {

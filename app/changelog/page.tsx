@@ -22,18 +22,22 @@ import { safeJsonLd } from "@/lib/safeJsonLd";
 const CHANGELOG_OG = "https://bjj-app.net/api/og?mode=reddit&lang=en&belt=blue&count=1500&streak=14&months=14";
 
 // z255jj: locale-aware metadata (F-12)
+// z260k: title field を locale-aware に (旧: "Changelog" hardcode で JA/PT SERP に英語表示)
 const CHANGELOG_META = {
   en: {
+    title: "Changelog",
     desc: "Recent updates and shipped features for BJJ App. Built indie, shipping every week.",
     ogTitle: "BJJ App Changelog — what we shipped",
     ogDesc: "Indie BJJ project. Recent updates and new features.",
   },
   ja: {
+    title: "更新履歴",
     desc: "BJJ App の最新アップデートと出荷済み機能。Indie 開発、毎週 ship。",
     ogTitle: "BJJ App Changelog — 最新の出荷履歴",
     ogDesc: "Indie BJJ プロジェクト。最近のアップデートと新機能。",
   },
   pt: {
+    title: "Novidades",
     desc: "Atualizações recentes e features lançadas do BJJ App. Indie, lançando toda semana.",
     ogTitle: "BJJ App Changelog — o que lançamos",
     ogDesc: "Projeto BJJ indie. Atualizações recentes e novas features.",
@@ -44,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await detectServerLocale();
   const m = CHANGELOG_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
   return {
-    title: "Changelog",
+    title: m.title,
     description: m.desc,
     alternates: { canonical: "https://bjj-app.net/changelog" },
     openGraph: {

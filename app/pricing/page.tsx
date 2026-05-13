@@ -36,18 +36,22 @@ const PRICING_OG = "https://bjj-app.net/api/og?mode=lp&lang=en&belt=blue&count=1
 // z255jj: locale-aware metadata (F-12) — generateMetadata で Accept-Language /
 // cookie ベースの locale 検出により JA/PT 検索結果でも適切な description を表示。
 // 旧: 静的英語 description が JA/PT SERP に出ていた SEO 機会損失を解消。
+// z260k: title field を locale-aware に (旧: "Pricing" hardcode で JA/PT SERP に英語表示)
 const PRICING_META = {
   en: {
+    title: "Pricing",
     desc: "Free forever for individual BJJ practitioners. Pro $9.99/mo for analytics. Gym Pro $99/mo for dojos. 14-day free trial.",
     ogTitle: "BJJ App Pricing — Free / Pro $9.99 / Gym $99",
     ogDesc: "Track BJJ training free forever. Pro for analytics. Gym Pro for dojos.",
   },
   ja: {
+    title: "料金プラン",
     desc: "個人 BJJ 練習者は永久無料。本格分析は Pro $9.99/月、道場管理は Gym Pro $99/月。14 日間無料トライアル。",
     ogTitle: "BJJ App 料金 — 無料 / Pro $9.99 / Gym $99",
     ogDesc: "BJJ 練習を永久無料で記録。分析は Pro、道場管理は Gym Pro。",
   },
   pt: {
+    title: "Preços",
     desc: "Grátis para sempre para praticantes individuais de BJJ. Pro $9.99/mês para análises. Gym Pro $99/mês para academias. 14 dias de teste grátis.",
     ogTitle: "Preços BJJ App — Grátis / Pro $9.99 / Gym $99",
     ogDesc: "Registre seu BJJ grátis para sempre. Pro para análises. Gym Pro para academias.",
@@ -58,7 +62,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await detectServerLocale();
   const m = PRICING_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
   return {
-    title: "Pricing",
+    title: m.title,
     description: m.desc,
     alternates: { canonical: "https://bjj-app.net/pricing" },
     openGraph: {
