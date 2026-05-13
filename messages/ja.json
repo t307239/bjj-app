@@ -271,7 +271,8 @@
     "toggleGoalTracker": "目標の表示切替",
     "toggleDetailCharts": "詳細チャートの表示切替",
     "toggleBadges": "バッジの表示切替",
-    "searchResultCount": "{count}件の結果"
+    "searchResultCount": "{count}件の結果",
+    "guestStorageFull": "ストレージが満杯です — クラウド保存のためログインしてください"
   },
   "techniques": {
     "mastery1": "入門",

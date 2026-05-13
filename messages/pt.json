@@ -271,7 +271,8 @@
     "toggleGoalTracker": "Alternar rastreador de metas",
     "toggleDetailCharts": "Alternar gráficos detalhados",
     "toggleBadges": "Alternar medalhas",
-    "searchResultCount": "{count} resultados encontrados"
+    "searchResultCount": "{count} resultados encontrados",
+    "guestStorageFull": "Armazenamento cheio — entre para salvar na nuvem"
   },
   "techniques": {
     "mastery1": "Conheço",

@@ -159,7 +159,7 @@ Total: 207
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/GoalTrackerEditor.tsx: L57: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [TRUNCATE_NO_TITLE] components/GuestDashboard.tsx: L311: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
+[INFO] [TRUNCATE_NO_TITLE] components/GuestDashboard.tsx: L343: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
   FIX: title={varName} を追加 (a11y/UX)
 [INFO] [DATE_PARSE_NO_GUARD] components/GymCurriculumCard.tsx: L41: `new Date(data.curriculum_completed_at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
   FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う

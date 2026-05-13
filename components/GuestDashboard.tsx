@@ -46,8 +46,15 @@ function loadGuestLogs(): GuestLog[] {
   }
 }
 
-function saveGuestLogs(logs: GuestLog[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
+function saveGuestLogs(logs: GuestLog[]): boolean {
+  // z260z: try/catch で quota exceeded (5-10MB limit) を silent fail させない。
+  // 戻り値で caller に通知し、UI で「保存失敗、ログイン推奨」表示する。
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export default function GuestDashboard() {
@@ -65,6 +72,15 @@ export default function GuestDashboard() {
   const [pendingDelete, setPendingDelete] = useState<{ id: string; entry: GuestLog; timerId: ReturnType<typeof setTimeout> } | null>(null);
   const [undoVisible, setUndoVisible] = useState(false);
   const [saving, setSaving] = useState(false);
+  // z260z: storage quota exceeded (~5MB) silent fail を visible 化
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const saveErrorTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => {
+    return () => {
+      if (saveErrorTimerRef.current) clearTimeout(saveErrorTimerRef.current);
+    };
+  }, []);
 
   // Locale-aware training types (labels from i18n)
   const TRAINING_TYPES = TRAINING_TYPE_VALUES.map((tt) => ({
@@ -89,7 +105,13 @@ export default function GuestDashboard() {
     };
     const updated = [newLog, ...logs];
     setLogs(updated);
-    saveGuestLogs(updated);
+    // z260z: localStorage 失敗 (quota / private mode) を user に通知
+    const ok = saveGuestLogs(updated);
+    if (!ok) {
+      setSaveError(t("training.guestStorageFull"));
+      if (saveErrorTimerRef.current) clearTimeout(saveErrorTimerRef.current);
+      saveErrorTimerRef.current = setTimeout(() => setSaveError(null), 8000);
+    }
     setNotes("");
     setSaving(false);
     if (continuousInput) {
@@ -136,6 +158,16 @@ export default function GuestDashboard() {
 
   return (
     <div className="min-h-[100dvh] bg-zinc-950 pb-20 sm:pb-0">
+      {/* z260z: localStorage quota exceeded / save failure toast (silent data loss を可視化) */}
+      {saveError && (
+        <div
+          role="alert"
+          aria-live="assertive"
+          className="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-[90%] bg-red-900/95 border border-red-500/40 text-white px-4 py-2.5 rounded-xl text-sm shadow-lg"
+        >
+          {saveError}
+        </div>
+      )}
       {/* Undo Toast */}
       {undoVisible && (
         <div className="fixed bottom-24 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-zinc-800 border border-white/10 px-4 py-2.5 rounded-xl text-sm text-white shadow-lg">
