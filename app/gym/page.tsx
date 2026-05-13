@@ -23,6 +23,13 @@ export const metadata: Metadata = {
     description: "Keep your students engaged between classes. See who's training, push curriculum, build loyalty.",
     url: "https://bjj-app.net/gym",
     siteName: "BJJ App",
+    // z260e: og:image 追加
+    images: [{
+      url: "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp",
+      width: 1200,
+      height: 630,
+      alt: "BJJ App for Academies",
+    }],
   },
 };
 

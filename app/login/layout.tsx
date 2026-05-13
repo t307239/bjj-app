@@ -16,6 +16,13 @@ export const metadata: Metadata = {
     url: `${BASE_URL}/login`,
     siteName: "BJJ App",
     type: "website",
+    // z260e: og:image 追加 (Twitter card は summary なので images 必要、social share preview 改善)
+    images: [{
+      url: `${BASE_URL}/api/og?belt=white&count=0&months=0&streak=0&mode=lp`,
+      width: 1200,
+      height: 630,
+      alt: "BJJ App - Login",
+    }],
   },
   twitter: {
     card: "summary",

@@ -17,6 +17,13 @@ export const metadata: Metadata = {
     siteName: "BJJ App",
     title: "Help & FAQ | BJJ App",
     description: "Frequently asked questions about BJJ App — training logs, technique tracking, streaks, gym features, and more.",
+    // z260e: og:image 追加
+    images: [{
+      url: "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp",
+      width: 1200,
+      height: 630,
+      alt: "BJJ App Help & FAQ",
+    }],
   },
 };
 

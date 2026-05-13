@@ -67,6 +67,13 @@ export const metadata: Metadata = {
     siteName: "BJJ App",
     title: "Records | BJJ App",
     description: "View your BJJ training records, technique progress, competition results, and personal bests.",
+    // z260e: og:image 追加 (X/Threads/Slack 等で share した時の preview 画像)
+    images: [{
+      url: "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp",
+      width: 1200,
+      height: 630,
+      alt: "BJJ App - Training Records",
+    }],
   },
 };
 
