@@ -202,7 +202,7 @@ export default function ContactForm({ locale }: Props) {
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+          <form method="post" onSubmit={handleSubmit} className="space-y-5" noValidate>
             {/* Category */}
             <fieldset>
               <legend className="text-xs font-semibold text-zinc-300 mb-2">
