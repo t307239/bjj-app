@@ -187,20 +187,27 @@ const COPY = {
   },
 } as const;
 
-const itemListJsonLd = (months: readonly MonthBlock[]) => ({
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  name: "BJJ App changelog",
-  itemListOrder: "https://schema.org/ItemListOrderDescending",
-  numberOfItems: months.reduce((acc, m) => acc + m.items.length, 0),
-  itemListElement: months.flatMap((m) =>
-    m.items.map((it, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: it.title,
-    })),
-  ),
-});
+// z260h: position は month を跨ぐグローバル連番にする
+// 旧: m.items.map((it, i) => position: i + 1) で month ごとに reset され
+//     同じ position 値が複数回出現 → schema.org ItemList 仕様違反
+//     (Google rich result test で warning 出る潜在的 silent bug)
+const itemListJsonLd = (months: readonly MonthBlock[]) => {
+  let pos = 0;
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "BJJ App changelog",
+    itemListOrder: "https://schema.org/ItemListOrderDescending",
+    numberOfItems: months.reduce((acc, m) => acc + m.items.length, 0),
+    itemListElement: months.flatMap((m) =>
+      m.items.map((it) => ({
+        "@type": "ListItem",
+        position: ++pos,
+        name: it.title,
+      })),
+    ),
+  };
+};
 
 export default async function ChangelogPage() {
   const supabase = await createClient();
