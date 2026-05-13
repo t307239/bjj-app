@@ -29,6 +29,8 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
   const [userId, setUserId] = useState<string | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  // z260n: Google profile avatar 404/expired 時 initials fallback で隙間表示防止
+  const [avatarError, setAvatarError] = useState(false);
 
   useEffect(() => {
     const checkToday = async () => {
@@ -170,14 +172,14 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
                 className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
                 aria-label={t("common.userMenu")}
               >
-                {avatarUrl ? (
+                {avatarUrl && !avatarError ? (
                   <Image
                     src={avatarUrl}
                     alt={displayName}
                     width={32}
                     height={32}
                     className="w-8 h-8 rounded-full"
-                    onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                    onError={() => setAvatarError(true)}
                   />
                 ) : (
                   <span className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-semibold text-white">
