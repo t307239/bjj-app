@@ -6,21 +6,54 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { detectServerLocale, makeT } from "@/lib/i18n";
 
-export const metadata: Metadata = {
-  title: "Data Processing Agreement (DPA)",
-  description:
-    "Summary of our Data Processing Agreement pursuant to GDPR Article 28.",
-  robots: { index: true, follow: true },
-  alternates: { canonical: "https://bjj-app.net/legal/dpa" },
-  openGraph: {
-    title: "Data Processing Agreement (DPA) | BJJ App",
-    description:
-      "Summary of our Data Processing Agreement pursuant to GDPR Article 28.",
-    url: "https://bjj-app.net/legal/dpa",
-    siteName: "BJJ App",
-    type: "article",
+// z260h: locale-aware metadata + og:image
+// 旧: static EN-only → JA/PT user の SERP に英語表示、og:locale 欠落、
+//     og:image 欠落で X/Slack share preview が text-only に
+const DPA_OG_IMAGE = "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp";
+
+const DPA_META = {
+  en: {
+    title: "Data Processing Agreement (DPA)",
+    desc: "Summary of our Data Processing Agreement pursuant to GDPR Article 28.",
+    ogTitle: "Data Processing Agreement (DPA) | BJJ App",
   },
-};
+  ja: {
+    title: "データ処理契約 (DPA)",
+    desc: "GDPR 第 28 条に基づくデータ処理契約 (DPA) の概要。",
+    ogTitle: "データ処理契約 (DPA) | BJJ App",
+  },
+  pt: {
+    title: "Contrato de Processamento de Dados (DPA)",
+    desc: "Resumo do nosso Contrato de Processamento de Dados conforme o Artigo 28 do GDPR.",
+    ogTitle: "Contrato de Processamento de Dados (DPA) | BJJ App",
+  },
+} as const;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await detectServerLocale();
+  const m = DPA_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
+  return {
+    title: m.title,
+    description: m.desc,
+    robots: { index: true, follow: true },
+    alternates: { canonical: "https://bjj-app.net/legal/dpa" },
+    openGraph: {
+      title: m.ogTitle,
+      description: m.desc,
+      url: "https://bjj-app.net/legal/dpa",
+      siteName: "BJJ App",
+      type: "article",
+      images: [{ url: DPA_OG_IMAGE, width: 1200, height: 630, alt: "BJJ App DPA" }],
+      locale: locale === "ja" ? "ja_JP" : locale === "pt" ? "pt_BR" : "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: m.ogTitle,
+      description: m.desc,
+      images: [DPA_OG_IMAGE],
+    },
+  };
+}
 
 export default async function DPAPage() {
   const locale = await detectServerLocale();

@@ -3,6 +3,7 @@
 # z212: app/robots.txt/route.ts (dynamic) と内容を完全同期。Vercel は public/*
 # をエッジで優先 serve する可能性があり、どちらが提供されても挙動が変わらない
 # ようにする防衛的な統一。app/robots.txt/route.ts を編集する時はここも更新。
+# z260h: /gym を Disallow から除去 (sitemap conflict 解消、B2B LP として indexable)
 User-agent: *
 Disallow: /api/
 Disallow: /auth
@@ -12,7 +13,6 @@ Disallow: /profile
 Disallow: /admin
 Disallow: /settings
 Disallow: /records
-Disallow: /gym
 Disallow: /invite
 Disallow: /unsubscribe
 Disallow: /account-deleted

@@ -1,11 +1,15 @@
 /**
  * /contact — z255oo: お問い合わせ / バグ報告 form
+ * z260h: og:image / twitter:image / ContactPoint JSON-LD 追加
  *
  * Public page (no auth required). 3 locale 対応 (ja/en/pt) via generateMetadata.
  */
 import type { Metadata } from "next";
 import { detectServerLocale } from "@/lib/i18n";
+import { safeJsonLd } from "@/lib/safeJsonLd";
 import ContactForm from "@/components/ContactForm";
+
+const CONTACT_OG_IMAGE = "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp";
 
 const META = {
   en: {
@@ -35,12 +39,41 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "BJJ App",
       title: m.title,
       description: m.desc,
+      images: [{ url: CONTACT_OG_IMAGE, width: 1200, height: 630, alt: "BJJ App Contact" }],
       locale: locale === "ja" ? "ja_JP" : locale === "pt" ? "pt_BR" : "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: m.title,
+      description: m.desc,
+      images: [CONTACT_OG_IMAGE],
     },
   };
 }
 
+// z260h: ContactPage + Organization.contactPoint で SERP に正式 contact 情報を伝える
+const contactJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: "Contact BJJ App",
+  url: "https://bjj-app.net/contact",
+  description: "Contact form for BJJ App bug reports, feature requests, and general inquiries.",
+  isPartOf: {
+    "@type": "WebSite",
+    name: "BJJ App",
+    url: "https://bjj-app.net",
+  },
+};
+
 export default async function ContactPage() {
   const locale = await detectServerLocale();
-  return <ContactForm locale={locale} />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(contactJsonLd) }}
+      />
+      <ContactForm locale={locale} />
+    </>
+  );
 }

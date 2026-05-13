@@ -3,12 +3,16 @@ import { NextResponse } from "next/server";
 /**
  * Dynamic robots.txt — z212 で public/robots.txt を撤廃し dynamic 一本化。
  *
- * 設計 (z212):
+ * 設計 (z212 + z260h):
  *   - /api/ は public/robots.txt にあったが dynamic 側に欠落していた = crawl
  *     可能な状態だった → 復元 (real bug fix)。
- *   - 既存 /dashboard /techniques /profile /auth に追加で /admin /settings
- *     /records /gym /invite /unsubscribe /account-deleted を明示 disallow
- *     (auth 必須 / token 必須 / post-action page で indexing 価値なし)
+ *   - z260h: /gym を Disallow から除去 (sitemap.ts には priority=0.7 で listed
+ *     されており、B2B Academy 向け public LP で og:image / canonical / FAQPage
+ *     JSON-LD 完備の indexable page。Disallow と sitemap が conflict していた
+ *     ＝ Google sitemap quality warning 要因 + B2B SEO 流入を阻害)。
+ *   - 既存 /dashboard /techniques /profile /auth /admin /settings /records
+ *     /invite /unsubscribe /account-deleted は明示 disallow (auth 必須 / token
+ *     必須 / post-action page で indexing 価値なし)
  *   - sitemap.ts と整合する形で「公開対象」のみ Allow として残る
  *
  * 注意: privacy / terms / legal は indexing したい (法的開示 page) のでここに
@@ -25,7 +29,6 @@ Disallow: /profile
 Disallow: /admin
 Disallow: /settings
 Disallow: /records
-Disallow: /gym
 Disallow: /invite
 Disallow: /unsubscribe
 Disallow: /account-deleted
