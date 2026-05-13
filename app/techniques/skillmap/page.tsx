@@ -17,22 +17,49 @@ const SkillMap = dynamic(() => import("@/components/SkillMapV2"), {
   ),
 });
 
-export const metadata: Metadata = {
-  // layout.tsx の template "%s | BJJ App" が自動付与するので suffix 重複回避
-  title: "Skill Map",
-  description:
-    "Visualize your BJJ technique connections as an interactive skill tree. Explore pathways from each position.",
-  alternates: {
-    canonical: "https://bjj-app.net/techniques/skillmap",
+// z261b: locale-aware metadata (前回 sub-agent run の Phase A 残課題 A-1)
+// auth-required page だが share / SERP 用に JA/PT description を用意。
+// robots: noindex で SEO index は防ぐ。
+const SKILLMAP_META = {
+  en: {
+    title: "Skill Map",
+    description:
+      "Visualize your BJJ technique connections as an interactive skill tree. Explore pathways from each position.",
+    ogTitle: "Skill Map — BJJ App",
   },
-  openGraph: {
-    type: "website",
-    url: "https://bjj-app.net/techniques/skillmap",
-    siteName: "BJJ App",
-    title: "Skill Map — BJJ App",
-    description: "Visualize your BJJ technique connections as an interactive skill tree. Explore pathways from each position.",
+  ja: {
+    title: "スキルマップ",
+    description:
+      "BJJ テクニックのつながりをインタラクティブなスキルツリーで可視化。各ポジションからのパスを探索しよう。",
+    ogTitle: "スキルマップ — BJJ App",
   },
-};
+  pt: {
+    title: "Mapa de Habilidades",
+    description:
+      "Visualize as conexões entre técnicas de BJJ como uma árvore de habilidades interativa. Explore os caminhos a partir de cada posição.",
+    ogTitle: "Mapa de Habilidades — BJJ App",
+  },
+} as const;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await detectServerLocale();
+  const m = SKILLMAP_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
+  return {
+    // layout.tsx の template "%s | BJJ App" が自動付与するので suffix 重複回避
+    title: m.title,
+    description: m.description,
+    alternates: { canonical: "https://bjj-app.net/techniques/skillmap" },
+    robots: { index: false, follow: true },
+    openGraph: {
+      type: "website",
+      url: "https://bjj-app.net/techniques/skillmap",
+      siteName: "BJJ App",
+      title: m.ogTitle,
+      description: m.description,
+      locale: locale === "ja" ? "ja_JP" : locale === "pt" ? "pt_BR" : "en_US",
+    },
+  };
+}
 
 export default async function SkillMapPage() {
   const supabase = await createClient();

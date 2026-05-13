@@ -23,14 +23,21 @@ describe("Q-110: Ops — Admin Stripe + CSV", () => {
   });
 
   it("AdminPanel shows Stripe badge in expanded view", () => {
+    // z261b: AdminPanel was JA-localized (z260 era). Tests updated from
+    // EN literal "Stripe (belt)" / "Subscription" to JA literal that matches
+    // the current source. The structural assertion (stripe field rendered +
+    // plan label rendered) is preserved.
     const source = fs.readFileSync(path.join(ROOT, "app/admin/AdminPanel.tsx"), "utf-8");
-    expect(source).toContain("Stripe (belt)");
-    expect(source).toContain("Subscription");
+    expect(source).toContain("帯の本数"); // stripe count label (JA)
+    expect(source).toContain("プラン");   // plan / subscription label (JA)
+    expect(source).toContain("{user.stripe}"); // stripe value rendered
   });
 
   it("AdminPanel has CSV export button", () => {
+    // z261b: JA-localized button label. handleExportCsv handler + format: "csv"
+    // payload are still asserted unchanged.
     const source = fs.readFileSync(path.join(ROOT, "app/admin/AdminPanel.tsx"), "utf-8");
-    expect(source).toContain("Export CSV");
+    expect(source).toContain("CSV エクスポート");
     expect(source).toContain("handleExportCsv");
     expect(source).toContain('format: "csv"');
   });
@@ -48,9 +55,11 @@ describe("Q-110: Ops — Admin Stripe + CSV", () => {
   });
 
   it("AdminPanel shows Pro/Free subscription status", () => {
+    // z261b: JA-localized — "Pro 有料会員" (Pro paid) / "無料会員" (Free).
+    // text-yellow-400 styling assertion preserved.
     const source = fs.readFileSync(path.join(ROOT, "app/admin/AdminPanel.tsx"), "utf-8");
-    expect(source).toContain('"Pro"');
-    expect(source).toContain('"Free"');
+    expect(source).toContain('"Pro 有料会員"');
+    expect(source).toContain('"無料会員"');
     expect(source).toContain("text-yellow-400");
   });
 });
