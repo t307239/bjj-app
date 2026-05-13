@@ -17,7 +17,7 @@ import {
   getMonthStartDate,
   getLocalDateParts,
 } from "@/lib/timezone";
-import { serverT, makeT, parseAcceptLanguage, type Locale } from "@/lib/i18n";
+import { serverT, makeT, parseAcceptLanguage, detectServerLocale, type Locale } from "@/lib/i18n";
 import { buildBreadcrumbJsonLd } from "@/lib/breadcrumb";
 import { logger } from "@/lib/logger";
 import GuestDashboardClient from "@/components/GuestDashboardClient";
@@ -54,28 +54,58 @@ const CompetitionSummaryCard = dynamic(() => import("@/components/CompetitionSum
   loading: () => <div className="min-h-[120px] bg-zinc-900/50 ring-1 ring-inset ring-white/[0.04] rounded-2xl animate-pulse" />,
 });
 
-export const metadata: Metadata = {
-  // layout.tsx の template "%s | BJJ App" が自動付与するので suffix 重複回避
-  title: "Records",
-  description: "View your BJJ training records, technique progress, competition results, and personal bests.",
-  alternates: {
-    canonical: "https://bjj-app.net/records",
+// z260f: locale-aware metadata (BACKLOG F-12 続き)
+// 旧: static EN-only description → JA/PT user の SERP に英語表示 → SEO 機会損失
+// 修正: detectServerLocale で cookie 優先 + Accept-Language fallback で 3 locale 出し分け
+const RECORDS_META = {
+  en: {
+    desc: "View your BJJ training records, technique progress, competition results, and personal bests.",
+    ogTitle: "Records | BJJ App",
+    ogDesc: "View your BJJ training records, technique progress, competition results, and personal bests.",
   },
-  openGraph: {
-    type: "website",
-    url: "https://bjj-app.net/records",
-    siteName: "BJJ App",
-    title: "Records | BJJ App",
-    description: "View your BJJ training records, technique progress, competition results, and personal bests.",
-    // z260e: og:image 追加 (X/Threads/Slack 等で share した時の preview 画像)
-    images: [{
-      url: "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp",
-      width: 1200,
-      height: 630,
-      alt: "BJJ App - Training Records",
-    }],
+  ja: {
+    desc: "BJJ の練習記録、テクニック進捗、大会結果、自己ベストを一覧表示。柔術の成長を可視化します。",
+    ogTitle: "練習記録 | BJJ App",
+    ogDesc: "BJJ の練習記録、テクニック進捗、大会結果、自己ベストを一覧表示。",
   },
-};
+  pt: {
+    desc: "Veja seus registros de treino de BJJ, progresso de técnicas, resultados de competições e recordes pessoais.",
+    ogTitle: "Registros | BJJ App",
+    ogDesc: "Veja seus registros de treino de BJJ, progresso de técnicas, resultados de competições.",
+  },
+} as const;
+
+const RECORDS_OG_IMAGE = "https://bjj-app.net/api/og?belt=white&count=0&months=0&streak=0&mode=lp";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await detectServerLocale();
+  const m = RECORDS_META[locale === "ja" ? "ja" : locale === "pt" ? "pt" : "en"];
+  return {
+    title: "Records",
+    description: m.desc,
+    alternates: { canonical: "https://bjj-app.net/records" },
+    openGraph: {
+      type: "website",
+      url: "https://bjj-app.net/records",
+      siteName: "BJJ App",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      images: [{
+        url: RECORDS_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "BJJ App - Training Records",
+      }],
+      locale: locale === "ja" ? "ja_JP" : locale === "pt" ? "pt_BR" : "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: m.ogTitle,
+      description: m.ogDesc,
+      images: [RECORDS_OG_IMAGE],
+    },
+  };
+}
 
 export default async function RecordsPage({
   searchParams,
