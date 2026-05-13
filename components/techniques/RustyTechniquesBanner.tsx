@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
+import { safeSetItem, safeGetItem } from "@/lib/safeLocalStorage";
 
 type RustyTechnique = {
   name: string;
@@ -24,7 +25,7 @@ export default function RustyTechniquesBanner({ techniques }: Props) {
     // Reset weekly — key includes ISO week
     const now = new Date(Date.now() + 9 * 60 * 60 * 1000);
     const weekKey = `${DISMISS_KEY}_${now.getFullYear()}_${Math.ceil((now.getDate() + new Date(now.getFullYear(), 0, 1).getDay()) / 7)}`;
-    return localStorage.getItem(weekKey) === "1";
+    return safeGetItem(weekKey) === "1";
   });
 
   if (dismissed || techniques.length === 0) return null;
@@ -32,7 +33,7 @@ export default function RustyTechniquesBanner({ techniques }: Props) {
   const handleDismiss = () => {
     const now = new Date(Date.now() + 9 * 60 * 60 * 1000);
     const weekKey = `${DISMISS_KEY}_${now.getFullYear()}_${Math.ceil((now.getDate() + new Date(now.getFullYear(), 0, 1).getDay()) / 7)}`;
-    localStorage.setItem(weekKey, "1");
+    safeSetItem(weekKey, "1");
     setDismissed(true);
   };
 

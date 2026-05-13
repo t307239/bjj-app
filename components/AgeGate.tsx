@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useLocale } from "@/lib/i18n";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
+import { safeSetItem, safeGetItem } from "@/lib/safeLocalStorage";
 
 const STORAGE_KEY = "bjj_age_verified";
 
@@ -19,7 +20,7 @@ export default function AgeGate() {
   useBodyScrollLock(status === "show" || status === "blocked");
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = safeGetItem(STORAGE_KEY);
     if (stored === "true") {
       setStatus("ok");
     } else if (stored === "false") {
@@ -30,7 +31,7 @@ export default function AgeGate() {
   }, []);
 
   const handleConfirm = (isOldEnough: boolean) => {
-    localStorage.setItem(STORAGE_KEY, String(isOldEnough));
+    safeSetItem(STORAGE_KEY, String(isOldEnough));
     setStatus(isOldEnough ? "ok" : "blocked");
   };
 

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocale } from "@/lib/i18n";
 import { clientLogger } from "@/lib/clientLogger";
+import { safeSetItem, safeGetItem } from "@/lib/safeLocalStorage";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -25,10 +26,10 @@ export default function InstallBanner() {
   }, []);
 
   useEffect(() => {
-    const isDismissed = localStorage.getItem("bjj_install_dismissed") === "1";
+    const isDismissed = safeGetItem("bjj_install_dismissed") === "1";
     if (isDismissed) { setDismissed(true); return; }
     // B-03: Show install banner only after 3rd session log (dopamine moment)
-    const logCount = parseInt(localStorage.getItem("bjj_log_count") ?? "0", 10);
+    const logCount = parseInt(safeGetItem("bjj_log_count") ?? "0", 10);
     if (logCount < 3) { setDismissed(true); return; }
     // iOS detection: iPhone/iPad/iPod + iPadOS 13+ desktop mode (UA reports Mac
      // but maxTouchPoints > 1 indicates touchscreen iPad). Exclude already-installed
@@ -45,7 +46,7 @@ export default function InstallBanner() {
     // mark dismissed permanently in localStorage so other tabs/Safari sessions
     // also skip the banner. This is a one-time auto-suppress, NOT a manual dismiss.
     if (isStandalone) {
-      localStorage.setItem("bjj_install_dismissed", "1");
+      safeSetItem("bjj_install_dismissed", "1");
       setDismissed(true);
       return;
     }
@@ -62,7 +63,7 @@ export default function InstallBanner() {
     // banner never re-appears after install — even if user opens app in a new
     // browser tab where standalone-mode detection wouldn't apply.
     const handleAppInstalled = () => {
-      localStorage.setItem("bjj_install_dismissed", "1");
+      safeSetItem("bjj_install_dismissed", "1");
       setDismissed(true);
       setPlatform(null);
     };
@@ -74,7 +75,7 @@ export default function InstallBanner() {
     };
   }, []);
 
-  const handleDismiss = () => { localStorage.setItem("bjj_install_dismissed", "1"); setDismissed(true); };
+  const handleDismiss = () => { safeSetItem("bjj_install_dismissed", "1"); setDismissed(true); };
 
   const handleInstallAndroid = async () => {
     if (!deferredPrompt) return;
@@ -82,7 +83,7 @@ export default function InstallBanner() {
     try {
       await deferredPrompt.prompt();
       const choiceResult = await deferredPrompt.userChoice;
-      if (choiceResult.outcome === "accepted") { localStorage.setItem("bjj_install_dismissed", "1"); setDismissed(true); }
+      if (choiceResult.outcome === "accepted") { safeSetItem("bjj_install_dismissed", "1"); setDismissed(true); }
     } catch (err) {
       clientLogger.error("pwa.install_prompt_error", {}, err);
       setInstallError(true);

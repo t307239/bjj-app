@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/lib/i18n";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
+import { safeSetItem, safeGetItem, safeRemoveItem } from "@/lib/safeLocalStorage";
 
 /**
  * AchievementBadge — z222 enhanced:
@@ -66,13 +67,13 @@ export default function AchievementBadge({
     // Without try/catch a JSON.parse throw would crash this component permanently
     // until the user clears localStorage via devtools.
     const safeReadList = (key: string): number[] => {
+      const raw = safeGetItem(key);
+      if (!raw) return [];
       try {
-        const raw = localStorage.getItem(key);
-        if (!raw) return [];
         const parsed = JSON.parse(raw);
         return Array.isArray(parsed) ? parsed.filter((n) => typeof n === "number") : [];
       } catch {
-        localStorage.removeItem(key);
+        safeRemoveItem(key);
         return [];
       }
     };
@@ -83,7 +84,7 @@ export default function AchievementBadge({
         const list = safeReadList("bjj_shown_milestones");
         if (!list.includes(matched)) {
           list.push(matched);
-          try { localStorage.setItem("bjj_shown_milestones", JSON.stringify(list)); } catch { /* quota */ }
+          safeSetItem("bjj_shown_milestones", JSON.stringify(list));
           setAType("sessions");
           setMilestone(matched);
           setShowBadge(true);
@@ -98,7 +99,7 @@ export default function AchievementBadge({
         const list = safeReadList("bjj_shown_streak_milestones");
         if (!list.includes(matched)) {
           list.push(matched);
-          try { localStorage.setItem("bjj_shown_streak_milestones", JSON.stringify(list)); } catch { /* quota */ }
+          safeSetItem("bjj_shown_streak_milestones", JSON.stringify(list));
           setAType("streak");
           setMilestone(matched);
           setShowBadge(true);

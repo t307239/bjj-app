@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
 import { hapticSuccess } from "@/lib/haptics";
+import { safeSetItem, safeGetItem } from "@/lib/safeLocalStorage";
 
 const DISMISS_KEY = "bjj_onboarding_dismissed";
 
@@ -28,11 +29,11 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
   const { t } = useLocale();
   const [dismissed, setDismissed] = useState(() => {
     if (typeof window === "undefined") return false;
-    return localStorage.getItem(DISMISS_KEY) === "1";
+    return safeGetItem(DISMISS_KEY) === "1";
   });
   const [safetyAcked, setSafetyAcked] = useState(() => {
     if (typeof window === "undefined") return false;
-    return localStorage.getItem(SAFETY_ACK_KEY) === "1";
+    return safeGetItem(SAFETY_ACK_KEY) === "1";
   });
   const isSafetyDone = hasSafetyAck || safetyAcked;
   // Item 30: celebration state — "idle" | "celebrating" | "fading" | "done"
@@ -41,7 +42,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
 
   const handleSafetyAck = () => {
     setSafetyAcked(true);
-    localStorage.setItem(SAFETY_ACK_KEY, "1");
+    safeSetItem(SAFETY_ACK_KEY, "1");
   };
 
   const steps: Step[] = [
@@ -84,7 +85,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
   useEffect(() => {
     if (allDone && prevCompletedRef.current < steps.length && celebState === "idle") {
       // Skip re-firing on fresh page loads where all steps were already done before
-      if (localStorage.getItem(DISMISS_KEY) === "1") {
+      if (safeGetItem(DISMISS_KEY) === "1") {
         prevCompletedRef.current = completedCount;
         return;
       }
@@ -93,7 +94,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
       const fadeTimer = setTimeout(() => setCelebState("fading"), 2800);
       const doneTimer = setTimeout(() => {
         setCelebState("done");
-        localStorage.setItem(DISMISS_KEY, "1"); // never show celebration again
+        safeSetItem(DISMISS_KEY, "1"); // never show celebration again
       }, 3800);
       prevCompletedRef.current = completedCount;
       return () => { clearTimeout(fadeTimer); clearTimeout(doneTimer); };
@@ -158,7 +159,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
     <div className="mb-6 bg-emerald-950/40 border border-emerald-500/30 rounded-2xl p-4 relative">
       {/* Dismiss button */}
       <button type="button"
-        onClick={() => { setDismissed(true); localStorage.setItem(DISMISS_KEY, "1"); }}
+        onClick={() => { setDismissed(true); safeSetItem(DISMISS_KEY, "1"); }}
         className="absolute top-3 right-3 text-zinc-500 hover:text-zinc-300 transition-colors text-xs p-1"
         aria-label={t("common.dismiss")}
       >

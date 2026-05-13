@@ -31,6 +31,7 @@ function monthsAgoLocalDate(monthsBack: number): string {
 }
 import { trackEvent } from "@/lib/analytics";
 import { clientLogger } from "@/lib/clientLogger";
+import { safeSetItem, safeGetItem } from "@/lib/safeLocalStorage";
 
 const PAGE_SIZE = 10;
 
@@ -402,9 +403,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     // I-17: Restore scroll position to top after closing form (prevents snap to bottom)
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "instant" });
     // OP1: Save last-used duration/type as defaults for next session
-    if (typeof localStorage !== "undefined") {
-      try { localStorage.setItem("bjj_form_defaults", JSON.stringify({ duration_min: form.duration_min, type: form.type })); } catch { /* ignore */ }
-    }
+    safeSetItem("bjj_form_defaults", JSON.stringify({ duration_min: form.duration_min, type: form.type }));
     setForm({ date: getLocalDateString(), duration_min: form.duration_min, type: form.type, notes: "", instructor_name: "", partner_username: "", weight: "", roll_focus: "", partner_belt: "", size_diff: "", gi_name: "" });
     setCompForm({ result: "win", opponent: "", finish: "", event: "", opponent_rank: "", gi_type: "gi" });
 
@@ -467,10 +466,8 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         }
       }
       setTotalCount((c) => (c !== null ? c + 1 : null));
-      if (typeof localStorage !== "undefined") {
-        const prev = parseInt(localStorage.getItem("bjj_log_count") ?? "0", 10);
-        localStorage.setItem("bjj_log_count", String(prev + 1));
-      }
+      const prevCount = parseInt(safeGetItem("bjj_log_count") ?? "0", 10);
+      safeSetItem("bjj_log_count", String(prevCount + 1));
       trackEvent("training_logged", { type: form.type });
       // §2 Logic: Revalidate server-rendered data after successful save
       router.refresh();
@@ -492,7 +489,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         || error?.message?.toLowerCase().includes("jwt")
         || error?.message?.toLowerCase().includes("unauthorized");
       if (isAuthError) {
-        try { localStorage.setItem("pending_training_log", JSON.stringify({ ...form, notes: finalNotes })); } catch { /* ignore */ }
+        safeSetItem("pending_training_log", JSON.stringify({ ...form, notes: finalNotes }));
         // z260y: session_expired は session-end transition → router.replace で history pollution 防止
         router.replace("/login?reason=session_expired");
       } else {
