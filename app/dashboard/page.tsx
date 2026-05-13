@@ -118,6 +118,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: count > 0 ? `Dashboard — ${count} sessions` : "Dashboard",
+    // z260d: auth-required page なので noindex 明示。親 layout.tsx は index:true (LP 用)、
+    // ここで上書き。user-specific data を含むので Google index 不要。
+    robots: { index: false, follow: false },
     openGraph: {
       type: "website",
       url: "https://bjj-app.net/dashboard",
