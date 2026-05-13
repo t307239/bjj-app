@@ -253,7 +253,8 @@ export default async function TechniquesPage() {
           <SafetyBanner
             title={t("techniquesPage.safetyTitle")}
             description={t("techniquesPage.safetyDesc")}
-            wikiHref="https://wiki.bjj-app.net/en/heel-hook.html"
+            // z260l: locale-aware wiki link — JA/PT user が EN heel-hook page に飛ばされる locale drift fix
+            wikiHref={`https://wiki.bjj-app.net/${locale}/heel-hook.html`}
             wikiLabel={t("techniquesPage.safetyWikiLink")}
           />
         )}

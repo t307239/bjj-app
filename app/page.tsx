@@ -664,10 +664,12 @@ export default async function Home() {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             {[
-              { icon: <IconLock className="w-6 h-6 text-emerald-400" />, title: t("landing.wikiGuardTitle"), desc: t("landing.wikiGuardDesc"), href: "https://wiki.bjj-app.net/en/bjj-guard-retention-advanced.html" },
-              { icon: <IconLegs className="w-6 h-6 text-blue-400" />, title: t("landing.wikiLegTitle"), desc: t("landing.wikiLegDesc"), href: "https://wiki.bjj-app.net/en/bjj-leg-lock-system.html" },
-              { icon: <IconTrophy className="w-6 h-6 text-yellow-400" />, title: t("landing.wikiCompTitle"), desc: t("landing.wikiCompDesc"), href: "https://wiki.bjj-app.net/en/bjj-competition-mindset.html" },
-              { icon: <IconTrendingUp className="w-6 h-6 text-rose-400" />, title: t("landing.wikiNutritionTitle"), desc: t("landing.wikiNutritionDesc"), href: "https://wiki.bjj-app.net/en/bjj-nutrition-science.html" },
+              // z260l: locale-aware wiki link — JA/PT user が EN page に飛ばされる locale drift fix
+              // 旧: hardcoded /en/ → JA user は英語 wiki に landing で離脱 risk + 多言語 wiki の意味喪失
+              { icon: <IconLock className="w-6 h-6 text-emerald-400" />, title: t("landing.wikiGuardTitle"), desc: t("landing.wikiGuardDesc"), href: `https://wiki.bjj-app.net/${locale}/bjj-guard-retention-advanced.html` },
+              { icon: <IconLegs className="w-6 h-6 text-blue-400" />, title: t("landing.wikiLegTitle"), desc: t("landing.wikiLegDesc"), href: `https://wiki.bjj-app.net/${locale}/bjj-leg-lock-system.html` },
+              { icon: <IconTrophy className="w-6 h-6 text-yellow-400" />, title: t("landing.wikiCompTitle"), desc: t("landing.wikiCompDesc"), href: `https://wiki.bjj-app.net/${locale}/bjj-competition-mindset.html` },
+              { icon: <IconTrendingUp className="w-6 h-6 text-rose-400" />, title: t("landing.wikiNutritionTitle"), desc: t("landing.wikiNutritionDesc"), href: `https://wiki.bjj-app.net/${locale}/bjj-nutrition-science.html` },
             ].map((item) => (
               <a
                 key={item.title}
@@ -683,9 +685,10 @@ export default async function Home() {
             ))}
           </div>
           {/* Fix 8: remove (free), use ArrowRight SVG */}
+          {/* z260l: locale-aware wiki root link (旧 bare https://wiki.bjj-app.net/) */}
           <div className="text-center">
             <a
-              href="https://wiki.bjj-app.net/"
+              href={`https://wiki.bjj-app.net/${locale}/`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-zinc-300 hover:text-white transition-colors text-sm font-medium"

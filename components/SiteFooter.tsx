@@ -15,7 +15,7 @@ import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
 
 export default function SiteFooter() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const year = new Date().getFullYear();
 
   const links = [
@@ -25,7 +25,8 @@ export default function SiteFooter() {
     { href: "/changelog", label: t("nav.changelog") }, // z203: indie 活発さ証明
     { href: "/help", label: t("nav.help") },
     { href: "/contact", label: t("nav.contact") },  // z255oo: お問い合わせ / バグ報告
-    { href: "https://wiki.bjj-app.net", label: "BJJ Wiki", external: true },
+    // z260l: locale-aware wiki link (旧 bare https://wiki.bjj-app.net で JA/PT user が EN root に着地)
+    { href: `https://wiki.bjj-app.net/${locale}/`, label: "BJJ Wiki", external: true },
     { href: "/privacy", label: t("nav.privacy") },
     { href: "/terms", label: t("nav.terms") },
   ];
