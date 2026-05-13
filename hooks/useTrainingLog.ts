@@ -493,7 +493,8 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         || error?.message?.toLowerCase().includes("unauthorized");
       if (isAuthError) {
         try { localStorage.setItem("pending_training_log", JSON.stringify({ ...form, notes: finalNotes })); } catch { /* ignore */ }
-        router.push("/login?reason=session_expired");
+        // z260y: session_expired は session-end transition → router.replace で history pollution 防止
+        router.replace("/login?reason=session_expired");
       } else {
         setToast({ message: t("training.saveFailed"), type: "error" });
       }

@@ -190,6 +190,11 @@ jobs:
       - name: Run detect_unmount_setstate_race.py
         run: python3 scripts/detect_unmount_setstate_race.py --ci
 
+      # z260y: error.tsx / signOut() / session_expired 後の router.push を catch
+      # router.replace で history pollution + back-button trap を防ぐ rule の自動 enforcement
+      - name: Run detect_router_push_session_end.py
+        run: python3 scripts/detect_router_push_session_end.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest

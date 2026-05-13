@@ -121,7 +121,8 @@ export default function AccountSection({ userId, supabase }: Props) {
         return;
       }
       await supabase.auth.signOut();
-      router.push("/?deleted=1");
+      // z260y: account delete 後の history pollution + back-button で削除前ページに戻る trap を防ぐ
+      router.replace("/?deleted=1");
     } catch (err: unknown) {
       clientLogger.error("account.delete_network", {}, err instanceof Error ? err : new Error(String(err)));
       setDeleteError(t("profile.deleteNetworkError"));

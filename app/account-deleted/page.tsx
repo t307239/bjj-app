@@ -23,7 +23,8 @@ export default function AccountDeletedPage() {
         setRestoring(false);
         return;
       }
-      router.push("/dashboard");
+      // z260y: account restore 後は account-deleted ページに戻られても無意味なので replace で history 上書き
+      router.replace("/dashboard");
     } catch {
       setError(t("profile.deleteNetworkError"));
       setRestoring(false);
@@ -32,7 +33,8 @@ export default function AccountDeletedPage() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    router.push("/");
+    // z260y: signOut 後の history pollution 防止
+    router.replace("/");
   };
 
   return (

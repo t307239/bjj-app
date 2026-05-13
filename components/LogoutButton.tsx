@@ -22,7 +22,8 @@ export default function LogoutButton({ onDone, className }: Props) {
     setIsLoading(true);
     onDone?.();
     await supabase.auth.signOut();
-    router.push("/");
+    // z260y: router.replace で post-logout history pollution + back-button trap 防止
+    router.replace("/");
     router.refresh();
   };
 

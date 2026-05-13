@@ -58,7 +58,7 @@ export default function Error({
         </button>
         <button
           type="button"
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.replace("/dashboard")}
           className="rounded-full bg-zinc-700 px-5 py-2 text-sm font-semibold text-zinc-200 hover:bg-zinc-600 transition-colors"
         >
           {t("error.goHome")}

@@ -49,7 +49,8 @@ export default function SettingsSection({
       return;
     }
     await supabase.auth.signOut();
-    router.push("/?deleted=1");
+    // z260y: account delete 後の history pollution + back-button で削除前ページに戻る trap を防ぐ
+    router.replace("/?deleted=1");
   };
 
   // Detect user's timezone from browser (client-only to avoid hydration mismatch)
