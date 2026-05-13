@@ -63,6 +63,14 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
   }, []);
 
+  // z260y: userId 変更で loadData が再実行された時、stale な前の結果が
+  // 後発の正しい結果を上書きしないよう mountedRef で防御。
+  const mountedRef = useRef(true);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
+
   // Sync isPro into node data when it changes (t via tRef — stable reference)
   useEffect(() => {
     setRfNodes((prev: Node[]) =>
@@ -87,6 +95,7 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
           .eq("user_id", userId),
       ]);
       const result = await Promise.race([query, timeout]);
+      if (!mountedRef.current) return;
       if (result) {
         const [nr, er] = result;
         if (!nr.error) {
@@ -110,7 +119,7 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
         e instanceof Error ? e : new Error(String(e)),
       );
     } finally {
-      setLoading(false);
+      if (mountedRef.current) setLoading(false);
     }
   }, [userId, isPro, supabase, setRfNodes, setRfEdges]); // t via tRef — not in deps
 

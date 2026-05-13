@@ -221,6 +221,8 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
 
   // ── Initial data load ──────────────────────────────────────────────────────
   useEffect(() => {
+    // z260y: useProfile.ts と同じ pattern で unmount/userId 変更後の setState を防御
+    let mounted = true;
     const loadEntries = async () => {
       setInitialLoading(true);
 
@@ -256,6 +258,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         countQuery,
       ]);
 
+      if (!mounted) return;
       if (!error && data) {
         setEntries(data);
         setPage(1);
@@ -294,6 +297,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         }
       }
     } catch { /* ignore */ }
+    return () => { mounted = false; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
@@ -306,6 +310,8 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       return;
     }
 
+    // z260y: rapid search 連打 / unmount で stale 結果が後発の正しい結果を上書きしないよう protect
+    let mounted = true;
     const searchEntries = async () => {
       setSearchLoading(true);
       const q = debouncedSearch;
@@ -339,6 +345,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         countQuery,
       ]);
 
+      if (!mounted) return;
       if (!error && data) {
         setEntries(data);
         setPage(1);
@@ -348,6 +355,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     };
 
     searchEntries();
+    return () => { mounted = false; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch]);
 

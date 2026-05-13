@@ -185,6 +185,11 @@ jobs:
       - name: Run detect_optimistic_no_rollback.py
         run: python3 scripts/detect_optimistic_no_rollback.py --ci
 
+      # z260y: `await Promise.all(...)` 後の setState で mounted guard 無し
+      # = unmount race → React warning + memory leak の典型 pattern を catch
+      - name: Run detect_unmount_setstate_race.py
+        run: python3 scripts/detect_unmount_setstate_race.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest

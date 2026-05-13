@@ -40,9 +40,13 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
   const [latestWeight, setLatestWeight] = useState<number | null>(null);
   const targetSavedTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const targetErrorTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  // z260y: mountedRef guard — Promise.all 後 setState を unmount 後から保護
+  const mountedRef = useRef(true);
 
   useEffect(() => {
+    mountedRef.current = true;
     return () => {
+      mountedRef.current = false;
       if (targetSavedTimerRef.current) clearTimeout(targetSavedTimerRef.current);
       if (targetErrorTimerRef.current) clearTimeout(targetErrorTimerRef.current);
     };
@@ -72,6 +76,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
           .limit(1),
       ]);
 
+      if (!mountedRef.current) return;
       if (coreRes.error) clientLogger.error("bodymanagementsection.core", {}, coreRes.error);
       if (bodyRes.error) clientLogger.error("bodymanagementsection.body", {}, bodyRes.error);
 
@@ -101,9 +106,9 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
     } catch (err: unknown) {
       clientLogger.error("bodymanagement.load_failed", {}, err instanceof Error ? err : new Error(String(err)));
     } finally {
-      setLoading(false);
+      if (mountedRef.current) setLoading(false);
     }
-  }, [userId]);
+  }, [userId, supabase, isProProp]);
 
   useEffect(() => { loadProfile(); }, [loadProfile]);
 
