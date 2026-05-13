@@ -630,7 +630,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         setToast(null);
       },
     });
-  }, [entries, pendingDelete, userId, supabase]); // t via tRef
+  }, [entries, pendingDelete, userId, supabase, router]); // t via tRef
 
   // ── Edit ──────────────────────────────────────────────────────────────────
   const cancelEdit = useCallback(() => setEditingId(null), []);

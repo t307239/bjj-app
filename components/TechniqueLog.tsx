@@ -76,12 +76,15 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
   const pendingTechDeleteRef = useRef(pendingTechDelete);
   pendingTechDeleteRef.current = pendingTechDelete;
   useEffect(() => {
+    // z261b: copy supabaseRef.current to local var inside the effect so the
+    // cleanup function captures the same instance (eslint react-hooks ref-warn).
+    const supabaseInstance = supabaseRef.current;
     return () => {
       const pending = pendingTechDeleteRef.current;
       if (pending) {
         clearTimeout(pending.timerId);
         void Promise.resolve(
-          supabaseRef.current
+          supabaseInstance
             .from("techniques")
             .delete()
             .eq("id", pending.id)

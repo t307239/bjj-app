@@ -63,7 +63,7 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
       setLoading(false);
     };
     fetch();
-  }, [userId, supabase]);
+  }, [userId, supabase, t]);
 
   // Cleanup toast timer on unmount
   useEffect(() => {

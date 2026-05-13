@@ -190,7 +190,7 @@ export default function RollAnalyticsCard({ userId }: { userId: string }) {
       setLoading(false);
     };
     load();
-  }, [userId]);
+  }, [userId, supabase]);
 
   const { beltLabel, focusLabel, sizeLabel } = buildLabels(t);
 

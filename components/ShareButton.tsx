@@ -16,10 +16,7 @@ type Props = {
   entry: TrainingEntry;
 };
 
-const BELT_COLORS: Record<string, string> = {
-  white: "#f5f5f4", blue: "#3b82f6", purple: "#a855f7",
-  brown: "#92400e", black: "#27272a",
-};
+// z261b: BELT_COLORS removed (dead code, never referenced after refactor)
 
 function drawShareCard(entry: TrainingEntry): HTMLCanvasElement {
   // 9:16 story aspect ratio (1080×1920 scaled to 540×960)
@@ -201,7 +198,7 @@ export default function ShareButton({ entry }: Props) {
     } finally {
       setSharing(false);
     }
-  }, [entry]);
+  }, [entry, t]);
 
   return (
     <button type="button"

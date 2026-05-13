@@ -33,7 +33,6 @@ export default function StreakProtect({ userId, streak }: Props) {
       setTrainedToday((count ?? 0) > 0);
     };
     check();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, streak]);
 
   if (trainedToday === null || trainedToday || dismissed || streak < 1) return null;

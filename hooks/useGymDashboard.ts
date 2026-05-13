@@ -182,7 +182,7 @@ export function useGymDashboard({ initialGym, t, locale = "en" }: UseGymDashboar
       <script>window.onload=()=>window.print();<\/script></body></html>`;
     const w = window.open("", "_blank");
     if (w) { w.document.write(html); w.document.close(); }
-  }, [members, gym.name]);
+  }, [members, gym.name, locale]);
 
   // ── Kick member ───────────────────────────────────────────────────────────
   const handleKickMember = useCallback(async (memberId: string) => {

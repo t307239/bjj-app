@@ -132,7 +132,7 @@ export default function TrainingBarChart({ userId, isPro = false }: Props) {
       }
     };
     load();
-  }, [userId, supabase]);
+  }, [userId, supabase, intlLocale]);
 
   useEffect(() => {
     if (!selectedMonth) {

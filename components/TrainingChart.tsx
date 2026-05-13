@@ -106,7 +106,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
       }
     };
     load();
-  }, [userId, supabase]);
+  }, [userId, supabase, locale]);
 
   if (loading) return <Skeleton height={120} rounded="xl" className="mb-4" />;
 
