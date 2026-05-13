@@ -195,6 +195,11 @@ jobs:
       - name: Run detect_router_push_session_end.py
         run: python3 scripts/detect_router_push_session_end.py --ci
 
+      # z261b: bare localStorage.setItem (QuotaExceededError / SSR / private mode)
+      # 直接呼びは silent UX bug。safeSetItem helper を強制し、helper 経由でなければ block。
+      - name: Run detect_unsafe_localstorage_setitem.py
+        run: python3 scripts/detect_unsafe_localstorage_setitem.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest
