@@ -2,8 +2,8 @@ BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 415 files
 CRITICAL: 0
 WARNING: 0
-INFO: 206
-Total: 206
+INFO: 207
+Total: 207
 
 [INFO] [DATE_PARSE_NO_GUARD] app/api/ai-coach/generate/route.ts: L375: `new Date(cachedMode.at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
   FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
@@ -39,9 +39,9 @@ Total: 206
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/gym/page.tsx: L103: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [SUPABASE_NO_ERROR] app/gym/upgrade/page.tsx: L116: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] app/gym/upgrade/page.tsx: L118: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [SUPABASE_NO_ERROR] app/gym/upgrade/page.tsx: L154: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] app/gym/upgrade/page.tsx: L156: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [DANGEROUS_HTML] app/help/page.tsx: L112: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
@@ -49,7 +49,9 @@ Total: 206
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/layout.tsx: L149: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/login/layout.tsx: L94: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/legal/dpa/page.tsx: L91: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
+[INFO] [DANGEROUS_HTML] app/login/layout.tsx: L96: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/login/page.tsx: L29: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
@@ -67,21 +69,21 @@ Total: 206
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [SUPABASE_NO_ERROR] app/pricing/page.tsx: L311: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L175: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L181: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L179: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L185: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/records/page.tsx: L134: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [DANGEROUS_HTML] app/records/page.tsx: L244: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L168: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L178: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L172: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
+[INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L182: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DATE_PARSE_NO_GUARD] app/techniques/page.tsx: L152: `new Date(tc.created_at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+[INFO] [DATE_PARSE_NO_GUARD] app/techniques/page.tsx: L162: `new Date(tc.created_at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
   FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
-[INFO] [DATE_PARSE_NO_GUARD] app/techniques/page.tsx: L160: `new Date(tc.created_at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
+[INFO] [DATE_PARSE_NO_GUARD] app/techniques/page.tsx: L170: `new Date(tc.created_at).getTime()` に NaN ガード無し — invalid ISO で silent NaN 伝搬
   FIX: isNaN(...) check を追加 or lib/formatDate.parseISODateSafe() を使う
 [INFO] [DANGEROUS_HTML] app/tour/page.tsx: L306: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
   FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証

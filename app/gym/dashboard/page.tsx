@@ -10,6 +10,8 @@ import GymRegistrationForm from "@/components/GymRegistrationForm";
 export const metadata: Metadata = {
   title: "Gym Dashboard",
   description: "Manage your BJJ gym — track member activity and reduce churn.",
+  // z260i: auth-required page なので noindex 明示 (robots.txt の Disallow と二重防御)
+  robots: { index: false, follow: false },
   alternates: {
     canonical: "https://bjj-app.net/gym/dashboard",
   },

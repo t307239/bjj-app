@@ -29,9 +29,13 @@ Disallow: /profile
 Disallow: /admin
 Disallow: /settings
 Disallow: /records
+Disallow: /gym/dashboard
+Disallow: /gym/upgrade
+Disallow: /gym/join
 Disallow: /invite
 Disallow: /unsubscribe
 Disallow: /account-deleted
+Allow: /gym
 Allow: /
 
 Sitemap: ${process.env.NEXT_PUBLIC_SITE_URL || "https://bjj-app.net"}/sitemap.xml

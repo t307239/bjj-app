@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   // layout.tsx の template "%s | BJJ App" が自動付与するので suffix 重複回避
   title: "Settings",
   description: "Manage your BJJ App preferences, notifications, theme, and data settings.",
+  // z260i: auth-required page なので noindex 明示 (root layout の index:true を override)
+  robots: { index: false, follow: false },
   alternates: {
     canonical: "https://bjj-app.net/settings",
   },

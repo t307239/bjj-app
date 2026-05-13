@@ -37,7 +37,16 @@ const getTechniquesBaseData = cache(async () => {
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getTechniquesBaseData();
-  if (!data) return { title: "Technique Journal" };
+  // z260i: guest + authed の両方で noindex 明示
+  // robots.txt で /techniques を Disallow しているが、meta robots でも明示的に
+  // noindex を返して二重防御 (Google が crawler 経由でなく直接 URL discovery した
+  // 場合の保険)
+  if (!data) {
+    return {
+      title: "Technique Journal",
+      robots: { index: false, follow: false },
+    };
+  }
 
   const n = data.techniques.length;
   const ogImage = `${BASE_URL}/api/og?belt=white&count=${n}&months=0&streak=0&mode=techniques`;
@@ -46,6 +55,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: "Technique Journal",
+    robots: { index: false, follow: false },
     openGraph: {
       type: "website",
       url: "https://bjj-app.net/techniques",

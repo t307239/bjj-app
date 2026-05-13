@@ -30,6 +30,8 @@ export const metadata: Metadata = {
   title: "Upgrade to Gym Pro",
   description:
     "Manage your dojo's training data, prevent student churn, and dispatch curriculum — all in BJJ App.",
+  // z260i: auth-required page なので noindex 明示 (robots.txt の Disallow と二重防御)
+  robots: { index: false, follow: false },
   alternates: { canonical: "https://bjj-app.net/gym/upgrade" },
   openGraph: {
     type: "website",

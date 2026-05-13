@@ -90,7 +90,15 @@ function calcStreak(recentLogs: { date: string }[]): number {
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getDashboardBaseData();
-  if (!data) return { title: "Dashboard" };
+  // z260i: guest path でも noindex を明示
+  // 旧: data=null (guest) で title だけ返し、root layout の index:true が残存
+  // → 「Dashboard」title の placeholder page が Google に index される silent SEO bug
+  if (!data) {
+    return {
+      title: "Dashboard",
+      robots: { index: false, follow: false },
+    };
+  }
 
   const { profile, totalCount, recentLogs } = data;
   const belt = profile?.belt ?? "white";

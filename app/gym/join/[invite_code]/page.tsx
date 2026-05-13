@@ -9,6 +9,8 @@ import { logger } from "@/lib/logger";
 export const metadata: Metadata = {
   title: "Join Gym",
   description: "Accept your gym's invitation and start tracking training together.",
+  // z260i: token-based invite page なので noindex 明示
+  robots: { index: false, follow: false },
 };
 
 type Props = {

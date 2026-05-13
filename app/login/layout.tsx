@@ -60,9 +60,11 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: locale === "ja" ? "ja_JP" : locale === "pt" ? "pt_BR" : "en_US",
     },
     twitter: {
-      card: "summary",
+      // z260i: 1200x630 OG image を持つので large card で表示
+      card: "summary_large_image",
       title: m.ogTitle,
       description: m.ogDesc,
+      images: [LOGIN_OG_IMAGE],
     },
   };
 }

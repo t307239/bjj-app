@@ -66,7 +66,13 @@ const getProfileData = cache(async () => {
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getProfileData();
-  if (!data) return { title: "Profile" };
+  // z260i: guest path でも noindex 明示 (dashboard と同じ silent bug)
+  if (!data) {
+    return {
+      title: "Profile",
+      robots: { index: false, follow: false },
+    };
+  }
 
   const belt = data.profile?.belt ?? "white";
   const count = data.totalCount;
