@@ -288,7 +288,7 @@ aria-hidden="true"           className={`w-4 h-4 text-zinc-400 transition-transf
           <p className="text-xs text-zinc-400">{t("chart.logToFillChart")}</p>
         </div>
       ) : range === 12 && !isPro ? (
-        <div className="relative" style={{ height: "120px" }}>
+        <div className="relative h-[120px]">
           <div className="filter blur-sm pointer-events-none opacity-50">
             <div className="flex items-end gap-1 h-full">
               {data.map((d) => {
@@ -320,7 +320,7 @@ aria-hidden="true"           className={`w-4 h-4 text-zinc-400 transition-transf
           </div>
         </div>
       ) : (
-        <div className="relative" style={{ height: "120px" }}>
+        <div className="relative h-[120px]">
           {avgPct > 0 && (
             <div
               className="absolute left-0 right-0 border-t border-dashed border-white/10 pointer-events-none"
