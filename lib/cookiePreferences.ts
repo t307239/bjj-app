@@ -32,6 +32,7 @@ export function getCookiePreferences(): CookiePreferences | null {
     if (raw === "declined") return { essential: true, analytics: false, marketing: false };
     return JSON.parse(raw) as CookiePreferences;
   } catch {
+    // silent: ok — JSON parse fail → null default
     return null;
   }
 }

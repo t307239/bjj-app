@@ -88,6 +88,7 @@ function fmtAge(isoDate: string | null | undefined, locale: string): string {
     if (Math.abs(diffDays) < 1) return rtf.format(0, "day");
     return rtf.format(diffDays, "day");
   } catch {
+    // silent: ok — Intl.RelativeTimeFormat unsupported — manual fallback
     const days = Math.abs(diffDays);
     return days === 0 ? "Today" : days === 1 ? "Yesterday" : `${days} days ago`;
   }
@@ -110,6 +111,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
       }
       return map;
     } catch {
+      // silent: ok — AI parse fail — return raw initial coaching as section
       return { general: initialCoaching };
     }
   });

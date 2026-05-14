@@ -119,6 +119,7 @@ export const VALIDATION_RULES: Record<string, ValidationRule> = {
         new URL(v);
         return null;
       } catch {
+        // silent: ok — invalid URL — return validation error message
         return "Please enter a valid URL";
       }
     },

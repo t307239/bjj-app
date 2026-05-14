@@ -42,6 +42,7 @@ function loadGuestLogs(): GuestLog[] {
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   } catch {
+    // silent: ok — localStorage parse fail — empty default
     return [];
   }
 }
@@ -53,6 +54,7 @@ function saveGuestLogs(logs: GuestLog[]): boolean {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
     return true;
   } catch {
+    // silent: ok — localStorage write fail — non-essential
     return false;
   }
 }

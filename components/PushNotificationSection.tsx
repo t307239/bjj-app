@@ -58,6 +58,7 @@ export default function PushNotificationSection() {
         if (!mountedRef.current) return;
         setSubState(sub !== null);
       } catch {
+        // silent: ok — subscription check fail — assume unsubscribed UI
         if (!mountedRef.current) return;
         setSubState(false);
       }

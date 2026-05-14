@@ -457,6 +457,7 @@ export function validateMessage(template: string): ValidationResult {
       params: compiled.requiredParams,
     };
   } catch {
+    // silent: ok — template parse fail — return errors[] for caller
     errors.push("Failed to parse message template");
     return { valid: false, errors, params: [] };
   }

@@ -165,6 +165,15 @@ export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail
         // rls-ok: cron clean-up of stale push subscription; service_role + unique PK
         await supabase.from("push_subscriptions").delete().eq("id", sub.id);
         stale++;
+      } else {
+        // z261q: non-stale push failures (5xx, network, encryption) were silently
+        // swallowed → no visibility into cron health. Forward to Sentry.
+        logger.warn("weekly-goal: push send failed", {
+          event: "weekly_goal_push_fail",
+          userId: sub.user_id,
+          statusCode: status,
+          error: err instanceof Error ? err.message : String(err),
+        });
       }
     }
   }

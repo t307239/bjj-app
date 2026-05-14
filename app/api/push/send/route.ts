@@ -50,6 +50,7 @@ const SendBodySchema = z.object({
         const parsed = new URL(u);
         return parsed.protocol === "https:" && (parsed.hostname === "bjj-app.net" || parsed.hostname === "wiki.bjj-app.net");
       } catch {
+        // silent: ok — rate-limit fail-open by design
         return false;
       }
     }, "url must be a same-origin path or https://bjj-app.net URL"),

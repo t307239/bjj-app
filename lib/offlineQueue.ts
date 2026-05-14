@@ -148,6 +148,7 @@ export class OfflineQueue {
           results.push({ action, success: false, error: result.error });
         }
       } catch (err) {
+        // silent: ok — captured into action.lastError for queue retry/UI
         action.attempts += 1;
         action.lastError = err instanceof Error ? err.message : "Unknown error";
         if (action.attempts < MAX_ATTEMPTS) {

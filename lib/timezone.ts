@@ -26,6 +26,7 @@ export function getUserTimezone(): string {
   try {
     return Intl.DateTimeFormat().resolvedOptions().timeZone;
   } catch {
+    // silent: ok — Intl.DateTimeFormat unsupported → UTC default
     return "UTC";
   }
 }
@@ -48,6 +49,7 @@ export function getLocalDateString(tz?: string): string {
     const d = parts.find((p) => p.type === "day")?.value ?? "";
     return `${y}-${m}-${d}`;
   } catch {
+    // silent: ok — Intl.DateTimeFormat unsupported → runtime local
     // Fallback: use runtime local date (correct when TZ env var is set)
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
@@ -90,6 +92,7 @@ export function getLocalDateParts(tz?: string): {
 
     return { year, month, day, dayOfWeek, daysInMonth };
   } catch {
+    // silent: ok — Intl.DateTimeFormat unsupported → runtime fields
     // Fallback to runtime local
     const d = now;
     return {
@@ -140,6 +143,7 @@ export function utcIsoToLocalDateString(utcIso: string, tz?: string): string {
     const dy = parts.find((p) => p.type === "day")?.value ?? "";
     return `${y}-${m}-${dy}`;
   } catch {
+    // silent: ok — Intl.DateTimeFormat unsupported → UTC date slice
     return utcIso.slice(0, 10);
   }
 }
@@ -177,6 +181,7 @@ export function getLogicalTrainingDate(tz?: string): string {
     }
     return getLocalDateString(tz);
   } catch {
+    // silent: ok — Intl.DateTimeFormat unsupported → local date
     // Fallback: just return today
     return getLocalDateString(tz);
   }

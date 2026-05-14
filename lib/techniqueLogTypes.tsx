@@ -94,6 +94,7 @@ export function extractYoutubeId(url: string): string | null {
       return u.pathname.slice(1);
     }
   } catch {
+    // silent: ok — invalid technique URL — skip render
     // invalid URL
   }
   return null;

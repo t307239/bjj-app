@@ -74,7 +74,10 @@ export async function POST(req: NextRequest) {
 
   // ── リクエストボディ検証（Zodスキーマ）────────────────────────────────────
   let rawBody: unknown;
-  try { rawBody = await req.json(); } catch { rawBody = null; }
+  try { rawBody = await req.json(); } catch {
+    // silent: ok — malformed body → null for validation
+    rawBody = null;
+  }
   const parsed = SubmitVideoSchema.safeParse(rawBody);
   if (!parsed.success) {
     return NextResponse.json(

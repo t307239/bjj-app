@@ -77,6 +77,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
         .join(" ");
     } catch {
+      // silent: ok — curriculum query fail — render no card
       return null;
     }
   })();

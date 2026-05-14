@@ -65,6 +65,7 @@ export function decodeCompNotes(notes: string): { comp: CompData | null; userNot
     const comp = JSON.parse(jsonStr) as CompData;
     return { comp, userNotes };
   } catch {
+    // silent: ok — competition note JSON parse fail → null
     return { comp: null, userNotes: notes };
   }
 }
@@ -126,6 +127,7 @@ export function decodeRollNotes(notes: string): { roll: RollMeta | null; userNot
     const roll = JSON.parse(jsonStr) as RollMeta;
     return { roll, userNotes };
   } catch {
+    // silent: ok — roll note JSON parse fail → null
     return { roll: null, userNotes: notes };
   }
 }

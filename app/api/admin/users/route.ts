@@ -201,7 +201,10 @@ export async function PATCH(req: NextRequest) {
 
   // 2. Parse & validate body with Zod
   let rawBody: unknown;
-  try { rawBody = await req.json(); } catch { rawBody = null; }
+  try { rawBody = await req.json(); } catch {
+    // silent: ok — malformed body → null for validation
+    rawBody = null;
+  }
   const parsed = AdminPatchSchema.safeParse(rawBody);
   if (!parsed.success) {
     return NextResponse.json(

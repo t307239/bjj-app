@@ -56,6 +56,7 @@ export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail
       value: rowCount,
     });
   } catch (e) {
+    // silent: ok — captured into results[] for admin dashboard
     results.push({ name: "training_logs_count", status: "critical", detail: String(e) });
   }
 
@@ -73,6 +74,7 @@ export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail
       value: rowCount,
     });
   } catch (e) {
+    // silent: ok — captured into results[] for admin dashboard
     results.push({ name: "profiles_count", status: "critical", detail: String(e) });
   }
 
@@ -103,6 +105,7 @@ export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail
       });
     }
   } catch (e) {
+    // silent: ok — captured into results[] for admin dashboard
     results.push({ name: "latest_log_freshness", status: "critical", detail: String(e) });
   }
 
@@ -119,6 +122,7 @@ export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail
       value: count ?? 0,
     });
   } catch (e) {
+    // silent: ok — captured into results[] for admin dashboard
     results.push({ name: "push_subscriptions_count", status: "ok", detail: `skipped: ${String(e)}` });
   }
 
@@ -136,6 +140,7 @@ export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail
       value: count ?? 0,
     });
   } catch (e) {
+    // silent: ok — captured into results[] for admin dashboard
     results.push({ name: "pro_users_count", status: "ok", detail: `skipped: ${String(e)}` });
   }
 

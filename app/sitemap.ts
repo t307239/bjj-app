@@ -128,6 +128,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     }
   } catch {
+    // silent: ok — supabase fetch fail — fall back to static entries
     // Supabase 取得失敗時は静的エントリのみ返す
   }
 

@@ -47,6 +47,7 @@ export function getLogicalTrainingDate(now?: Date, tz?: string): string {
     const d = String(logicalDate.getUTCDate()).padStart(2, "0");
     return `${y}-${m}-${d}`;
   } catch {
+    // silent: ok — Intl.DateTimeFormat unsupported — manual fallback
     // Fallback: no shift, just return current local date
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;

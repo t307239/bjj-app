@@ -54,6 +54,7 @@ export default function ShareButton({ title, url, lang }: ShareButtonProps) {
       try {
         await navigator.share({ title, url, text: shareText });
       } catch {
+        // silent: ok — Web Share cancelled or unsupported — fallback follows
         // User cancelled or error — silently ignore
       }
     } else {
@@ -61,7 +62,10 @@ export default function ShareButton({ title, url, lang }: ShareButtonProps) {
         await navigator.clipboard.writeText(`${shareText}\n${url}`);
         setCopied(true);
         timerRef.current = setTimeout(() => setCopied(false), 2200);
-      } catch {}
+      } catch {
+    // silent: ok — clipboard unavailable — fallback prompt
+    
+  }
     }
   };
 

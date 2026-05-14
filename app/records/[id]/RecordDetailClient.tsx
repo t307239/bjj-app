@@ -23,6 +23,7 @@ export default function RecordDetailClient({ recordId }: Props) {
       await navigator.clipboard.writeText(url);
       setCopied(true);
     } catch {
+      // silent: ok — iOS Safari clipboard fallback — secondary path follows
       // Fallback for iOS Safari / older browsers
       const input = document.createElement("input");
       input.value = url;

@@ -57,7 +57,10 @@ export function getLayoutedNodes(nodes: Node[], edges: Edge[]): Node[] {
   g.setDefaultEdgeLabel(() => ({}));
   nodes.forEach((n) => g.setNode(n.id, { width: NODE_W, height: NODE_H }));
   edges.forEach((e) => {
-    try { g.setEdge(e.source, e.target); } catch { /* skip bad edges */ }
+    try { g.setEdge(e.source, e.target); } catch {
+    // silent: ok — skip malformed edge geometry
+    /* skip bad edges */
+  }
   });
   dagre.layout(g);
   return nodes.map((n) => {

@@ -152,7 +152,10 @@ export default function BeltPromotionCelebration({ fromBelt, toBelt, onClose }: 
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({ text: shareTextRaw, url: "https://bjj-app.net" });
-      } catch { /* user cancelled */ }
+      } catch {
+    // silent: ok — Web Share cancelled
+    /* user cancelled */
+  }
     }
   };
   const hasNativeShare = typeof navigator !== "undefined" && !!navigator.share;

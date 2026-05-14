@@ -18,6 +18,7 @@ export async function createClient() {
               cookieStore.set(name, value, options as Parameters<typeof cookieStore.set>[2])
             );
           } catch {
+            // silent: ok — cookies().set() not allowed in Server Component — ignore
             // Server Componentから呼ばれた場合は無視
           }
         },

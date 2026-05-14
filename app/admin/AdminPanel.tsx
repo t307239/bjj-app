@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { formatDateShort } from "@/lib/formatDate";
+import { clientLogger } from "@/lib/clientLogger";
 import AttributionTable from "@/components/admin/AttributionTable";
 import PmfMetricsCard from "@/components/admin/PmfMetricsCard";
 
@@ -86,12 +87,15 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-    } catch {
-      // Network error — silently ignore
+    } catch (err) {
+      // z261q: admin CSV export silent fail → user sees nothing.
+      // Forward to Sentry so we can surface admin tooling outages.
+      clientLogger.error("admin.export_csv.fail", { query }, err);
+      showToast("Export failed — see console");
     } finally {
       setExporting(false);
     }
-  }, [query]);
+  }, [query, showToast]);
 
   const fetchUsers = useCallback(async (q: string, pg: number) => {
     setLoading(true);

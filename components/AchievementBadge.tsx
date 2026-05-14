@@ -73,6 +73,7 @@ export default function AchievementBadge({
         const parsed = JSON.parse(raw);
         return Array.isArray(parsed) ? parsed.filter((n) => typeof n === "number") : [];
       } catch {
+        // silent: ok — localStorage corruption → self-heal by removing key
         safeRemoveItem(key);
         return [];
       }
@@ -156,7 +157,10 @@ export default function AchievementBadge({
       try {
         await navigator.share({ text: shareText, url: shareUrl });
         return;
-      } catch { /* user cancelled */ }
+      } catch {
+    // silent: ok — Web Share cancelled
+    /* user cancelled */
+  }
     }
     // fallback: X/Twitter
     handleShareX();
@@ -194,6 +198,7 @@ export default function AchievementBadge({
       await navigator.clipboard.writeText(payload);
       flashCopyToast("copied");
     } catch {
+      // silent: ok — clipboard API throws on HTTP/iframe — execCommand fallback
       // z258: fallback for HTTP / iframe / older Safari where clipboard API throws
       try {
         const ta = document.createElement("textarea");
@@ -207,6 +212,7 @@ export default function AchievementBadge({
         document.body.removeChild(ta);
         flashCopyToast(ok ? "copied" : "failed");
       } catch {
+        // silent: ok — execCommand copy fallback fail — flash toast UI handles
         flashCopyToast("failed");
       }
     }

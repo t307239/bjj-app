@@ -52,6 +52,7 @@ export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail
       detail: `${orphanCount} logs with null user_id`,
     });
   } catch (e) {
+    // silent: ok — captured into results[] for admin dashboard
     results.push({ name: "orphan_training_logs_null_user", status: "critical", detail: String(e) });
   }
 
@@ -89,6 +90,7 @@ export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail
       detail: `${invalidCount} profiles with non-standard belt`,
     });
   } catch (e) {
+    // silent: ok — captured into results[] for admin dashboard
     results.push({ name: "invalid_belt_values", status: "critical", detail: String(e) });
   }
 
@@ -106,6 +108,7 @@ export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail
       detail: `${futureCount} logs dated > tomorrow`,
     });
   } catch (e) {
+    // silent: ok — captured into results[] for admin dashboard
     results.push({ name: "future_dated_logs", status: "critical", detail: String(e) });
   }
 
@@ -126,6 +129,7 @@ export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail
       detail: `${dupes} duplicate endpoints out of ${endpoints.length}`,
     });
   } catch (e) {
+    // silent: ok — captured into results[] for admin dashboard
     results.push({ name: "duplicate_push_endpoints", status: "critical", detail: String(e) });
   }
 
@@ -142,6 +146,7 @@ export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail
       detail: `${negCount} profiles with negative stripe`,
     });
   } catch (e) {
+    // silent: ok — captured into results[] for admin dashboard
     results.push({ name: "negative_stripe_count", status: "critical", detail: String(e) });
   }
 

@@ -261,6 +261,15 @@ export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail
             const status = (err as { statusCode?: number }).statusCode;
             if (status === 404 || status === 410) {
               staleEndpoints.push(sub.endpoint);
+            } else {
+              // z261q: non-stale failures were silently swallowed → no visibility
+              // into milestone push delivery health. Forward to Sentry.
+              logger.warn("reengagement.milestone_send_fail", {
+                event: "reengagement_milestone_push_fail",
+                userId: sub.user_id,
+                statusCode: status,
+                error: err instanceof Error ? err.message : String(err),
+              });
             }
           }
         }

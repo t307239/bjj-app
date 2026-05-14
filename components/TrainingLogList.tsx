@@ -48,6 +48,7 @@ function formatRelativeDate(
     const shortYear = diffDays > 365 ? `/${String(logDate.getFullYear()).slice(2)}` : "";
     return `${base}${shortYear}`;
   } catch {
+    // silent: ok — date format fallback for older browsers
     const shortYear = diffDays > 365 ? `/${String(logDate.getFullYear()).slice(2)}` : "";
     return `${logDate.getMonth() + 1}/${logDate.getDate()}${shortYear}`;
   }

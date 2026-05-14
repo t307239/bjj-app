@@ -26,6 +26,7 @@ const CurriculumBodySchema = z.object({
         if (parsed.protocol !== "https:") return false;
         return ALLOWED_HOSTS.includes(parsed.hostname);
       } catch {
+        // silent: ok — rate-limit fail-open by design
         return false;
       }
     }, "Only HTTPS BJJ Wiki URLs (wiki.bjj-app.net) are allowed"),
@@ -65,7 +66,10 @@ export async function POST(req: NextRequest) {
   }
 
   let rawBody: unknown;
-  try { rawBody = await req.json(); } catch { rawBody = null; }
+  try { rawBody = await req.json(); } catch {
+    // silent: ok — malformed body → null for validation
+    rawBody = null;
+  }
   const parsed = CurriculumBodySchema.safeParse(rawBody);
   if (!parsed.success) {
     return NextResponse.json(

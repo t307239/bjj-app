@@ -73,6 +73,7 @@ export function verifyUnsubscribeToken(token: string | null | undefined): Verify
   try {
     secret = getSecret();
   } catch {
+    // silent: ok — HMAC env missing — return validated error reason
     return { ok: false, reason: "server_misconfigured" };
   }
 
@@ -84,6 +85,7 @@ export function verifyUnsubscribeToken(token: string | null | undefined): Verify
   try {
     actualSig = b64urlDecode(sigB64);
   } catch {
+    // silent: ok — signature decode fail — return validated error reason
     return { ok: false, reason: "malformed_sig" };
   }
   if (
@@ -97,6 +99,7 @@ export function verifyUnsubscribeToken(token: string | null | undefined): Verify
   try {
     payload = JSON.parse(b64urlDecode(payloadB64).toString("utf-8")) as TokenPayload;
   } catch {
+    // silent: ok — payload decode fail — return validated error reason
     return { ok: false, reason: "malformed_payload" };
   }
   if (typeof payload.uid !== "string" || typeof payload.exp !== "number") {

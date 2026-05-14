@@ -318,6 +318,7 @@ export function groupByPage(
       if (!groups[path]) groups[path] = [];
       groups[path].push(entry);
     } catch {
+      // silent: ok — URL parse fail — skip metric
       // skip invalid URLs
     }
   }

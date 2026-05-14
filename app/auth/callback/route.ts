@@ -40,6 +40,7 @@ function safeNextPath(next: string | null, origin: string): string {
     // Re-serialize to drop any host/scheme abuse the URL parser normalized.
     return target.pathname + target.search + target.hash;
   } catch {
+    // silent: ok — URL parse fail → safe fallback path
     return FALLBACK;
   }
 }

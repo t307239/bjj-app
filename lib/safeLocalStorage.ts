@@ -58,6 +58,7 @@ export function safeGetItem(key: string): string | null {
   try {
     return window.localStorage.getItem(key);
   } catch {
+    // silent: ok — storage operation unsupported — return null
     return null;
   }
 }

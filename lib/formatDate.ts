@@ -35,6 +35,7 @@ export function formatDateShort(
       day: "numeric",
     });
   } catch {
+    // silent: ok — Intl.DateTimeFormat unsupported — raw slice
     return typeof isoOrDate === "string" ? isoOrDate.slice(0, 10) : "—";
   }
 }
@@ -58,6 +59,7 @@ export function formatDateLong(
       weekday: "long",
     });
   } catch {
+    // silent: ok — Intl.DateTimeFormat unsupported — raw slice
     return typeof isoOrDate === "string" ? isoOrDate.slice(0, 10) : "—";
   }
 }
@@ -94,6 +96,7 @@ export function formatRelativeTime(
     if (diffWeek < 5) return rtf.format(-diffWeek, "week");
     return rtf.format(-diffMonth, "month");
   } catch {
+    // silent: ok — Intl.DateTimeFormat unsupported — em dash
     return "—";
   }
 }
@@ -112,6 +115,7 @@ export function formatTime(
       minute: "2-digit",
     });
   } catch {
+    // silent: ok — Intl.DateTimeFormat unsupported — em dash
     return "—";
   }
 }
@@ -128,6 +132,7 @@ export function formatNumber(
   try {
     return new Intl.NumberFormat(INTL_LOCALE[locale], options).format(value);
   } catch {
+    // silent: ok — Intl.DateTimeFormat unsupported — stringify
     return String(value);
   }
 }
@@ -145,6 +150,7 @@ export function formatMonthYear(
       year: "numeric",
     });
   } catch {
+    // silent: ok — Intl.DateTimeFormat unsupported — manual YYYY-MM fallback
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
   }
 }

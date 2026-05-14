@@ -36,6 +36,7 @@ export default function CookieConsent() {
         if (typeof parsed.marketing === "boolean") setMarketing(parsed.marketing);
       }
     } catch {
+      // silent: ok — localStorage unavailable — don't show banner
       // localStorage unavailable or corrupt JSON — don't show
     }
 
@@ -50,7 +51,7 @@ export default function CookieConsent() {
           if (typeof parsed.analytics === "boolean") setAnalytics(parsed.analytics);
           if (typeof parsed.marketing === "boolean") setMarketing(parsed.marketing);
         }
-      } catch { /* noop */ }
+      } catch { /* silent: ok — localStorage unavailable / corrupt JSON, defaults to opt-out */ }
       setVisible(true);
       setShowDetails(true);
     }
@@ -61,7 +62,7 @@ export default function CookieConsent() {
   function save(prefs: CookiePreferences) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
-    } catch { /* noop */ }
+    } catch { /* silent: ok — localStorage write fail (quota/private) — preference is session-only */ }
     setVisible(false);
   }
 

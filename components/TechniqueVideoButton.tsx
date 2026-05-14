@@ -11,6 +11,7 @@ function isSafeHttpUrl(s: string): boolean {
     const u = new URL(s);
     return u.protocol === "http:" || u.protocol === "https:";
   } catch {
+    // silent: ok — youtube URL parse fail — render no button
     return false;
   }
 }
@@ -21,6 +22,7 @@ function getStoredUrl(id: string): string {
     // z261p: validate stored URL — strip any pre-existing javascript: payload
     return isSafeHttpUrl(raw) ? raw : "";
   } catch {
+    // silent: ok — youtube URL parse fail — empty id
     return "";
   }
 }
@@ -32,7 +34,10 @@ function setStoredUrl(id: string, url: string): void {
     } else {
       localStorage.removeItem(`${LS_PREFIX}${id}`);
     }
-  } catch { /* ignore */ }
+  } catch {
+    // silent: ok — embed iframe error — ignore (player handles)
+    /* ignore */
+  }
 }
 
 /** Converts various YouTube URL formats to a clean watch URL.
@@ -58,6 +63,7 @@ function normalizeYouTubeUrl(raw: string): string {
     // Non-YouTube URL — pass through (already validated to be http(s))
     return s;
   } catch {
+    // silent: ok — youtube URL parse fail — empty thumbnail
     return "";
   }
 }

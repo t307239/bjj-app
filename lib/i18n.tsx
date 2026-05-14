@@ -100,7 +100,10 @@ export async function detectServerLocale(): Promise<Locale> {
     const acceptLang = hdrs.get("accept-language") ?? "";
     const detected = parseAcceptLanguage(acceptLang);
     if (detected) return detected;
-  } catch { /* ignore */ }
+  } catch {
+    // silent: ok — cookies() may throw outside request context
+    /* ignore */
+  }
   return "en";
 }
 
@@ -133,7 +136,10 @@ export function parseAcceptLanguage(header: string): Locale | null {
 function syncLocaleCookie(locale: Locale) {
   try {
     document.cookie = `${LOCALE_STORAGE_KEY}=${locale};path=/;max-age=${365 * 86400};SameSite=Lax`;
-  } catch { /* ignore */ }
+  } catch {
+    // silent: ok — document.cookie unavailable (SSR) — ignore
+    /* ignore */
+  }
 }
 
 function detectClientLocale(): Locale {
@@ -147,6 +153,7 @@ function detectClientLocale(): Locale {
       return detected;
     }
   } catch {
+    // silent: ok — localStorage unavailable (SSR/private) — env detect default
     /* ignore */
   }
   const lang = navigator.language?.toLowerCase() ?? "en";
@@ -167,6 +174,7 @@ function setGlobalLocale(locale: Locale) {
   try {
     localStorage.setItem(LOCALE_STORAGE_KEY, locale);
   } catch {
+    // silent: ok — localStorage write fail — non-essential persistence
     /* ignore */
   }
   syncLocaleCookie(locale);

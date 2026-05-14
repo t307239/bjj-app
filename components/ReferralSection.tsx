@@ -58,6 +58,7 @@ export default function ReferralSection({
         await navigator.share({ text: shareText, url: referralLink });
         trackEvent("referral_shared", { method: "native_share" });
       } catch {
+        // silent: ok — Web Share cancelled
         // User cancelled share
       }
     } else {

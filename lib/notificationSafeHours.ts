@@ -38,6 +38,7 @@ export function isSilentHour(timezone: string, now?: Date): boolean {
     // 22:00 <= hour  OR  hour < 08:00
     return hour >= SILENT_START || hour < SILENT_END;
   } catch {
+    // silent: ok — unknown TZ → safe-side suppress send
     // 不明なタイムゾーン → 安全側（送信禁止）
     return true;
   }

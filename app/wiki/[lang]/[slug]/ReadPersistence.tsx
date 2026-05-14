@@ -57,6 +57,7 @@ export default function ReadPersistence({ slug, lang = "en" }: ReadPersistencePr
         }
       }
     } catch {
+      // silent: ok — localStorage blocked (private mode) — non-essential persistence
       // localStorage blocked (private mode etc.) — silently ignore
     }
     saveRef.current = true;
@@ -72,7 +73,10 @@ export default function ReadPersistence({ slug, lang = "en" }: ReadPersistencePr
       lastSave = now;
       try {
         localStorage.setItem(storageKey, String(Math.round(window.scrollY)));
-      } catch {}
+      } catch {
+    // silent: ok — localStorage blocked — non-essential persistence
+    
+  }
     };
     window.addEventListener("scroll", save, { passive: true });
     return () => window.removeEventListener("scroll", save);
@@ -87,7 +91,10 @@ export default function ReadPersistence({ slug, lang = "en" }: ReadPersistencePr
     setShowBanner(false);
     try {
       localStorage.removeItem(storageKey);
-    } catch {}
+    } catch {
+    // silent: ok — localStorage blocked — non-essential persistence
+    
+  }
   }, [storageKey]);
 
   if (!showBanner) return null;

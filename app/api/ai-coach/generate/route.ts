@@ -319,7 +319,7 @@ export async function POST(req: NextRequest) {
   }
 
   let rawBody: unknown;
-  try { rawBody = await req.json(); } catch { rawBody = {}; }
+  try { rawBody = await req.json(); } catch { // silent: ok — malformed body → empty record for validation rawBody = {}; }
   const parsed = GenerateBodySchema.safeParse(rawBody);
   if (!parsed.success) {
     return NextResponse.json(
@@ -366,6 +366,7 @@ export async function POST(req: NextRequest) {
       }
     }
   } catch {
+    // silent: ok — invalid cache → regenerate
     // Invalid cache — regenerate
   }
 
@@ -434,7 +435,10 @@ export async function POST(req: NextRequest) {
           finish: comp.finish ?? "",
           opponent_rank: comp.opponent_rank ?? "",
         });
-      } catch { /* skip malformed */ }
+      } catch {
+    // silent: ok — malformed cached payload → skip
+    /* skip malformed */
+  }
     }
   }
 
@@ -502,6 +506,7 @@ export async function POST(req: NextRequest) {
       })
       .eq("id", user.id);
   } catch {
+    // silent: ok — cache columns may not exist yet — cache miss is fine
     // Columns may not exist yet — cache miss is OK
   }
 

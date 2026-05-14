@@ -174,6 +174,7 @@ export async function probeSingleEndpoint(
         : undefined,
     };
   } catch (err) {
+    // silent: ok — error message is returned as probe result for caller to aggregate
     const responseTimeMs = Date.now() - start;
     const message = err instanceof Error ? err.message : "Unknown error";
 

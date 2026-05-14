@@ -15,12 +15,18 @@ function loadSharedSet(): Set<number> {
   try {
     const raw = localStorage.getItem(LS_KEY);
     return new Set(raw ? (JSON.parse(raw) as number[]) : []);
-  } catch { return new Set(); }
+  } catch {
+    // silent: ok — localStorage unavailable — empty seen set
+    return new Set();
+  }
 }
 function markShared(n: number): void {
   const set = loadSharedSet();
   set.add(n);
-  try { localStorage.setItem(LS_KEY, JSON.stringify([...set])); } catch { /* ignore */ }
+  try { localStorage.setItem(LS_KEY, JSON.stringify([...set])); } catch {
+    // silent: ok — localStorage write fail — non-essential persistence
+    /* ignore */
+  }
 }
 
 interface Props {
@@ -100,6 +106,7 @@ export default function MilestoneBadgeGrid({ totalCount }: Props) {
       try {
         await navigator.share({ text });
       } catch {
+        // silent: ok — Web Share cancelled — still mark as seen
         // User cancelled — still mark as seen
       }
     } else {

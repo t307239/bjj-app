@@ -42,6 +42,7 @@ function loadSnooze(): SnoozeMap {
     const raw = localStorage.getItem(LS_SNOOZE_KEY);
     return raw ? (JSON.parse(raw) as SnoozeMap) : {};
   } catch {
+    // silent: ok — localStorage parse fail — empty default
     return {};
   }
 }
@@ -49,7 +50,10 @@ function loadSnooze(): SnoozeMap {
 function saveSnooze(map: SnoozeMap): void {
   try {
     localStorage.setItem(LS_SNOOZE_KEY, JSON.stringify(map));
-  } catch { /* ignore */ }
+  } catch {
+    // silent: ok — localStorage write fail — non-essential
+    /* ignore */
+  }
 }
 
 // ─── Alert config by elapsed days ─────────────────────────────────────────────
@@ -120,6 +124,7 @@ function loadInjuryHistory(): InjuryHistoryEntry[] {
     const raw = localStorage.getItem("bjj_injury_history");
     return raw ? (JSON.parse(raw) as InjuryHistoryEntry[]) : [];
   } catch {
+    // silent: ok — Web Share API unsupported — fallback handles UI
     return [];
   }
 }

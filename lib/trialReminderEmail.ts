@@ -93,6 +93,7 @@ function fmtDate(d: Date, locale: Locale): string {
       day: "numeric",
     }).format(d);
   } catch {
+    // silent: ok — date formatting fail — ISO slice fallback
     return d.toISOString().slice(0, 10);
   }
 }

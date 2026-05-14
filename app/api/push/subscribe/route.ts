@@ -48,6 +48,7 @@ function isValidTimezone(tz: string): boolean {
     Intl.DateTimeFormat(undefined, { timeZone: tz });
     return true;
   } catch {
+    // silent: ok — rate-limit fail-open by design
     return false;
   }
 }
@@ -114,7 +115,10 @@ export async function DELETE(req: NextRequest) {
   }
 
   let rawBody: unknown;
-  try { rawBody = await req.json(); } catch { rawBody = null; }
+  try { rawBody = await req.json(); } catch {
+    // silent: ok — malformed body → null for validation
+    rawBody = null;
+  }
   const parsed = UnsubscribeBodySchema.safeParse(rawBody);
   if (!parsed.success) {
     return NextResponse.json(

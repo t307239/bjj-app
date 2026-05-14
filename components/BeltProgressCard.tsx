@@ -249,6 +249,7 @@ export default function BeltProgressCard({
                 const fmt = new Intl.DateTimeFormat(intlLocale, { year: "numeric", month: "2-digit" });
                 dateStr = fmt.format(date);
               } catch {
+                // silent: ok — Intl.DateTimeFormat unsupported — manual ymd fallback
                 dateStr = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}`;
               }
               return (

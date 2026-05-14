@@ -121,7 +121,10 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
           if (parsed.duration_min && typeof parsed.duration_min === "number") lastDuration = parsed.duration_min;
           if (parsed.type && typeof parsed.type === "string") lastType = parsed.type;
         }
-      } catch { /* ignore */ }
+      } catch {
+    // silent: ok — localStorage write fail — non-essential persistence
+    /* ignore */
+  }
     }
     return {
       date: getLogicalTrainingDate(),
@@ -297,7 +300,10 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
           setToast({ message: t("training.restoredDraft"), type: "success" });
         }
       }
-    } catch { /* ignore */ }
+    } catch {
+    // silent: ok — localStorage write fail — non-essential persistence
+    /* ignore */
+  }
     return () => { mounted = false; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);

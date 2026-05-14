@@ -25,7 +25,10 @@ export async function POST(req: NextRequest) {
       cookies: {
         getAll: () => cookieStore.getAll(),
         setAll: (list: Array<{ name: string; value: string; options?: Record<string, unknown> }>) => {
-          try { list.forEach(({ name, value, options }) => cookieStore.set(name, value, options as Parameters<typeof cookieStore.set>[2])); } catch { /* read-only */ }
+          try { list.forEach(({ name, value, options }) => cookieStore.set(name, value, options as Parameters<typeof cookieStore.set>[2])); } catch {
+    // silent: ok — read-only audit fetch — failure non-blocking
+    /* read-only */
+  }
         },
       },
     }

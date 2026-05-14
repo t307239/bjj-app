@@ -35,6 +35,7 @@ export default function SafetyBanner({
       const stored = localStorage.getItem(STORAGE_KEY);
       setDismissed(stored === "true");
     } catch {
+      // silent: ok — localStorage read fail — show banner
       setDismissed(false);
     }
   }, []);
@@ -48,6 +49,7 @@ export default function SafetyBanner({
     try {
       localStorage.setItem(STORAGE_KEY, "true");
     } catch {
+      // silent: ok — localStorage write fail — hide for session
       // storage unavailable — hide for this session only
     }
   };

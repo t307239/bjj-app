@@ -318,6 +318,7 @@ export async function withFallbackChain<T>(
 
       return { data: result, usedFallback: name, index: i };
     } catch (error) {
+      // silent: ok — fallback chain captures lastError and rethrows on full failure
       lastError = error;
     }
   }
@@ -345,10 +346,12 @@ export async function withGracefulDegradation<T>(
           const data = await config.degraded();
           return { data, mode: "degraded" };
         } catch {
+          // silent: ok — fallback to minimal — primary/degraded both failed
           return { data: config.minimal(), mode: "minimal" };
         }
       }
     } catch {
+      // silent: ok — primary health check fail — try primary anyway
       // Health check failed — try primary anyway
     }
   }
@@ -357,10 +360,12 @@ export async function withGracefulDegradation<T>(
     const data = await config.primary();
     return { data, mode: "primary" };
   } catch {
+    // silent: ok — primary call fail — try degraded
     try {
       const data = await config.degraded();
       return { data, mode: "degraded" };
     } catch {
+      // silent: ok — degraded call fail — fall back to minimal cached data
       return { data: config.minimal(), mode: "minimal" };
     }
   }

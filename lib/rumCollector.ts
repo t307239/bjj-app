@@ -101,6 +101,7 @@ export function extractPath(url: string): string {
   try {
     return new URL(url).pathname;
   } catch {
+    // silent: ok — URL parse fail — pass through raw
     return url;
   }
 }
