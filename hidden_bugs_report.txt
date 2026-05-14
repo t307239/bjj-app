@@ -2,8 +2,8 @@ BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 416 files
 CRITICAL: 0
 WARNING: 0
-INFO: 97
-Total: 97
+INFO: 96
+Total: 96
 
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/gym-outreach/route.ts: L189: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
@@ -179,8 +179,6 @@ Total: 97
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/ui/Skeleton.tsx: L30: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [ANY_TYPE_ESCAPE] lib/codeHealthDashboard.ts: L217: `as any` 型アサーション — 適切な型に置換推奨
-  FIX: 具体的な型を定義するか、unknown + 型ガードを使用
 [INFO] [CONSOLE_LOG] lib/missingKeyDetector.ts: console.log() が 1 件残存
   FIX: 本番前に削除
 [INFO] [TODO_COMMENT] lib/prReviewChecklist.ts: L44: TODO: /FIXME comment found" },
