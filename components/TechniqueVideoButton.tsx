@@ -154,7 +154,7 @@ export default function TechniqueVideoButton({ techniqueId }: Props) {
         </a>
         <button type="button"
           onClick={() => { setDraft(url); setEditing(true); }}
-          className="text-zinc-600 hover:text-zinc-400 p-1.5 min-h-[32px] min-w-[32px] transition-colors rounded-lg flex items-center justify-center"
+          className="text-zinc-600 hover:text-zinc-400 p-1.5 min-h-[44px] min-w-[44px] transition-colors rounded-lg flex items-center justify-center"
           title={t("techniques.editVideo")}
           aria-label={t("techniques.editVideo")}
         >
@@ -164,7 +164,7 @@ export default function TechniqueVideoButton({ techniqueId }: Props) {
         </button>
         <button type="button"
           onClick={handleRemove}
-          className="text-zinc-600 hover:text-red-400 p-1.5 min-h-[32px] min-w-[32px] transition-colors rounded-lg flex items-center justify-center"
+          className="text-zinc-600 hover:text-red-400 p-1.5 min-h-[44px] min-w-[44px] transition-colors rounded-lg flex items-center justify-center"
           title={t("techniques.removeVideo")}
           aria-label={t("techniques.removeVideo")}
         >

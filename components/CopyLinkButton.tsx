@@ -43,7 +43,7 @@ export default function CopyLinkButton({ entryId }: Props) {
   return (
     <button type="button"
       onClick={handleCopy}
-      className={`transition-colors p-2 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center ${
+      className={`transition-colors p-2 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center ${
         copied
           ? "text-emerald-400"
           : "text-zinc-400 hover:text-zinc-200"

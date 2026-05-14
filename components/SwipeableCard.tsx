@@ -176,7 +176,7 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
         <button
           type="button"
           onClick={onEdit}
-          className="p-1.5 rounded-lg bg-emerald-600/80 hover:bg-emerald-600 text-white transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+          className="p-1.5 rounded-lg bg-emerald-600/80 hover:bg-emerald-600 text-white transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
           aria-label={editLabel}
         >
           <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -186,7 +186,7 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
         <button
           type="button"
           onClick={onDelete}
-          className="p-1.5 rounded-lg bg-red-600/80 hover:bg-red-600 text-white transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+          className="p-1.5 rounded-lg bg-red-600/80 hover:bg-red-600 text-white transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
           aria-label={deleteLabel}
         >
           <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

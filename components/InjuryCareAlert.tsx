@@ -212,7 +212,7 @@ export default function InjuryCareAlert({ bodyStatus, bodyStatusDates }: Props) 
           </div>
           <button type="button"
             onClick={() => handleDismiss(partKey)}
-            className="flex-shrink-0 text-zinc-500 hover:text-zinc-300 transition-colors p-1 rounded-md hover:bg-white/5 min-h-[32px] min-w-[32px] flex items-center justify-center"
+            className="flex-shrink-0 text-zinc-500 hover:text-zinc-300 transition-colors p-1 rounded-md hover:bg-white/5 min-h-[44px] min-w-[44px] flex items-center justify-center"
             aria-label={t("injury.snooze7d")}
             title={t("injury.hide7d")}
           >

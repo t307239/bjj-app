@@ -39,6 +39,9 @@ export async function fetchProfile(
   supabase: SupabaseClient,
   userId: string,
 ): Promise<{ data: DbProfile | null; error: string | null }> {
+  // select-star: ok — fetchProfile is the canonical "give me everything"
+  // helper. Caller wants the full DbProfile shape (21 columns) for editing.
+  // Lightweight callers should use fetchProStatus() below instead.
   const { data, error } = await supabase
     .from("profiles")
     .select("*")
