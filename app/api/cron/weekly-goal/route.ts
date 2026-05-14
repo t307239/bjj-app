@@ -162,6 +162,7 @@ export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail
     } catch (err: unknown) {
       const status = (err as { statusCode?: number })?.statusCode;
       if (status === 404 || status === 410) {
+        // rls-ok: cron clean-up of stale push subscription; service_role + unique PK
         await supabase.from("push_subscriptions").delete().eq("id", sub.id);
         stale++;
       }

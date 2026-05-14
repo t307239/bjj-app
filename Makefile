@@ -3,10 +3,10 @@
 # 「完璧」と宣言する前に必ず `make verify` を実行する。
 # 6 つの lint が全パスすれば commit 可能、1 つでも 🔴 fail なら作業未完了。
 
-.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions input-autocomplete a11y-table-label
+.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions input-autocomplete a11y-table-label unsafe-dynamic-href api-auth-bypass supabase-rls-gap
 
 # Run all anti-regression checks
-verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions input-autocomplete a11y-table-label
+verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions input-autocomplete a11y-table-label unsafe-dynamic-href api-auth-bypass supabase-rls-gap
 	@echo ""
 	@echo "✅ All anti-regression checks passed."
 	@echo "   Safe to commit."
@@ -114,6 +114,21 @@ locale-drift:
 hidden-bugs:
 	@echo "→ detect_hidden_bugs.py..."
 	@python3 scripts/detect_hidden_bugs.py 2>&1 | grep -E "🔴 CRITICAL: 0" || (echo "❌ CRITICAL bugs found" && exit 1)
+
+# z261p: <a href={X}> 動的 URL injection 防御 (javascript: / data: XSS scheme guard)
+unsafe-dynamic-href:
+	@echo "→ detect_unsafe_dynamic_href.py..."
+	@python3 scripts/detect_unsafe_dynamic_href.py --ci
+
+# z261p: API route の auth check 不在検出 (public/webhook/cron opt-out marker 必須)
+api-auth-bypass:
+	@echo "→ detect_api_auth_bypass.py..."
+	@python3 scripts/detect_api_auth_bypass.py --ci
+
+# z261p: user-scoped table の mutation で owner filter 不在 (defence-in-depth audit)
+supabase-rls-gap:
+	@echo "→ detect_supabase_rls_gap.py..."
+	@python3 scripts/detect_supabase_rls_gap.py --ci
 
 # Run vitest unit tests
 test:

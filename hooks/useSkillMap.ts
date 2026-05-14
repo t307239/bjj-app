@@ -140,7 +140,8 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
         prevEdges = prev;
         return prev.filter((e: Edge) => e.source !== nodeId && e.target !== nodeId);
       });
-      const { error } = await supabase.from("technique_nodes").delete().eq("id", nodeId);
+      // z261p: defence-in-depth — owner filter even though RLS already enforces it
+      const { error } = await supabase.from("technique_nodes").delete().eq("id", nodeId).eq("user_id", userId);
       if (error) {
         setRfNodes(prevNodes);
         setRfEdges(prevEdges);
@@ -148,7 +149,7 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
         showToast(tRef.current("skillmap.deleteNodeError"), "error");
       }
     },
-    [supabase, setRfNodes, setRfEdges, showToast]
+    [supabase, setRfNodes, setRfEdges, showToast, userId]
   );
 
   // ── onConnect (drag handle to handle, PC) ────────────────────────────────
@@ -202,7 +203,8 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
     async (deleted) => {
       const failed: Edge[] = [];
       for (const e of deleted) {
-        const { error } = await supabase.from("technique_edges").delete().eq("id", e.id);
+        // z261p: defence-in-depth owner filter
+        const { error } = await supabase.from("technique_edges").delete().eq("id", e.id).eq("user_id", userId);
         if (error) {
           clientLogger.error("skillmap.edge_delete_failed", { edgeId: e.id }, error);
           failed.push(e);
@@ -213,7 +215,7 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
         showToast(tRef.current("skillmap.deleteEdgeError"), "error");
       }
     },
-    [supabase, setRfEdges, showToast]
+    [supabase, setRfEdges, showToast, userId]
   );
 
   // ── Nodes delete (keyboard Delete when node selected) ───────────────────
@@ -222,7 +224,8 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
     async (deleted) => {
       const failed: Node[] = [];
       for (const n of deleted) {
-        const { error } = await supabase.from("technique_nodes").delete().eq("id", n.id);
+        // z261p: defence-in-depth owner filter
+        const { error } = await supabase.from("technique_nodes").delete().eq("id", n.id).eq("user_id", userId);
         if (error) {
           clientLogger.error("skillmap.node_delete_failed", { nodeId: n.id }, error);
           failed.push(n);
@@ -233,7 +236,7 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
         showToast(tRef.current("skillmap.deleteNodeError"), "error");
       }
     },
-    [supabase, setRfNodes, showToast]
+    [supabase, setRfNodes, showToast, userId]
   );
 
   // ── Add node (PC right-click or mobile button) ───────────────────────────
@@ -295,7 +298,8 @@ export function useSkillMap({ userId, isPro, t }: UseSkillMapProps) {
         .select()
         .single();
       if (edgeErr) {
-        await supabase.from("technique_nodes").delete().eq("id", nodeData.id);
+        // z261p: defence-in-depth owner filter on rollback delete
+        await supabase.from("technique_nodes").delete().eq("id", nodeData.id).eq("user_id", userId);
         showToast(tRef.current("skillmap.addEdgeError"), "error"); return;
       }
       setRfNodes((prev: Node[]) => [
