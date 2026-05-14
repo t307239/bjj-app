@@ -41,7 +41,9 @@ export default function MemberCard({
   };
   const lastSeenText = member.last_training_date
     ? (() => {
-        const days = Math.floor((Date.now() - new Date(member.last_training_date).getTime()) / 86400000);
+        const t0 = new Date(member.last_training_date).getTime();
+        if (isNaN(t0)) return t("gym.never");
+        const days = Math.floor((Date.now() - t0) / 86400000);
         if (days === 0) return t("gym.today");
         if (days === 1) return t("gym.yesterday");
         return t("gym.daysAgo", { n: days });

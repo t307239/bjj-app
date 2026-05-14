@@ -9,7 +9,7 @@ import CookieSettingsButton from "@/components/CookieSettingsButton";
 import HeroPreviewVideo from "@/components/HeroPreviewVideo";
 
 const PricingSection = dynamic(() => import("@/components/PricingSection"), {
-  loading: () => <div className="px-4 py-16 bg-zinc-900/50 animate-pulse" style={{ minHeight: 400 }} />,
+  loading: () => <div className="px-4 py-16 bg-zinc-900/50 animate-pulse min-h-[400px]" />,
 });
 import { detectServerLocale, makeT } from "@/lib/i18n";
 
@@ -486,7 +486,7 @@ export default async function Home() {
                         <span className="text-xs text-yellow-400">75%</span>
                       </div>
                       <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <div className="h-full bg-yellow-400 rounded-full" style={{ width: "75%" }} />
+                        <div className="h-full bg-yellow-400 rounded-full w-3/4" />
                       </div>
                       <div className="text-xs text-zinc-400 mt-1">{t("dashboard.mockDashboardWeeklySessions")}</div>
                     </div>
@@ -496,7 +496,7 @@ export default async function Home() {
                         <span className="text-xs text-green-400">{t("dashboard.mockDashboardMonthlyDone")}</span>
                       </div>
                       <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <div className="h-full bg-green-400 rounded-full" style={{ width: "100%" }} />
+                        <div className="h-full bg-green-400 rounded-full w-full" />
                       </div>
                       <div className="text-xs text-zinc-400 mt-1">{t("dashboard.mockDashboardMonthlySessions")}</div>
                     </div>

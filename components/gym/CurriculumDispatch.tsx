@@ -91,7 +91,9 @@ export default function CurriculumDispatch({ gym, onUpgradeClick, upgrading, isG
 
   const sentAgo = lastSentAt
     ? (() => {
-        const d = Math.floor((Date.now() - new Date(lastSentAt).getTime()) / 86400000);
+        const t0 = new Date(lastSentAt).getTime();
+        if (isNaN(t0)) return null;
+        const d = Math.floor((Date.now() - t0) / 86400000);
         if (d === 0) return t("gym.today");
         if (d === 1) return t("gym.yesterday");
         return t("gym.daysAgo", { n: d });

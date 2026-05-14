@@ -415,7 +415,10 @@ export default function TechniqueLog({ userId, isPro = false, userBelt = "white"
       if (sortBy === "mastery_desc") return (b.mastery_level ?? 0) - (a.mastery_level ?? 0);
       if (sortBy === "mastery_asc") return (a.mastery_level ?? 0) - (b.mastery_level ?? 0);
       if (sortBy === "name") return a.name.localeCompare(b.name, "ja");
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      const tA = new Date(a.created_at).getTime();
+      const tB = new Date(b.created_at).getTime();
+      // Invalid dates sort last (0) to keep comparator stable
+      return (isNaN(tB) ? 0 : tB) - (isNaN(tA) ? 0 : tA);
     });
 
   // ── Pagination ─────────────────────────────────────────────────────────────

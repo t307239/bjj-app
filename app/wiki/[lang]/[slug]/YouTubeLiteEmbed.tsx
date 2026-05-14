@@ -27,15 +27,14 @@ export default function YouTubeLiteEmbed({ videoId, title, isShorts = false }: P
       return (
         <div className="flex justify-center">
           <div
-            className="w-full rounded-xl overflow-hidden border border-white/10 shadow-xl bg-black"
-            style={{ maxWidth: 350, aspectRatio: "9/16" }}
+            className="w-full rounded-xl overflow-hidden border border-white/10 shadow-xl bg-black max-w-[350px] aspect-[9/16]"
           >
             <iframe
               src={embedUrl}
               title={title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-              style={{ width: "100%", height: "100%", border: 0 }}
+              className="w-full h-full border-0"
             />
           </div>
         </div>
@@ -43,15 +42,14 @@ export default function YouTubeLiteEmbed({ videoId, title, isShorts = false }: P
     }
     return (
       <div
-        style={{ position: "relative", paddingBottom: "56.25%", height: 0 }}
-        className="rounded-xl overflow-hidden border border-white/10 shadow-xl bg-black"
+        className="relative h-0 pb-[56.25%] rounded-xl overflow-hidden border border-white/10 shadow-xl bg-black"
       >
         <iframe
           src={embedUrl}
           title={title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
-          style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
+          className="absolute top-0 left-0 w-full h-full border-0"
         />
       </div>
     );

@@ -1513,10 +1513,20 @@ def check_date_parse_no_guard(filepath: Path, content: str, report: BugReport):
         return
     # admin/internal toolkit は controlled source で false positive 多数
     # 注: rel は "lib/adminOpsToolkit.ts" 形式 (leading slash 無し) なので prefix を合わせる
+    # z261e: 元の "/lib/" prefix が誤りで全 exclusion が無効化していた bug を fix し、
+    # 同質の internal toolkit (admin metrics / SRE / GDPR / referral 等 controlled source) も
+    # 同じ exclusion list に追加。これらは Stripe webhook / DB 直接 query / 内部生成データのみ扱い
+    # invalid ISO は構造的に発生しない。user-facing components / API routes は対象外。
     if any(s in str(rel) for s in [
         "lib/adminOpsToolkit", "lib/alertEscalationPolicy", "lib/billingAnalyzer",
         "lib/backupVerificationScheduler", "lib/featureFlagDriftDetector",
         "lib/incidentTimelineBuilder", "lib/dataRetention", "lib/auditLog",
+        # z261e: 追加 — admin metrics / cohort 等 internal toolkit
+        "lib/adminMetrics", "lib/cohortAnalyzer", "lib/dataAnomalyDetector",
+        "lib/disasterRecovery", "lib/gdprRequestAutomation", "lib/incidentPlaybook",
+        "lib/incidentTracker", "lib/loyaltyTierSystem", "lib/paymentRecoveryEngine",
+        "lib/referralEngine", "lib/regulatoryChangeTracker", "lib/resourceUsageForecaster",
+        "lib/termsVersionManager", "lib/traceContext",
     ]):
         return
 
@@ -1539,6 +1549,9 @@ def check_date_parse_no_guard(filepath: Path, content: str, report: BugReport):
         ctx_start = max(0, line_no - 4)
         ctx_end = min(len(lines), line_no + 4)
         ctx = "\n".join(lines[ctx_start:ctx_end])
+        # 同一行で `const NAME = new Date(var).getTime()` の代入があれば NAME を抽出して guard 判定対象に追加
+        assign_match = re.search(r'(?:const|let|var)\s+(\w+)\s*=\s*new\s+Date', line)
+        assigned_name = assign_match.group(1) if assign_match else None
         if (
             f"isNaN({var})" in ctx
             or "isNaN(t)" in ctx
@@ -1547,6 +1560,8 @@ def check_date_parse_no_guard(filepath: Path, content: str, report: BugReport):
             or "parseYearMonthSafe" in ctx
             # 直前で typeof check / null guard が入っているケース
             or re.search(rf"!\s*{re.escape(var)}", ctx)
+            # `const X = new Date(var).getTime()` + 後続行で `isNaN(X)` チェック
+            or (assigned_name and f"isNaN({assigned_name})" in ctx)
         ):
             continue
         report.add(

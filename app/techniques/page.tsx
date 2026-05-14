@@ -160,15 +160,20 @@ export default async function TechniquesPage() {
       const mastery = tc.mastery_level ?? 0;
       if (mastery >= 3) return false; // already solid
       const createdMs = new Date(tc.created_at).getTime();
+      if (isNaN(createdMs)) return false; // skip rows with invalid created_at
       const daysSince = Math.floor((nowMs - createdMs) / 86400000);
       return daysSince >= RUSTY_THRESHOLD_DAYS;
     })
-    .map((tc) => ({
-      name: tc.name ?? "",
-      category: tc.category ?? null,
-      mastery_level: tc.mastery_level ?? 0,
-      daysSinceCreated: Math.floor((nowMs - new Date(tc.created_at).getTime()) / 86400000),
-    }))
+    .map((tc) => {
+      const createdMs = new Date(tc.created_at).getTime();
+      const daysSinceCreated = isNaN(createdMs) ? 0 : Math.floor((nowMs - createdMs) / 86400000);
+      return {
+        name: tc.name ?? "",
+        category: tc.category ?? null,
+        mastery_level: tc.mastery_level ?? 0,
+        daysSinceCreated,
+      };
+    })
     .sort((a, b) => b.daysSinceCreated - a.daysSinceCreated);
 
   return (

@@ -40,6 +40,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
       if (!data?.curriculum_completed_at) return;
       const completedAt = new Date(data.curriculum_completed_at).getTime();
       const setAt = new Date(curriculumSetAt).getTime();
+      if (isNaN(completedAt) || isNaN(setAt)) return;
       if (completedAt >= setAt) setPracticed(true);
     };
     fetchPracticed();
@@ -80,9 +81,10 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
     }
   })();
 
-  const daysAgo = Math.floor(
-    (Date.now() - new Date(curriculumSetAt).getTime()) / 86400000
-  );
+  const _setAtMs = new Date(curriculumSetAt).getTime();
+  const daysAgo = isNaN(_setAtMs)
+    ? 0
+    : Math.floor((Date.now() - _setAtMs) / 86400000);
 
   return (
     <div className={`bg-zinc-900/50 ring-1 ring-inset rounded-xl px-4 py-3 shadow-lg shadow-black/40 transition-colors ${practiced ? "ring-[#10B981]/30" : "ring-white/[0.04]"}`}>

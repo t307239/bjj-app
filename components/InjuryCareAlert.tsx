@@ -30,7 +30,10 @@ function toDateStr(d: Date): string {
 }
 
 function daysBetween(a: string, b: string): number {
-  return Math.floor((new Date(b).getTime() - new Date(a).getTime()) / 86400000);
+  const tA = new Date(a).getTime();
+  const tB = new Date(b).getTime();
+  if (isNaN(tA) || isNaN(tB)) return 0;
+  return Math.floor((tB - tA) / 86400000);
 }
 
 function loadSnooze(): SnoozeMap {

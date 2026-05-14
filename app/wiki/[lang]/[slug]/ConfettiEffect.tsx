@@ -37,8 +37,7 @@ export default function ConfettiEffect() {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="fixed inset-0 pointer-events-none z-banner"
-      style={{ display: "none" }}
+      className="fixed inset-0 pointer-events-none z-banner hidden"
     />
   );
 }
