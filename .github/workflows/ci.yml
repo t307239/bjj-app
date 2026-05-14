@@ -217,6 +217,11 @@ jobs:
       - name: Run detect_img_no_dimensions.py
         run: python3 scripts/detect_img_no_dimensions.py --ci
 
+      # z261m: a11y/UX — <input type=email/password/tel/url> must have autoComplete
+      # WCAG 1.3.5 (Identify Input Purpose) + UX (browser autofill)
+      - name: Run detect_input_no_autocomplete.py
+        run: python3 scripts/detect_input_no_autocomplete.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest

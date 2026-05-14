@@ -134,9 +134,10 @@ export default function CurriculumDispatch({ gym, onUpgradeClick, upgrading, isG
           value={url}
           onChange={(e) => { setUrl(e.target.value); setConfirmDispatch(false); }}
           placeholder={`${wikiBase}/...`}
+          autoComplete="off"
           className="flex-1 bg-zinc-800 text-xs text-zinc-300 placeholder-gray-500 px-3 py-2 rounded-lg border border-white/10 focus:outline-none focus:border-white/30"
-        aria-label={t("gym.ariaCurriculumWikiUrl")}
-            />
+          aria-label={t("gym.ariaCurriculumWikiUrl")}
+        />
         <button type="button"
           onClick={() => { if (!url.trim()) return; setConfirmDispatch(true); }}
           disabled={dispatching || !url.trim() || confirmDispatch}

@@ -3,10 +3,10 @@
 # 「完璧」と宣言する前に必ず `make verify` を実行する。
 # 6 つの lint が全パスすれば commit 可能、1 つでも 🔴 fail なら作業未完了。
 
-.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions
+.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions input-autocomplete
 
 # Run all anti-regression checks
-verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions
+verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions input-autocomplete
 	@echo ""
 	@echo "✅ All anti-regression checks passed."
 	@echo "   Safe to commit."
@@ -90,6 +90,11 @@ a11y-input-label:
 img-no-dimensions:
 	@echo "→ detect_img_no_dimensions.py..."
 	@python3 scripts/detect_img_no_dimensions.py --ci
+
+# z261m: <input type=email/password/tel/url> missing autoComplete (WCAG 1.3.5)
+input-autocomplete:
+	@echo "→ detect_input_no_autocomplete.py..."
+	@python3 scripts/detect_input_no_autocomplete.py --ci
 
 typecheck:
 	@echo "→ TypeScript type check..."

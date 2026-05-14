@@ -93,9 +93,10 @@ export default function TechniqueVideoButton({ techniqueId }: Props) {
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={t("common.youtubePlaceholder")}
+          autoComplete="off"
           className="flex-1 bg-zinc-800 border border-white/15 text-xs text-zinc-200 rounded-lg px-2.5 py-1.5 min-h-[36px] focus:outline-none focus:border-emerald-500 placeholder-zinc-600"
-        aria-label={t("techniques.ariaVideoUrl")}
-            />
+          aria-label={t("techniques.ariaVideoUrl")}
+        />
         <button type="button"
           onClick={handleSave}
           className="text-xs font-semibold text-black bg-emerald-500 hover:bg-emerald-400 rounded-lg px-2.5 py-1.5 min-h-[36px] transition-colors flex-shrink-0"
