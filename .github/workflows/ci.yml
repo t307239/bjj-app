@@ -222,6 +222,11 @@ jobs:
       - name: Run detect_input_no_autocomplete.py
         run: python3 scripts/detect_input_no_autocomplete.py --ci
 
+      # z261n: a11y — <table> must have an accessible name (caption/aria-label/aria-labelledby)
+      # Screen reader users navigating data tables need to know what each table contains.
+      - name: Run detect_a11y_table_no_label.py
+        run: python3 scripts/detect_a11y_table_no_label.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest
