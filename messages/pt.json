@@ -278,7 +278,8 @@
     "ariaFilterDateFrom": "Filtro: data inicial",
     "ariaFilterDateTo": "Filtro: data final",
     "ariaGiName": "Nome do gi",
-    "ariaEditDate": "Editar data do treino"
+    "ariaEditDate": "Editar data do treino",
+    "ariaEditNotes": "Editar notas do treino"
   },
   "techniques": {
     "mastery1": "Conheço",
@@ -412,7 +413,8 @@
     "emptyCta": "Adicione Sua Primeira Técnica",
     "addedDaysAgoOne": "1 dia atrás",
     "ariaEditName": "Editar nome da técnica",
-    "ariaVideoUrl": "URL do vídeo da técnica"
+    "ariaVideoUrl": "URL do vídeo da técnica",
+    "ariaEditNotes": "Editar notas da técnica"
   },
   "profile": {
     "title": "Perfil",
@@ -1117,7 +1119,8 @@
     "legendMastered": "Dominado",
     "ariaTechniqueName": "Nome da técnica",
     "ariaChildName": "Nome do nó filho",
-    "ariaTagName": "Nome da tag"
+    "ariaTagName": "Nome da tag",
+    "ariaEdgeNotes": "Notas da conexão"
   },
   "wiki": {
     "dailyTip": "Conhecimento BJJ de Hoje",
@@ -1384,7 +1387,8 @@
     "daysAgoOne": "1 dia atrás",
     "churnAlertTitle": "{n} aluno(s) em risco de churn",
     "churnAlertDesc": "Membros sem treinos há 14+ dias. Considere contatá-los.",
-    "ariaCurriculumWikiUrl": "URL do artigo wiki do currículo"
+    "ariaCurriculumWikiUrl": "URL do artigo wiki do currículo",
+    "ariaCsvTextarea": "Entrada de texto para convite em massa via CSV"
   },
   "gymJoin": {
     "title": "Entrar em {name}",

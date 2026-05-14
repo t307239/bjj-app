@@ -257,6 +257,8 @@ export default function AchievementBadge({
               <img
                 src={previewImageUrl}
                 alt={`${milestone} ${aType}`}
+                width={1200}
+                height={630}
                 className="w-full h-auto block"
                 loading="lazy"
               />

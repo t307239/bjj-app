@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-"""z261k: Detect <input> elements without an accessible name (a11y).
+"""z261k: Detect <input>, <textarea>, <select> elements without an accessible name (a11y).
 
-Detects user-visible text inputs (text, email, password, tel, search, url, date,
-time, datetime-local, month, week, number) that have:
+Detects user-visible form controls that have:
   - no aria-label / aria-labelledby
   - no <label htmlFor={id}> referencing their id
   - no surrounding <label> element (within 10 lines before or 5 lines after)
 
+For <input>, type=hidden/submit/button/reset/checkbox/radio/file are excluded
+(checkbox/radio are typically wrapped in a clickable <label> already).
+
 Excludes:
-  - hidden / submit / button / reset / checkbox / radio / file types
   - JSX block comments (/* ... */)
   - components/ui/DraftNumberInput.tsx (wrapper — parent supplies label)
 
@@ -62,8 +63,39 @@ def extract_jsx_tag(text: str, start: int) -> str | None:
     return None
 
 
+def _check_tag(path: Path, text: str, lines: list[str], tag_name: str, m_iter):
+    """Return list of (path, line_no, snippet) for tag_name occurrences missing labels."""
+    out: list[tuple[Path, int, str]] = []
+    for m in m_iter:
+        tag = extract_jsx_tag(text, m.start())
+        if not tag:
+            continue
+        if tag_name == "input":
+            m_type = re.search(r"\btype=[\"\']?(\w+)", tag)
+            itype = m_type.group(1) if m_type else "text"
+            if itype in EXCLUDED_TYPES:
+                continue
+        if re.search(r"\baria-label\b", tag) or re.search(r"\baria-labelledby\b", tag):
+            continue
+        m_id = re.search(r"\bid=[\"\']([^\"\']+)", tag)
+        if m_id:
+            iid = m_id.group(1)
+            if re.search(rf"<label\b[^>]*?\bhtmlFor=[\"\']?{re.escape(iid)}\b", text):
+                continue
+        ln = text[: m.start()].count("\n") + 1
+        ctx_before = "\n".join(lines[max(0, ln - 10) : ln + 1])
+        if re.search(r"<label\b", ctx_before):
+            continue
+        ctx_after = "\n".join(lines[ln : ln + 5])
+        if re.search(r"<label\b", ctx_after):
+            continue
+        snippet = " ".join(tag.split())[:120]
+        out.append((path, ln, snippet))
+    return out
+
+
 def main(ci_mode: bool = False) -> int:
-    violations: list[tuple[Path, int, str]] = []
+    violations: list[tuple[Path, int, str, str]] = []
     for path in sorted(TARGETS):
         rel = str(path.relative_to(ROOT))
         if rel in EXCLUDED_FILES:
@@ -76,41 +108,20 @@ def main(ci_mode: bool = False) -> int:
             continue
         text = strip_block_comments(raw)
         lines = text.split("\n")
-        for m in re.finditer(r"<input\b", text):
-            tag = extract_jsx_tag(text, m.start())
-            if not tag:
-                continue
-            m_type = re.search(r"\btype=[\"\']?(\w+)", tag)
-            itype = m_type.group(1) if m_type else "text"
-            if itype in EXCLUDED_TYPES:
-                continue
-            if re.search(r"\baria-label\b", tag) or re.search(r"\baria-labelledby\b", tag):
-                continue
-            m_id = re.search(r"\bid=[\"\']([^\"\']+)", tag)
-            if m_id:
-                iid = m_id.group(1)
-                if re.search(rf"<label\b[^>]*?\bhtmlFor=[\"\']?{re.escape(iid)}\b", text):
-                    continue
-            ln = text[: m.start()].count("\n") + 1
-            ctx_before = "\n".join(lines[max(0, ln - 10) : ln + 1])
-            if re.search(r"<label\b", ctx_before):
-                continue
-            ctx_after = "\n".join(lines[ln : ln + 5])
-            if re.search(r"<label\b", ctx_after):
-                continue
-            snippet = " ".join(tag.split())[:120]
-            violations.append((path, ln, snippet))
+        for tname in ("input", "textarea", "select"):
+            for p, ln, snippet in _check_tag(path, text, lines, tname, re.finditer(rf"<{tname}\b", text)):
+                violations.append((p, ln, snippet, tname))
 
     if violations:
-        print(f"❌ A11y violation: {len(violations)} <input> elements lack accessible name (no aria-label / no <label>)")
-        for path, ln, snippet in violations:
-            print(f"   {path.relative_to(ROOT)}:{ln}: {snippet}")
+        print(f"❌ A11y violation: {len(violations)} form controls lack accessible name (no aria-label / no <label>)")
+        for path, ln, snippet, tname in violations:
+            print(f"   {path.relative_to(ROOT)}:{ln} ({tname}): {snippet}")
         print()
         print("   Fix: add aria-label={t(\"<section>.aria<Field>\")} OR wrap in <label>…</label>")
         if ci_mode:
             return 1
     else:
-        print("✅ All <input> elements have accessible names.")
+        print("✅ All form controls (<input>/<textarea>/<select>) have accessible names.")
     return 0
 
 

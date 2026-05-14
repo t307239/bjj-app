@@ -39,7 +39,8 @@ export default function EdgeNotesPanel({ notes, onChange, onSave, onClose, t }: 
         placeholder={t("skillmap.edgeNotesPlaceholder")}
         className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 resize-none"
         rows={3}
-      />
+      aria-label={t("skillmap.ariaEdgeNotes")}
+              />
       <div className="flex gap-2 mt-2">
         <button type="button"
           onClick={onClose}

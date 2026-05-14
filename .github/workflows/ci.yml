@@ -212,6 +212,11 @@ jobs:
       - name: Run detect_a11y_input_no_label.py
         run: python3 scripts/detect_a11y_input_no_label.py --ci
 
+      # z261k: perf/CLS — <img>/<Image> must have explicit width/height
+      # Core Web Vitals (CLS) を永久 block。
+      - name: Run detect_img_no_dimensions.py
+        run: python3 scripts/detect_img_no_dimensions.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest

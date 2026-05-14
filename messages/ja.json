@@ -278,7 +278,8 @@
     "ariaFilterDateFrom": "絞り込み: 開始日",
     "ariaFilterDateTo": "絞り込み: 終了日",
     "ariaGiName": "ギの名前",
-    "ariaEditDate": "練習日を編集"
+    "ariaEditDate": "練習日を編集",
+    "ariaEditNotes": "練習メモを編集"
   },
   "techniques": {
     "mastery1": "入門",
@@ -412,7 +413,8 @@
     "emptyCta": "最初のテクニックを追加",
     "addedDaysAgoOne": "1日前",
     "ariaEditName": "テクニック名を編集",
-    "ariaVideoUrl": "テクニック動画URL"
+    "ariaVideoUrl": "テクニック動画URL",
+    "ariaEditNotes": "テクニックメモを編集"
   },
   "profile": {
     "title": "プロフィール",
@@ -1081,7 +1083,8 @@
     "legendMastered": "習得済み",
     "ariaTechniqueName": "テクニック名",
     "ariaChildName": "子ノード名",
-    "ariaTagName": "タグ名"
+    "ariaTagName": "タグ名",
+    "ariaEdgeNotes": "エッジメモ"
   },
   "wiki": {
     "dailyTip": "今日のBJJ知識",
@@ -1348,7 +1351,8 @@
     "daysAgoOne": "1日前",
     "churnAlertTitle": "{n}名の生徒が離脱リスク",
     "churnAlertDesc": "14日以上練習記録なし。声かけを推奨します。",
-    "ariaCurriculumWikiUrl": "カリキュラムのWiki記事URL"
+    "ariaCurriculumWikiUrl": "カリキュラムのWiki記事URL",
+    "ariaCsvTextarea": "CSV一括招待テキスト入力"
   },
   "gymJoin": {
     "title": "{name} に参加する",

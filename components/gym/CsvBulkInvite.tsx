@@ -208,7 +208,8 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
                     placeholder={t("gym.csvPlaceholder")}
                     rows={8}
                     className="w-full bg-zinc-800 text-xs text-gray-200 placeholder-gray-600 px-3 py-2.5 rounded-lg border border-white/10 focus:outline-none focus:border-white/30 resize-none font-mono"
-                  />
+                  aria-label={t("gym.ariaCsvTextarea")}
+              />
                   <button type="button"
                     onClick={parseInput}
                     disabled={!input.trim()}

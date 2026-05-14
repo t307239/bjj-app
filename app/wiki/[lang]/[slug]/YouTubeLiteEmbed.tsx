@@ -74,6 +74,8 @@ export default function YouTubeLiteEmbed({ videoId, title, isShorts = false }: P
         <img
           src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
           alt={title}
+          width={480}
+          height={360}
           loading="lazy"
           decoding="async"
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"

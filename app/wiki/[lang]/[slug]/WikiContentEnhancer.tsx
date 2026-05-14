@@ -178,9 +178,12 @@ export default function WikiContentEnhancer() {
             </svg>
           </button>
           {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/no-noninteractive-element-interactions */}
+          {/* z261k: width/height hint for CLS — actual size is clamped by max-w-full / max-h-[90vh] */}
           <img
             src={lightboxSrc}
             alt={t("common.expandedView")}
+            width={1920}
+            height={1080}
             className="max-w-full max-h-[90vh] rounded-xl shadow-2xl object-contain"
             onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
           />

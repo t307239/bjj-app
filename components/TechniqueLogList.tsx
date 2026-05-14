@@ -281,7 +281,8 @@ aria-hidden="true"             className="absolute left-3 top-1/2 -translate-y-1
                     }
                     rows={2}
                     className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none mb-2 resize-none"
-                  />
+                  aria-label={t("techniques.ariaEditNotes")}
+              />
                   <div className="flex gap-2">
                     <button
                       type="submit"

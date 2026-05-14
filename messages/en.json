@@ -278,7 +278,8 @@
     "ariaFilterDateFrom": "Filter: from date",
     "ariaFilterDateTo": "Filter: to date",
     "ariaGiName": "Gi name",
-    "ariaEditDate": "Edit training date"
+    "ariaEditDate": "Edit training date",
+    "ariaEditNotes": "Edit training notes"
   },
   "techniques": {
     "mastery1": "Know it",
@@ -412,7 +413,8 @@
     "emptyCta": "Add Your First Technique",
     "addedDaysAgoOne": "1 day ago",
     "ariaEditName": "Edit technique name",
-    "ariaVideoUrl": "Technique video URL"
+    "ariaVideoUrl": "Technique video URL",
+    "ariaEditNotes": "Edit technique notes"
   },
   "profile": {
     "title": "Profile",
@@ -1091,7 +1093,8 @@
     "legendMastered": "Mastered",
     "ariaTechniqueName": "Technique name",
     "ariaChildName": "Child node name",
-    "ariaTagName": "Tag name"
+    "ariaTagName": "Tag name",
+    "ariaEdgeNotes": "Edge notes"
   },
   "wiki": {
     "dailyTip": "Today's BJJ Knowledge",
@@ -1358,7 +1361,8 @@
     "daysAgoOne": "1 day ago",
     "churnAlertTitle": "{n} member(s) at risk of leaving",
     "churnAlertDesc": "Members who haven't trained in 14+ days. Consider reaching out.",
-    "ariaCurriculumWikiUrl": "Curriculum wiki article URL"
+    "ariaCurriculumWikiUrl": "Curriculum wiki article URL",
+    "ariaCsvTextarea": "CSV bulk invite text input"
   },
   "gymJoin": {
     "title": "Join {name}",
