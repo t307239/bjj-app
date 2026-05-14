@@ -5,9 +5,21 @@ import { useLocale } from "@/lib/i18n";
 
 const LS_PREFIX = "bjj_tech_video_";
 
+function isSafeHttpUrl(s: string): boolean {
+  if (!s) return false;
+  try {
+    const u = new URL(s);
+    return u.protocol === "http:" || u.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 function getStoredUrl(id: string): string {
   try {
-    return localStorage.getItem(`${LS_PREFIX}${id}`) ?? "";
+    const raw = localStorage.getItem(`${LS_PREFIX}${id}`) ?? "";
+    // z261p: validate stored URL — strip any pre-existing javascript: payload
+    return isSafeHttpUrl(raw) ? raw : "";
   } catch {
     return "";
   }
@@ -23,13 +35,19 @@ function setStoredUrl(id: string, url: string): void {
   } catch { /* ignore */ }
 }
 
-/** Converts various YouTube URL formats to a clean watch URL */
+/** Converts various YouTube URL formats to a clean watch URL.
+ * z261p: scheme validation — only http(s) allowed to block javascript: / data: XSS.
+ */
 function normalizeYouTubeUrl(raw: string): string {
   const s = raw.trim();
   if (!s) return "";
   // Already short / standard — return as-is if looks like a URL
   try {
     const url = new URL(s.startsWith("http") ? s : `https://${s}`);
+    // SECURITY: only http(s) — reject javascript: / data: / file: / chrome-extension: etc.
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      return "";
+    }
     // youtu.be short links
     if (url.hostname === "youtu.be") {
       const id = url.pathname.slice(1);
@@ -37,10 +55,10 @@ function normalizeYouTubeUrl(raw: string): string {
     }
     // youtube.com/watch, /shorts, /embed
     if (url.hostname.includes("youtube.com")) return s;
-    // Non-YouTube URL — pass through
+    // Non-YouTube URL — pass through (already validated to be http(s))
     return s;
   } catch {
-    return s;
+    return "";
   }
 }
 

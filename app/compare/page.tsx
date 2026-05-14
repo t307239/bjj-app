@@ -384,6 +384,7 @@ export default async function ComparePage() {
         </h2>
         <div className="grid sm:grid-cols-2 gap-4 mb-12">
           {cards.map((card) => (
+            // safe-href: CARDS_BY_LOCALE inline literal, all entries are hardcoded https://
             <a
               key={card.name}
               href={card.url}

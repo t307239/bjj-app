@@ -103,6 +103,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
               : t("gym.curriculumCardTitle")}
           </p>
           <a
+            // safe-href: validated server-side in /api/gym/curriculum (https + ALLOWED_HOSTS)
             href={curriculumUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -121,6 +122,7 @@ export default function GymCurriculumCard({ curriculumUrl, curriculumSetAt, gymN
         {/* Read link + Practiced button */}
         <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
           <a
+            // safe-href: validated server-side in /api/gym/curriculum (https + ALLOWED_HOSTS)
             href={curriculumUrl}
             target="_blank"
             rel="noopener noreferrer"
