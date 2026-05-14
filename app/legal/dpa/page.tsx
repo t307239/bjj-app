@@ -121,7 +121,7 @@ export default async function DPAPage() {
           {/* §3 Sub-processors */}
           <Section title={t("dpa.section3.title")}>
             <p>{t("dpa.section3.intro")}</p>
-            <table className="w-full mt-2 text-xs">
+            <table className="w-full mt-2 text-xs" aria-label={t("dpa.section3.title")}>
               <thead>
                 <tr className="border-b border-white/10 text-zinc-400">
                   <th className="text-left py-2">{t("dpa.section3.headerService")}</th>

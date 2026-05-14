@@ -414,11 +414,11 @@ export default async function ComparePage() {
         </div>
 
         {/* Comparison table */}
-        <h2 className="text-xs uppercase tracking-widest text-zinc-500 mb-4">
+        <h2 id="compare-table-heading" className="text-xs uppercase tracking-widest text-zinc-500 mb-4">
           {c.tableTitle}
         </h2>
         <div className="overflow-x-auto mb-8">
-          <table className="w-full text-xs sm:text-sm">
+          <table className="w-full text-xs sm:text-sm" aria-labelledby="compare-table-heading">
             <thead>
               <tr className="border-b border-white/[0.08] text-left">
                 <th className="py-3 px-2 font-medium text-zinc-400 sticky left-0 bg-zinc-950">

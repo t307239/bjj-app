@@ -191,12 +191,12 @@ export default async function PrivacyPage() {
           </section>
 
           <section id="retention">
-            <h2 className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
+            <h2 id="retention-heading" className="text-base font-semibold text-white mb-3 pl-3 border-l-2 border-emerald-500/40">
               {t("privacy.toc.retention")}
             </h2>
             <p className="text-zinc-400 mb-3">{t("privacy.retention.intro")}</p>
             <div className="overflow-x-auto mb-3">
-              <table className="w-full text-xs border-collapse">
+              <table className="w-full text-xs border-collapse" aria-labelledby="retention-heading">
                 <thead>
                   <tr className="border-b border-white/10 text-left">
                     <th className="py-2 pr-4 text-zinc-300 font-semibold">{t("privacy.retention.tableHeader1")}</th>

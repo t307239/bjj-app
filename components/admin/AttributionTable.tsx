@@ -187,7 +187,7 @@ export default function AttributionTable() {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-xs tabular-nums">
+        <table className="w-full text-xs tabular-nums" aria-label="流入元別の有料転換率">
           <thead className="border-b border-white/10">
             <tr>
               <th className="text-left py-2 px-2 text-zinc-400 font-normal">流入元</th>
@@ -248,7 +248,7 @@ export default function AttributionTable() {
           >
             💰 課金に至った流入元
           </h3>
-          <table className="w-full text-xs tabular-nums">
+          <table className="w-full text-xs tabular-nums" aria-label="課金に至った流入元">
             <thead className="border-b border-white/10">
               <tr>
                 <th className="text-left py-2 px-2 text-zinc-400 font-normal">
