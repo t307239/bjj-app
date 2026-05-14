@@ -48,11 +48,20 @@ export async function POST(req: Request) {
   // and we returned 200 without ever processing. The successful first run
   // for that event never happened. Now we read-check first, then insert
   // AFTER successful processing so retries can re-attempt failed events.
-  const { data: alreadyProcessed } = await supabase
+  // z261i: error 時は observability のため warn log + fall through to processing
+  // (idempotency 上 retry 安全側で「未処理扱い」が正解。次の insert で重複検知される)。
+  const { data: alreadyProcessed, error: idempErr } = await supabase
     .from("stripe_webhook_events")
     .select("event_id")
     .eq("event_id", event.id)
     .maybeSingle();
+  if (idempErr) {
+    logger.warn("stripe.webhook.idempotency_check_failed", {
+      eventId: event.id,
+      eventType: event.type,
+      message: idempErr.message,
+    });
+  }
   if (alreadyProcessed) {
     logger.info("stripe.webhook.duplicate_event_skipped", {
       eventId: event.id,

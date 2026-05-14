@@ -186,11 +186,21 @@ export async function GET(req: Request) {
       skipped++;
       continue;
     }
-    const { data: ownerProfile } = await supabase
+    // z261i: error 時は observability のため warn log。profile 不取得時の
+    // default 動作 (locale='en' で送信、opted_out=false で送信) は意図的に
+    // 維持 (silent skip より一定の送信を優先 = email retention 目的)。
+    const { data: ownerProfile, error: profileErr } = await supabase
       .from("profiles")
       .select("locale, email_marketing_opted_out")
       .eq("id", gym.owner_id)
       .single();
+    if (profileErr) {
+      logger.warn("gym-outreach.profile_lookup_failed", {
+        gymId: gym.id,
+        ownerId: gym.owner_id,
+        message: profileErr.message,
+      });
+    }
 
     // z187: opted-out user は send skip
     if (ownerProfile?.email_marketing_opted_out) {
