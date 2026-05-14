@@ -1,0 +1,104 @@
+# z261r: Playwright E2E CI — 53+ spec を CI 完結化、E2E を drift 防止 6 領域目に
+#
+# 戦略:
+#   - 認証済み project (free-user / pro-user / gym-owner / gym-member) は
+#     SUPABASE_SERVICE_ROLE_KEY が CI secrets に無いと auth.setup.ts が
+#     storageState 生成を skip して spec が落ちる → CI では --project=chromium
+#     + --project=mobile (=ゲスト project) のみ実行で安全に E2E gate。
+#   - secrets が後で追加されれば --project=all で full matrix に upgrade 可能。
+#
+# 失敗時:
+#   - playwright-report artifact を 30 日保管
+#   - Telegram 通知 (deploy-notify.yml と同じ pattern、main push 時のみ)
+
+name: Playwright E2E
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: playwright-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e-guest:
+    name: E2E (guest / chromium + mobile)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read .nvmrc
+        id: nvmrc
+        run: echo "node_version=$(cat .nvmrc | tr -d 'v')" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.nvmrc.outputs.node_version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      - name: Install Playwright chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build Next.js (placeholder env)
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-key-for-build-check
+          NEXT_PUBLIC_STRIPE_PAYMENT_LINK: https://placeholder
+          NEXT_PUBLIC_STRIPE_ANNUAL_LINK: https://placeholder
+
+      - name: Run guest E2E (chromium + mobile)
+        run: npx playwright test --project=chromium --project=mobile
+        env:
+          # auth.setup.ts は SUPABASE_SERVICE_ROLE_KEY 不在で skip → guest spec のみ実行される
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-key-for-build-check
+          NEXT_PUBLIC_STRIPE_PAYMENT_LINK: https://placeholder
+          NEXT_PUBLIC_STRIPE_ANNUAL_LINK: https://placeholder
+          CI: "true"
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.run_id }}
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload Playwright traces on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces-${{ github.run_id }}
+          path: test-results/
+          retention-days: 7
+
+      - name: Send Telegram notification on failure
+        if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main' && env.TELEGRAM_BOT_TOKEN != ''
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          SHA_SHORT=$(echo ${{ github.sha }} | cut -c1-7)
+          TEXT="🚨 *BJJ App Playwright E2E failed*%0A\`${SHA_SHORT}\` on main%0A%0A[View run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT_ID}" \
+            -d "text=${TEXT}" \
+            -d "parse_mode=Markdown" \
+            > /dev/null 2>&1 || true
