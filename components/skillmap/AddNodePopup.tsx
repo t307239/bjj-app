@@ -13,7 +13,18 @@ type Props = {
 export default function AddNodePopup({ screenX, screenY, onAdd, onCancel, t }: Props) {
   const [name, setName] = useState("");
   const ref = useRef<HTMLInputElement>(null);
-  useEffect(() => { requestAnimationFrame(() => ref.current?.focus()); }, []);
+  const prevFocusRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    // z261l: capture trigger element + restore focus on close (a11y)
+    prevFocusRef.current = (typeof document !== "undefined" ? document.activeElement : null) as HTMLElement | null;
+    requestAnimationFrame(() => ref.current?.focus());
+    return () => {
+      // Restore focus only if still in the document
+      if (prevFocusRef.current && typeof document !== "undefined" && document.body.contains(prevFocusRef.current)) {
+        prevFocusRef.current.focus();
+      }
+    };
+  }, []);
 
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
