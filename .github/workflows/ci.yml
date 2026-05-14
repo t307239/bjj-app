@@ -227,6 +227,11 @@ jobs:
       - name: Run detect_a11y_table_no_label.py
         run: python3 scripts/detect_a11y_table_no_label.py --ci
 
+      # z261q: observability — every catch block must call logger/Sentry/setError or carry a
+      # `silent: ok — <reason>` opt-out marker, preventing future silent error swallowing.
+      - name: Run detect_silent_catch_observability.py
+        run: python3 scripts/detect_silent_catch_observability.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest

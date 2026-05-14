@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     }
 
     let rawBody: unknown;
-    try { rawBody = await req.json(); } catch { // silent: ok — malformed body → empty for validation rawBody = {}; }
+    try { rawBody = await req.json(); } catch { /* silent: ok — malformed body → empty for validation */ rawBody = {}; }
     const parsed = WaitlistBodySchema.safeParse(rawBody);
     if (!parsed.success) {
       return NextResponse.json({ error: "Validation failed", issues: parsed.error.issues }, { status: 400 });

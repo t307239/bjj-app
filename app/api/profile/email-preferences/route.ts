@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
   }
 
   let raw: unknown;
-  try { raw = await req.json(); } catch { // silent: ok — malformed body → empty for validation raw = {}; }
+  try { raw = await req.json(); } catch { /* silent: ok — malformed body → empty for validation */ raw = {}; }
   const parsed = UpdateBody.safeParse(raw);
   if (!parsed.success) {
     return NextResponse.json(

@@ -319,7 +319,7 @@ export async function POST(req: NextRequest) {
   }
 
   let rawBody: unknown;
-  try { rawBody = await req.json(); } catch { // silent: ok — malformed body → empty record for validation rawBody = {}; }
+  try { rawBody = await req.json(); } catch { /* silent: ok — malformed body → empty record for validation */ rawBody = {}; }
   const parsed = GenerateBodySchema.safeParse(rawBody);
   if (!parsed.success) {
     return NextResponse.json(

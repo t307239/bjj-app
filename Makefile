@@ -3,10 +3,10 @@
 # 「完璧」と宣言する前に必ず `make verify` を実行する。
 # 6 つの lint が全パスすれば commit 可能、1 つでも 🔴 fail なら作業未完了。
 
-.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions input-autocomplete a11y-table-label unsafe-dynamic-href api-auth-bypass supabase-rls-gap
+.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions input-autocomplete a11y-table-label unsafe-dynamic-href api-auth-bypass supabase-rls-gap silent-catch-observability
 
 # Run all anti-regression checks
-verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions input-autocomplete a11y-table-label unsafe-dynamic-href api-auth-bypass supabase-rls-gap
+verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions input-autocomplete a11y-table-label unsafe-dynamic-href api-auth-bypass supabase-rls-gap silent-catch-observability
 	@echo ""
 	@echo "✅ All anti-regression checks passed."
 	@echo "   Safe to commit."
@@ -129,6 +129,11 @@ api-auth-bypass:
 supabase-rls-gap:
 	@echo "→ detect_supabase_rls_gap.py..."
 	@python3 scripts/detect_supabase_rls_gap.py --ci
+
+# z261q: catch block で logger / Sentry / opt-out marker のどれも無い silent swallow を block
+silent-catch-observability:
+	@echo "→ detect_silent_catch_observability.py..."
+	@python3 scripts/detect_silent_catch_observability.py --ci
 
 # Run vitest unit tests
 test:
