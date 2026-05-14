@@ -2,6 +2,80 @@
 
 ---
 
+## 2026/05/14 チェック
+
+### 新着リリース
+
+#### 🛠️ Claude Code v2.1.141（2026/05/13-14頃 / 最新）
+- **`/feedback` で過去 24h / 7d セッションを同梱可能に**: 単一セッションを跨ぐ問題報告が容易に
+- **Rewind menu に "Summarize up to here" 追加**: 古い turn を圧縮して直近 context だけ残せる
+- **ホック JSON output に `terminalSequence` field**: terminal を持たない hook からも desktop 通知 / window title / bell を送出可能
+- **`CLAUDE_CODE_PLUGIN_PREFER_HTTPS`**: GitHub plugin 取得を SSH の代わりに HTTPS で。SSH key 無し環境向け
+- **`ANTHROPIC_WORKSPACE_ID` 環境変数**: workload identity federation の token を特定 workspace に scope
+- **`claude agents --cwd <path>`**: ディレクトリ単位でセッション一覧を絞り込み
+- **長考スピナーが 10 秒で amber に色変化**: Claude が止まっていないことを視覚的に示す
+- **🔒 Bedrock/Vertex/Foundry/gateway での background side-query が壊れる bug 修正**: 不正な Haiku model ID を投げて失敗していたものを main-loop model fallback に
+- **Auto mode permission dialog**: `permissions.ask` rule が trigger された場合に理由を表示
+- **`Edit` permission prompt に "view diff in your IDE" 復活**: IDE 接続時のみ
+- **markdown table の vertical key-value 落ちを fix（v2.1.136 regression）**
+
+#### 🛠️ Claude Code v2.1.140（2026/05/12頃）
+- **Agent tool `subagent_type` の case/separator-insensitive matching**: `"Code Reviewer"` でも `code-reviewer` に解決
+- **agent color palette 更新**
+- **`/goal` が `disableAllHooks` / `allowManagedHooksOnly` 下で永久 hang する bug 修正**
+- **`Read` tool の `offset` が whitespace-padded / `+`-prefix string で validation 失敗していた bug 修正**
+- **plugin の default folder（`commands/` 等）が `plugin.json` の同名 key で silently 無視される問題に warning**
+
+#### 🛠️ Claude Code v2.1.139（2026/05/11-12頃 / 大型リリース）
+- **🚀 Agent view（Research Preview）追加**: `claude agents` で全セッション（実行中 / 待機中 / 完了）を一画面で管理可能。docs: https://code.claude.com/docs/en/agent-view
+- **🎯 `/goal` コマンド追加**: 完了条件を設定すると Claude が turn を跨いで条件達成まで作業継続。interactive / `-p` / Remote Control 全対応。経過 elapsed/turns/tokens を live overlay 表示
+- **🖱️ `/scroll-speed` コマンド**: マウスホイール scroll 速度を live preview で調整
+- **`claude plugin details <name>`**: plugin の component inventory + per-session token cost を表示
+- **transcript view ナビゲーション拡張**: `?` で shortcut、`{`/`}` で user prompt 間 jump、`v` で shortcut panel toggle
+- **hook `args: string[]` field**: shell を介さず直接 spawn、path placeholder の quote 不要
+- **hook `continueOnBlock` config**: `PostToolUse` で hook の rejection reason を Claude に feedback して turn を継続可能
+- **MCP stdio server に `CLAUDE_PROJECT_DIR` 環境変数を渡す**: hooks と挙動 matching、plugin config から `${CLAUDE_PROJECT_DIR}` 参照可能
+- **🔒 `ANTHROPIC_API_KEY` / `apiKeyHelper` / `ANTHROPIC_AUTH_TOKEN` 設定時、Remote Control / `/schedule` / claude.ai MCP connectors / 通知 prefs が無効化**: API key と Claude.ai login の両立を防止
+- **API request の subagent header 追加**: `x-claude-code-agent-id` / `x-claude-code-parent-agent-id` で subagent 系統を tracking
+- **Cursor / VS Code 1.92-1.104 のマウスホイール速度 fix**
+
+#### 🛠️ Claude Code v2.1.136（2026/05/11頃）
+- **`settings.autoMode.hard_deny`**: auto mode classifier rule で user 意図に関わらず unconditional block
+- **🔒 MCP OAuth refresh token concurrent loss fix**: 複数 remote MCP server を持つユーザーの daily re-authentication 問題が解消
+- **🔒 OAuth token race fix**: concurrent credential write で freshly-rotated token を上書きする login loop 修正
+- **`.mcp.json` / plugin / claude.ai connectors の MCP server が `/clear` で silently 消える bug 修正**（VS Code / JetBrains / Agent SDK）
+- **plan mode が `Edit(...)` allow rule を持つ file write を block しなかった regression 修正**
+- **WSL2 で Windows clipboard 経由の image paste を PowerShell fallback で対応**
+
+#### 📡 API変更
+
+##### **Fine-grained tool streaming GA**（2026/05/13頃）
+- 全 model / 全 platform で正式 GA。`betas=["fine-grained-tool-streaming-2025-05-14"]` 削除推奨
+- tool use chunk が高速 streaming + word break 削減
+- `eager_input_streaming` で per-tool 制御
+
+#### 🖥️ プロダクト
+
+##### **Claude for Small Business**（2026/05/14）
+- 小規模事業者向け toggle install 型 connector パッケージ
+- **対応ツール**: Intuit QuickBooks / PayPal / HubSpot / Canva / Docusign / Google Workspace / Microsoft 365
+- **PayPal**: settlements / invoicing / disputes / refunds を Claude 内で完結
+- **QuickBooks**: payroll / monthly close / cash-flow / 確定申告準備
+- **HubSpot**: lead triage / customer pulse / campaign attribution
+- 5/14 シカゴから全米無料半日 AI fluency tour 開始（各 stop 100 名上限）
+- Workday Foundation + LISC 連携で 15 名の solopreneur に Claude credits 提供
+
+### 💡 BJJ Appへの影響
+
+- **🟢 Claude Code v2.1.141 は通常 update 推奨**: `claude update` で取得。`/feedback` の 24h/7d 同梱は Wiki batch / cron 系で複数日跨ぎの問題を後追い報告する際に便利。Rewind の "Summarize up to here" は長尺セッションの context 圧縮に使える
+- **🚀 v2.1.139 `/goal` コマンドは BJJ Wiki batch 改善余地大**: 「make verify が 0 fail になるまで」「`tsc EXIT:0` まで」等 CLAUDE.md の収束ループ規約と完全 match。`/loop` 廃止して `/goal` に移行検討。docs/CLAUDE_FEATURES.md の更新候補
+- **🚀 v2.1.139 Agent view（`claude agents`）**: bjj-app と bjj-wiki の並行セッション管理が一画面化。Wiki cron / SNS post / daily-digest が回ってる時の visibility 大幅改善
+- **🟢 v2.1.136 MCP OAuth concurrent refresh fix**: bjj-app は Slack / Atlassian / Linear / Notion 等の remote MCP を併用していないため即時影響なし。ただし将来 Stripe MCP 等を追加する際の前提条件として安定化済み
+- **🟢 Fine-grained tool streaming GA**: bjj-app の tool use（Wiki batch / Gemini 呼び出し）は SDK 経由でなく直接 API 呼びのため、SDK の自動 update を受ける範囲では恩恵あり。手動で beta header 付けてた箇所は無いはずだが念のため `grep -r "fine-grained-tool-streaming"` で確認推奨
+- **🟡 Claude for Small Business**: BJJ App は B2C SaaS で SMB 向け connector 群と直接被らないが、**B2B Gym Pro tier の差別化観点で参考になる**。HubSpot / QuickBooks 統合のような「業界 SaaS の中に Claude を埋め込む」設計思想は Gym 管理側の追加 connector（Stripe billing summary 等）の参考に。docs/MARKETING_PLAN.md の B2B section に「SMB 向け Anthropic 公式 pattern」として参照する余地あり
+
+---
+
 ## 2026/05/11 チェック
 
 ### 新着リリース
