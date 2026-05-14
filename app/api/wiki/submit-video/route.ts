@@ -1,3 +1,4 @@
+// auth: public — UGC anonymous video submission (rate-limited 5/10min, AI triage gate before publish)
 /**
  * POST /api/wiki/submit-video
  *

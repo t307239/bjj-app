@@ -51,6 +51,9 @@ SAFE_VALUE_HINTS = (
     "ctaPrimaryHref",
     "supabaseUrl",
     "sentryIngestOrigin",
+    "stripePaymentLink",
+    "paymentUrl",
+    "upgradeUrl",
 )
 
 

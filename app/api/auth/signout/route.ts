@@ -1,3 +1,4 @@
+// auth: public — sign out clears session, safe no-op for unauthed; rate-limited per IP
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { createRateLimiter } from "@/lib/rateLimit";

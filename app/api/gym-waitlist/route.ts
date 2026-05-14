@@ -1,3 +1,4 @@
+// auth: public — gym waitlist signup (rate-limited 5/10min, email-validated by zod)
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";

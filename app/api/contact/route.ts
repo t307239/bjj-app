@@ -1,3 +1,4 @@
+// auth: public — anonymous contact form / bug report (rate-limited, email-validated)
 /**
  * POST /api/contact
  *

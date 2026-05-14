@@ -1,3 +1,4 @@
+// auth: public — uptime monitoring endpoint, no PII / sensitive data
 /**
  * GET /api/health
  *

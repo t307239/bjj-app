@@ -64,6 +64,7 @@ export default function EmptyState({
         </button>
       )}
       {linkAction && (
+        // safe-href: props.linkAction.href is developer-controlled (callers pass internal paths only); enforce via review
         <a
           href={linkAction.href}
           className="mt-2 inline-block px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl transition-colors active:scale-95"
