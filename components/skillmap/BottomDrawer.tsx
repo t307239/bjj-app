@@ -201,6 +201,7 @@ export default function BottomDrawer({
               className="w-full bg-zinc-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/30"
               style={{ touchAction: "auto" }}
               maxLength={80}
+            aria-label={t("skillmap.ariaChildName")}
             />
             <div className="flex gap-2">
               <button type="button"
@@ -268,7 +269,8 @@ export default function BottomDrawer({
                 className="flex-1 bg-zinc-800 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/30"
                 style={{ touchAction: "auto" }}
                 maxLength={40}
-              />
+              aria-label={t("skillmap.ariaTagName")}
+            />
               <button type="button"
                 onClick={addCustomTag}
                 disabled={!customTagInput.trim()}

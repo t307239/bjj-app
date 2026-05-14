@@ -272,7 +272,13 @@
     "toggleDetailCharts": "Toggle detail charts",
     "toggleBadges": "Toggle badges",
     "searchResultCount": "{count} results found",
-    "guestStorageFull": "Storage full — sign in to save to cloud"
+    "guestStorageFull": "Storage full — sign in to save to cloud",
+    "ariaDate": "Training date",
+    "ariaNotes": "Training notes",
+    "ariaFilterDateFrom": "Filter: from date",
+    "ariaFilterDateTo": "Filter: to date",
+    "ariaGiName": "Gi name",
+    "ariaEditDate": "Edit training date"
   },
   "techniques": {
     "mastery1": "Know it",
@@ -404,7 +410,9 @@
     "freeCounter": "📝 {count}/{limit} techniques (free plan)",
     "freeLimitReachedShort": "🔒 Free limit reached — {limit}/{limit} techniques",
     "emptyCta": "Add Your First Technique",
-    "addedDaysAgoOne": "1 day ago"
+    "addedDaysAgoOne": "1 day ago",
+    "ariaEditName": "Edit technique name",
+    "ariaVideoUrl": "Technique video URL"
   },
   "profile": {
     "title": "Profile",
@@ -565,7 +573,11 @@
     "bjjHistoryOneYearOneMonth": "1 year 1 month",
     "language": "Language",
     "languageDesc": "Choose your preferred display language. Changes apply immediately.",
-    "languageAriaLabel": "Display language selector"
+    "languageAriaLabel": "Display language selector",
+    "ariaNewEmail": "New email address",
+    "ariaNewDisplayName": "New display name",
+    "ariaBeltPromoDate": "Belt promotion date",
+    "ariaNewBeltDate": "New belt promotion date"
   },
   "competition": {
     "title": "Match Record",
@@ -608,7 +620,10 @@
     "viewAll": "View All Matches",
     "hideAll": "Show Recent",
     "matchHistory": "Match History",
-    "eventLabel": "Event"
+    "eventLabel": "Event",
+    "ariaEditOpponent": "Edit opponent",
+    "ariaEditFinish": "Edit finish",
+    "ariaEditEvent": "Edit event"
   },
   "guest": {
     "banner": "Guest Mode",
@@ -973,7 +988,8 @@
     "cookieSettings": "Cookie Settings",
     "ageVerification": "Age verification",
     "offlineDisabled": "Requires internet connection",
-    "error": "Error"
+    "error": "Error",
+    "ariaSearchEmail": "Search by email"
   },
   "aiCoach": {
     "title": "AI Coach",
@@ -1072,7 +1088,10 @@
     "addTechnique": "Add technique",
     "legendLocked": "Locked",
     "legendLearning": "Learning",
-    "legendMastered": "Mastered"
+    "legendMastered": "Mastered",
+    "ariaTechniqueName": "Technique name",
+    "ariaChildName": "Child node name",
+    "ariaTagName": "Tag name"
   },
   "wiki": {
     "dailyTip": "Today's BJJ Knowledge",
@@ -1085,7 +1104,8 @@
     "notFoundSwept": "Looks like this technique got swept.",
     "notFoundBody": "The page you're looking for doesn't exist — maybe it tapped out before you got here.",
     "notFoundBack": "Back to BJJ Wiki",
-    "notFoundHome": "BJJ App Home"
+    "notFoundHome": "BJJ App Home",
+    "ariaYouTubeUrl": "YouTube video URL"
   },
   "error": {
     "title": "Something went wrong",
@@ -1337,7 +1357,8 @@
     "curriculumAriaOpen": "Open curriculum article: {name}",
     "daysAgoOne": "1 day ago",
     "churnAlertTitle": "{n} member(s) at risk of leaving",
-    "churnAlertDesc": "Members who haven't trained in 14+ days. Consider reaching out."
+    "churnAlertDesc": "Members who haven't trained in 14+ days. Consider reaching out.",
+    "ariaCurriculumWikiUrl": "Curriculum wiki article URL"
   },
   "gymJoin": {
     "title": "Join {name}",
@@ -1990,7 +2011,9 @@
     "tipBase": "Build your base. Technique development, conditioning, and exploring new positions.",
     "proTeaser": "Upgrade to Pro for AI training recommendations",
     "duplicateError": "A goal with the same name and date already exists",
-    "loadError": "Failed to load data"
+    "loadError": "Failed to load data",
+    "ariaName": "Competition name",
+    "ariaDate": "Competition date"
   },
   "records": {
     "errorTitle": "Something went wrong",

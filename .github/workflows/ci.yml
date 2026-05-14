@@ -206,6 +206,12 @@ jobs:
       - name: Run detect_zindex_hardcode.py
         run: python3 scripts/detect_zindex_hardcode.py --ci
 
+      # z261k: a11y — <input> elements must have an accessible name
+      # (aria-label, aria-labelledby, htmlFor-linked label, or wrapping label)
+      # スクリーンリーダー死亡を永久 block。
+      - name: Run detect_a11y_input_no_label.py
+        run: python3 scripts/detect_a11y_input_no_label.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest

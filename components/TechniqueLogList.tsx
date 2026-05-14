@@ -239,7 +239,8 @@ aria-hidden="true"             className="absolute left-3 top-1/2 -translate-y-1
                     }
                     className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30 mb-2"
                     required
-                  />
+                  aria-label={t("techniques.ariaEditName")}
+            />
                   <div className="grid grid-cols-2 gap-2 mb-2">
                     <select
                       value={editForm.category}

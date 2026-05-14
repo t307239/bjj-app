@@ -61,7 +61,8 @@ export default function SkillMapEmpty({
             }}
             className="w-full bg-zinc-800 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/30"
             maxLength={80}
-          />
+          aria-label={t("skillmap.ariaTechniqueName")}
+            />
           <div className="flex gap-2 w-full">
             <button type="button" onClick={() => setEmptyAddName("")} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-2 rounded-xl transition-colors">{t("common.cancel")}</button>
             <button type="button"

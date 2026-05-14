@@ -37,7 +37,8 @@ export default function AddNodePopup({ screenX, screenY, onAdd, onCancel, t }: P
         }}
         className="w-full bg-zinc-700 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none mb-2"
         maxLength={80}
-      />
+      aria-label={t("skillmap.ariaTechniqueName")}
+            />
       <div className="flex gap-2">
         <button type="button" onClick={onCancel} className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-xs text-zinc-300 py-2 min-h-[44px] rounded-lg transition-colors">
           {t("common.cancel")}

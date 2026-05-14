@@ -130,7 +130,8 @@ export default function UgcVideoSubmit({ slug, lang, ugcLabel, ugcCta }: Props) 
                 placeholder="https://www.youtube.com/watch?v=..."
                 required
                 className="w-full rounded-lg border border-white/10 bg-slate-800/60 px-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500/50"
-              />
+              aria-label={t("wiki.ariaYouTubeUrl")}
+            />
               {errorMsg && (
                 <p className="text-xs text-red-400" role="alert">{errorMsg}</p>
               )}

@@ -259,7 +259,8 @@ export default function GuestDashboard() {
                   max={getLocalDateString()}
                   onChange={(e) => setDate(e.target.value)}
                   className="w-full bg-zinc-800 text-white text-sm rounded-lg px-3 py-2 border border-white/10 focus:outline-none focus:border-white/30"
-                />
+                aria-label={t("training.ariaDate")}
+            />
               </div>
               {/* 時間プリセット */}
               <div>
@@ -302,7 +303,8 @@ export default function GuestDashboard() {
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder={t("training.memoOptional")}
                 className="w-full bg-zinc-800 text-white text-sm rounded-lg px-3 py-2 border border-white/10 focus:outline-none focus:border-white/30"
-              />
+              aria-label={t("training.ariaNotes")}
+            />
               {/* 連続入力チェックボックス */}
               <label className="flex items-center gap-2 cursor-pointer select-none">
                 <input

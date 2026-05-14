@@ -218,6 +218,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="メールアドレス検索…"
             className="w-full bg-zinc-900 border border-white/10 text-white placeholder-gray-600 px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:border-white/30"
+            aria-label="メールアドレスで検索"
           />
         </div>
 

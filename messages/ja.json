@@ -272,7 +272,13 @@
     "toggleDetailCharts": "詳細チャートの表示切替",
     "toggleBadges": "バッジの表示切替",
     "searchResultCount": "{count}件の結果",
-    "guestStorageFull": "ストレージが満杯です — クラウド保存のためログインしてください"
+    "guestStorageFull": "ストレージが満杯です — クラウド保存のためログインしてください",
+    "ariaDate": "練習日",
+    "ariaNotes": "練習メモ",
+    "ariaFilterDateFrom": "絞り込み: 開始日",
+    "ariaFilterDateTo": "絞り込み: 終了日",
+    "ariaGiName": "ギの名前",
+    "ariaEditDate": "練習日を編集"
   },
   "techniques": {
     "mastery1": "入門",
@@ -404,7 +410,9 @@
     "freeCounter": "📝 {count}/{limit} テクニック（無料プラン）",
     "freeLimitReachedShort": "🔒 無料上限に達しました — {limit}/{limit} テクニック",
     "emptyCta": "最初のテクニックを追加",
-    "addedDaysAgoOne": "1日前"
+    "addedDaysAgoOne": "1日前",
+    "ariaEditName": "テクニック名を編集",
+    "ariaVideoUrl": "テクニック動画URL"
   },
   "profile": {
     "title": "プロフィール",
@@ -565,7 +573,11 @@
     "bjjHistoryOneYearOneMonth": "1年1ヶ月",
     "language": "言語",
     "languageDesc": "表示言語を選択してください。変更はすぐに反映されます。",
-    "languageAriaLabel": "表示言語の選択"
+    "languageAriaLabel": "表示言語の選択",
+    "ariaNewEmail": "新しいメールアドレス",
+    "ariaNewDisplayName": "新しい表示名",
+    "ariaBeltPromoDate": "昇格日",
+    "ariaNewBeltDate": "新しい昇格日"
   },
   "competition": {
     "title": "試合戦績",
@@ -608,7 +620,10 @@
     "viewAll": "全試合を表示",
     "hideAll": "最近のみ表示",
     "matchHistory": "試合履歴",
-    "eventLabel": "大会"
+    "eventLabel": "大会",
+    "ariaEditOpponent": "対戦相手を編集",
+    "ariaEditFinish": "決め技を編集",
+    "ariaEditEvent": "大会名を編集"
   },
   "guest": {
     "banner": "ゲストモードで体験中",
@@ -963,7 +978,8 @@
     "cookieSettings": "Cookie設定",
     "ageVerification": "年齢確認",
     "offlineDisabled": "インターネット接続が必要です",
-    "error": "エラー"
+    "error": "エラー",
+    "ariaSearchEmail": "メールアドレスで検索"
   },
   "aiCoach": {
     "title": "AIコーチ",
@@ -1062,7 +1078,10 @@
     "addTechnique": "テクニックを追加",
     "legendLocked": "未解放",
     "legendLearning": "学習中",
-    "legendMastered": "習得済み"
+    "legendMastered": "習得済み",
+    "ariaTechniqueName": "テクニック名",
+    "ariaChildName": "子ノード名",
+    "ariaTagName": "タグ名"
   },
   "wiki": {
     "dailyTip": "今日のBJJ知識",
@@ -1075,7 +1094,8 @@
     "notFoundSwept": "この技は一本取られたようです。",
     "notFoundBody": "お探しのページは存在しないか、あなたが着く前にタップアウトしたかもしれません。",
     "notFoundBack": "BJJ Wikiに戻る",
-    "notFoundHome": "BJJ App ホーム"
+    "notFoundHome": "BJJ App ホーム",
+    "ariaYouTubeUrl": "YouTube動画URL"
   },
   "error": {
     "title": "エラーが発生しました",
@@ -1327,7 +1347,8 @@
     "curriculumAriaOpen": "カリキュラム記事を開く: {name}",
     "daysAgoOne": "1日前",
     "churnAlertTitle": "{n}名の生徒が離脱リスク",
-    "churnAlertDesc": "14日以上練習記録なし。声かけを推奨します。"
+    "churnAlertDesc": "14日以上練習記録なし。声かけを推奨します。",
+    "ariaCurriculumWikiUrl": "カリキュラムのWiki記事URL"
   },
   "gymJoin": {
     "title": "{name} に参加する",
@@ -1990,7 +2011,9 @@
     "tipBase": "基礎固め。テクニック習得、フィジカル強化、新ポジションの探索。",
     "proTeaser": "Proにアップグレードで練習量AIレコメンドを解放",
     "duplicateError": "同じ名前・日付の大会目標がすでに存在します",
-    "loadError": "データの読み込みに失敗しました"
+    "loadError": "データの読み込みに失敗しました",
+    "ariaName": "大会名",
+    "ariaDate": "大会の日付"
   },
   "records": {
     "errorTitle": "何かが間違っています",

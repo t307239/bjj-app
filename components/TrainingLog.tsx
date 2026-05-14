@@ -347,7 +347,8 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
                     max={dateTo || today}
                     onChange={(e) => setDateFrom(e.target.value)}
                     className="w-28 flex-shrink-0 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:border-white/30"
-                  />
+                  aria-label={t("training.ariaFilterDateFrom")}
+            />
                   <span className="text-zinc-400 text-xs flex-shrink-0">–</span>
                   <input
                     type="date"
@@ -356,7 +357,8 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
                     max={today}
                     onChange={(e) => setDateTo(e.target.value)}
                     className="w-28 flex-shrink-0 bg-zinc-900 text-white text-xs rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:border-white/30"
-                  />
+                  aria-label={t("training.ariaFilterDateTo")}
+            />
                   <button type="button"
                     onClick={() => { setDateFrom(""); setDateTo(""); }}
                     aria-label={t("common.clearFilter")}

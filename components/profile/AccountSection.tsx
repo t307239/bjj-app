@@ -158,6 +158,7 @@ export default function AccountSection({ userId, supabase }: Props) {
               placeholder={t("profile.emailPlaceholder")}
               aria-describedby={emailError ? "email-error" : undefined}
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-emerald-500"
+            aria-label={t("profile.ariaNewEmail")}
             />
             {emailError && <p id="email-error" role="alert" className="text-red-400 text-xs">{emailError}</p>}
             {emailMsg && <p aria-live="polite" className="text-emerald-400 text-xs">{emailMsg}</p>}

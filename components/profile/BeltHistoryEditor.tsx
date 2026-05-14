@@ -267,7 +267,8 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
             max={today}
             onChange={(e) => setNewDate(e.target.value)}
             className="w-full bg-zinc-800 text-zinc-300 text-sm rounded-lg px-3 py-2 border border-white/8 focus:outline-none focus:border-white/20"
-          />
+          aria-label={t("profile.ariaNewBeltDate")}
+            />
           <button type="button"
             onClick={handleAdd}
             disabled={!newBelt || !newDate || saving}

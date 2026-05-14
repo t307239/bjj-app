@@ -596,7 +596,8 @@ aria-hidden="true"               className={`w-3 h-3 flex-shrink-0 transition-tr
                     placeholder={t("training.giNamePlaceholder")}
                     className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm border border-zinc-700 focus:outline-none focus:border-white/30 placeholder-gray-500"
                     maxLength={50}
-                  />
+                  aria-label={t("training.ariaGiName")}
+            />
                 </div>
               )}
             </div>

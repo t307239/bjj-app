@@ -262,7 +262,8 @@ const TrainingLogList = memo(function TrainingLogList({
                     max={today}
                     onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
                     className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1.5 text-sm border border-white/10 focus:outline-none focus:border-white/30 mb-2"
-                  />
+                  aria-label={t("training.ariaEditDate")}
+            />
                   <DurationPicker
                     value={editForm.duration_min}
                     onChange={(v) => setEditForm({ ...editForm, duration_min: v })}
@@ -300,7 +301,8 @@ const TrainingLogList = memo(function TrainingLogList({
                         onChange={(e) => setEditCompForm({ ...editCompForm, opponent: e.target.value })}
                         placeholder={t("competition.opponentShortPlaceholder")}
                         className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
-                      />
+                      aria-label={t("competition.ariaEditOpponent")}
+            />
                     </div>
                     <div className="grid grid-cols-2 gap-1.5">
                       <input
@@ -309,14 +311,16 @@ const TrainingLogList = memo(function TrainingLogList({
                         onChange={(e) => setEditCompForm({ ...editCompForm, finish: e.target.value })}
                         placeholder={t("competition.finishShortPlaceholder")}
                         className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
-                      />
+                      aria-label={t("competition.ariaEditFinish")}
+            />
                       <input
                         type="text"
                         value={editCompForm.event}
                         onChange={(e) => setEditCompForm({ ...editCompForm, event: e.target.value })}
                         placeholder={t("competition.eventShortPlaceholder")}
                         className="w-full bg-zinc-800 text-white rounded-lg px-2 py-1 text-xs border border-white/10 focus:outline-none focus:border-white/30 placeholder-gray-500"
-                      />
+                      aria-label={t("competition.ariaEditEvent")}
+            />
                     </div>
                     <div className="grid grid-cols-2 gap-1.5">
                       <select

@@ -272,7 +272,13 @@
     "toggleDetailCharts": "Alternar gráficos detalhados",
     "toggleBadges": "Alternar medalhas",
     "searchResultCount": "{count} resultados encontrados",
-    "guestStorageFull": "Armazenamento cheio — entre para salvar na nuvem"
+    "guestStorageFull": "Armazenamento cheio — entre para salvar na nuvem",
+    "ariaDate": "Data do treino",
+    "ariaNotes": "Notas do treino",
+    "ariaFilterDateFrom": "Filtro: data inicial",
+    "ariaFilterDateTo": "Filtro: data final",
+    "ariaGiName": "Nome do gi",
+    "ariaEditDate": "Editar data do treino"
   },
   "techniques": {
     "mastery1": "Conheço",
@@ -404,7 +410,9 @@
     "freeCounter": "📝 {count}/{limit} técnicas (plano gratuito)",
     "freeLimitReachedShort": "🔒 Limite atingido — {limit}/{limit} técnicas",
     "emptyCta": "Adicione Sua Primeira Técnica",
-    "addedDaysAgoOne": "1 dia atrás"
+    "addedDaysAgoOne": "1 dia atrás",
+    "ariaEditName": "Editar nome da técnica",
+    "ariaVideoUrl": "URL do vídeo da técnica"
   },
   "profile": {
     "title": "Perfil",
@@ -565,7 +573,11 @@
     "bjjHistoryOneYearOneMonth": "1 ano 1 mês",
     "language": "Idioma",
     "languageDesc": "Escolha seu idioma de exibição. As alterações são aplicadas imediatamente.",
-    "languageAriaLabel": "Seletor de idioma de exibição"
+    "languageAriaLabel": "Seletor de idioma de exibição",
+    "ariaNewEmail": "Novo endereço de e-mail",
+    "ariaNewDisplayName": "Novo nome de exibição",
+    "ariaBeltPromoDate": "Data da promoção",
+    "ariaNewBeltDate": "Nova data de promoção"
   },
   "competition": {
     "title": "Histórico de Lutas",
@@ -608,7 +620,10 @@
     "viewAll": "Ver Todas as Lutas",
     "hideAll": "Mostrar Recentes",
     "matchHistory": "Histórico de Lutas",
-    "eventLabel": "Evento"
+    "eventLabel": "Evento",
+    "ariaEditOpponent": "Editar oponente",
+    "ariaEditFinish": "Editar finalização",
+    "ariaEditEvent": "Editar evento"
   },
   "guest": {
     "banner": "Modo Visitante",
@@ -999,7 +1014,8 @@
     "cookieSettings": "Configurações de Cookies",
     "ageVerification": "Verificação de idade",
     "offlineDisabled": "Requer conexão com a internet",
-    "error": "Erro"
+    "error": "Erro",
+    "ariaSearchEmail": "Buscar por e-mail"
   },
   "aiCoach": {
     "title": "🤖 AI Micro-Coach",
@@ -1098,7 +1114,10 @@
     "addTechnique": "Adicionar técnica",
     "legendLocked": "Bloqueado",
     "legendLearning": "Aprendendo",
-    "legendMastered": "Dominado"
+    "legendMastered": "Dominado",
+    "ariaTechniqueName": "Nome da técnica",
+    "ariaChildName": "Nome do nó filho",
+    "ariaTagName": "Nome da tag"
   },
   "wiki": {
     "dailyTip": "Conhecimento BJJ de Hoje",
@@ -1111,7 +1130,8 @@
     "notFoundSwept": "Parece que essa técnica foi raspada.",
     "notFoundBody": "A página que você procura não existe — talvez tenha batido antes de você chegar.",
     "notFoundBack": "Voltar ao BJJ Wiki",
-    "notFoundHome": "Início do BJJ App"
+    "notFoundHome": "Início do BJJ App",
+    "ariaYouTubeUrl": "URL do vídeo do YouTube"
   },
   "error": {
     "title": "Algo deu errado",
@@ -1363,7 +1383,8 @@
     "curriculumAriaOpen": "Abrir artigo do currículo: {name}",
     "daysAgoOne": "1 dia atrás",
     "churnAlertTitle": "{n} aluno(s) em risco de churn",
-    "churnAlertDesc": "Membros sem treinos há 14+ dias. Considere contatá-los."
+    "churnAlertDesc": "Membros sem treinos há 14+ dias. Considere contatá-los.",
+    "ariaCurriculumWikiUrl": "URL do artigo wiki do currículo"
   },
   "gymJoin": {
     "title": "Entrar em {name}",
@@ -2018,7 +2039,9 @@
     "tipBase": "Construa sua base. Desenvolvimento técnico, condicionamento e exploração.",
     "proTeaser": "Atualize para Pro para recomendações de treino com IA",
     "duplicateError": "Já existe uma meta com o mesmo nome e data",
-    "loadError": "Falha ao carregar dados"
+    "loadError": "Falha ao carregar dados",
+    "ariaName": "Nome da competição",
+    "ariaDate": "Data da competição"
   },
   "records": {
     "errorTitle": "Algo deu errado",
