@@ -42,6 +42,8 @@ AUDIT_FRAMEWORK.md の20軸スコアリングでは見逃される、
  34. .split("-") 直後 destructure に長さガード無し（malformed input で undefined → NaN 伝搬） [z257c]
  35. new Date(x).getTime() に isNaN ガード無し（invalid ISO で silent NaN） [z257c]
  36. className="truncate" + dynamic content に title 属性無し（省略後 full text 確認不可） [z257c]
+ 37. <button> で type 属性無し（<form> 内なら submit 暴発 risk） [z261d]
+ 38. <a target="_blank"> で rel="noopener" / "noreferrer" 不在（tabnabbing + referrer leak） [z261d]
 
 使い方:
     python3 scripts/detect_hidden_bugs.py              # 全チェック
@@ -1722,6 +1724,166 @@ def check_settimeout_setstate_outside_useeffect(filepath: Path, content: str, re
 
 
 # ─────────────────────────────────────────────────────
+# カテゴリ 37: <button> で type 属性無し (z261d)
+# ─────────────────────────────────────────────────────
+
+def check_button_no_type(filepath: Path, content: str, report: BugReport):
+    """<button> tag で type 属性無し → <form> 内なら default submit で暴発 risk
+
+    実害シナリオ:
+      <form onSubmit={...}>
+        <button onClick={...}>キャンセル</button>   ← type 無し = submit と解釈
+                                                  → form の onSubmit が誤発火
+      </form>
+
+    検出: <button> 開始タグで `type=` 属性が無いもの。
+      - <form> 内に居る button → CRITICAL (submit 暴発で data 破壊 risk)
+      - <form> 外の button → INFO (実害低、明示性 hygiene)
+
+    既存 `<button type="...">` または `<button ... type="..."` ならスキップ。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+    if filepath.suffix != ".tsx":
+        return
+
+    # form 内かどうかは行単位の粗い tracker で十分 (form の close tag は </form>)
+    # JSX なので <form> ... </form> の間にある button を form 内と判定
+    # ただし conditional <form && ...> 等の partial match は false positive 避けるため
+    # opening tag が明確な <form> または <form\s 形式のみカウント
+
+    lines = content.split("\n")
+    form_depth = 0
+    # Track button opening tags that span multiple lines: store start line + accumulated text
+    pending: list[tuple[int, str, int]] = []  # (start_line, accumulated_text, form_depth_when_opened)
+
+    OPEN_FORM_RE = re.compile(r"<form\b")
+    CLOSE_FORM_RE = re.compile(r"</form>")
+    OPEN_BUTTON_RE = re.compile(r"<button\b")
+    CLOSE_TAG_RE = re.compile(r">")  # closes the opening button tag
+
+    for line_no, line in enumerate(lines, 1):
+        stripped = line.lstrip()
+        if stripped.startswith("//") or stripped.startswith("*"):
+            continue
+
+        # First: drain any pending button-open by appending this line
+        if pending:
+            new_pending = []
+            for start_line, accum, fd in pending:
+                accum2 = accum + " " + line
+                # find first > that's NOT part of an attribute value
+                # simple heuristic: split on /> or > (we only care about closing the tag)
+                close_idx = accum2.find(">")
+                if close_idx == -1:
+                    new_pending.append((start_line, accum2, fd))
+                    continue
+                # tag closed — check if accum has type=
+                tag = accum2[: close_idx + 1]
+                if "type=" in tag:
+                    continue  # OK
+                sev = "CRITICAL" if fd > 0 else "INFO"
+                report.add(
+                    sev, "BUTTON_NO_TYPE",
+                    str(rel),
+                    f"L{start_line}: <button> で type 属性無し" + (" — <form> 内で submit 暴発 risk" if fd > 0 else " — 明示的 type=\"button\" 推奨"),
+                    'type="button" を明示 (送信ボタンなら type="submit")',
+                )
+            pending = new_pending
+
+        # Position-aware scan: process <form>, </form>, <button in order so
+        # single-line <form><button>...</button></form> still sees form_depth>0
+        # when checking the button.
+        # Collect (position, kind) events
+        events: list[tuple[int, str]] = []
+        for fm in OPEN_FORM_RE.finditer(line):
+            events.append((fm.start(), "form_open"))
+        for fm in CLOSE_FORM_RE.finditer(line):
+            events.append((fm.start(), "form_close"))
+        for bm in OPEN_BUTTON_RE.finditer(line):
+            events.append((bm.start(), "button_open"))
+        events.sort()
+
+        for pos, kind in events:
+            if kind == "form_open":
+                form_depth += 1
+            elif kind == "form_close":
+                form_depth = max(0, form_depth - 1)
+            else:  # button_open
+                snippet = line[pos:]
+                close_idx = snippet.find(">")
+                if close_idx == -1:
+                    pending.append((line_no, snippet, form_depth))
+                    continue
+                tag = snippet[: close_idx + 1]
+                if "type=" in tag:
+                    continue
+                sev = "CRITICAL" if form_depth > 0 else "INFO"
+                report.add(
+                    sev, "BUTTON_NO_TYPE",
+                    str(rel),
+                    f"L{line_no}: <button> で type 属性無し" + (" — <form> 内で submit 暴発 risk" if form_depth > 0 else " — 明示的 type=\"button\" 推奨"),
+                    'type="button" を明示 (送信ボタンなら type="submit")',
+                )
+
+
+# ─────────────────────────────────────────────────────
+# カテゴリ 38: <a target="_blank"> で rel="noopener" 不在 (z261d)
+# ─────────────────────────────────────────────────────
+
+def check_external_no_rel(filepath: Path, content: str, report: BugReport):
+    """<a target="_blank"> で rel="noopener" / "noreferrer" 不在 = tabnabbing risk
+
+    Modern browser は target="_blank" に noopener を自動付与する傾向だが、
+    過去の browser + crawler + screenshot service では window.opener が
+    parent window を握る tabnabbing 攻撃が可能。
+
+    検出: target="_blank" を持つ <a> 開始タグで rel に noopener / noreferrer
+    どちらも無い ものを WARNING 検出。
+    """
+    rel_p = filepath.relative_to(APP_ROOT)
+    if filepath.suffix != ".tsx":
+        return
+
+    # Multi-line aware: collapse a-open tag spans
+    # Find each `<a` followed eventually by `>` (not `</a>`) and inspect attrs
+    # Simple regex per file: capture entire opening tag content
+    A_OPEN_RE = re.compile(r"<a\s[^>]*>", re.DOTALL)
+
+    lines_offset = []
+    pos = 0
+    for ln, l in enumerate(content.split("\n"), 1):
+        lines_offset.append((pos, ln))
+        pos += len(l) + 1  # +1 for newline
+
+    def offset_to_line(off: int) -> int:
+        # binary-ish; small files so linear is fine
+        last = 1
+        for start, ln in lines_offset:
+            if start > off:
+                return last
+            last = ln
+        return last
+
+    for m in A_OPEN_RE.finditer(content):
+        tag = m.group(0)
+        if 'target="_blank"' not in tag and "target='_blank'" not in tag:
+            continue
+        # rel attribute
+        rel_m = re.search(r"""rel=["']([^"']+)["']""", tag)
+        rel_val = rel_m.group(1) if rel_m else ""
+        rel_tokens = {t.strip() for t in rel_val.split()}
+        if "noopener" in rel_tokens or "noreferrer" in rel_tokens:
+            continue
+        line_no = offset_to_line(m.start())
+        report.add(
+            "WARNING", "EXTERNAL_NO_REL",
+            str(rel_p),
+            f"L{line_no}: <a target=\"_blank\"> に rel=\"noopener\" / \"noreferrer\" 不在 — tabnabbing + referrer leak risk",
+            'rel="noopener noreferrer" を追加',
+        )
+
+
+# ─────────────────────────────────────────────────────
 # メインスキャナ
 # ─────────────────────────────────────────────────────
 
@@ -1762,6 +1924,8 @@ def scan_all() -> BugReport:
             check_inline_styles(fpath, content, report)         # カテゴリ28
             check_unsafe_number_input(fpath, content, report)   # カテゴリ29
             check_settimeout_no_cleanup(fpath, content, report) # カテゴリ30
+            check_button_no_type(fpath, content, report)        # カテゴリ37 (z261d)
+            check_external_no_rel(fpath, content, report)       # カテゴリ38 (z261d)
 
         # TS/TSX共通チェック（カテゴリ 7, 10-11, 14-15, 17-18, 20）
         check_console_logs(fpath, content, report)
