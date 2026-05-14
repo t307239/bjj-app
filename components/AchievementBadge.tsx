@@ -217,14 +217,14 @@ export default function AchievementBadge({
       {/* Overlay background */}
       <div
         role="presentation"
-        className="fixed inset-0 bg-black bg-opacity-50 z-40 animate-in fade-in duration-300"
+        className="fixed inset-0 bg-black bg-opacity-50 z-banner animate-in fade-in duration-300"
         onClick={() => setShowBadge(false)}
         aria-hidden="true"
       />
 
       {/* Badge card */}
       <div
-        className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none"
+        className="fixed inset-0 flex items-center justify-center z-dropdown pointer-events-none"
         style={{
           animation: "slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
@@ -242,7 +242,7 @@ export default function AchievementBadge({
           </div>
 
           {/* Main content */}
-          <div className="relative z-10">
+          <div className="relative z-floating">
             <div className="text-8xl mb-4 drop-shadow-lg">
               {milestoneEmoji}
             </div>

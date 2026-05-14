@@ -391,7 +391,7 @@ export default function AdminPanel({ adminEmail }: { adminEmail: string }) {
 
       {/* Toast notification */}
       {toast && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-zinc-800 border border-white/10 text-white text-sm px-4 py-2.5 rounded-xl shadow-lg animate-fade-in">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-dropdown bg-zinc-800 border border-white/10 text-white text-sm px-4 py-2.5 rounded-xl shadow-lg animate-fade-in">
           {toast}
         </div>
       )}

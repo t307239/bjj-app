@@ -86,7 +86,7 @@ function ConfettiCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-[60]"
+      className="fixed inset-0 pointer-events-none z-modal-backdrop"
     />
   );
 }
@@ -115,7 +115,7 @@ export default function FirstRollCelebration({ onDismiss }: Props) {
       {/* Modal overlay */}
       <div
         role="presentation"
-        className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm px-0 sm:px-6"
+        className="fixed inset-0 z-dropdown flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm px-0 sm:px-6"
         onClick={onDismiss}
       >
         <div

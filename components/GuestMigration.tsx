@@ -100,7 +100,7 @@ export default function GuestMigration({ userId }: { userId: string }) {
       <div
         role="status"
         aria-live="polite"
-        className="fixed bottom-20 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-4"
+        className="fixed bottom-20 sm:bottom-6 left-1/2 -translate-x-1/2 z-dropdown animate-in slide-in-from-bottom-4"
       >
         <div className="bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium">
           <svg
@@ -128,7 +128,7 @@ export default function GuestMigration({ userId }: { userId: string }) {
     <div
       role="alert"
       aria-live="assertive"
-      className="fixed bottom-20 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-4"
+      className="fixed bottom-20 sm:bottom-6 left-1/2 -translate-x-1/2 z-dropdown animate-in slide-in-from-bottom-4"
     >
       <div className="bg-red-600 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-3 text-sm font-medium">
         <svg

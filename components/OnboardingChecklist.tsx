@@ -133,7 +133,7 @@ export default function OnboardingChecklist({ hasFirstLog, hasGoal, hasTechnique
           ))}
         </div>
 
-        <div className="relative z-10">
+        <div className="relative z-floating">
           <div className="text-4xl mb-2 animate-bounce">🎉</div>
           <p className="text-lg font-bold text-white mb-1">{t("onboarding.celebTitle")}</p>
           <p className="text-sm text-emerald-200">{t("onboarding.celebSubtitle")}</p>

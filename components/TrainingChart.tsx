@@ -318,7 +318,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
                     day ? (
                       <div key={di} className="relative group w-3 h-3">
                         <div className={`w-3 h-3 rounded-sm ${getColor(day.count)} transition-colors cursor-default`} />
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-zinc-800 border border-white/10 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 shadow-lg">
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-zinc-800 border border-white/10 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-tooltip shadow-lg">
                           {new Intl.DateTimeFormat(locale, { month: "short", day: "numeric", year: "numeric" }).format(new Date(day.date + "T00:00:00"))}: {day.count} {t("dashboard.sessionsUnit")}
                         </div>
                       </div>

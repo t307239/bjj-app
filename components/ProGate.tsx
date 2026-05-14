@@ -51,7 +51,7 @@ export default function ProGate({
       </div>
 
       {/* Upgrade overlay */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-zinc-950/80 backdrop-blur-sm border border-white/10 z-10">
+      <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-zinc-950/80 backdrop-blur-sm border border-white/10 z-floating">
         <div className="text-center px-4">
           <div className="text-2xl mb-2">🔒</div>
           <p className="text-sm text-zinc-300 mb-1">{featureText}</p>

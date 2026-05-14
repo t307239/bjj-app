@@ -195,7 +195,7 @@ export default function BodyManagementSection({ userId, isPro: isProProp = false
 
         {/* Paywall overlay for free users */}
         {!isPro && (
-          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 rounded-xl bg-zinc-950/85 backdrop-blur-sm px-6 text-center">
+          <div className="absolute inset-0 z-tooltip flex flex-col items-center justify-center gap-3 rounded-xl bg-zinc-950/85 backdrop-blur-sm px-6 text-center">
             <span className="text-3xl">🔒</span>
             <p className="text-sm font-semibold text-zinc-100 leading-snug">
               {t("body.paywallTitle")}

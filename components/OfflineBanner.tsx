@@ -35,7 +35,7 @@ const OfflineBanner = memo(function OfflineBanner() {
 
   return (
     <div
-      className={`sticky top-0 z-[60] w-full text-sm font-semibold px-4 py-2 flex items-center justify-center gap-2 transition-colors duration-300 ${
+      className={`sticky top-0 z-modal-backdrop w-full text-sm font-semibold px-4 py-2 flex items-center justify-center gap-2 transition-colors duration-300 ${
         isOnline
           ? "bg-emerald-600 text-white"
           : "bg-amber-500 text-black"

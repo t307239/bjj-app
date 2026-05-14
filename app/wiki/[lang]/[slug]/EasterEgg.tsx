@@ -62,7 +62,7 @@ export default function EasterEgg() {
       role="dialog"
       aria-modal="true"
       aria-label="Easter egg: Black Belt unlocked"
-      className="fixed inset-0 z-[9999] pointer-events-none flex items-center justify-center p-6"
+      className="fixed inset-0 z-critical pointer-events-none flex items-center justify-center p-6"
     >
       {/* Backdrop glow */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />

@@ -22,7 +22,7 @@ export default function ScrollProgressBar() {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 h-[3px] pointer-events-none">
+    <div className="fixed top-0 left-0 right-0 z-dropdown h-[3px] pointer-events-none">
       <div
         className="h-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-purple-500 transition-[width] duration-100"
         style={{ width: `${progress}%` }}

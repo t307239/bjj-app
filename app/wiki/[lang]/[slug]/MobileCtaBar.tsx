@@ -11,7 +11,7 @@ interface Props {
 
 export default function MobileCtaBar({ href, cta }: Props) {
   return (
-    <div className="fixed bottom-0 inset-x-0 z-40 lg:hidden border-t border-white/10 bg-[#0f172a]/90 backdrop-blur-md px-4 py-3 pb-safe">
+    <div className="fixed bottom-0 inset-x-0 z-banner lg:hidden border-t border-white/10 bg-[#0f172a]/90 backdrop-blur-md px-4 py-3 pb-safe">
       <Link
         href={href}
         className="

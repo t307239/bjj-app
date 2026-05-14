@@ -84,7 +84,7 @@ export default function CookieConsent() {
       role="dialog"
       aria-modal="true"
       aria-label={t("common.cookieConsent")}
-      className="fixed bottom-0 inset-x-0 z-[9999] p-3 sm:p-4"
+      className="fixed bottom-0 inset-x-0 z-critical p-3 sm:p-4"
     >
       <div className="max-w-lg mx-auto bg-zinc-900 border border-white/10 rounded-2xl p-4 shadow-2xl">
         <p className="text-sm text-zinc-300 leading-relaxed">

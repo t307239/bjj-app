@@ -156,7 +156,7 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
           transition: animating ? "transform 0.2s ease" : undefined,
           willChange: "transform",
           position: "relative",
-          zIndex: 1,
+          zIndex: 1 /* z-base */,
           touchAction: "pan-y",  // iOS: allow vertical scroll, block horizontal browser gestures
         }}
         onTouchStart={handleTouchStart}
@@ -169,7 +169,7 @@ export default function SwipeableCard({ onDelete, onEdit, children, className = 
       {/* a11y: Keyboard-accessible action buttons (visible on focus/hover) */}
       {!hideOverlayButtons && <div
         className={[
-          "absolute top-1 right-1 z-10 flex items-center gap-1 transition-opacity",
+          "absolute top-1 right-1 z-floating flex items-center gap-1 transition-opacity",
           focused ? "opacity-100" : "opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto",
         ].join(" ")}
       >

@@ -106,7 +106,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
     <>
       <OfflineBanner />
       {/* デスクトップ/タブレット ヘッダー */}
-      <header className="bg-zinc-950/80 backdrop-blur-xl border-b border-white/[0.08] px-4 sm:px-6 py-3 sticky top-0 z-50">
+      <header className="bg-zinc-950/80 backdrop-blur-xl border-b border-white/[0.08] px-4 sm:px-6 py-3 sticky top-0 z-dropdown">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
@@ -199,7 +199,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
                 </svg>
               </button>
               {showUserMenu && (
-                <div className="absolute right-0 top-10 w-44 bg-zinc-900 border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
+                <div className="absolute right-0 top-10 w-44 bg-zinc-900 border border-white/10 rounded-xl shadow-xl z-dropdown overflow-hidden">
                   <div className="px-3 py-2 border-b border-white/5">
                     <p className="text-xs text-zinc-400 truncate" title={displayName}>{displayName}</p>
                   </div>
@@ -236,7 +236,7 @@ export default function NavBar({ displayName, avatarUrl, isPro: isProProp }: Pro
       </header>
 
       {/* モバイル ボトムナビ */}
-      <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-zinc-950/80 backdrop-blur-xl border-t border-white/[0.08] z-50">
+      <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-zinc-950/80 backdrop-blur-xl border-t border-white/[0.08] z-dropdown">
         {currentStreak >= 30 ? (
           <div className="flex justify-center py-1 border-b border-white/5 bg-orange-500/5">
             <span className="text-xs text-orange-400">{t("nav.streakBadge", { n: currentStreak })}</span>

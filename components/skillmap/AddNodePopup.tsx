@@ -21,7 +21,7 @@ export default function AddNodePopup({ screenX, screenY, onAdd, onCancel, t }: P
       role="dialog"
       aria-modal="true"
       aria-label={t("skillmap.addTechnique")}
-      style={{ position: "fixed", left: screenX, top: screenY, zIndex: 30 }}
+      style={{ position: "fixed", left: screenX, top: screenY, zIndex: 30 /* z-sticky-nav */ }}
       className="bg-zinc-800 border border-white/20 rounded-xl shadow-2xl p-3 w-48"
       onMouseDown={(e) => e.stopPropagation()}
     >

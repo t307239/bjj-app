@@ -106,7 +106,7 @@ export default function BottomDrawer({
   };
 
   return (
-    <div className="fixed inset-0 z-50" style={{ touchAction: "auto" }} onPointerDown={onClose}>
+    <div className="fixed inset-0 z-dropdown" style={{ touchAction: "auto" }} onPointerDown={onClose}>
       <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
       <div
         ref={drawerRef}
@@ -117,7 +117,7 @@ export default function BottomDrawer({
         className="absolute left-0 right-0 bg-zinc-900 border-t border-white/10 rounded-t-2xl p-5 pb-8 outline-none"
         style={{
           bottom: keyboardOffset > 0 ? `${keyboardOffset}px` : 0,
-          zIndex: 51,
+          zIndex: 51 /* z-modal */,
           touchAction: "auto",
         }}
         onPointerDown={(e) => e.stopPropagation()}

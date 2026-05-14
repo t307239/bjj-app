@@ -354,7 +354,7 @@ aria-hidden="true"           className={`w-4 h-4 text-zinc-400 transition-transf
                 >
                   {/* Hover tooltip */}
                   {hoveredMonth === d.month && val > 0 && (
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-zinc-950 border border-white/10 rounded-lg px-2 py-1.5 text-center pointer-events-none z-20 whitespace-nowrap shadow-lg">
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-zinc-950 border border-white/10 rounded-lg px-2 py-1.5 text-center pointer-events-none z-tooltip whitespace-nowrap shadow-lg">
                       <div className="text-xs font-semibold text-white">{d.label}</div>
                       <div className="text-xs text-zinc-300 mt-0.5">{d.count}{timesUnit} · {formatMinutes(d.minutes)}</div>
                       {/* Type breakdown in tooltip */}

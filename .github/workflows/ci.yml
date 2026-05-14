@@ -200,6 +200,12 @@ jobs:
       - name: Run detect_unsafe_localstorage_setitem.py
         run: python3 scripts/detect_unsafe_localstorage_setitem.py --ci
 
+      # z261c: numeric z-index hardcode (require semantic token)
+      # tailwind.config.ts extend.zIndex で定義された token (z-floating, z-modal,
+      # z-toast, z-critical 等) を強制。numeric z-50 / zIndex: 50 を block。
+      - name: Run detect_zindex_hardcode.py
+        run: python3 scripts/detect_zindex_hardcode.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest

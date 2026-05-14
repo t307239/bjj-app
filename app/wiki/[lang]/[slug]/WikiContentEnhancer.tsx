@@ -146,7 +146,7 @@ export default function WikiContentEnhancer() {
         <div
           role="status"
           aria-live="polite"
-          className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-800 text-white text-xs px-4 py-2 rounded-full shadow-lg border border-slate-700 pointer-events-none"
+          className="fixed top-20 left-1/2 -translate-x-1/2 z-dropdown bg-slate-800 text-white text-xs px-4 py-2 rounded-full shadow-lg border border-slate-700 pointer-events-none"
         >
           {toast}
         </div>
@@ -159,7 +159,7 @@ export default function WikiContentEnhancer() {
           role="dialog"
           aria-modal="true"
           aria-label={t("common.imageViewer")}
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 cursor-zoom-out"
+          className="fixed inset-0 z-dropdown bg-black/90 flex items-center justify-center p-4 cursor-zoom-out"
           onClick={() => setLightboxSrc(null)}
           onKeyDown={(e) => {
             if (e.key === "Escape" || e.key === "Enter") {

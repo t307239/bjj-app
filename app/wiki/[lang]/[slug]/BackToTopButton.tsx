@@ -25,7 +25,7 @@ export default function BackToTopButton({ lang }: { lang: string }) {
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label={label}
       className="
-        fixed bottom-24 right-5 z-40 lg:bottom-10 lg:right-8
+        fixed bottom-24 right-5 z-banner lg:bottom-10 lg:right-8
         flex items-center justify-center
         w-10 h-10 rounded-full
         bg-slate-800/90 border border-slate-700/60

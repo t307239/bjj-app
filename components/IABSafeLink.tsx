@@ -66,7 +66,7 @@ export default function IABSafeLink({
       {showBanner && (
         <div
           role="presentation"
-          className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center px-4"
+          className="fixed inset-0 z-critical bg-black/80 backdrop-blur-sm flex items-center justify-center px-4"
           onClick={() => setShowBanner(false)}
         >
           <div

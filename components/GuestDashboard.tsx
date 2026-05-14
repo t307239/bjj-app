@@ -163,14 +163,14 @@ export default function GuestDashboard() {
         <div
           role="alert"
           aria-live="assertive"
-          className="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-[90%] bg-red-900/95 border border-red-500/40 text-white px-4 py-2.5 rounded-xl text-sm shadow-lg"
+          className="fixed top-4 left-1/2 -translate-x-1/2 z-dropdown max-w-[90%] bg-red-900/95 border border-red-500/40 text-white px-4 py-2.5 rounded-xl text-sm shadow-lg"
         >
           {saveError}
         </div>
       )}
       {/* Undo Toast */}
       {undoVisible && (
-        <div className="fixed bottom-24 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-zinc-800 border border-white/10 px-4 py-2.5 rounded-xl text-sm text-white shadow-lg">
+        <div className="fixed bottom-24 sm:bottom-6 left-1/2 -translate-x-1/2 z-dropdown flex items-center gap-3 bg-zinc-800 border border-white/10 px-4 py-2.5 rounded-xl text-sm text-white shadow-lg">
           <span>{t("training.deleted")}</span>
           <button type="button" onClick={handleUndoDelete} className="text-[#10B981] font-semibold hover:text-[#0d9668] transition-colors">
             {t("training.undo")}

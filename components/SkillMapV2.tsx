@@ -394,7 +394,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
       <div className="relative">
       <div
         className="w-full rounded-xl overflow-hidden border border-white/10"
-        style={{ height: "clamp(350px, 60vh, 620px)", touchAction: isMobile ? "manipulation" : "none", zIndex: 1 }}
+        style={{ height: "clamp(350px, 60vh, 620px)", touchAction: isMobile ? "manipulation" : "none", zIndex: 1 /* z-base */ }}
       >
         <ReactFlow
           nodes={filteredDisplayNodes}
@@ -454,7 +454,7 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
           aria-label={t("skillmap.addNodeMobile")}
           title={!isOnline ? t("common.offlineDisabled") : undefined}
           style={{ touchAction: "auto" }}
-          className="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white text-2xl font-bold shadow-lg shadow-emerald-900/40 flex items-center justify-center transition-all active:scale-90 z-10"
+          className="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-[#10B981] hover:bg-[#0d9668] disabled:opacity-50 text-white text-2xl font-bold shadow-lg shadow-emerald-900/40 flex items-center justify-center transition-all active:scale-90 z-floating"
         >
           +
         </button>
@@ -489,11 +489,11 @@ function SkillMapInner({ userId, isPro, stripePaymentLink, stripeAnnualLink }: P
 
       {/* Mobile: Add node drawer (BottomDrawer pattern — iOS Safari keyboard compatible) */}
       {mobileAddDrawer && (
-        <div className="fixed inset-0 z-50" style={{ touchAction: "auto" }} onPointerDown={() => setMobileAddDrawer(null)}>
+        <div className="fixed inset-0 z-dropdown" style={{ touchAction: "auto" }} onPointerDown={() => setMobileAddDrawer(null)}>
           <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
           <div
             className="absolute left-0 right-0 bottom-0 bg-zinc-900 border-t border-white/10 rounded-t-2xl p-5 pb-8"
-            style={{ zIndex: 51, touchAction: "auto" }}
+            style={{ zIndex: 51 /* z-modal */, touchAction: "auto" }}
             onPointerDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
           >

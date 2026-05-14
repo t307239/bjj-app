@@ -340,7 +340,7 @@ aria-hidden="true"             className={`w-4 h-4 text-zinc-400 transition-tran
         </div>
       </button>
       {isOpen && (<div className={`p-4 border-t border-white/10 ${!isPro ? "relative" : ""}`}>{!isPro && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-zinc-900/80 rounded-b-xl">
+        <div className="absolute inset-0 z-floating flex flex-col items-center justify-center bg-zinc-900/80 rounded-b-xl">
           <span className="text-2xl mb-2">🔒</span>
           <p className="text-sm font-semibold text-zinc-100">{t("chart.proOnly")}</p>
           {process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ? (

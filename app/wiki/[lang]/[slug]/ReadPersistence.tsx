@@ -96,7 +96,7 @@ export default function ReadPersistence({ slug, lang = "en" }: ReadPersistencePr
     <div
       role="status"
       aria-live="polite"
-      className="fixed bottom-20 left-4 right-4 sm:left-auto sm:right-6 sm:w-80 z-40 bg-slate-800/95 backdrop-blur-md border border-slate-700/60 rounded-xl shadow-xl p-4 flex items-start gap-3"
+      className="fixed bottom-20 left-4 right-4 sm:left-auto sm:right-6 sm:w-80 z-banner bg-slate-800/95 backdrop-blur-md border border-slate-700/60 rounded-xl shadow-xl p-4 flex items-start gap-3"
     >
       <span className="text-xl shrink-0 mt-0.5">📖</span>
       <div className="flex-1 min-w-0">

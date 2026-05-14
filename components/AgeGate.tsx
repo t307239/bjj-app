@@ -39,7 +39,7 @@ export default function AgeGate() {
 
   if (status === "blocked") {
     return (
-      <div className="fixed inset-0 z-[9999] bg-zinc-950 flex flex-col items-center justify-center px-6 text-center">
+      <div className="fixed inset-0 z-critical bg-zinc-950 flex flex-col items-center justify-center px-6 text-center">
         <span className="text-5xl mb-6">🔒</span>
         <h1 className="text-xl font-black text-white mb-3">{t("ageGate.blockedTitle")}</h1>
         <p className="text-zinc-400 text-sm max-w-xs leading-relaxed">
@@ -54,7 +54,7 @@ export default function AgeGate() {
 
   // status === "show"
   return (
-    <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center px-4" role="dialog" aria-modal="true" aria-label={t("common.ageVerification")}>
+    <div className="fixed inset-0 z-critical bg-black/80 backdrop-blur-sm flex items-center justify-center px-4" role="dialog" aria-modal="true" aria-label={t("common.ageVerification")}>
       <div className="w-full max-w-sm bg-zinc-900 border border-white/10 rounded-3xl p-7 shadow-2xl text-center">
         <span className="text-4xl mb-4 block">🥋</span>
         <h2 className="text-lg font-black text-white mb-2">{t("ageGate.ageVerificationTitle")}</h2>

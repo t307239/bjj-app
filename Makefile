@@ -3,10 +3,10 @@
 # 「完璧」と宣言する前に必ず `make verify` を実行する。
 # 6 つの lint が全パスすれば commit 可能、1 つでも 🔴 fail なら作業未完了。
 
-.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem
+.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode
 
 # Run all anti-regression checks
-verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem
+verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode
 	@echo ""
 	@echo "✅ All anti-regression checks passed."
 	@echo "   Safe to commit."
@@ -75,6 +75,11 @@ router-push-session-end:
 unsafe-localstorage-setitem:
 	@echo "→ detect_unsafe_localstorage_setitem.py..."
 	@python3 scripts/detect_unsafe_localstorage_setitem.py --ci
+
+# z261c: z-index hardcode (require semantic token from tailwind.config.ts)
+zindex-hardcode:
+	@echo "→ detect_zindex_hardcode.py..."
+	@python3 scripts/detect_zindex_hardcode.py --ci
 
 typecheck:
 	@echo "→ TypeScript type check..."

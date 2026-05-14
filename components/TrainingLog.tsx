@@ -117,7 +117,7 @@ function ExportDropdown({ userId, isPro, onPdf, pdfLoading }: {
         <svg aria-hidden="true" className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/></svg>
       </button>
       {open && (
-        <div className="absolute right-0 top-full mt-1 z-50 bg-zinc-800 border border-white/10 rounded-xl shadow-xl min-w-[160px] overflow-hidden">
+        <div className="absolute right-0 top-full mt-1 z-dropdown bg-zinc-800 border border-white/10 rounded-xl shadow-xl min-w-[160px] overflow-hidden">
           <button type="button" onClick={exportTraining} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors text-left">
             <svg aria-hidden="true" className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             {t("csv.button.training")}
@@ -405,7 +405,7 @@ export default function TrainingLog({ userId, isPro = false, initialOpen = false
           setShowForm(true);
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
-        className="md:hidden fixed bottom-20 right-4 z-50 w-14 h-14 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-2xl font-bold rounded-full shadow-lg shadow-[#10B981]/40 transition-all flex items-center justify-center print:hidden"
+        className="md:hidden fixed bottom-20 right-4 z-dropdown w-14 h-14 bg-[#10B981] hover:bg-[#0d9668] active:scale-95 text-white text-2xl font-bold rounded-full shadow-lg shadow-[#10B981]/40 transition-all flex items-center justify-center print:hidden"
         aria-label={t("training.logSession")}
       >
         +

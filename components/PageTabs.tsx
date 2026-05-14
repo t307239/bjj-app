@@ -45,7 +45,7 @@ export default function PageTabs({ tabs, defaultTab, urlParam, children, trailin
   return (
     <>
       {/* Tab bar */}
-      <div className="sticky z-30 bg-zinc-950/95 backdrop-blur-md border-b border-white/8 -mx-4 px-4 mb-5" style={{ top: "var(--navbar-height)" }}>
+      <div className="sticky z-sticky-nav bg-zinc-950/95 backdrop-blur-md border-b border-white/8 -mx-4 px-4 mb-5" style={{ top: "var(--navbar-height)" }}>
         <div className="flex items-center gap-1">
           <div className="flex-1 flex gap-1 overflow-x-auto scrollbar-none">
             {tabs.map((tab) => (

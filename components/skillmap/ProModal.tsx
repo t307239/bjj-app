@@ -83,7 +83,7 @@ export default function ProModal({ onClose, stripePaymentLink, stripeAnnualLink,
   const hasLink = !!fallbackUrl;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="pro-modal-title">
+    <div className="fixed inset-0 z-dropdown flex items-center justify-center bg-black/60" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="pro-modal-title">
       <div ref={dialogRef} tabIndex={-1} className="bg-zinc-900 border border-white/10 rounded-2xl p-7 max-w-sm w-full text-center shadow-2xl mx-4 outline-none" onClick={(e) => e.stopPropagation()}>
         <div className="text-4xl mb-3">🥋</div>
         <h3 id="pro-modal-title" className="text-lg font-bold text-white mb-2">{t("skillmap.proModalTitlePC")}</h3>

@@ -107,7 +107,7 @@ export default async function TagArchivePage({
   return (
     <div className="min-h-[100dvh] bg-[#0f172a] text-white">
       {/* Sticky header / breadcrumb */}
-      <header className="border-b border-white/10 bg-[#0f172a]/95 backdrop-blur-sm sticky top-0 z-30">
+      <header className="border-b border-white/10 bg-[#0f172a]/95 backdrop-blur-sm sticky top-0 z-sticky-nav">
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center gap-2 text-sm">
           <Link
             href={`/wiki/${lang}`}
