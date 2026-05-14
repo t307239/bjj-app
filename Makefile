@@ -3,10 +3,10 @@
 # 「完璧」と宣言する前に必ず `make verify` を実行する。
 # 6 つの lint が全パスすれば commit 可能、1 つでも 🔴 fail なら作業未完了。
 
-.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions input-autocomplete a11y-table-label unsafe-dynamic-href api-auth-bypass supabase-rls-gap silent-catch-observability
+.PHONY: verify locale-drift hidden-bugs schema-mismatch i18n-keys typecheck test all clean indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions input-autocomplete a11y-table-label unsafe-dynamic-href api-auth-bypass supabase-rls-gap silent-catch-observability supabase-select-star mobile-touch-target
 
 # Run all anti-regression checks
-verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions input-autocomplete a11y-table-label unsafe-dynamic-href api-auth-bypass supabase-rls-gap silent-catch-observability
+verify: typecheck locale-drift hidden-bugs schema-mismatch i18n-keys dead-components indexable-orphans missing-canonical wiki-url internal-links unsafe-settimeout localstorage-hazards optimistic-rollback unmount-race router-push-session-end unsafe-localstorage-setitem zindex-hardcode a11y-input-label img-no-dimensions input-autocomplete a11y-table-label unsafe-dynamic-href api-auth-bypass supabase-rls-gap silent-catch-observability supabase-select-star mobile-touch-target
 	@echo ""
 	@echo "✅ All anti-regression checks passed."
 	@echo "   Safe to commit."
@@ -134,6 +134,16 @@ supabase-rls-gap:
 silent-catch-observability:
 	@echo "→ detect_silent_catch_observability.py..."
 	@python3 scripts/detect_silent_catch_observability.py --ci
+
+# z261r: DB perf — .select("*") over-fetch を block ({count, head:true} 例外 + // select-star: ok opt-out)
+supabase-select-star:
+	@echo "→ detect_supabase_select_star.py..."
+	@python3 scripts/detect_supabase_select_star.py --ci
+
+# z261r: mobile UX — icon-only square button (min-w-[NN] && min-h-[NN]) で < 44px を block
+mobile-touch-target:
+	@echo "→ detect_mobile_touch_target.py..."
+	@python3 scripts/detect_mobile_touch_target.py --ci
 
 # Run vitest unit tests
 test:

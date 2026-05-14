@@ -232,6 +232,17 @@ jobs:
       - name: Run detect_silent_catch_observability.py
         run: python3 scripts/detect_silent_catch_observability.py --ci
 
+      # z261r: DB perf — Supabase queries must use explicit column lists, not .select("*").
+      # Aggregation queries ({ count: "exact", head: true }) and opt-out marker
+      # `// select-star: ok — <reason>` are exempt.
+      - name: Run detect_supabase_select_star.py
+        run: python3 scripts/detect_supabase_select_star.py --ci
+
+      # z261r: Mobile UX — icon-only square buttons (both min-w-[NN] and min-h-[NN] specified)
+      # must meet the 44×44 px touch target minimum (Apple HIG / WCAG 2.5.5).
+      - name: Run detect_mobile_touch_target.py
+        run: python3 scripts/detect_mobile_touch_target.py --ci
+
   smoke-test:
     name: Post-deploy Smoke Test
     runs-on: ubuntu-latest
