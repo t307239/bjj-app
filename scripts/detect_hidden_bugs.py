@@ -438,8 +438,65 @@ def check_unused_imports(filepath: Path, content: str, report: BugReport):
 # カテゴリ 11: any 型エスケープ
 # ─────────────────────────────────────────────────────
 
+def _strip_strings_and_comments(line: str) -> str:
+    """[z261g] line から string literal / inline comment を除去（false-positive 削減用）。
+
+    Naive な single-line stripper:
+      - `'...'` / `"..."` (escapes 対応)
+      - `` `...` `` (interpolation `${...}` を含む template literal も対象、ただし interpolation 部分は保持)
+      - `// ...` inline comment
+    Multi-line template literal や regex literal は対象外（false negative > false positive を優先）。
+    """
+    # remove inline comment
+    s = re.sub(r"//[^\n]*$", "", line)
+    # remove single/double quoted string literals
+    s = re.sub(r"'(?:[^'\\]|\\.)*'", "''", s)
+    s = re.sub(r'"(?:[^"\\]|\\.)*"', '""', s)
+    # Template literals — strip backtick segments while preserving ${...} (which is code).
+    # Walk char-by-char to handle nested interpolation simply.
+    out: list[str] = []
+    i = 0
+    n = len(s)
+    while i < n:
+        c = s[i]
+        if c == "`":
+            # find matching backtick at top-level, preserving interpolation contents
+            i += 1
+            while i < n and s[i] != "`":
+                if s[i] == "\\" and i + 1 < n:
+                    i += 2
+                    continue
+                if s[i] == "$" and i + 1 < n and s[i + 1] == "{":
+                    # consume interpolation, keep its content
+                    depth = 1
+                    i += 2
+                    out.append(" ")
+                    while i < n and depth > 0:
+                        if s[i] == "{":
+                            depth += 1
+                        elif s[i] == "}":
+                            depth -= 1
+                            if depth == 0:
+                                i += 1
+                                break
+                        out.append(s[i])
+                        i += 1
+                    out.append(" ")
+                    continue
+                i += 1
+            if i < n:
+                i += 1  # closing backtick
+        else:
+            out.append(c)
+            i += 1
+    return "".join(out)
+
+
 def check_any_type(filepath: Path, content: str, report: BugReport):
-    """`: any` / `as any` の検出（カテゴリ11）"""
+    """`: any` / `as any` の検出（カテゴリ11）
+
+    [z261g] 文字列リテラル内 / inline comment 内の `as any` は false positive として除外。
+    """
     rel = filepath.relative_to(APP_ROOT)
 
     # database.types.ts は自動生成なので除外
@@ -454,8 +511,10 @@ def check_any_type(filepath: Path, content: str, report: BugReport):
         # コメント行は除外
         if stripped.startswith("//") or stripped.startswith("*") or stripped.startswith("/*"):
             continue
+        # 文字列リテラル / inline comment を除去してから検査
+        code = _strip_strings_and_comments(line)
         # 'as any' パターン
-        as_any = re.findall(r'\bas\s+any\b', line)
+        as_any = re.findall(r'\bas\s+any\b', code)
         for _ in as_any:
             report.add(
                 "INFO", "ANY_TYPE_ESCAPE",
@@ -464,10 +523,10 @@ def check_any_type(filepath: Path, content: str, report: BugReport):
                 "具体的な型を定義するか、unknown + 型ガードを使用",
             )
         # ': any' パターン（関数引数・変数宣言）
-        colon_any = re.findall(r':\s*any\b(?!\s*\[)', line)
+        colon_any = re.findall(r':\s*any\b(?!\s*\[)', code)
         for _ in colon_any:
             # 'as any' と重複カウントしない
-            if 'as any' not in line or ': any' in line.replace('as any', ''):
+            if 'as any' not in code or ': any' in code.replace('as any', ''):
                 report.add(
                     "INFO", "ANY_TYPE_ESCAPE",
                     str(rel),
@@ -566,17 +625,54 @@ def check_low_contrast_gray(filepath: Path, content: str, report: BugReport):
 # ─────────────────────────────────────────────────────
 
 def check_dangerous_html(filepath: Path, content: str, report: BugReport):
-    """dangerouslySetInnerHTML の使用を検出（カテゴリ13）"""
-    rel = filepath.relative_to(APP_ROOT)
+    """dangerouslySetInnerHTML の使用を検出（カテゴリ13）
 
-    for line_no, line in enumerate(content.split("\n"), 1):
-        if "dangerouslySetInnerHTML" in line:
-            report.add(
-                "INFO", "DANGEROUS_HTML",
-                str(rel),
-                f"L{line_no}: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック",
-                "DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証",
-            )
+    [z261g] 既知の safe pattern は INFO downgrade で false positive 削減:
+      - `safeJsonLd(...)` argument (explicit sanitization wrapper)
+      - Hardcoded backtick template literal with no ${ interpolation
+      - `// safe-html: <reason>` opt-out marker on same or prev 2 lines
+
+    残りは「trusted source か要確認」として INFO 維持。
+    """
+    rel = filepath.relative_to(APP_ROOT)
+    lines = content.split("\n")
+
+    for line_no, line in enumerate(lines, 1):
+        if "dangerouslySetInnerHTML" not in line:
+            continue
+
+        # opt-out marker (same line or up to 2 lines above)
+        opt_out = False
+        for offset in range(0, 3):
+            idx = line_no - 1 - offset
+            if idx < 0:
+                break
+            if "safe-html:" in lines[idx]:
+                opt_out = True
+                break
+        if opt_out:
+            continue
+
+        # Build a small context window: current line + next 2 (multi-line {{ assignment)
+        window_end = min(line_no + 2, len(lines))
+        window = " ".join(lines[line_no - 1:window_end])
+
+        # Known-safe patterns
+        # 1. safeJsonLd(...) wrapper
+        if re.search(r"__html:\s*safeJsonLd\s*\(", window):
+            continue
+        # 2. Hardcoded backtick template literal with no ${ interpolation
+        #    Match: __html: `...no-interpolation...`
+        m = re.search(r"__html:\s*`([^`]*)`", window)
+        if m and "${" not in m.group(1):
+            continue
+
+        report.add(
+            "INFO", "DANGEROUS_HTML",
+            str(rel),
+            f"L{line_no}: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック",
+            "DOMPurify等でサニタイズ済みか確認。trusted source なら `// safe-html: <reason>` で opt-out",
+        )
 
 
 # ─────────────────────────────────────────────────────

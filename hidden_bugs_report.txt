@@ -2,8 +2,8 @@ BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 416 files
 CRITICAL: 0
 WARNING: 0
-INFO: 121
-Total: 121
+INFO: 97
+Total: 97
 
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/gym-outreach/route.ts: L189: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
@@ -15,62 +15,20 @@ Total: 121
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/api/stripe/webhook/route.ts: L268: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [DANGEROUS_HTML] app/changelog/page.tsx: L248: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [SUPABASE_NO_ERROR] app/changelog/page.tsx: L236: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [DANGEROUS_HTML] app/compare/page.tsx: L357: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [SUPABASE_NO_ERROR] app/compare/page.tsx: L343: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [DANGEROUS_HTML] app/contact/page.tsx: L74: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L110: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L125: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [DANGEROUS_HTML] app/gym/page.tsx: L99: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/gym/page.tsx: L103: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [SUPABASE_NO_ERROR] app/gym/upgrade/page.tsx: L118: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/gym/upgrade/page.tsx: L156: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [DANGEROUS_HTML] app/help/page.tsx: L112: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/help/page.tsx: L116: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/layout.tsx: L149: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/legal/dpa/page.tsx: L91: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/login/layout.tsx: L96: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/login/page.tsx: L29: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/page.tsx: L220: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/page.tsx: L224: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/pricing/page.tsx: L327: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [SUPABASE_NO_ERROR] app/pricing/page.tsx: L315: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L181: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/profile/page.tsx: L185: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/records/page.tsx: L145: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/records/page.tsx: L255: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L183: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/techniques/page.tsx: L187: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/tour/page.tsx: L310: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [SUPABASE_NO_ERROR] app/tour/page.tsx: L296: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/ScrollProgressBar.tsx: L28: style={{...}} — Tailwindクラスで統一推奨
@@ -79,12 +37,6 @@ Total: 121
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/wiki/[lang]/[slug]/loading.tsx: L98: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L696: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L700: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
-[INFO] [DANGEROUS_HTML] app/wiki/[lang]/[slug]/page.tsx: L814: dangerouslySetInnerHTML 使用 — XSSリスク確認済みか要チェック
-  FIX: DOMPurify等でサニタイズ済みか確認。ユーザー入力を直接渡していないか検証
 [INFO] [INLINE_STYLE_OBJECT] components/AchievementBadge.tsx: L228: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BeltProgressCard.tsx: L133: style={{...}} — Tailwindクラスで統一推奨

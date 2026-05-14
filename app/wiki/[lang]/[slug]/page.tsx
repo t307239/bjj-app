@@ -811,7 +811,7 @@ export default async function WikiPage({
                 prose-th:text-slate-200 prose-th:border-slate-700/50
                 prose-td:border-slate-700/50
               "
-              dangerouslySetInnerHTML={{ __html: processedHtml }}
+              dangerouslySetInnerHTML={/* safe-html: trusted Supabase admin-authored wiki content, no user input path */ { __html: processedHtml }}
             />
           </article>
 
