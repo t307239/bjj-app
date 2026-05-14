@@ -415,7 +415,7 @@ aria-hidden="true"             className={`w-4 h-4 text-zinc-400 transition-tran
                     }}
                   >
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${d.bg}`} />
-                    <span className={`text-xs flex-1 truncate ${isSelected ? "text-white font-medium" : "text-zinc-400"}`}>{d.label}</span>
+                    <span className={`text-xs flex-1 truncate ${isSelected ? "text-white font-medium" : "text-zinc-400"}`} title={d.label}>{d.label}</span>
                     <span className="text-xs font-medium text-white">
                       {chartMode === "time" ? fmtMins(d.totalMins) : `${d.count}${t("chart.timesUnit")}`}
                     </span>

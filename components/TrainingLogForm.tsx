@@ -512,7 +512,7 @@ aria-hidden="true"               className={`w-3 h-3 flex-shrink-0 transition-tr
                 {form.roll_focus && <span className="inline-block px-1.5 py-0.5 bg-emerald-900/30 border border-emerald-500/30 rounded text-emerald-400 text-xs">{ROLL_FOCUS_OPTIONS.find(o => o.value === form.roll_focus)?.emoji}</span>}
                 {form.partner_belt && <span className={`inline-block w-4 h-4 rounded-full ${PARTNER_BELT_OPTIONS.find(o => o.value === form.partner_belt)?.bg}`} />}
                 {form.size_diff && <span className="inline-block px-1.5 py-0.5 bg-zinc-700/60 border border-zinc-500/30 rounded text-zinc-300 text-xs">{SIZE_DIFF_OPTIONS.find(o => o.value === form.size_diff)?.icon}</span>}
-                {form.gi_name && <span className="inline-block px-1.5 py-0.5 bg-blue-900/30 border border-blue-500/30 rounded text-blue-300 text-xs truncate max-w-[80px]">🥋 {form.gi_name}</span>}
+                {form.gi_name && <span className="inline-block px-1.5 py-0.5 bg-blue-900/30 border border-blue-500/30 rounded text-blue-300 text-xs truncate max-w-[80px]" title={form.gi_name}>🥋 {form.gi_name}</span>}
               </span>
             )}
           </button>

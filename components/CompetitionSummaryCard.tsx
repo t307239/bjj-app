@@ -295,7 +295,7 @@ export default function CompetitionSummaryCard({ userId, isPro = false }: Props)
                   const pct = analytics.subWins > 0 ? Math.round((count / analytics.subWins) * 100) : 0;
                   return (
                     <div key={finish} className="flex items-center gap-2">
-                      <span className="text-xs text-zinc-300 flex-1 truncate">{finish}</span>
+                      <span className="text-xs text-zinc-300 flex-1 truncate" title={finish}>{finish}</span>
                       <div className="w-20 h-2 bg-zinc-800 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-green-500/70 rounded-full"

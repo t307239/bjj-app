@@ -297,7 +297,7 @@ export default function TrainingChart({ userId, isPro = false }: Props) {
             <div className="flex gap-[3px] ml-5 mb-0.5">
               {monthLabels.map((label, wi) => (
                 <div key={wi} className="flex-1 min-w-0 overflow-hidden">
-                  <span className="text-[10px] text-zinc-500 whitespace-nowrap leading-none truncate block">{label}</span>
+                  <span className="text-[10px] text-zinc-500 whitespace-nowrap leading-none truncate block" title={label}>{label}</span>
                 </div>
               ))}
             </div>

@@ -237,9 +237,9 @@ export default function CsvBulkInvite({ gym, onUpgradeClick, upgrading, isGymPro
                       <div key={idx} className="flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-2">
                         <div className="flex-1 min-w-0">
                           {row.name && (
-                            <p className="text-xs font-medium text-white truncate">{row.name}</p>
+                            <p className="text-xs font-medium text-white truncate" title={row.name}>{row.name}</p>
                           )}
-                          <p className="text-xs text-zinc-400 truncate">{row.email}</p>
+                          <p className="text-xs text-zinc-400 truncate" title={row.email}>{row.email}</p>
                         </div>
                         <button type="button"
                           onClick={() => copyLink(idx)}

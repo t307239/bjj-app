@@ -1512,10 +1512,11 @@ def check_date_parse_no_guard(filepath: Path, content: str, report: BugReport):
     if "scripts/" in str(rel) or "__tests__/" in str(rel) or "/lib/formatDate" in str(rel):
         return
     # admin/internal toolkit は controlled source で false positive 多数
+    # 注: rel は "lib/adminOpsToolkit.ts" 形式 (leading slash 無し) なので prefix を合わせる
     if any(s in str(rel) for s in [
-        "/lib/adminOpsToolkit", "/lib/alertEscalationPolicy", "/lib/billingAnalyzer",
-        "/lib/backupVerificationScheduler", "/lib/featureFlagDriftDetector",
-        "/lib/incidentTimelineBuilder", "/lib/dataRetention", "/lib/auditLog",
+        "lib/adminOpsToolkit", "lib/alertEscalationPolicy", "lib/billingAnalyzer",
+        "lib/backupVerificationScheduler", "lib/featureFlagDriftDetector",
+        "lib/incidentTimelineBuilder", "lib/dataRetention", "lib/auditLog",
     ]):
         return
 

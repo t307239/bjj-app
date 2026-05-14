@@ -340,7 +340,7 @@ export default function GuestDashboard() {
                     </span>
                     <span className="text-white text-sm">{log.date}</span>
                     <span className="text-zinc-400 text-xs">{log.duration_min}{t("training.durationUnit")}</span>
-                    {log.notes && <span className="text-zinc-400 text-xs truncate">{log.notes}</span>}
+                    {log.notes && <span className="text-zinc-400 text-xs truncate" title={log.notes}>{log.notes}</span>}
                   </div>
                   <button type="button"
                     onClick={() => handleDelete(log.id)}

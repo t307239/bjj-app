@@ -165,9 +165,13 @@ export async function GET(request: Request) {  // ── Auth: CRON_SECRET (fail
 
   await Promise.allSettled(
     sendable.map(async (sub) => {
-      const daysSinceTraining = sub.last_trained
-        ? Math.floor((now.getTime() - new Date(sub.last_trained).getTime()) / 86400000)
-        : 7; // Default for never-trained users
+      let daysSinceTraining = 7; // Default for never-trained users
+      if (sub.last_trained) {
+        const lastTrainedMs = new Date(sub.last_trained).getTime();
+        if (!isNaN(lastTrainedMs)) {
+          daysSinceTraining = Math.floor((now.getTime() - lastTrainedMs) / 86400000);
+        }
+      }
 
       const title = msgTemplate.title;
       const body = msgTemplate.body.replace("{days}", String(daysSinceTraining));

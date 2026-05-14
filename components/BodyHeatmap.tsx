@@ -397,9 +397,9 @@ aria-hidden="true"           viewBox="0 0 120 265"
               className="inline-block w-2 h-2 rounded-full flex-shrink-0"
               style={{ background: STATUS_COLOR[status[p.key]!] }}
             />
-            <span className="text-zinc-400 truncate">{t(p.labelKey)}</span>
+            <span className="text-zinc-400 truncate" title={t(p.labelKey)}>{t(p.labelKey)}</span>
             {notes[p.key] && (
-              <span className="text-zinc-500 truncate text-xs ml-1">— {notes[p.key]}</span>
+              <span className="text-zinc-500 truncate text-xs ml-1" title={notes[p.key]}>— {notes[p.key]}</span>
             )}
             <span
               className="ml-auto text-xs font-semibold flex-shrink-0"

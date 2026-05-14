@@ -188,7 +188,9 @@ function buildEmailHtml(
 
 // ── Day from created_at ────────────────────────────────────────────────────
 function daysSince(iso: string): number {
-  return Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+  const t = new Date(iso).getTime();
+  if (isNaN(t)) return -1; // signal invalid — caller's markerFromDays returns null for negatives
+  return Math.floor((Date.now() - t) / 86400000);
 }
 
 function markerFromDays(days: number): DayMarker | null {

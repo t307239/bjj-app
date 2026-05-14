@@ -372,7 +372,8 @@ export async function POST(req: NextRequest) {
   // Check cache freshness for this specific mode
   const cachedMode = cacheMap[mode];
   if (cachedMode) {
-    const cacheAge = Date.now() - new Date(cachedMode.at).getTime();
+    const cachedAt = new Date(cachedMode.at).getTime();
+    const cacheAge = isNaN(cachedAt) ? Infinity : Date.now() - cachedAt;
     if (cacheAge < SEVEN_DAYS_MS) {
       return NextResponse.json({
         coaching: cachedMode.text,

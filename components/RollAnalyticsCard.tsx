@@ -77,7 +77,7 @@ function BarRow({
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
   return (
     <div className="flex items-center gap-2 text-xs">
-      <span className="w-20 flex-shrink-0 text-zinc-400 truncate">{badge ? `${badge} ${label}` : label}</span>
+      <span className="w-20 flex-shrink-0 text-zinc-400 truncate" title={badge ? `${badge} ${label}` : label}>{badge ? `${badge} ${label}` : label}</span>
       <div className="flex-1 bg-zinc-800 rounded-full h-1.5 overflow-hidden">
         <div className={`${color} h-full rounded-full transition-all duration-500`} style={{ width: `${pct}%` }} />
       </div>

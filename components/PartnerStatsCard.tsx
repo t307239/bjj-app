@@ -31,7 +31,7 @@ function BarRow({ label, count, pct, accent }: { label: string; count: number; p
   return (
     <div className="mb-2">
       <div className="flex items-center justify-between mb-0.5">
-        <span className="text-xs text-zinc-300 truncate max-w-[70%]">@{label}</span>
+        <span className="text-xs text-zinc-300 truncate max-w-[70%]" title={`@${label}`}>@{label}</span>
         <span className="text-xs text-zinc-500 flex-shrink-0">{count}</span>
       </div>
       <div className="w-full h-1.5 bg-zinc-700 rounded-full overflow-hidden">
