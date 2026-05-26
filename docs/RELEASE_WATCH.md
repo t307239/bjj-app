@@ -2,6 +2,64 @@
 
 ---
 
+## 2026/05/26 チェック
+
+### 新着リリース
+
+#### 🛠️ Claude Code v2.1.142〜v2.1.150（2026/05/15-23）
+
+- **`/simplify` → `/code-review` にリネーム**: コマンド名が実態に合った名称に変更
+- **PowerShell tool fix**: `pwsh` を winget / Microsoft Store 経由でインストールした場合に exit code 1 で失敗していた問題を修正
+- **`/effort` スライダー bug fix**: 開いた時にスライダーが誤った位置で表示される問題を修正
+- **MCP ページネーション fix**: MCP server を 1 ページ目以降にページネーションすると resources / templates / prompts が落ちる問題を修正
+- **Windows Terminal ストローブ修正**: attached background session でストリーミング中に画面がちらつく問題を修正
+- **Remote Control セッション名同期修正**: claude.ai / Claude mobile app からリネームしても local session 名が更新されない問題を修正
+- **履歴 race fix**: 送信直後の prompt が上キー履歴に 2 件表示されてしまう race condition を修正
+- **「Jump to bottom」pill fix**: fullscreen mode でタップしても即座に消えない問題を修正
+- **v2.1.150**: 内部インフラ改善のみ（ユーザー向け変更なし）
+
+#### 📡 API変更
+
+##### **Cache diagnostics**（public beta）
+- `diagnostics.previous_message_id` を Messages リクエストに渡すと `cache_miss_reason` が返却される
+- プロンプトキャッシュがどこで diverge したか原因を特定可能に。キャッシュ効率の最適化に有用
+
+##### **Claude Platform on AWS 正式ローンチ**
+- Anthropic 管理インフラを AWS 経由で利用可能に（AWS billing + IAM 認証）
+- 対応: Messages API / Files API / Message Batches API / Claude Managed Agents / Agent Skills / code execution / tool use
+- 既存 Bedrock GA とは別経路（Anthropic managed vs AWS managed）
+
+##### **Managed Agents: Memory / Multiagent / Outcomes が public beta へ**
+- beta header `managed-agents-2026-04-01` で利用可能（既報の機能が正式 public beta に移行）
+
+##### **Web search — SEC filing データ強化**
+- web search tool が SEC filing の詳細データを返せるようになった。財務 research agent / 決算分析 / デューデリジェンスワークフローで一次情報に citation 付きでアクセス可能
+
+#### 🏢 企業・戦略ニュース
+
+##### **Anthropic、Stainless を買収**（2026/05/18）
+- Stainless: SDK 生成 + MCP server tooling の専業スタートアップ。Anthropic SDK（Python / TypeScript / Go / Java 等）は元々全て Stainless が生成
+- 買収目的: Claude Platform の MCP connectivity と developer experience をさらに強化
+- 「agent は接続できる先だけ有能」— SDK/MCP server 生成インフラを内製化することで将来の connector エコシステム構築が加速
+
+##### **KPMG と戦略的グローバルアライアンス**（2026/05/19）
+- 276,000 名以上の全 KPMG 社員が Claude にアクセス可能
+- KPMG の Digital Gateway（Microsoft Azure 上の主要クライアントプラットフォーム）に Claude Cowork + Managed Agents を統合
+- 税務・法務クライアント向けの新ツールと、PE ポートフォリオ企業向け Claude Code 統合（KPMG Blaze）も展開
+
+##### **Project Glasswing 初回アップデート**（2026/05/22）
+- AWS / Apple / Broadcom / Cisco / Google / Microsoft / NVIDIA 等と連携した防御的サイバーセキュリティイニシアチブの進捗報告
+
+### 💡 BJJ Appへの影響
+
+- **🟢 Claude Code `claude update` 推奨**: v2.1.142-v2.1.150 は主にバグ修正。`/code-review` リネームで commit 前チェックが少し自然な名称に。macOS 中心の開発なので Windows 系修正は直接影響なし
+- **🟡 Cache diagnostics**: Wiki バッチや Gemini API 呼び出しで prompt cache を使い始める際、キャッシュ miss の原因特定が容易になる。現状は Gemini 直接呼びのため Claude API キャッシュは未使用だが、将来 Claude で batch 処理する場合に有用
+- **🟢 Claude Platform on AWS**: bjj-app は Vercel + Supabase 構成で AWS 経由は不要。影響なし
+- **🚀 Stainless 買収 — SDK 品質向上に期待**: 今後 Claude SDK の更新頻度・品質が向上する可能性。bjj-app で Python SDK (`anthropic` package) を使っている箇所は恩恵を受ける可能性あり
+- **🟡 KPMG/大企業アライアンス連発**: Anthropic の B2B 路線加速（PwC / KPMG / Gates Foundation）は、BJJ App の **Gym Pro tier（B2B）の参考事例として活用余地あり**。「道場単位での Claude 統合 → インサイト提供」という Gym Pro の価値命題が大企業向けの潮流と方向性一致。docs/MARKETING_PLAN.md の B2B section に反映検討
+
+---
+
 ## 2026/05/14 チェック
 
 ### 新着リリース
