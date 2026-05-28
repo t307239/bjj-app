@@ -6,7 +6,7 @@
  * Pro users get 8 weeks of data; free users get a teaser (current week count only).
  */
 
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { getLocalDateString } from "@/lib/timezone";
 
 export type TrainingType = "gi" | "nogi" | "drilling" | "competition" | "open_mat" | "recovery";
@@ -94,6 +94,12 @@ export function useWeeklyReport(
   logs: LogEntry[],
   t: (key: string, vars?: Record<string, string | number>) => string,
 ): WeeklyReportData {
+  // z262: tRef — t は useLocale() から毎レンダー新参照。useMemo deps に入れると
+  // logs が変わっていなくても毎レンダー再計算され report オブジェクトが新参照になり
+  // WeeklyReportCard の handleShare useCallback が連鎖再生成される。
+  const tRef = useRef(t);
+  tRef.current = t;
+
   return useMemo(() => {
     const emptyDist = (): Record<TrainingType, number> =>
       Object.fromEntries(ALL_TYPES.map((tt) => [tt, 0])) as Record<TrainingType, number>;
@@ -228,16 +234,16 @@ export function useWeeklyReport(
     if (hasEnoughData) {
       // Week delta insight
       if (weekDelta > 0) {
-        insights.push(t("report.insightWeekUp", { n: weekDelta }));
+        insights.push(tRef.current("report.insightWeekUp", { n: weekDelta }));
       } else if (weekDelta < 0) {
-        insights.push(t("report.insightWeekDown", { n: Math.abs(weekDelta) }));
+        insights.push(tRef.current("report.insightWeekDown", { n: Math.abs(weekDelta) }));
       }
 
       // Consecutive weeks trend (3+ weeks increasing)
       if (weeklyTrend.length >= 3) {
         const last3 = weeklyTrend.slice(-3);
         if (last3[0].count < last3[1].count && last3[1].count < last3[2].count) {
-          insights.push(t("report.insightConsecutiveUp"));
+          insights.push(tRef.current("report.insightConsecutiveUp"));
         }
       }
 
@@ -245,7 +251,7 @@ export function useWeeklyReport(
       const totalCurrentWeek = currentWeekCount || 1;
       const drillingRatio = currentWeekDist.drilling / totalCurrentWeek;
       if (totalCurrentWeek >= 3 && drillingRatio < 0.15) {
-        insights.push(t("report.insightLowDrilling"));
+        insights.push(tRef.current("report.insightLowDrilling"));
       }
 
       // Consecutive days achievement
