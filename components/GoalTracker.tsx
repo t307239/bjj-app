@@ -50,6 +50,11 @@ export default function GoalTracker({ userId }: Props) {
 
   const supabaseRef = useRef(createClient());
   const supabase = supabaseRef.current;
+  // z262: tRef — t は useLocale() から毎レンダー新参照が生成される。
+  // deps に直接入れると useEffect が無限 re-fire し 400+ Supabase requests/session 発生。
+  // Ref に同期させ effect 内は tRef.current を参照することで deps から除外する。
+  const tRef = useRef(t);
+  tRef.current = t;
   // z260y: mountedRef guard — useEffect 内 async + setState を unmount から保護
   const mountedRef = useRef(true);
 
@@ -146,7 +151,7 @@ export default function GoalTracker({ userId }: Props) {
             const cnt = (wLogs ?? []).filter((l) => l.date >= wsStr && l.date <= weStr).length;
             wh.push({
               weekStart: wsStr,
-              label: i === 0 ? t("goal.thisWeek") : i === 1 ? t("goal.lastWeek") : t("goal.weeksAgo", { n: i }),
+              label: i === 0 ? tRef.current("goal.thisWeek") : i === 1 ? tRef.current("goal.lastWeek") : tRef.current("goal.weeksAgo", { n: i }),
               count: cnt,
               achieved: cnt >= wGoal,
               isCurrent: i === 0,
@@ -187,7 +192,7 @@ export default function GoalTracker({ userId }: Props) {
       }
     };
     load();
-  }, [userId, supabase, t]);
+  }, [userId, supabase]); // t は tRef.current 経由で参照 — deps に入れると無限 re-fire
 
   // Onboarding: when navigated to via #goal-tracker hash, auto-expand + open weekly goal editor
   useEffect(() => {
