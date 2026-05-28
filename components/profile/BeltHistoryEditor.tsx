@@ -46,6 +46,9 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
 
   const supabaseRef = useRef(createClient());
   const supabase = supabaseRef.current;
+  // z262: tRef — t は毎レンダー新参照。deps に入れると fetch useEffect が無限 re-fire する。
+  const tRef = useRef(t);
+  tRef.current = t;
 
   useEffect(() => {
     const fetch = async () => {
@@ -56,14 +59,14 @@ export default function BeltHistoryEditor({ userId, externalExpanded }: Props) {
         .order("promoted_at", { ascending: true });
       if (error) {
         clientLogger.error("belt_history.load_failed", {}, error);
-        setToast(t("error.title"));
+        setToast(tRef.current("error.title"));
         toastTimer.current = setTimeout(() => setToast(null), 3000);
       }
       setEntries((data as BeltHistoryEntry[]) ?? []);
       setLoading(false);
     };
     fetch();
-  }, [userId, supabase, t]);
+  }, [userId, supabase]); // t は tRef.current 経由で参照 — deps に入れると無限 re-fire
 
   // Cleanup toast timer on unmount
   useEffect(() => {

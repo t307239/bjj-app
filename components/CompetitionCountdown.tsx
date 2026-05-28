@@ -135,6 +135,10 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
   const [saving, setSaving] = useState(false);
   const [weeklySessionCount, setWeeklySessionCount] = useState(0);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  // z262: tRef — GoalTracker と同様、t は毎レンダー新参照。
+  // loadGoals の useCallback deps に入れると再生成ループ → useEffect([loadGoals]) で無限発火。
+  const tRef = useRef(t);
+  tRef.current = t;
   // z260y: mountedRef guard — userId 変更/高速 nav で unmount 後 setState 防止
   const mountedRef = useRef(true);
 
@@ -180,11 +184,11 @@ export default function CompetitionCountdown({ userId, isPro = false }: Props) {
       setWeeklySessionCount(Math.max(Math.round(totalSessions / 4), 2));
     } catch (err) {
       clientLogger.error("compgoal_loadgoals_network_error", {}, err);
-      if (mountedRef.current) setErrorMsg(t("compGoal.loadError"));
+      if (mountedRef.current) setErrorMsg(tRef.current("compGoal.loadError"));
     } finally {
       if (mountedRef.current) setLoading(false);
     }
-  }, [userId, supabase, t]);
+  }, [userId, supabase]); // t は tRef.current 経由で参照 — deps に入れると無限 re-fire
 
   useEffect(() => {
     loadGoals();
