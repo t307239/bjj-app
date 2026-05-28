@@ -96,6 +96,10 @@ function fmtAge(isoDate: string | null | undefined, locale: string): string {
 
 export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt }: Props) {
   const { t, locale } = useLocale();
+  // z262: tRef — t は毎レンダー新参照。generate useCallback の deps に入れると
+  // handleModeChange も再生成され連鎖コストが発生する。locale は文字列値で安定。
+  const tRef = useRef(t);
+  tRef.current = t;
   const [mode, setMode] = useState<CoachMode>("general");
   const [coachingMap, setCoachingMap] = useState<Partial<Record<CoachMode, string>>>(() => {
     if (!initialCoaching) return {};
@@ -144,7 +148,7 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
       if (reqId !== requestIdRef.current) return;
       if (!res.ok) {
         const errBody = await res.json().catch(() => ({})) as { error?: string };
-        setError(errBody.error ?? t("aiCoach.error"));
+        setError(errBody.error ?? tRef.current("aiCoach.error"));
         return;
       }
       const data = await res.json() as {
@@ -166,13 +170,13 @@ export default function AICoachCard({ isPro, initialCoaching, initialGeneratedAt
       if (reqId !== requestIdRef.current) return;
       clientLogger.error("ai_coach.generate_failed", {}, err instanceof Error ? err : new Error(String(err)));
       const isTimeout = err instanceof DOMException && err.name === "AbortError";
-      setError(isTimeout ? t("aiCoach.error") : t("aiCoach.error"));
+      setError(isTimeout ? tRef.current("aiCoach.error") : tRef.current("aiCoach.error"));
     } finally {
       // Only the latest request clears the spinner — older ones already
       // returned via the reqId guard above.
       if (reqId === requestIdRef.current) setLoadingMode(null);
     }
-  }, [locale, t]);
+  }, [locale]); // t は tRef.current 経由で参照 — deps に入れると毎レンダー再生成
 
   const handleModeChange = useCallback((newMode: CoachMode) => {
     setMode(newMode);

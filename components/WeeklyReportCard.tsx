@@ -6,7 +6,7 @@
  * Pro users see full KPI + trend + insights. Free users see blur teaser.
  */
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n";
 import { useWeeklyReport, type TrainingType } from "@/hooks/useWeeklyReport";
@@ -46,6 +46,10 @@ const TYPE_ICONS: Record<TrainingType, string> = {
 
 export default function WeeklyReportCard({ userId, isPro }: Props) {
   const { t, locale } = useLocale();
+  // z262: tRef — t は毎レンダー新参照。handleShareReport useCallback deps に入れると
+  // report 変化とは無関係に毎レンダー再生成される。
+  const tRef = useRef(t);
+  tRef.current = t;
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"week" | "month">("week");
@@ -90,7 +94,7 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
     setSharing(true);
     try {
       const count = tab === "week" ? report.currentWeekCount : report.currentMonthCount;
-      const periodLabel = tab === "week" ? t("report.tabWeek") : t("report.tabMonth");
+      const periodLabel = tab === "week" ? tRef.current("report.tabWeek") : tRef.current("report.tabMonth");
       const totalMin = tab === "week" ? report.currentWeekTotalMinutes : report.currentMonthTotalMinutes;
       const timeStr = totalMin > 0
         ? (totalMin >= 60
@@ -98,13 +102,13 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
           : `${totalMin}m`)
         : "";
       const text = [
-        `🥋 ${periodLabel}: ${count} ${t("report.sessions")}`,
+        `🥋 ${periodLabel}: ${count} ${tRef.current("report.sessions")}`,
         timeStr ? `⏱ ${timeStr}` : "",
         report.maxConsecutiveDays > 0
           ? `🔥 ${
               report.maxConsecutiveDays === 1
-                ? t("report.streakValueOne")
-                : t("report.streakValue", { n: report.maxConsecutiveDays })
+                ? tRef.current("report.streakValueOne")
+                : tRef.current("report.streakValue", { n: report.maxConsecutiveDays })
             }`
           : "",
         "",
@@ -125,7 +129,7 @@ export default function WeeklyReportCard({ userId, isPro }: Props) {
     } finally {
       setSharing(false);
     }
-  }, [tab, report, t]);
+  }, [tab, report]); // t は tRef.current 経由で参照 — deps に入れると毎レンダー再生成
 
   // ── Loading skeleton — matches real content height to prevent layout shift ──
   if (loading) {

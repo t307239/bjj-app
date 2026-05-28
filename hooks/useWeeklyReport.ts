@@ -256,7 +256,7 @@ export function useWeeklyReport(
 
       // Consecutive days achievement
       if (maxConsecutiveDays >= 3) {
-        insights.push(t("report.insightStreak", { n: maxConsecutiveDays }));
+        insights.push(tRef.current("report.insightStreak", { n: maxConsecutiveDays }));
       }
     }
 
@@ -278,5 +278,5 @@ export function useWeeklyReport(
       insights,
       hasEnoughData,
     };
-  }, [logs, t]);
+  }, [logs]); // t は tRef.current 経由で参照 — deps に入れると毎レンダー再計算
 }

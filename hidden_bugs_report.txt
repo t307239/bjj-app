@@ -61,11 +61,11 @@ Total: 88
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L78: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L368: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L372: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L398: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L402: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L406: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/BodyHeatmap.tsx: L410: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/CompetitionSummaryCard.tsx: L302: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
@@ -131,15 +131,15 @@ Total: 88
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/TrialStatusBanner.tsx: L35: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L163: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L167: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L316: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L320: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L355: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/WeeklyReportCard.tsx: L359: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/WeightChart.tsx: L147: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[INFO] [INLINE_STYLE_OBJECT] components/WeightCutPlanner.tsx: L167: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] components/WeightCutPlanner.tsx: L171: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/admin/AttributionTable.tsx: L132: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換

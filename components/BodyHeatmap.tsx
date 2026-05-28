@@ -97,6 +97,10 @@ function toDateStr(d: Date): string {
 
 export default function BodyHeatmap({ userId, initialStatus, initialDates, initialNotes }: Props) {
   const { t } = useLocale();
+  // z262: tRef — t は毎レンダー新参照。useCallback deps に入れると savePart/saveNote が
+  // 毎レンダー再生成される。値は tRef.current 経由で最新を参照。
+  const tRef = useRef(t);
+  tRef.current = t;
   const isOnline = useOnlineStatus();
   const supabaseRef = useRef(createClient());
   const supabase = supabaseRef.current;
@@ -202,9 +206,9 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates, initi
     if (error) {
       setStatus(status);
       setStatusDates(statusDates);
-      showToast(t("body.saveError"));
+      showToast(tRef.current("body.saveError"));
     }
-  }, [isOnline, status, statusDates, notes, userId, supabase, showToast, t]);
+  }, [isOnline, status, statusDates, notes, userId, supabase, showToast]); // t は tRef.current 経由
 
   // Save note with debounce
   const saveNote = useCallback((part: PartKey, value: string) => {
@@ -224,9 +228,9 @@ export default function BodyHeatmap({ userId, initialStatus, initialDates, initi
         .update({ body_notes: newNotes })
         .eq("id", userId);
       setSavingNote(false);
-      if (error) showToast(t("body.saveError"));
+      if (error) showToast(tRef.current("body.saveError"));
     }, 800);
-  }, [notes, userId, supabase, showToast, t]);
+  }, [notes, userId, supabase, showToast]); // t は tRef.current 経由
 
   const partColor = (key: PartKey) =>
     status[key] ? STATUS_COLOR[status[key]!] : DEFAULT_COLOR;

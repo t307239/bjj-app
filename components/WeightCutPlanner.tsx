@@ -6,7 +6,7 @@
  * generates a phased plan with weekly milestones and phase-specific advice.
  */
 
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useLocale } from "@/lib/i18n";
 import { computeWeightCutPlan } from "@/lib/weightCutPlan";
 
@@ -32,6 +32,10 @@ type Milestone = {
 
 export default function WeightCutPlanner({ currentWeight, targetWeight, targetDate }: Props) {
   const { t } = useLocale();
+  // z262: tRef — t は毎レンダー新参照。useMemo deps に入れると props 変化なしでも
+  // 毎レンダー再計算されコストが発生する。
+  const tRef = useRef(t);
+  tRef.current = t;
 
   const plan = useMemo(() => {
     // Pure milestone math lives in lib/weightCutPlan.ts (unit-tested).
@@ -55,36 +59,36 @@ export default function WeightCutPlanner({ currentWeight, targetWeight, targetDa
 
     if (totalDays > 7) {
       phases.push({
-        name: t("weightCut.phaseNormal"),
+        name: tRef.current("weightCut.phaseNormal"),
         startDay: 0,
         endDay: Math.max(0, totalDays - 7),
-        advice: t("weightCut.phaseNormalAdvice"),
+        advice: tRef.current("weightCut.phaseNormalAdvice"),
         color: "bg-emerald-500",
       });
     }
     if (totalDays > 3) {
       phases.push({
-        name: t("weightCut.phaseWaterLoad"),
+        name: tRef.current("weightCut.phaseWaterLoad"),
         startDay: Math.max(0, totalDays - 7),
         endDay: Math.max(0, totalDays - 3),
-        advice: t("weightCut.phaseWaterLoadAdvice"),
+        advice: tRef.current("weightCut.phaseWaterLoadAdvice"),
         color: "bg-blue-500",
       });
     }
     if (totalDays > 1) {
       phases.push({
-        name: t("weightCut.phaseWaterCut"),
+        name: tRef.current("weightCut.phaseWaterCut"),
         startDay: Math.max(0, totalDays - 3),
         endDay: totalDays - 1,
-        advice: t("weightCut.phaseWaterCutAdvice"),
+        advice: tRef.current("weightCut.phaseWaterCutAdvice"),
         color: "bg-amber-500",
       });
     }
     phases.push({
-      name: t("weightCut.phaseWeighIn"),
+      name: tRef.current("weightCut.phaseWeighIn"),
       startDay: totalDays - 1,
       endDay: totalDays,
-      advice: t("weightCut.phaseWeighInAdvice"),
+      advice: tRef.current("weightCut.phaseWeighInAdvice"),
       color: "bg-red-500",
     });
 
@@ -97,7 +101,7 @@ export default function WeightCutPlanner({ currentWeight, targetWeight, targetDa
       currentPhaseIdx: currentPhaseIdx >= 0 ? currentPhaseIdx : 0,
       onTrack: true,
     };
-  }, [currentWeight, targetWeight, targetDate, t]);
+  }, [currentWeight, targetWeight, targetDate]); // t は tRef.current 経由で参照
 
   // Past competition date
   if (!plan) return null;

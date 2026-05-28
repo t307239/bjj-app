@@ -5,7 +5,7 @@
  * html2canvas の代わりに Canvas API でシェア画像を生成。
  * Web Share API 対応デバイスは直接シェア、非対応は PNG ダウンロード。
  */
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { TRAINING_TYPES } from "@/lib/trainingTypes";
 import { type TrainingEntry } from "@/lib/trainingLogHelpers";
 import { clientLogger } from "@/lib/clientLogger";
@@ -162,6 +162,10 @@ function wrapText(ctx: CanvasRenderingContext2D, text: string, x: number, y: num
 
 export default function ShareButton({ entry }: Props) {
   const { t } = useLocale();
+  // z262: tRef — t は毎レンダー新参照。useCallback deps に入れると entry 変化とは
+  // 無関係に毎レンダー再生成される。
+  const tRef = useRef(t);
+  tRef.current = t;
   const [sharing, setSharing] = useState(false);
 
   const handleShare = useCallback(async () => {
@@ -176,8 +180,8 @@ export default function ShareButton({ entry }: Props) {
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({
           files: [file],
-          title: t("share.nativeTitle"),
-          text: t("share.nativeText"),
+          title: tRef.current("share.nativeTitle"),
+          text: tRef.current("share.nativeText"),
         });
         trackEvent("training_shared", { method: "native_share" });
       } else {
@@ -198,7 +202,7 @@ export default function ShareButton({ entry }: Props) {
     } finally {
       setSharing(false);
     }
-  }, [entry, t]);
+  }, [entry]); // t は tRef.current 経由で参照 — deps に入れると毎レンダー再生成
 
   return (
     <button type="button"
