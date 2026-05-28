@@ -86,6 +86,19 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
   // t is recreated every render by makeT() — use ref to keep deps stable
   const tRef = useRef(t);
   tRef.current = t;
+
+  // z262: Debounce router.refresh() so rapid insert→delete (or undo) doesn't
+  // fire multiple full Server Component re-renders in quick succession.
+  // Why debounce instead of remove: router.refresh() syncs server-rendered counts
+  // (StatusBar streak/total) after mutations. We still need it, just not repeatedly.
+  const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scheduleRefresh = useCallback(() => {
+    if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
+    refreshTimerRef.current = setTimeout(() => {
+      router.refresh();
+      refreshTimerRef.current = null;
+    }, 1500);
+  }, [router]);
   const idempotencyKey = useRef(
     typeof crypto !== "undefined" ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`
   );
@@ -253,12 +266,16 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
           .select("name")
           .eq("user_id", userId)
           .order("name", { ascending: true }),
+        // z262: limit to 200 rows to avoid fetching all logs for autocomplete.
+        // The partial index (training_logs_user_partner_idx) makes this a fast
+        // index scan; dedup happens in JS below. 200 covers any real-world user.
         supabase
           .from("training_logs")
           .select("partner_username")
           .eq("user_id", userId)
           .not("partner_username", "is", null)
-          .neq("partner_username", ""),
+          .neq("partner_username", "")
+          .limit(200),
         countQuery,
       ]);
 
@@ -475,8 +492,10 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       const prevCount = parseInt(safeGetItem("bjj_log_count") ?? "0", 10);
       safeSetItem("bjj_log_count", String(prevCount + 1));
       trackEvent("training_logged", { type: form.type });
-      // §2 Logic: Revalidate server-rendered data after successful save
-      router.refresh();
+      // §2 Logic: Revalidate server-rendered data after successful save.
+      // z262: debounced via scheduleRefresh() — avoids double-refresh when
+      // user saves then immediately deletes (undo flow triggers delete within 5s).
+      scheduleRefresh();
 
       // ── Post-training insight (one-liner feedback) ─────────────────
       const insight = generateInsight(entries, data, totalCount, tRef.current);
@@ -615,7 +634,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
       if (!error) {
         if (typeof navigator !== "undefined") navigator.vibrate?.([30, 20, 30]);
         setTotalCount((c) => (c !== null ? Math.max(0, c - 1) : null));
-        router.refresh();
+        scheduleRefresh();
       } else {
         setEntries((prev) => [removed, ...prev].sort((a, b) => b.date.localeCompare(a.date)));
         setToast({ message: tRef.current("training.deleteFailed"), type: "error" });
@@ -636,7 +655,7 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
         setToast(null);
       },
     });
-  }, [entries, pendingDelete, userId, supabase, router]); // t via tRef
+  }, [entries, pendingDelete, userId, supabase, scheduleRefresh]); // t via tRef; router via scheduleRefresh
 
   // ── Edit ──────────────────────────────────────────────────────────────────
   const cancelEdit = useCallback(() => setEditingId(null), []);
@@ -685,13 +704,13 @@ export function useTrainingLog({ userId, isPro, initialOpen, t }: UseTrainingLog
     if (!error && data) {
       setEntries((prev) => prev.map((en) => en.id === id ? data : en));
       setToast({ message: tRef.current("training.updated"), type: "success" });
-      router.refresh();
+      scheduleRefresh();
     } else {
       if (prevEntry) setEntries((prev) => prev.map((en) => en.id === id ? prevEntry : en));
       setEditingId(id);
       setToast({ message: tRef.current("training.updateFailed"), type: "error" });
     }
-  }, [editForm, editCompForm, entries, userId, supabase, router]); // t via tRef
+  }, [editForm, editCompForm, entries, userId, supabase, scheduleRefresh]); // t via tRef; router via scheduleRefresh
 
   // ── Pagination ────────────────────────────────────────────────────────────
   const handlePageChange = useCallback(async (newPage: number) => {
