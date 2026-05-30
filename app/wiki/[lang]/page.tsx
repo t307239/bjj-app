@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { makeT, type Locale } from "@/lib/i18n";
 
-export const revalidate = 3600;
+// Why: same as [slug]/page.tsx — daily GitHub Actions updates, 24h is sufficient.
+export const revalidate = 86400;
 
 // ─────────────────────────────────────────
 // 定数・型定義

@@ -18,7 +18,9 @@ import YouTubeLiteEmbed from "./YouTubeLiteEmbed";
 import UgcVideoSubmit from "./UgcVideoSubmit";
 import { logger } from "@/lib/logger";
 
-export const revalidate = 3600;
+// Why: wiki content updates via GitHub Actions daily, not hourly.
+// 3600 (1h) was burning Vercel Fluid Active CPU — 24h cuts serverless invocations 24x.
+export const revalidate = 86400;
 
 // ─────────────────────────────────────────
 // 型定義
