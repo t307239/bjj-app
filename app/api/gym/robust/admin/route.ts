@@ -14,11 +14,13 @@ export async function GET() {
   }
 
   // スタッフ/オーナー権限チェック
-  const admin = createRobustAdminClient();
-  const { data: isStaff } = await admin.rpc("is_gym_staff_or_owner", { target_gym_id: GYM_ID });
+  // Why: service role client で RPC を呼ぶと auth.uid() が NULL になるため、
+  //      必ず user の authenticated client (supabase) で呼ぶこと
+  const { data: isStaff } = await supabase.rpc("is_gym_staff_or_owner", { target_gym_id: GYM_ID });
   if (!isStaff) {
     return NextResponse.json({ error: "権限がありません" }, { status: 403 });
   }
+  const admin = createRobustAdminClient();
 
   const billingPeriod = currentBillingPeriod();
   const todayStart = new Date();
