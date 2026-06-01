@@ -157,8 +157,8 @@ export default function CheckinPage() {
       <p className="text-zinc-400 text-sm mb-8">チェックイン</p>
 
       {/* カメラプレビュー */}
-      <div className="relative mb-8 rounded-2xl overflow-hidden border-2 border-white/20"
-           style={{ width: 280, height: 280 }}>
+      {/* Why: max-w-full で 320px 端末でもオーバーフロー防止 */}
+      <div className="relative mb-8 rounded-2xl overflow-hidden border-2 border-white/20 w-[280px] h-[280px] max-w-full" style={{ aspectRatio: "1" }}>
         <video
           ref={videoRef}
           className="w-full h-full object-cover"

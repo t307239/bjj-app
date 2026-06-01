@@ -215,7 +215,7 @@ export default function AdminMembersPage() {
                       <p className="text-white font-medium">{m.name}</p>
                       <p className="text-zinc-500 text-xs">{m.email}</p>
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-xs text-zinc-400 mb-1">ステータス</label>
                         <select value={editStatus} onChange={e => setEditStatus(e.target.value)}

@@ -173,7 +173,7 @@ export default function AdminVideosPage() {
                   className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm font-mono" />
                 <p className="text-zinc-600 text-xs mt-1">Drive の共有 URL から取得: …/d/<strong>ここ</strong>/view</p>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs text-zinc-400 mb-1">クラス種別</label>
                   <select value={addClassType} onChange={e => setAddClassType(e.target.value)}
