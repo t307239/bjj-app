@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createRobustServerClient } from "@/lib/robust/supabase";
+import { createRobustServerClient } from "@/lib/robust/supabase-server";
 import { createCheckoutSession } from "@/lib/robust/payments";
 import { getGymBySlug } from "@/lib/robust/member";
 import { STRIPE_PRICE_IDS } from "@/lib/robust/types";

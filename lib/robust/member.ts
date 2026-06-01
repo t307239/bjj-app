@@ -1,5 +1,5 @@
 // MemberService — 全モジュールの共通基盤（他から呼ばれる側）
-import { createRobustServerClient } from "./supabase";
+import { createRobustServerClient } from "./supabase-server";
 import type { Gym, GymMember } from "./types";
 
 export async function getGymBySlug(slug: string): Promise<Gym | null> {

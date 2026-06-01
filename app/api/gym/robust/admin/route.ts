@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { createRobustServerClient, createRobustAdminClient } from "@/lib/robust/supabase";
+import { createRobustServerClient } from "@/lib/robust/supabase-server";
+import { createRobustAdminClient } from "@/lib/robust/supabase";
 import { currentBillingPeriod } from "@/lib/robust/attendance";
 
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
