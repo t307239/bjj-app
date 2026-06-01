@@ -107,9 +107,9 @@ export default withSentryConfig(analyzer(nextConfig), {
   authToken: process.env.SENTRY_AUTH_TOKEN,
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
-  // Why: SENTRY_AUTH_TOKEN が期限切れ/未設定でもビルドを落とさない。
+  // Why: SENTRY_AUTH_TOKEN が期限切れ/未設定の場合はアップロードを無効化。
   //      ソースマップアップロードは任意機能なのでビルド失敗の原因にしない。
-  errorHandler: (err: Error) => {
-    console.warn("[Sentry] Source map upload failed (non-fatal):", err.message);
+  sourcemaps: {
+    disable: !process.env.SENTRY_AUTH_TOKEN,
   },
 });
