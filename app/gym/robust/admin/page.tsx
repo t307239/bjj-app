@@ -61,23 +61,55 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [tab, setTab] = useState<"today" | "members">("today");
+  // ログインフォーム状態
+  const [showLogin, setShowLogin] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const [loginSubmitting, setLoginSubmitting] = useState(false);
+
+  async function fetchDashboard() {
+    const res = await fetch("/api/gym/robust/admin");
+    if (!res.ok) {
+      const json = await res.json().catch(() => ({}));
+      setError(json.error ?? "エラーが発生しました");
+      setLoading(false);
+      return;
+    }
+    const json = await res.json();
+    setData(json);
+    setLoading(false);
+  }
+
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setLoginError("");
+    setLoginSubmitting(true);
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: loginEmail,
+        password: loginPassword,
+      });
+      if (signInError) throw signInError;
+      setShowLogin(false);
+      setLoading(true);
+      await fetchDashboard();
+    } catch (err) {
+      setLoginError((err as Error).message);
+    } finally {
+      setLoginSubmitting(false);
+    }
+  }
 
   useEffect(() => {
     (async () => {
-      // 未ログインなら登録ページへ
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { window.location.href = "/gym/robust/register"; return; }
-
-      const res = await fetch("/api/gym/robust/admin");
-      if (!res.ok) {
-        const json = await res.json().catch(() => ({}));
-        setError(json.error ?? "エラーが発生しました");
+      if (!user) {
+        setShowLogin(true);
         setLoading(false);
         return;
       }
-      const json = await res.json();
-      setData(json);
-      setLoading(false);
+      await fetchDashboard();
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -85,6 +117,54 @@ export default function AdminPage() {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (showLogin) {
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
+        <div className="w-full max-w-sm">
+          <div className="mb-8 text-center">
+            <h1 className="text-xl font-bold text-white">ROBUST 柔術</h1>
+            <p className="text-zinc-500 text-sm mt-1">管理者ログイン</p>
+          </div>
+          <form onSubmit={handleLogin} className="bg-zinc-900 border border-white/10 rounded-xl p-6 space-y-4">
+            <div>
+              <label htmlFor="admin-email" className="block text-xs text-zinc-400 mb-1">メールアドレス</label>
+              <input
+                id="admin-email"
+                type="email"
+                value={loginEmail}
+                onChange={e => setLoginEmail(e.target.value)}
+                required
+                autoComplete="email"
+                className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                placeholder="admin@example.com"
+              />
+            </div>
+            <div>
+              <label htmlFor="admin-password" className="block text-xs text-zinc-400 mb-1">パスワード</label>
+              <input
+                id="admin-password"
+                type="password"
+                value={loginPassword}
+                onChange={e => setLoginPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+                className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+              />
+            </div>
+            {loginError && <p className="text-red-400 text-xs">{loginError}</p>}
+            <button
+              type="submit"
+              disabled={loginSubmitting}
+              className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
+            >
+              {loginSubmitting ? "ログイン中..." : "ログイン"}
+            </button>
+          </form>
+        </div>
       </div>
     );
   }
