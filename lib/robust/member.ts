@@ -3,7 +3,7 @@ import { createRobustServerClient } from "./supabase";
 import type { Gym, GymMember } from "./types";
 
 export async function getGymBySlug(slug: string): Promise<Gym | null> {
-  const supabase = createRobustServerClient();
+  const supabase = await createRobustServerClient();
   const { data, error } = await supabase
     .from("gyms")
     .select("id, owner_id, name, slug, plan_cap, overage_yen, features, created_at, updated_at")
@@ -14,7 +14,7 @@ export async function getGymBySlug(slug: string): Promise<Gym | null> {
 }
 
 export async function getMemberByQrToken(qrToken: string): Promise<GymMember | null> {
-  const supabase = createRobustServerClient();
+  const supabase = await createRobustServerClient();
   const { data, error } = await supabase
     .from("gym_members")
     .select(
@@ -29,7 +29,7 @@ export async function getMemberByQrToken(qrToken: string): Promise<GymMember | n
 }
 
 export async function getMemberByUserId(userId: string, gymId: string): Promise<GymMember | null> {
-  const supabase = createRobustServerClient();
+  const supabase = await createRobustServerClient();
   const { data, error } = await supabase
     .from("gym_members")
     .select("id, gym_id, user_id, email, name, plan_type, plan_cap, status, qr_token")
@@ -41,7 +41,7 @@ export async function getMemberByUserId(userId: string, gymId: string): Promise<
 }
 
 export async function isGymFeatureEnabled(gymId: string, feature: string): Promise<boolean> {
-  const supabase = createRobustServerClient();
+  const supabase = await createRobustServerClient();
   const { data } = await supabase
     .from("gyms")
     .select("features")

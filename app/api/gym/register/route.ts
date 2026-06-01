@@ -13,7 +13,7 @@ const bodySchema = z.object({
 
 // auth: public — Supabase Auth で認証確認済みのユーザーのみ
 export async function POST(req: NextRequest) {
-  const supabase = createRobustServerClient();
+  const supabase = await createRobustServerClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
     return NextResponse.json({ error: "ログインが必要です" }, { status: 401 });

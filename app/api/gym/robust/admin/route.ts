@@ -6,7 +6,7 @@ const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
 
 // auth: public — is_gym_staff_or_owner RLS で保護
 export async function GET() {
-  const supabase = createRobustServerClient();
+  const supabase = await createRobustServerClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
     return NextResponse.json({ error: "ログインが必要です" }, { status: 401 });
