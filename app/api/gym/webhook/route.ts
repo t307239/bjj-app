@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { robustStripe } from "@/lib/robust/payments";
+import { getStripe } from "@/lib/robust/payments";
 import { handleCheckoutCompleted } from "./handlers/checkout-completed";
 import { handleInvoicePaid } from "./handlers/invoice-paid";
 import { handleInvoicePaymentFailed } from "./handlers/invoice-payment-failed";
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 
   let event: Stripe.Event;
   try {
-    event = robustStripe.webhooks.constructEvent(
+    event = getStripe().webhooks.constructEvent(
       body,
       sig,
       process.env.ROBUST_STRIPE_WEBHOOK_SECRET!

@@ -4,8 +4,18 @@ import { format } from "date-fns";
 import { createRobustAdminClient } from "./supabase";
 import type { GymMember } from "./types";
 
-// ROBUST 専用 Stripe インスタンス（bjj-app の Stripe とは別アカウント）
-const robustStripe = new Stripe(process.env.ROBUST_STRIPE_SECRET_KEY!);
+// Why: モジュールレベルで new Stripe(undefined) を呼ぶと
+//      ROBUST_STRIPE_SECRET_KEY 未設定の Vercel build 環境でクラッシュする。
+//      遅延初期化パターンで関数呼び出し時にのみインスタンスを生成する。
+let _stripe: Stripe | null = null;
+function getStripe(): Stripe {
+  if (!_stripe) {
+    const key = process.env.ROBUST_STRIPE_SECRET_KEY;
+    if (!key) throw new Error("ROBUST_STRIPE_SECRET_KEY is not configured");
+    _stripe = new Stripe(key);
+  }
+  return _stripe;
+}
 
 /** 超過課金: PaymentIntents 都度ではなく Invoice Items に積む（翌月合算） */
 export async function addOverageToNextInvoice(
@@ -24,7 +34,7 @@ export async function addOverageToNextInvoice(
   const overageYen = gym?.overage_yen ?? 1000;
   const period = format(new Date(), "yyyy年MM月");
 
-  await robustStripe.invoiceItems.create({
+  await getStripe().invoiceItems.create({
     customer: member.stripe_customer_id,
     amount: overageYen,
     currency: "jpy",
@@ -67,7 +77,7 @@ export async function createCheckoutSession({
     });
   }
 
-  const session = await robustStripe.checkout.sessions.create({
+  const session = await getStripe().checkout.sessions.create({
     client_reference_id: userId,
     customer_email: email,
     mode: "subscription",
@@ -81,4 +91,4 @@ export async function createCheckoutSession({
   return session.url!;
 }
 
-export { robustStripe };
+export { getStripe };
