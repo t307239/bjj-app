@@ -5,9 +5,7 @@ import { createRobustAdminClient } from "./supabase";
 import type { GymMember } from "./types";
 
 // ROBUST 専用 Stripe インスタンス（bjj-app の Stripe とは別アカウント）
-const robustStripe = new Stripe(process.env.ROBUST_STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-04-30.basil",
-});
+const robustStripe = new Stripe(process.env.ROBUST_STRIPE_SECRET_KEY!);
 
 /** 超過課金: PaymentIntents 都度ではなく Invoice Items に積む（翌月合算） */
 export async function addOverageToNextInvoice(
@@ -51,27 +49,30 @@ export async function createCheckoutSession({
   origin: string;
   setupFeeAmount: number; // 入会金（円）
 }): Promise<string> {
+  // 入会金は line_items に one_time price_data として追加
+  // Why: subscription_data.add_invoice_items は Stripe v17 では非対応。
+  //      subscription mode では recurring + one_time を line_items に混在可能。
+  const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
+    { price: priceId, quantity: 1 },
+  ];
+  if (setupFeeAmount > 0) {
+    lineItems.push({
+      price_data: {
+        currency: "jpy",
+        product_data: { name: "入会金" },
+        unit_amount: setupFeeAmount,
+        // recurring なし = one_time
+      },
+      quantity: 1,
+    });
+  }
+
   const session = await robustStripe.checkout.sessions.create({
-    // Supabase Auth の user_id を橋渡し
     client_reference_id: userId,
     customer_email: email,
     mode: "subscription",
-    line_items: [
-      { price: priceId, quantity: 1 },
-    ],
-    // 入会金を Invoice Item として追加
-    invoice_creation: setupFeeAmount > 0 ? {
-      enabled: true,
-    } : undefined,
-    subscription_data: setupFeeAmount > 0 ? {
-      add_invoice_items: [{
-        price_data: {
-          currency: "jpy",
-          product_data: { name: "入会金" },
-          unit_amount: setupFeeAmount,
-        },
-      }],
-    } : undefined,
+    line_items: lineItems,
+    metadata: { gymSlug, planKey: priceId },
     success_url: `${origin}/gym/${gymSlug}/register/success`,
     cancel_url: `${origin}/gym/${gymSlug}/register`,
     payment_method_types: ["card"],

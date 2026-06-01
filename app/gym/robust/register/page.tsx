@@ -10,7 +10,7 @@
  * 3. プラン選択 → POST /api/gym/register → Stripe Checkout URL へ遷移
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
 
 const GYM_SLUG = "robust";

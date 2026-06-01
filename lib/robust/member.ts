@@ -25,7 +25,7 @@ export async function getMemberByQrToken(qrToken: string): Promise<GymMember | n
     .eq("status", "active")
     .single();
   if (error) return null;
-  return data as GymMember;
+  return data as unknown as GymMember;
 }
 
 export async function getMemberByUserId(userId: string, gymId: string): Promise<GymMember | null> {
