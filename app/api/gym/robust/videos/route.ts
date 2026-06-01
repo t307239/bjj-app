@@ -79,9 +79,18 @@ export async function POST(req: NextRequest) {
   }
 
   const admin = createRobustAdminClient();
+  // Why: spread を避けて explicit columns で INSERT — PostgREST が未知 column を拒否するのを防ぐ
   const { data, error } = await admin
     .from("gym_videos")
-    .insert({ ...parsed.data, gym_id: GYM_ID, created_by: user.id })
+    .insert({
+      gym_id: GYM_ID,
+      created_by: user.id,
+      title: parsed.data.title,
+      description: parsed.data.description ?? null,
+      drive_file_id: parsed.data.drive_file_id,
+      thumbnail_url: parsed.data.thumbnail_url ?? null,
+      class_type: parsed.data.class_type ?? null,
+    })
     .select("id")
     .single();
 
