@@ -1,5 +1,7 @@
 // MemberService — 全モジュールの共通基盤（他から呼ばれる側）
-import { createRobustServerClient } from "./supabase-server";
+// Why: member.ts の全関数はサーバーサイド lookup。
+//      gym_members/gyms テーブルは RLS で is_gym_staff_or_owner のみ許可されるため、
+//      anon/user client では取得不可。service role (admin client) で明示的なフィルタを使用する。
 import { createRobustAdminClient } from "./supabase";
 import type { Gym, GymMember } from "./types";
 
@@ -18,8 +20,9 @@ export async function getGymBySlug(slug: string): Promise<Gym | null> {
 }
 
 export async function getMemberByQrToken(qrToken: string): Promise<GymMember | null> {
-  const supabase = await createRobustServerClient();
-  const { data, error } = await supabase
+  // Why: checkin は auth:public エンドポイント。anon key では gym_members の RLS が通らないため admin client を使用。
+  const admin = createRobustAdminClient();
+  const { data, error } = await admin
     .from("gym_members")
     .select(
       "id, gym_id, user_id, email, name, stripe_customer_id, stripe_subscription_id, " +
@@ -33,8 +36,10 @@ export async function getMemberByQrToken(qrToken: string): Promise<GymMember | n
 }
 
 export async function getMemberByUserId(userId: string, gymId: string): Promise<GymMember | null> {
-  const supabase = await createRobustServerClient();
-  const { data, error } = await supabase
+  // Why: server-side lookup。self-read RLS (user_id = auth.uid()) はサーバー側では
+  //      cookie 経由セッションが必要だが、admin client で明示的に userId フィルタすれば同等の安全性を確保できる。
+  const admin = createRobustAdminClient();
+  const { data, error } = await admin
     .from("gym_members")
     .select("id, gym_id, user_id, email, name, plan_type, plan_cap, status, qr_token")
     .eq("user_id", userId)
@@ -45,8 +50,9 @@ export async function getMemberByUserId(userId: string, gymId: string): Promise<
 }
 
 export async function isGymFeatureEnabled(gymId: string, feature: string): Promise<boolean> {
-  const supabase = await createRobustServerClient();
-  const { data } = await supabase
+  // Why: gyms テーブルの RLS は is_gym_staff_or_owner のみ。server-side lookup のため admin client を使用。
+  const admin = createRobustAdminClient();
+  const { data } = await admin
     .from("gyms")
     .select("features")
     .eq("id", gymId)

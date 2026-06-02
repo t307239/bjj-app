@@ -134,6 +134,11 @@ export default function RegisterPage() {
         }),
       });
       const json = await res.json();
+      if (res.status === 503) {
+        // Stripe 未設定時は連絡先を案内
+        setError(json.error ?? "現在オンライン決済の準備中です。");
+        return;
+      }
       if (!res.ok) throw new Error(json.error ?? "登録処理に失敗しました");
       window.location.href = json.url;
     } catch (err) {

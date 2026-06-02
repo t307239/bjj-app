@@ -33,7 +33,8 @@ export async function POST(req: NextRequest) {
 
   const priceId = STRIPE_PRICE_IDS[planKey];
   if (!priceId) {
-    return NextResponse.json({ error: "無効なプランです" }, { status: 400 });
+    // Why: Stripe Price ID が未設定（空文字）は「無効なプラン」ではなく「決済未設定」
+    return NextResponse.json({ error: "現在オンライン決済の準備中です。直接ご連絡ください。" }, { status: 503 });
   }
 
   const origin = req.headers.get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL ?? "";
