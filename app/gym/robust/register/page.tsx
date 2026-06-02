@@ -15,7 +15,7 @@ import { createRobustClient } from "@/lib/robust/supabase";
 
 const GYM_SLUG = "robust";
 
-type Step = "auth" | "plan" | "loading";
+type Step = "auth" | "profile" | "plan" | "loading";
 
 type Plan = {
   id: string;
@@ -75,6 +75,10 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  // プロフィール情報
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [sportsHistory, setSportsHistory] = useState("");
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -111,12 +115,17 @@ export default function RegisterPage() {
         options: { data: { name } },
       });
       if (signUpError) throw signUpError;
-      setStep("plan");
+      setStep("profile"); // 認証後はプロフィール入力へ
     } catch (err) {
       setError((err as Error).message);
     } finally {
       setSubmitting(false);
     }
+  }
+
+  function handleProfileNext(e: React.FormEvent) {
+    e.preventDefault();
+    setStep("plan");
   }
 
   async function handleCheckout() {
@@ -131,6 +140,9 @@ export default function RegisterPage() {
           gymSlug: GYM_SLUG,
           planKey: selectedPlan.priceKey,
           setupFee: selectedPlan.setupFee,
+          phone: phone || undefined,
+          address: address || undefined,
+          sportsHistory: sportsHistory || undefined,
         }),
       });
       const json = await res.json();
@@ -162,6 +174,15 @@ export default function RegisterPage() {
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold text-white mb-1">ROBUST 柔術</h1>
           <p className="text-zinc-400 text-sm">会員登録</p>
+        </div>
+
+        {/* ステップインジケーター */}
+        <div className="flex items-center justify-center gap-2 mb-6 text-xs text-zinc-500">
+          <span className={step === "auth" ? "text-emerald-400 font-medium" : "text-zinc-600"}>① 基本情報</span>
+          <span className="text-zinc-700">›</span>
+          <span className={step === "profile" ? "text-emerald-400 font-medium" : "text-zinc-600"}>② 詳細情報</span>
+          <span className="text-zinc-700">›</span>
+          <span className={step === "plan" ? "text-emerald-400 font-medium" : "text-zinc-600"}>③ プラン選択</span>
         </div>
 
         {step === "auth" && (
@@ -212,6 +233,54 @@ export default function RegisterPage() {
               className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
             >
               {submitting ? "処理中..." : "アカウントを作成"}
+            </button>
+          </form>
+        )}
+
+        {step === "profile" && (
+          <form onSubmit={handleProfileNext} className="bg-zinc-900 border border-white/10 rounded-xl p-6 space-y-4">
+            <p className="text-xs text-zinc-500 mb-2">入会に必要な情報をご記入ください（任意項目は後で追加可能）</p>
+            <div>
+              <label htmlFor="reg-phone" className="block text-xs text-zinc-400 mb-1">電話番号</label>
+              <input
+                id="reg-phone"
+                type="tel"
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+                autoComplete="tel"
+                placeholder="090-1234-5678"
+                className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+              />
+            </div>
+            <div>
+              <label htmlFor="reg-address" className="block text-xs text-zinc-400 mb-1">住所</label>
+              <input
+                id="reg-address"
+                type="text"
+                value={address}
+                onChange={e => setAddress(e.target.value)}
+                autoComplete="street-address"
+                placeholder="東京都板橋区..."
+                className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+              />
+            </div>
+            <div>
+              <label htmlFor="reg-sports" className="block text-xs text-zinc-400 mb-1">運動経歴・格闘技歴</label>
+              <textarea
+                id="reg-sports"
+                value={sportsHistory}
+                onChange={e => setSportsHistory(e.target.value)}
+                rows={3}
+                maxLength={500}
+                placeholder="例: 柔道3年、ボクシング未経験など"
+                className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm resize-none"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
+            >
+              次へ（プラン選択）→
             </button>
           </form>
         )}

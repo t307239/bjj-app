@@ -51,13 +51,19 @@ export async function createCheckoutSession({
   priceId,
   origin,
   setupFeeAmount,
+  phone,
+  address,
+  sportsHistory,
 }: {
   userId: string;
   email: string;
   gymSlug: string;
   priceId: string;
   origin: string;
-  setupFeeAmount: number; // 入会金（円）
+  setupFeeAmount: number;
+  phone?: string;
+  address?: string;
+  sportsHistory?: string;
 }): Promise<string> {
   // 入会金は line_items に one_time price_data として追加
   // Why: subscription_data.add_invoice_items は Stripe v17 では非対応。
@@ -77,12 +83,30 @@ export async function createCheckoutSession({
     });
   }
 
+  // A案: billing_cycle_anchor で月末統一 + 日割り自動計算
+  // Why: 入会日が異なっても毎月同じ日に請求を統一する（オーナー運用の簡略化）。
+  //      月末 = 各月の最終日に固定。proration_behavior で月中入会の日割りを Stripe が自動算出。
+  const now = new Date();
+  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  const billingAnchor = Math.floor(lastDayOfMonth.getTime() / 1000);
+
   const session = await getStripe().checkout.sessions.create({
     client_reference_id: userId,
     customer_email: email,
     mode: "subscription",
     line_items: lineItems,
-    metadata: { gymSlug, planKey: priceId },
+    metadata: {
+      gymSlug,
+      planKey: priceId,
+      // プロフィール情報をメタデータに保存（webhook で gym_members に書き込む）
+      phone: phone ?? "",
+      address: address ?? "",
+      sports_history: sportsHistory ?? "",
+    },
+    subscription_data: {
+      billing_cycle_anchor: billingAnchor,
+      proration_behavior: "create_prorations",
+    },
     success_url: `${origin}/gym/${gymSlug}/register/success`,
     cancel_url: `${origin}/gym/${gymSlug}/register`,
     payment_method_types: ["card"],

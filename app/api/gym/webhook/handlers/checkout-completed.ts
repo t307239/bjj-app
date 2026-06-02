@@ -42,6 +42,10 @@ export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void
     user_id: userId,
     email,
     name: session.customer_details?.name ?? "",
+    // メタデータからプロフィール情報を復元
+    phone: session.metadata?.phone || null,
+    address: session.metadata?.address || null,
+    sports_history: session.metadata?.sports_history || null,
     stripe_customer_id: session.customer as string,
     stripe_subscription_id: session.subscription as string | null,
     payment_method: "stripe",
@@ -49,6 +53,7 @@ export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void
     plan_type: planType,
     plan_cap: planType === "twice_weekly" ? gym.plan_cap : null,
     status: "active",
+    video_access: false, // デフォルト非公開。admin から個別に有効化
   });
 }
 

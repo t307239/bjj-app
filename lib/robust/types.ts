@@ -50,6 +50,9 @@ export type GymMember = {
   plan_type: PlanType;
   plan_cap: number | null;
   status: MemberStatus;
+  address: string | null;
+  sports_history: string | null;
+  video_access: boolean;
   insurance_expires_at: string | null;
   is_minor: boolean;
   guardian_consent: boolean;
