@@ -1,10 +1,14 @@
 // MemberService — 全モジュールの共通基盤（他から呼ばれる側）
 import { createRobustServerClient } from "./supabase-server";
+import { createRobustAdminClient } from "./supabase";
 import type { Gym, GymMember } from "./types";
 
 export async function getGymBySlug(slug: string): Promise<Gym | null> {
-  const supabase = await createRobustServerClient();
-  const { data, error } = await supabase
+  // Why: gyms テーブルの RLS は is_gym_staff_or_owner のみ許可。
+  //      登録フロー中のユーザーはまだ staff/owner でないため anon client では取得不可。
+  //      service role でジム情報を公開 lookup する。
+  const admin = createRobustAdminClient();
+  const { data, error } = await admin
     .from("gyms")
     .select("id, owner_id, name, slug, plan_cap, overage_yen, features, created_at, updated_at")
     .eq("slug", slug)
