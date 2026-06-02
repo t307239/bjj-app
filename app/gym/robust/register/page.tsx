@@ -92,7 +92,7 @@ export default function RegisterPage() {
         .maybeSingle();
 
       if (member) {
-        window.location.href = `/gym/${GYM_SLUG}/member`;
+        window.location.href = `/gym/${GYM_SLUG}/member/qr`;
         return;
       }
       // 幽霊アカウント → プラン選択へ
