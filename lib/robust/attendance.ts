@@ -13,14 +13,14 @@ export function currentBillingPeriod(): string {
 export async function isDuplicateCheckin(memberId: string): Promise<boolean> {
   const supabase = createRobustAdminClient();
   const since = new Date(Date.now() - CHECKIN_COOLDOWN_MINUTES * 60 * 1000).toISOString();
-  const { data } = await supabase
+  // Why: head:true のとき data は null。count は別フィールドで返るため destructure が必要。
+  //      data?.count は常に undefined → 永遠に重複検知しない silent bug だった。
+  const { count } = await supabase
     .from("attendance_logs")
     .select("id", { count: "exact", head: true })
     .eq("member_id", memberId)
     .gte("checked_in_at", since);
-  return (data as unknown as { count: number } | null)?.count
-    ? true
-    : false;
+  return (count ?? 0) > 0;
 }
 
 export async function countThisMonthAttendance(memberId: string): Promise<number> {
