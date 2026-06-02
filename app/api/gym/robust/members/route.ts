@@ -38,6 +38,7 @@ const updateSchema = z.object({
   status: z.enum(["active", "paused", "cancelled"]).optional(),
   plan_type: z.enum(["fulltime", "twice_weekly", "drop_in"]).optional(),
   plan_cap: z.number().int().min(1).max(99).nullable().optional(),
+  video_access: z.boolean().optional(),
 });
 
 export async function PATCH(req: NextRequest) {

@@ -32,13 +32,16 @@ export async function GET() {
   // 会員: active かつ is_active = true の動画のみ
   const { data: member } = await admin
     .from("gym_members")
-    .select("id, status")
+    .select("id, status, video_access")
     .eq("user_id", user.id)
     .eq("gym_id", GYM_ID)
     .maybeSingle();
 
   if (!member || member.status !== "active") {
     return NextResponse.json({ error: "有効な会員のみ閲覧できます" }, { status: 403 });
+  }
+  if (!member.video_access) {
+    return NextResponse.json({ error: "動画閲覧のオプションが有効になっていません。オーナーにお問い合わせください。" }, { status: 403 });
   }
 
   const { data: videos, error } = await admin

@@ -8,6 +8,9 @@ type Member = {
   name: string;
   email: string;
   phone: string | null;
+  address: string | null;
+  sports_history: string | null;
+  video_access: boolean;
   plan_type: string;
   plan_cap: number | null;
   status: string;
@@ -44,6 +47,8 @@ export default function AdminMembersPage() {
   const [editStatus, setEditStatus] = useState<string>("");
   const [editPlan, setEditPlan] = useState<string>("");
   const [editCap, setEditCap] = useState<string>("");
+  const [editVideoAccess, setEditVideoAccess] = useState<boolean>(false);
+  const [detailMember, setDetailMember] = useState<Member | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [showLogin, setShowLogin] = useState(false);
@@ -92,6 +97,7 @@ export default function AdminMembersPage() {
     setEditStatus(m.status);
     setEditPlan(m.plan_type);
     setEditCap(m.plan_cap != null ? String(m.plan_cap) : "");
+    setEditVideoAccess(m.video_access);
     setSaveError("");
   }
 
@@ -99,7 +105,12 @@ export default function AdminMembersPage() {
     setSaving(true);
     setSaveError("");
     try {
-      const body: Record<string, unknown> = { memberId, status: editStatus, plan_type: editPlan };
+      const body: Record<string, unknown> = {
+        memberId,
+        status: editStatus,
+        plan_type: editPlan,
+        video_access: editVideoAccess,
+      };
       if (editPlan === "twice_weekly") {
         body.plan_cap = editCap ? parseInt(editCap) : 8;
       } else {
@@ -115,7 +126,7 @@ export default function AdminMembersPage() {
         throw new Error(json.error ?? "保存に失敗しました");
       }
       setMembers(prev => prev.map(m => m.id === memberId
-        ? { ...m, status: editStatus, plan_type: editPlan, plan_cap: body.plan_cap as number | null }
+        ? { ...m, status: editStatus, plan_type: editPlan, plan_cap: body.plan_cap as number | null, video_access: editVideoAccess }
         : m
       ));
       setEditing(null);
@@ -243,6 +254,21 @@ export default function AdminMembersPage() {
                           className="w-32 bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
                       </div>
                     )}
+                    {/* 動画アクセス切替 */}
+                    <div className="flex items-center justify-between bg-zinc-800 rounded-lg px-3 py-2.5">
+                      <div>
+                        <p className="text-white text-sm">会員限定動画の閲覧</p>
+                        <p className="text-zinc-500 text-xs mt-0.5">オンにすると動画ページにアクセス可能</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setEditVideoAccess(v => !v)}
+                        className={`relative w-11 h-6 rounded-full transition-colors ${editVideoAccess ? "bg-emerald-500" : "bg-zinc-600"}`}
+                        aria-label="動画アクセス切替"
+                      >
+                        <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${editVideoAccess ? "translate-x-5" : "translate-x-0"}`} />
+                      </button>
+                    </div>
                     {saveError && <p className="text-red-400 text-xs">{saveError}</p>}
                     <div className="flex gap-2">
                       <button onClick={() => handleSave(m.id)} disabled={saving}
@@ -267,18 +293,45 @@ export default function AdminMembersPage() {
                         </span>
                       </div>
                       <p className="text-zinc-500 text-xs mt-0.5 truncate">{m.email}</p>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500">
+                      <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500 flex-wrap">
                         <span>{PLAN_LABEL[m.plan_type] ?? m.plan_type}</span>
                         {m.plan_cap != null && <span>上限{m.plan_cap}回/月</span>}
                         {m.phone && <span>{m.phone}</span>}
                         <span>{m.payment_method === "stripe" ? "カード" : "口座振替"}</span>
+                        {m.video_access && <span className="text-emerald-500">動画あり</span>}
                       </div>
                     </div>
-                    <button onClick={() => startEdit(m)}
-                      className="ml-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-400 hover:text-white text-xs bg-zinc-800 hover:bg-zinc-700 rounded-lg px-3"
-                      aria-label={`${m.name}を編集`}>
-                      編集
-                    </button>
+                    <div className="flex gap-2 ml-3 shrink-0">
+                      {(m.address || m.sports_history) && (
+                        <button type="button" onClick={() => setDetailMember(detailMember?.id === m.id ? null : m)}
+                          className="min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-400 hover:text-white text-xs bg-zinc-800 hover:bg-zinc-700 rounded-lg px-2"
+                          aria-label={`${m.name}の詳細`}>
+                          詳細
+                        </button>
+                      )}
+                      <button type="button" onClick={() => startEdit(m)}
+                        className="min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-400 hover:text-white text-xs bg-zinc-800 hover:bg-zinc-700 rounded-lg px-3"
+                        aria-label={`${m.name}を編集`}>
+                        編集
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {/* 詳細情報パネル（住所・運動経歴） */}
+                {detailMember?.id === m.id && editing !== m.id && (
+                  <div className="mt-3 pt-3 border-t border-white/10 space-y-2 text-xs">
+                    {m.address && (
+                      <div>
+                        <span className="text-zinc-500">住所: </span>
+                        <span className="text-zinc-300">{m.address}</span>
+                      </div>
+                    )}
+                    {m.sports_history && (
+                      <div>
+                        <span className="text-zinc-500">運動経歴: </span>
+                        <span className="text-zinc-300">{m.sports_history}</span>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
