@@ -84,11 +84,16 @@ export async function createCheckoutSession({
   }
 
   // A案: billing_cycle_anchor で月末統一 + 日割り自動計算
-  // Why: 入会日が異なっても毎月同じ日に請求を統一する（オーナー運用の簡略化）。
-  //      月末 = 各月の最終日に固定。proration_behavior で月中入会の日割りを Stripe が自動算出。
+  // Why: 月末 5 日以内の入会は「初月日割りが数百円 → 2〜3日後にまた月額」という
+  //      ユーザー体験上不自然な二重請求になる。
+  //      残り 5 日以内なら翌月末をアンカーにし、初月は実質無料期間扱いにする。
   const now = new Date();
-  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  const billingAnchor = Math.floor(lastDayOfMonth.getTime() / 1000);
+  const lastDayThisMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  const daysLeft = lastDayThisMonth.getDate() - now.getDate();
+  const anchorDate = daysLeft <= 5
+    ? new Date(now.getFullYear(), now.getMonth() + 2, 0) // 翌月末
+    : lastDayThisMonth;                                   // 今月末
+  const billingAnchor = Math.floor(anchorDate.getTime() / 1000);
 
   const session = await getStripe().checkout.sessions.create({
     client_reference_id: userId,
