@@ -14,6 +14,7 @@ type Member = {
   video_access: boolean;
   family_discount: boolean;
   family_member_name: string | null;
+  family_discount_warning: boolean;
   plan_type: string;
   plan_cap: number | null;
   status: string;
@@ -264,8 +265,13 @@ export default function AdminMembersPage() {
                         <span>{m.payment_method === "stripe" ? "カード" : "口座振替"}</span>
                         {m.video_access && <span className="text-emerald-500">動画あり</span>}
                         {m.family_discount && (
-                          <span className="text-blue-400" title={`家族割引申請: ${m.family_member_name ?? ""}さんと同世帯`}>
-                            👨‍👩‍👦 {m.family_member_name ?? "家族割"}
+                          <span
+                            className={m.family_discount_warning ? "text-yellow-400" : "text-blue-400"}
+                            title={m.family_discount_warning
+                              ? `⚠️ 同じ氏名「${m.family_member_name}」を複数会員が申請しています。確認が必要です。`
+                              : `家族割引申請: ${m.family_member_name ?? ""}さんと同世帯`}
+                          >
+                            {m.family_discount_warning ? "⚠️" : "👨‍👩‍👦"} {m.family_member_name ?? "家族割"}
                           </span>
                         )}
                       </div>

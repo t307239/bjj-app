@@ -39,28 +39,33 @@ export async function POST(req: NextRequest) {
   const handler = handlers[event.type];
   if (handler) {
     const admin = createRobustAdminClient();
-    // Why: INSERT→handler の順だと handler 失敗時に event_id が残り Stripe の再送が 200 skipped になり
-    //      永久に再処理されなくなる。正しい順序は「先に重複チェック→handler 成功後に記録」。
-    const { data: already } = await admin
+
+    // Why: read → handler → insert の順では同時再送の TOCTOU レースを防げない。
+    //      先に INSERT で排他権を確保し、23505（UNIQUE違反）なら処理済みとしてスキップ。
+    //      handler が失敗した場合は DELETE で巻き戻し、Stripe が再送できるようにする。
+    const { error: claimError } = await admin
       .from("webhook_events")
-      .select("event_id")
-      .eq("event_id", event.id)
-      .maybeSingle();
-    if (already) {
-      clientLogger.warn("robust.webhook.duplicate", { eventId: event.id });
-      return NextResponse.json({ received: true, skipped: "duplicate" });
+      .insert({ event_id: event.id });
+
+    if (claimError) {
+      if (claimError.code === "23505") {
+        // 別リクエストが先に処理中 or 処理済み → 重複スキップ
+        clientLogger.warn("robust.webhook.duplicate", { eventId: event.id });
+        return NextResponse.json({ received: true, skipped: "duplicate" });
+      }
+      // その他のDBエラーは handler を実行せずエラー返却（Stripe がリトライ）
+      clientLogger.error("robust.webhook.claim_error", { eventId: event.id }, claimError);
+      return NextResponse.json({ error: "DB error" }, { status: 500 });
     }
 
     try {
       await handler(event);
     } catch (err) {
-      clientLogger.error(`robust.webhook.handler_error.${event.type}`, {}, err);
-      // 記録しない → Stripe が再送してリトライできる
+      clientLogger.error(`robust.webhook.handler_error.${event.type}`, { eventId: event.id }, err);
+      // 巻き戻し: DELETE して Stripe の再送が再処理できるようにする
+      await admin.from("webhook_events").delete().eq("event_id", event.id);
       return NextResponse.json({ error: "Handler failed" }, { status: 500 });
     }
-
-    // 成功後にのみ記録
-    await admin.from("webhook_events").insert({ event_id: event.id });
   }
 
   return NextResponse.json({ received: true });

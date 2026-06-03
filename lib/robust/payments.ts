@@ -178,9 +178,11 @@ export async function createCheckoutSession({
   }
 
   // 月額プラン: subscription + 日割り・翌月分・保険を one-time で同時決済
-  // billing_cycle_anchor は翌々月1日（常に未来日）
-  // Why: 月末当日入会でも anchor が十分未来になるよう翌々月1日に固定。
-  //      翌々月末より1日前で、proration_behavior="none" なら subscription は翌々月1日から。
+  // billing_cycle_anchor = 翌々月1日（常に未来日・月末当日入会でも安全）
+  // Why: 今月（日割り）と翌月分は line_items one-time で別途請求済み。
+  //      subscription の定期課金は翌々月1日から開始し、以降毎月1日に課金。
+  //      翌々月末ではなく翌々月1日にする理由: Stripe は anchor 日が近すぎると
+  //      即時 proration が走る場合があるため、月初で確実に未来になるよう固定。
   const anchorDate = new Date(now.getFullYear(), now.getMonth() + 2, 1);
   const billingAnchor = Math.floor(anchorDate.getTime() / 1000);
 

@@ -38,7 +38,9 @@ export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void
     : planKey === "drop_in" ? "drop_in"
     : "fulltime";
 
-  await supabase.from("gym_members").insert({
+  // Why: webhook_events の排他制御後もごく稀に同時実行が起こりうる。
+  //      gym_members の user_id UNIQUE 制約を活かして INSERT onConflict doNothing で冪等化。
+  const { error: memberInsertError } = await supabase.from("gym_members").insert({
     gym_id: gym.id,
     user_id: userId,
     email,
@@ -62,6 +64,11 @@ export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void
     family_discount: session.metadata?.family_discount === "true",
     family_member_name: session.metadata?.family_member_name || null,
   });
+
+  // user_id UNIQUE 違反 = 別リクエストが先に INSERT 済み → 正常（冪等）
+  if (memberInsertError && memberInsertError.code !== "23505") {
+    throw memberInsertError;
+  }
 }
 
 function extractGymSlug(url: string): string | null {
