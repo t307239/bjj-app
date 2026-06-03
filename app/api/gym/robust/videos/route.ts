@@ -1,18 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createRobustServerClient } from "@/lib/robust/supabase-server";
 import { createRobustAdminClient } from "@/lib/robust/supabase";
+import { requireRobustAdmin, requireRobustAuth } from "@/lib/robust/auth";
 import { z } from "zod";
 
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
 
 // auth: public — 会員は GET のみ、管理者は全操作
 export async function GET() {
-  const supabase = await createRobustServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: "ログインが必要です" }, { status: 401 });
-  }
+  const auth = await requireRobustAuth();
+  if (!auth.ok) return auth.response;
 
+  const supabase = await createRobustServerClient();
   const admin = createRobustAdminClient();
 
   // 管理者かチェック
@@ -33,7 +32,7 @@ export async function GET() {
   const { data: member } = await admin
     .from("gym_members")
     .select("id, status, video_access")
-    .eq("user_id", user.id)
+    .eq("user_id", auth.userId)
     .eq("gym_id", GYM_ID)
     .maybeSingle();
 
@@ -64,16 +63,8 @@ const createSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const supabase = await createRobustServerClient();
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) {
-    return NextResponse.json({ error: "ログインが必要です" }, { status: 401 });
-  }
-
-  const { data: isStaff } = await supabase.rpc("is_gym_staff_or_owner", { target_gym_id: GYM_ID });
-  if (!isStaff) {
-    return NextResponse.json({ error: "権限がありません" }, { status: 403 });
-  }
+  const auth = await requireRobustAdmin();
+  if (!auth.ok) return auth.response;
 
   const body = await req.json().catch(() => null);
   const parsed = createSchema.safeParse(body);
@@ -87,7 +78,7 @@ export async function POST(req: NextRequest) {
     .from("gym_videos")
     .insert({
       gym_id: GYM_ID,
-      created_by: user.id,
+      created_by: auth.userId,
       title: parsed.data.title,
       description: parsed.data.description ?? null,
       drive_file_id: parsed.data.drive_file_id,
@@ -104,16 +95,8 @@ export async function POST(req: NextRequest) {
 const toggleSchema = z.object({ videoId: z.string().uuid(), is_active: z.boolean() });
 
 export async function PATCH(req: NextRequest) {
-  const supabase = await createRobustServerClient();
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) {
-    return NextResponse.json({ error: "ログインが必要です" }, { status: 401 });
-  }
-
-  const { data: isStaff } = await supabase.rpc("is_gym_staff_or_owner", { target_gym_id: GYM_ID });
-  if (!isStaff) {
-    return NextResponse.json({ error: "権限がありません" }, { status: 403 });
-  }
+  const auth = await requireRobustAdmin();
+  if (!auth.ok) return auth.response;
 
   const body = await req.json().catch(() => null);
   const parsed = toggleSchema.safeParse(body);

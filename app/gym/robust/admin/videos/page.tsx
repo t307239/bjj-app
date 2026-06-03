@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
+import RobustAdminLoginForm from "@/components/robust/RobustAdminLoginForm";
 
 type Video = {
   id: string;
@@ -26,9 +27,6 @@ export default function AdminVideosPage() {
   const [error, setError] = useState("");
   const [showAdd, setShowAdd] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const [loginError, setLoginError] = useState("");
   // 追加フォーム
   const [addTitle, setAddTitle] = useState("");
   const [addDesc, setAddDesc] = useState("");
@@ -59,18 +57,6 @@ export default function AdminVideosPage() {
       await fetchVideos();
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
-    setLoginError("");
-    try {
-      const { error: signInError } = await supabase.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
-      if (signInError) throw signInError;
-      setShowLogin(false);
-      setLoading(true);
-      await fetchVideos();
-    } catch (err) { setLoginError((err as Error).message); }
-  }
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
@@ -109,27 +95,7 @@ export default function AdminVideosPage() {
   }
 
   if (showLogin) {
-    return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
-        <div className="w-full max-w-sm">
-          <h1 className="text-xl font-bold text-white text-center mb-6">ROBUST 柔術 — 管理者ログイン</h1>
-          <form onSubmit={handleLogin} className="bg-zinc-900 border border-white/10 rounded-xl p-6 space-y-4">
-            <div>
-              <label htmlFor="v-email" className="block text-xs text-zinc-400 mb-1">メールアドレス</label>
-              <input id="v-email" type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)}
-                required autoComplete="email" className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
-            </div>
-            <div>
-              <label htmlFor="v-pw" className="block text-xs text-zinc-400 mb-1">パスワード</label>
-              <input id="v-pw" type="password" value={loginPassword} onChange={e => setLoginPassword(e.target.value)}
-                required autoComplete="current-password" className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
-            </div>
-            {loginError && <p className="text-red-400 text-xs">{loginError}</p>}
-            <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg py-2.5 text-sm">ログイン</button>
-          </form>
-        </div>
-      </div>
-    );
+    return <RobustAdminLoginForm onSuccess={() => { setShowLogin(false); setLoading(true); fetchVideos(); }} />;
   }
 
   if (loading) return <div className="min-h-screen bg-zinc-950 flex items-center justify-center"><div className="w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin" /></div>;
