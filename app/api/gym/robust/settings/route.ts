@@ -5,12 +5,34 @@ import { z } from "zod";
 
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
 
-// auth: public — ログイン済みで取得可（Drive フォルダ URL の表示用）
+// auth: public — admin または video_access を持つ active 会員のみ取得可
+// Why: drive_folder_url は「リンクを知っている全員」共有のフォルダを指すため、URL 自体が
+//      動画ペイウォールの鍵になる。ログイン済みなら誰でも返すと video_access 無し会員が
+//      直接 API を叩いて課金オプションを回避できてしまうため、video_access を必須にする。
 export async function GET() {
   const auth = await requireRobustAuth();
   if (!auth.ok) return auth.response;
 
   const admin = createRobustAdminClient();
+
+  const { createRobustServerClient } = await import("@/lib/robust/supabase-server");
+  const supabase = await createRobustServerClient();
+  const { data: isStaff } = await supabase.rpc("is_gym_staff_or_owner", { target_gym_id: GYM_ID });
+
+  if (!isStaff) {
+    // 会員: active かつ video_access=true のみ許可
+    const { data: member } = await admin
+      .from("gym_members")
+      .select("status, video_access")
+      .eq("user_id", auth.userId)
+      .eq("gym_id", GYM_ID)
+      .maybeSingle();
+
+    if (!member || member.status !== "active" || !member.video_access) {
+      return NextResponse.json({ error: "閲覧権限がありません" }, { status: 403 });
+    }
+  }
+
   const { data } = await admin
     .from("gyms")
     .select("drive_folder_url")
