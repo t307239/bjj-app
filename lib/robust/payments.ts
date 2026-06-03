@@ -88,54 +88,52 @@ export async function createCheckoutSession({
   //      subscription 自体は翌々月末から開始（proration: "none"）。
 
   const now = new Date();
+  const isDropIn = planKeyLogical === "drop_in";
+
+  // drop_in は単発参加のため日割り・翌月分前払いは不要
+  // Why: monthlyAmount=2000 のまま日割り・翌月分を計算すると約¥5,000〜6,000の三重課金になる
   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
   const remainingDays = daysInMonth - now.getDate() + 1;
-
-  // 家族割引適用後の月額（定数使用）
   const discountedMonthly = monthlyAmount - (familyDiscount ? FAMILY_DISCOUNT_YEN : 0);
+  // 日割りは Math.round（会員中立な丸め）
+  const proratedAmount = Math.round(discountedMonthly * remainingDays / daysInMonth);
 
-  // 日割り計算（切り上げ）
-  const proratedAmount = Math.ceil(discountedMonthly * remainingDays / daysInMonth);
-
-  // line_items: 入会金・日割り・翌月分・保険をすべて one-time で明示
+  // line_items 構築
   const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
-    // subscription（翌々月末から開始）
     { price: priceId, quantity: 1 },
   ];
 
-  // 入会金
-  if (setupFeeAmount > 0) {
-    lineItems.push({
-      price_data: { currency: "jpy", product_data: { name: "入会金" }, unit_amount: setupFeeAmount },
-      quantity: 1,
-    });
+  if (!isDropIn) {
+    // 月額プランのみ: 入会金・日割り・翌月分を追加
+    if (setupFeeAmount > 0) {
+      lineItems.push({
+        price_data: { currency: "jpy", product_data: { name: "入会金" }, unit_amount: setupFeeAmount },
+        quantity: 1,
+      });
+    }
+    if (proratedAmount > 0) {
+      lineItems.push({
+        price_data: {
+          currency: "jpy",
+          product_data: { name: `日割り（${remainingDays}日分）` },
+          unit_amount: proratedAmount,
+        },
+        quantity: 1,
+      });
+    }
+    if (discountedMonthly > 0) {
+      lineItems.push({
+        price_data: {
+          currency: "jpy",
+          product_data: { name: "翌月分（前払い）" },
+          unit_amount: discountedMonthly,
+        },
+        quantity: 1,
+      });
+    }
   }
 
-  // 日割り（当月）
-  if (proratedAmount > 0) {
-    lineItems.push({
-      price_data: {
-        currency: "jpy",
-        product_data: { name: `日割り（${remainingDays}日分）` },
-        unit_amount: proratedAmount,
-      },
-      quantity: 1,
-    });
-  }
-
-  // 翌月分満額（前払い）
-  if (discountedMonthly > 0) {
-    lineItems.push({
-      price_data: {
-        currency: "jpy",
-        product_data: { name: "翌月分（前払い）" },
-        unit_amount: discountedMonthly,
-      },
-      quantity: 1,
-    });
-  }
-
-  // スポーツ保険（任意選択・定数使用）
+  // スポーツ保険（drop_in でも任意で追加可能）
   if (includeInsurance) {
     const insuranceFee = isMinor ? SPORTS_INSURANCE_KIDS_YEN : SPORTS_INSURANCE_YEN;
     lineItems.push({

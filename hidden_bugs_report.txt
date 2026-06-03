@@ -47,7 +47,7 @@ Total: 111
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] app/gym/robust/member/videos/page.tsx: L95: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/register/page.tsx: L199: JSX内に英語テキスト直書き: "ROBUST 柔術"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/register/page.tsx: L200: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
 [INFO] [SUPABASE_NO_ERROR] app/gym/robust/register/page.tsx: L108: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加

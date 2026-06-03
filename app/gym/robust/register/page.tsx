@@ -164,6 +164,7 @@ export default function RegisterPage() {
           guardianName: isMinor ? guardianName : undefined,
           guardianContact: isMinor ? guardianContact : undefined,
           includeInsurance,
+          agreedToTerms,
           familyDiscount: !!familyMemberName.trim(),
           familyMemberName: familyMemberName.trim() || undefined,
           monthlyAmount: selectedPlan.monthlyAmount,
@@ -440,11 +441,11 @@ export default function RegisterPage() {
             </div>
 
             {/* 決済明細プレビュー */}
-            {selectedPlan && selectedPlan.monthlyAmount > 0 && (() => {
+            {selectedPlan && selectedPlan.monthlyAmount > 0 && selectedPlan.priceKey !== "drop_in" && (() => {
               const today = new Date();
               const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
               const remainingDays = daysInMonth - today.getDate() + 1;
-              const prorated = Math.ceil(selectedPlan.monthlyAmount * remainingDays / daysInMonth);
+              const prorated = Math.round(selectedPlan.monthlyAmount * remainingDays / daysInMonth);
               const discountedMonthly = selectedPlan.monthlyAmount - (familyMemberName.trim() ? FAMILY_DISCOUNT_YEN : 0);
               const insuranceFee = isMinor ? SPORTS_INSURANCE_KIDS_YEN : SPORTS_INSURANCE_YEN;
               const total = selectedPlan.setupFee + prorated + discountedMonthly + (includeInsurance ? insuranceFee : 0);

@@ -198,3 +198,16 @@ CREATE INDEX idx_members_stripe_customer  ON gym_members (stripe_customer_id);
 -- ============================================================
 -- INSERT INTO gyms (name, slug, owner_id, plan_cap, overage_yen)
 -- VALUES ('ROBUST 柔術', 'robust', '<YOUR_AUTH_USER_ID>', 8, 1000);
+
+-- webhook 冪等性テーブル（z270: event.id で二重処理を防ぐ）
+CREATE TABLE IF NOT EXISTS webhook_events (
+  event_id   TEXT PRIMARY KEY,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- gym_members の追加カラム（z265-z270 で追加）
+ALTER TABLE gym_members ADD COLUMN IF NOT EXISTS address         TEXT;
+ALTER TABLE gym_members ADD COLUMN IF NOT EXISTS sports_history  TEXT;
+ALTER TABLE gym_members ADD COLUMN IF NOT EXISTS video_access    BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE gym_members ADD COLUMN IF NOT EXISTS family_discount     BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE gym_members ADD COLUMN IF NOT EXISTS family_member_name  TEXT;

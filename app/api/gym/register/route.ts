@@ -15,6 +15,7 @@ const bodySchema = z.object({
   isMinor: z.boolean().optional(),
   guardianName: z.string().max(50).optional(),
   guardianContact: z.string().max(100).optional(),
+  agreedToTerms: z.boolean().optional(),
   includeInsurance: z.boolean().optional(),
   familyDiscount: z.boolean().optional(),
   familyMemberName: z.string().max(50).optional(),
@@ -34,7 +35,15 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "不正なリクエスト" }, { status: 400 });
   }
-  const { gymSlug, planKey, setupFee, phone, address, sportsHistory, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, monthlyAmount } = parsed.data;
+  const { gymSlug, planKey, setupFee, phone, address, sportsHistory, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, monthlyAmount, agreedToTerms } = parsed.data;
+
+  // サーバー側バリデーション（フロントの disabled バイパス対策）
+  if (!agreedToTerms) {
+    return NextResponse.json({ error: "利用規約への同意が必要です" }, { status: 400 });
+  }
+  if (isMinor && (!guardianName || !guardianContact)) {
+    return NextResponse.json({ error: "18歳未満の場合は保護者情報が必要です" }, { status: 400 });
+  }
 
   const gym = await getGymBySlug(gymSlug);
   if (!gym) {
