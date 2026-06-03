@@ -9,7 +9,7 @@ Total: 111
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/api/gym/robust/videos/route.ts: L18: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [SUPABASE_NO_ERROR] app/api/gym/webhook/handlers/checkout-completed.ts: L21: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] app/api/gym/webhook/handlers/checkout-completed.ts: L26: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/api/gym/webhook/handlers/invoice-paid.ts: L11: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加

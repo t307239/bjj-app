@@ -157,6 +157,7 @@ export async function createCheckoutSession({
     guardian_contact: guardianContact ?? "",
     family_member_name: familyMemberName ?? "",
     family_discount: String(familyDiscount ?? false),
+    include_insurance: String(includeInsurance ?? false),
   };
 
   // Why: drop_in はビジター単発参加（¥2,000/回）。

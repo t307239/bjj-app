@@ -17,10 +17,15 @@ export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void
 
   const supabase = createRobustAdminClient();
 
-  // カゴ落ちの冪等性: すでに登録済みなら何もしない
+  // 既存会員チェック
+  // Why: drop_in は毎回新しい checkout を作るが gym_members.user_id は UNIQUE。
+  //      2回目以降の drop_in は既存レコードが返る → 冪等スキップ。
+  //      drop_in 会員は永続的に "active" 状態で QR を保持し、来館のたびにチェックイン。
+  //      1回ごとの課金記録は Stripe の Payment 履歴で管理する（DB には残さない設計）。
+  //      将来的に attendance ベースの1回券管理が必要になった場合は別テーブルで対応。
   const { data: existing } = await supabase
     .from("gym_members")
-    .select("id")
+    .select("id, plan_type")
     .eq("user_id", userId)
     .eq("gym_id", gym.id)
     .maybeSingle();
@@ -63,12 +68,24 @@ export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void
     video_access: false,
     family_discount: session.metadata?.family_discount === "true",
     family_member_name: session.metadata?.family_member_name || null,
+    // 保険有効期限: 加入した場合のみ記録（4月1日〜翌3月31日の年度管理）
+    // Why: 記録がないと翌年度の重複加入防止・保険有効期限確認ができない
+    insurance_expires_at: session.metadata?.include_insurance === "true"
+      ? getInsuranceExpiry()
+      : null,
   });
 
   // user_id UNIQUE 違反 = 別リクエストが先に INSERT 済み → 正常（冪等）
   if (memberInsertError && memberInsertError.code !== "23505") {
     throw memberInsertError;
   }
+}
+
+/** スポーツ保険有効期限: 加入月が4月以降なら当年度末(翌3/31)、3月以前なら当年3/31 */
+function getInsuranceExpiry(): string {
+  const now = new Date();
+  const year = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
+  return `${year + 1}-03-31`;
 }
 
 function extractGymSlug(url: string): string | null {
