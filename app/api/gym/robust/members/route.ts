@@ -53,6 +53,9 @@ const updateSchema = z.object({
   plan_type: z.enum(["fulltime", "twice_weekly", "drop_in"]).optional(),
   plan_cap: z.number().int().min(1).max(99).nullable().optional(),
   video_access: z.boolean().optional(),
+  family_discount_approved: z.boolean().optional(), // 家族割引 承認/却下
+  payment_method: z.enum(["stripe", "bank_transfer"]).optional(), // 口座振替フラグ
+  manual_checkin: z.boolean().optional(), // 手動チェックイン（true で当日記録）
 });
 
 export async function PATCH(req: NextRequest) {
