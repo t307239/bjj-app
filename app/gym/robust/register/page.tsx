@@ -83,6 +83,7 @@ export default function RegisterPage() {
   const [guardianName, setGuardianName] = useState("");
   const [guardianContact, setGuardianContact] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [includeInsurance, setIncludeInsurance] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -150,6 +151,7 @@ export default function RegisterPage() {
           isMinor,
           guardianName: isMinor ? guardianName : undefined,
           guardianContact: isMinor ? guardianContact : undefined,
+          includeInsurance,
         }),
       });
       const json = await res.json();
