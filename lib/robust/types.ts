@@ -90,6 +90,17 @@ export type GymVideo = {
   updated_at: string;
 };
 
+// プランごとの月額（サーバー側で金額を確定するために使用）
+// Why: クライアントから monthlyAmount を受け取ると改ざんで日割り・翌月分を0にできる。
+//      planKey からサーバー側で一意に月額を決定する。
+export const PLAN_MONTHLY_AMOUNTS: Record<string, number> = {
+  fulltime_male:   12000,
+  fulltime_female: 10000,
+  twice_male:      10000,
+  twice_kids:       7000,
+  drop_in:          2000,
+};
+
 // Stripe plan_id マッピング
 export const STRIPE_PRICE_IDS: Record<string, string> = {
   fulltime_male:   process.env.STRIPE_ROBUST_PRICE_FULLTIME_MALE   ?? '',

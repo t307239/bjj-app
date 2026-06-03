@@ -167,7 +167,7 @@ export default function RegisterPage() {
           agreedToTerms,
           familyDiscount: !!familyMemberName.trim(),
           familyMemberName: familyMemberName.trim() || undefined,
-          monthlyAmount: selectedPlan.monthlyAmount,
+          // monthlyAmount は送信しない（サーバー側で planKey から確定）
         }),
       });
       const json = await res.json();

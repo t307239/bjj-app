@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createRobustServerClient } from "@/lib/robust/supabase-server";
 import { createCheckoutSession } from "@/lib/robust/payments";
 import { getGymBySlug } from "@/lib/robust/member";
-import { STRIPE_PRICE_IDS } from "@/lib/robust/types";
+import { STRIPE_PRICE_IDS, PLAN_MONTHLY_AMOUNTS } from "@/lib/robust/types";
 import { z } from "zod";
 
 const bodySchema = z.object({
@@ -19,7 +19,7 @@ const bodySchema = z.object({
   includeInsurance: z.boolean().optional(),
   familyDiscount: z.boolean().optional(),
   familyMemberName: z.string().max(50).optional(),
-  monthlyAmount: z.number().int().min(0).max(100000),
+  // monthlyAmount はクライアント送信値を使わない（改ざん防止）
 });
 
 // auth: public — Supabase Auth で認証確認済みのユーザーのみ
@@ -35,7 +35,10 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "不正なリクエスト" }, { status: 400 });
   }
-  const { gymSlug, planKey, setupFee, phone, address, sportsHistory, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, monthlyAmount, agreedToTerms } = parsed.data;
+  const { gymSlug, planKey, setupFee, phone, address, sportsHistory, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, agreedToTerms } = parsed.data;
+
+  // Why: monthlyAmount はクライアント値を使わず planKey からサーバー側で確定（改ざん防止）
+  const monthlyAmount = PLAN_MONTHLY_AMOUNTS[planKey] ?? 0;
 
   // サーバー側バリデーション（フロントの disabled バイパス対策）
   if (!agreedToTerms) {
