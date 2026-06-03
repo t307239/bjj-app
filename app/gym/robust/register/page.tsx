@@ -103,10 +103,13 @@ export default function RegisterPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { setStep("auth"); return; }
 
+      // Why: user_id のみだと将来 multi-tenant 化時に他ジムレコードを誤検出する
+      const GYM_ID_CONST = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
       const { data: member } = await supabase
         .from("gym_members")
         .select("id")
         .eq("user_id", user.id)
+        .eq("gym_id", GYM_ID_CONST)
         .maybeSingle();
 
       if (member) {

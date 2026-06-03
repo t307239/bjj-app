@@ -17,6 +17,17 @@ import { useState, useEffect, useRef, useCallback } from "react";
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
 const FEEDBACK_DURATION_MS = 3000;
 
+// Why: processToken のたびに new AudioContext() を生成すると
+//      ブラウザの同時 AudioContext 上限（~6）に達して音が止まる＋メモリリーク。
+//      モジュールスコープで1個のみ生成して使い回す。
+let _audioCtx: AudioContext | null = null;
+function getAudioContext(): AudioContext {
+  if (!_audioCtx || _audioCtx.state === "closed") {
+    _audioCtx = new AudioContext();
+  }
+  return _audioCtx;
+}
+
 type FeedbackState = {
   type: "success" | "warning" | "error" | "overcharge";
   name: string;
@@ -37,16 +48,21 @@ export default function CheckinPage() {
     if (token === lastScannedRef.current) return;
     lastScannedRef.current = token;
 
-    // 確認音
-    const audio = new AudioContext();
-    const osc = audio.createOscillator();
-    const gain = audio.createGain();
-    osc.connect(gain);
-    gain.connect(audio.destination);
-    osc.frequency.value = 880;
-    gain.gain.value = 0.3;
-    osc.start();
-    osc.stop(audio.currentTime + 0.12);
+    // 確認音（共有 AudioContext を使い回す）
+    try {
+      const audio = getAudioContext();
+      if (audio.state === "suspended") await audio.resume();
+      const osc = audio.createOscillator();
+      const gain = audio.createGain();
+      osc.connect(gain);
+      gain.connect(audio.destination);
+      osc.frequency.value = 880;
+      gain.gain.value = 0.3;
+      osc.start();
+      osc.stop(audio.currentTime + 0.12);
+    } catch {
+      /* silent: ok — 音声再生失敗はチェックイン処理に影響しない */
+    }
 
     try {
       if (!GYM_ID) {

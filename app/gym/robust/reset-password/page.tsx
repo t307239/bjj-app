@@ -13,10 +13,19 @@ export default function ResetPasswordPage() {
   const [hasSession, setHasSession] = useState(false);
 
   useEffect(() => {
-    // Supabase がURLのtokenを自動処理してセッションを設定する
-    supabase.auth.getSession().then(({ data }) => {
-      setHasSession(!!data.session);
+    // Why: Supabase は URL の recovery token を非同期で処理する。
+    //      getSession() を即時呼ぶと token 処理完了前に false になり「期限切れ」が誤表示される。
+    //      onAuthStateChange の PASSWORD_RECOVERY イベントを待つのが確実。
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY" || (event === "SIGNED_IN" && session)) {
+        setHasSession(true);
+      }
     });
+    // フォールバック: すでにセッションがある場合
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) setHasSession(true);
+    });
+    return () => subscription.unsubscribe();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleSubmit(e: React.FormEvent) {

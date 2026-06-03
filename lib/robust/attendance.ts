@@ -75,6 +75,8 @@ export async function checkIn(
   if (error || !log) throw new Error("チェックイン記録の作成に失敗しました");
 
   // 超過課金チェック（twice_weekly プランのみ）
+  // Why: drop_in は subscription なし・単発参加のため上限・超過課金の概念が存在しない。
+  //      stripe_subscription_id が null の会員で invoiceItems を作ると宙吊り invoice になる。
   let overcharged = false;
   if (member.plan_type === "twice_weekly" && member.plan_cap !== null) {
     const count = await countThisMonthAttendance(member.id);

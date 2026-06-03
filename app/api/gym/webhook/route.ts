@@ -38,26 +38,29 @@ export async function POST(req: NextRequest) {
 
   const handler = handlers[event.type];
   if (handler) {
-    // Why: Stripe は同一イベントを再送することがある。
-    //      webhook_events テーブルで event.id を冪等キーとして管理し二重処理を防ぐ。
     const admin = createRobustAdminClient();
-    const { error: insertError } = await admin
+    // Why: INSERT→handler の順だと handler 失敗時に event_id が残り Stripe の再送が 200 skipped になり
+    //      永久に再処理されなくなる。正しい順序は「先に重複チェック→handler 成功後に記録」。
+    const { data: already } = await admin
       .from("webhook_events")
-      .insert({ event_id: event.id });
-    if (insertError) {
-      // PK 重複 (23505) = 処理済み → 200 を返して Stripe のリトライを止める
-      if (insertError.code === "23505") {
-        clientLogger.warn("robust.webhook.duplicate", { eventId: event.id });
-        return NextResponse.json({ received: true, skipped: "duplicate" });
-      }
-      clientLogger.error("robust.webhook.idempotency_error", { eventId: event.id }, insertError);
+      .select("event_id")
+      .eq("event_id", event.id)
+      .maybeSingle();
+    if (already) {
+      clientLogger.warn("robust.webhook.duplicate", { eventId: event.id });
+      return NextResponse.json({ received: true, skipped: "duplicate" });
     }
+
     try {
       await handler(event);
     } catch (err) {
       clientLogger.error(`robust.webhook.handler_error.${event.type}`, {}, err);
+      // 記録しない → Stripe が再送してリトライできる
       return NextResponse.json({ error: "Handler failed" }, { status: 500 });
     }
+
+    // 成功後にのみ記録
+    await admin.from("webhook_events").insert({ event_id: event.id });
   }
 
   return NextResponse.json({ received: true });
