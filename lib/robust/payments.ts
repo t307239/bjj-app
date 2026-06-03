@@ -54,6 +54,9 @@ export async function createCheckoutSession({
   phone,
   address,
   sportsHistory,
+  isMinor,
+  guardianName,
+  guardianContact,
 }: {
   userId: string;
   email: string;
@@ -64,8 +67,11 @@ export async function createCheckoutSession({
   phone?: string;
   address?: string;
   sportsHistory?: string;
+  isMinor?: boolean;
+  guardianName?: string;
+  guardianContact?: string;
 }): Promise<string> {
-  // 入会金は line_items に one_time price_data として追加
+  // 入会金・スポーツ保険は line_items に one_time price_data として追加
   // Why: subscription_data.add_invoice_items は Stripe v17 では非対応。
   //      subscription mode では recurring + one_time を line_items に混在可能。
   const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
@@ -77,11 +83,20 @@ export async function createCheckoutSession({
         currency: "jpy",
         product_data: { name: "入会金" },
         unit_amount: setupFeeAmount,
-        // recurring なし = one_time
       },
       quantity: 1,
     });
   }
+  // スポーツ保険（初回必須）: HP 記載通り一般 ¥2,150 / キッズ ¥950
+  const insuranceFee = isMinor ? 950 : 2150;
+  lineItems.push({
+    price_data: {
+      currency: "jpy",
+      product_data: { name: `スポーツ保険（年度分）` },
+      unit_amount: insuranceFee,
+    },
+    quantity: 1,
+  });
 
   // A案: billing_cycle_anchor で月末統一 + 日割り自動計算
   // Why: 月末 5 日以内の入会は「初月日割りが数百円 → 2〜3日後にまた月額」という
@@ -107,6 +122,9 @@ export async function createCheckoutSession({
       phone: phone ?? "",
       address: address ?? "",
       sports_history: sportsHistory ?? "",
+      is_minor: String(isMinor ?? false),
+      guardian_name: guardianName ?? "",
+      guardian_contact: guardianContact ?? "",
     },
     subscription_data: {
       billing_cycle_anchor: billingAnchor,

@@ -12,6 +12,8 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 
+// Why: 空文字 GYM_ID で .eq("gym_id","") を呼ぶと全会員が「別ジム」判定になる。
+//      未設定は明示的にエラーとして扱う。
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
 const FEEDBACK_DURATION_MS = 3000;
 
@@ -47,6 +49,10 @@ export default function CheckinPage() {
     osc.stop(audio.currentTime + 0.12);
 
     try {
+      if (!GYM_ID) {
+        setFeedback({ type: "error", name: "", message: "ジム設定が未完了です。管理者にお問い合わせください。" });
+        return;
+      }
       const res = await fetch("/api/gym/checkin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -65,6 +71,9 @@ export default function CheckinPage() {
       }
     } catch {
       setFeedback({ type: "error", name: "", message: "通信エラーが発生しました" });
+      // Why: 通信エラー時も lastScannedRef をリセットしないと
+      //      同一 QR の再スキャンが永久にブロックされる
+      lastScannedRef.current = "";
     }
 
     // フィードバック後にリセット

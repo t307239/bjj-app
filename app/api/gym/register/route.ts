@@ -12,6 +12,9 @@ const bodySchema = z.object({
   phone: z.string().max(20).optional(),
   address: z.string().max(200).optional(),
   sportsHistory: z.string().max(500).optional(),
+  isMinor: z.boolean().optional(),
+  guardianName: z.string().max(50).optional(),
+  guardianContact: z.string().max(100).optional(),
 });
 
 // auth: public — Supabase Auth で認証確認済みのユーザーのみ
@@ -27,7 +30,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "不正なリクエスト" }, { status: 400 });
   }
-  const { gymSlug, planKey, setupFee, phone, address, sportsHistory } = parsed.data;
+  const { gymSlug, planKey, setupFee, phone, address, sportsHistory, isMinor, guardianName, guardianContact } = parsed.data;
 
   const gym = await getGymBySlug(gymSlug);
   if (!gym) {
@@ -52,6 +55,9 @@ export async function POST(req: NextRequest) {
     phone,
     address,
     sportsHistory,
+    isMinor: isMinor ?? false,
+    guardianName,
+    guardianContact,
   });
 
   return NextResponse.json({ url: checkoutUrl });

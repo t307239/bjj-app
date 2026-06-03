@@ -39,8 +39,10 @@ export default function AdminVideosPage() {
   async function fetchVideos() {
     const res = await fetch("/api/gym/robust/videos");
     if (!res.ok) {
+      // Why: admin ページなので 401（未ログイン）も 403（権限なし）も
+      //      ログインフォームを表示して管理者として再認証を促す
+      if (res.status === 401 || res.status === 403) { setShowLogin(true); setLoading(false); return; }
       const json = await res.json().catch(() => ({}));
-      if (res.status === 401) { setShowLogin(true); setLoading(false); return; }
       setError(json.error ?? "エラーが発生しました");
       setLoading(false);
       return;

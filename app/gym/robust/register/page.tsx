@@ -79,6 +79,10 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [sportsHistory, setSportsHistory] = useState("");
+  const [isMinor, setIsMinor] = useState(false);
+  const [guardianName, setGuardianName] = useState("");
+  const [guardianContact, setGuardianContact] = useState("");
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -143,6 +147,9 @@ export default function RegisterPage() {
           phone: phone || undefined,
           address: address || undefined,
           sportsHistory: sportsHistory || undefined,
+          isMinor,
+          guardianName: isMinor ? guardianName : undefined,
+          guardianContact: isMinor ? guardianContact : undefined,
         }),
       });
       const json = await res.json();
@@ -276,9 +283,65 @@ export default function RegisterPage() {
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm resize-none"
               />
             </div>
+            {/* 未成年フラグ */}
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={isMinor}
+                onChange={e => setIsMinor(e.target.checked)}
+                className="w-4 h-4 rounded"
+                id="reg-minor"
+              />
+              <span className="text-sm text-zinc-300">18歳未満（保護者同意が必要）</span>
+            </label>
+            {isMinor && (
+              <div className="space-y-3 pl-7">
+                <div>
+                  <label htmlFor="reg-guardian-name" className="block text-xs text-zinc-400 mb-1">保護者氏名 <span className="text-red-400">*</span></label>
+                  <input
+                    id="reg-guardian-name"
+                    type="text"
+                    value={guardianName}
+                    onChange={e => setGuardianName(e.target.value)}
+                    required
+                    autoComplete="name"
+                    placeholder="保護者 太郎"
+                    className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="reg-guardian-contact" className="block text-xs text-zinc-400 mb-1">保護者連絡先（電話またはメール）<span className="text-red-400">*</span></label>
+                  <input
+                    id="reg-guardian-contact"
+                    type="text"
+                    value={guardianContact}
+                    onChange={e => setGuardianContact(e.target.value)}
+                    required
+                    placeholder="090-xxxx-xxxx"
+                    className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                  />
+                </div>
+              </div>
+            )}
+            {/* 利用規約同意 */}
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={agreedToTerms}
+                onChange={e => setAgreedToTerms(e.target.checked)}
+                className="w-4 h-4 rounded mt-0.5 shrink-0"
+                id="reg-terms"
+              />
+              <span className="text-xs text-zinc-400">
+                入会規約・スポーツ保険（一般 ¥2,150 / キッズ ¥950）への同意、および
+                <a href="https://robust-bjj.jp" target="_blank" rel="noopener" className="text-emerald-400 underline ml-1">ROBUST 柔術の規則</a>
+                に従うことに同意します。
+              </span>
+            </label>
             <button
               type="submit"
-              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
+              disabled={agreedToTerms === false || (isMinor && (!guardianName || !guardianContact))}
+              className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
             >
               次へ（プラン選択）→
             </button>
