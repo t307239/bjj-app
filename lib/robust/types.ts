@@ -53,6 +53,8 @@ export type GymMember = {
   address: string | null;
   sports_history: string | null;
   video_access: boolean;
+  family_discount: boolean;
+  family_member_name: string | null;
   insurance_expires_at: string | null;
   is_minor: boolean;
   guardian_consent: boolean;
@@ -98,3 +100,8 @@ export const STRIPE_PRICE_IDS: Record<string, string> = {
 };
 
 export const CHECKIN_COOLDOWN_MINUTES = 60;
+
+// 割引・保険の定数（マジックナンバー禁止）
+export const FAMILY_DISCOUNT_YEN = 2000;
+export const SPORTS_INSURANCE_YEN = 2150;
+export const SPORTS_INSURANCE_KIDS_YEN = 950;
