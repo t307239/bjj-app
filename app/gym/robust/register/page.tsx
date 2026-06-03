@@ -378,6 +378,50 @@ export default function RegisterPage() {
                 </button>
               ))}
             </div>
+            {/* スポーツ保険（選択制） */}
+            <label className="flex items-start gap-3 bg-zinc-800/60 rounded-xl p-3 cursor-pointer border border-white/10">
+              <input
+                type="checkbox"
+                checked={includeInsurance}
+                onChange={e => setIncludeInsurance(e.target.checked)}
+                className="w-4 h-4 rounded mt-0.5 shrink-0"
+                id="reg-insurance"
+              />
+              <div>
+                <p className="text-sm text-white font-medium">
+                  スポーツ保険に加入する
+                  <span className="ml-2 text-emerald-400 font-bold">
+                    ¥{isMinor ? "950" : "2,150"}
+                  </span>
+                  <span className="text-zinc-500 text-xs ml-1">（年度分・任意）</span>
+                </p>
+                <p className="text-xs text-zinc-500 mt-0.5">
+                  練習中のケガに備えるスポーツ保険です。加入推奨。4月〜翌3月末の年度管理。
+                </p>
+              </div>
+            </label>
+
+            {/* 決済明細プレビュー */}
+            {selectedPlan && (
+              <div className="bg-zinc-800/40 rounded-xl p-3 text-xs text-zinc-400 space-y-1">
+                <div className="flex justify-between">
+                  <span>月額（日割り）</span><span className="text-white">{selectedPlan.price}</span>
+                </div>
+                {selectedPlan.setupFee > 0 && (
+                  <div className="flex justify-between">
+                    <span>入会金（初回のみ）</span>
+                    <span className="text-white">¥{selectedPlan.setupFee.toLocaleString()}</span>
+                  </div>
+                )}
+                {includeInsurance && (
+                  <div className="flex justify-between">
+                    <span>スポーツ保険</span>
+                    <span className="text-white">¥{isMinor ? "950" : "2,150"}</span>
+                  </div>
+                )}
+              </div>
+            )}
+
             {error && <p className="text-red-400 text-xs mb-3">{error}</p>}
             <button
               type="button"
