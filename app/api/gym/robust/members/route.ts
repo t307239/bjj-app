@@ -13,7 +13,7 @@ export async function GET() {
   const admin = createRobustAdminClient();
   const { data: members, error } = await admin
     .from("gym_members")
-    .select("id, name, email, phone, address, sports_history, video_access, plan_type, plan_cap, status, payment_method, insurance_expires_at, is_minor, created_at")
+    .select("id, name, email, phone, address, sports_history, video_access, family_discount, family_member_name, plan_type, plan_cap, status, payment_method, insurance_expires_at, is_minor, created_at")
     .eq("gym_id", GYM_ID)
     .order("created_at", { ascending: false });
 

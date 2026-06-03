@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getStripe } from "@/lib/robust/payments";
+import { createRobustAdminClient } from "@/lib/robust/supabase";
 import { handleCheckoutCompleted } from "./handlers/checkout-completed";
 import { handleInvoicePaid } from "./handlers/invoice-paid";
 import { handleInvoicePaymentFailed } from "./handlers/invoice-payment-failed";
@@ -37,6 +38,20 @@ export async function POST(req: NextRequest) {
 
   const handler = handlers[event.type];
   if (handler) {
+    // Why: Stripe は同一イベントを再送することがある。
+    //      webhook_events テーブルで event.id を冪等キーとして管理し二重処理を防ぐ。
+    const admin = createRobustAdminClient();
+    const { error: insertError } = await admin
+      .from("webhook_events")
+      .insert({ event_id: event.id });
+    if (insertError) {
+      // PK 重複 (23505) = 処理済み → 200 を返して Stripe のリトライを止める
+      if (insertError.code === "23505") {
+        clientLogger.warn("robust.webhook.duplicate", { eventId: event.id });
+        return NextResponse.json({ received: true, skipped: "duplicate" });
+      }
+      clientLogger.error("robust.webhook.idempotency_error", { eventId: event.id }, insertError);
+    }
     try {
       await handler(event);
     } catch (err) {

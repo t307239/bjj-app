@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { format } from "date-fns";
 import { createRobustAdminClient } from "./supabase";
 import type { GymMember } from "./types";
+import { FAMILY_DISCOUNT_YEN, SPORTS_INSURANCE_YEN, SPORTS_INSURANCE_KIDS_YEN } from "./types";
 
 // Why: モジュールレベルで new Stripe(undefined) を呼ぶと
 //      ROBUST_STRIPE_SECRET_KEY 未設定の Vercel build 環境でクラッシュする。
@@ -90,8 +91,8 @@ export async function createCheckoutSession({
   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
   const remainingDays = daysInMonth - now.getDate() + 1;
 
-  // 家族割引適用後の月額
-  const discountedMonthly = monthlyAmount - (familyDiscount ? 2000 : 0);
+  // 家族割引適用後の月額（定数使用）
+  const discountedMonthly = monthlyAmount - (familyDiscount ? FAMILY_DISCOUNT_YEN : 0);
 
   // 日割り計算（切り上げ）
   const proratedAmount = Math.ceil(discountedMonthly * remainingDays / daysInMonth);
@@ -134,9 +135,9 @@ export async function createCheckoutSession({
     });
   }
 
-  // スポーツ保険（任意選択）
+  // スポーツ保険（任意選択・定数使用）
   if (includeInsurance) {
-    const insuranceFee = isMinor ? 950 : 2150;
+    const insuranceFee = isMinor ? SPORTS_INSURANCE_KIDS_YEN : SPORTS_INSURANCE_YEN;
     lineItems.push({
       price_data: {
         currency: "jpy",
@@ -147,33 +148,60 @@ export async function createCheckoutSession({
     });
   }
 
-  // subscription の定期課金は翌々月末から開始（日割り・翌月分は one-time で別途支払い済み）
-  const nextMonthEnd = new Date(now.getFullYear(), now.getMonth() + 2, 0);
-  const billingAnchor = Math.floor(nextMonthEnd.getTime() / 1000);
+  const sharedMetadata = {
+    gymSlug,
+    planKey: planKeyLogical,
+    phone: phone ?? "",
+    address: address ?? "",
+    sports_history: sportsHistory ?? "",
+    is_minor: String(isMinor ?? false),
+    guardian_name: guardianName ?? "",
+    guardian_contact: guardianContact ?? "",
+    family_member_name: familyMemberName ?? "",
+    family_discount: String(familyDiscount ?? false),
+  };
+
+  // Why: drop_in はビジター単発参加（¥2,000/回）。
+  //      subscription モードに乗せると毎月課金になるため payment モードで一回払い。
+  if (planKeyLogical === "drop_in") {
+    const session = await getStripe().checkout.sessions.create({
+      client_reference_id: userId,
+      customer_email: email,
+      mode: "payment",
+      line_items: lineItems, // drop_in price_data (one-time) + 保険
+      metadata: sharedMetadata,
+      success_url: `${origin}/gym/${gymSlug}/register/success`,
+      cancel_url: `${origin}/gym/${gymSlug}/register`,
+      payment_method_types: ["card"],
+    });
+    return session.url!;
+  }
+
+  // 月額プラン: subscription + 日割り・翌月分・保険を one-time で同時決済
+  // billing_cycle_anchor は翌々月1日（常に未来日）
+  // Why: 月末当日入会でも anchor が十分未来になるよう翌々月1日に固定。
+  //      翌々月末より1日前で、proration_behavior="none" なら subscription は翌々月1日から。
+  const anchorDate = new Date(now.getFullYear(), now.getMonth() + 2, 1);
+  const billingAnchor = Math.floor(anchorDate.getTime() / 1000);
+
+  // 家族割引: Stripe coupon を subscription_data に適用（翌々月以降の定期課金にも反映）
+  // Why: line_items の one-time 割引は初回のみ。coupon を使えば subscription の毎月請求にも -¥2,000 が永続適用。
+  //      ROBUST_STRIPE_COUPON_FAMILY env var に事前作成した Stripe coupon ID を設定すること。
+  const familyCouponId = process.env.ROBUST_STRIPE_COUPON_FAMILY;
+  const discounts = familyDiscount && familyCouponId
+    ? [{ coupon: familyCouponId }]
+    : undefined;
 
   const session = await getStripe().checkout.sessions.create({
     client_reference_id: userId,
     customer_email: email,
     mode: "subscription",
     line_items: lineItems,
-    metadata: {
-      gymSlug,
-      planKey: planKeyLogical, // Why: priceId(Stripe ID)ではなく論理キー("twice_male"等)を保存。webhook で plan_type を判定するために必要。
-      // プロフィール情報をメタデータに保存（webhook で gym_members に書き込む）
-      phone: phone ?? "",
-      address: address ?? "",
-      sports_history: sportsHistory ?? "",
-      is_minor: String(isMinor ?? false),
-      guardian_name: guardianName ?? "",
-      guardian_contact: guardianContact ?? "",
-      family_member_name: familyMemberName ?? "",
-      family_discount: String(familyDiscount ?? false),
-    },
+    metadata: sharedMetadata,
     subscription_data: {
-      // Why: 日割り・翌月分は line_items の one-time で手動処理済み。
-      //      subscription 自体は翌々月末からフル課金開始。proration 不要。
       billing_cycle_anchor: billingAnchor,
       proration_behavior: "none",
+      ...(discounts ? { discounts } : {}),
     },
     success_url: `${origin}/gym/${gymSlug}/register/success`,
     cancel_url: `${origin}/gym/${gymSlug}/register`,

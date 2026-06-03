@@ -29,7 +29,7 @@ export default function MemberQrPage() {
         .select("id, name, qr_token, plan_type, status")
         .eq("user_id", user.id)
         .eq("gym_id", GYM_ID)
-        .single();
+        .maybeSingle(); // Why: webhook 未完了タイミングで開くと .single() は PGRST116 をthrowする
 
       setMember(data as GymMember | null);
       setLoading(false);

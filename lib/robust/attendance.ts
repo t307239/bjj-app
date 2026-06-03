@@ -54,6 +54,13 @@ export async function checkIn(
 
   const billingPeriod = currentBillingPeriod();
 
+  // Why: isDuplicateCheckin → INSERT の間に同時リクエストが到達すると二重 INSERT する。
+  //      INSERT 直前に再チェックして競合ウィンドウを最小化する（楽観的ロック）。
+  const doubleCheck = await isDuplicateCheckin(member.id);
+  if (doubleCheck) {
+    return { log: { member_id: member.id, gym_id: gymId } as AttendanceLog, overcharged: false, duplicate: true };
+  }
+
   const { data: log, error } = await supabase
     .from("attendance_logs")
     .insert({
@@ -74,6 +81,8 @@ export async function checkIn(
     if (count > member.plan_cap && member.payment_method === "stripe") {
       await addOverageToNextInvoice(member, gymId);
       overcharged = true;
+      // Why: charged フラグを true に更新しないと履歴画面の「超過」マークが出ない
+      await supabase.from("attendance_logs").update({ charged: true }).eq("id", (log as { id: string }).id);
     }
   }
 

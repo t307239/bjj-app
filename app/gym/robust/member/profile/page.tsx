@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import React from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
 
 type Profile = {
@@ -31,6 +32,7 @@ export default function MemberProfilePage() {
   const [sportsHistory, setSportsHistory] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState("");
+  const saveMsgTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -47,22 +49,35 @@ export default function MemberProfilePage() {
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  function showMsg(msg: string) {
+    setSaveMsg(msg);
+    if (saveMsgTimerRef.current) clearTimeout(saveMsgTimerRef.current);
+    saveMsgTimerRef.current = setTimeout(() => setSaveMsg(""), 3000);
+  }
+
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
     setSaveMsg("");
-    const res = await fetch("/api/gym/robust/member/profile", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phone: phone || null, address: address || null, sports_history: sportsHistory || null }),
-    });
-    if (res.ok) {
-      setProfile(p => p ? { ...p, phone: phone || null, address: address || null, sports_history: sportsHistory || null } : p);
-      setEditing(false);
-      setSaveMsg("保存しました");
-      setTimeout(() => setSaveMsg(""), 3000);
+    try {
+      const res = await fetch("/api/gym/robust/member/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: phone || null, address: address || null, sports_history: sportsHistory || null }),
+      });
+      if (res.ok) {
+        setProfile(p => p ? { ...p, phone: phone || null, address: address || null, sports_history: sportsHistory || null } : p);
+        setEditing(false);
+        showMsg("保存しました");
+      } else {
+        const json = await res.json().catch(() => ({}));
+        showMsg(json.error ?? "保存に失敗しました");
+      }
+    } catch {
+      showMsg("通信エラーが発生しました");
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   }
 
   if (loading) return <div className="min-h-screen bg-zinc-950 flex items-center justify-center"><div className="w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin" /></div>;

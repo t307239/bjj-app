@@ -12,6 +12,8 @@ type Member = {
   address: string | null;
   sports_history: string | null;
   video_access: boolean;
+  family_discount: boolean;
+  family_member_name: string | null;
   plan_type: string;
   plan_cap: number | null;
   status: string;
@@ -261,6 +263,11 @@ export default function AdminMembersPage() {
                         {m.phone && <span>{m.phone}</span>}
                         <span>{m.payment_method === "stripe" ? "カード" : "口座振替"}</span>
                         {m.video_access && <span className="text-emerald-500">動画あり</span>}
+                        {m.family_discount && (
+                          <span className="text-blue-400" title={`家族割引申請: ${m.family_member_name ?? ""}さんと同世帯`}>
+                            👨‍👩‍👦 {m.family_member_name ?? "家族割"}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div className="flex gap-2 ml-3 shrink-0">

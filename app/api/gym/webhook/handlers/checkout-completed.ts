@@ -58,7 +58,9 @@ export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void
     plan_type: planType,
     plan_cap: planType === "twice_weekly" ? gym.plan_cap : null,
     status: "active",
-    video_access: false, // デフォルト非公開。admin から個別に有効化
+    video_access: false,
+    family_discount: session.metadata?.family_discount === "true",
+    family_member_name: session.metadata?.family_member_name || null,
   });
 }
 

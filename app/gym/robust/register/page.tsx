@@ -12,6 +12,7 @@
 
 import { useState, useEffect } from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
+import { FAMILY_DISCOUNT_YEN, SPORTS_INSURANCE_YEN, SPORTS_INSURANCE_KIDS_YEN } from "@/lib/robust/types";
 
 const GYM_SLUG = "robust";
 
@@ -402,7 +403,7 @@ export default function RegisterPage() {
                 <p className="text-sm text-white font-medium">
                   スポーツ保険に加入する
                   <span className="ml-2 text-emerald-400 font-bold">
-                    ¥{isMinor ? "950" : "2,150"}
+                    ¥{(isMinor ? SPORTS_INSURANCE_KIDS_YEN : SPORTS_INSURANCE_YEN).toLocaleString()}
                   </span>
                   <span className="text-zinc-500 text-xs ml-1">（年度分・任意）</span>
                 </p>
@@ -441,8 +442,8 @@ export default function RegisterPage() {
               const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
               const remainingDays = daysInMonth - today.getDate() + 1;
               const prorated = Math.ceil(selectedPlan.monthlyAmount * remainingDays / daysInMonth);
-              const discountedMonthly = selectedPlan.monthlyAmount - (familyMemberName.trim() ? 2000 : 0);
-              const insuranceFee = isMinor ? 950 : 2150;
+              const discountedMonthly = selectedPlan.monthlyAmount - (familyMemberName.trim() ? FAMILY_DISCOUNT_YEN : 0);
+              const insuranceFee = isMinor ? SPORTS_INSURANCE_KIDS_YEN : SPORTS_INSURANCE_YEN;
               const total = selectedPlan.setupFee + prorated + discountedMonthly + (includeInsurance ? insuranceFee : 0);
               return (
                 <div className="bg-zinc-800/40 rounded-xl p-3 text-xs text-zinc-400 space-y-1">
