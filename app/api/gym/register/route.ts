@@ -17,6 +17,7 @@ const bodySchema = z.object({
   guardianContact: z.string().max(100).optional(),
   includeInsurance: z.boolean().optional(),
   familyDiscount: z.boolean().optional(),
+  familyMemberName: z.string().max(50).optional(),
   monthlyAmount: z.number().int().min(0).max(100000),
 });
 
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "不正なリクエスト" }, { status: 400 });
   }
-  const { gymSlug, planKey, setupFee, phone, address, sportsHistory, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, monthlyAmount } = parsed.data;
+  const { gymSlug, planKey, setupFee, phone, address, sportsHistory, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, monthlyAmount } = parsed.data;
 
   const gym = await getGymBySlug(gymSlug);
   if (!gym) {
@@ -63,6 +64,7 @@ export async function POST(req: NextRequest) {
     guardianContact,
     includeInsurance: includeInsurance ?? false,
     familyDiscount: familyDiscount ?? false,
+    familyMemberName,
     monthlyAmount: monthlyAmount,
   });
 

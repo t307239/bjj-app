@@ -90,7 +90,8 @@ export default function RegisterPage() {
   const [guardianContact, setGuardianContact] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [includeInsurance, setIncludeInsurance] = useState(false);
-  const [familyDiscount, setFamilyDiscount] = useState(false);
+  // 家族割引: boolean → 同居家族氏名入力に変更（オーナーが確認）
+  const [familyMemberName, setFamilyMemberName] = useState("");
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -159,7 +160,8 @@ export default function RegisterPage() {
           guardianName: isMinor ? guardianName : undefined,
           guardianContact: isMinor ? guardianContact : undefined,
           includeInsurance,
-          familyDiscount,
+          familyDiscount: !!familyMemberName.trim(),
+          familyMemberName: familyMemberName.trim() || undefined,
           monthlyAmount: selectedPlan.monthlyAmount,
         }),
       });
@@ -411,22 +413,27 @@ export default function RegisterPage() {
             </label>
 
             {/* 家族・兄弟割引 */}
-            <label className="flex items-start gap-3 bg-zinc-800/60 rounded-xl p-3 cursor-pointer border border-white/10">
-              <input
-                type="checkbox"
-                checked={familyDiscount}
-                onChange={e => setFamilyDiscount(e.target.checked)}
-                className="w-4 h-4 rounded mt-0.5 shrink-0"
-                id="reg-family"
-              />
+            <div className="bg-zinc-800/60 rounded-xl p-3 border border-white/10 space-y-2">
               <div>
                 <p className="text-sm text-white font-medium">
                   家族・兄弟割引
                   <span className="ml-2 text-emerald-400 font-bold">-¥2,000/月</span>
                 </p>
-                <p className="text-xs text-zinc-500 mt-0.5">同一世帯の2人目以降が対象</p>
+                <p className="text-xs text-zinc-500 mt-0.5">同一世帯の2人目以降が対象。すでに会員の家族・兄弟の氏名を入力してください（オーナーが確認します）</p>
               </div>
-            </label>
+              <input
+                id="reg-family-name"
+                type="text"
+                value={familyMemberName}
+                onChange={e => setFamilyMemberName(e.target.value)}
+                autoComplete="off"
+                placeholder="例：高玉 年克（すでに会員の方の氏名）"
+                className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+              />
+              {familyMemberName.trim() && (
+                <p className="text-xs text-emerald-400">✓ 割引が適用されます（入会後にオーナーが確認）</p>
+              )}
+            </div>
 
             {/* 決済明細プレビュー */}
             {selectedPlan && selectedPlan.monthlyAmount > 0 && (() => {
@@ -434,7 +441,7 @@ export default function RegisterPage() {
               const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
               const remainingDays = daysInMonth - today.getDate() + 1;
               const prorated = Math.ceil(selectedPlan.monthlyAmount * remainingDays / daysInMonth);
-              const discountedMonthly = selectedPlan.monthlyAmount - (familyDiscount ? 2000 : 0);
+              const discountedMonthly = selectedPlan.monthlyAmount - (familyMemberName.trim() ? 2000 : 0);
               const insuranceFee = isMinor ? 950 : 2150;
               const total = selectedPlan.setupFee + prorated + discountedMonthly + (includeInsurance ? insuranceFee : 0);
               return (
@@ -454,9 +461,9 @@ export default function RegisterPage() {
                     <span>翌月分（前払い）</span>
                     <span className="text-white">¥{discountedMonthly.toLocaleString()}</span>
                   </div>
-                  {familyDiscount && (
+                  {familyMemberName.trim() && (
                     <div className="flex justify-between text-emerald-400">
-                      <span>家族割引</span><span>-¥2,000</span>
+                      <span>家族割引（{familyMemberName.trim()}さんと同世帯）</span><span>-¥2,000</span>
                     </div>
                   )}
                   {includeInsurance && (

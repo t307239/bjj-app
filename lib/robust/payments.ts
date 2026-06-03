@@ -60,6 +60,7 @@ export async function createCheckoutSession({
   guardianContact,
   includeInsurance,
   familyDiscount,
+  familyMemberName,
 }: {
   userId: string;
   email: string;
@@ -76,6 +77,7 @@ export async function createCheckoutSession({
   guardianContact?: string;
   includeInsurance?: boolean;
   familyDiscount?: boolean;
+  familyMemberName?: string;
 }): Promise<string> {
   // 課金モデル: 入会金 + 日割り（当月）+ 翌月分満額（前払い）+ 保険（任意）
   // Why: HP 記載「入会金とコース代金の翌月分をご用意ください」に準拠。
@@ -162,6 +164,8 @@ export async function createCheckoutSession({
       is_minor: String(isMinor ?? false),
       guardian_name: guardianName ?? "",
       guardian_contact: guardianContact ?? "",
+      family_member_name: familyMemberName ?? "",
+      family_discount: String(familyDiscount ?? false),
     },
     subscription_data: {
       // Why: 日割り・翌月分は line_items の one-time で手動処理済み。
