@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 448 files
+TS/TSX Scanned: 455 files
 CRITICAL: 0
-WARNING: 7
+WARNING: 12
 INFO: 99
-Total: 106
+Total: 111
 
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/onboarding-email/route.ts: L251: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
@@ -37,6 +37,10 @@ Total: 106
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] app/gym/robust/checkin/page.tsx: L170: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/profile/page.tsx: L77: JSX内に英語テキスト直書き: "ROBUST 柔術"
+  FIX: t() キーを追加して多言語対応
+[WARNING] [SETTIMEOUT_NO_CLEANUP] app/gym/robust/member/profile/page.tsx: L63: setTimeout(() => setState) without clearTimeout — メモリリーク
+  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/qr/page.tsx: L74: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
 [INFO] [SUPABASE_NO_ERROR] app/gym/robust/member/qr/page.tsx: L27: Supabase query の戻り値で error を無視 — サイレント失敗リスク
@@ -45,12 +49,16 @@ Total: 106
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] app/gym/robust/member/videos/page.tsx: L95: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/register/page.tsx: L193: JSX内に英語テキスト直書き: "ROBUST 柔術"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/register/page.tsx: L195: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
-[INFO] [SUPABASE_NO_ERROR] app/gym/robust/register/page.tsx: L104: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] app/gym/robust/register/page.tsx: L105: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/register/success/page.tsx: L22: JSX内に英語テキスト直書き: "ようこそ ROBUST 柔術へ"
   FIX: t() キーを追加して多言語対応
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/reset-password/page.tsx: L43: JSX内に英語テキスト直書き: "ROBUST 柔術"
+  FIX: t() キーを追加して多言語対応
+[WARNING] [PROMISE_NO_CATCH] app/gym/robust/reset-password/page.tsx: L17: .then() に .catch() がない — エラー時サイレント失敗
+  FIX: .catch((err) => console.error(err)) を追加、または async/await + try-catch に変更
 [INFO] [SUPABASE_NO_ERROR] app/gym/upgrade/page.tsx: L118: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/gym/upgrade/page.tsx: L156: Supabase query の戻り値で error を無視 — サイレント失敗リスク
@@ -187,7 +195,9 @@ Total: 106
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/gym/BeltDistributionChart.tsx: L43: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] components/robust/RobustAdminLoginForm.tsx: L40: JSX内に英語テキスト直書き: "ROBUST 柔術"
+[WARNING] [JSX_HARDCODED_ENGLISH] components/robust/RobustAdminLoginForm.tsx: L60: JSX内に英語テキスト直書き: "ROBUST 柔術"
+  FIX: t() キーを追加して多言語対応
+[WARNING] [JSX_HARDCODED_ENGLISH] components/robust/RobustAdminLoginForm.tsx: L96: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/AddNodePopup.tsx: L35: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換

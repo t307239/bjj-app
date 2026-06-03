@@ -108,12 +108,22 @@ export default function MemberQrPage() {
 
         <canvas ref={canvasRef} className="hidden" />
 
-        {/* 動画ページへのリンク */}
-        <div className="mt-6">
+        {/* ナビゲーション */}
+        <div className="mt-6 space-y-2">
           <a href="/gym/robust/member/videos"
             className="block w-full text-center bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-sm font-medium rounded-xl py-3 transition-colors">
             会員限定動画を見る →
           </a>
+          <div className="flex gap-2">
+            <a href="/gym/robust/member/history"
+              className="flex-1 text-center bg-zinc-800 hover:bg-zinc-700 text-zinc-400 text-xs rounded-xl py-2.5 transition-colors">
+              来館履歴
+            </a>
+            <a href="/gym/robust/member/profile"
+              className="flex-1 text-center bg-zinc-800 hover:bg-zinc-700 text-zinc-400 text-xs rounded-xl py-2.5 transition-colors">
+              マイページ
+            </a>
+          </div>
         </div>
       </div>
     </div>
