@@ -68,7 +68,7 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "不正なリクエスト" }, { status: 400 });
   }
 
-  const { memberId, ...updates } = parsed.data;
+  const { memberId, family_discount_approved, manual_checkin, ...updates } = parsed.data;
   const admin = createRobustAdminClient();
 
   // Why: admin が status="cancelled" に変更した場合、DB 更新だけでは Stripe subscription が
@@ -92,6 +92,24 @@ export async function PATCH(req: NextRequest) {
         console.error("Stripe subscription cancel failed:", stripeErr);
       }
     }
+  }
+
+  // 家族割引 承認/却下: family_discount フラグを更新
+  if (family_discount_approved !== undefined) {
+    (updates as Record<string, unknown>).family_discount = family_discount_approved;
+  }
+
+  // 手動チェックイン: attendance_logs に当日記録を追加
+  if (manual_checkin) {
+    const { currentBillingPeriod } = await import("@/lib/robust/attendance");
+    const { error: ciError } = await admin.from("attendance_logs").insert({
+      member_id: memberId,
+      gym_id: GYM_ID,
+      billing_period: currentBillingPeriod(),
+      class_type: null,
+    });
+    if (ciError) return NextResponse.json({ error: `手動チェックイン失敗: ${ciError.message}` }, { status: 500 });
+    return NextResponse.json({ ok: true, checkedIn: true });
   }
 
   const { error } = await admin

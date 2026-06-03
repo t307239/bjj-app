@@ -211,3 +211,8 @@ ALTER TABLE gym_members ADD COLUMN IF NOT EXISTS sports_history  TEXT;
 ALTER TABLE gym_members ADD COLUMN IF NOT EXISTS video_access    BOOLEAN NOT NULL DEFAULT false;
 ALTER TABLE gym_members ADD COLUMN IF NOT EXISTS family_discount     BOOLEAN NOT NULL DEFAULT false;
 ALTER TABLE gym_members ADD COLUMN IF NOT EXISTS family_member_name  TEXT;
+
+-- gyms の Drive フォルダ URL（会員限定動画の一括共有用）
+-- Why: 個別動画登録(gym_videos)に加え、Drive フォルダごと共有したいオーナー向け。
+--      権限ある会員(video_access=true)にのみフロントでリンク表示する。
+ALTER TABLE gyms ADD COLUMN IF NOT EXISTS drive_folder_url TEXT;
