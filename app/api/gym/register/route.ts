@@ -66,6 +66,7 @@ export async function POST(req: NextRequest) {
     familyDiscount: familyDiscount ?? false,
     familyMemberName,
     monthlyAmount: monthlyAmount,
+    planKeyLogical: planKey, // 論理キーをメタデータに渡す（webhook plan_type判定用）
   });
 
   return NextResponse.json({ url: checkoutUrl });

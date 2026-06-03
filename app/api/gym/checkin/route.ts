@@ -5,15 +5,38 @@ import type { ClassType } from "@/lib/robust/types";
 import { z } from "zod";
 import { clientLogger } from "@/lib/clientLogger";
 
+// Why: auth:public エンドポイントのため QRトークン総当たり攻撃を防ぐ。
+//      Vercel Serverless はインスタンスをまたぐと揮発するが、
+//      チェックインは実際のタブレット1台からのスキャンなので
+//      1分10回(=6秒に1回)制限で十分。MAU増加後は Upstash Redis に移行推奨。
+const ipRateMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 10; // 1分あたり最大10回
+const RATE_WINDOW_MS = 60_000;
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = ipRateMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    ipRateMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
 const bodySchema = z.object({
   qrToken: z.string().uuid(),
   gymId: z.string().uuid(),
   classType: z.enum(["beginner","basic","regular","nogi","private","other"]).optional(),
 });
 
-// auth: public — qr_token 認証 + rate-limit 必須
-// rate-limit は Vercel Edge Config またはミドルウェアで設定すること
+// auth: public — qr_token 認証 + IP rate-limit
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (!checkRateLimit(ip)) {
+    return NextResponse.json({ error: "リクエストが多すぎます。しばらく待ってから再試行してください。", success: false }, { status: 429 });
+  }
   const body = await req.json().catch(() => null);
   const parsed = bodySchema.safeParse(body);
   if (!parsed.success) {

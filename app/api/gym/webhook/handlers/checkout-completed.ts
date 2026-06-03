@@ -30,10 +30,11 @@ export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void
   // Stripe Customer からメール取得
   const email = session.customer_email ?? session.customer_details?.email ?? "";
 
-  // plan_type を metadata or subscription から推定
-  // ※ 登録時に session.metadata.planKey をセットする必要あり
-  const planKey = session.metadata?.planKey ?? "fulltime";
-  const planType = planKey.startsWith("twice") ? "twice_weekly"
+  // plan_type を metadata.planKey（論理キー）から確定
+  // Why: "twice_male"/"twice_kids" → twice_weekly, "drop_in" → drop_in, それ以外 → fulltime
+  const planKey = session.metadata?.planKey ?? "";
+  const planType: "fulltime" | "twice_weekly" | "drop_in" =
+    planKey === "twice_male" || planKey === "twice_kids" ? "twice_weekly"
     : planKey === "drop_in" ? "drop_in"
     : "fulltime";
 

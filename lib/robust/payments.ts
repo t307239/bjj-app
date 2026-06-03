@@ -61,6 +61,7 @@ export async function createCheckoutSession({
   includeInsurance,
   familyDiscount,
   familyMemberName,
+  planKeyLogical,
 }: {
   userId: string;
   email: string;
@@ -78,6 +79,7 @@ export async function createCheckoutSession({
   includeInsurance?: boolean;
   familyDiscount?: boolean;
   familyMemberName?: string;
+  planKeyLogical: string; // "fulltime_male" | "fulltime_female" | "twice_male" | "twice_kids" | "drop_in"
 }): Promise<string> {
   // 課金モデル: 入会金 + 日割り（当月）+ 翌月分満額（前払い）+ 保険（任意）
   // Why: HP 記載「入会金とコース代金の翌月分をご用意ください」に準拠。
@@ -156,7 +158,7 @@ export async function createCheckoutSession({
     line_items: lineItems,
     metadata: {
       gymSlug,
-      planKey: priceId,
+      planKey: planKeyLogical, // Why: priceId(Stripe ID)ではなく論理キー("twice_male"等)を保存。webhook で plan_type を判定するために必要。
       // プロフィール情報をメタデータに保存（webhook で gym_members に書き込む）
       phone: phone ?? "",
       address: address ?? "",
