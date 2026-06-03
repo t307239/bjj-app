@@ -30,9 +30,17 @@ type TodayLog = {
   gym_members: { name: string; plan_type: string } | null;
 };
 
+type InsuranceExpiring = {
+  id: string;
+  name: string;
+  insurance_expires_at: string;
+  status: string;
+};
+
 type AdminData = {
   members: Member[];
   todayLogs: TodayLog[];
+  insuranceExpiring: InsuranceExpiring[];
   billingPeriod: string;
 };
 
@@ -165,6 +173,30 @@ export default function AdminPage() {
           チェックイン
         </a>
       </div>
+
+      {/* 保険期限切れ予定者（期限切れ + 30日以内） */}
+      {data.insuranceExpiring.length > 0 && (
+        <div className="px-4 pb-3">
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4">
+            <p className="text-amber-400 text-sm font-medium mb-2">
+              ⚠️ スポーツ保険の更新予定（{data.insuranceExpiring.length}名）
+            </p>
+            <div className="space-y-1.5">
+              {data.insuranceExpiring.map(m => {
+                const expired = new Date(m.insurance_expires_at) < new Date();
+                return (
+                  <div key={m.id} className="flex items-center justify-between text-xs">
+                    <span className="text-zinc-200">{m.name}</span>
+                    <span className={`whitespace-nowrap ${expired ? "text-red-400" : "text-amber-300"}`}>
+                      {m.insurance_expires_at}{expired ? "（期限切れ）" : " まで"}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* タブ */}
       <div className="flex border-b border-white/10 px-4">

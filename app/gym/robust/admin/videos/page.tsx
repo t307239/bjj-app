@@ -35,6 +35,10 @@ export default function AdminVideosPage() {
   const [addThumb, setAddThumb] = useState("");
   const [addSubmitting, setAddSubmitting] = useState(false);
   const [addError, setAddError] = useState("");
+  // Drive フォルダ URL（会員へ一括共有するフォルダリンク）
+  const [folderUrl, setFolderUrl] = useState("");
+  const [folderSaving, setFolderSaving] = useState(false);
+  const [folderMsg, setFolderMsg] = useState<{ text: string; ok: boolean } | null>(null);
 
   async function fetchVideos() {
     const res = await fetch("/api/gym/robust/videos");
@@ -52,11 +56,39 @@ export default function AdminVideosPage() {
     setLoading(false);
   }
 
+  async function fetchSettings() {
+    const res = await fetch("/api/gym/robust/settings");
+    if (!res.ok) return; // 設定取得失敗は致命的でないため握りつぶす（動画一覧は表示する）
+    const json = await res.json();
+    setFolderUrl(json.drive_folder_url ?? "");
+  }
+
+  async function handleSaveFolder(e: React.FormEvent) {
+    e.preventDefault();
+    setFolderSaving(true);
+    setFolderMsg(null);
+    try {
+      // 空入力は null として送信し、フォルダ未設定状態にできるようにする
+      const trimmed = folderUrl.trim();
+      const res = await fetch("/api/gym/robust/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ drive_folder_url: trimmed === "" ? null : trimmed }),
+      });
+      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? "保存に失敗しました");
+      setFolderMsg({ text: "フォルダ URL を保存しました", ok: true });
+    } catch (err) {
+      setFolderMsg({ text: (err as Error).message, ok: false });
+    } finally {
+      setFolderSaving(false);
+    }
+  }
+
   useEffect(() => {
     (async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { setShowLogin(true); setLoading(false); return; }
-      await fetchVideos();
+      await Promise.all([fetchVideos(), fetchSettings()]);
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -120,6 +152,26 @@ export default function AdminVideosPage() {
             </button>
           </div>
         </div>
+
+        {/* Drive フォルダ URL 設定（権限ある会員に一括共有するリンク） */}
+        <form onSubmit={handleSaveFolder} className="bg-zinc-900 border border-white/10 rounded-xl p-5 mb-6">
+          <h2 className="text-sm font-bold text-white mb-1">共有 Drive フォルダ</h2>
+          <p className="text-zinc-500 text-xs mb-3">
+            動画閲覧オプションが有効な会員にこのフォルダリンクを表示します。Drive 側で「リンクを知っている全員（閲覧者）」に共有設定してください。
+          </p>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <input type="url" value={folderUrl} onChange={e => setFolderUrl(e.target.value)}
+              placeholder="https://drive.google.com/drive/folders/..."
+              className="flex-1 bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
+            <button type="submit" disabled={folderSaving}
+              className="min-h-[44px] bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white text-sm font-medium rounded-lg px-4 whitespace-nowrap">
+              {folderSaving ? "保存中..." : "保存"}
+            </button>
+          </div>
+          {folderMsg && (
+            <p className={`text-xs mt-2 ${folderMsg.ok ? "text-emerald-400" : "text-red-400"}`} role="status">{folderMsg.text}</p>
+          )}
+        </form>
 
         {/* 追加フォーム */}
         {showAdd && (

@@ -5,6 +5,9 @@ import { currentBillingPeriod } from "@/lib/robust/attendance";
 
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
 
+// 保険期限切れ警告の対象期間: 今日から30日以内に期限を迎える会員を「更新予定」として表示
+const INSURANCE_EXPIRY_WARNING_DAYS = 30;
+
 // auth: public — is_gym_staff_or_owner RLS で保護
 export async function GET() {
   const auth = await requireRobustAdmin();
@@ -24,6 +27,20 @@ export async function GET() {
     )
     .eq("gym_id", GYM_ID)
     .order("created_at", { ascending: false });
+
+  // 保険期限切れ予定者: 期限切れ済み + 30日以内に期限を迎える active 会員
+  // Why: スポーツ保険は年単位更新。期限切れに気づかず練習させると無保険事故のリスク。
+  //      admin が事前に更新案内できるよう、期限が近い順に一覧化する。
+  const warningCutoff = new Date();
+  warningCutoff.setDate(warningCutoff.getDate() + INSURANCE_EXPIRY_WARNING_DAYS);
+  const { data: insuranceExpiring } = await admin
+    .from("gym_members")
+    .select("id, name, insurance_expires_at, status")
+    .eq("gym_id", GYM_ID)
+    .eq("status", "active")
+    .not("insurance_expires_at", "is", null)
+    .lte("insurance_expires_at", warningCutoff.toISOString().slice(0, 10))
+    .order("insurance_expires_at", { ascending: true });
 
   // 今日のチェックインログ
   const { data: todayLogs } = await admin
@@ -50,6 +67,7 @@ export async function GET() {
   return NextResponse.json({
     members: membersWithCount,
     todayLogs: todayLogs ?? [],
+    insuranceExpiring: insuranceExpiring ?? [],
     billingPeriod,
   });
 }

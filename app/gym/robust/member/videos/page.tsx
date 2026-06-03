@@ -25,6 +25,7 @@ export default function MemberVideosPage() {
   const [error, setError] = useState("");
   const [selected, setSelected] = useState<Video | null>(null);
   const [filter, setFilter] = useState<string>("all");
+  const [folderUrl, setFolderUrl] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -40,6 +41,13 @@ export default function MemberVideosPage() {
       }
       const json = await res.json();
       setVideos(json.videos);
+
+      // 動画アクセス権あり（videos が 200）なので共有 Drive フォルダ URL も取得
+      const settingsRes = await fetch("/api/gym/robust/settings");
+      if (settingsRes.ok) {
+        const s = await settingsRes.json().catch(() => ({}));
+        setFolderUrl(s.drive_folder_url ?? null);
+      }
       setLoading(false);
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -73,6 +81,19 @@ export default function MemberVideosPage() {
           </div>
           <a href="/gym/robust/member/qr" className="text-zinc-400 text-xs hover:text-white">← QRコード</a>
         </div>
+
+        {/* 共有 Drive フォルダへのリンク（設定されている場合のみ） */}
+        {folderUrl && (
+          <a href={folderUrl} target="_blank" rel="noopener noreferrer"
+            className="flex items-center gap-3 bg-zinc-900 border border-emerald-500/30 rounded-xl p-4 mb-4 hover:border-emerald-500/60 transition-colors">
+            <span className="text-2xl shrink-0" aria-hidden="true">📁</span>
+            <div className="min-w-0">
+              <p className="text-white text-sm font-medium">共有 Drive フォルダを開く</p>
+              <p className="text-zinc-500 text-xs mt-0.5">すべての会員限定動画をまとめて視聴できます</p>
+            </div>
+            <span className="ml-auto text-zinc-500 text-sm shrink-0" aria-hidden="true">↗</span>
+          </a>
+        )}
 
         {/* フィルター */}
         {classTypes.length > 1 && (

@@ -52,10 +52,14 @@ export default function AdminMembersPage() {
   const [editPlan, setEditPlan] = useState<string>("");
   const [editCap, setEditCap] = useState<string>("");
   const [editVideoAccess, setEditVideoAccess] = useState<boolean>(false);
+  const [editPaymentMethod, setEditPaymentMethod] = useState<string>("stripe");
   const [detailMember, setDetailMember] = useState<Member | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [showLogin, setShowLogin] = useState(false);
+  // インライン操作（手動チェックイン / 家族割引承認却下 / 再入会）の進行状態とフィードバック
+  const [actioningId, setActioningId] = useState<string | null>(null);
+  const [actionMsg, setActionMsg] = useState<{ id: string; text: string; ok: boolean } | null>(null);
 
   async function fetchMembers() {
     const res = await fetch("/api/gym/robust/members");
@@ -85,7 +89,56 @@ export default function AdminMembersPage() {
     setEditPlan(m.plan_type);
     setEditCap(m.plan_cap != null ? String(m.plan_cap) : "");
     setEditVideoAccess(m.video_access);
+    setEditPaymentMethod(m.payment_method);
     setSaveError("");
+  }
+
+  // インライン PATCH の共通ヘルパー。成功で会員行を patch 更新し、フィードバックを表示する。
+  async function patchMember(
+    memberId: string,
+    payload: Record<string, unknown>,
+    applyLocal: (m: Member) => Member,
+    successText: string,
+  ) {
+    setActioningId(memberId);
+    setActionMsg(null);
+    try {
+      const res = await fetch("/api/gym/robust/members", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ memberId, ...payload }),
+      });
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        throw new Error(json.error ?? "操作に失敗しました");
+      }
+      setMembers(prev => prev.map(m => (m.id === memberId ? applyLocal(m) : m)));
+      setActionMsg({ id: memberId, text: successText, ok: true });
+    } catch (err) {
+      setActionMsg({ id: memberId, text: (err as Error).message, ok: false });
+    } finally {
+      setActioningId(null);
+    }
+  }
+
+  // ② 手動チェックイン: その日の来館記録を1クリックで作成（DB行は増えるが会員データは不変）
+  function handleManualCheckin(memberId: string) {
+    patchMember(memberId, { manual_checkin: true }, m => m, "本日のチェックインを記録しました");
+  }
+
+  // ① 家族割引 承認/却下: Stripe coupon も API 側で同期される
+  function handleFamilyDecision(memberId: string, approved: boolean) {
+    patchMember(
+      memberId,
+      { family_discount_approved: approved },
+      m => ({ ...m, family_discount: approved }),
+      approved ? "家族割引を承認しました" : "家族割引を却下しました",
+    );
+  }
+
+  // ③ 再入会: 退会済み会員を1クリックで有効化
+  function handleRejoin(memberId: string) {
+    patchMember(memberId, { status: "active" }, m => ({ ...m, status: "active" }), "再入会を完了しました");
   }
 
   async function handleSave(memberId: string) {
@@ -97,6 +150,7 @@ export default function AdminMembersPage() {
         status: editStatus,
         plan_type: editPlan,
         video_access: editVideoAccess,
+        payment_method: editPaymentMethod,
       };
       if (editPlan === "twice_weekly") {
         body.plan_cap = editCap ? parseInt(editCap) : 8;
@@ -113,7 +167,7 @@ export default function AdminMembersPage() {
         throw new Error(json.error ?? "保存に失敗しました");
       }
       setMembers(prev => prev.map(m => m.id === memberId
-        ? { ...m, status: editStatus, plan_type: editPlan, plan_cap: body.plan_cap as number | null, video_access: editVideoAccess }
+        ? { ...m, status: editStatus, plan_type: editPlan, plan_cap: body.plan_cap as number | null, video_access: editVideoAccess, payment_method: editPaymentMethod }
         : m
       ));
       setEditing(null);
@@ -234,6 +288,15 @@ export default function AdminMembersPage() {
                         <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${editVideoAccess ? "translate-x-5" : "translate-x-0"}`} />
                       </button>
                     </div>
+                    {/* ⑤ 支払い方法（カード / 口座振替）切替 */}
+                    <div>
+                      <label className="block text-xs text-zinc-400 mb-1">支払い方法</label>
+                      <select value={editPaymentMethod} onChange={e => setEditPaymentMethod(e.target.value)}
+                        className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+                        <option value="stripe">カード（Stripe）</option>
+                        <option value="bank_transfer">口座振替</option>
+                      </select>
+                    </div>
                     {saveError && <p className="text-red-400 text-xs">{saveError}</p>}
                     <div className="flex gap-2">
                       <button onClick={() => handleSave(m.id)} disabled={saving}
@@ -290,6 +353,47 @@ export default function AdminMembersPage() {
                         編集
                       </button>
                     </div>
+                  </div>
+                )}
+                {/* アクション行（手動チェックイン / 家族割引承認却下 / 再入会） */}
+                {editing !== m.id && (
+                  <div className="mt-3 pt-3 border-t border-white/10 flex flex-wrap gap-2 items-center">
+                    {/* ② 手動チェックイン: 退会者以外に表示 */}
+                    {m.status !== "cancelled" && (
+                      <button type="button" disabled={actioningId === m.id}
+                        onClick={() => handleManualCheckin(m.id)}
+                        className="min-h-[44px] px-3 text-xs bg-zinc-800 hover:bg-zinc-700 disabled:opacity-40 text-white rounded-lg whitespace-nowrap">
+                        ✓ 手動チェックイン
+                      </button>
+                    )}
+                    {/* ③ 再入会: 退会済みのみ表示 */}
+                    {m.status === "cancelled" && (
+                      <button type="button" disabled={actioningId === m.id}
+                        onClick={() => handleRejoin(m.id)}
+                        className="min-h-[44px] px-3 text-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white rounded-lg whitespace-nowrap">
+                        ↩ 再入会
+                      </button>
+                    )}
+                    {/* ① 家族割引 承認/却下: 申請中(family_discount=true)のみ表示 */}
+                    {m.family_discount && (
+                      <>
+                        <button type="button" disabled={actioningId === m.id}
+                          onClick={() => handleFamilyDecision(m.id, true)}
+                          className="min-h-[44px] px-3 text-xs bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white rounded-lg whitespace-nowrap">
+                          👨‍👩‍👦 家族割引を承認
+                        </button>
+                        <button type="button" disabled={actioningId === m.id}
+                          onClick={() => handleFamilyDecision(m.id, false)}
+                          className="min-h-[44px] px-3 text-xs bg-zinc-700 hover:bg-zinc-600 disabled:opacity-40 text-white rounded-lg whitespace-nowrap">
+                          却下
+                        </button>
+                      </>
+                    )}
+                    {actionMsg?.id === m.id && (
+                      <span className={`text-xs ${actionMsg.ok ? "text-emerald-400" : "text-red-400"}`} role="status">
+                        {actionMsg.text}
+                      </span>
+                    )}
                   </div>
                 )}
                 {/* 詳細情報パネル（住所・運動経歴） */}

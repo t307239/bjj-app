@@ -94,9 +94,39 @@ export async function PATCH(req: NextRequest) {
     }
   }
 
-  // 家族割引 承認/却下: family_discount フラグを更新
+  // 家族割引 承認/却下: family_discount フラグ更新 + 既存 Stripe subscription に coupon を反映
+  // Why: 登録時に DB 検証できなかった申請は coupon 未適用で family_discount=true のまま保存される。
+  //      admin が承認したら既存 subscription に coupon を適用し、却下したら discount を除去する。
+  //      フラグだけ更新しても実課金額は変わらないため、ここで Stripe 側も必ず同期させる。
   if (family_discount_approved !== undefined) {
     (updates as Record<string, unknown>).family_discount = family_discount_approved;
+
+    const { data: target } = await admin
+      .from("gym_members")
+      .select("stripe_subscription_id")
+      .eq("id", memberId)
+      .eq("gym_id", GYM_ID)
+      .maybeSingle();
+
+    const familyCouponId = process.env.ROBUST_STRIPE_COUPON_FAMILY;
+    if (target?.stripe_subscription_id) {
+      try {
+        if (family_discount_approved && familyCouponId) {
+          // 承認: coupon(duration=forever 前提) を適用 → 翌月以降の定期課金にも -¥2,000
+          await getStripe().subscriptions.update(target.stripe_subscription_id, {
+            discounts: [{ coupon: familyCouponId }],
+          });
+        } else {
+          // 却下: 既存の discount を全除去（空配列で coupon をクリア）
+          await getStripe().subscriptions.update(target.stripe_subscription_id, {
+            discounts: [],
+          });
+        }
+      } catch (stripeErr) {
+        // Stripe 失敗は DB 更新を止めない（手動フォローアップで対応）
+        console.error("Family discount coupon sync failed:", stripeErr);
+      }
+    }
   }
 
   // 手動チェックイン: attendance_logs に当日記録を追加
