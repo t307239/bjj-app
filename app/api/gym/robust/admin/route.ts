@@ -1,25 +1,14 @@
 import { NextResponse } from "next/server";
-import { createRobustServerClient } from "@/lib/robust/supabase-server";
 import { createRobustAdminClient } from "@/lib/robust/supabase";
+import { requireRobustAdmin } from "@/lib/robust/auth";
 import { currentBillingPeriod } from "@/lib/robust/attendance";
 
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
 
 // auth: public — is_gym_staff_or_owner RLS で保護
 export async function GET() {
-  const supabase = await createRobustServerClient();
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) {
-    return NextResponse.json({ error: "ログインが必要です" }, { status: 401 });
-  }
-
-  // スタッフ/オーナー権限チェック
-  // Why: service role client で RPC を呼ぶと auth.uid() が NULL になるため、
-  //      必ず user の authenticated client (supabase) で呼ぶこと
-  const { data: isStaff } = await supabase.rpc("is_gym_staff_or_owner", { target_gym_id: GYM_ID });
-  if (!isStaff) {
-    return NextResponse.json({ error: "権限がありません" }, { status: 403 });
-  }
+  const auth = await requireRobustAdmin();
+  if (!auth.ok) return auth.response;
   const admin = createRobustAdminClient();
 
   const billingPeriod = currentBillingPeriod();
