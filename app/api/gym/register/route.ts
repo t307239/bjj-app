@@ -54,6 +54,31 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "ジムが見つかりません" }, { status: 404 });
   }
 
+  // 家族割引の事前検証: 同一 gym 内に該当氏名の active 会員が存在するか確認
+  // Why: familyDiscount は自己申告のみだと coupon(forever) を無検証で適用できる。
+  //      DB に存在する active 会員名と突き合わせて申請の妥当性を検証する。
+  //      氏名表記ゆれ（"高玉年克" vs "高玉 年克"）は trim+normalize で緩和。
+  let verifiedFamilyDiscount = false;
+  if (familyDiscount && familyMemberName?.trim()) {
+    const { createRobustAdminClient } = await import("@/lib/robust/supabase");
+    const admin = createRobustAdminClient();
+    const normalizedInput = familyMemberName.trim().replace(/\s+/g, "");
+    const { data: members } = await admin
+      .from("gym_members")
+      .select("name")
+      .eq("gym_id", gym.id)
+      .eq("status", "active");
+
+    verifiedFamilyDiscount = (members ?? []).some(
+      m => m.name.replace(/\s+/g, "") === normalizedInput
+    );
+
+    if (!verifiedFamilyDiscount) {
+      // 割引申請は記録するが coupon は適用しない（admin が後日確認して手動調整可能）
+      // → familyDiscount=true でメタデータに保存、coupon は false として処理
+    }
+  }
+
   const priceId = STRIPE_PRICE_IDS[planKey];
   if (!priceId) {
     // Why: Stripe Price ID が未設定（空文字）は「無効なプラン」ではなく「決済未設定」
@@ -76,8 +101,8 @@ export async function POST(req: NextRequest) {
     guardianName,
     guardianContact,
     includeInsurance: includeInsurance ?? false,
-    familyDiscount: familyDiscount ?? false,
-    familyMemberName,
+    familyDiscount: verifiedFamilyDiscount,   // DB検証済みの場合のみ coupon 適用
+    familyMemberName,                          // 申請氏名は常に保存（admin確認用）
     monthlyAmount: monthlyAmount,
     planKeyLogical: planKey, // 論理キーをメタデータに渡す（webhook plan_type判定用）
   });

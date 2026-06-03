@@ -9,8 +9,10 @@ export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void
   const userId = session.client_reference_id;
   if (!userId) throw new Error("client_reference_id が未設定");
 
-  const gymSlug = extractGymSlug(session.success_url ?? "");
-  if (!gymSlug) throw new Error("gym slug を success_url から取得できません");
+  // Why: success_url は checkout 作成時の origin ヘッダ(改ざん可能)から構築されるため
+  //      正規表現パースに頼らず信頼できる metadata.gymSlug を一次情報として使用する。
+  const gymSlug = session.metadata?.gymSlug;
+  if (!gymSlug) throw new Error("metadata.gymSlug が未設定");
 
   const gym = await getGymBySlug(gymSlug);
   if (!gym) throw new Error(`ジムが見つかりません: ${gymSlug}`);
@@ -88,7 +90,3 @@ function getInsuranceExpiry(): string {
   return `${year + 1}-03-31`;
 }
 
-function extractGymSlug(url: string): string | null {
-  const match = url.match(/\/gym\/([^/]+)\//);
-  return match?.[1] ?? null;
-}
