@@ -31,11 +31,11 @@ Total: 106
   FIX: type="button" を明示 (送信ボタンなら type="submit")
 [WARNING] [HARDCODED_MIXED] app/gym/robust/admin/videos/page.tsx: 多言語混在（JAの中に英語）: '上の「動画を追加」ボタンから Google Drive の動画を登録してください'
   FIX: t() / serverT() 経由に修正
-[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/videos/page.tsx: L115: <button> で type 属性無し — 明示的 type="button" 推奨
+[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/videos/page.tsx: L117: <button> で type 属性無し — 明示的 type="button" 推奨
   FIX: type="button" を明示 (送信ボタンなら type="submit")
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/checkin/page.tsx: L156: JSX内に英語テキスト直書き: "ROBUST 柔術"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/checkin/page.tsx: L165: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
-[INFO] [INLINE_STYLE_OBJECT] app/gym/robust/checkin/page.tsx: L161: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] app/gym/robust/checkin/page.tsx: L170: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/qr/page.tsx: L74: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
@@ -45,9 +45,9 @@ Total: 106
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] app/gym/robust/member/videos/page.tsx: L95: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/register/page.tsx: L175: JSX内に英語テキスト直書き: "ROBUST 柔術"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/register/page.tsx: L182: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
-[INFO] [SUPABASE_NO_ERROR] app/gym/robust/register/page.tsx: L92: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] app/gym/robust/register/page.tsx: L96: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/register/success/page.tsx: L22: JSX内に英語テキスト直書き: "ようこそ ROBUST 柔術へ"
   FIX: t() キーを追加して多言語対応
