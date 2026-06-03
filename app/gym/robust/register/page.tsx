@@ -23,6 +23,7 @@ type Plan = {
   price: string;
   priceKey: string;
   setupFee: number;
+  monthlyAmount: number; // 日割り・翌月分計算用（税別）
   description: string;
 };
 
@@ -33,6 +34,7 @@ const PLANS: Plan[] = [
     price: "¥12,000/月",
     priceKey: "fulltime_male",
     setupFee: 10000,
+    monthlyAmount: 12000,
     description: "通い放題・全クラス参加可",
   },
   {
@@ -41,6 +43,7 @@ const PLANS: Plan[] = [
     price: "¥10,000/月",
     priceKey: "fulltime_female",
     setupFee: 5000,
+    monthlyAmount: 10000,
     description: "通い放題・全クラス参加可",
   },
   {
@@ -49,6 +52,7 @@ const PLANS: Plan[] = [
     price: "¥10,000/月",
     priceKey: "twice_male",
     setupFee: 10000,
+    monthlyAmount: 10000,
     description: "月8回まで。超過は¥1,000/回",
   },
   {
@@ -57,6 +61,7 @@ const PLANS: Plan[] = [
     price: "¥7,000/月",
     priceKey: "twice_kids",
     setupFee: 0,
+    monthlyAmount: 7000,
     description: "小学生対象・月8回まで",
   },
   {
@@ -65,6 +70,7 @@ const PLANS: Plan[] = [
     price: "¥2,000/回",
     priceKey: "drop_in",
     setupFee: 0,
+    monthlyAmount: 2000,
     description: "単発参加",
   },
 ];
@@ -84,6 +90,7 @@ export default function RegisterPage() {
   const [guardianContact, setGuardianContact] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [includeInsurance, setIncludeInsurance] = useState(false);
+  const [familyDiscount, setFamilyDiscount] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -152,6 +159,8 @@ export default function RegisterPage() {
           guardianName: isMinor ? guardianName : undefined,
           guardianContact: isMinor ? guardianContact : undefined,
           includeInsurance,
+          familyDiscount,
+          monthlyAmount: selectedPlan.monthlyAmount,
         }),
       });
       const json = await res.json();
@@ -401,26 +410,68 @@ export default function RegisterPage() {
               </div>
             </label>
 
-            {/* 決済明細プレビュー */}
-            {selectedPlan && (
-              <div className="bg-zinc-800/40 rounded-xl p-3 text-xs text-zinc-400 space-y-1">
-                <div className="flex justify-between">
-                  <span>月額（日割り）</span><span className="text-white">{selectedPlan.price}</span>
-                </div>
-                {selectedPlan.setupFee > 0 && (
-                  <div className="flex justify-between">
-                    <span>入会金（初回のみ）</span>
-                    <span className="text-white">¥{selectedPlan.setupFee.toLocaleString()}</span>
-                  </div>
-                )}
-                {includeInsurance && (
-                  <div className="flex justify-between">
-                    <span>スポーツ保険</span>
-                    <span className="text-white">¥{isMinor ? "950" : "2,150"}</span>
-                  </div>
-                )}
+            {/* 家族・兄弟割引 */}
+            <label className="flex items-start gap-3 bg-zinc-800/60 rounded-xl p-3 cursor-pointer border border-white/10">
+              <input
+                type="checkbox"
+                checked={familyDiscount}
+                onChange={e => setFamilyDiscount(e.target.checked)}
+                className="w-4 h-4 rounded mt-0.5 shrink-0"
+                id="reg-family"
+              />
+              <div>
+                <p className="text-sm text-white font-medium">
+                  家族・兄弟割引
+                  <span className="ml-2 text-emerald-400 font-bold">-¥2,000/月</span>
+                </p>
+                <p className="text-xs text-zinc-500 mt-0.5">同一世帯の2人目以降が対象</p>
               </div>
-            )}
+            </label>
+
+            {/* 決済明細プレビュー */}
+            {selectedPlan && selectedPlan.monthlyAmount > 0 && (() => {
+              const today = new Date();
+              const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+              const remainingDays = daysInMonth - today.getDate() + 1;
+              const prorated = Math.ceil(selectedPlan.monthlyAmount * remainingDays / daysInMonth);
+              const discountedMonthly = selectedPlan.monthlyAmount - (familyDiscount ? 2000 : 0);
+              const insuranceFee = isMinor ? 950 : 2150;
+              const total = selectedPlan.setupFee + prorated + discountedMonthly + (includeInsurance ? insuranceFee : 0);
+              return (
+                <div className="bg-zinc-800/40 rounded-xl p-3 text-xs text-zinc-400 space-y-1">
+                  <p className="text-zinc-500 text-xs mb-2 font-medium">今日の決済内訳</p>
+                  {selectedPlan.setupFee > 0 && (
+                    <div className="flex justify-between">
+                      <span>入会金（初回のみ）</span>
+                      <span className="text-white">¥{selectedPlan.setupFee.toLocaleString()}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <span>日割り（{remainingDays}日分）</span>
+                    <span className="text-white">¥{prorated.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>翌月分（前払い）</span>
+                    <span className="text-white">¥{discountedMonthly.toLocaleString()}</span>
+                  </div>
+                  {familyDiscount && (
+                    <div className="flex justify-between text-emerald-400">
+                      <span>家族割引</span><span>-¥2,000</span>
+                    </div>
+                  )}
+                  {includeInsurance && (
+                    <div className="flex justify-between">
+                      <span>スポーツ保険</span>
+                      <span className="text-white">¥{insuranceFee.toLocaleString()}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between border-t border-white/10 pt-1 mt-1 text-white font-medium">
+                    <span>合計</span><span>¥{total.toLocaleString()}</span>
+                  </div>
+                  <p className="text-zinc-600 text-xs mt-1">翌々月末から ¥{discountedMonthly.toLocaleString()}/月</p>
+                </div>
+              );
+            })()}
 
             {error && <p className="text-red-400 text-xs mb-3">{error}</p>}
             <button
