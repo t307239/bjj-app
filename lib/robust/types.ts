@@ -90,15 +90,23 @@ export type GymVideo = {
   updated_at: string;
 };
 
-// プランごとの月額（サーバー側で金額を確定するために使用）
-// Why: クライアントから monthlyAmount を受け取ると改ざんで日割り・翌月分を0にできる。
-//      planKey からサーバー側で一意に月額を決定する。
+// プランごとの月額・入会金（サーバー側で金額を確定するために使用）
+// Why: クライアントから monthlyAmount/setupFee を受け取ると改ざんで課金額を0にできる。
+//      planKey からサーバー側で一意に決定する。フロントの PLANS 定数と必ず一致させること。
 export const PLAN_MONTHLY_AMOUNTS: Record<string, number> = {
   fulltime_male:   12000,
   fulltime_female: 10000,
   twice_male:      10000,
   twice_kids:       7000,
   drop_in:          2000,
+};
+
+export const PLAN_SETUP_FEES: Record<string, number> = {
+  fulltime_male:   10000,
+  fulltime_female:  5000,
+  twice_male:      10000,
+  twice_kids:          0,
+  drop_in:             0,
 };
 
 // Stripe plan_id マッピング

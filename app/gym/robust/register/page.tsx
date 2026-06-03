@@ -156,7 +156,7 @@ export default function RegisterPage() {
         body: JSON.stringify({
           gymSlug: GYM_SLUG,
           planKey: selectedPlan.priceKey,
-          setupFee: selectedPlan.setupFee,
+          // setupFee は送信しない（サーバー側で planKey から確定）
           phone: phone || undefined,
           address: address || undefined,
           sportsHistory: sportsHistory || undefined,

@@ -187,7 +187,9 @@ export async function createCheckoutSession({
 
   // 家族割引: Stripe coupon を subscription_data に適用（翌々月以降の定期課金にも反映）
   // Why: line_items の one-time 割引は初回のみ。coupon を使えば subscription の毎月請求にも -¥2,000 が永続適用。
-  //      ROBUST_STRIPE_COUPON_FAMILY env var に事前作成した Stripe coupon ID を設定すること。
+  // 重要: ROBUST_STRIPE_COUPON_FAMILY に設定する coupon は必ず duration="forever" で作成すること。
+  //       duration="once" にすると翌々月（subscription初回）のみ割引が適用され翌々月+1以降は消える。
+  //       Stripe Dashboard: Products > Coupons > 新規作成 > Amount off: 2000円 > Duration: Forever
   const familyCouponId = process.env.ROBUST_STRIPE_COUPON_FAMILY;
   const discounts = familyDiscount && familyCouponId
     ? [{ coupon: familyCouponId }]

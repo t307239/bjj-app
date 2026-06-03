@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { createRobustServerClient } from "@/lib/robust/supabase-server";
 import { createCheckoutSession } from "@/lib/robust/payments";
 import { getGymBySlug } from "@/lib/robust/member";
-import { STRIPE_PRICE_IDS, PLAN_MONTHLY_AMOUNTS } from "@/lib/robust/types";
+import { STRIPE_PRICE_IDS, PLAN_MONTHLY_AMOUNTS, PLAN_SETUP_FEES } from "@/lib/robust/types";
 import { z } from "zod";
 
 const bodySchema = z.object({
   gymSlug: z.string().min(1).max(50),
   planKey: z.enum(["fulltime_male", "fulltime_female", "twice_male", "twice_kids", "drop_in"]),
-  setupFee: z.number().int().min(0).max(50000),
+  // setupFee はクライアント送信値を使わない（PLAN_SETUP_FEES で確定）
   phone: z.string().max(20).optional(),
   address: z.string().max(200).optional(),
   sportsHistory: z.string().max(500).optional(),
@@ -35,10 +35,11 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "不正なリクエスト" }, { status: 400 });
   }
-  const { gymSlug, planKey, setupFee, phone, address, sportsHistory, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, agreedToTerms } = parsed.data;
+  const { gymSlug, planKey, phone, address, sportsHistory, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, agreedToTerms } = parsed.data;
 
-  // Why: monthlyAmount はクライアント値を使わず planKey からサーバー側で確定（改ざん防止）
+  // Why: monthlyAmount/setupFee はクライアント値を使わず planKey から確定（改ざん防止）
   const monthlyAmount = PLAN_MONTHLY_AMOUNTS[planKey] ?? 0;
+  const setupFee = PLAN_SETUP_FEES[planKey] ?? 0;
 
   // サーバー側バリデーション（フロントの disabled バイパス対策）
   if (!agreedToTerms) {
