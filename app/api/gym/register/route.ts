@@ -62,6 +62,8 @@ export async function POST(req: NextRequest) {
     guardianName,
     guardianContact,
     includeInsurance: includeInsurance ?? false,
+    familyDiscount: familyDiscount ?? false,
+    monthlyAmount: monthlyAmount,
   });
 
   return NextResponse.json({ url: checkoutUrl });

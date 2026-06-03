@@ -51,6 +51,7 @@ export async function createCheckoutSession({
   priceId,
   origin,
   setupFeeAmount,
+  monthlyAmount,
   phone,
   address,
   sportsHistory,
@@ -58,6 +59,7 @@ export async function createCheckoutSession({
   guardianName,
   guardianContact,
   includeInsurance,
+  familyDiscount,
 }: {
   userId: string;
   email: string;
@@ -65,6 +67,7 @@ export async function createCheckoutSession({
   priceId: string;
   origin: string;
   setupFeeAmount: number;
+  monthlyAmount: number;
   phone?: string;
   address?: string;
   sportsHistory?: string;
@@ -72,25 +75,62 @@ export async function createCheckoutSession({
   guardianName?: string;
   guardianContact?: string;
   includeInsurance?: boolean;
+  familyDiscount?: boolean;
 }): Promise<string> {
-  // 入会金・スポーツ保険は line_items に one_time price_data として追加
-  // Why: subscription_data.add_invoice_items は Stripe v17 では非対応。
-  //      subscription mode では recurring + one_time を line_items に混在可能。
+  // 課金モデル: 入会金 + 日割り（当月）+ 翌月分満額（前払い）+ 保険（任意）
+  // Why: HP 記載「入会金とコース代金の翌月分をご用意ください」に準拠。
+  //      日割りで当月の利用分を精算しつつ、翌月分を前払いで確保する。
+  //      subscription 自体は翌々月末から開始（proration: "none"）。
+
+  const now = new Date();
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const remainingDays = daysInMonth - now.getDate() + 1;
+
+  // 家族割引適用後の月額
+  const discountedMonthly = monthlyAmount - (familyDiscount ? 2000 : 0);
+
+  // 日割り計算（切り上げ）
+  const proratedAmount = Math.ceil(discountedMonthly * remainingDays / daysInMonth);
+
+  // line_items: 入会金・日割り・翌月分・保険をすべて one-time で明示
   const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
+    // subscription（翌々月末から開始）
     { price: priceId, quantity: 1 },
   ];
+
+  // 入会金
   if (setupFeeAmount > 0) {
+    lineItems.push({
+      price_data: { currency: "jpy", product_data: { name: "入会金" }, unit_amount: setupFeeAmount },
+      quantity: 1,
+    });
+  }
+
+  // 日割り（当月）
+  if (proratedAmount > 0) {
     lineItems.push({
       price_data: {
         currency: "jpy",
-        product_data: { name: "入会金" },
-        unit_amount: setupFeeAmount,
+        product_data: { name: `日割り（${remainingDays}日分）` },
+        unit_amount: proratedAmount,
       },
       quantity: 1,
     });
   }
-  // スポーツ保険（任意選択）: HP 記載通り一般 ¥2,150 / キッズ ¥950
-  // Why: 選択制にすることで既加入者が重複加入しないようにする
+
+  // 翌月分満額（前払い）
+  if (discountedMonthly > 0) {
+    lineItems.push({
+      price_data: {
+        currency: "jpy",
+        product_data: { name: "翌月分（前払い）" },
+        unit_amount: discountedMonthly,
+      },
+      quantity: 1,
+    });
+  }
+
+  // スポーツ保険（任意選択）
   if (includeInsurance) {
     const insuranceFee = isMinor ? 950 : 2150;
     lineItems.push({
@@ -103,17 +143,9 @@ export async function createCheckoutSession({
     });
   }
 
-  // A案: billing_cycle_anchor で月末統一 + 日割り自動計算
-  // Why: 月末 5 日以内の入会は「初月日割りが数百円 → 2〜3日後にまた月額」という
-  //      ユーザー体験上不自然な二重請求になる。
-  //      残り 5 日以内なら翌月末をアンカーにし、初月は実質無料期間扱いにする。
-  const now = new Date();
-  const lastDayThisMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  const daysLeft = lastDayThisMonth.getDate() - now.getDate();
-  const anchorDate = daysLeft <= 5
-    ? new Date(now.getFullYear(), now.getMonth() + 2, 0) // 翌月末
-    : lastDayThisMonth;                                   // 今月末
-  const billingAnchor = Math.floor(anchorDate.getTime() / 1000);
+  // subscription の定期課金は翌々月末から開始（日割り・翌月分は one-time で別途支払い済み）
+  const nextMonthEnd = new Date(now.getFullYear(), now.getMonth() + 2, 0);
+  const billingAnchor = Math.floor(nextMonthEnd.getTime() / 1000);
 
   const session = await getStripe().checkout.sessions.create({
     client_reference_id: userId,
@@ -132,8 +164,10 @@ export async function createCheckoutSession({
       guardian_contact: guardianContact ?? "",
     },
     subscription_data: {
+      // Why: 日割り・翌月分は line_items の one-time で手動処理済み。
+      //      subscription 自体は翌々月末からフル課金開始。proration 不要。
       billing_cycle_anchor: billingAnchor,
-      proration_behavior: "create_prorations",
+      proration_behavior: "none",
     },
     success_url: `${origin}/gym/${gymSlug}/register/success`,
     cancel_url: `${origin}/gym/${gymSlug}/register`,
