@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createRobustAdminClient } from "@/lib/robust/supabase";
 import { requireRobustAdmin } from "@/lib/robust/auth";
+import { getStripe } from "@/lib/robust/payments";
 import { z } from "zod";
 
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
@@ -66,11 +67,35 @@ export async function PATCH(req: NextRequest) {
 
   const { memberId, ...updates } = parsed.data;
   const admin = createRobustAdminClient();
+
+  // Why: admin が status="cancelled" に変更した場合、DB 更新だけでは Stripe subscription が
+  //      active のまま毎月課金が継続してしまう。期末キャンセルで月額を止める。
+  if (updates.status === "cancelled") {
+    const { data: member } = await admin
+      .from("gym_members")
+      .select("stripe_subscription_id")
+      .eq("id", memberId)
+      .eq("gym_id", GYM_ID)
+      .maybeSingle();
+
+    if (member?.stripe_subscription_id) {
+      try {
+        // cancel_at_period_end=true: 当月末まで使わせて期末に自動解約（即時返金しない）
+        await getStripe().subscriptions.update(member.stripe_subscription_id, {
+          cancel_at_period_end: true,
+        });
+      } catch (stripeErr) {
+        // Stripe エラーは DB 更新を止めない（手動フォローアップで対応）
+        console.error("Stripe subscription cancel failed:", stripeErr);
+      }
+    }
+  }
+
   const { error } = await admin
     .from("gym_members")
     .update(updates)
     .eq("id", memberId)
-    .eq("gym_id", GYM_ID); // // defence-in-depth: gym_id フィルタで他 gym の会員変更を防止
+    .eq("gym_id", GYM_ID);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -16,6 +16,14 @@ export async function handleInvoicePaid(event: Stripe.Event): Promise<void> {
 
   if (!member) return;
 
+  // Why: 支払い失敗で paused になった会員が再課金成功したら自動で active に戻す。
+  //      cancelled は手動退会なので復帰させない（paused のみ対象）。
+  await supabase
+    .from("gym_members")
+    .update({ status: "active" })
+    .eq("id", member.id)
+    .eq("status", "paused");
+
   const billingPeriod = format(
     new Date((invoice.period_start ?? Date.now() / 1000) * 1000),
     "yyyy-MM"

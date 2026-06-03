@@ -47,6 +47,18 @@ export default function MemberQrPage() {
     drop_in: "ドロップイン",
   };
 
+  const statusLabel: Record<string, string> = {
+    active: "有効",
+    paused: "休会中",
+    cancelled: "退会",
+  };
+
+  const statusColor: Record<string, string> = {
+    active: "bg-emerald-500/20 text-emerald-400",
+    paused: "bg-yellow-500/20 text-yellow-400",
+    cancelled: "bg-red-500/20 text-red-400",
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
@@ -87,7 +99,12 @@ export default function MemberQrPage() {
           )}
         </div>
 
-        <p className="text-zinc-500 text-xs mb-6">入口のタブレットにかざしてください</p>
+        {member.status === "active"
+          ? <p className="text-zinc-500 text-xs mb-6">入口のタブレットにかざしてください</p>
+          : <p className="text-yellow-500 text-xs mb-6">
+              {member.status === "paused" ? "⚠️ 休会中のため現在チェックインできません" : "⚠️ 退会済みのためチェックインできません"}
+            </p>
+        }
 
         <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 text-left">
           <div className="flex justify-between items-center">
@@ -97,11 +114,9 @@ export default function MemberQrPage() {
           <div className="flex justify-between items-center mt-2">
             <span className="text-xs text-zinc-500">ステータス</span>
             <span className={`text-xs px-2 py-0.5 rounded ${
-              member.status === "active"
-                ? "bg-emerald-500/20 text-emerald-400"
-                : "bg-red-500/20 text-red-400"
+              statusColor[member.status] ?? "bg-zinc-700 text-zinc-400"
             }`}>
-              {member.status === "active" ? "有効" : member.status}
+              {statusLabel[member.status] ?? member.status}
             </span>
           </div>
         </div>

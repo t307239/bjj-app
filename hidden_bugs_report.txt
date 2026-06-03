@@ -39,7 +39,7 @@ Total: 111
   FIX: 対応するTailwindユーティリティクラスに変換
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/profile/page.tsx: L92: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/qr/page.tsx: L74: JSX内に英語テキスト直書き: "ROBUST 柔術"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/qr/page.tsx: L86: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
 [INFO] [SUPABASE_NO_ERROR] app/gym/robust/member/qr/page.tsx: L27: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
