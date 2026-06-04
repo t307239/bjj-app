@@ -34,6 +34,41 @@ type FeedbackState = {
   message: string;
 } | null;
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+
+// 物理キー(e.code)を hex 文字へ変換する。
+// Why: 受付PCが「かな/全角」入力のままだと e.key は "５"/"え" 等に化けるが、
+//      e.code は IME と無関係に物理キー位置を返す。QRトークンは hex+ハイフンのみ
+//      なので、物理キーから組み立てれば入力モードを切り替えなくても正しく読める。
+//      JIS/US どちらの配列でも英数字とハイフンの物理位置は同じため安全。
+function codeToTokenChar(code: string): string | null {
+  if (/^Digit[0-9]$/.test(code)) return code.slice(5);
+  if (/^Numpad[0-9]$/.test(code)) return code.slice(6);
+  if (/^Key[A-F]$/.test(code)) return code.slice(3).toLowerCase();
+  if (code === "Minus" || code === "NumpadSubtract") return "-";
+  return null;
+}
+
+// 全角・ひらがな経由で化けた文字列を UUID トークンに正規化する（カメラ/フォールバック用）。
+// 32桁の hex に復元できた場合のみ UUID 形式へ再構成し、それ以外は元の文字列を返す
+// （誤ったトークンを送らないため）。
+const KANA_VOWEL_TO_ASCII: Record<string, string> = {
+  "あ": "a", "い": "i", "う": "u", "え": "e", "お": "o",
+  "ア": "a", "イ": "i", "ウ": "u", "エ": "e", "オ": "o",
+};
+function normalizeScannedToken(raw: string): string {
+  const trimmed = raw.trim();
+  if (UUID_RE.test(trimmed.toLowerCase())) return trimmed.toLowerCase();
+  // 全角英数 → 半角
+  let s = trimmed.replace(/[Ａ-Ｚａ-ｚ０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
+  s = s.replace(/[ぁ-んァ-ン]/g, ch => KANA_VOWEL_TO_ASCII[ch] ?? "").toLowerCase();
+  const hex = s.replace(/[^0-9a-f]/g, "");
+  if (hex.length === 32) {
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+  }
+  return trimmed;
+}
+
 export default function CheckinPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -139,7 +174,7 @@ export default function CheckinPage() {
       const { default: jsQR } = await import("jsqr");
       const code = jsQR(imageData.data, imageData.width, imageData.height);
       if (code?.data) {
-        await processToken(code.data);
+        await processToken(normalizeScannedToken(code.data));
       }
 
       animationId = requestAnimationFrame(tick);
@@ -155,14 +190,32 @@ export default function CheckinPage() {
   }, [processToken]);
 
   // USB バーコードリーダー対応（Enter で確定）
+  // Why: e.code(物理キー)優先で組み立てることで、受付PCが日本語入力モードのままでも
+  //      自動的に正しい hex トークンになる（入力モード切替が不要）。
   const barcodeBuffer = useRef("");
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Enter") {
-        const token = barcodeBuffer.current.trim();
+      if (e.code === "Enter" || e.code === "NumpadEnter" || e.key === "Enter") {
+        const token = normalizeScannedToken(barcodeBuffer.current);
         barcodeBuffer.current = "";
-        if (token) processToken(token);
-      } else if (e.key.length === 1) {
+        if (!token) return;
+        if (UUID_RE.test(token)) {
+          processToken(token);
+        } else {
+          // 物理キーでも復元できない（特殊配列/スキャナ設定）→ 利用者に分かる案内
+          setFeedback({
+            type: "error",
+            name: "",
+            message: "読み取りに失敗しました。入力モードを半角英数（英数キー）にしてもう一度スキャンしてください。",
+          });
+        }
+        return;
+      }
+      const ch = codeToTokenChar(e.code);
+      if (ch !== null) {
+        barcodeBuffer.current += ch;
+      } else if (!e.isComposing && e.key.length === 1) {
+        // 物理キーで判定できない端末向けフォールバック（後段の normalize で補正）
         barcodeBuffer.current += e.key;
       }
     }

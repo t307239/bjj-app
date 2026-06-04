@@ -39,9 +39,9 @@ Total: 116
   FIX: t() / serverT() 経由に修正
 [INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/videos/page.tsx: L149: <button> で type 属性無し — 明示的 type="button" 推奨
   FIX: type="button" を明示 (送信ボタンなら type="submit")
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/checkin/page.tsx: L181: JSX内に英語テキスト直書き: "ROBUST 柔術"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/checkin/page.tsx: L234: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
-[INFO] [INLINE_STYLE_OBJECT] app/gym/robust/checkin/page.tsx: L186: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] app/gym/robust/checkin/page.tsx: L239: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/profile/page.tsx: L92: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
