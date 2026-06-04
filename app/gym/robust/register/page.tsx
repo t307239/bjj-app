@@ -82,6 +82,9 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  // auth ステップの表示モード: 新規登録 or 既存会員ログイン
+  const [authMode, setAuthMode] = useState<"signup" | "login">("signup");
+  const [resetSent, setResetSent] = useState(false);
   // プロフィール情報
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -97,29 +100,70 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  // ログイン済みユーザーを適切な画面へ振り分ける。
+  // 既存会員 → QR画面 / 未登録(幽霊アカウント) → プラン選択。未ログインなら auth ステップ。
+  // Why: useEffect 初回チェックとログイン成功後の両方で同じ分岐を使うため関数化。
+  async function routeLoggedInUser(): Promise<void> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { setStep("auth"); return; }
+
+    // Why: user_id のみだと将来 multi-tenant 化時に他ジムレコードを誤検出する
+    const GYM_ID_CONST = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
+    const { data: member } = await supabase
+      .from("gym_members")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("gym_id", GYM_ID_CONST)
+      .maybeSingle();
+
+    if (member) {
+      window.location.href = `/gym/${GYM_SLUG}/member/qr`;
+      return;
+    }
+    // 幽霊アカウント → プラン選択へ
+    setStep("plan");
+  }
+
   // カゴ落ちチェック: ログイン済みで gym_members 未登録なら Checkout へ
   useEffect(() => {
-    (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { setStep("auth"); return; }
-
-      // Why: user_id のみだと将来 multi-tenant 化時に他ジムレコードを誤検出する
-      const GYM_ID_CONST = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
-      const { data: member } = await supabase
-        .from("gym_members")
-        .select("id")
-        .eq("user_id", user.id)
-        .eq("gym_id", GYM_ID_CONST)
-        .maybeSingle();
-
-      if (member) {
-        window.location.href = `/gym/${GYM_SLUG}/member/qr`;
-        return;
-      }
-      // 幽霊アカウント → プラン選択へ
-      setStep("plan");
-    })();
+    routeLoggedInUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 既存会員ログイン
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setSubmitting(true);
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+      if (signInError) throw signInError;
+      setStep("loading");
+      await routeLoggedInUser();
+    } catch {
+      // Why: Supabase の生エラー文言(英語)をそのまま出さず、利用者向けの日本語に統一
+      setError("メールアドレスまたはパスワードが正しくありません");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  // パスワードリセットメール送信
+  async function handleResetPassword() {
+    setError("");
+    if (!email) { setError("メールアドレスを入力してください"); return; }
+    setSubmitting(true);
+    try {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/gym/${GYM_SLUG}/reset-password`,
+      });
+      if (resetError) throw resetError;
+      setResetSent(true);
+    } catch {
+      setError("リセットメールの送信に失敗しました");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   async function handleSignUp(e: React.FormEvent) {
     e.preventDefault();
@@ -211,20 +255,48 @@ export default function RegisterPage() {
         </div>
 
         {step === "auth" && (
-          <form onSubmit={handleSignUp} className="bg-zinc-900 border border-white/10 rounded-xl p-6 space-y-4">
-            <div>
-              <label htmlFor="reg-name" className="block text-xs text-zinc-400 mb-1">お名前</label>
-              <input
-                id="reg-name"
-                type="text"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                required
-                autoComplete="name"
-                className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-                placeholder="高玉 年克"
-              />
+          <form
+            onSubmit={authMode === "signup" ? handleSignUp : handleLogin}
+            className="bg-zinc-900 border border-white/10 rounded-xl p-6 space-y-4"
+          >
+            {/* 新規登録 / ログイン 切替 */}
+            <div className="flex bg-zinc-800 rounded-lg p-1 mb-2">
+              <button
+                type="button"
+                onClick={() => { setAuthMode("signup"); setError(""); setResetSent(false); }}
+                className={`flex-1 text-sm rounded-md py-2 transition-colors ${authMode === "signup" ? "bg-emerald-600 text-white" : "text-zinc-400 hover:text-white"}`}
+              >
+                新規登録
+              </button>
+              <button
+                type="button"
+                onClick={() => { setAuthMode("login"); setError(""); setResetSent(false); }}
+                className={`flex-1 text-sm rounded-md py-2 transition-colors ${authMode === "login" ? "bg-emerald-600 text-white" : "text-zinc-400 hover:text-white"}`}
+              >
+                ログイン
+              </button>
             </div>
+
+            {authMode === "login" && (
+              <p className="text-zinc-500 text-xs">すでに会員の方はメールアドレスとパスワードでログインしてください。</p>
+            )}
+
+            {/* お名前は新規登録時のみ */}
+            {authMode === "signup" && (
+              <div>
+                <label htmlFor="reg-name" className="block text-xs text-zinc-400 mb-1">お名前</label>
+                <input
+                  id="reg-name"
+                  type="text"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  required
+                  autoComplete="name"
+                  className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                  placeholder="高玉 年克"
+                />
+              </div>
+            )}
             <div>
               <label htmlFor="reg-email" className="block text-xs text-zinc-400 mb-1">メールアドレス</label>
               <input
@@ -239,26 +311,41 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label htmlFor="reg-password" className="block text-xs text-zinc-400 mb-1">パスワード（8文字以上）</label>
+              <label htmlFor="reg-password" className="block text-xs text-zinc-400 mb-1">
+                {authMode === "signup" ? "パスワード（8文字以上）" : "パスワード"}
+              </label>
               <input
                 id="reg-password"
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                minLength={8}
-                autoComplete="new-password"
+                minLength={authMode === "signup" ? 8 : undefined}
+                autoComplete={authMode === "signup" ? "new-password" : "current-password"}
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
             {error && <p className="text-red-400 text-xs">{error}</p>}
+            {resetSent && <p className="text-emerald-400 text-xs">パスワード再設定メールを送信しました。メールをご確認ください。</p>}
             <button
               type="submit"
               disabled={submitting}
               className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
             >
-              {submitting ? "処理中..." : "アカウントを作成"}
+              {submitting ? "処理中..." : authMode === "signup" ? "アカウントを作成" : "ログイン"}
             </button>
+
+            {/* パスワード忘れ（ログイン時のみ） */}
+            {authMode === "login" && (
+              <button
+                type="button"
+                onClick={handleResetPassword}
+                disabled={submitting}
+                className="w-full text-zinc-400 hover:text-white text-xs disabled:opacity-40"
+              >
+                パスワードをお忘れですか？
+              </button>
+            )}
           </form>
         )}
 
