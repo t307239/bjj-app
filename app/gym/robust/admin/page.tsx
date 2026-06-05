@@ -159,17 +159,21 @@ export default function AdminPage() {
       </div>
 
       {/* クイックリンク */}
-      <div className="flex gap-2 px-4 pb-3">
+      <div className="grid grid-cols-2 gap-2 px-4 pb-3">
+        <a href="/gym/robust/admin/attendance"
+          className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
+          出欠確認
+        </a>
         <a href="/gym/robust/admin/members"
-          className="flex-1 text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
+          className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
           会員管理
         </a>
         <a href="/gym/robust/admin/videos"
-          className="flex-1 text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
+          className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
           動画管理
         </a>
         <a href="/gym/robust/checkin"
-          className="flex-1 text-center text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg py-2.5 transition-colors">
+          className="text-center text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg py-2.5 transition-colors">
           チェックイン
         </a>
       </div>
