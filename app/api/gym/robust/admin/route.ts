@@ -14,6 +14,22 @@ export async function GET() {
   if (!auth.ok) return auth.response;
   const admin = createRobustAdminClient();
 
+  // 呼び出し元の役割（owner / admin / instructor）を判定し、UI でメニュー出し分けに使う
+  let role: "owner" | "admin" | "instructor" = "instructor";
+  const { data: gymRow } = await admin.from("gyms").select("owner_id").eq("id", GYM_ID).maybeSingle();
+  if (gymRow?.owner_id === auth.userId) {
+    role = "owner";
+  } else {
+    const { data: staffRow } = await admin
+      .from("gym_staff")
+      .select("role")
+      .eq("gym_id", GYM_ID)
+      .eq("user_id", auth.userId)
+      .eq("status", "active")
+      .maybeSingle();
+    if (staffRow?.role === "admin" || staffRow?.role === "instructor") role = staffRow.role;
+  }
+
   const billingPeriod = currentBillingPeriod();
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
@@ -68,6 +84,7 @@ export async function GET() {
     members: membersWithCount,
     todayLogs: todayLogs ?? [],
     insuranceExpiring: insuranceExpiring ?? [],
+    role,
     billingPeriod,
   });
 }

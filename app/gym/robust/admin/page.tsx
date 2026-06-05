@@ -41,6 +41,7 @@ type AdminData = {
   members: Member[];
   todayLogs: TodayLog[];
   insuranceExpiring: InsuranceExpiring[];
+  role: "owner" | "admin" | "instructor";
   billingPeriod: string;
 };
 
@@ -176,6 +177,12 @@ export default function AdminPage() {
           className="text-center text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg py-2.5 transition-colors">
           チェックイン
         </a>
+        {(data.role === "owner" || data.role === "admin") && (
+          <a href="/gym/robust/admin/staff"
+            className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
+            スタッフ管理
+          </a>
+        )}
       </div>
 
       {/* 保険期限切れ予定者（期限切れ + 30日以内） */}
