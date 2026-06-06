@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createRobustAdminClient } from "@/lib/robust/supabase";
-import { requireRobustAdmin } from "@/lib/robust/auth";
+import { requireRobustManager } from "@/lib/robust/auth";
 import { getStripe } from "@/lib/robust/payments";
 import { z } from "zod";
 
@@ -8,7 +8,7 @@ const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
 
 // auth: public — is_gym_staff_or_owner RLS で保護
 export async function GET() {
-  const auth = await requireRobustAdmin();
+  const auth = await requireRobustManager();
   if (!auth.ok) return auth.response;
 
   const admin = createRobustAdminClient();
@@ -59,7 +59,7 @@ const updateSchema = z.object({
 });
 
 export async function PATCH(req: NextRequest) {
-  const auth = await requireRobustAdmin();
+  const auth = await requireRobustManager();
   if (!auth.ok) return auth.response;
 
   const body = await req.json().catch(() => null);
