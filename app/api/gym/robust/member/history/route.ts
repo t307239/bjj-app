@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createRobustAdminClient } from "@/lib/robust/supabase";
 import { requireRobustAuth } from "@/lib/robust/auth";
+import { currentBillingPeriod } from "@/lib/robust/attendance";
 
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
 
@@ -34,10 +35,9 @@ export async function GET() {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // 今月の来館回数
-  const now = new Date();
-  const currentBillingPeriod = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-  const thisMonthCount = (logs ?? []).filter(l => l.billing_period === currentBillingPeriod).length;
+  // 今月の来館回数（保存される billing_period と同じ JST 基準で集計）
+  const thisMonth = currentBillingPeriod();
+  const thisMonthCount = (logs ?? []).filter(l => l.billing_period === thisMonth).length;
 
   return NextResponse.json({
     logs: logs ?? [],
