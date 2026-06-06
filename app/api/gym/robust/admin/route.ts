@@ -34,13 +34,17 @@ export async function GET() {
   const todayStart = jstTodayStartUtc();
 
   // 会員一覧 (今月の出欠数付き)
+  // Why: 出席履歴は年単位で蓄積するため、全期間を埋め込むと会員数×全出席行を毎回転送して重くなる。
+  //      埋め込みを当月(billing_period)だけに絞る（過去データはDBに残り、必要時に履歴画面で取得）。
+  //      埋め込みフィルタは left join のままなので、当月出席0の会員も一覧に残る。
   const { data: members } = await admin
     .from("gym_members")
     .select(
       "id, name, email, plan_type, status, created_at, " +
-      "attendance_logs(id, billing_period)"
+      "attendance_logs(id)"
     )
     .eq("gym_id", GYM_ID)
+    .eq("attendance_logs.billing_period", billingPeriod)
     .order("created_at", { ascending: false });
 
   // 保険期限切れ予定者: 期限切れ済み + 30日以内に期限を迎える active 会員
@@ -68,12 +72,11 @@ export async function GET() {
   type MemberRow = {
     id: string; name: string; email: string; plan_type: string;
     status: string; created_at: string;
-    attendance_logs: Array<{ billing_period: string }>;
+    attendance_logs: Array<{ id: string }>; // 当月分のみ（クエリで絞り込み済み）
   };
-  // 会員ごとに今月出欠数を集計
+  // 会員ごとに今月出欠数を集計（埋め込みは当月分のみなので件数=今月回数）
   const membersWithCount = ((members as unknown as MemberRow[]) ?? []).map((m) => {
-    const logs = m.attendance_logs ?? [];
-    const monthCount = logs.filter(l => l.billing_period === billingPeriod).length;
+    const monthCount = (m.attendance_logs ?? []).length;
     const { attendance_logs: _logs, ...rest } = m;
     void _logs;
     return { ...rest, month_count: monthCount };
