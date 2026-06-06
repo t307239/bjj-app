@@ -191,6 +191,11 @@ CREATE INDEX idx_attendance_member_period ON attendance_logs (member_id, billing
 CREATE INDEX idx_members_qr_token         ON gym_members (qr_token);
 CREATE INDEX idx_members_user_id          ON gym_members (user_id);
 CREATE INDEX idx_members_stripe_customer  ON gym_members (stripe_customer_id);
+-- パフォーマンス追加（高頻度クエリ向け・冪等）
+CREATE INDEX IF NOT EXISTS idx_attendance_member_checkedin ON attendance_logs (member_id, checked_in_at); -- 重複チェック・履歴
+CREATE INDEX IF NOT EXISTS idx_attendance_gym_checkedin    ON attendance_logs (gym_id, checked_in_at);    -- 今日の来館(ダッシュボード/出欠確認)
+CREATE INDEX IF NOT EXISTS idx_members_gym_status          ON gym_members (gym_id, status);                -- 会員一覧(active)
+CREATE INDEX IF NOT EXISTS idx_videos_gym_active           ON gym_videos (gym_id, is_active);              -- 会員向け動画一覧
 
 -- ============================================================
 -- 初期データ: ROBUST 柔術（slug = 'robust'）
