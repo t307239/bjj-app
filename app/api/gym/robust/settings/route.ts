@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createRobustAdminClient } from "@/lib/robust/supabase";
-import { requireRobustAdmin, requireRobustAuth } from "@/lib/robust/auth";
+import { requireRobustManager, requireRobustAuth } from "@/lib/robust/auth";
 import { z } from "zod";
 
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
@@ -46,9 +46,9 @@ const settingsSchema = z.object({
   drive_folder_url: z.string().url().nullable().optional(),
 });
 
-// admin のみ更新可
+// オーナー・管理者のみ更新可
 export async function PATCH(req: NextRequest) {
-  const auth = await requireRobustAdmin();
+  const auth = await requireRobustManager();
   if (!auth.ok) return auth.response;
 
   const body = await req.json().catch(() => null);

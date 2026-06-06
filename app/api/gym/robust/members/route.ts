@@ -26,9 +26,10 @@ export async function GET() {
 
   // Why: A→B、B→A と互いに家族割引を申請すると両者が -¥2,000 を二重に受けられる。
   //      同一の family_member_name を複数会員が申請しているケースを検出し admin に警告。
+  //      承認前(family_discount=false)の申請も対象にするため、氏名入力の有無で判定する。
   const familyNameCount: Record<string, number> = {};
   for (const m of list) {
-    if (m.family_discount && m.family_member_name) {
+    if (m.family_member_name) {
       const key = m.family_member_name.trim();
       familyNameCount[key] = (familyNameCount[key] ?? 0) + 1;
     }
@@ -39,7 +40,7 @@ export async function GET() {
 
   const membersWithWarning = list.map(m => ({
     ...m,
-    family_discount_warning: m.family_discount && m.family_member_name
+    family_discount_warning: m.family_member_name
       ? duplicateFamilyNames.has(m.family_member_name.trim())
       : false,
   }));

@@ -327,14 +327,15 @@ export default function AdminMembersPage() {
                         {m.phone && <span>{m.phone}</span>}
                         <span>{m.payment_method === "stripe" ? "カード" : "口座振替"}</span>
                         {m.video_access && <span className="text-emerald-500">動画あり</span>}
-                        {m.family_discount && (
+                        {m.family_member_name && (
                           <span
-                            className={m.family_discount_warning ? "text-yellow-400" : "text-blue-400"}
+                            className={m.family_discount_warning ? "text-yellow-400" : m.family_discount ? "text-blue-400" : "text-amber-400"}
                             title={m.family_discount_warning
                               ? `⚠️ 同じ氏名「${m.family_member_name}」を複数会員が申請しています。確認が必要です。`
-                              : `家族割引申請: ${m.family_member_name ?? ""}さんと同世帯`}
+                              : `家族割引 ${m.family_discount ? "適用中" : "申請中（未適用）"}: ${m.family_member_name}さんと同世帯`}
                           >
-                            {m.family_discount_warning ? "⚠️" : "👨‍👩‍👦"} {m.family_member_name ?? "家族割"}
+                            {m.family_discount_warning ? "⚠️" : "👨‍👩‍👦"} {m.family_member_name}
+                            {m.family_discount ? "（適用中）" : "（申請中）"}
                           </span>
                         )}
                       </div>
@@ -374,8 +375,8 @@ export default function AdminMembersPage() {
                         ↩ 再入会
                       </button>
                     )}
-                    {/* ① 家族割引 承認/却下: 申請中(family_discount=true)のみ表示 */}
-                    {m.family_discount && (
+                    {/* ① 家族割引: 申請（氏名入力）があれば表示。未適用なら承認、適用中なら解除 */}
+                    {m.family_member_name && !m.family_discount && (
                       <>
                         <button type="button" disabled={actioningId === m.id}
                           onClick={() => handleFamilyDecision(m.id, true)}
@@ -388,6 +389,13 @@ export default function AdminMembersPage() {
                           却下
                         </button>
                       </>
+                    )}
+                    {m.family_member_name && m.family_discount && (
+                      <button type="button" disabled={actioningId === m.id}
+                        onClick={() => handleFamilyDecision(m.id, false)}
+                        className="min-h-[44px] px-3 text-xs bg-zinc-700 hover:bg-zinc-600 disabled:opacity-40 text-white rounded-lg whitespace-nowrap">
+                        家族割引を解除
+                      </button>
                     )}
                     {actionMsg?.id === m.id && (
                       <span className={`text-xs ${actionMsg.ok ? "text-emerald-400" : "text-red-400"}`} role="status">

@@ -165,14 +165,19 @@ export default function AdminPage() {
           className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
           出欠確認
         </a>
-        <a href="/gym/robust/admin/members"
-          className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
-          会員管理
-        </a>
-        <a href="/gym/robust/admin/videos"
-          className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
-          動画管理
-        </a>
+        {/* 会員管理・動画管理・スタッフ管理は owner / admin のみ（instructor は出欠確認とチェックインのみ） */}
+        {(data.role === "owner" || data.role === "admin") && (
+          <>
+            <a href="/gym/robust/admin/members"
+              className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
+              会員管理
+            </a>
+            <a href="/gym/robust/admin/videos"
+              className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
+              動画管理
+            </a>
+          </>
+        )}
         <a href="/gym/robust/checkin"
           className="text-center text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg py-2.5 transition-colors">
           チェックイン
