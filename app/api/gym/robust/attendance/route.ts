@@ -36,9 +36,9 @@ export async function GET() {
     if (staff?.role === "admin" || staff?.role === "instructor") role = staff.role;
   }
 
-  // 今日チェックイン済みの member_id 集合
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
+  // 今日チェックイン済みの member_id 集合（JST 基準の「今日」）
+  const { jstTodayStartUtc } = await import("@/lib/robust/attendance");
+  const todayStart = jstTodayStartUtc();
   const { data: todayLogs } = await admin
     .from("attendance_logs")
     .select("member_id")

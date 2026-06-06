@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createRobustAdminClient } from "@/lib/robust/supabase";
 import { requireRobustAdmin } from "@/lib/robust/auth";
-import { currentBillingPeriod } from "@/lib/robust/attendance";
+import { currentBillingPeriod, jstTodayStartUtc } from "@/lib/robust/attendance";
 
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
 
@@ -31,8 +31,7 @@ export async function GET() {
   }
 
   const billingPeriod = currentBillingPeriod();
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
+  const todayStart = jstTodayStartUtc();
 
   // 会員一覧 (今月の出欠数付き)
   const { data: members } = await admin

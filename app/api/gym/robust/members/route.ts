@@ -131,8 +131,19 @@ export async function PATCH(req: NextRequest) {
   }
 
   // 手動チェックイン: attendance_logs に当日記録を追加
+  // Why: ボタン連打や「QR済みの会員をさらに手動」で同日二重記録が起きると、出席数・週2回上限が
+  //      過大カウントされる。当日(JST)の既存チェックインがあれば二重作成せず冪等に返す。
   if (manual_checkin) {
-    const { currentBillingPeriod } = await import("@/lib/robust/attendance");
+    const { currentBillingPeriod, jstTodayStartUtc } = await import("@/lib/robust/attendance");
+    const { count } = await admin
+      .from("attendance_logs")
+      .select("id", { count: "exact", head: true })
+      .eq("member_id", memberId)
+      .eq("gym_id", GYM_ID)
+      .gte("checked_in_at", jstTodayStartUtc().toISOString());
+    if ((count ?? 0) > 0) {
+      return NextResponse.json({ ok: true, checkedIn: true, alreadyCheckedIn: true });
+    }
     const { error: ciError } = await admin.from("attendance_logs").insert({
       member_id: memberId,
       gym_id: GYM_ID,

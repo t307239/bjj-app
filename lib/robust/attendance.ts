@@ -1,12 +1,23 @@
 // AttendanceService — チェックイン・集計
-import { format } from "date-fns";
 import { createRobustAdminClient } from "./supabase";
 import type { AttendanceLog, ClassType, GymMember } from "./types";
 import { CHECKIN_COOLDOWN_MINUTES } from "./types";
 import { addOverageToNextInvoice } from "./payments";
 
+// JST(UTC+9, サマータイムなし)固定。Vercel/Supabase は UTC 稼働のため明示的に補正する。
+// Why: UTC 基準だと、JST 早朝(0:00-8:59)の来館が前日扱いになり、月初の朝クラスが
+//      前月の請求期間に記録される等のズレが起きる。道場は JST 運用なので JST で日付を確定する。
+const JST_OFFSET_MS = 9 * 60 * 60 * 1000;
+
 export function currentBillingPeriod(): string {
-  return format(new Date(), "yyyy-MM");
+  // JST 基準の「YYYY-MM」
+  return new Date(Date.now() + JST_OFFSET_MS).toISOString().slice(0, 7);
+}
+
+/** JST の「今日の0:00」を UTC の Date で返す（checked_in_at >= 用） */
+export function jstTodayStartUtc(): Date {
+  const jst = new Date(Date.now() + JST_OFFSET_MS);
+  return new Date(Date.UTC(jst.getUTCFullYear(), jst.getUTCMonth(), jst.getUTCDate()) - JST_OFFSET_MS);
 }
 
 /** 二重スキャン防止チェック（60分クールダウン） */
