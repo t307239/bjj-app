@@ -703,7 +703,10 @@
     "ariaSignInGoogle": "Sign in with Google",
     "ariaEmailAddress": "Email address",
     "ariaSendMagicLink": "Send magic login link",
-    "ariaSignInGitHub": "Sign in with GitHub"
+    "ariaSignInGitHub": "Sign in with GitHub",
+    "consentCombined": "I am 13 or older (with parental consent if under 18), and I understand BJJ carries physical risk and agree to train responsibly. BJJ App is not liable for any injury.",
+    "consentRequired": "↑ Please check the box to continue",
+    "ariaConsentCombined": "Confirm age and physical-risk acknowledgment"
   },
   "stats": {
     "personalBests": "Personal Records",
@@ -1724,7 +1727,8 @@
     "footerCopyright": "© 2026 BJJ App. Built by grapplers, for grapplers.",
     "footerTerms": "Terms",
     "footerPrivacy": "Privacy",
-    "footerTokushoho": "特定商取引法に基づく表記"
+    "footerTokushoho": "特定商取引法に基づく表記",
+    "heroTrust": "🎁 14-day free trial · No credit card · No auto-charge"
   },
   "landing": {
     "navLogin": "Sign in",

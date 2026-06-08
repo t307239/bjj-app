@@ -90,13 +90,13 @@ function LoginForm() {
   const lastOtpSentRef = useRef<number>(0);
   const OTP_COOLDOWN_MS = 60_000;
 
-  // COPPA: user must confirm age 13+
-  const [ageConfirmed, setAgeConfirmed] = useState(false);
-  // Training Disclaimer: user must accept physical risk
-  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
+  // Why: COPPA(13+年齢) と傷害免責を 1 つの affirmative consent に統合。
+  // 2 個の必須チェックは最上流の最大の離脱点だったため、法的な明示同意
+  // (暗黙同意より強い) を保ちつつ操作を 1 クリックに半減させ CVR を改善。
+  const [consentAccepted, setConsentAccepted] = useState(false);
 
-  // Both must be checked before any login action is enabled
-  const canProceed = ageConfirmed && disclaimerAccepted;
+  // Must be checked before any login action is enabled
+  const canProceed = consentAccepted;
 
   // Highlight checkboxes when user tries to proceed without checking them
   const [nudge, setNudge] = useState(false);
@@ -205,44 +205,26 @@ function LoginForm() {
           <ErrorBanner />
         </Suspense>
 
-        {/* ── COPPA + Training Disclaimer checkboxes ──────────────────────── */}
-        {/* Required BEFORE any login action. COPPA: 13+ age gate (US federal law).
-            Disclaimer: injury liability (protects against personal-injury claims). */}
+        {/* ── Combined consent checkbox (COPPA age 13+ + injury disclaimer) ─── */}
+        {/* Required BEFORE any login action. Single affirmative consent covers
+            both COPPA (US federal 13+ age gate) and injury-liability disclaimer.
+            Merged from 2 checkboxes to 1 to cut top-of-funnel friction. */}
         <div
           ref={checkboxRef}
-          className={`bg-zinc-900/80 rounded-xl px-4 py-3 mb-3 space-y-2.5 border transition-colors duration-300 ${
+          className={`bg-zinc-900/80 rounded-xl px-4 py-3 mb-3 border transition-colors duration-300 ${
             nudge ? "border-[#10B981] ring-1 ring-[#10B981]/40" : "border-white/10"
           }`}
         >
-          {/* Age confirmation (COPPA + parental consent) */}
           <label className="flex items-start gap-3 cursor-pointer group">
             <input
               type="checkbox"
-              checked={ageConfirmed}
-              onChange={(e) => setAgeConfirmed(e.target.checked)}
+              checked={consentAccepted}
+              onChange={(e) => setConsentAccepted(e.target.checked)}
               className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#10B981] flex-shrink-0 cursor-pointer"
-              aria-label={t("login.ariaAgeConfirm")}
+              aria-label={t("login.ariaConsentCombined")}
             />
             <span className="text-xs text-zinc-400 group-hover:text-zinc-300 leading-relaxed">
-              {t("login.ageConfirmPre")} <span className="text-white font-medium">{t("login.ageConfirm")}</span>
-              <span className="text-zinc-400"> {t("login.ageConfirmNote")}</span>
-              <br />
-              <span className="text-zinc-400">{t("login.parentalConsent")}</span>
-            </span>
-          </label>
-
-          {/* Training Disclaimer */}
-          <label className="flex items-start gap-3 cursor-pointer group">
-            <input
-              type="checkbox"
-              checked={disclaimerAccepted}
-              onChange={(e) => setDisclaimerAccepted(e.target.checked)}
-              className="mt-0.5 w-4 h-4 rounded border-white/20 bg-zinc-800 accent-[#10B981] flex-shrink-0 cursor-pointer"
-              aria-label={t("login.ariaDisclaimerConfirm")}
-            />
-            <span className="text-xs text-zinc-400 group-hover:text-zinc-300 leading-relaxed">
-              {t("login.disclaimerPre")} <span className="text-white font-medium">{t("login.disclaimerRisk")}</span>{" "}
-              {t("login.disclaimerPost")}
+              {t("login.consentCombined")}
             </span>
           </label>
         </div>
@@ -337,10 +319,10 @@ function LoginForm() {
           </div>
         </div>
 
-        {/* Hint when checkboxes not yet checked */}
+        {/* Hint when consent not yet checked */}
         {!canProceed && (
           <p className="text-center text-zinc-400 text-xs mt-2">
-            {t("login.checkboxesRequired")}
+            {t("login.consentRequired")}
           </p>
         )}
 

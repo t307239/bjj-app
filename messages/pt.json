@@ -703,7 +703,10 @@
     "ariaSignInGoogle": "Entrar com Google",
     "ariaEmailAddress": "Endereço de email",
     "ariaSendMagicLink": "Enviar link mágico de login",
-    "ariaSignInGitHub": "Entrar com GitHub"
+    "ariaSignInGitHub": "Entrar com GitHub",
+    "consentCombined": "Tenho 13 anos ou mais (com consentimento dos pais se menor de 18) e entendo que o BJJ envolve risco físico e concordo em treinar com responsabilidade. O BJJ App não se responsabiliza por lesões.",
+    "consentRequired": "↑ Marque a caixa para continuar",
+    "ariaConsentCombined": "Confirmar idade e ciência de risco físico"
   },
   "stats": {
     "personalBests": "Recordes Pessoais",
@@ -1752,7 +1755,8 @@
     "footerCopyright": "© 2026 BJJ App. Feito por lutadores, para lutadores.",
     "footerTerms": "Termos",
     "footerPrivacy": "Privacidade",
-    "footerTokushoho": "特定商取引法に基づく表記"
+    "footerTokushoho": "特定商取引法に基づく表記",
+    "heroTrust": "🎁 14 dias grátis · Sem cartão · Sem cobrança automática"
   },
   "landing": {
     "navLogin": "Entrar",

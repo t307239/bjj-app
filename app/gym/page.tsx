@@ -152,6 +152,11 @@ export default async function GymPage() {
               >
                 {t("gymLanding.heroCta")}
               </Link>
+              {/* Why: 主CTA直下のリスク低減 microcopy は B2B trial CVR の定番レバー。
+                  決定地点で「無料・カード不要・自動課金なし」を明示し離脱を抑える。 */}
+              <p className="text-emerald-400/90 text-xs whitespace-nowrap">
+                {t("gymLanding.heroTrust")}
+              </p>
               <a
                 href="#waitlist"
                 className="text-sm text-zinc-400 hover:text-zinc-300 transition-colors"

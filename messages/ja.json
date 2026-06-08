@@ -703,7 +703,10 @@
     "ariaEmailAddress": "メールアドレス",
     "ariaSendMagicLink": "マジックログインリンクを送信",
     "ariaSignInGitHub": "GitHubでサインイン",
-    "ariaSignInGoogle": "Googleでサインイン"
+    "ariaSignInGoogle": "Googleでサインイン",
+    "consentCombined": "私は13歳以上であり（18歳未満は保護者の同意のうえ）、BJJには身体的リスクが伴うことを理解し、責任を持って練習することに同意します。BJJ Appはいかなる怪我についても責任を負いません。",
+    "consentRequired": "↑ チェックしてから続けてください",
+    "ariaConsentCombined": "年齢と身体的リスクへの同意"
   },
   "stats": {
     "personalBests": "個人記録",
@@ -1641,7 +1644,8 @@
     "footerCopyright": "© 2026 BJJ App. グラップラーによる、グラップラーのためのアプリ。",
     "footerTerms": "利用規約",
     "footerPrivacy": "プライバシーポリシー",
-    "footerTokushoho": "特定商取引法に基づく表記"
+    "footerTokushoho": "特定商取引法に基づく表記",
+    "heroTrust": "🎁 14日間無料・クレジットカード不要・自動課金なし"
   },
   "landing": {
     "navLogin": "ログイン",
