@@ -235,7 +235,7 @@ Total: 117
   FIX: 修正済みなら削除、未着手ならBACKLOGへ移動
 [INFO] [SUPABASE_NO_ERROR] lib/robust/auth.ts: L23: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [SUPABASE_NO_ERROR] lib/robust/payments.ts: L29: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] lib/robust/payments.ts: L33: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [CONSOLE_LOG] lib/styleAuditor.ts: console.log() が 1 件残存
   FIX: 本番前に削除

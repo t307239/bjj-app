@@ -1,9 +1,10 @@
 // PaymentsService — Stripe 課金（他から呼ばれる側、循環依存禁止）
 import Stripe from "stripe";
-import { format } from "date-fns";
 import { createRobustAdminClient } from "./supabase";
 import type { GymMember } from "./types";
 import { FAMILY_DISCOUNT_YEN, SPORTS_INSURANCE_YEN, SPORTS_INSURANCE_KIDS_YEN } from "./types";
+
+const JST_OFFSET_MS = 9 * 60 * 60 * 1000;
 
 // Why: モジュールレベルで new Stripe(undefined) を呼ぶと
 //      ROBUST_STRIPE_SECRET_KEY 未設定の Vercel build 環境でクラッシュする。
@@ -23,7 +24,10 @@ export async function addOverageToNextInvoice(
   member: GymMember,
   gymId: string
 ): Promise<void> {
-  if (!member.stripe_customer_id) return;
+  // Why: 顧客IDが無い / 有効なサブスクが無い場合は請求先が確定しないため超過課金しない。
+  //      サブスク無しで invoiceItem を作ると「宙吊りの請求項目」になり、将来の別請求に
+  //      予期せず合算される恐れがある（口座振替・解約済への誤課金防止）。
+  if (!member.stripe_customer_id || !member.stripe_subscription_id) return;
 
   const supabase = createRobustAdminClient();
   const { data: gym } = await supabase
@@ -33,14 +37,15 @@ export async function addOverageToNextInvoice(
     .single();
 
   const overageYen = gym?.overage_yen ?? 1000;
-  const period = format(new Date(), "yyyy年MM月");
+  const jst = new Date(Date.now() + JST_OFFSET_MS);
+  const period = `${jst.getUTCFullYear()}年${String(jst.getUTCMonth() + 1).padStart(2, "0")}月`;
 
   await getStripe().invoiceItems.create({
     customer: member.stripe_customer_id,
     amount: overageYen,
     currency: "jpy",
     description: `超過チェックイン 1回分 (${period})`,
-    subscription: member.stripe_subscription_id ?? undefined,
+    subscription: member.stripe_subscription_id,
   });
 }
 
