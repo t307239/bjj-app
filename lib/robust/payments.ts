@@ -182,13 +182,15 @@ export async function createCheckoutSession({
   }
 
   // 月額プラン: subscription + 日割り・翌月分・保険を one-time で同時決済
-  // billing_cycle_anchor = 翌々月1日（常に未来日・月末当日入会でも安全）
+  // trial_end = 翌々月1日（定期課金の開始を翌々月1日まで遅延）
   // Why: 今月（日割り）と翌月分は line_items one-time で別途請求済み。
   //      subscription の定期課金は翌々月1日から開始し、以降毎月1日に課金。
-  //      翌々月末ではなく翌々月1日にする理由: Stripe は anchor 日が近すぎると
-  //      即時 proration が走る場合があるため、月初で確実に未来になるよう固定。
-  const anchorDate = new Date(now.getFullYear(), now.getMonth() + 2, 1);
-  const billingAnchor = Math.floor(anchorDate.getTime() / 1000);
+  //      billing_cycle_anchor ではなく trial_end を使う理由:
+  //      Stripe は billing_cycle_anchor を「次の自然課金日（≈30日後）」より後に
+  //      設定すると "cannot be later than next natural billing date" エラーを返す。
+  //      trial_end はそのような制限がなく、任意の未来日まで課金を遅延できる。
+  const trialEndDate = new Date(now.getFullYear(), now.getMonth() + 2, 1);
+  const trialEnd = Math.floor(trialEndDate.getTime() / 1000);
 
   // 家族割引: Stripe coupon を subscription_data に適用（翌々月以降の定期課金にも反映）
   // Why: line_items の one-time 割引は初回のみ。coupon を使えば subscription の毎月請求にも -¥2,000 が永続適用。
@@ -207,8 +209,7 @@ export async function createCheckoutSession({
     line_items: lineItems,
     metadata: sharedMetadata,
     subscription_data: {
-      billing_cycle_anchor: billingAnchor,
-      proration_behavior: "none",
+      trial_end: trialEnd,
       ...(discounts ? { discounts } : {}),
     },
     success_url: `${origin}/gym/${gymSlug}/register/success`,
