@@ -208,9 +208,12 @@ export async function createCheckoutSession({
     mode: "subscription",
     line_items: lineItems,
     metadata: sharedMetadata,
+    // Why: session-level discounts apply to the subscription's recurring amount.
+    // subscription_data.discounts was rejected ("unknown parameter") by Stripe API.
+    // One-time line_items (入会金/日割り/翌月) are unaffected by coupon per Stripe spec.
+    ...(discounts ? { discounts } : {}),
     subscription_data: {
       trial_end: trialEnd,
-      ...(discounts ? { discounts } : {}),
     },
     success_url: `${origin}/gym/${gymSlug}/register/success`,
     cancel_url: `${origin}/gym/${gymSlug}/register`,
