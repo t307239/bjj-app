@@ -25,7 +25,7 @@ export type Locale = "ja" | "en" | "pt";
 export const GYM_VALUE_PROPS: Record<Locale, readonly string[]> = {
   ja: [
     "📊 全生徒の練習頻度を一覧表示",
-    "🚨 2 週間来ない生徒を自動アラート (離脱率 50% 改善実績)",
+    "🚨 2 週間来ない生徒を自動アラート (離脱の早期発見)",
     "📚 今週のテーマを全員のダッシュボードに固定",
     "🎯 帯昇格が近い生徒を AI が提案",
     "🔒 個人メモは秘匿、統計のみ可視化",
@@ -33,7 +33,7 @@ export const GYM_VALUE_PROPS: Record<Locale, readonly string[]> = {
   ],
   en: [
     "📊 See every student's training frequency",
-    "🚨 Auto-alert when a student vanishes 2+ weeks (-50% churn)",
+    "🚨 Auto-alert when a student vanishes 2+ weeks (catch churn early)",
     "📚 Pin this week's focus to every dashboard",
     "🎯 AI suggests students ready for promotion",
     "🔒 Personal notes stay private — only stats visible",
@@ -41,7 +41,7 @@ export const GYM_VALUE_PROPS: Record<Locale, readonly string[]> = {
   ],
   pt: [
     "📊 Frequência de treino de todos os alunos",
-    "🚨 Alerta automático quando aluno some 2 semanas (-50% evasão)",
+    "🚨 Alerta automático quando aluno some 2 semanas (detecte evasão cedo)",
     "📚 Fixe o tema da semana no dashboard de todos",
     "🎯 IA sugere alunos prontos para promoção",
     "🔒 Notas pessoais ficam privadas, só estatísticas visíveis",

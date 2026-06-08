@@ -13,13 +13,18 @@ export default function PricingSection({ userId }: { userId?: string | null }) {
   const [isAnnual, setIsAnnual] = useState(false);
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
 
+  // Why: 未ログイン時に bare "/login" へ飛ばすと認証後 dashboard に着地し、
+  // 購入意図が失われる(CVR 漏れ)。next=/pricing で課金ページへ復帰させ、
+  // 復帰時には userId が埋まった Stripe link で checkout を継続できる。
+  const LOGIN_RETURN_TO_PRICING = "/login?next=/pricing";
+
   const monthlyUrl = userId && STRIPE_MONTHLY_LINK
     ? `${STRIPE_MONTHLY_LINK}?client_reference_id=${userId}`
-    : "/login";
+    : LOGIN_RETURN_TO_PRICING;
 
   const annualUrl = userId && STRIPE_ANNUAL_LINK
     ? `${STRIPE_ANNUAL_LINK}?client_reference_id=${userId}`
-    : "/login";
+    : LOGIN_RETURN_TO_PRICING;
 
   const upgradeUrl = isAnnual ? annualUrl : monthlyUrl;
 
