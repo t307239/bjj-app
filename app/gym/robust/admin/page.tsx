@@ -47,7 +47,7 @@ type AdminData = {
 
 const PLAN_LABEL: Record<string, string> = {
   fulltime:     "フルタイム",
-  twice_weekly: "週2回",
+  twice_weekly: "月8回",
   drop_in:      "ドロップイン",
 };
 
@@ -155,7 +155,7 @@ export default function AdminPage() {
         </div>
         <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
           <p className="text-2xl font-bold text-amber-400">{planCounts.twice_weekly ?? 0}</p>
-          <p className="text-xs text-zinc-500 mt-0.5">週2プラン</p>
+          <p className="text-xs text-zinc-500 mt-0.5">月8回プラン</p>
         </div>
       </div>
 

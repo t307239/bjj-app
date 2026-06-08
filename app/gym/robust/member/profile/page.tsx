@@ -18,7 +18,7 @@ type Profile = {
 };
 
 const PLAN_LABEL: Record<string, string> = {
-  fulltime: "フルタイム", twice_weekly: "週2回", drop_in: "ドロップイン",
+  fulltime: "フルタイム", twice_weekly: "月8回", drop_in: "ドロップイン",
 };
 
 export default function MemberProfilePage() {

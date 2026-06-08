@@ -49,7 +49,7 @@ const PLANS: Plan[] = [
   },
   {
     id: "twice_male",
-    label: "週2回（男性）",
+    label: "月8回（男性）",
     price: "¥10,000/月",
     priceKey: "twice_male",
     setupFee: 10000,
@@ -58,7 +58,7 @@ const PLANS: Plan[] = [
   },
   {
     id: "twice_kids",
-    label: "週2回（キッズ）",
+    label: "月8回（キッズ）",
     price: "¥7,000/月",
     priceKey: "twice_kids",
     setupFee: 0,

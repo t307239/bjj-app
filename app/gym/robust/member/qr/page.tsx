@@ -43,7 +43,7 @@ export default function MemberQrPage() {
 
   const planLabel: Record<string, string> = {
     fulltime: "フルタイム",
-    twice_weekly: "週2回",
+    twice_weekly: "月8回",
     drop_in: "ドロップイン",
   };
 

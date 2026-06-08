@@ -26,7 +26,7 @@ type Member = {
 
 const PLAN_LABEL: Record<string, string> = {
   fulltime: "フルタイム",
-  twice_weekly: "週2回",
+  twice_weekly: "月8回",
   drop_in: "ドロップイン",
 };
 
@@ -260,7 +260,7 @@ export default function AdminMembersPage() {
                         <select value={editPlan} onChange={e => setEditPlan(e.target.value)}
                           className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
                           <option value="fulltime">フルタイム</option>
-                          <option value="twice_weekly">週2回</option>
+                          <option value="twice_weekly">月8回</option>
                           <option value="drop_in">ドロップイン</option>
                         </select>
                       </div>
