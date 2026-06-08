@@ -43,7 +43,11 @@ export async function GET() {
 }
 
 const settingsSchema = z.object({
-  drive_folder_url: z.string().url().nullable().optional(),
+  // Why: z.url() は javascript: 等のスキームも通すため、http(s) のみに限定して
+  //      会員ページの <a href> 経由の XSS を防ぐ（defence-in-depth）。
+  drive_folder_url: z.string().url()
+    .refine(u => /^https?:\/\//i.test(u), { message: "http(s) のURLを指定してください" })
+    .nullable().optional(),
 });
 
 // オーナー・管理者のみ更新可

@@ -265,6 +265,13 @@ export default function AdminMembersPage() {
                         </select>
                       </div>
                     </div>
+                    {/* Why: プラン変更は cap/超過の判定には効くが、Stripe の月額請求は自動で変わらない。
+                            （プラン種別だけでは男女別価格を確定できず自動同期できない）。誤解防止の注意書き。 */}
+                    {editPlan !== m.plan_type && (
+                      <p className="text-amber-400 text-xs bg-amber-500/10 rounded-lg px-3 py-2">
+                        ※ プラン変更は月額（Stripe）の請求額には自動反映されません。金額の変更が必要な場合は Stripe 側で行ってください。
+                      </p>
+                    )}
                     {editPlan === "twice_weekly" && (
                       <div>
                         <label className="block text-xs text-zinc-400 mb-1">月上限回数</label>

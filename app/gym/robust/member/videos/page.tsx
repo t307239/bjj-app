@@ -83,7 +83,7 @@ export default function MemberVideosPage() {
         </div>
 
         {/* 共有 Drive フォルダへのリンク（設定されている場合のみ） */}
-        {folderUrl && (
+        {folderUrl && /^https?:\/\//i.test(folderUrl) && (
           <a href={folderUrl} target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-3 bg-zinc-900 border border-emerald-500/30 rounded-xl p-4 mb-4 hover:border-emerald-500/60 transition-colors">
             <span className="text-2xl shrink-0" aria-hidden="true">📁</span>
