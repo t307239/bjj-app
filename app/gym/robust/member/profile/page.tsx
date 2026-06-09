@@ -159,6 +159,11 @@ export default function MemberProfilePage() {
 
         {/* リンク */}
         <div className="space-y-2">
+          <a href="/gym/robust/member/qr"
+            className="block bg-emerald-600 hover:bg-emerald-500 rounded-xl p-4 flex items-center justify-between transition-colors">
+            <span className="text-white text-sm font-medium">📱 チェックイン用QRコードを表示</span>
+            <span className="text-white/80 text-xs">→</span>
+          </a>
           <a href="/gym/robust/member/history"
             className="block bg-zinc-900 border border-white/10 rounded-xl p-4 flex items-center justify-between hover:border-white/20">
             <span className="text-white text-sm">チェックイン履歴</span>
