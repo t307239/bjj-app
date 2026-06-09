@@ -175,6 +175,15 @@ export default function MemberProfilePage() {
             <span className="text-zinc-500 text-xs">→</span>
           </a>
         </div>
+
+        {/* ログアウト */}
+        <button
+          type="button"
+          onClick={async () => { await supabase.auth.signOut(); window.location.href = "/gym/robust/register"; }}
+          className="w-full mt-4 min-h-[44px] text-zinc-400 hover:text-white text-sm bg-zinc-900 border border-white/10 rounded-xl"
+        >
+          ログアウト
+        </button>
       </div>
     </div>
   );
