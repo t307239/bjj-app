@@ -72,9 +72,10 @@ export async function PATCH(req: NextRequest) {
   const { memberId, family_discount_approved, manual_checkin, ...updates } = parsed.data;
   const admin = createRobustAdminClient();
 
-  // Why: admin が status="cancelled" に変更した場合、DB 更新だけでは Stripe subscription が
-  //      active のまま毎月課金が継続してしまう。期末キャンセルで月額を止める。
-  if (updates.status === "cancelled") {
+  // ステータス変更を Stripe subscription に連動させる。
+  // Why: DB のステータスだけ変えても課金は止まらない。退会=期末解約、休会=請求停止、
+  //      復帰=請求再開（休会/解約予約を解除）を Stripe 側にも反映する。
+  if (updates.status === "cancelled" || updates.status === "paused" || updates.status === "active") {
     const { data: member } = await admin
       .from("gym_members")
       .select("stripe_subscription_id")
@@ -82,15 +83,22 @@ export async function PATCH(req: NextRequest) {
       .eq("gym_id", GYM_ID)
       .maybeSingle();
 
-    if (member?.stripe_subscription_id) {
+    const subId = member?.stripe_subscription_id;
+    if (subId) {
       try {
-        // cancel_at_period_end=true: 当月末まで使わせて期末に自動解約（即時返金しない）
-        await getStripe().subscriptions.update(member.stripe_subscription_id, {
-          cancel_at_period_end: true,
-        });
+        if (updates.status === "cancelled") {
+          // 退会: 当月末まで使わせて期末に自動解約（即時返金しない）
+          await getStripe().subscriptions.update(subId, { cancel_at_period_end: true });
+        } else if (updates.status === "paused") {
+          // 休会: 請求を停止（behavior:void = 休会中は請求書を発行しない＝課金されない）
+          await getStripe().subscriptions.update(subId, { pause_collection: { behavior: "void" } });
+        } else if (updates.status === "active") {
+          // 復帰: 休会の請求停止と解約予約を解除して通常課金に戻す
+          await getStripe().subscriptions.update(subId, { pause_collection: "", cancel_at_period_end: false });
+        }
       } catch (stripeErr) {
         // Stripe エラーは DB 更新を止めない（手動フォローアップで対応）
-        console.error("Stripe subscription cancel failed:", stripeErr);
+        console.error("Stripe subscription status sync failed:", stripeErr);
       }
     }
   }

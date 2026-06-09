@@ -141,6 +141,16 @@ export default function AdminMembersPage() {
     patchMember(memberId, { status: "active" }, m => ({ ...m, status: "active" }), "再入会を完了しました");
   }
 
+  // 動画閲覧権限をワンタップでON/OFF
+  function handleToggleVideo(memberId: string, current: boolean) {
+    patchMember(
+      memberId,
+      { video_access: !current },
+      m => ({ ...m, video_access: !current }),
+      !current ? "動画閲覧をONにしました" : "動画閲覧をOFFにしました",
+    );
+  }
+
   async function handleSave(memberId: string) {
     setSaving(true);
     setSaveError("");
@@ -374,6 +384,12 @@ export default function AdminMembersPage() {
                         ✓ 手動チェックイン
                       </button>
                     )}
+                    {/* 動画閲覧権限のワンタップ切替 */}
+                    <button type="button" disabled={actioningId === m.id}
+                      onClick={() => handleToggleVideo(m.id, m.video_access)}
+                      className={`min-h-[44px] px-3 text-xs disabled:opacity-40 rounded-lg whitespace-nowrap ${m.video_access ? "bg-emerald-700 hover:bg-emerald-600 text-white" : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300"}`}>
+                      {m.video_access ? "🎬 動画ON（OFFにする）" : "🎬 動画OFF（ONにする）"}
+                    </button>
                     {/* ③ 再入会: 退会済みのみ表示 */}
                     {m.status === "cancelled" && (
                       <button type="button" disabled={actioningId === m.id}
