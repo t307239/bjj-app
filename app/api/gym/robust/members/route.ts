@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createRobustAdminClient } from "@/lib/robust/supabase";
 import { requireRobustManager } from "@/lib/robust/auth";
 import { getStripe } from "@/lib/robust/payments";
+import { syncDriveAccess } from "@/lib/robust/drive";
 import { z } from "zod";
 
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
@@ -193,6 +194,23 @@ export async function PATCH(req: NextRequest) {
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  // Drive 自動同期: 動画権限 or ステータスが変わったら Drive フォルダ共有を反映。
+  // Why: 動画ON かつ有効 = 共有、OFF/退会/休会 = 剥奪を自動化し「剥奪忘れ」を撲滅。
+  //      env 未設定なら syncDriveAccess は no-op（管理画面のリストで手動運用にフォールバック）。
+  //      Drive 失敗は DB 更新を巻き戻さない（best-effort、失敗は logger で可視化）。
+  if (updates.video_access !== undefined || updates.status !== undefined) {
+    const { data: m } = await admin
+      .from("gym_members")
+      .select("status, video_access, google_email, email")
+      .eq("id", memberId)
+      .eq("gym_id", GYM_ID)
+      .maybeSingle();
+    if (m) {
+      const shouldHaveAccess = m.status === "active" && m.video_access === true;
+      await syncDriveAccess(m.google_email ?? m.email, shouldHaveAccess);
+    }
   }
 
   return NextResponse.json({ ok: true });

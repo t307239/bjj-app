@@ -40,6 +40,7 @@ export type GymMember = {
   email: string;
   name: string;
   name_kana: string | null;
+  google_email: string | null;
   phone: string | null;
   gender: 'male' | 'female' | 'other' | null;
   birth_year: number | null;

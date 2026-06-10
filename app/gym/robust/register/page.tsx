@@ -557,7 +557,8 @@ export default function RegisterPage() {
 
         {step === "plan" && (
           <div className="bg-zinc-900 border border-white/10 rounded-xl p-6">
-            <h2 className="text-sm font-bold text-white mb-4">プランを選択してください</h2>
+            <h2 className="text-sm font-bold text-white mb-1">プランを選択してください</h2>
+            <p className="text-xs text-zinc-500 mb-4">※ 表示価格はすべて税別です。</p>
             <div className="space-y-2 mb-6">
               {PLANS.map(plan => (
                 <button
