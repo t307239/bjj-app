@@ -257,7 +257,12 @@ export async function generateMetadata({
 
   const title = page.title;
   const description = page.description ?? "";
-  const canonicalUrl = `https://bjj-app.net/wiki/${lang}/${slug}`;
+  // Why: bjj-app.net/wiki と静的 wiki.bjj-app.net は同一スラグ・同一内容のクロスドメイン重複。
+  //      静的サイト(wiki.bjj-app.net)が SEO 本体(3,800+ page indexed)のため、
+  //      動的側の canonical を静的 .html に向けてランキング信号を集約する。
+  //      これにより Google の「重複・正規未選択」「discovered-not-indexed」を解消。
+  //      スラグは Supabase wiki_pages(1,556) ⊂ 静的 en(1,571 superset) で一致確認済み。
+  const canonicalUrl = `https://wiki.bjj-app.net/${lang}/${slug}.html`;
 
   return {
     title: `${title} | BJJ Wiki`,
@@ -274,9 +279,9 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        en: `https://bjj-app.net/wiki/en/${slug}`,
-        ja: `https://bjj-app.net/wiki/ja/${slug}`,
-        pt: `https://bjj-app.net/wiki/pt/${slug}`,
+        en: `https://wiki.bjj-app.net/en/${slug}.html`,
+        ja: `https://wiki.bjj-app.net/ja/${slug}.html`,
+        pt: `https://wiki.bjj-app.net/pt/${slug}.html`,
       },
     },
   };

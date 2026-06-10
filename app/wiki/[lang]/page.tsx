@@ -166,12 +166,14 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      url: `https://bjj-app.net/wiki/${lang}`,
+      url: `https://wiki.bjj-app.net/${lang}/`,
       type: "website",
       siteName: "BJJ Wiki",
     },
+    // Why: 静的 wiki.bjj-app.net/<lang>/ が SEO 本体。動的 index は重複のため
+    //      canonical を静的サイトへ向けてランキング信号を集約する。
     alternates: {
-      canonical: `https://bjj-app.net/wiki/${lang}`,
+      canonical: `https://wiki.bjj-app.net/${lang}/`,
     },
   };
 }

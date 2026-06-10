@@ -71,7 +71,10 @@ export async function generateMetadata({
   return {
     title: `${displayTag} | BJJ Wiki`,
     description: `BJJ Wiki articles about ${displayTag}`,
+    // Why: tag 一覧は bjj-app 側のみ存在（静的 wiki に対応なし）。canonical 欠落だと
+    //      Google が「重複・正規未選択」と判定するため、自己 canonical を明示する。
     alternates: {
+      canonical: `https://bjj-app.net/wiki/${lang}/tags/${tag}`,
       languages: {
         en: `https://bjj-app.net/wiki/en/tags/${tag}`,
         ja: `https://bjj-app.net/wiki/ja/tags/${tag}`,
