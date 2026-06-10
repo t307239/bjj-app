@@ -9,9 +9,16 @@ const bodySchema = z.object({
   gymSlug: z.string().min(1).max(50),
   planKey: z.enum(["fulltime_male", "fulltime_female", "twice_male", "twice_kids", "drop_in"]),
   // setupFee はクライアント送信値を使わない（PLAN_SETUP_FEES で確定）
+  nameKana: z.string().min(1).max(50),
+  // 生年月日は YYYY-MM-DD のみ許可（不正値で DB date 型を壊さない）
+  birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   phone: z.string().max(20).optional(),
   address: z.string().max(200).optional(),
   sportsHistory: z.string().max(500).optional(),
+  emergencyName: z.string().max(50).optional(),
+  emergencyPhone: z.string().max(20).optional(),
+  emergencyRelation: z.string().max(20).optional(),
+  medicalNotes: z.string().max(500).optional(),
   isMinor: z.boolean().optional(),
   guardianName: z.string().max(50).optional(),
   guardianContact: z.string().max(100).optional(),
@@ -35,7 +42,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "不正なリクエスト" }, { status: 400 });
   }
-  const { gymSlug, planKey, phone, address, sportsHistory, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, agreedToTerms } = parsed.data;
+  const { gymSlug, planKey, nameKana, birthDate, phone, address, sportsHistory, emergencyName, emergencyPhone, emergencyRelation, medicalNotes, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, agreedToTerms } = parsed.data;
 
   // Why: monthlyAmount/setupFee はクライアント値を使わず planKey から確定（改ざん防止）
   const monthlyAmount = PLAN_MONTHLY_AMOUNTS[planKey] ?? 0;
@@ -94,9 +101,15 @@ export async function POST(req: NextRequest) {
     priceId,
     origin,
     setupFeeAmount: setupFee,
+    nameKana,
+    birthDate,
     phone,
     address,
     sportsHistory,
+    emergencyName,
+    emergencyPhone,
+    emergencyRelation,
+    medicalNotes,
     isMinor: isMinor ?? false,
     guardianName,
     guardianContact,

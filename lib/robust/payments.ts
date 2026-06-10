@@ -58,9 +58,15 @@ export async function createCheckoutSession({
   origin,
   setupFeeAmount,
   monthlyAmount,
+  nameKana,
+  birthDate,
   phone,
   address,
   sportsHistory,
+  emergencyName,
+  emergencyPhone,
+  emergencyRelation,
+  medicalNotes,
   isMinor,
   guardianName,
   guardianContact,
@@ -76,9 +82,15 @@ export async function createCheckoutSession({
   origin: string;
   setupFeeAmount: number;
   monthlyAmount: number;
+  nameKana?: string;
+  birthDate?: string;
   phone?: string;
   address?: string;
   sportsHistory?: string;
+  emergencyName?: string;
+  emergencyPhone?: string;
+  emergencyRelation?: string;
+  medicalNotes?: string;
   isMinor?: boolean;
   guardianName?: string;
   guardianContact?: string;
@@ -154,9 +166,15 @@ export async function createCheckoutSession({
   const sharedMetadata = {
     gymSlug,
     planKey: planKeyLogical,
+    name_kana: nameKana ?? "",
+    birth_date: birthDate ?? "",
     phone: phone ?? "",
     address: address ?? "",
     sports_history: sportsHistory ?? "",
+    emergency_contact_name: emergencyName ?? "",
+    emergency_contact_phone: emergencyPhone ?? "",
+    emergency_contact_relation: emergencyRelation ?? "",
+    medical_notes: medicalNotes ?? "",
     is_minor: String(isMinor ?? false),
     guardian_name: guardianName ?? "",
     guardian_contact: guardianContact ?? "",

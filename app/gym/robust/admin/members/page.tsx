@@ -7,10 +7,16 @@ import RobustAdminLoginForm from "@/components/robust/RobustAdminLoginForm";
 type Member = {
   id: string;
   name: string;
+  name_kana: string | null;
   email: string;
   phone: string | null;
+  birth_date: string | null;
   address: string | null;
   sports_history: string | null;
+  emergency_contact_name: string | null;
+  emergency_contact_phone: string | null;
+  emergency_contact_relation: string | null;
+  medical_notes: string | null;
   video_access: boolean;
   family_discount: boolean;
   family_member_name: string | null;
@@ -332,6 +338,7 @@ export default function AdminMembersPage() {
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-white font-medium text-sm">{m.name}</p>
+                        {m.name_kana && <span className="text-zinc-500 text-xs">（{m.name_kana}）</span>}
                         {m.is_minor && <span className="text-xs bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded">未成年</span>}
                         <span className={`text-xs px-2 py-0.5 rounded ${STATUS_COLOR[m.status] ?? "bg-zinc-700 text-zinc-400"}`}>
                           {STATUS_LABEL[m.status] ?? m.status}
@@ -358,7 +365,7 @@ export default function AdminMembersPage() {
                       </div>
                     </div>
                     <div className="flex gap-2 ml-3 shrink-0">
-                      {(m.address || m.sports_history) && (
+                      {(m.address || m.sports_history || m.birth_date || m.emergency_contact_name || m.emergency_contact_phone || m.medical_notes) && (
                         <button type="button" onClick={() => setDetailMember(detailMember?.id === m.id ? null : m)}
                           className="min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-400 hover:text-white text-xs bg-zinc-800 hover:bg-zinc-700 rounded-lg px-2"
                           aria-label={`${m.name}の詳細`}>
@@ -427,19 +434,41 @@ export default function AdminMembersPage() {
                     )}
                   </div>
                 )}
-                {/* 詳細情報パネル（住所・運動経歴） */}
+                {/* 詳細情報パネル（生年月日・住所・緊急連絡先・運動経歴・既往症） */}
                 {detailMember?.id === m.id && editing !== m.id && (
                   <div className="mt-3 pt-3 border-t border-white/10 space-y-2 text-xs">
+                    {m.birth_date && (
+                      <div>
+                        <span className="text-zinc-500">生年月日: </span>
+                        <span className="text-zinc-300">{m.birth_date}</span>
+                      </div>
+                    )}
                     {m.address && (
                       <div>
                         <span className="text-zinc-500">住所: </span>
                         <span className="text-zinc-300">{m.address}</span>
                       </div>
                     )}
+                    {(m.emergency_contact_name || m.emergency_contact_phone) && (
+                      <div>
+                        <span className="text-zinc-500">緊急連絡先: </span>
+                        <span className="text-zinc-300">
+                          {m.emergency_contact_name}
+                          {m.emergency_contact_relation && `（${m.emergency_contact_relation}）`}
+                          {m.emergency_contact_phone && ` ${m.emergency_contact_phone}`}
+                        </span>
+                      </div>
+                    )}
                     {m.sports_history && (
                       <div>
                         <span className="text-zinc-500">運動経歴: </span>
                         <span className="text-zinc-300">{m.sports_history}</span>
+                      </div>
+                    )}
+                    {m.medical_notes && (
+                      <div>
+                        <span className="text-amber-500">既往症・アレルギー: </span>
+                        <span className="text-zinc-300">{m.medical_notes}</span>
                       </div>
                     )}
                   </div>
