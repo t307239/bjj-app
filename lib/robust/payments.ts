@@ -223,4 +223,46 @@ export async function createCheckoutSession({
   return session.url!;
 }
 
+// ROBUST 会員ポータル設定 ID（モジュールスコープでメモ化）
+let _robustPortalConfigId: string | null = null;
+
+/**
+ * ROBUST 会員カスタマーポータルの configuration ID を取得する。
+ * カード変更のみ許可し、会員による解約・プラン変更・休会は不可にする。
+ *
+ * Why: 退会/休会/プラン変更はオーナーが管理画面で管理する方針のため、会員が
+ *      Stripe ポータルから自己解約できると運用が二重化する。アカウント既定の
+ *      ポータル設定を変更すると bjj-app 本体の Pro サブスクポータルにも影響する
+ *      ため、metadata で識別する ROBUST 専用 configuration を使い分ける。
+ *      cold start ごとの重複作成を避けるため、既存設定を list で再利用する。
+ */
+export async function getRobustPortalConfigId(): Promise<string> {
+  if (_robustPortalConfigId) return _robustPortalConfigId;
+  const stripe = getStripe();
+
+  const existing = await stripe.billingPortal.configurations.list({ limit: 100 });
+  const found = existing.data.find(
+    (c) => c.active && c.metadata?.robust_portal === "1"
+  );
+  if (found) {
+    _robustPortalConfigId = found.id;
+    return found.id;
+  }
+
+  const created = await stripe.billingPortal.configurations.create({
+    features: {
+      // カード変更と請求履歴の閲覧のみ許可
+      payment_method_update: { enabled: true },
+      invoice_history: { enabled: true },
+      // 会員の自己解約・プラン変更・連絡先変更は不可（オーナー管理に一本化）
+      subscription_cancel: { enabled: false },
+      subscription_update: { enabled: false },
+      customer_update: { enabled: false },
+    },
+    metadata: { robust_portal: "1" },
+  });
+  _robustPortalConfigId = created.id;
+  return created.id;
+}
+
 export { getStripe };

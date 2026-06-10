@@ -29,7 +29,6 @@ export default function MemberProfilePage() {
   const [editing, setEditing] = useState(false);
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [sportsHistory, setSportsHistory] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState("");
   const saveMsgTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -44,7 +43,6 @@ export default function MemberProfilePage() {
       setProfile(json.member);
       setPhone(json.member.phone ?? "");
       setAddress(json.member.address ?? "");
-      setSportsHistory(json.member.sports_history ?? "");
       setLoading(false);
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -63,10 +61,10 @@ export default function MemberProfilePage() {
       const res = await fetch("/api/gym/robust/member/profile", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: phone || null, address: address || null, sports_history: sportsHistory || null }),
+        body: JSON.stringify({ phone: phone || null, address: address || null }),
       });
       if (res.ok) {
-        setProfile(p => p ? { ...p, phone: phone || null, address: address || null, sports_history: sportsHistory || null } : p);
+        setProfile(p => p ? { ...p, phone: phone || null, address: address || null } : p);
         setEditing(false);
         showMsg("保存しました");
       } else {
@@ -133,11 +131,6 @@ export default function MemberProfilePage() {
                 <input type="text" value={address} onChange={e => setAddress(e.target.value)} autoComplete="street-address"
                   className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
               </div>
-              <div>
-                <label className="block text-xs text-zinc-400 mb-1">運動経歴・格闘技歴</label>
-                <textarea value={sportsHistory} onChange={e => setSportsHistory(e.target.value)} rows={2} maxLength={500}
-                  className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm resize-none" />
-              </div>
               <div className="flex gap-2">
                 <button type="submit" disabled={saving}
                   className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white text-sm rounded-lg py-2 font-medium">
@@ -151,7 +144,6 @@ export default function MemberProfilePage() {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between"><span className="text-zinc-500">電話</span><span className="text-white">{profile.phone || "未登録"}</span></div>
               <div className="flex justify-between"><span className="text-zinc-500">住所</span><span className="text-white text-right max-w-[60%] truncate" title={profile.address ?? ""}>{profile.address || "未登録"}</span></div>
-              <div><span className="text-zinc-500 text-xs">運動経歴</span><p className="text-white text-xs mt-0.5">{profile.sports_history || "未登録"}</p></div>
             </div>
           )}
           {saveMsg && <p className="text-emerald-400 text-xs mt-2">{saveMsg}</p>}
