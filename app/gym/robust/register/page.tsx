@@ -102,6 +102,7 @@ export default function RegisterPage() {
   const [includeInsurance, setIncludeInsurance] = useState(false);
   // 家族割引: boolean → 同居家族氏名入力に変更（オーナーが確認）
   const [familyMemberName, setFamilyMemberName] = useState("");
+  const [simultaneousFamily, setSimultaneousFamily] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -614,7 +615,7 @@ export default function RegisterPage() {
                   家族・兄弟割引
                   <span className="ml-2 text-emerald-400 font-bold">-¥2,000/月</span>
                 </p>
-                <p className="text-xs text-zinc-500 mt-0.5">同一世帯の2人目以降が対象。すでに会員の家族・兄弟の氏名を入力してください（オーナーが確認します）</p>
+                <p className="text-xs text-zinc-500 mt-0.5">同一世帯の2人目以降が対象。家族・兄弟の氏名を入力してください（入会後にオーナーが確認します）</p>
               </div>
               <input
                 id="reg-family-name"
@@ -622,11 +623,31 @@ export default function RegisterPage() {
                 value={familyMemberName}
                 onChange={e => setFamilyMemberName(e.target.value)}
                 autoComplete="off"
-                placeholder="例：柔術 花子（すでに会員の方の氏名）"
+                placeholder="例：柔術 花子（家族・兄弟の方の氏名）"
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               />
+              {/* 同時入会トグル: 相手も今回入会＝DB未登録のため、自己申告で初月から割引を適用 */}
               {familyMemberName.trim() && (
-                <p className="text-xs text-emerald-400">✓ 割引が適用されます（入会後にオーナーが確認）</p>
+                <label className="flex items-start gap-2 cursor-pointer pt-1">
+                  <input
+                    type="checkbox"
+                    checked={simultaneousFamily}
+                    onChange={e => setSimultaneousFamily(e.target.checked)}
+                    className="w-4 h-4 rounded mt-0.5 shrink-0"
+                    id="reg-simultaneous-family"
+                  />
+                  <span className="text-xs text-zinc-300">
+                    👨‍👩‍👦 家族・兄弟と同時入会します（相手の方も今回が初めての入会）
+                    <span className="block text-zinc-500 mt-0.5">
+                      チェックすると初月から割引を適用します。すでに会員のご家族を指定する場合はチェック不要です（自動で照合します）。後日スタッフが確認します。
+                    </span>
+                  </span>
+                </label>
+              )}
+              {familyMemberName.trim() && (
+                <p className="text-xs text-emerald-400">
+                  ✓ 割引が適用されます（{simultaneousFamily ? "同時入会・初月から" : "入会後にオーナーが確認"}）
+                </p>
               )}
             </div>
 
