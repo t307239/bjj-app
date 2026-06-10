@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { createRobustAdminClient } from "@/lib/robust/supabase";
 import { getGymBySlug } from "@/lib/robust/member";
+import { robustLogger } from "@/lib/robust/logger";
 
 export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void> {
   const session = event.data.object as Stripe.Checkout.Session;
@@ -32,7 +33,15 @@ export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void
     .eq("gym_id", gym.id)
     .maybeSingle();
 
-  if (existing) return;
+  if (existing) {
+    // 課金済みだが既にレコードあり（再送/二度押し）→ 正常スキップ。可視化して照合可能に。
+    robustLogger.warn("robust.checkout.duplicate_skip", {
+      userId,
+      sessionId: session.id,
+      customer: String(session.customer ?? ""),
+    });
+    return;
+  }
 
   // Stripe Customer からメール取得
   const email = session.customer_email ?? session.customer_details?.email ?? "";
@@ -85,8 +94,23 @@ export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void
 
   // user_id UNIQUE 違反 = 別リクエストが先に INSERT 済み → 正常（冪等）
   if (memberInsertError && memberInsertError.code !== "23505") {
+    // 課金済みなのに会員レコード作成に失敗 = 要手動照合の重大イベント
+    robustLogger.error("robust.checkout.member_insert_failed", {
+      userId,
+      sessionId: session.id,
+      customer: String(session.customer ?? ""),
+      planType,
+    }, memberInsertError);
     throw memberInsertError;
   }
+
+  // 課金成功 → 会員作成完了。決済とレコードの突合を可能にする（最終失敗の検知用）
+  robustLogger.info("robust.checkout.member_created", {
+    userId,
+    sessionId: session.id,
+    customer: String(session.customer ?? ""),
+    planType,
+  });
 }
 
 /** スポーツ保険有効期限: 加入月が4月以降なら当年度末(翌3/31)、3月以前なら当年3/31 */

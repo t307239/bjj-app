@@ -217,6 +217,14 @@ export default function AdminMembersPage() {
   const activeCount = members.filter(m => m.status === "active").length;
   const pausedCount = members.filter(m => m.status === "paused").length;
 
+  // 動画アクセス（手動 Drive 共有）管理リスト
+  // Why: 動画は Drive フォルダを各会員の Google アカウントに手動共有する運用。
+  //      アプリの動画リンクは status==active かつ video_access でゲートされるが、
+  //      手動共有した Drive 権限はアプリのゲートが効かない（退会後も直接閲覧可能）。
+  //      「共有すべき人」「権限を外すべき人」を可視化し剥奪忘れの事故を防ぐ。
+  const driveShareTargets = members.filter(m => m.status === "active" && m.video_access);
+  const driveRevokeTargets = members.filter(m => m.video_access && m.status !== "active");
+
   return (
     <div className="min-h-screen bg-zinc-950 p-4">
       <div className="max-w-4xl mx-auto">
@@ -244,6 +252,51 @@ export default function AdminMembersPage() {
             <p className="text-xs text-zinc-500 mt-1">休会中</p>
           </div>
         </div>
+
+        {/* 動画アクセス（Drive 共有）管理 */}
+        {(driveShareTargets.length > 0 || driveRevokeTargets.length > 0) && (
+          <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
+            <h2 className="text-sm font-medium text-white mb-1">📹 動画アクセス（Drive 共有管理）</h2>
+            <p className="text-zinc-500 text-xs mb-3">
+              動画フォルダを各会員の Google アカウントに手動共有する運用です。下記を Drive の共有設定に反映してください。
+            </p>
+
+            {driveRevokeTargets.length > 0 && (
+              <div className="mb-3 rounded-lg bg-red-500/10 border border-red-500/30 p-3">
+                <p className="text-red-400 text-xs font-medium mb-1">
+                  ⚠️ Drive 権限を外す（{driveRevokeTargets.length}名）— 退会・休会したが動画ONのまま
+                </p>
+                <ul className="space-y-1">
+                  {driveRevokeTargets.map(m => (
+                    <li key={m.id} className="text-xs text-zinc-300 flex items-center gap-2 flex-wrap">
+                      <span>{m.name}</span>
+                      <span className="text-zinc-500">{m.email}</span>
+                      <span className="text-red-400">（{STATUS_LABEL[m.status] ?? m.status}）</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div>
+              <p className="text-emerald-400 text-xs font-medium mb-1">
+                ✅ Drive を共有する対象（{driveShareTargets.length}名）— 有効かつ動画ON
+              </p>
+              {driveShareTargets.length === 0 ? (
+                <p className="text-zinc-500 text-xs">対象なし</p>
+              ) : (
+                <ul className="space-y-1">
+                  {driveShareTargets.map(m => (
+                    <li key={m.id} className="text-xs text-zinc-300 flex items-center gap-2 flex-wrap">
+                      <span>{m.name}</span>
+                      <span className="text-zinc-500">{m.email}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* 会員リスト */}
         {members.length === 0 ? (

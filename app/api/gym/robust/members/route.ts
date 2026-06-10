@@ -112,28 +112,51 @@ export async function PATCH(req: NextRequest) {
 
     const { data: target } = await admin
       .from("gym_members")
-      .select("stripe_subscription_id")
+      .select("stripe_subscription_id, family_member_name")
       .eq("id", memberId)
       .eq("gym_id", GYM_ID)
       .maybeSingle();
 
     const familyCouponId = process.env.ROBUST_STRIPE_COUPON_FAMILY;
-    if (target?.stripe_subscription_id) {
+
+    // 単一会員の subscription に coupon を適用/除去する小ヘルパー（冪等）
+    async function syncCoupon(subId: string | null | undefined, apply: boolean) {
+      if (!subId) return;
       try {
-        if (family_discount_approved && familyCouponId) {
-          // 承認: coupon(duration=forever 前提) を適用 → 翌月以降の定期課金にも -¥2,000
-          await getStripe().subscriptions.update(target.stripe_subscription_id, {
-            discounts: [{ coupon: familyCouponId }],
-          });
-        } else {
-          // 却下: 既存の discount を全除去（空配列で coupon をクリア）
-          await getStripe().subscriptions.update(target.stripe_subscription_id, {
-            discounts: [],
-          });
-        }
+        await getStripe().subscriptions.update(subId, {
+          discounts: apply && familyCouponId ? [{ coupon: familyCouponId }] : [],
+        });
       } catch (stripeErr) {
         // Stripe 失敗は DB 更新を止めない（手動フォローアップで対応）
         console.error("Family discount coupon sync failed:", stripeErr);
+      }
+    }
+
+    // 申請者本人に適用/除去
+    await syncCoupon(target?.stripe_subscription_id, family_discount_approved);
+
+    // 双方向適用: 承認時は「相手側（family_member_name で指名された会員）」にも適用する。
+    // Why: 同時入会で一人目が先に登録した場合、一人目は登録時に照合相手が居らず割引が
+    //      適用されない非対称が起きる。世帯割引は両者対象のため、承認時に相手側の
+    //      定期課金にも coupon を適用し family_discount=true にして揃える（却下時は本人のみ解除）。
+    if (family_discount_approved && target?.family_member_name?.trim()) {
+      const normalized = target.family_member_name.trim().replace(/\s+/g, "");
+      const { data: candidates } = await admin
+        .from("gym_members")
+        .select("id, name, stripe_subscription_id")
+        .eq("gym_id", GYM_ID)
+        .eq("status", "active")
+        .neq("id", memberId);
+      const relative = (candidates ?? []).find(
+        c => c.name.replace(/\s+/g, "") === normalized
+      );
+      if (relative) {
+        await syncCoupon(relative.stripe_subscription_id, true);
+        await admin
+          .from("gym_members")
+          .update({ family_discount: true })
+          .eq("id", relative.id)
+          .eq("gym_id", GYM_ID);
       }
     }
   }

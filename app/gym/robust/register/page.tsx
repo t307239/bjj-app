@@ -472,7 +472,7 @@ export default function RegisterPage() {
                 </div>
               </div>
             </div>
-            {/* 既往症・アレルギー（安全管理） */}
+            {/* 既往症・アレルギー（要配慮個人情報 — 任意・安全管理目的） */}
             <div>
               <label htmlFor="reg-medical" className="block text-xs text-zinc-400 mb-1">既往症・アレルギー（任意）</label>
               <textarea
@@ -484,6 +484,11 @@ export default function RegisterPage() {
                 placeholder="例: 喘息、右膝前十字靭帯の既往、甲殻類アレルギーなど"
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm resize-none"
               />
+              {/* Why: 既往症・アレルギーは個人情報保護法上の「要配慮個人情報」。
+                      取得目的の明示と、入力＝利用同意であることを表示する（任意性も明記）。 */}
+              <p className="text-zinc-500 text-[11px] mt-1 leading-relaxed">
+                ※ 健康・安全管理（練習中の事故・体調急変時の適切な対応）のためにのみ使用します。入力は任意です。ご入力いただいた場合、この目的での利用に同意したものとして取り扱います。スタッフ以外には開示しません。
+              </p>
             </div>
             {/* 未成年フラグ */}
             <label className="flex items-center gap-3 cursor-pointer">

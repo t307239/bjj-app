@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 461 files
 CRITICAL: 0
-WARNING: 15
+WARNING: 16
 INFO: 102
-Total: 117
+Total: 118
 
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/onboarding-email/route.ts: L251: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
@@ -11,7 +11,7 @@ Total: 117
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/api/gym/robust/videos/route.ts: L18: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [SUPABASE_NO_ERROR] app/api/gym/webhook/handlers/checkout-completed.ts: L28: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] app/api/gym/webhook/handlers/checkout-completed.ts: L29: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/api/gym/webhook/handlers/invoice-paid.ts: L11: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
@@ -27,11 +27,13 @@ Total: 117
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] app/dashboard/loading.tsx: L125: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
+[WARNING] [HARDCODED_MIXED] app/gym/robust/admin/members/page.tsx: 多言語混在（JAの中に英語）: '📹 動画アクセス（Drive 共有管理）'
+  FIX: t() / serverT() 経由に修正
 [WARNING] [HARDCODED_MIXED] app/gym/robust/admin/members/page.tsx: 多言語混在（JAの中に英語）: 'カード（Stripe）'
   FIX: t() / serverT() 経由に修正
-[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L325: <button> で type 属性無し — 明示的 type="button" 推奨
+[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L378: <button> で type 属性無し — 明示的 type="button" 推奨
   FIX: type="button" を明示 (送信ボタンなら type="submit")
-[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L329: <button> で type 属性無し — 明示的 type="button" 推奨
+[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L382: <button> で type 属性無し — 明示的 type="button" 推奨
   FIX: type="button" を明示 (送信ボタンなら type="submit")
 [WARNING] [HARDCODED_MIXED] app/gym/robust/admin/videos/page.tsx: 多言語混在（JAの中に英語）: '共有 Drive フォルダ'
   FIX: t() / serverT() 経由に修正

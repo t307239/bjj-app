@@ -11,7 +11,7 @@
  */
 import * as Sentry from "@sentry/nextjs";
 
-type RobustLogLevel = "warn" | "error";
+type RobustLogLevel = "info" | "warn" | "error";
 
 function report(
   level: RobustLogLevel,
@@ -30,8 +30,9 @@ function report(
       });
     }
   } else {
-    Sentry.captureMessage(`[${event}] warning`, {
-      level: "warning",
+    // info / warn は Sentry の message レベルにマップ（happy path の milestone も記録）
+    Sentry.captureMessage(`[${event}] ${level}`, {
+      level: level === "warn" ? "warning" : "info",
       tags: { event },
       extra: meta,
     });
@@ -51,12 +52,16 @@ function report(
   };
   if (level === "error") {
     console.error(JSON.stringify(entry));
-  } else {
+  } else if (level === "warn") {
     console.warn(JSON.stringify(entry));
+  } else {
+    console.log(JSON.stringify(entry));
   }
 }
 
 export const robustLogger = {
+  info: (event: string, meta: Record<string, unknown> = {}) =>
+    report("info", event, meta),
   warn: (event: string, meta: Record<string, unknown> = {}) =>
     report("warn", event, meta),
   error: (event: string, meta: Record<string, unknown> = {}, err?: unknown) =>
