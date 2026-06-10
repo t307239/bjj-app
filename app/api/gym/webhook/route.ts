@@ -6,7 +6,7 @@ import { handleCheckoutCompleted } from "./handlers/checkout-completed";
 import { handleInvoicePaid } from "./handlers/invoice-paid";
 import { handleInvoicePaymentFailed } from "./handlers/invoice-payment-failed";
 import { handleSubscriptionDeleted } from "./handlers/subscription-deleted";
-import { clientLogger } from "@/lib/clientLogger";
+import { robustLogger } from "@/lib/robust/logger";
 
 // auth: webhook — Stripe 署名検証で代替
 export async function POST(req: NextRequest) {
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       process.env.ROBUST_STRIPE_WEBHOOK_SECRET!
     );
   } catch (err) {
-    clientLogger.error("robust.webhook.signature_error", {}, err);
+    robustLogger.error("robust.webhook.signature_error", {}, err);
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
@@ -50,18 +50,18 @@ export async function POST(req: NextRequest) {
     if (claimError) {
       if (claimError.code === "23505") {
         // 別リクエストが先に処理中 or 処理済み → 重複スキップ
-        clientLogger.warn("robust.webhook.duplicate", { eventId: event.id });
+        robustLogger.warn("robust.webhook.duplicate", { eventId: event.id });
         return NextResponse.json({ received: true, skipped: "duplicate" });
       }
       // その他のDBエラーは handler を実行せずエラー返却（Stripe がリトライ）
-      clientLogger.error("robust.webhook.claim_error", { eventId: event.id }, claimError);
+      robustLogger.error("robust.webhook.claim_error", { eventId: event.id }, claimError);
       return NextResponse.json({ error: "DB error" }, { status: 500 });
     }
 
     try {
       await handler(event);
     } catch (err) {
-      clientLogger.error(`robust.webhook.handler_error.${event.type}`, { eventId: event.id }, err);
+      robustLogger.error(`robust.webhook.handler_error.${event.type}`, { eventId: event.id }, err);
       // 巻き戻し: DELETE して Stripe の再送が再処理できるようにする
       await admin.from("webhook_events").delete().eq("event_id", event.id);
       return NextResponse.json({ error: "Handler failed" }, { status: 500 });
