@@ -224,6 +224,7 @@ export default function RegisterPage() {
           agreedToTerms,
           familyDiscount: !!familyMemberName.trim(),
           familyMemberName: familyMemberName.trim() || undefined,
+          simultaneousFamily,
           // monthlyAmount は送信しない（サーバー側で planKey から確定）
         }),
       });

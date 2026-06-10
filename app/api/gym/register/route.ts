@@ -26,6 +26,7 @@ const bodySchema = z.object({
   includeInsurance: z.boolean().optional(),
   familyDiscount: z.boolean().optional(),
   familyMemberName: z.string().max(50).optional(),
+  simultaneousFamily: z.boolean().optional(), // 同時入会: 相手も今回入会のため自己申告で割引適用
   // monthlyAmount はクライアント送信値を使わない（改ざん防止）
 });
 
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "不正なリクエスト" }, { status: 400 });
   }
-  const { gymSlug, planKey, nameKana, birthDate, phone, address, sportsHistory, emergencyName, emergencyPhone, emergencyRelation, medicalNotes, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, agreedToTerms } = parsed.data;
+  const { gymSlug, planKey, nameKana, birthDate, phone, address, sportsHistory, emergencyName, emergencyPhone, emergencyRelation, medicalNotes, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, simultaneousFamily, agreedToTerms } = parsed.data;
 
   // Why: monthlyAmount/setupFee はクライアント値を使わず planKey から確定（改ざん防止）
   const monthlyAmount = PLAN_MONTHLY_AMOUNTS[planKey] ?? 0;
@@ -112,6 +113,13 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // 同時入会の自己申告: 相手も今回入会のため DB に未登録 → 照合できない。
+  // Why: 一人目が登録時に照合相手が居らず割引漏れする非対称を、自己申告で初月から
+  //      coupon 適用して解消する。悪用時はオーナーが管理画面の「家族割引を解除」で取消可能。
+  //      氏名未入力での誤適用を防ぐため familyMemberName 必須。
+  const applyCoupon =
+    verifiedFamilyDiscount || (simultaneousFamily === true && !!familyMemberName?.trim());
+
   const priceId = STRIPE_PRICE_IDS[planKey];
   if (!priceId) {
     // Why: Stripe Price ID が未設定（空文字）は「無効なプラン」ではなく「決済未設定」
@@ -140,7 +148,7 @@ export async function POST(req: NextRequest) {
     guardianName,
     guardianContact,
     includeInsurance: includeInsurance ?? false,
-    familyDiscount: verifiedFamilyDiscount,   // DB検証済みの場合のみ coupon 適用
+    familyDiscount: applyCoupon,               // DB検証済み or 同時入会の自己申告で coupon 適用
     familyMemberName,                          // 申請氏名は常に保存（admin確認用）
     monthlyAmount: monthlyAmount,
     planKeyLogical: planKey, // 論理キーをメタデータに渡す（webhook plan_type判定用）
