@@ -39,9 +39,15 @@ export type GymMember = {
   user_id: string | null;
   email: string;
   name: string;
+  name_kana: string | null;
   phone: string | null;
   gender: 'male' | 'female' | 'other' | null;
   birth_year: number | null;
+  birth_date: string | null;
+  emergency_contact_name: string | null;
+  emergency_contact_phone: string | null;
+  emergency_contact_relation: string | null;
+  medical_notes: string | null;
   stripe_customer_id: string | null;
   stripe_subscription_id: string | null;
   default_payment_method_id: string | null;

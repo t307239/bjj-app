@@ -86,9 +86,15 @@ export default function RegisterPage() {
   const [authMode, setAuthMode] = useState<"signup" | "login">("signup");
   const [resetSent, setResetSent] = useState(false);
   // プロフィール情報
+  const [nameKana, setNameKana] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [sportsHistory, setSportsHistory] = useState("");
+  const [emergencyName, setEmergencyName] = useState("");
+  const [emergencyPhone, setEmergencyPhone] = useState("");
+  const [emergencyRelation, setEmergencyRelation] = useState("");
+  const [medicalNotes, setMedicalNotes] = useState("");
   const [isMinor, setIsMinor] = useState(false);
   const [guardianName, setGuardianName] = useState("");
   const [guardianContact, setGuardianContact] = useState("");
@@ -201,9 +207,15 @@ export default function RegisterPage() {
           gymSlug: GYM_SLUG,
           planKey: selectedPlan.priceKey,
           // setupFee は送信しない（サーバー側で planKey から確定）
+          nameKana: nameKana.trim() || undefined,
+          birthDate: birthDate || undefined,
           phone: phone || undefined,
           address: address || undefined,
           sportsHistory: sportsHistory || undefined,
+          emergencyName: emergencyName.trim() || undefined,
+          emergencyPhone: emergencyPhone.trim() || undefined,
+          emergencyRelation: emergencyRelation.trim() || undefined,
+          medicalNotes: medicalNotes.trim() || undefined,
           isMinor,
           guardianName: isMinor ? guardianName : undefined,
           guardianContact: isMinor ? guardianContact : undefined,
@@ -353,6 +365,29 @@ export default function RegisterPage() {
           <form onSubmit={handleProfileNext} className="bg-zinc-900 border border-white/10 rounded-xl p-6 space-y-4">
             <p className="text-xs text-zinc-500 mb-2">入会に必要な情報をご記入ください（任意項目は後で追加可能）</p>
             <div>
+              <label htmlFor="reg-kana" className="block text-xs text-zinc-400 mb-1">フリガナ <span className="text-red-400">*</span></label>
+              <input
+                id="reg-kana"
+                type="text"
+                value={nameKana}
+                onChange={e => setNameKana(e.target.value)}
+                required
+                placeholder="ヤマダ タロウ"
+                className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+              />
+            </div>
+            <div>
+              <label htmlFor="reg-birth" className="block text-xs text-zinc-400 mb-1">生年月日</label>
+              <input
+                id="reg-birth"
+                type="date"
+                value={birthDate}
+                onChange={e => setBirthDate(e.target.value)}
+                autoComplete="bday"
+                className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+              />
+            </div>
+            <div>
               <label htmlFor="reg-phone" className="block text-xs text-zinc-400 mb-1">電話番号</label>
               <input
                 id="reg-phone"
@@ -385,6 +420,59 @@ export default function RegisterPage() {
                 rows={3}
                 maxLength={500}
                 placeholder="例: 柔道3年、ボクシング未経験など"
+                className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm resize-none"
+              />
+            </div>
+            {/* 緊急連絡先（怪我など緊急時の連絡先） */}
+            <div className="space-y-3 border-t border-white/10 pt-4">
+              <p className="text-xs text-zinc-400 font-medium">緊急連絡先（怪我など緊急時にご連絡します）</p>
+              <div>
+                <label htmlFor="reg-emg-name" className="block text-xs text-zinc-400 mb-1">氏名</label>
+                <input
+                  id="reg-emg-name"
+                  type="text"
+                  value={emergencyName}
+                  onChange={e => setEmergencyName(e.target.value)}
+                  placeholder="山田 花子"
+                  className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                />
+              </div>
+              <div className="flex gap-3">
+                <div className="flex-1">
+                  <label htmlFor="reg-emg-phone" className="block text-xs text-zinc-400 mb-1">電話</label>
+                  <input
+                    id="reg-emg-phone"
+                    type="tel"
+                    value={emergencyPhone}
+                    onChange={e => setEmergencyPhone(e.target.value)}
+                    autoComplete="off"
+                    placeholder="090-1234-5678"
+                    className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                  />
+                </div>
+                <div className="w-28">
+                  <label htmlFor="reg-emg-rel" className="block text-xs text-zinc-400 mb-1">続柄</label>
+                  <input
+                    id="reg-emg-rel"
+                    type="text"
+                    value={emergencyRelation}
+                    onChange={e => setEmergencyRelation(e.target.value)}
+                    placeholder="母"
+                    className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+            {/* 既往症・アレルギー（安全管理） */}
+            <div>
+              <label htmlFor="reg-medical" className="block text-xs text-zinc-400 mb-1">既往症・アレルギー（任意）</label>
+              <textarea
+                id="reg-medical"
+                value={medicalNotes}
+                onChange={e => setMedicalNotes(e.target.value)}
+                rows={2}
+                maxLength={500}
+                placeholder="例: 喘息、右膝前十字靭帯の既往、甲殻類アレルギーなど"
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm resize-none"
               />
             </div>
@@ -445,7 +533,7 @@ export default function RegisterPage() {
             </label>
             <button
               type="submit"
-              disabled={agreedToTerms === false || (isMinor && (!guardianName || !guardianContact))}
+              disabled={agreedToTerms === false || !nameKana.trim() || (isMinor && (!guardianName || !guardianContact))}
               className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
             >
               次へ（プラン選択）→
