@@ -92,7 +92,7 @@ export async function POST(req: NextRequest) {
   // 家族割引の事前検証: 同一 gym 内に該当氏名の active 会員が存在するか確認
   // Why: familyDiscount は自己申告のみだと coupon(forever) を無検証で適用できる。
   //      DB に存在する active 会員名と突き合わせて申請の妥当性を検証する。
-  //      氏名表記ゆれ（"高玉年克" vs "高玉 年克"）は trim+normalize で緩和。
+  //      氏名表記ゆれ（"柔術太郎" vs "柔術 太郎"）は trim+normalize で緩和。
   let verifiedFamilyDiscount = false;
   if (familyDiscount && familyMemberName?.trim()) {
     const normalizedInput = familyMemberName.trim().replace(/\s+/g, "");
