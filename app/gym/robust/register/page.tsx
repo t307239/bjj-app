@@ -232,6 +232,15 @@ export default function RegisterPage() {
         setError(json.error ?? "現在オンライン決済の準備中です。");
         return;
       }
+      if (res.status === 409 && json.alreadyMember) {
+        // 既存会員の二重入会防止: 入会金の二重請求を避け、状況に応じて案内/誘導
+        if (json.error?.includes("退会")) {
+          setError(json.error);
+        } else {
+          window.location.href = `/gym/${GYM_SLUG}/member/qr`;
+        }
+        return;
+      }
       if (!res.ok) throw new Error(json.error ?? "登録処理に失敗しました");
       window.location.href = json.url;
     } catch (err) {

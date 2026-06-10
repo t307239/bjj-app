@@ -61,14 +61,40 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "ジムが見つかりません" }, { status: 404 });
   }
 
+  const { createRobustAdminClient } = await import("@/lib/robust/supabase");
+  const admin = createRobustAdminClient();
+
+  // 既存会員の二重入会防止（致命的な課金バグの防御）
+  // Why: 登録フローは Stripe Checkout で入会金＋日割り＋翌月分を即時請求する。
+  //      既に会員レコードがある user が再度この API を叩くと（UI バイパス・二度押し・
+  //      カゴ落ち再開等）、checkout が作られ入会金を二重請求してしまう。
+  //      webhook 側の重複スキップは「課金後」に効くため救済にならない。
+  //      ここで existing レコードを検出したら checkout を作らず 409 で弾く。
+  //      退会済み会員の再入会はオーナーが管理画面の「再入会」で行う（再課金なし）。
+  const { data: existingMember } = await admin
+    .from("gym_members")
+    .select("id, status")
+    .eq("user_id", user.id)
+    .eq("gym_id", gym.id)
+    .maybeSingle();
+  if (existingMember) {
+    return NextResponse.json(
+      {
+        error: existingMember.status === "cancelled"
+          ? "退会済みのため、再入会は道場へお問い合わせください。"
+          : "既に会員登録済みです。マイページをご利用ください。",
+        alreadyMember: true,
+      },
+      { status: 409 }
+    );
+  }
+
   // 家族割引の事前検証: 同一 gym 内に該当氏名の active 会員が存在するか確認
   // Why: familyDiscount は自己申告のみだと coupon(forever) を無検証で適用できる。
   //      DB に存在する active 会員名と突き合わせて申請の妥当性を検証する。
   //      氏名表記ゆれ（"高玉年克" vs "高玉 年克"）は trim+normalize で緩和。
   let verifiedFamilyDiscount = false;
   if (familyDiscount && familyMemberName?.trim()) {
-    const { createRobustAdminClient } = await import("@/lib/robust/supabase");
-    const admin = createRobustAdminClient();
     const normalizedInput = familyMemberName.trim().replace(/\s+/g, "");
     const { data: members } = await admin
       .from("gym_members")
