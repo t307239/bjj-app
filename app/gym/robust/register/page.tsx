@@ -314,7 +314,7 @@ export default function RegisterPage() {
                   required
                   autoComplete="name"
                   className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-                  placeholder="高玉 年克"
+                  placeholder="柔術 太郎"
                 />
               </div>
             )}
@@ -381,7 +381,7 @@ export default function RegisterPage() {
                 value={nameKana}
                 onChange={e => setNameKana(e.target.value)}
                 required
-                placeholder="ヤマダ タロウ"
+                placeholder="ジュウジュツ タロウ"
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
@@ -442,7 +442,7 @@ export default function RegisterPage() {
                   type="text"
                   value={emergencyName}
                   onChange={e => setEmergencyName(e.target.value)}
-                  placeholder="山田 花子"
+                  placeholder="柔術 花子"
                   className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
                 />
               </div>
@@ -507,7 +507,7 @@ export default function RegisterPage() {
                     onChange={e => setGuardianName(e.target.value)}
                     required
                     autoComplete="name"
-                    placeholder="保護者 太郎"
+                    placeholder="柔術 花子"
                     className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
                   />
                 </div>
@@ -616,7 +616,7 @@ export default function RegisterPage() {
                 value={familyMemberName}
                 onChange={e => setFamilyMemberName(e.target.value)}
                 autoComplete="off"
-                placeholder="例：高玉 年克（すでに会員の方の氏名）"
+                placeholder="例：柔術 花子（すでに会員の方の氏名）"
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               />
               {familyMemberName.trim() && (
