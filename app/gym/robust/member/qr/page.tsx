@@ -100,7 +100,7 @@ export default function MemberQrPage() {
         </div>
 
         {member.status === "active"
-          ? <p className="text-zinc-500 text-xs mb-6">入口のタブレットにかざしてください</p>
+          ? <p className="text-zinc-500 text-xs mb-6">入口の読み取り機にQRコードをかざしてください</p>
           : <p className="text-yellow-500 text-xs mb-6">
               {member.status === "paused" ? "⚠️ 休会中のため現在チェックインできません" : "⚠️ 退会済みのためチェックインできません"}
             </p>
