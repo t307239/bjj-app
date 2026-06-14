@@ -27,6 +27,32 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: false,
   },
+  // z262idx: bjj-app.net/wiki/* は wiki.bjj-app.net(GitHub Pages) と同一内容の
+  // 非 canonical 重複。アプリ内リンクは皆無（外部/クローラーのみが巡回）で、
+  // Supabase fetch + ISR レンダリング(Node 関数)が Vercel Fluid Active CPU を
+  // 浪費していた（無料枠 100% 到達の主因、実行ログで特定）。
+  // エッジ層の redirect で正規の静的 wiki に送り、重い Node レンダリング自体を
+  // 発生させない（CPU を即時削減）。slug は静的側 .html と 1:1 対応を確認済。
+  // permanent:false(307) = 可逆。robots Disallow:/wiki と二段構えで止血。
+  async redirects() {
+    return [
+      {
+        source: "/wiki/:lang(en|ja|pt)/:slug",
+        destination: "https://wiki.bjj-app.net/:lang/:slug.html",
+        permanent: false,
+      },
+      {
+        source: "/wiki/:lang(en|ja|pt)",
+        destination: "https://wiki.bjj-app.net/:lang/",
+        permanent: false,
+      },
+      {
+        source: "/wiki",
+        destination: "https://wiki.bjj-app.net/",
+        permanent: false,
+      },
+    ];
+  },
   // セキュリティヘッダー + キャッシュ設定
   async headers() {
     return [
