@@ -35,6 +35,7 @@ Disallow: /gym/join
 Disallow: /invite
 Disallow: /unsubscribe
 Disallow: /account-deleted
+Disallow: /wiki
 Allow: /gym
 Allow: /
 
