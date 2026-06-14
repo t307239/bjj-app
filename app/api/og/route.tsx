@@ -3,6 +3,14 @@ import { NextRequest } from "next/server";
 
 export const runtime = "edge";
 
+// z262idx: OG 画像は query params 毎に決定的（同じ入力→同じ画像）なので
+// CDN に長期 immutable キャッシュさせ、edge での再生成を初回のみに抑える。
+// Wiki 4,452 page の per-technique OG をクローラー/SNS が繰り返し fetch しても
+// 2 回目以降は CDN ヒットで edge CPU を消費しない。
+const OG_CACHE_HEADERS = {
+  "Cache-Control": "public, immutable, no-transform, max-age=31536000",
+} as const;
+
 const BELT_COLORS: Record<string, { bg: string; text: string; label: string; labelEn: string }> = {
   white:  { bg: "#f3f4f6", text: "#111827", label: "白帯",  labelEn: "White Belt" },
   blue:   { bg: "#1d4ed8", text: "#ffffff", label: "青帯",  labelEn: "Blue Belt" },
@@ -226,7 +234,7 @@ export async function GET(req: NextRequest) {
           </div>
         </div>
       ),
-      { width: 1200, height: 630 },
+      { width: 1200, height: 630, headers: OG_CACHE_HEADERS },
     );
   }
   // ── /achievement branch ──────────────────────────────────────────
@@ -302,7 +310,7 @@ export async function GET(req: NextRequest) {
           </div>
         </div>
       ),
-      { width: 1200, height: 630 },
+      { width: 1200, height: 630, headers: OG_CACHE_HEADERS },
     );
   }
   // ── /technique branch ────────────────────────────────────────────
@@ -438,6 +446,7 @@ export async function GET(req: NextRequest) {
     {
       width: 1200,
       height: 630,
+      headers: OG_CACHE_HEADERS,
     }
   );
 }
