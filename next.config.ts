@@ -37,6 +37,15 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        // z262idx: 各 wiki page の動的 OG 画像生成(edge)。page 本体の redirect
+        // 後はクローラーが旧 meta を読まなくなり自然減衰するが、漏れ分も静的の
+        // 汎用 OG 画像へ寄せて edge 関数起動を止める（プレビューは壊れない）。
+        // より具体的な 3 セグメントを先に置く（first-match 優先）。
+        source: "/wiki/:lang(en|ja|pt)/:slug/opengraph-image",
+        destination: "https://wiki.bjj-app.net/og-image-v2.png",
+        permanent: false,
+      },
+      {
         source: "/wiki/:lang(en|ja|pt)/:slug",
         destination: "https://wiki.bjj-app.net/:lang/:slug.html",
         permanent: false,
