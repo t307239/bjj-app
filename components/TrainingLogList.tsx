@@ -378,7 +378,8 @@ const TrainingLogList = memo(function TrainingLogList({
               /* Normal display — compressed 1-row layout (㉕) */
               <div>
                 {/* Primary row: left = type badge + date, right = duration + actions */}
-                <div className="flex items-center justify-between w-full">
+                {/* z262idx: gap-2 で狭幅時も日付と所要時間が密着しないよう最低間隔を保証 */}
+                <div className="flex items-center justify-between gap-2 w-full">
                   {/* Left: type badge + relative date */}
                   <div className="flex items-center gap-2 min-w-0">
                     <span
