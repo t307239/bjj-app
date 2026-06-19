@@ -180,9 +180,12 @@ export default function GuestDashboard() {
         </div>
       )}
       {/* ゲストバナー */}
+      {/* Why(z262idx): 旧 `flex justify-between` で LangToggle(言語選択カード)を横並びに
+          していたため、モバイル幅で CJK テキストの <p> が min-content=1文字 まで潰れ
+          縦書き化していた。モバイルは縦積み(flex-col)、sm+ で横並びに切替えて解消。 */}
       <div className="bg-gradient-to-r from-violet-600/70 to-indigo-600/60 px-4 py-3 text-center">
-        <div className="flex items-center justify-between max-w-4xl mx-auto">
-          <p className="text-white text-sm font-medium flex-1 text-center">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between max-w-4xl mx-auto">
+          <p className="text-white text-sm font-medium sm:flex-1 text-center">
             🥋 {t("guest.banner")} —
             <Link href="/login" className="underline ml-1 font-bold">
               {t("guest.signupLink")}
