@@ -12,11 +12,17 @@
  * Q-18: contact link (mailto) for support / press inquiries.
  */
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
 
 export default function SiteFooter() {
   const { t, locale } = useLocale();
   const year = new Date().getFullYear();
+  const pathname = usePathname();
+
+  // z262idx: ROBUST(道場向け会員アプリ)では bjj-app 本体の footer
+  // (Pricing/Wiki/Compare 等)は文脈が異なり不要なので非表示にする。
+  if (pathname?.startsWith("/gym/robust")) return null;
 
   const links = [
     { href: "/tour", label: t("nav.tour") },          // z213: signup 前の機能ツアー
