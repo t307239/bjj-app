@@ -32,6 +32,13 @@ Sentry.init({
     "Non-Error promise rejection",
     // Third-party scripts
     "Immersive Translate",
+    // z262idx: ブラウザ自動翻訳(Google翻訳等)が React 管理下のテキストノードを
+    // 差し替えることで発生する DOM 例外。アプリ起因ではなくページは動作する既知ノイズ。
+    // 主にモバイル Chrome の自動翻訳で発生（/records・/techniques 等）。
+    "removeChild",
+    "insertBefore",
+    "The node to be removed is not a child of this node",
+    "The node before which the new node is to be inserted is not a child of this node",
     // Network issues
     "Failed to fetch",
     "Load failed",
