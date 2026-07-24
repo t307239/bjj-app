@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
 
 type Log = { id: string; checked_in_at: string; class_type: string | null; billing_period: string; charged: boolean };
+type MonthStat = { period: string; count: number };
 
 const CLASS_LABEL: Record<string, string> = {
   beginner: "白帯クラス", basic: "基礎", regular: "通常",
@@ -14,6 +15,9 @@ export default function MemberHistoryPage() {
   const supabase = createRobustClient();
   const [logs, setLogs] = useState<Log[]>([]);
   const [thisMonthCount, setThisMonthCount] = useState(0);
+  const [annualCount, setAnnualCount] = useState(0);
+  const [avgPerMonth, setAvgPerMonth] = useState(0);
+  const [monthly, setMonthly] = useState<MonthStat[]>([]);
   const [planCap, setPlanCap] = useState<number | null>(null);
   const [planType, setPlanType] = useState("");
   const [loading, setLoading] = useState(true);
@@ -27,6 +31,9 @@ export default function MemberHistoryPage() {
       const json = await res.json();
       setLogs(json.logs);
       setThisMonthCount(json.thisMonthCount);
+      setAnnualCount(json.annualCount ?? 0);
+      setAvgPerMonth(json.avgPerMonth ?? 0);
+      setMonthly(json.monthly ?? []);
       setPlanCap(json.planCap);
       setPlanType(json.planType);
       setLoading(false);
@@ -40,6 +47,9 @@ export default function MemberHistoryPage() {
     acc[key].push(l);
     return acc;
   }, {});
+
+  // 棒グラフの高さ基準（0除算回避のため最小1）
+  const maxMonthly = Math.max(1, ...monthly.map(m => m.count));
 
   if (loading) return <div className="min-h-screen bg-zinc-950 flex items-center justify-center"><div className="w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin" /></div>;
 
@@ -66,6 +76,39 @@ export default function MemberHistoryPage() {
             )}
           </div>
         )}
+
+        {/* 年間サマリ・来館頻度分析（依頼書 Section 8） */}
+        <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
+          <div className="flex items-baseline gap-4 mb-4">
+            <div>
+              <p className="text-zinc-400 text-xs mb-0.5">年間来館数</p>
+              <div className="flex items-baseline gap-1 whitespace-nowrap">
+                <span className="text-3xl font-bold text-white tabular-nums">{annualCount}</span>
+                <span className="text-zinc-500 text-sm">回</span>
+              </div>
+            </div>
+            <div>
+              <p className="text-zinc-400 text-xs mb-0.5">平均</p>
+              <div className="flex items-baseline gap-1 whitespace-nowrap">
+                <span className="text-xl font-bold text-emerald-400 tabular-nums">{avgPerMonth}</span>
+                <span className="text-zinc-500 text-xs">回/月</span>
+              </div>
+            </div>
+          </div>
+          <p className="text-zinc-500 text-[11px] mb-1">直近12ヶ月の来館頻度</p>
+          <div className="flex items-end justify-between gap-1 h-24" role="img" aria-label="直近12ヶ月の月別来館数">
+            {monthly.map(m => (
+              <div key={m.period} className="flex-1 flex flex-col items-center justify-end gap-1 min-w-0">
+                <span className="text-[10px] text-zinc-400 tabular-nums">{m.count > 0 ? m.count : ""}</span>
+                <div
+                  className={`w-full rounded-t ${m.count > 0 ? "bg-emerald-500/80" : "bg-zinc-800"}`}
+                  style={{ height: `${Math.round((m.count / maxMonthly) * 100)}%`, minHeight: m.count > 0 ? 4 : 2 }}
+                />
+                <span className="text-[9px] text-zinc-600 tabular-nums">{m.period.slice(5)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* 履歴一覧 */}
         {Object.keys(grouped).length === 0 ? (

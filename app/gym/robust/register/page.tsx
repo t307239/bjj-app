@@ -15,6 +15,8 @@ import { createRobustClient } from "@/lib/robust/supabase";
 import { FAMILY_DISCOUNT_YEN, SPORTS_INSURANCE_YEN, SPORTS_INSURANCE_KIDS_YEN } from "@/lib/robust/types";
 
 const GYM_SLUG = "robust";
+// 日本の郵便番号は 7 桁（ハイフンなし）。マジックナンバー回避のため定数化。
+const POSTAL_CODE_DIGITS = 7;
 
 type Step = "auth" | "profile" | "plan" | "loading";
 
@@ -90,11 +92,15 @@ export default function RegisterPage() {
   const [birthDate, setBirthDate] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [postalLoading, setPostalLoading] = useState(false);
+  const [postalError, setPostalError] = useState("");
   const [sportsHistory, setSportsHistory] = useState("");
   const [emergencyName, setEmergencyName] = useState("");
   const [emergencyPhone, setEmergencyPhone] = useState("");
   const [emergencyRelation, setEmergencyRelation] = useState("");
   const [medicalNotes, setMedicalNotes] = useState("");
+  const [bloodType, setBloodType] = useState<"" | "A" | "B" | "O" | "AB">("");
   const [isMinor, setIsMinor] = useState(false);
   const [guardianName, setGuardianName] = useState("");
   const [guardianContact, setGuardianContact] = useState("");
@@ -135,6 +141,33 @@ export default function RegisterPage() {
   useEffect(() => {
     routeLoggedInUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 郵便番号 → 住所自動入力（zipcloud 無料 API・APIキー不要）
+  // Why: 会員が住所を手入力する負担を減らし、都道府県抜けなどの表記ゆれを防ぐ。
+  //      7桁揃った時点で自動検索し、都道府県〜町名を補完（番地は会員が続けて手入力）。
+  async function lookupAddress(rawZip: string): Promise<void> {
+    const zip = rawZip.replace(/[^0-9]/g, "");
+    if (zip.length !== POSTAL_CODE_DIGITS) return;
+    setPostalLoading(true);
+    setPostalError("");
+    try {
+      const res = await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zip}`);
+      if (!res.ok) throw new Error(`zipcloud status ${res.status}`);
+      const json: { results: { address1: string; address2: string; address3: string }[] | null } = await res.json();
+      const hit = json.results?.[0];
+      if (!hit) {
+        setPostalError("該当する住所が見つかりませんでした。手入力してください");
+        return;
+      }
+      // 都道府県+市区町村+町名を前方補完。番地・建物名は会員が続けて入力する。
+      setAddress(`${hit.address1}${hit.address2}${hit.address3}`);
+    } catch {
+      // ネットワーク断・API 障害時は手入力にフォールバック（UI で明示）
+      setPostalError("住所の取得に失敗しました。手入力してください");
+    } finally {
+      setPostalLoading(false);
+    }
+  }
 
   // 既存会員ログイン
   async function handleLogin(e: React.FormEvent) {
@@ -217,6 +250,7 @@ export default function RegisterPage() {
           emergencyPhone: emergencyPhone.trim() || undefined,
           emergencyRelation: emergencyRelation.trim() || undefined,
           medicalNotes: medicalNotes.trim() || undefined,
+          bloodType: bloodType || undefined,
           isMinor,
           guardianName: isMinor ? guardianName : undefined,
           guardianContact: isMinor ? guardianContact : undefined,
@@ -411,6 +445,38 @@ export default function RegisterPage() {
               />
             </div>
             <div>
+              <label htmlFor="reg-postal" className="block text-xs text-zinc-400 mb-1">郵便番号（住所自動入力）</label>
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                <input
+                  id="reg-postal"
+                  type="text"
+                  inputMode="numeric"
+                  value={postalCode}
+                  onChange={e => {
+                    const v = e.target.value;
+                    setPostalCode(v);
+                    setPostalError("");
+                    // 7 桁揃った瞬間に自動検索（ボタンを押さなくても補完される）
+                    if (v.replace(/[^0-9]/g, "").length === POSTAL_CODE_DIGITS) void lookupAddress(v);
+                  }}
+                  autoComplete="postal-code"
+                  placeholder="1500001"
+                  maxLength={8}
+                  className="flex-1 bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                />
+                <button
+                  type="button"
+                  onClick={() => void lookupAddress(postalCode)}
+                  disabled={postalLoading}
+                  className="shrink-0 min-h-[44px] px-4 rounded-lg bg-white/10 text-white text-sm disabled:opacity-50"
+                >
+                  {postalLoading ? "検索中…" : "住所検索"}
+                </button>
+              </div>
+              {postalError && <p className="text-xs text-red-400 mt-1">{postalError}</p>}
+              <p className="text-[11px] text-zinc-500 mt-1">ハイフンなし7桁で都道府県〜町名を自動入力します</p>
+            </div>
+            <div>
               <label htmlFor="reg-address" className="block text-xs text-zinc-400 mb-1">住所</label>
               <input
                 id="reg-address"
@@ -473,6 +539,22 @@ export default function RegisterPage() {
                   />
                 </div>
               </div>
+            </div>
+            {/* 血液型（任意・緊急時の安全管理目的） */}
+            <div>
+              <label htmlFor="reg-blood" className="block text-xs text-zinc-400 mb-1">血液型（任意）</label>
+              <select
+                id="reg-blood"
+                value={bloodType}
+                onChange={e => setBloodType(e.target.value as typeof bloodType)}
+                className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+              >
+                <option value="">未選択</option>
+                <option value="A">A型</option>
+                <option value="B">B型</option>
+                <option value="O">O型</option>
+                <option value="AB">AB型</option>
+              </select>
             </div>
             {/* 既往症・アレルギー（要配慮個人情報 — 任意・安全管理目的） */}
             <div>

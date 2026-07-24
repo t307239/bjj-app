@@ -61,7 +61,26 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
+  // Why(Vercel Fluid Active CPU 削減): 旧 matcher は全リクエスト(公開SEOページ
+  // /, /pricing, /compare, /tour, /changelog, /help, /legal/* 等)で走り、
+  // クローラー巡回のたびに supabase.auth.getUser()(Supabase へのネットワーク往復
+  // = Node CPU)を無駄に発火させ無料枠を浪費していた。
+  // middleware が実際に必要なのは (a)未認証 redirect する保護ルート、
+  // (b)認証済→/dashboard へ飛ばす /login、(c)セッショントークン refresh が要る
+  // 認証エリアのみ。公開ページは認証不要なので除外して getUser() を起こさない。
+  // セキュリティヘッダーは next.config.ts の headers() が全ルートに付与するため
+  // ここを絞っても影響しない。
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/login",
+    "/dashboard/:path*",
+    "/records/:path*",
+    "/settings/:path*",
+    "/techniques/:path*",
+    "/profile/:path*",
+    "/admin/:path*",
+    "/gym/dashboard/:path*",
+    "/invite/:path*",
+    "/account-deleted",
+    "/unsubscribe",
   ],
 };

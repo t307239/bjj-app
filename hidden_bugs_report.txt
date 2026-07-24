@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 462 files
+TS/TSX Scanned: 463 files
 CRITICAL: 0
 WARNING: 16
-INFO: 102
-Total: 118
+INFO: 103
+Total: 119
 
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/onboarding-email/route.ts: L251: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
@@ -31,9 +31,9 @@ Total: 118
   FIX: t() / serverT() 経由に修正
 [WARNING] [HARDCODED_MIXED] app/gym/robust/admin/members/page.tsx: 多言語混在（JAの中に英語）: 'カード（Stripe）'
   FIX: t() / serverT() 経由に修正
-[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L378: <button> で type 属性無し — 明示的 type="button" 推奨
+[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L457: <button> で type 属性無し — 明示的 type="button" 推奨
   FIX: type="button" を明示 (送信ボタンなら type="submit")
-[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L382: <button> で type 属性無し — 明示的 type="button" 推奨
+[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L461: <button> で type 属性無し — 明示的 type="button" 推奨
   FIX: type="button" を明示 (送信ボタンなら type="submit")
 [WARNING] [HARDCODED_MIXED] app/gym/robust/admin/videos/page.tsx: 多言語混在（JAの中に英語）: '共有 Drive フォルダ'
   FIX: t() / serverT() 経由に修正
@@ -45,7 +45,9 @@ Total: 118
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] app/gym/robust/checkin/page.tsx: L239: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/profile/page.tsx: L90: JSX内に英語テキスト直書き: "ROBUST 柔術"
+[INFO] [INLINE_STYLE_OBJECT] app/gym/robust/member/history/page.tsx: L105: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/profile/page.tsx: L106: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/qr/page.tsx: L86: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
@@ -59,9 +61,9 @@ Total: 118
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] app/gym/robust/member/videos/page.tsx: L116: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/register/page.tsx: L267: JSX内に英語テキスト直書き: "ROBUST 柔術"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/register/page.tsx: L301: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
-[INFO] [SUPABASE_NO_ERROR] app/gym/robust/register/page.tsx: L119: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] app/gym/robust/register/page.tsx: L125: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/register/success/page.tsx: L75: JSX内に英語テキスト直書き: "ようこそ ROBUST 柔術へ！"
   FIX: t() キーを追加して多言語対応

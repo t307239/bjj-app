@@ -19,6 +19,7 @@ const bodySchema = z.object({
   emergencyPhone: z.string().max(20).optional(),
   emergencyRelation: z.string().max(20).optional(),
   medicalNotes: z.string().max(500).optional(),
+  bloodType: z.enum(["A", "B", "O", "AB"]).optional(),
   isMinor: z.boolean().optional(),
   guardianName: z.string().max(50).optional(),
   guardianContact: z.string().max(100).optional(),
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "不正なリクエスト" }, { status: 400 });
   }
-  const { gymSlug, planKey, nameKana, birthDate, phone, address, sportsHistory, emergencyName, emergencyPhone, emergencyRelation, medicalNotes, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, simultaneousFamily, agreedToTerms } = parsed.data;
+  const { gymSlug, planKey, nameKana, birthDate, phone, address, sportsHistory, emergencyName, emergencyPhone, emergencyRelation, medicalNotes, bloodType, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, simultaneousFamily, agreedToTerms } = parsed.data;
 
   // Why: monthlyAmount/setupFee はクライアント値を使わず planKey から確定（改ざん防止）
   const monthlyAmount = PLAN_MONTHLY_AMOUNTS[planKey] ?? 0;
@@ -144,6 +145,7 @@ export async function POST(req: NextRequest) {
     emergencyPhone,
     emergencyRelation,
     medicalNotes,
+    bloodType,
     isMinor: isMinor ?? false,
     guardianName,
     guardianContact,

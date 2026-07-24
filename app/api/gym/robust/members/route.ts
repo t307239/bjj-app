@@ -3,6 +3,7 @@ import { createRobustAdminClient } from "@/lib/robust/supabase";
 import { requireRobustManager } from "@/lib/robust/auth";
 import { getStripe } from "@/lib/robust/payments";
 import { syncDriveAccess } from "@/lib/robust/drive";
+import { robustLogger } from "@/lib/robust/logger";
 import { z } from "zod";
 
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
@@ -15,7 +16,7 @@ export async function GET() {
   const admin = createRobustAdminClient();
   const { data: members, error } = await admin
     .from("gym_members")
-    .select("id, name, name_kana, email, phone, birth_date, address, sports_history, emergency_contact_name, emergency_contact_phone, emergency_contact_relation, medical_notes, video_access, family_discount, family_member_name, plan_type, plan_cap, status, payment_method, insurance_expires_at, is_minor, created_at")
+    .select("id, name, name_kana, email, phone, birth_date, address, sports_history, emergency_contact_name, emergency_contact_phone, emergency_contact_relation, medical_notes, blood_type, belt, stripes, video_access, family_discount, family_member_name, plan_type, plan_cap, status, payment_method, insurance_expires_at, is_minor, created_at")
     .eq("gym_id", GYM_ID)
     .order("created_at", { ascending: false });
 
@@ -58,6 +59,9 @@ const updateSchema = z.object({
   family_discount_approved: z.boolean().optional(), // 家族割引 承認/却下
   payment_method: z.enum(["stripe", "bank_transfer"]).optional(), // 口座振替フラグ
   manual_checkin: z.boolean().optional(), // 手動チェックイン（true で当日記録）
+  belt: z.enum(["white", "blue", "purple", "brown", "black"]).optional(), // 帯（依頼書 Section 9）
+  stripes: z.number().int().min(0).max(4).optional(),                     // ストライプ 0-4本
+  promotion_note: z.string().max(200).optional(),                        // 昇格メモ（履歴に記録）
 });
 
 export async function PATCH(req: NextRequest) {
@@ -70,8 +74,23 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "不正なリクエスト" }, { status: 400 });
   }
 
-  const { memberId, family_discount_approved, manual_checkin, ...updates } = parsed.data;
+  // promotion_note は gym_members の列ではない（belt_history へのメモ）ため updates から除外する。
+  // Why: updates に混ざると gym_members.update() で「存在しない列」エラーになる。
+  const { memberId, family_discount_approved, manual_checkin, promotion_note, ...updates } = parsed.data;
   const admin = createRobustAdminClient();
+
+  // 帯・ストライプの変更検知用に、更新前の値を控える（依頼書 Section 10: 昇格履歴）。
+  // Why: PATCH に belt/stripes が来ても値が同じなら履歴を作らない（重複記録防止）。
+  let beltBefore: { belt: string; stripes: number } | null = null;
+  if (updates.belt !== undefined || updates.stripes !== undefined) {
+    const { data } = await admin
+      .from("gym_members")
+      .select("belt, stripes")
+      .eq("id", memberId)
+      .eq("gym_id", GYM_ID)
+      .maybeSingle();
+    beltBefore = data ?? null;
+  }
 
   // ステータス変更を Stripe subscription に連動させる。
   // Why: DB のステータスだけ変えても課金は止まらない。退会=期末解約、休会=請求停止、
@@ -194,6 +213,27 @@ export async function PATCH(req: NextRequest) {
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  // 昇格履歴の記録（依頼書 Section 10）。帯 or ストライプが実際に変わった時だけ 1 行追加。
+  // Why: 未指定フィールドは更新前の値で埋め、before と比較して差分がある場合のみ記録する。
+  //      履歴 insert 失敗は本更新を巻き戻さない（best-effort、失敗は logger で可視化）。
+  if (beltBefore && (updates.belt !== undefined || updates.stripes !== undefined)) {
+    const newBelt = updates.belt ?? beltBefore.belt;
+    const newStripes = updates.stripes ?? beltBefore.stripes;
+    if (newBelt !== beltBefore.belt || newStripes !== beltBefore.stripes) {
+      const { error: histError } = await admin.from("belt_history").insert({
+        gym_id: GYM_ID,
+        member_id: memberId,
+        belt: newBelt,
+        stripes: newStripes,
+        note: promotion_note?.trim() || null,
+        created_by: auth.userId,
+      });
+      if (histError) {
+        robustLogger.error("robust.belt_history.insert_failed", { memberId, error: histError.message });
+      }
+    }
   }
 
   // Drive 自動同期: 動画権限 or ステータスが変わったら Drive フォルダ共有を反映。

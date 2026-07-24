@@ -71,6 +71,7 @@ export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void
     emergency_contact_phone: session.metadata?.emergency_contact_phone || null,
     emergency_contact_relation: session.metadata?.emergency_contact_relation || null,
     medical_notes: session.metadata?.medical_notes || null,
+    blood_type: session.metadata?.blood_type || null,
     is_minor: session.metadata?.is_minor === "true",
     guardian_consent: session.metadata?.is_minor === "true",
     guardian_name: session.metadata?.guardian_name || null,

@@ -14,7 +14,21 @@ type Profile = {
   plan_type: string;
   status: string;
   video_access: boolean;
+  belt: string;
+  stripes: number;
   created_at: string;
+};
+
+const BELT_LABEL: Record<string, string> = {
+  white: "白帯", blue: "青帯", purple: "紫帯", brown: "茶帯", black: "黒帯",
+};
+
+type Promotion = {
+  id: string;
+  belt: string;
+  stripes: number;
+  promoted_on: string;
+  note: string | null;
 };
 
 const PLAN_LABEL: Record<string, string> = {
@@ -24,6 +38,7 @@ const PLAN_LABEL: Record<string, string> = {
 export default function MemberProfilePage() {
   const supabase = createRobustClient();
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editing, setEditing] = useState(false);
@@ -41,6 +56,7 @@ export default function MemberProfilePage() {
       if (!res.ok) { setError("プロフィールの取得に失敗しました"); setLoading(false); return; }
       const json = await res.json();
       setProfile(json.member);
+      setPromotions(json.promotions ?? []);
       setPhone(json.member.phone ?? "");
       setAddress(json.member.address ?? "");
       setLoading(false);
@@ -103,12 +119,33 @@ export default function MemberProfilePage() {
               {profile.status === "active" ? "有効" : profile.status === "paused" ? "休会中" : "退会"}
             </span>
           </div>
-          <div className="flex gap-4 mt-3 text-xs text-zinc-500">
+          <div className="flex gap-4 mt-3 text-xs text-zinc-500 flex-wrap">
             <span>{PLAN_LABEL[profile.plan_type] ?? profile.plan_type}</span>
+            <span className="text-zinc-300 whitespace-nowrap">{BELT_LABEL[profile.belt] ?? profile.belt}{profile.stripes > 0 ? ` ${profile.stripes}本` : ""}</span>
             <span>入会: {new Date(profile.created_at).toLocaleDateString("ja-JP")}</span>
             {profile.video_access && <span className="text-emerald-500">動画あり</span>}
           </div>
         </div>
+
+        {/* 昇格履歴（依頼書 Section 10）: 記録がある場合のみ表示 */}
+        {promotions.length > 0 && (
+          <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-4">
+            <h2 className="text-sm font-medium text-white mb-3">昇格履歴</h2>
+            <ul className="space-y-2">
+              {promotions.map(pr => (
+                <li key={pr.id} className="flex items-baseline gap-3 text-sm">
+                  <span className="text-zinc-500 text-xs whitespace-nowrap tabular-nums">
+                    {new Date(pr.promoted_on).toLocaleDateString("ja-JP")}
+                  </span>
+                  <span className="text-white whitespace-nowrap">
+                    {BELT_LABEL[pr.belt] ?? pr.belt}{pr.stripes > 0 ? ` ${pr.stripes}本` : ""}
+                  </span>
+                  {pr.note && <span className="text-zinc-400 text-xs truncate" title={pr.note}>{pr.note}</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* 連絡先・プロフィール */}
         <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-4">

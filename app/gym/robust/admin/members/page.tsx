@@ -17,6 +17,9 @@ type Member = {
   emergency_contact_phone: string | null;
   emergency_contact_relation: string | null;
   medical_notes: string | null;
+  blood_type: string | null;
+  belt: string;
+  stripes: number;
   video_access: boolean;
   family_discount: boolean;
   family_member_name: string | null;
@@ -34,6 +37,22 @@ const PLAN_LABEL: Record<string, string> = {
   fulltime: "フルタイム",
   twice_weekly: "月8回",
   drop_in: "ドロップイン",
+};
+
+const BELT_LABEL: Record<string, string> = {
+  white: "白帯",
+  blue: "青帯",
+  purple: "紫帯",
+  brown: "茶帯",
+  black: "黒帯",
+};
+
+type Promotion = {
+  id: string;
+  belt: string;
+  stripes: number;
+  promoted_on: string;
+  note: string | null;
 };
 
 const STATUS_LABEL: Record<string, string> = {
@@ -59,7 +78,12 @@ export default function AdminMembersPage() {
   const [editCap, setEditCap] = useState<string>("");
   const [editVideoAccess, setEditVideoAccess] = useState<boolean>(false);
   const [editPaymentMethod, setEditPaymentMethod] = useState<string>("stripe");
+  const [editBelt, setEditBelt] = useState<string>("white");
+  const [editStripes, setEditStripes] = useState<number>(0);
   const [detailMember, setDetailMember] = useState<Member | null>(null);
+  // 昇格履歴（依頼書 Section 10）: 詳細を開いた会員の履歴をオンデマンド取得してキャッシュ
+  const [detailHistory, setDetailHistory] = useState<Promotion[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [showLogin, setShowLogin] = useState(false);
@@ -96,7 +120,30 @@ export default function AdminMembersPage() {
     setEditCap(m.plan_cap != null ? String(m.plan_cap) : "");
     setEditVideoAccess(m.video_access);
     setEditPaymentMethod(m.payment_method);
+    setEditBelt(m.belt);
+    setEditStripes(m.stripes);
     setSaveError("");
+  }
+
+  // 詳細パネルの開閉。開くときだけ昇格履歴をオンデマンド取得（一覧APIを N+1 で重くしない）。
+  async function toggleDetail(m: Member) {
+    if (detailMember?.id === m.id) {
+      setDetailMember(null);
+      return;
+    }
+    setDetailMember(m);
+    setDetailHistory([]);
+    setHistoryLoading(true);
+    try {
+      const res = await fetch(`/api/gym/robust/members/history?memberId=${m.id}`);
+      if (res.ok) {
+        const json = await res.json();
+        setDetailHistory(json.history ?? []);
+      }
+      // 履歴取得失敗は詳細表示自体は妨げない（履歴セクションを空表示にとどめる）
+    } finally {
+      setHistoryLoading(false);
+    }
   }
 
   // インライン PATCH の共通ヘルパー。成功で会員行を patch 更新し、フィードバックを表示する。
@@ -167,6 +214,8 @@ export default function AdminMembersPage() {
         plan_type: editPlan,
         video_access: editVideoAccess,
         payment_method: editPaymentMethod,
+        belt: editBelt,
+        stripes: editStripes,
       };
       if (editPlan === "twice_weekly") {
         body.plan_cap = editCap ? parseInt(editCap) : 8;
@@ -183,7 +232,7 @@ export default function AdminMembersPage() {
         throw new Error(json.error ?? "保存に失敗しました");
       }
       setMembers(prev => prev.map(m => m.id === memberId
-        ? { ...m, status: editStatus, plan_type: editPlan, plan_cap: body.plan_cap as number | null, video_access: editVideoAccess, payment_method: editPaymentMethod }
+        ? { ...m, status: editStatus, plan_type: editPlan, plan_cap: body.plan_cap as number | null, video_access: editVideoAccess, payment_method: editPaymentMethod, belt: editBelt, stripes: editStripes }
         : m
       ));
       setEditing(null);
@@ -373,6 +422,36 @@ export default function AdminMembersPage() {
                         <option value="bank_transfer">口座振替</option>
                       </select>
                     </div>
+                    {/* 帯・ストライプ（依頼書 Section 9）。保存時に変更があれば昇格履歴に自動記録される。 */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-zinc-400 mb-1">帯</label>
+                        <select value={editBelt} onChange={e => setEditBelt(e.target.value)}
+                          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+                          <option value="white">白帯</option>
+                          <option value="blue">青帯</option>
+                          <option value="purple">紫帯</option>
+                          <option value="brown">茶帯</option>
+                          <option value="black">黒帯</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs text-zinc-400 mb-1">ストライプ</label>
+                        <select value={String(editStripes)} onChange={e => setEditStripes(parseInt(e.target.value))}
+                          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+                          <option value="0">0本</option>
+                          <option value="1">1本</option>
+                          <option value="2">2本</option>
+                          <option value="3">3本</option>
+                          <option value="4">4本</option>
+                        </select>
+                      </div>
+                    </div>
+                    {(editBelt !== m.belt || editStripes !== m.stripes) && (
+                      <p className="text-emerald-400 text-xs bg-emerald-500/10 rounded-lg px-3 py-2">
+                        ※ 保存すると昇格履歴に記録されます（{BELT_LABEL[m.belt] ?? m.belt}{m.stripes}本 → {BELT_LABEL[editBelt] ?? editBelt}{editStripes}本）
+                      </p>
+                    )}
                     {saveError && <p className="text-red-400 text-xs">{saveError}</p>}
                     <div className="flex gap-2">
                       <button onClick={() => handleSave(m.id)} disabled={saving}
@@ -395,6 +474,9 @@ export default function AdminMembersPage() {
                         {m.is_minor && <span className="text-xs bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded">未成年</span>}
                         <span className={`text-xs px-2 py-0.5 rounded ${STATUS_COLOR[m.status] ?? "bg-zinc-700 text-zinc-400"}`}>
                           {STATUS_LABEL[m.status] ?? m.status}
+                        </span>
+                        <span className="text-xs bg-zinc-700 text-zinc-200 px-2 py-0.5 rounded whitespace-nowrap">
+                          {BELT_LABEL[m.belt] ?? m.belt}{m.stripes > 0 ? ` ${m.stripes}本` : ""}
                         </span>
                       </div>
                       <p className="text-zinc-500 text-xs mt-0.5 truncate">{m.email}</p>
@@ -419,7 +501,7 @@ export default function AdminMembersPage() {
                     </div>
                     <div className="flex gap-2 ml-3 shrink-0">
                       {(m.address || m.sports_history || m.birth_date || m.emergency_contact_name || m.emergency_contact_phone || m.medical_notes) && (
-                        <button type="button" onClick={() => setDetailMember(detailMember?.id === m.id ? null : m)}
+                        <button type="button" onClick={() => toggleDetail(m)}
                           className="min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-400 hover:text-white text-xs bg-zinc-800 hover:bg-zinc-700 rounded-lg px-2"
                           aria-label={`${m.name}の詳細`}>
                           詳細
@@ -518,12 +600,41 @@ export default function AdminMembersPage() {
                         <span className="text-zinc-300">{m.sports_history}</span>
                       </div>
                     )}
+                    {m.blood_type && (
+                      <div>
+                        <span className="text-zinc-500">血液型: </span>
+                        <span className="text-zinc-300">{m.blood_type}型</span>
+                      </div>
+                    )}
                     {m.medical_notes && (
                       <div>
                         <span className="text-amber-500">既往症・アレルギー: </span>
                         <span className="text-zinc-300">{m.medical_notes}</span>
                       </div>
                     )}
+                    {/* 昇格履歴（依頼書 Section 10・管理画面の一覧表示） */}
+                    <div className="pt-2 border-t border-white/5">
+                      <span className="text-zinc-500">昇格履歴: </span>
+                      {historyLoading ? (
+                        <span className="text-zinc-500">読み込み中…</span>
+                      ) : detailHistory.length === 0 ? (
+                        <span className="text-zinc-500">記録なし</span>
+                      ) : (
+                        <ul className="mt-1 space-y-1">
+                          {detailHistory.map(pr => (
+                            <li key={pr.id} className="flex items-baseline gap-2">
+                              <span className="text-zinc-500 tabular-nums whitespace-nowrap">
+                                {new Date(pr.promoted_on).toLocaleDateString("ja-JP")}
+                              </span>
+                              <span className="text-zinc-300 whitespace-nowrap">
+                                {BELT_LABEL[pr.belt] ?? pr.belt}{pr.stripes > 0 ? ` ${pr.stripes}本` : ""}
+                              </span>
+                              {pr.note && <span className="text-zinc-500 truncate" title={pr.note}>{pr.note}</span>}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>

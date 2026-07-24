@@ -13,14 +13,26 @@ export async function GET() {
   const admin = createRobustAdminClient();
   const { data, error } = await admin
     .from("gym_members")
-    .select("id, name, email, phone, address, sports_history, plan_type, status, video_access, created_at")
+    .select("id, name, email, phone, address, sports_history, plan_type, status, video_access, belt, stripes, created_at")
     .eq("user_id", auth.userId)
     .eq("gym_id", GYM_ID)
     .maybeSingle();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   if (!data) return NextResponse.json({ error: "会員情報が見つかりません" }, { status: 404 });
-  return NextResponse.json({ member: data });
+
+  // 昇格履歴（依頼書 Section 10）: 本人分を新しい順で取得。
+  // Why: member_id で絞り、RLS とは別に defence-in-depth で own レコードのみ返す。
+  const { data: promotions } = await admin
+    .from("belt_history")
+    .select("id, belt, stripes, promoted_on, note")
+    .eq("member_id", data.id)
+    .eq("gym_id", GYM_ID)
+    .order("promoted_on", { ascending: false })
+    .order("created_at", { ascending: false })
+    .range(0, 49);
+
+  return NextResponse.json({ member: data, promotions: promotions ?? [] });
 }
 
 const updateSchema = z.object({

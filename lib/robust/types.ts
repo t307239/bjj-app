@@ -17,6 +17,35 @@ export type StaffRole = typeof STAFF_ROLES[number];
 export const CLASS_TYPES = ['beginner', 'basic', 'regular', 'nogi', 'private', 'other'] as const;
 export type ClassType = typeof CLASS_TYPES[number];
 
+// 血液型（依頼書 Section 3）。任意入力のため null 許容。
+export const BLOOD_TYPES = ['A', 'B', 'O', 'AB'] as const;
+export type BloodType = typeof BLOOD_TYPES[number];
+
+// 帯・ストライプ（依頼書 Section 9）。順序は昇格順で、ラベル表示にも使う。
+export const BELTS = ['white', 'blue', 'purple', 'brown', 'black'] as const;
+export type Belt = typeof BELTS[number];
+export const BELT_LABELS_JA: Record<Belt, string> = {
+  white: '白帯',
+  blue: '青帯',
+  purple: '紫帯',
+  brown: '茶帯',
+  black: '黒帯',
+};
+export const MAX_STRIPES = 4;
+
+// 昇格履歴（依頼書 Section 10）
+export type BeltHistory = {
+  id: string;
+  gym_id: string;
+  member_id: string;
+  belt: Belt;
+  stripes: number;
+  promoted_on: string;
+  note: string | null;
+  created_by: string | null;
+  created_at: string;
+};
+
 export const GYM_FEATURES = ['attendance', 'payments', 'videos'] as const;
 export type GymFeature = typeof GYM_FEATURES[number];
 
@@ -49,6 +78,9 @@ export type GymMember = {
   emergency_contact_phone: string | null;
   emergency_contact_relation: string | null;
   medical_notes: string | null;
+  blood_type: BloodType | null;
+  belt: Belt;
+  stripes: number;
   stripe_customer_id: string | null;
   stripe_subscription_id: string | null;
   default_payment_method_id: string | null;

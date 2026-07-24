@@ -67,6 +67,7 @@ export async function createCheckoutSession({
   emergencyPhone,
   emergencyRelation,
   medicalNotes,
+  bloodType,
   isMinor,
   guardianName,
   guardianContact,
@@ -91,6 +92,7 @@ export async function createCheckoutSession({
   emergencyPhone?: string;
   emergencyRelation?: string;
   medicalNotes?: string;
+  bloodType?: string;
   isMinor?: boolean;
   guardianName?: string;
   guardianContact?: string;
@@ -175,6 +177,7 @@ export async function createCheckoutSession({
     emergency_contact_phone: emergencyPhone ?? "",
     emergency_contact_relation: emergencyRelation ?? "",
     medical_notes: medicalNotes ?? "",
+    blood_type: bloodType ?? "",
     is_minor: String(isMinor ?? false),
     guardian_name: guardianName ?? "",
     guardian_contact: guardianContact ?? "",
