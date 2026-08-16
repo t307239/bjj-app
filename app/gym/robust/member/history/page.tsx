@@ -72,7 +72,7 @@ export default function MemberHistoryPage() {
               <span className="text-zinc-500 text-sm">/ {planCap}回</span>
             </div>
             {thisMonthCount > planCap && (
-              <p className="text-red-400 text-xs mt-1">上限を超えています（超過分 ¥1,000/回 が翌月請求に追加されます）</p>
+              <p className="text-red-400 text-xs mt-1">上限を超えています（超過分 ¥2,200/回 が翌月請求に追加されます）</p>
             )}
           </div>
         )}

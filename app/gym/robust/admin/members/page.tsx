@@ -17,6 +17,9 @@ type Member = {
   emergency_contact_phone: string | null;
   emergency_contact_relation: string | null;
   medical_notes: string | null;
+  chronic_conditions: string | null;
+  allergies: string | null;
+  injury_history: string | null;
   blood_type: string | null;
   belt: string;
   stripes: number;
@@ -500,7 +503,7 @@ export default function AdminMembersPage() {
                       </div>
                     </div>
                     <div className="flex gap-2 ml-3 shrink-0">
-                      {(m.address || m.sports_history || m.birth_date || m.emergency_contact_name || m.emergency_contact_phone || m.medical_notes) && (
+                      {(m.address || m.sports_history || m.birth_date || m.emergency_contact_name || m.emergency_contact_phone || m.medical_notes || m.chronic_conditions || m.allergies || m.injury_history || m.blood_type) && (
                         <button type="button" onClick={() => toggleDetail(m)}
                           className="min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-400 hover:text-white text-xs bg-zinc-800 hover:bg-zinc-700 rounded-lg px-2"
                           aria-label={`${m.name}の詳細`}>
@@ -606,9 +609,27 @@ export default function AdminMembersPage() {
                         <span className="text-zinc-300">{m.blood_type}型</span>
                       </div>
                     )}
+                    {m.chronic_conditions && (
+                      <div>
+                        <span className="text-amber-500">持病: </span>
+                        <span className="text-zinc-300">{m.chronic_conditions}</span>
+                      </div>
+                    )}
+                    {m.allergies && (
+                      <div>
+                        <span className="text-amber-500">アレルギー: </span>
+                        <span className="text-zinc-300">{m.allergies}</span>
+                      </div>
+                    )}
+                    {m.injury_history && (
+                      <div>
+                        <span className="text-amber-500">怪我歴: </span>
+                        <span className="text-zinc-300">{m.injury_history}</span>
+                      </div>
+                    )}
                     {m.medical_notes && (
                       <div>
-                        <span className="text-amber-500">既往症・アレルギー: </span>
+                        <span className="text-amber-500">既往症・アレルギー（旧）: </span>
                         <span className="text-zinc-300">{m.medical_notes}</span>
                       </div>
                     )}

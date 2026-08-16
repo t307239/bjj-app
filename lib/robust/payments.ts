@@ -36,7 +36,9 @@ export async function addOverageToNextInvoice(
     .eq("id", gymId)
     .single();
 
-  const overageYen = gym?.overage_yen ?? 1000;
+  // 依頼書準拠: 週2会員の超過は 1回 ¥2,200（ドロップイン ¥2,000 の税込相当）。
+  // 実額は gyms.overage_yen（DB）で管理し、未設定時のフォールバックを ¥2,200 とする。
+  const overageYen = gym?.overage_yen ?? 2200;
   const jst = new Date(Date.now() + JST_OFFSET_MS);
   const period = `${jst.getUTCFullYear()}年${String(jst.getUTCMonth() + 1).padStart(2, "0")}月`;
 
@@ -67,6 +69,9 @@ export async function createCheckoutSession({
   emergencyPhone,
   emergencyRelation,
   medicalNotes,
+  chronicConditions,
+  allergies,
+  injuryHistory,
   bloodType,
   isMinor,
   guardianName,
@@ -92,6 +97,9 @@ export async function createCheckoutSession({
   emergencyPhone?: string;
   emergencyRelation?: string;
   medicalNotes?: string;
+  chronicConditions?: string;
+  allergies?: string;
+  injuryHistory?: string;
   bloodType?: string;
   isMinor?: boolean;
   guardianName?: string;
@@ -177,6 +185,9 @@ export async function createCheckoutSession({
     emergency_contact_phone: emergencyPhone ?? "",
     emergency_contact_relation: emergencyRelation ?? "",
     medical_notes: medicalNotes ?? "",
+    chronic_conditions: chronicConditions ?? "",
+    allergies: allergies ?? "",
+    injury_history: injuryHistory ?? "",
     blood_type: bloodType ?? "",
     is_minor: String(isMinor ?? false),
     guardian_name: guardianName ?? "",

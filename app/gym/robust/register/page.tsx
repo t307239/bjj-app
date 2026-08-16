@@ -56,7 +56,7 @@ const PLANS: Plan[] = [
     priceKey: "twice_male",
     setupFee: 10000,
     monthlyAmount: 10000,
-    description: "月8回まで。超過は¥1,000/回",
+    description: "月8回まで。超過は¥2,200/回",
   },
   {
     id: "twice_kids",
@@ -100,6 +100,9 @@ export default function RegisterPage() {
   const [emergencyPhone, setEmergencyPhone] = useState("");
   const [emergencyRelation, setEmergencyRelation] = useState("");
   const [medicalNotes, setMedicalNotes] = useState("");
+  const [chronicConditions, setChronicConditions] = useState("");
+  const [allergies, setAllergies] = useState("");
+  const [injuryHistory, setInjuryHistory] = useState("");
   const [bloodType, setBloodType] = useState<"" | "A" | "B" | "O" | "AB">("");
   const [isMinor, setIsMinor] = useState(false);
   const [guardianName, setGuardianName] = useState("");
@@ -250,6 +253,9 @@ export default function RegisterPage() {
           emergencyPhone: emergencyPhone.trim() || undefined,
           emergencyRelation: emergencyRelation.trim() || undefined,
           medicalNotes: medicalNotes.trim() || undefined,
+          chronicConditions: chronicConditions.trim() || undefined,
+          allergies: allergies.trim() || undefined,
+          injuryHistory: injuryHistory.trim() || undefined,
           bloodType: bloodType || undefined,
           isMinor,
           guardianName: isMinor ? guardianName : undefined,
@@ -556,20 +562,46 @@ export default function RegisterPage() {
                 <option value="AB">AB型</option>
               </select>
             </div>
-            {/* 既往症・アレルギー（要配慮個人情報 — 任意・安全管理目的） */}
-            <div>
-              <label htmlFor="reg-medical" className="block text-xs text-zinc-400 mb-1">既往症・アレルギー（任意）</label>
-              <textarea
-                id="reg-medical"
-                value={medicalNotes}
-                onChange={e => setMedicalNotes(e.target.value)}
-                rows={2}
-                maxLength={500}
-                placeholder="例: 喘息、右膝前十字靭帯の既往、甲殻類アレルギーなど"
-                className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm resize-none"
-              />
-              {/* Why: 既往症・アレルギーは個人情報保護法上の「要配慮個人情報」。
-                      取得目的の明示と、入力＝利用同意であることを表示する（任意性も明記）。 */}
+            {/* 健康情報（要配慮個人情報 — 任意・安全管理目的）: 持病/アレルギー/怪我歴に分割（依頼書 Section 14） */}
+            <div className="space-y-3">
+              <p className="text-xs text-zinc-400 font-medium">健康情報（任意）</p>
+              <div>
+                <label htmlFor="reg-chronic" className="block text-xs text-zinc-400 mb-1">持病</label>
+                <input
+                  id="reg-chronic"
+                  type="text"
+                  value={chronicConditions}
+                  onChange={e => setChronicConditions(e.target.value)}
+                  maxLength={200}
+                  placeholder="例: 喘息、高血圧 など"
+                  className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                />
+              </div>
+              <div>
+                <label htmlFor="reg-allergy" className="block text-xs text-zinc-400 mb-1">アレルギー</label>
+                <input
+                  id="reg-allergy"
+                  type="text"
+                  value={allergies}
+                  onChange={e => setAllergies(e.target.value)}
+                  maxLength={200}
+                  placeholder="例: 甲殻類、そば、ハウスダスト など"
+                  className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                />
+              </div>
+              <div>
+                <label htmlFor="reg-injury" className="block text-xs text-zinc-400 mb-1">怪我歴</label>
+                <input
+                  id="reg-injury"
+                  type="text"
+                  value={injuryHistory}
+                  onChange={e => setInjuryHistory(e.target.value)}
+                  maxLength={200}
+                  placeholder="例: 右膝前十字靭帯の既往、左肩脱臼 など"
+                  className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                />
+              </div>
+              {/* Why: 健康情報は個人情報保護法上の「要配慮個人情報」。取得目的の明示と、入力＝利用同意であることを表示する（任意性も明記）。 */}
               <p className="text-zinc-500 text-[11px] mt-1 leading-relaxed">
                 ※ 健康・安全管理（練習中の事故・体調急変時の適切な対応）のためにのみ使用します。入力は任意です。ご入力いただいた場合、この目的での利用に同意したものとして取り扱います。スタッフ以外には開示しません。
               </p>

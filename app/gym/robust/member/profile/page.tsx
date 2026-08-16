@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import React from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
+import { subscribeRobustPush, unsubscribeRobustPush, isRobustPushSubscribed } from "@/lib/robust/push";
 
 type Profile = {
   id: string;
@@ -47,6 +48,48 @@ export default function MemberProfilePage() {
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState("");
   const saveMsgTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  // プッシュ通知（依頼書 Section 15）
+  const [pushOn, setPushOn] = useState(false);
+  const [pushBusy, setPushBusy] = useState(false);
+  const [pushSupported, setPushSupported] = useState(true);
+  const [pushMsg, setPushMsg] = useState("");
+
+  // この端末の購読状態を初期化（トグルの初期 ON/OFF に反映）
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+      setPushSupported(false);
+      return;
+    }
+    let mounted = true;
+    isRobustPushSubscribed()
+      .then(on => { if (mounted) setPushOn(on); })
+      .catch(() => { /* silent: ok — 購読状態の取得失敗時はトグルOFF初期値のまま */ });
+    return () => { mounted = false; };
+  }, []);
+
+  async function handleTogglePush() {
+    setPushBusy(true);
+    setPushMsg("");
+    try {
+      if (pushOn) {
+        await unsubscribeRobustPush();
+        setPushOn(false);
+        setPushMsg("通知をオフにしました");
+      } else {
+        const ok = await subscribeRobustPush();
+        if (ok) {
+          setPushOn(true);
+          setPushMsg("通知をオンにしました");
+        } else {
+          // 権限拒否 or 非対応。ブラウザ設定で許可が必要な旨を案内。
+          setPushMsg("通知を有効にできませんでした。ブラウザの通知許可をご確認ください。");
+        }
+      }
+    } finally {
+      setPushBusy(false);
+    }
+  }
 
   useEffect(() => {
     (async () => {
@@ -185,6 +228,30 @@ export default function MemberProfilePage() {
           )}
           {saveMsg && <p className="text-emerald-400 text-xs mt-2">{saveMsg}</p>}
         </div>
+
+        {/* プッシュ通知（依頼書 Section 15）: 休館・イベント・緊急連絡を受け取る */}
+        {pushSupported && (
+          <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-white text-sm">お知らせ通知</p>
+                <p className="text-zinc-500 text-xs mt-0.5">休館日・イベント・緊急連絡をこの端末で受け取る</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleTogglePush}
+                disabled={pushBusy}
+                role="switch"
+                aria-checked={pushOn}
+                aria-label="お知らせ通知の受け取り"
+                className={`relative shrink-0 w-11 h-6 rounded-full transition-colors disabled:opacity-50 ${pushOn ? "bg-emerald-500" : "bg-zinc-600"}`}
+              >
+                <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${pushOn ? "translate-x-5" : "translate-x-0"}`} />
+              </button>
+            </div>
+            {pushMsg && <p className="text-zinc-400 text-xs mt-2">{pushMsg}</p>}
+          </div>
+        )}
 
         {/* リンク */}
         <div className="space-y-2">

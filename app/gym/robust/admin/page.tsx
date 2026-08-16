@@ -188,6 +188,12 @@ export default function AdminPage() {
             スタッフ管理
           </a>
         )}
+        {(data.role === "owner" || data.role === "admin") && (
+          <a href="/gym/robust/admin/notify"
+            className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
+            お知らせ配信
+          </a>
+        )}
       </div>
 
       {/* 保険期限切れ予定者（期限切れ + 30日以内） */}
