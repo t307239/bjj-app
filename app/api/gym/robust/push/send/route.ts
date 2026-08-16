@@ -36,7 +36,7 @@ const sendSchema = z.object({
     .string()
     .max(512)
     .optional()
-    .default("/gym/robust/member/qr")
+    .default("/gym/robust/member/announcements")
     .refine(
       (u) => u.startsWith("/gym/robust"),
       "url は /gym/robust 配下のパスのみ指定できます"
@@ -141,6 +141,18 @@ export async function POST(req: NextRequest) {
   if (staleEndpoints.length > 0) {
     await admin.from("push_subscriptions").delete().in("endpoint", staleEndpoints);
   }
+
+  // お知らせをアプリ内一覧用に保存（プッシュを見逃しても後から読める）。
+  // Why: 保存失敗はプッシュ配信自体を無効化しない（best-effort・logger で可視化）。
+  const { error: annErr } = await admin.from("announcements").insert({
+    gym_id: GYM_ID,
+    title,
+    body: message,
+    urgent,
+    sent_by: auth.userId,
+    sent_count: sent,
+  });
+  if (annErr) robustLogger.error("robust.announcement.save_failed", { error: annErr.message });
 
   robustLogger.info("robust.push.broadcast", { total: all.length, sent, failed, urgent });
   return NextResponse.json({ ok: true, total: all.length, sent, failed, staleRemoved: staleEndpoints.length });
