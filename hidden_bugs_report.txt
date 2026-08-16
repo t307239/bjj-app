@@ -1,5 +1,5 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 467 files
+TS/TSX Scanned: 468 files
 CRITICAL: 0
 WARNING: 16
 INFO: 103
@@ -31,9 +31,9 @@ Total: 119
   FIX: t() / serverT() 経由に修正
 [WARNING] [HARDCODED_MIXED] app/gym/robust/admin/members/page.tsx: 多言語混在（JAの中に英語）: 'カード（Stripe）'
   FIX: t() / serverT() 経由に修正
-[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L460: <button> で type 属性無し — 明示的 type="button" 推奨
+[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L499: <button> で type 属性無し — 明示的 type="button" 推奨
   FIX: type="button" を明示 (送信ボタンなら type="submit")
-[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L464: <button> で type 属性無し — 明示的 type="button" 推奨
+[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L503: <button> で type 属性無し — 明示的 type="button" 推奨
   FIX: type="button" を明示 (送信ボタンなら type="submit")
 [WARNING] [HARDCODED_MIXED] app/gym/robust/admin/videos/page.tsx: 多言語混在（JAの中に英語）: '共有 Drive フォルダ'
   FIX: t() / serverT() 経由に修正

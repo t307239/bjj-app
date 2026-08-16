@@ -23,6 +23,7 @@ type Member = {
   blood_type: string | null;
   belt: string;
   stripes: number;
+  photo_url: string | null;
   video_access: boolean;
   family_discount: boolean;
   family_member_name: string | null;
@@ -87,6 +88,9 @@ export default function AdminMembersPage() {
   // 昇格履歴（依頼書 Section 10）: 詳細を開いた会員の履歴をオンデマンド取得してキャッシュ
   const [detailHistory, setDetailHistory] = useState<Promotion[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+  // 会員写真アップロード進行状態
+  const [uploadingPhotoId, setUploadingPhotoId] = useState<string | null>(null);
+  const MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5MB
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [showLogin, setShowLogin] = useState(false);
@@ -146,6 +150,41 @@ export default function AdminMembersPage() {
       // 履歴取得失敗は詳細表示自体は妨げない（履歴セクションを空表示にとどめる）
     } finally {
       setHistoryLoading(false);
+    }
+  }
+
+  // 会員写真アップロード: File → base64 → API。成功で一覧の photo_url を即時更新。
+  async function handlePhotoUpload(memberId: string, file: File) {
+    if (file.size > MAX_PHOTO_BYTES) {
+      setActionMsg({ id: memberId, text: "画像は5MBまでです", ok: false });
+      return;
+    }
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setActionMsg({ id: memberId, text: "JPEG/PNG/WebPのみ対応です", ok: false });
+      return;
+    }
+    setUploadingPhotoId(memberId);
+    setActionMsg(null);
+    try {
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(((reader.result as string).split(",")[1]) ?? "");
+        reader.onerror = () => reject(new Error("画像の読み込みに失敗しました"));
+        reader.readAsDataURL(file);
+      });
+      const res = await fetch("/api/gym/robust/members/photo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ memberId, contentType: file.type, imageBase64: base64 }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "アップロードに失敗しました");
+      setMembers(prev => prev.map(m => m.id === memberId ? { ...m, photo_url: json.url } : m));
+      setActionMsg({ id: memberId, text: "写真を更新しました", ok: true });
+    } catch (err) {
+      setActionMsg({ id: memberId, text: (err as Error).message, ok: false });
+    } finally {
+      setUploadingPhotoId(null);
     }
   }
 
@@ -470,7 +509,25 @@ export default function AdminMembersPage() {
                 ) : (
                   /* 表示モード */
                   <div className="flex items-center justify-between">
-                    <div className="min-w-0">
+                    <div className="flex items-center gap-3 min-w-0">
+                      {/* 会員写真: クリックで登録/変更（本人確認・なりすまし/過少申告対策） */}
+                      <label className="relative shrink-0 cursor-pointer" title="クリックで写真を登録/変更">
+                        {m.photo_url ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={m.photo_url} alt={m.name} className="w-11 h-11 rounded-full object-cover bg-zinc-800" />
+                        ) : (
+                          <span className="w-11 h-11 rounded-full bg-zinc-700 flex items-center justify-center text-zinc-300 text-base">{m.name.charAt(0)}</span>
+                        )}
+                        {uploadingPhotoId === m.id && (
+                          <span className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full">
+                            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          </span>
+                        )}
+                        <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden"
+                          disabled={uploadingPhotoId === m.id}
+                          onChange={e => { const f = e.target.files?.[0]; if (f) handlePhotoUpload(m.id, f); e.currentTarget.value = ""; }} />
+                      </label>
+                      <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-white font-medium text-sm">{m.name}</p>
                         {m.name_kana && <span className="text-zinc-500 text-xs">（{m.name_kana}）</span>}
@@ -501,6 +558,7 @@ export default function AdminMembersPage() {
                           </span>
                         )}
                       </div>
+                    </div>
                     </div>
                     <div className="flex gap-2 ml-3 shrink-0">
                       {(m.address || m.sports_history || m.birth_date || m.emergency_contact_name || m.emergency_contact_phone || m.medical_notes || m.chronic_conditions || m.allergies || m.injury_history || m.blood_type) && (
