@@ -46,10 +46,10 @@ export async function GET() {
     .gte("checked_in_at", todayStart.toISOString());
   const checkedIn = new Set((todayLogs ?? []).map(l => l.member_id));
 
-  // active 会員のみ（金額系は select しない）
+  // active 会員のみ（金額系は select しない。写真は本人確認用途で許可）
   const { data: members } = await admin
     .from("gym_members")
-    .select("id, name, plan_type")
+    .select("id, name, plan_type, photo_url")
     .eq("gym_id", GYM_ID)
     .eq("status", "active")
     .order("name", { ascending: true });
@@ -58,6 +58,7 @@ export async function GET() {
     id: m.id,
     name: m.name,
     plan_type: m.plan_type,
+    photo_url: m.photo_url,
     checked_in_today: checkedIn.has(m.id),
   }));
 

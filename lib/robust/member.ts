@@ -26,7 +26,7 @@ export async function getMemberByQrToken(qrToken: string): Promise<GymMember | n
     .from("gym_members")
     .select(
       "id, gym_id, user_id, email, name, stripe_customer_id, stripe_subscription_id, " +
-      "default_payment_method_id, payment_method, qr_token, plan_type, plan_cap, status"
+      "default_payment_method_id, payment_method, qr_token, plan_type, plan_cap, status, photo_url"
     )
     .eq("qr_token", qrToken)
     .eq("status", "active")

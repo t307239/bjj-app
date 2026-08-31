@@ -99,6 +99,7 @@ export type GymMember = {
   guardian_consent: boolean;
   guardian_name: string | null;
   guardian_contact: string | null;
+  photo_url: string | null;
   created_at: string;
   updated_at: string;
 };

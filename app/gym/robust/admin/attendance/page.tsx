@@ -8,6 +8,7 @@ type RosterMember = {
   id: string;
   name: string;
   plan_type: string;
+  photo_url: string | null;
   checked_in_today: boolean;
 };
 
@@ -156,6 +157,15 @@ export default function AttendanceCheckPage() {
               <div key={m.id} className="bg-zinc-900 border border-white/10 rounded-xl p-3 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-xl shrink-0" aria-hidden="true">{m.checked_in_today ? "✅" : "⬜"}</span>
+                  {/* 顔写真: インストラクターが本人確認に使う。未登録は頭文字プレースホルダ。 */}
+                  {m.photo_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={m.photo_url} alt={m.name} className="w-10 h-10 rounded-full object-cover bg-zinc-800 shrink-0" />
+                  ) : (
+                    <span className="w-10 h-10 rounded-full bg-zinc-800 text-zinc-400 text-sm flex items-center justify-center shrink-0" aria-hidden="true">
+                      {m.name.slice(0, 1)}
+                    </span>
+                  )}
                   <div className="min-w-0">
                     <p className="text-white text-sm font-medium truncate" title={m.name}>{m.name}</p>
                     <p className="text-zinc-500 text-xs">{PLAN_LABEL[m.plan_type] ?? m.plan_type}</p>

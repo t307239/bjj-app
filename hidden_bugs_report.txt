@@ -1,9 +1,9 @@
 BJJ App Hidden Bug Detector Report
 TS/TSX Scanned: 470 files
 CRITICAL: 0
-WARNING: 16
+WARNING: 17
 INFO: 104
-Total: 120
+Total: 121
 
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/onboarding-email/route.ts: L251: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
@@ -41,15 +41,17 @@ Total: 120
   FIX: t() / serverT() 経由に修正
 [INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/videos/page.tsx: L149: <button> で type 属性無し — 明示的 type="button" 推奨
   FIX: type="button" を明示 (送信ボタンなら type="submit")
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/checkin/page.tsx: L234: JSX内に英語テキスト直書き: "ROBUST 柔術"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/checkin/page.tsx: L288: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
-[INFO] [INLINE_STYLE_OBJECT] app/gym/robust/checkin/page.tsx: L239: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] app/gym/robust/checkin/page.tsx: L293: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [TRUNCATE_NO_TITLE] app/gym/robust/member/announcements/page.tsx: L52: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
   FIX: title={varName} を追加 (a11y/UX)
 [INFO] [INLINE_STYLE_OBJECT] app/gym/robust/member/history/page.tsx: L105: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/profile/page.tsx: L149: JSX内に英語テキスト直書き: "ROBUST 柔術"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/profile/page.tsx: L163: JSX内に英語テキスト直書き: "ROBUST 柔術"
+  FIX: t() キーを追加して多言語対応
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/profile/page.tsx: L273: JSX内に英語テキスト直書き: "📱 iPhoneで通知を受け取るには"
   FIX: t() キーを追加して多言語対応
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/qr/page.tsx: L86: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応

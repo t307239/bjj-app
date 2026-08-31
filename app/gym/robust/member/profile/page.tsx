@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
 import { subscribeRobustPush, unsubscribeRobustPush, isRobustPushSubscribed } from "@/lib/robust/push";
@@ -53,12 +53,26 @@ export default function MemberProfilePage() {
   const [pushBusy, setPushBusy] = useState(false);
   const [pushSupported, setPushSupported] = useState(true);
   const [pushMsg, setPushMsg] = useState("");
+  // iOS Safari(タブ) は PushManager 非対応でトグルが消えるため、ホーム画面追加を促す案内を出す
+  const [iosInstallHint, setIosInstallHint] = useState(false);
 
   // この端末の購読状態を初期化（トグルの初期 ON/OFF に反映）
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
       setPushSupported(false);
+      // Why: iOSはホーム画面に追加したPWAでのみWeb Pushが有効。Safariタブでは
+      //      PushManagerが無くトグルが非表示になるため、未インストールのiOS端末には
+      //      「ホーム画面に追加」の案内を出して通知を受け取れるよう誘導する。
+      const ua = navigator.userAgent;
+      const isIOS =
+        /iP(hone|od|ad)/.test(ua) ||
+        // iPadOS13+ はデスクトップUAを返すためタッチ数で判定
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      const isStandalone =
+        window.matchMedia("(display-mode: standalone)").matches ||
+        (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+      if (isIOS && !isStandalone) setIosInstallHint(true);
       return;
     }
     let mounted = true;
@@ -250,6 +264,18 @@ export default function MemberProfilePage() {
               </button>
             </div>
             {pushMsg && <p className="text-zinc-400 text-xs mt-2">{pushMsg}</p>}
+          </div>
+        )}
+
+        {/* iPhone(Safariタブ) 向け: ホーム画面に追加しないと通知トグルが出ない旨を案内 */}
+        {iosInstallHint && (
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 mb-4">
+            <p className="text-amber-300 text-sm font-medium">📱 iPhoneで通知を受け取るには</p>
+            <p className="text-amber-200/80 text-xs mt-1 leading-relaxed">
+              Safari下部の共有ボタン
+              <span className="inline-block px-1">⬆️</span>
+              →「ホーム画面に追加」でアプリとして登録してください。追加したアイコンから開くと、ここに通知のスイッチが表示され、休館・イベント・緊急連絡を受け取れます。
+            </p>
           </div>
         )}
 

@@ -32,6 +32,7 @@ type FeedbackState = {
   type: "success" | "warning" | "error" | "overcharge";
   name: string;
   message: string;
+  photoUrl?: string | null; // 本人確認用の顔写真（成功系のみ設定。未登録は null）
 } | null;
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -75,6 +76,10 @@ export default function CheckinPage() {
   const barcodeInputRef = useRef<HTMLInputElement>(null);
   const [feedback, setFeedback] = useState<FeedbackState>(null);
   const [scanning, setScanning] = useState(false);
+  // 受付端末がアクティブ（最前面かつフォーカス）か。false の間は警告バナーを出す。
+  // Why: USBリーダーは最前面アプリにしか入力が届かない。他アプリに切替わると
+  //      スキャンしても記録されないため、スタッフに気づかせて再開を促す。
+  const [pageActive, setPageActive] = useState(true);
   const lastScannedRef = useRef<string>("");
   const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -114,11 +119,11 @@ export default function CheckinPage() {
       if (!res.ok || !data.success) {
         setFeedback({ type: "error", name: "", message: data.error ?? "エラーが発生しました" });
       } else if (data.duplicate) {
-        setFeedback({ type: "warning", name: data.member_name, message: data.message });
+        setFeedback({ type: "warning", name: data.member_name, message: data.message, photoUrl: data.member_photo_url });
       } else if (data.overcharged) {
-        setFeedback({ type: "overcharge", name: data.member_name, message: data.message });
+        setFeedback({ type: "overcharge", name: data.member_name, message: data.message, photoUrl: data.member_photo_url });
       } else {
-        setFeedback({ type: "success", name: data.member_name, message: data.message });
+        setFeedback({ type: "success", name: data.member_name, message: data.message, photoUrl: data.member_photo_url });
       }
     } catch {
       setFeedback({ type: "error", name: "", message: "通信エラーが発生しました" });
@@ -223,6 +228,55 @@ export default function CheckinPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [processToken]);
 
+  // 画面スリープ抑止（Screen Wake Lock）。画面表示中だけ保持し、復帰時に再取得。
+  // Why: 受付端末がスリープするとリーダー入力を受け取れず出席を取り逃す。
+  //      非対応/権限拒否時は OS 側のスリープ設定に委ねる（例外は握りつぶす）。
+  useEffect(() => {
+    type Sentinel = { release: () => Promise<void> };
+    const nav = navigator as Navigator & { wakeLock?: { request: (t: "screen") => Promise<Sentinel> } };
+    if (!nav.wakeLock) return;
+    let sentinel: Sentinel | null = null;
+    let cancelled = false;
+    const acquire = async () => {
+      try {
+        sentinel = await nav.wakeLock!.request("screen");
+      } catch {
+        /* silent: ok — 非対応/権限拒否時は OS のスリープ設定に委ねる */
+      }
+    };
+    const onVisible = () => {
+      // Wake Lock はタブが隠れると自動解放されるため、復帰時に再取得する
+      if (document.visibilityState === "visible" && !cancelled) acquire();
+    };
+    acquire();
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      cancelled = true;
+      document.removeEventListener("visibilitychange", onVisible);
+      sentinel?.release().catch(() => { /* silent: ok — 解放失敗は無害 */ });
+    };
+  }, []);
+
+  // 受付端末のアクティブ状態を監視（最前面 & フォーカス）。外れたら警告バナーを出す。
+  useEffect(() => {
+    const sync = () => setPageActive(document.visibilityState === "visible" && document.hasFocus());
+    window.addEventListener("focus", sync);
+    window.addEventListener("blur", sync);
+    document.addEventListener("visibilitychange", sync);
+    sync();
+    return () => {
+      window.removeEventListener("focus", sync);
+      window.removeEventListener("blur", sync);
+      document.removeEventListener("visibilitychange", sync);
+    };
+  }, []);
+
+  // 警告バナーのタップで再開: フォーカスを取り戻し、隠し入力へ復帰させる。
+  const reactivate = useCallback(() => {
+    setPageActive(true);
+    barcodeInputRef.current?.focus();
+  }, []);
+
   const bgColor = feedback === null ? "bg-zinc-950"
     : feedback.type === "success"    ? "bg-emerald-900"
     : feedback.type === "warning"    ? "bg-amber-900"
@@ -258,6 +312,15 @@ export default function CheckinPage() {
           {feedback.type === "warning" && <div className="text-5xl mb-3">⚠️</div>}
           {feedback.type === "overcharge" && <div className="text-5xl mb-3">💳</div>}
           {feedback.type === "error" && <div className="text-5xl mb-3">❌</div>}
+          {/* 顔写真: インストラクターが「今チェックインした人」を目視で本人確認できるよう大きく表示 */}
+          {feedback.photoUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={feedback.photoUrl}
+              alt={feedback.name}
+              className="w-24 h-24 rounded-full object-cover bg-zinc-800 mx-auto mb-3 border-2 border-white/20"
+            />
+          )}
           {feedback.name && (
             <p className="text-white text-2xl font-bold mb-2">{feedback.name}</p>
           )}
@@ -278,7 +341,26 @@ export default function CheckinPage() {
         aria-label="バーコードリーダー入力"
         className="sr-only"
         readOnly
+        autoFocus
       />
+
+      {/* フォーカス外れ警告: 最前面でない間はスキャンを受け取れないためスタッフに再開を促す */}
+      {!pageActive && (
+        <button
+          type="button"
+          onClick={reactivate}
+          aria-label="チェックインを再開する"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/85 backdrop-blur-sm p-6 text-center"
+        >
+          <span className="text-6xl mb-4" aria-hidden="true">⏸️</span>
+          <span className="text-white text-2xl font-bold mb-2">受付が一時停止中です</span>
+          <span className="text-white/80 text-base leading-relaxed">
+            この画面が最前面にないため、スキャンを受け取れません。
+            <br />
+            ここをタップして再開してください。
+          </span>
+        </button>
+      )}
     </div>
   );
 }

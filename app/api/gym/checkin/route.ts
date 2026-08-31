@@ -62,6 +62,8 @@ export async function POST(req: NextRequest) {
       duplicate: result.duplicate,
       overcharged: result.overcharged,
       member_name: member.name,
+      // Why: インストラクターが顔写真で本人確認できるよう返す（氏名だけでは同名判別が難しい）
+      member_photo_url: member.photo_url,
       message: result.duplicate
         ? "既にチェックイン済みです（60分以内）"
         : result.overcharged
