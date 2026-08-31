@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createRobustAdminClient } from "@/lib/robust/supabase";
-import { requireRobustManager } from "@/lib/robust/auth";
+import { requireRobustManager, requireRobustAdmin } from "@/lib/robust/auth";
 import { getStripe } from "@/lib/robust/payments";
 import { syncDriveAccess } from "@/lib/robust/drive";
 import { robustLogger } from "@/lib/robust/logger";
@@ -65,9 +65,6 @@ const updateSchema = z.object({
 });
 
 export async function PATCH(req: NextRequest) {
-  const auth = await requireRobustManager();
-  if (!auth.ok) return auth.response;
-
   const body = await req.json().catch(() => null);
   const parsed = updateSchema.safeParse(body);
   if (!parsed.success) {
@@ -77,6 +74,20 @@ export async function PATCH(req: NextRequest) {
   // promotion_note は gym_members の列ではない（belt_history へのメモ）ため updates から除外する。
   // Why: updates に混ざると gym_members.update() で「存在しない列」エラーになる。
   const { memberId, family_discount_approved, manual_checkin, promotion_note, ...updates } = parsed.data;
+
+  // 権限: 手動チェックイン“のみ”のリクエストは受付スタッフ(instructor含む)にも許可する。
+  // Why: 出席画面のワンタップ手動チェックインは受付業務であり instructor に必要。一方、帯/ステータス/
+  //      写真/動画/家族割引などの管理操作はオーナー・管理者のみに限定したい。そこで、他の更新項目を
+  //      一切含まない手動チェックイン単独のときだけ requireRobustAdmin(=staff可) に緩め、それ以外は
+  //      requireRobustManager で instructor を締め出す（権限昇格の抜け道を作らない）。
+  const isManualCheckinOnly =
+    manual_checkin === true &&
+    family_discount_approved === undefined &&
+    promotion_note === undefined &&
+    Object.keys(updates).length === 0;
+  const auth = isManualCheckinOnly ? await requireRobustAdmin() : await requireRobustManager();
+  if (!auth.ok) return auth.response;
+
   const admin = createRobustAdminClient();
 
   // 帯・ストライプの変更検知用に、更新前の値を控える（依頼書 Section 10: 昇格履歴）。
