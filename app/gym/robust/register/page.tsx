@@ -685,7 +685,15 @@ export default function RegisterPage() {
         {step === "plan" && (
           <div className="bg-zinc-900 border border-white/10 rounded-xl p-6">
             <h2 className="text-sm font-bold text-white mb-1">プランを選択してください</h2>
-            <p className="text-xs text-zinc-500 mb-4">※ 表示価格はすべて税別です。</p>
+            <p className="text-xs text-zinc-500 mb-2">※ 表示価格はすべて税別です。</p>
+            {/* 戻る: 詳細情報を修正できるように②へ戻す（入力値は state 保持のため消えない） */}
+            <button
+              type="button"
+              onClick={() => { setError(""); setStep("profile"); }}
+              className="text-xs text-zinc-400 hover:text-white mb-4 inline-flex items-center gap-1 min-h-[44px]"
+            >
+              ← 詳細情報に戻る
+            </button>
             <div className="space-y-2 mb-6">
               {PLANS.map(plan => (
                 <button
