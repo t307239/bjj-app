@@ -138,8 +138,11 @@ export default function RegisterPage() {
       window.location.href = `/gym/${GYM_SLUG}/member/qr`;
       return;
     }
-    // 幽霊アカウント → プラン選択へ
-    setStep("plan");
+    // 幽霊アカウント(カゴ落ち) → 詳細情報から再開する。
+    // Why: 詳細情報(フリガナ・生年月日・電話・住所・緊急連絡先)は必須。ここでプラン選択(③)に
+    //      直行すると、必須項目が空のまま最終送信され server 検証(zod)で 400 になり登録を完了できない。
+    //      まず②で必須情報を入力させてから③プラン選択へ進める（フリガナ必須のため従来から潜在的に詰む経路だった）。
+    setStep("profile");
   }
 
   // カゴ落ちチェック: ログイン済みで gym_members 未登録なら Checkout へ
