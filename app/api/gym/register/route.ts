@@ -11,13 +11,15 @@ const bodySchema = z.object({
   // setupFee はクライアント送信値を使わない（PLAN_SETUP_FEES で確定）
   nameKana: z.string().min(1).max(50),
   // 生年月日は YYYY-MM-DD のみ許可（不正値で DB date 型を壊さない）
-  birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-  phone: z.string().max(20).optional(),
-  address: z.string().max(200).optional(),
+  // 必須化（依頼: 登録情報の必須化）。フリガナと合わせ、連絡先・緊急連絡先・生年月日を必須にする。
+  // 健康情報・血液型・運動経歴は要配慮個人情報/任意のため optional のまま維持。
+  birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  phone: z.string().min(1).max(20),
+  address: z.string().min(1).max(200),
   sportsHistory: z.string().max(500).optional(),
-  emergencyName: z.string().max(50).optional(),
-  emergencyPhone: z.string().max(20).optional(),
-  emergencyRelation: z.string().max(20).optional(),
+  emergencyName: z.string().min(1).max(50),
+  emergencyPhone: z.string().min(1).max(20),
+  emergencyRelation: z.string().min(1).max(20),
   medicalNotes: z.string().max(500).optional(),
   chronicConditions: z.string().max(200).optional(),
   allergies: z.string().max(200).optional(),

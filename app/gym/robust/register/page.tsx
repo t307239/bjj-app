@@ -99,7 +99,9 @@ export default function RegisterPage() {
   const [emergencyName, setEmergencyName] = useState("");
   const [emergencyPhone, setEmergencyPhone] = useState("");
   const [emergencyRelation, setEmergencyRelation] = useState("");
-  const [medicalNotes, setMedicalNotes] = useState("");
+  // medicalNotes は健康情報を持病/アレルギー/怪我歴に分割（Section 14）した名残。
+  // 現UIでは入力欄がなく常に空だが、後方互換のため送信キーは維持する（setterは不要）。
+  const [medicalNotes] = useState("");
   const [chronicConditions, setChronicConditions] = useState("");
   const [allergies, setAllergies] = useState("");
   const [injuryHistory, setInjuryHistory] = useState("");
@@ -414,7 +416,7 @@ export default function RegisterPage() {
 
         {step === "profile" && (
           <form onSubmit={handleProfileNext} className="bg-zinc-900 border border-white/10 rounded-xl p-6 space-y-4">
-            <p className="text-xs text-zinc-500 mb-2">入会に必要な情報をご記入ください（任意項目は後で追加可能）</p>
+            <p className="text-xs text-zinc-500 mb-2"><span className="text-red-400">*</span> は必須項目です。健康情報・血液型・運動経歴は任意です。</p>
             <div>
               <label htmlFor="reg-kana" className="block text-xs text-zinc-400 mb-1">フリガナ <span className="text-red-400">*</span></label>
               <input
@@ -428,24 +430,26 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label htmlFor="reg-birth" className="block text-xs text-zinc-400 mb-1">生年月日</label>
+              <label htmlFor="reg-birth" className="block text-xs text-zinc-400 mb-1">生年月日 <span className="text-red-400">*</span></label>
               <input
                 id="reg-birth"
                 type="date"
                 value={birthDate}
                 onChange={e => setBirthDate(e.target.value)}
                 autoComplete="bday"
+                required
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
             <div>
-              <label htmlFor="reg-phone" className="block text-xs text-zinc-400 mb-1">電話番号</label>
+              <label htmlFor="reg-phone" className="block text-xs text-zinc-400 mb-1">電話番号 <span className="text-red-400">*</span></label>
               <input
                 id="reg-phone"
                 type="tel"
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
                 autoComplete="tel"
+                required
                 placeholder="090-1234-5678"
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               />
@@ -483,13 +487,14 @@ export default function RegisterPage() {
               <p className="text-[11px] text-zinc-500 mt-1">ハイフンなし7桁で都道府県〜町名を自動入力します</p>
             </div>
             <div>
-              <label htmlFor="reg-address" className="block text-xs text-zinc-400 mb-1">住所</label>
+              <label htmlFor="reg-address" className="block text-xs text-zinc-400 mb-1">住所 <span className="text-red-400">*</span></label>
               <input
                 id="reg-address"
                 type="text"
                 value={address}
                 onChange={e => setAddress(e.target.value)}
                 autoComplete="street-address"
+                required
                 placeholder="東京都板橋区..."
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               />
@@ -508,14 +513,15 @@ export default function RegisterPage() {
             </div>
             {/* 緊急連絡先（怪我など緊急時の連絡先） */}
             <div className="space-y-3 border-t border-white/10 pt-4">
-              <p className="text-xs text-zinc-400 font-medium">緊急連絡先（怪我など緊急時にご連絡します）</p>
+              <p className="text-xs text-zinc-400 font-medium">緊急連絡先 <span className="text-red-400">*</span>（怪我など緊急時にご連絡します）</p>
               <div>
-                <label htmlFor="reg-emg-name" className="block text-xs text-zinc-400 mb-1">氏名</label>
+                <label htmlFor="reg-emg-name" className="block text-xs text-zinc-400 mb-1">氏名 <span className="text-red-400">*</span></label>
                 <input
                   id="reg-emg-name"
                   type="text"
                   value={emergencyName}
                   onChange={e => setEmergencyName(e.target.value)}
+                  required
                   placeholder="柔術 花子"
                   className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
                 />
@@ -529,17 +535,19 @@ export default function RegisterPage() {
                     value={emergencyPhone}
                     onChange={e => setEmergencyPhone(e.target.value)}
                     autoComplete="off"
+                    required
                     placeholder="090-1234-5678"
                     className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
                   />
                 </div>
                 <div className="w-28">
-                  <label htmlFor="reg-emg-rel" className="block text-xs text-zinc-400 mb-1">続柄</label>
+                  <label htmlFor="reg-emg-rel" className="block text-xs text-zinc-400 mb-1">続柄 <span className="text-red-400">*</span></label>
                   <input
                     id="reg-emg-rel"
                     type="text"
                     value={emergencyRelation}
                     onChange={e => setEmergencyRelation(e.target.value)}
+                    required
                     placeholder="母"
                     className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
                   />
