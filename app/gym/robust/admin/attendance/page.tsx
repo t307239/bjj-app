@@ -81,6 +81,28 @@ export default function AttendanceCheckPage() {
     }
   }
 
+  // 出席済みをワンタップで取消（当日分のみ削除）。誤チェックをその場で戻せるように。
+  async function handleUndoCheckin(memberId: string) {
+    setCheckingId(memberId);
+    setActionError("");
+    try {
+      const res = await fetch("/api/gym/robust/members", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ memberId, undo_checkin: true }),
+      });
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        throw new Error(json.error ?? "出席の取消に失敗しました");
+      }
+      setRoster(prev => prev.map(m => (m.id === memberId ? { ...m, checked_in_today: false } : m)));
+    } catch (err) {
+      setActionError((err as Error).message);
+    } finally {
+      setCheckingId(null);
+    }
+  }
+
   if (showLogin) {
     return <RobustAdminLoginForm onSuccess={() => { setShowLogin(false); setLoading(true); fetchRoster(); }} />;
   }
@@ -169,7 +191,17 @@ export default function AttendanceCheckPage() {
                   </div>
                 </div>
                 {m.checked_in_today ? (
-                  <span className="text-emerald-400 text-xs shrink-0 whitespace-nowrap">出席済み</span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-emerald-400 text-xs whitespace-nowrap">出席済み</span>
+                    <button
+                      type="button"
+                      onClick={() => handleUndoCheckin(m.id)}
+                      disabled={checkingId === m.id}
+                      className="min-h-[44px] px-3 text-xs bg-zinc-800 hover:bg-zinc-700 disabled:opacity-40 text-zinc-300 rounded-lg whitespace-nowrap"
+                    >
+                      {checkingId === m.id ? "..." : "取消"}
+                    </button>
+                  </div>
                 ) : (
                   <button
                     type="button"

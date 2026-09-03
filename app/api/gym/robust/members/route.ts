@@ -59,6 +59,7 @@ const updateSchema = z.object({
   family_discount_approved: z.boolean().optional(), // 家族割引 承認/却下
   payment_method: z.enum(["stripe", "bank_transfer"]).optional(), // 口座振替フラグ
   manual_checkin: z.boolean().optional(), // 手動チェックイン（true で当日記録）
+  undo_checkin: z.boolean().optional(),   // 出席取消（true で当日記録を削除＝オン/オフのトグル）
   belt: z.enum(["white", "blue", "purple", "brown", "black"]).optional(), // 帯（依頼書 Section 9）
   stripes: z.number().int().min(0).max(4).optional(),                     // ストライプ 0-4本
   promotion_note: z.string().max(200).optional(),                        // 昇格メモ（履歴に記録）
@@ -73,19 +74,19 @@ export async function PATCH(req: NextRequest) {
 
   // promotion_note は gym_members の列ではない（belt_history へのメモ）ため updates から除外する。
   // Why: updates に混ざると gym_members.update() で「存在しない列」エラーになる。
-  const { memberId, family_discount_approved, manual_checkin, promotion_note, ...updates } = parsed.data;
+  const { memberId, family_discount_approved, manual_checkin, undo_checkin, promotion_note, ...updates } = parsed.data;
 
   // 権限: 手動チェックイン“のみ”のリクエストは受付スタッフ(instructor含む)にも許可する。
   // Why: 出席画面のワンタップ手動チェックインは受付業務であり instructor に必要。一方、帯/ステータス/
   //      写真/動画/家族割引などの管理操作はオーナー・管理者のみに限定したい。そこで、他の更新項目を
   //      一切含まない手動チェックイン単独のときだけ requireRobustAdmin(=staff可) に緩め、それ以外は
   //      requireRobustManager で instructor を締め出す（権限昇格の抜け道を作らない）。
-  const isManualCheckinOnly =
-    manual_checkin === true &&
+  const isStaffCheckinAction =
+    (manual_checkin === true || undo_checkin === true) &&
     family_discount_approved === undefined &&
     promotion_note === undefined &&
     Object.keys(updates).length === 0;
-  const auth = isManualCheckinOnly ? await requireRobustAdmin() : await requireRobustManager();
+  const auth = isStaffCheckinAction ? await requireRobustAdmin() : await requireRobustManager();
   if (!auth.ok) return auth.response;
 
   const admin = createRobustAdminClient();
@@ -214,6 +215,20 @@ export async function PATCH(req: NextRequest) {
     });
     if (ciError) return NextResponse.json({ error: `手動チェックイン失敗: ${ciError.message}` }, { status: 500 });
     return NextResponse.json({ ok: true, checkedIn: true });
+  }
+
+  // 出席取消: 当日(JST)のチェックインを削除（出席のオン/オフ切替）。
+  // Why: 誤チェックや取り違えを受付でその場で戻せるように。当日分のみ削除し、過去の履歴は触らない。
+  if (undo_checkin) {
+    const { jstTodayStartUtc } = await import("@/lib/robust/attendance");
+    const { error: delErr } = await admin
+      .from("attendance_logs")
+      .delete()
+      .eq("member_id", memberId)
+      .eq("gym_id", GYM_ID)
+      .gte("checked_in_at", jstTodayStartUtc().toISOString());
+    if (delErr) return NextResponse.json({ error: `出席取消に失敗しました: ${delErr.message}` }, { status: 500 });
+    return NextResponse.json({ ok: true, checkedIn: false });
   }
 
   const { error } = await admin
