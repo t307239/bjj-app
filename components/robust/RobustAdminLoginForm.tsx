@@ -119,6 +119,13 @@ export default function RobustAdminLoginForm({ onSuccess }: Props) {
             パスワードをお忘れですか？
           </button>
         </form>
+        {/* 会員がここに来た場合の脱出導線（行き止まり回避） */}
+        <p className="text-center mt-4 text-xs text-zinc-500">
+          会員の方は{" "}
+          <a href="/gym/robust/member/qr" className="text-emerald-400 hover:underline">会員トップ</a>
+          {" ／ "}
+          <a href="/gym/robust/register" className="text-emerald-400 hover:underline">ログイン・新規登録</a>
+        </p>
       </div>
     </div>
   );

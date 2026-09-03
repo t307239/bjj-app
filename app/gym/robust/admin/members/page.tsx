@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
 import RobustAdminLoginForm from "@/components/robust/RobustAdminLoginForm";
+import RobustAccessDenied from "@/components/robust/RobustAccessDenied";
 
 type Member = {
   id: string;
@@ -298,11 +299,7 @@ export default function AdminMembersPage() {
   }
 
   if (error) {
-    return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
-        <p className="text-red-400 text-sm">{error}</p>
-      </div>
-    );
+    return <RobustAccessDenied message={error} onLogin={() => { setError(""); setShowLogin(true); }} />;
   }
 
   const activeCount = members.filter(m => m.status === "active").length;
