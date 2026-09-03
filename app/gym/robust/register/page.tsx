@@ -672,6 +672,14 @@ export default function RegisterPage() {
                 に従うことに同意します。
               </span>
             </label>
+            {/* 戻る: 基本情報(①)へ。入力値は state 保持のため戻っても消えない */}
+            <button
+              type="button"
+              onClick={() => { setError(""); setStep("auth"); }}
+              className="text-xs text-zinc-400 hover:text-white inline-flex items-center gap-1 min-h-[44px]"
+            >
+              ← 基本情報に戻る
+            </button>
             <button
               type="submit"
               disabled={agreedToTerms === false || !nameKana.trim() || (isMinor && (!guardianName || !guardianContact))}
