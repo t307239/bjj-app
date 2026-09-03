@@ -87,6 +87,8 @@ export default function RegisterPage() {
   // auth ステップの表示モード: 新規登録 or 既存会員ログイン
   const [authMode, setAuthMode] = useState<"signup" | "login">("signup");
   const [resetSent, setResetSent] = useState(false);
+  // ログイン済み・会員未登録(ゴースト)の再開フラグ。①基本情報を起点にしつつ②へ進む導線を出す。
+  const [resumeGhost, setResumeGhost] = useState(false);
   // プロフィール情報
   const [nameKana, setNameKana] = useState("");
   const [birthDate, setBirthDate] = useState("");
@@ -138,11 +140,12 @@ export default function RegisterPage() {
       window.location.href = `/gym/${GYM_SLUG}/member/qr`;
       return;
     }
-    // 幽霊アカウント(カゴ落ち) → 詳細情報から再開する。
-    // Why: 詳細情報(フリガナ・生年月日・電話・住所・緊急連絡先)は必須。ここでプラン選択(③)に
-    //      直行すると、必須項目が空のまま最終送信され server 検証(zod)で 400 になり登録を完了できない。
-    //      まず②で必須情報を入力させてから③プラン選択へ進める（フリガナ必須のため従来から潜在的に詰む経路だった）。
-    setStep("profile");
+    // 幽霊アカウント(カゴ落ち) → 登録は①基本情報を起点に見せる（ユーザー要望）。
+    // Why: 会員未登録のまま②③へ直行すると流れが分かりにくい。①を起点にしつつ、ログイン済みなので
+    //      「登録を続ける」導線で②詳細情報へ進める。②で必須情報(フリガナ/生年月日/連絡先/緊急連絡先)を
+    //      入力させてから③へ進むので、③直行で必須未入力→400 になる経路も避けられる。
+    setResumeGhost(true);
+    setStep("auth");
   }
 
   // カゴ落ちチェック: ログイン済みで gym_members 未登録なら Checkout へ
@@ -327,6 +330,19 @@ export default function RegisterPage() {
             onSubmit={authMode === "signup" ? handleSignUp : handleLogin}
             className="bg-zinc-900 border border-white/10 rounded-xl p-6 space-y-4"
           >
+            {/* ゴースト(ログイン済み・会員未登録)向け: ①を起点に見せつつ②へ進む導線 */}
+            {resumeGhost && (
+              <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 text-center space-y-2">
+                <p className="text-amber-200/90 text-xs">ログイン済みですが会員登録がまだ完了していません。</p>
+                <button
+                  type="button"
+                  onClick={() => { setError(""); setStep("profile"); }}
+                  className="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm rounded-lg py-2 transition-colors"
+                >
+                  登録を続ける（詳細情報へ）→
+                </button>
+              </div>
+            )}
             {/* 新規登録 / ログイン 切替 */}
             <div className="flex bg-zinc-800 rounded-lg p-1 mb-2">
               <button
