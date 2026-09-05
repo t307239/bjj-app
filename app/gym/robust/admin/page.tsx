@@ -127,8 +127,22 @@ export default function AdminPage() {
   if (!data) return null;
 
   const activeMembers = data.members.filter(m => m.status === "active");
-  // 休会中の会員数。Why: ダッシュボードの3指標目を「特定プラン数」から、フォロー対象が分かる「休会中」に変更。
   const pausedCount = data.members.filter(m => m.status === "paused").length;
+  const cancelledCount = data.members.filter(m => m.status === "cancelled").length;
+  // 有効会員のプラン内訳。Why: ダッシュボードで会員数系＋プラン構成を一目で把握できるようにする。
+  const planCount = (t: string) => activeMembers.filter(m => m.plan_type === t).length;
+
+  // サマリー指標（2段表示）: 会員数系（総/有効/休会/退会）＋ 稼働・プラン内訳（本日来館/各プラン）。
+  const summaryStats: { n: number; label: string; color: string }[] = [
+    { n: data.members.length, label: "総会員", color: "text-white" },
+    { n: activeMembers.length, label: "有効", color: "text-emerald-400" },
+    { n: pausedCount, label: "休会中", color: "text-amber-400" },
+    { n: cancelledCount, label: "退会", color: "text-zinc-400" },
+    { n: data.todayLogs.length, label: "本日来館", color: "text-sky-400" },
+    { n: planCount("fulltime"), label: "フルタイム", color: "text-white" },
+    { n: planCount("twice_weekly"), label: "月8回", color: "text-white" },
+    { n: planCount("drop_in"), label: "ドロップイン", color: "text-white" },
+  ];
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
@@ -141,20 +155,14 @@ export default function AdminPage() {
         <span className="text-xs text-zinc-500">{data.billingPeriod}</span>
       </header>
 
-      {/* サマリーカード */}
-      <div className="grid grid-cols-3 gap-2 p-4">
-        <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
-          <p className="text-2xl font-bold text-emerald-400">{activeMembers.length}</p>
-          <p className="text-xs text-zinc-500 mt-0.5">有効会員</p>
-        </div>
-        <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
-          <p className="text-2xl font-bold text-white">{data.todayLogs.length}</p>
-          <p className="text-xs text-zinc-500 mt-0.5">本日来館</p>
-        </div>
-        <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
-          <p className="text-2xl font-bold text-amber-400">{pausedCount}</p>
-          <p className="text-xs text-zinc-500 mt-0.5">休会中</p>
-        </div>
+      {/* サマリーカード（会員数系＋稼働・プラン内訳を2段で表示） */}
+      <div className="grid grid-cols-4 gap-2 p-4">
+        {summaryStats.map(s => (
+          <div key={s.label} className="bg-zinc-900 border border-white/10 rounded-xl p-2.5 text-center">
+            <p className={`text-xl font-bold ${s.color}`}>{s.n}</p>
+            <p className="text-[10px] text-zinc-500 mt-0.5 leading-tight">{s.label}</p>
+          </div>
+        ))}
       </div>
 
       {/* クイックリンク */}

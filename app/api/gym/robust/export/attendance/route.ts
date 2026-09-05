@@ -23,6 +23,21 @@ const PLAN_LABEL: Record<string, string> = {
   twice_weekly: "月8回",
   drop_in: "ドロップイン",
 };
+const BELT_LABEL: Record<string, string> = {
+  white: "白帯",
+  blue: "青帯",
+  purple: "紫帯",
+  brown: "茶帯",
+  black: "黒帯",
+};
+const STATUS_LABEL: Record<string, string> = {
+  active: "有効",
+  paused: "休会中",
+  cancelled: "退会",
+};
+// timestamptz → JSTの日付(YYYY-MM-DD)。入会日など。
+const jstDate = (iso: string | null): string =>
+  iso ? new Date(iso).toLocaleDateString("sv-SE", { timeZone: "Asia/Tokyo" }) : "";
 
 // JSTの「今日」および「今月1日」をYYYY-MM-DDで返す。
 function jstToday(): string {
@@ -32,16 +47,36 @@ function jstMonthStart(): string {
   return jstToday().slice(0, 7) + "-01";
 }
 
-// 出席ログ1件（gym_members を埋め込み）。Supトの埋め込みは配列/単体どちらの型にもなり得るため広めに受ける。
+// 埋め込みする会員情報（会員CSVと同等の詳細）。Why: 来館1件ごとに会員の連絡先・住所・
+// 緊急連絡先などフル情報を付けて、単体で完結する来館レポートにするため。
+type MemberInfo = {
+  name: string | null;
+  name_kana: string | null;
+  email: string | null;
+  phone: string | null;
+  address: string | null;
+  birth_date: string | null;
+  plan_type: string | null;
+  belt: string | null;
+  stripes: number | null;
+  status: string | null;
+  emergency_contact_name: string | null;
+  emergency_contact_phone: string | null;
+  emergency_contact_relation: string | null;
+  insurance_expires_at: string | null;
+  created_at: string | null;
+};
+
+// 出席ログ1件（gym_members を埋め込み）。埋め込みは配列/単体どちらの型にもなり得るため広めに受ける。
 type AttendanceRow = {
   checked_in_at: string | null;
   class_type: string | null;
   charged: boolean | null;
-  gym_members:
-    | { name: string | null; email: string | null; plan_type: string | null }
-    | { name: string | null; email: string | null; plan_type: string | null }[]
-    | null;
+  gym_members: MemberInfo | MemberInfo[] | null;
 };
+
+const MEMBER_SELECT =
+  "name, name_kana, email, phone, address, birth_date, plan_type, belt, stripes, status, emergency_contact_name, emergency_contact_phone, emergency_contact_relation, insurance_expires_at, created_at";
 
 function pickMember(m: AttendanceRow["gym_members"]) {
   if (Array.isArray(m)) return m[0] ?? null;
@@ -71,7 +106,7 @@ export async function GET(req: NextRequest) {
   const admin = createRobustAdminClient();
   const { data, error } = await admin
     .from("attendance_logs")
-    .select("checked_in_at, class_type, charged, gym_members(name, email, plan_type)")
+    .select(`checked_in_at, class_type, charged, gym_members(${MEMBER_SELECT})`)
     .eq("gym_id", GYM_ID)
     .gte("checked_in_at", fromTs)
     .lte("checked_in_at", toTs)
@@ -82,7 +117,14 @@ export async function GET(req: NextRequest) {
   }
 
   const rows = (data ?? []) as unknown as AttendanceRow[];
-  const headers = ["日付", "時刻", "会員名", "メール", "プラン", "クラス", "課金対象"];
+  // Why: 来館情報（日時・クラス・超過課金）に加え、会員CSVと同等の会員詳細（住所・連絡先・
+  //      緊急連絡先・帯・保険期限・入会日など）を各行に付けて、単体で完結する来館レポートにする。
+  const headers = [
+    "日付", "時刻", "クラス", "超過課金",
+    "会員名", "フリガナ", "メール", "電話", "住所", "生年月日",
+    "プラン", "帯", "ストライプ", "ステータス",
+    "緊急連絡先氏名", "緊急連絡先電話", "緊急連絡先続柄", "保険期限", "入会日",
+  ];
   const headerLine = headers.map(csvCell).join(",");
 
   const bodyLines = rows.map((r) => {
@@ -95,11 +137,23 @@ export async function GET(req: NextRequest) {
     return [
       date,
       time,
-      m?.name ?? "",
-      m?.email ?? "",
-      PLAN_LABEL[m?.plan_type ?? ""] ?? m?.plan_type ?? "",
       r.class_type ?? "",
-      r.charged === null ? "" : r.charged ? "課金" : "無料",
+      r.charged ? "超過あり（¥2,200）" : "－",
+      m?.name ?? "",
+      m?.name_kana ?? "",
+      m?.email ?? "",
+      m?.phone ?? "",
+      m?.address ?? "",
+      m?.birth_date ?? "",
+      PLAN_LABEL[m?.plan_type ?? ""] ?? m?.plan_type ?? "",
+      BELT_LABEL[m?.belt ?? ""] ?? m?.belt ?? "",
+      m?.stripes ?? "",
+      STATUS_LABEL[m?.status ?? ""] ?? m?.status ?? "",
+      m?.emergency_contact_name ?? "",
+      m?.emergency_contact_phone ?? "",
+      m?.emergency_contact_relation ?? "",
+      m?.insurance_expires_at ?? "",
+      jstDate(m?.created_at ?? null),
     ]
       .map(csvCell)
       .join(",");
