@@ -1,11 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { useLocale } from "@/lib/i18n";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { safeSetItem, safeGetItem } from "@/lib/safeLocalStorage";
 
 const STORAGE_KEY = "bjj_age_verified";
+
+// Why: ROBUST(道場会員向けB2B)は登録時に生年月日＋18歳未満の保護者同意を取得するため、
+//      公開版 bjj-app 向けの汎用 COPPA 13歳ゲートは表示しない（会員体験の阻害・二重確認の回避）。
+const ROBUST_PATH_PREFIX = "/gym/robust";
 
 /**
  * AgeGate — COPPA compliance hard block.
@@ -15,9 +20,11 @@ const STORAGE_KEY = "bjj_age_verified";
  */
 export default function AgeGate() {
   const { t } = useLocale();
+  const pathname = usePathname();
+  const isRobust = pathname?.startsWith(ROBUST_PATH_PREFIX) ?? false;
   const [status, setStatus] = useState<"loading" | "show" | "blocked" | "ok">("loading");
-  // z258: lock background scroll while the age-gate or block screen is up.
-  useBodyScrollLock(status === "show" || status === "blocked");
+  // z258: lock background scroll while the age-gate or block screen is up（ROBUST では出さないのでロックもしない）。
+  useBodyScrollLock(!isRobust && (status === "show" || status === "blocked"));
 
   useEffect(() => {
     const stored = safeGetItem(STORAGE_KEY);
@@ -35,6 +42,8 @@ export default function AgeGate() {
     setStatus(isOldEnough ? "ok" : "blocked");
   };
 
+  // ROBUST 配下は年齢ゲートを一切表示しない（本体アプリのみ対象）。
+  if (isRobust) return null;
   if (status === "loading" || status === "ok") return null;
 
   if (status === "blocked") {

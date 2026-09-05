@@ -326,7 +326,17 @@ export default function AdminMembersPage() {
             <h1 className="text-xl font-bold text-white">会員管理</h1>
             <p className="text-zinc-500 text-xs mt-0.5">ROBUST 柔術</p>
           </div>
-          <a href="/gym/robust/admin" className="text-zinc-400 text-xs hover:text-white">← ダッシュボード</a>
+          <div className="flex items-center gap-3">
+            {/* CSVエクスポート（事業継続・引き継ぎ用）。同一オリジンのGETでCookieセッションによりAPI認証される。 */}
+            <a
+              href="/api/gym/robust/export"
+              className="text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg px-3 py-1.5 whitespace-nowrap"
+              title="会員データをCSVでダウンロード"
+            >
+              ⬇ CSVエクスポート
+            </a>
+            <a href="/gym/robust/admin" className="text-zinc-400 text-xs hover:text-white whitespace-nowrap">← ダッシュボード</a>
+          </div>
         </div>
 
         {/* サマリ */}
