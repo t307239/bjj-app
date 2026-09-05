@@ -60,6 +60,7 @@ export async function createCheckoutSession({
   origin,
   setupFeeAmount,
   monthlyAmount,
+  name,
   nameKana,
   birthDate,
   phone,
@@ -88,6 +89,7 @@ export async function createCheckoutSession({
   origin: string;
   setupFeeAmount: number;
   monthlyAmount: number;
+  name?: string;      // アプリで入力した氏名（会員名の正）。Stripeのカード名義より優先させる。
   nameKana?: string;
   birthDate?: string;
   phone?: string;
@@ -176,6 +178,7 @@ export async function createCheckoutSession({
   const sharedMetadata = {
     gymSlug,
     planKey: planKeyLogical,
+    name: name ?? "",
     name_kana: nameKana ?? "",
     birth_date: birthDate ?? "",
     phone: phone ?? "",

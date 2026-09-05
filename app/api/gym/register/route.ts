@@ -9,6 +9,7 @@ const bodySchema = z.object({
   gymSlug: z.string().min(1).max(50),
   planKey: z.enum(["fulltime_male", "fulltime_female", "twice_male", "twice_kids", "drop_in"]),
   // setupFee はクライアント送信値を使わない（PLAN_SETUP_FEES で確定）
+  name: z.string().max(50).optional(), // アプリ入力の氏名（会員名の正）。未送信時は webhook が Stripe カード名義にフォールバック
   nameKana: z.string().min(1).max(50),
   // 生年月日は YYYY-MM-DD のみ許可（不正値で DB date 型を壊さない）
   // 必須化（依頼: 登録情報の必須化）。フリガナと合わせ、連絡先・緊急連絡先・生年月日を必須にする。
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "不正なリクエスト" }, { status: 400 });
   }
-  const { gymSlug, planKey, nameKana, birthDate, phone, address, sportsHistory, emergencyName, emergencyPhone, emergencyRelation, medicalNotes, chronicConditions, allergies, injuryHistory, bloodType, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, simultaneousFamily, agreedToTerms } = parsed.data;
+  const { gymSlug, planKey, name, nameKana, birthDate, phone, address, sportsHistory, emergencyName, emergencyPhone, emergencyRelation, medicalNotes, chronicConditions, allergies, injuryHistory, bloodType, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, simultaneousFamily, agreedToTerms } = parsed.data;
 
   // Why: monthlyAmount/setupFee はクライアント値を使わず planKey から確定（改ざん防止）
   const monthlyAmount = PLAN_MONTHLY_AMOUNTS[planKey] ?? 0;
@@ -135,6 +136,7 @@ export async function POST(req: NextRequest) {
   const origin = req.headers.get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL ?? "";
 
   const checkoutUrl = await createCheckoutSession({
+    name,
     userId: user.id,
     email: user.email!,
     gymSlug,

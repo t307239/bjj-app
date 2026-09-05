@@ -60,7 +60,8 @@ export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void
     gym_id: gym.id,
     user_id: userId,
     email,
-    name: session.customer_details?.name ?? "",
+    // アプリで入力した氏名を優先（Stripe決済ページのカード名義で上書きされないように）。未設定時のみカード名義にフォールバック。
+    name: session.metadata?.name || session.customer_details?.name || "",
     // メタデータからプロフィール情報を復元
     name_kana: session.metadata?.name_kana || null,
     birth_date: session.metadata?.birth_date || null,

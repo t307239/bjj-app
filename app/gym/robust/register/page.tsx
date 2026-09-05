@@ -263,6 +263,7 @@ export default function RegisterPage() {
           gymSlug: GYM_SLUG,
           planKey: selectedPlan.priceKey,
           // setupFee は送信しない（サーバー側で planKey から確定）
+          name: name.trim() || undefined,
           nameKana: nameKana.trim() || undefined,
           birthDate: birthDate || undefined,
           phone: phone || undefined,
@@ -861,6 +862,30 @@ export default function RegisterPage() {
                     <span>合計</span><span>¥{total.toLocaleString()}</span>
                   </div>
                   <p className="text-zinc-600 text-xs mt-1">翌々月末から ¥{discountedMonthly.toLocaleString()}/月</p>
+                </div>
+              );
+            })()}
+
+            {/* ドロップイン（単発）の内訳: サブスクの日割り/前払いは無いので単発金額＋保険のみ表示 */}
+            {selectedPlan && selectedPlan.priceKey === "drop_in" && (() => {
+              const insuranceFee = isMinor ? SPORTS_INSURANCE_KIDS_YEN : SPORTS_INSURANCE_YEN;
+              const total = selectedPlan.monthlyAmount + (includeInsurance ? insuranceFee : 0);
+              return (
+                <div className="bg-zinc-800/40 rounded-xl p-3 text-xs text-zinc-400 space-y-1">
+                  <p className="text-zinc-500 text-xs mb-2 font-medium">今日の決済内訳</p>
+                  <div className="flex justify-between">
+                    <span>ドロップイン（単発参加）</span>
+                    <span className="text-white">¥{selectedPlan.monthlyAmount.toLocaleString()}</span>
+                  </div>
+                  {includeInsurance && (
+                    <div className="flex justify-between">
+                      <span>スポーツ保険</span>
+                      <span className="text-white">¥{insuranceFee.toLocaleString()}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between border-t border-white/10 pt-1 mt-1 text-white font-medium">
+                    <span>合計</span><span>¥{total.toLocaleString()}</span>
+                  </div>
                 </div>
               );
             })()}
