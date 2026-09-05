@@ -735,7 +735,7 @@ export default function RegisterPage() {
                 <button
                   key={plan.id}
                   type="button"
-                  onClick={() => setSelectedPlan(plan)}
+                  onClick={() => { setSelectedPlan(plan); if (plan.priceKey === "drop_in") setIncludeInsurance(false); }}
                   className={`w-full text-left rounded-lg border p-3 transition-colors ${
                     selectedPlan?.id === plan.id
                       ? "border-emerald-500 bg-emerald-500/10"
@@ -755,7 +755,8 @@ export default function RegisterPage() {
                 </button>
               ))}
             </div>
-            {/* スポーツ保険（選択制） */}
+            {/* スポーツ保険（選択制）。ドロップイン(単発)は年度保険が不要なので非表示 */}
+            {selectedPlan?.priceKey !== "drop_in" && (
             <label className="flex items-start gap-3 bg-zinc-800/60 rounded-xl p-3 cursor-pointer border border-white/10">
               <input
                 type="checkbox"
@@ -777,6 +778,7 @@ export default function RegisterPage() {
                 </p>
               </div>
             </label>
+            )}
 
             {/* 家族・兄弟割引 */}
             <div className="bg-zinc-800/60 rounded-xl p-3 border border-white/10 space-y-2">
