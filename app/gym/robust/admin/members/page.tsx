@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
 import RobustAdminLoginForm from "@/components/robust/RobustAdminLoginForm";
 import RobustAccessDenied from "@/components/robust/RobustAccessDenied";
+import RobustBeltBar from "@/components/robust/RobustBeltBar";
 
 type Member = {
   id: string;
@@ -532,9 +533,7 @@ export default function AdminMembersPage() {
                         <span className={`text-xs px-2 py-0.5 rounded ${STATUS_COLOR[m.status] ?? "bg-zinc-700 text-zinc-400"}`}>
                           {STATUS_LABEL[m.status] ?? m.status}
                         </span>
-                        <span className="text-xs bg-zinc-700 text-zinc-200 px-2 py-0.5 rounded whitespace-nowrap">
-                          {BELT_LABEL[m.belt] ?? m.belt}{m.stripes > 0 ? ` ${m.stripes}本` : ""}
-                        </span>
+                        <RobustBeltBar belt={m.belt} stripes={m.stripes} />
                       </div>
                       <p className="text-zinc-500 text-xs mt-0.5 truncate">{m.email}</p>
                       <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500 flex-wrap">

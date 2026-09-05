@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import React from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
 import { subscribeRobustPush, unsubscribeRobustPush, isRobustPushSubscribed } from "@/lib/robust/push";
+import RobustBeltBar from "@/components/robust/RobustBeltBar";
 
 type Profile = {
   id: string;
@@ -178,7 +179,7 @@ export default function MemberProfilePage() {
           </div>
           <div className="flex gap-4 mt-3 text-xs text-zinc-500 flex-wrap">
             <span>{PLAN_LABEL[profile.plan_type] ?? profile.plan_type}</span>
-            <span className="text-zinc-300 whitespace-nowrap">{BELT_LABEL[profile.belt] ?? profile.belt}{profile.stripes > 0 ? ` ${profile.stripes}本` : ""}</span>
+            <RobustBeltBar belt={profile.belt} stripes={profile.stripes} />
             <span>入会: {new Date(profile.created_at).toLocaleDateString("ja-JP")}</span>
             {profile.video_access && <span className="text-emerald-500">動画あり</span>}
           </div>
