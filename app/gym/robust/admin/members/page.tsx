@@ -103,6 +103,15 @@ export default function AdminMembersPage() {
   const [attTo, setAttTo] = useState(() =>
     new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Tokyo" }),
   );
+  // Drive共有対象メールを一括コピーした際の一時フィードバック
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const copyEmails = (key: string, emails: string[]) => {
+    // Why: 会員が多いとDrive共有先を1件ずつコピーするのは非現実的。カンマ区切りで一括コピー。
+    navigator.clipboard?.writeText(emails.join(", ")).then(() => {
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 2000);
+    });
+  };
   const MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5MB
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
@@ -392,9 +401,9 @@ export default function AdminMembersPage() {
             className="text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg px-4 py-2 whitespace-nowrap"
             title="指定期間の来館データをCSVでダウンロード"
           >
-            ⬇ 来館CSV（期間指定）
+            ⬇ 来館サマリーCSV（月別回数）
           </a>
-          <p className="text-xs text-zinc-500 basis-full">指定期間に誰がいつ来たかを出席ログから出力します（売上・稼働レポート用）。</p>
+          <p className="text-xs text-zinc-500 basis-full">指定期間の「会員 × 各月の来館回数」を一覧で出力します（稼働・売上分析用）。会員の連絡先など詳細は「会員CSV」から。</p>
         </div>
 
         {/* 動画アクセス（Drive 共有）管理 */}
@@ -406,39 +415,59 @@ export default function AdminMembersPage() {
             </p>
 
             {driveRevokeTargets.length > 0 && (
-              <div className="mb-3 rounded-lg bg-red-500/10 border border-red-500/30 p-3">
-                <p className="text-red-400 text-xs font-medium mb-1">
+              <details open={driveRevokeTargets.length <= 8} className="mb-3 rounded-lg bg-red-500/10 border border-red-500/30 p-3">
+                <summary className="text-red-400 text-xs font-medium cursor-pointer">
                   ⚠️ Drive 権限を外す（{driveRevokeTargets.length}名）— 退会・休会したが動画ONのまま
-                </p>
-                <ul className="space-y-1">
-                  {driveRevokeTargets.map(m => (
-                    <li key={m.id} className="text-xs text-zinc-300 flex items-center gap-2 flex-wrap">
-                      <span>{m.name}</span>
-                      <span className="text-zinc-500">{m.email}</span>
-                      <span className="text-red-400">（{STATUS_LABEL[m.status] ?? m.status}）</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                </summary>
+                <div className="mt-2">
+                  <button
+                    type="button"
+                    onClick={() => copyEmails("revoke", driveRevokeTargets.map(m => m.email))}
+                    className="text-[11px] bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded px-2 py-1 mb-2"
+                  >
+                    📋 メールを一括コピー{copiedKey === "revoke" ? " ✓" : ""}
+                  </button>
+                  <ul className="space-y-1 max-h-56 overflow-auto">
+                    {driveRevokeTargets.map(m => (
+                      <li key={m.id} className="text-xs text-zinc-300 flex items-center gap-2 flex-wrap">
+                        <span>{m.name}</span>
+                        <span className="text-zinc-500">{m.email}</span>
+                        <span className="text-red-400">（{STATUS_LABEL[m.status] ?? m.status}）</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </details>
             )}
 
-            <div>
-              <p className="text-emerald-400 text-xs font-medium mb-1">
-                ✅ Drive を共有する対象（{driveShareTargets.length}名）— 有効かつ動画ON
+            {driveShareTargets.length === 0 ? (
+              <p className="text-emerald-400 text-xs font-medium">
+                ✅ Drive を共有する対象（0名）— 有効かつ動画ON：対象なし
               </p>
-              {driveShareTargets.length === 0 ? (
-                <p className="text-zinc-500 text-xs">対象なし</p>
-              ) : (
-                <ul className="space-y-1">
-                  {driveShareTargets.map(m => (
-                    <li key={m.id} className="text-xs text-zinc-300 flex items-center gap-2 flex-wrap">
-                      <span>{m.name}</span>
-                      <span className="text-zinc-500">{m.email}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+            ) : (
+              <details open={driveShareTargets.length <= 8}>
+                <summary className="text-emerald-400 text-xs font-medium cursor-pointer">
+                  ✅ Drive を共有する対象（{driveShareTargets.length}名）— 有効かつ動画ON
+                </summary>
+                <div className="mt-2">
+                  <button
+                    type="button"
+                    onClick={() => copyEmails("share", driveShareTargets.map(m => m.email))}
+                    className="text-[11px] bg-emerald-600 hover:bg-emerald-500 text-white rounded px-2 py-1 mb-2"
+                  >
+                    📋 メールを一括コピー{copiedKey === "share" ? " ✓" : ""}
+                  </button>
+                  <ul className="space-y-1 max-h-56 overflow-auto">
+                    {driveShareTargets.map(m => (
+                      <li key={m.id} className="text-xs text-zinc-300 flex items-center gap-2 flex-wrap">
+                        <span>{m.name}</span>
+                        <span className="text-zinc-500">{m.email}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </details>
+            )}
           </div>
         )}
 
