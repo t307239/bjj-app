@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
 import RobustAdminLoginForm from "@/components/robust/RobustAdminLoginForm";
 import RobustAccessDenied from "@/components/robust/RobustAccessDenied";
+import RobustPhotoLightbox from "@/components/robust/RobustPhotoLightbox";
 
 type RosterMember = {
   id: string;
@@ -35,6 +36,8 @@ export default function AttendanceCheckPage() {
   const [onlyAbsent, setOnlyAbsent] = useState(false);
   const [checkingId, setCheckingId] = useState<string | null>(null);
   const [actionError, setActionError] = useState("");
+  // 本人確認用の写真拡大（ライトボックス）
+  const [zoomPhoto, setZoomPhoto] = useState<{ url: string; name: string } | null>(null);
 
   async function fetchRoster() {
     const res = await fetch("/api/gym/robust/attendance");
@@ -176,12 +179,20 @@ export default function AttendanceCheckPage() {
               <div key={m.id} className="bg-zinc-900 border border-white/10 rounded-xl p-3 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-xl shrink-0" aria-hidden="true">{m.checked_in_today ? "✅" : "⬜"}</span>
-                  {/* 顔写真: インストラクターが本人確認に使う。未登録は頭文字プレースホルダ。 */}
+                  {/* 顔写真: インストラクターが本人確認に使う。タップで拡大して氏名と照合。未登録は頭文字プレースホルダ。 */}
                   {m.photo_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={m.photo_url} alt={m.name} className="w-10 h-10 rounded-full object-cover bg-zinc-800 shrink-0" />
+                    <button
+                      type="button"
+                      onClick={() => setZoomPhoto({ url: m.photo_url as string, name: m.name })}
+                      className="shrink-0 rounded-full cursor-zoom-in"
+                      title="タップで拡大して本人確認"
+                      aria-label={`${m.name} の写真を拡大`}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={m.photo_url} alt={m.name} className="w-14 h-14 rounded-full object-cover bg-zinc-800" />
+                    </button>
                   ) : (
-                    <span className="w-10 h-10 rounded-full bg-zinc-800 text-zinc-400 text-sm flex items-center justify-center shrink-0" aria-hidden="true">
+                    <span className="w-14 h-14 rounded-full bg-zinc-800 text-zinc-400 text-base flex items-center justify-center shrink-0" aria-hidden="true">
                       {m.name.slice(0, 1)}
                     </span>
                   )}
@@ -217,6 +228,7 @@ export default function AttendanceCheckPage() {
           </div>
         )}
       </div>
+      <RobustPhotoLightbox photo={zoomPhoto} onClose={() => setZoomPhoto(null)} />
     </div>
   );
 }

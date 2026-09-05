@@ -5,6 +5,7 @@ import { createRobustClient } from "@/lib/robust/supabase";
 import RobustAdminLoginForm from "@/components/robust/RobustAdminLoginForm";
 import RobustAccessDenied from "@/components/robust/RobustAccessDenied";
 import RobustBeltBar from "@/components/robust/RobustBeltBar";
+import RobustPhotoLightbox from "@/components/robust/RobustPhotoLightbox";
 
 type Member = {
   id: string;
@@ -92,6 +93,8 @@ export default function AdminMembersPage() {
   const [historyLoading, setHistoryLoading] = useState(false);
   // 会員写真アップロード進行状態
   const [uploadingPhotoId, setUploadingPhotoId] = useState<string | null>(null);
+  // 本人確認用の写真拡大（ライトボックス）
+  const [zoomPhoto, setZoomPhoto] = useState<{ url: string; name: string } | null>(null);
   const MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5MB
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
@@ -508,23 +511,44 @@ export default function AdminMembersPage() {
                   /* 表示モード */
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 min-w-0">
-                      {/* 会員写真: クリックで登録/変更（本人確認・なりすまし/過少申告対策） */}
-                      <label className="relative shrink-0 cursor-pointer" title="クリックで写真を登録/変更">
+                      {/* 会員写真（本人確認・なりすまし/過少申告対策）
+                          Why: 写真ありは「タップで拡大」して氏名↔顔を照合、右下の鉛筆で変更。
+                               写真なしはアバター全体をクリックで登録（従来動作）。 */}
+                      <div className="relative shrink-0">
                         {m.photo_url ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={m.photo_url} alt={m.name} className="w-11 h-11 rounded-full object-cover bg-zinc-800" />
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => setZoomPhoto({ url: m.photo_url as string, name: m.name })}
+                              className="rounded-full cursor-zoom-in"
+                              title="クリックで拡大"
+                              aria-label={`${m.name} の写真を拡大`}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={m.photo_url} alt={m.name} className="w-14 h-14 rounded-full object-cover bg-zinc-800" />
+                            </button>
+                            <label className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-zinc-700 hover:bg-zinc-600 rounded-full flex items-center justify-center cursor-pointer border border-zinc-900 text-[11px] leading-none"
+                              title="写真を変更">
+                              <span aria-hidden="true">✎</span>
+                              <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden"
+                                disabled={uploadingPhotoId === m.id}
+                                onChange={e => { const f = e.target.files?.[0]; if (f) handlePhotoUpload(m.id, f); e.currentTarget.value = ""; }} />
+                            </label>
+                          </>
                         ) : (
-                          <span className="w-11 h-11 rounded-full bg-zinc-700 flex items-center justify-center text-zinc-300 text-base">{m.name.charAt(0)}</span>
+                          <label className="cursor-pointer" title="クリックで写真を登録">
+                            <span className="w-14 h-14 rounded-full bg-zinc-700 flex items-center justify-center text-zinc-300 text-lg">{m.name.charAt(0)}</span>
+                            <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden"
+                              disabled={uploadingPhotoId === m.id}
+                              onChange={e => { const f = e.target.files?.[0]; if (f) handlePhotoUpload(m.id, f); e.currentTarget.value = ""; }} />
+                          </label>
                         )}
                         {uploadingPhotoId === m.id && (
                           <span className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full">
                             <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                           </span>
                         )}
-                        <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden"
-                          disabled={uploadingPhotoId === m.id}
-                          onChange={e => { const f = e.target.files?.[0]; if (f) handlePhotoUpload(m.id, f); e.currentTarget.value = ""; }} />
-                      </label>
+                      </div>
                       <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-white font-medium text-sm">{m.name}</p>
@@ -717,6 +741,7 @@ export default function AdminMembersPage() {
           </div>
         )}
       </div>
+      <RobustPhotoLightbox photo={zoomPhoto} onClose={() => setZoomPhoto(null)} />
     </div>
   );
 }

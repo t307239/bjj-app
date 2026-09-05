@@ -36,26 +36,26 @@ export default function RobustBeltBar({
   const label = `${BELT_LABEL[key] ?? belt}${n > 0 ? ` ${n}本` : ""}`;
 
   return (
-    <span className={`inline-flex items-center gap-1.5 ${className}`}>
+    <span className={`inline-flex items-center gap-2 ${className}`}>
       <span
         className="relative inline-block rounded-[3px] overflow-hidden shrink-0 ring-1 ring-inset ring-black/40"
-        style={{ width: 60, height: 13, background: gradient }}
+        style={{ width: 78, height: 17, background: gradient }}
         role="img"
         aria-label={label}
         title={label}
       >
         {/* ランクバー（帯の端の黒/赤の区画） */}
         <span
-          className="absolute top-0 bottom-0 flex items-center justify-center gap-[2px] px-[3px]"
-          style={{ right: 7, width: 24, background: rankBarColor }}
+          className="absolute top-0 bottom-0 flex items-center justify-center gap-[2.5px] px-1"
+          style={{ right: 9, width: 31, background: rankBarColor }}
         >
           {/* 白ストライプ */}
           {Array.from({ length: n }).map((_, i) => (
-            <span key={i} className="inline-block bg-white" style={{ width: 2, height: "72%" }} />
+            <span key={i} className="inline-block bg-white" style={{ width: 2.5, height: "72%" }} />
           ))}
         </span>
       </span>
-      {showLabel && <span className="text-zinc-300 text-xs whitespace-nowrap">{label}</span>}
+      {showLabel && <span className="text-zinc-300 text-sm whitespace-nowrap">{label}</span>}
     </span>
   );
 }
