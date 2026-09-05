@@ -95,6 +95,14 @@ export default function AdminMembersPage() {
   const [uploadingPhotoId, setUploadingPhotoId] = useState<string | null>(null);
   // 本人確認用の写真拡大（ライトボックス）
   const [zoomPhoto, setZoomPhoto] = useState<{ url: string; name: string } | null>(null);
+  // 来館CSVの期間（既定=今月1日〜今日, JST）。Why: 出席ログを期間指定で出力するため。
+  const [attFrom, setAttFrom] = useState(() => {
+    const t = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Tokyo" });
+    return t.slice(0, 7) + "-01";
+  });
+  const [attTo, setAttTo] = useState(() =>
+    new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Tokyo" }),
+  );
   const MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5MB
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
@@ -327,13 +335,13 @@ export default function AdminMembersPage() {
             <p className="text-zinc-500 text-xs mt-0.5">ROBUST 柔術</p>
           </div>
           <div className="flex items-center gap-3">
-            {/* CSVエクスポート（事業継続・引き継ぎ用）。同一オリジンのGETでCookieセッションによりAPI認証される。 */}
+            {/* 会員マスタCSV（事業継続・引き継ぎ用）。同一オリジンのGETでCookieセッションによりAPI認証される。 */}
             <a
               href="/api/gym/robust/export"
               className="text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg px-3 py-1.5 whitespace-nowrap"
-              title="会員データをCSVでダウンロード"
+              title="会員データ（連絡先・プラン等）をCSVでダウンロード"
             >
-              ⬇ CSVエクスポート
+              ⬇ 会員CSV
             </a>
             <a href="/gym/robust/admin" className="text-zinc-400 text-xs hover:text-white whitespace-nowrap">← ダッシュボード</a>
           </div>
@@ -353,6 +361,40 @@ export default function AdminMembersPage() {
             <p className="text-2xl font-bold text-yellow-400">{pausedCount}</p>
             <p className="text-xs text-zinc-500 mt-1">休会中</p>
           </div>
+        </div>
+
+        {/* 来館CSV（期間指定）: 出席ログを日付範囲で出力（売上・稼働レポート用） */}
+        <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6 flex flex-wrap items-end gap-3">
+          <div>
+            <label htmlFor="att-from" className="block text-xs text-zinc-400 mb-1">来館CSV：開始日</label>
+            <input
+              id="att-from"
+              type="date"
+              value={attFrom}
+              max={attTo}
+              onChange={(e) => setAttFrom(e.target.value)}
+              className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-1.5 text-white text-sm"
+            />
+          </div>
+          <div>
+            <label htmlFor="att-to" className="block text-xs text-zinc-400 mb-1">終了日</label>
+            <input
+              id="att-to"
+              type="date"
+              value={attTo}
+              min={attFrom}
+              onChange={(e) => setAttTo(e.target.value)}
+              className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-1.5 text-white text-sm"
+            />
+          </div>
+          <a
+            href={`/api/gym/robust/export/attendance?from=${attFrom}&to=${attTo}`}
+            className="text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg px-4 py-2 whitespace-nowrap"
+            title="指定期間の来館データをCSVでダウンロード"
+          >
+            ⬇ 来館CSV（期間指定）
+          </a>
+          <p className="text-xs text-zinc-500 basis-full">指定期間に誰がいつ来たかを出席ログから出力します（売上・稼働レポート用）。</p>
         </div>
 
         {/* 動画アクセス（Drive 共有）管理 */}

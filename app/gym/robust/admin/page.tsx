@@ -127,10 +127,8 @@ export default function AdminPage() {
   if (!data) return null;
 
   const activeMembers = data.members.filter(m => m.status === "active");
-  const planCounts: Record<string, number> = {};
-  for (const m of activeMembers) {
-    planCounts[m.plan_type] = (planCounts[m.plan_type] ?? 0) + 1;
-  }
+  // 休会中の会員数。Why: ダッシュボードの3指標目を「特定プラン数」から、フォロー対象が分かる「休会中」に変更。
+  const pausedCount = data.members.filter(m => m.status === "paused").length;
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
@@ -154,8 +152,8 @@ export default function AdminPage() {
           <p className="text-xs text-zinc-500 mt-0.5">本日来館</p>
         </div>
         <div className="bg-zinc-900 border border-white/10 rounded-xl p-3 text-center">
-          <p className="text-2xl font-bold text-amber-400">{planCounts.twice_weekly ?? 0}</p>
-          <p className="text-xs text-zinc-500 mt-0.5">月8回プラン</p>
+          <p className="text-2xl font-bold text-amber-400">{pausedCount}</p>
+          <p className="text-xs text-zinc-500 mt-0.5">休会中</p>
         </div>
       </div>
 
