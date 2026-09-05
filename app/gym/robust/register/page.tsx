@@ -216,23 +216,14 @@ export default function RegisterPage() {
     }
   }
 
-  async function handleSignUp(e: React.FormEvent) {
+  // 新規登録①: アカウントは作らず②詳細情報へ進むだけ。
+  // Why: アカウント作成は最後(③決済時, handleCheckout)にまとめて行う。こうすると②③から①へ戻って
+  //      メール/パスワードを修正でき、登録途中放置による幽霊アカウント(認証あり・会員なし)も生まれにくい。
+  //      入力チェックは form の required / minLength(8) で担保済み。
+  function handleBasicNext(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    setSubmitting(true);
-    try {
-      const { error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { name } },
-      });
-      if (signUpError) throw signUpError;
-      setStep("profile"); // 認証後はプロフィール入力へ
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setSubmitting(false);
-    }
+    setStep("profile");
   }
 
   function handleProfileNext(e: React.FormEvent) {
@@ -245,6 +236,26 @@ export default function RegisterPage() {
     setError("");
     setSubmitting(true);
     try {
+      // 新規フローはこの時点(決済直前)でアカウントを作成する。
+      // Why: ①でアカウントを作らず最後にまとめることで、②③から①へ戻ってメール/パスワード変更が可能になり、
+      //      途中放置の幽霊アカウントも生まれにくい。既にログイン済み(ログイン/再開)なら作成はスキップ。
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        const { error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { data: { name } },
+        });
+        if (signUpError) {
+          setError(
+            /already|registered|exists/i.test(signUpError.message)
+              ? "このメールアドレスは既に登録済みです。「ログイン」からお進みください。"
+              : signUpError.message
+          );
+          setSubmitting(false);
+          return;
+        }
+      }
       const res = await fetch("/api/gym/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -327,7 +338,7 @@ export default function RegisterPage() {
 
         {step === "auth" && (
           <form
-            onSubmit={authMode === "signup" ? handleSignUp : handleLogin}
+            onSubmit={authMode === "signup" ? handleBasicNext : handleLogin}
             className="bg-zinc-900 border border-white/10 rounded-xl p-6 space-y-4"
           >
             {/* ゴースト(ログイン済み・会員未登録)向け: ①を起点に見せつつ②へ進む導線 */}
@@ -416,7 +427,7 @@ export default function RegisterPage() {
               disabled={submitting}
               className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
             >
-              {submitting ? "処理中..." : authMode === "signup" ? "アカウントを作成" : "ログイン"}
+              {submitting ? "処理中..." : authMode === "signup" ? "次へ（詳細情報）→" : "ログイン"}
             </button>
 
             {/* パスワード忘れ（ログイン時のみ） */}
