@@ -18,12 +18,6 @@ function csvCell(value: unknown): string {
   return `"${String(value).replace(/"/g, '""')}"`;
 }
 
-const PLAN_LABEL: Record<string, string> = {
-  fulltime: "フルタイム",
-  twice_weekly: "月8回",
-  drop_in: "ドロップイン",
-};
-
 function jstToday(): string {
   return new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Tokyo" });
 }
@@ -52,7 +46,7 @@ function monthsInRange(fromYm: string, toYm: string): string[] {
   return out;
 }
 
-type MemberLite = { name: string | null; email: string | null; plan_type: string | null };
+type MemberLite = { name: string | null; email: string | null };
 type AttendanceRow = {
   checked_in_at: string | null;
   gym_members: MemberLite | MemberLite[] | null;
@@ -63,7 +57,9 @@ function pickMember(m: AttendanceRow["gym_members"]): MemberLite | null {
   return m;
 }
 
-type Agg = { name: string; email: string; plan: string; counts: Record<string, number>; total: number };
+// Why: プラン等の会員属性は会員CSVに集約し、来館サマリーは「会員名＋メール（紐付けキー）＋
+//      月別回数」に絞って2CSVの重複を最小化する。
+type Agg = { name: string; email: string; counts: Record<string, number>; total: number };
 
 export async function GET(req: NextRequest) {
   const auth = await requireRobustManager();
@@ -86,7 +82,7 @@ export async function GET(req: NextRequest) {
   const admin = createRobustAdminClient();
   const { data, error } = await admin
     .from("attendance_logs")
-    .select("checked_in_at, gym_members(name, email, plan_type)")
+    .select("checked_in_at, gym_members(name, email)")
     .eq("gym_id", GYM_ID)
     .gte("checked_in_at", fromTs)
     .lte("checked_in_at", toTs)
@@ -107,7 +103,7 @@ export async function GET(req: NextRequest) {
     const key = m.email ?? m.name ?? "unknown";
     let agg = byMember.get(key);
     if (!agg) {
-      agg = { name: m.name ?? "", email: m.email ?? "", plan: PLAN_LABEL[m.plan_type ?? ""] ?? m.plan_type ?? "", counts: {}, total: 0 };
+      agg = { name: m.name ?? "", email: m.email ?? "", counts: {}, total: 0 };
       byMember.set(key, agg);
     }
     const ym = jstMonth(r.checked_in_at);
@@ -117,15 +113,14 @@ export async function GET(req: NextRequest) {
 
   const aggs = [...byMember.values()].sort((a, b) => a.name.localeCompare(b.name, "ja"));
 
-  const header = ["会員名", "メール", "プラン", ...months, "合計"];
+  const header = ["会員名", "メール", ...months, "合計"];
   const headerLine = header.map(csvCell).join(",");
   const bodyLines = aggs.map((a) =>
-    [a.name, a.email, a.plan, ...months.map((ym) => a.counts[ym] ?? 0), a.total].map(csvCell).join(","),
+    [a.name, a.email, ...months.map((ym) => a.counts[ym] ?? 0), a.total].map(csvCell).join(","),
   );
   // 末尾に月別合計（全員）の行を付ける。
   const totalRow = [
     "（月合計）",
-    "",
     "",
     ...months.map((ym) => aggs.reduce((s, a) => s + (a.counts[ym] ?? 0), 0)),
     aggs.reduce((s, a) => s + a.total, 0),

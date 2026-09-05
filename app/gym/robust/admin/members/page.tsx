@@ -238,10 +238,6 @@ export default function AdminMembersPage() {
     }
   }
 
-  // ② 手動チェックイン: その日の来館記録を1クリックで作成（DB行は増えるが会員データは不変）
-  function handleManualCheckin(memberId: string) {
-    patchMember(memberId, { manual_checkin: true }, m => m, "本日のチェックインを記録しました");
-  }
 
   // ① 家族割引 承認/却下: Stripe coupon も API 側で同期される
   function handleFamilyDecision(memberId: string, approved: boolean) {
@@ -680,14 +676,7 @@ export default function AdminMembersPage() {
                 {/* アクション行（手動チェックイン / 家族割引承認却下 / 再入会） */}
                 {editing !== m.id && (
                   <div className="mt-3 pt-3 border-t border-white/10 flex flex-wrap gap-2 items-center">
-                    {/* ② 手動チェックイン: 退会者以外に表示 */}
-                    {m.status !== "cancelled" && (
-                      <button type="button" disabled={actioningId === m.id}
-                        onClick={() => handleManualCheckin(m.id)}
-                        className="min-h-[44px] px-3 text-xs bg-zinc-800 hover:bg-zinc-700 disabled:opacity-40 text-white rounded-lg whitespace-nowrap">
-                        ✓ 手動チェックイン
-                      </button>
-                    )}
+                    {/* 出席取り（手動チェックイン・取消）は出欠確認画面に一本化。会員管理は情報管理に専念。 */}
                     {/* 動画閲覧権限のワンタップ切替 */}
                     <button type="button" disabled={actioningId === m.id}
                       onClick={() => handleToggleVideo(m.id, m.video_access)}
