@@ -152,7 +152,18 @@ export default function AdminPage() {
           <h1 className="text-base font-bold">ROBUST 柔術</h1>
           <p className="text-xs text-zinc-500">管理ダッシュボード</p>
         </div>
-        <span className="text-xs text-zinc-500">{data.billingPeriod}</span>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-zinc-500">{data.billingPeriod}</span>
+          {/* Why: 管理画面にログアウトが無く、オーナー↔インストラクターのアカウント切替には
+              会員マイページまで行く必要があり不便だった。ここから直接ログアウトできるようにする。 */}
+          <button
+            type="button"
+            onClick={async () => { await supabase.auth.signOut(); window.location.href = "/gym/robust/register"; }}
+            className="text-xs text-zinc-400 hover:text-white border border-white/10 rounded-lg px-2.5 py-1 transition-colors"
+          >
+            ログアウト
+          </button>
+        </div>
       </header>
 
       {/* サマリーカード（会員数系＋稼働・プラン内訳を2段で表示） */}

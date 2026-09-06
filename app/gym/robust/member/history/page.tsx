@@ -6,10 +6,6 @@ import { createRobustClient } from "@/lib/robust/supabase";
 type Log = { id: string; checked_in_at: string; class_type: string | null; billing_period: string; charged: boolean };
 type MonthStat = { period: string; count: number };
 
-const CLASS_LABEL: Record<string, string> = {
-  beginner: "白帯クラス", basic: "基礎", regular: "通常",
-  nogi: "ノーギ", private: "個別", other: "その他",
-};
 
 export default function MemberHistoryPage() {
   const supabase = createRobustClient();
@@ -133,7 +129,7 @@ export default function MemberHistoryPage() {
                         <p className="text-white text-sm">
                           {new Date(log.checked_in_at).toLocaleDateString("ja-JP", { month: "numeric", day: "numeric", weekday: "short" })}
                         </p>
-                        {log.class_type && <p className="text-zinc-500 text-xs mt-0.5">{CLASS_LABEL[log.class_type] ?? log.class_type}</p>}
+                        {/* クラス種別は運用でクラス名が変わり得るため会員履歴には表示しない */}
                       </div>
                       <div className="text-right">
                         <span className="text-zinc-500 text-xs tabular-nums">
