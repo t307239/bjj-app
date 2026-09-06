@@ -28,6 +28,14 @@ export default function RobustAccessDenied({
             管理者としてログイン
           </button>
         )}
+        {/* スタッフ(インストラクター)はダッシュボード自体は開けるので、個人ページではなく
+            ダッシュボードへ戻れる導線を用意する（純スタッフ＝会員でない人の脱出先）。 */}
+        <a
+          href="/gym/robust/admin"
+          className="w-full bg-zinc-800 hover:bg-zinc-700 text-white text-sm rounded-lg py-2.5 transition-colors"
+        >
+          ダッシュボードへ（スタッフ）
+        </a>
         <a
           href="/gym/robust/member/qr"
           className="w-full bg-zinc-800 hover:bg-zinc-700 text-white text-sm rounded-lg py-2.5 transition-colors"
