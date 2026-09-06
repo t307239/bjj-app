@@ -158,7 +158,7 @@ export default function AdminPage() {
               会員マイページまで行く必要があり不便だった。ここから直接ログアウトできるようにする。 */}
           <button
             type="button"
-            onClick={async () => { await supabase.auth.signOut(); window.location.href = "/gym/robust/register"; }}
+            onClick={async () => { await supabase.auth.signOut(); window.location.href = "/gym/robust/admin"; }}
             className="text-xs text-zinc-400 hover:text-white border border-white/10 rounded-lg px-2.5 py-1 transition-colors"
           >
             ログアウト

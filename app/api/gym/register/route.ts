@@ -30,6 +30,8 @@ const bodySchema = z.object({
   guardianName: z.string().max(50).optional(),
   guardianContact: z.string().max(100).optional(),
   agreedToTerms: z.boolean().optional(),
+  // カード登録をスキップして口座振替(後日)で入会する。Stripeを通さず会員を直接作成する。
+  skipPayment: z.boolean().optional(),
   includeInsurance: z.boolean().optional(),
   familyDiscount: z.boolean().optional(),
   familyMemberName: z.string().max(50).optional(),
@@ -50,7 +52,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "不正なリクエスト" }, { status: 400 });
   }
-  const { gymSlug, planKey, name, nameKana, birthDate, phone, address, sportsHistory, emergencyName, emergencyPhone, emergencyRelation, medicalNotes, chronicConditions, allergies, injuryHistory, bloodType, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, simultaneousFamily, agreedToTerms } = parsed.data;
+  const { gymSlug, planKey, name, nameKana, birthDate, phone, address, sportsHistory, emergencyName, emergencyPhone, emergencyRelation, medicalNotes, chronicConditions, allergies, injuryHistory, bloodType, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, simultaneousFamily, agreedToTerms, skipPayment } = parsed.data;
 
   // Why: monthlyAmount/setupFee はクライアント値を使わず planKey から確定（改ざん防止）
   const monthlyAmount = PLAN_MONTHLY_AMOUNTS[planKey] ?? 0;
@@ -127,6 +129,60 @@ export async function POST(req: NextRequest) {
   const applyCoupon =
     verifiedFamilyDiscount || (simultaneousFamily === true && !!familyMemberName?.trim());
 
+  // 論理プランキー → DBの plan_type
+  const planType: "fulltime" | "twice_weekly" | "drop_in" =
+    planKey === "twice_male" || planKey === "twice_kids" ? "twice_weekly"
+    : planKey === "drop_in" ? "drop_in"
+    : "fulltime";
+
+  // ── カード登録スキップ（口座振替で後日）: Stripeを通さず会員を直接作成 ──
+  // Why: 口座振替など現地払いの会員を、自己登録でもカード無しで作れるようにする。
+  //      入会金・保険料はジム側で後日徴収。カードは後からオーナー発行のリンクで登録可能。
+  if (skipPayment) {
+    const { error: insErr } = await admin.from("gym_members").insert({
+      gym_id: gym.id,
+      user_id: user.id,
+      email: user.email!,
+      name: name ?? "",
+      name_kana: nameKana,
+      birth_date: birthDate,
+      phone,
+      address,
+      sports_history: sportsHistory ?? null,
+      emergency_contact_name: emergencyName,
+      emergency_contact_phone: emergencyPhone,
+      emergency_contact_relation: emergencyRelation,
+      medical_notes: medicalNotes ?? null,
+      chronic_conditions: chronicConditions ?? null,
+      allergies: allergies ?? null,
+      injury_history: injuryHistory ?? null,
+      blood_type: bloodType ?? null,
+      is_minor: isMinor ?? false,
+      guardian_consent: isMinor ?? false,
+      guardian_name: guardianName ?? null,
+      guardian_contact: guardianContact ?? null,
+      stripe_customer_id: null,
+      stripe_subscription_id: null,
+      payment_method: "bank", // 口座振替（現地/後日徴収）
+      qr_token: crypto.randomUUID(),
+      plan_type: planType,
+      plan_cap: planType === "twice_weekly" ? gym.plan_cap : null,
+      status: "active",
+      video_access: false,
+      family_discount: applyCoupon,
+      family_member_name: familyMemberName ?? null,
+      insurance_expires_at: (includeInsurance ?? false) ? getInsuranceExpiry() : null,
+    });
+    if (insErr) {
+      // user_id UNIQUE 違反 = 既に会員（二度押し等）→ 正常扱い
+      if (insErr.code === "23505") {
+        return NextResponse.json({ error: "既に会員登録済みです。", alreadyMember: true }, { status: 409 });
+      }
+      return NextResponse.json({ error: "登録に失敗しました" }, { status: 500 });
+    }
+    return NextResponse.json({ skipped: true });
+  }
+
   const priceId = STRIPE_PRICE_IDS[planKey];
   if (!priceId) {
     // Why: Stripe Price ID が未設定（空文字）は「無効なプラン」ではなく「決済未設定」
@@ -167,4 +223,11 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json({ url: checkoutUrl });
+}
+
+/** スポーツ保険有効期限: 加入月が4月以降なら翌3/31、3月以前なら当年3/31（webhookと同一ロジック） */
+function getInsuranceExpiry(): string {
+  const now = new Date();
+  const year = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
+  return `${year + 1}-03-31`;
 }

@@ -120,6 +120,53 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  // 入力ドラフトの退避/復元。Why: Stripe決済ページへ往復したり再読込するとSPAのstateが消えて
+  //      詳細情報を再入力させられていた。sessionStorageに退避して復元する（パスワードは保存しない）。
+  const DRAFT_KEY = "robust_reg_draft";
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw) as Record<string, unknown>;
+      const s = (v: unknown) => (typeof v === "string" ? v : "");
+      if (typeof d.name === "string") setName(d.name);
+      setNameKana(s(d.nameKana));
+      setBirthDate(s(d.birthDate));
+      setPhone(s(d.phone));
+      setAddress(s(d.address));
+      setPostalCode(s(d.postalCode));
+      setSportsHistory(s(d.sportsHistory));
+      setEmergencyName(s(d.emergencyName));
+      setEmergencyPhone(s(d.emergencyPhone));
+      setEmergencyRelation(s(d.emergencyRelation));
+      setChronicConditions(s(d.chronicConditions));
+      setAllergies(s(d.allergies));
+      setInjuryHistory(s(d.injuryHistory));
+      if (d.bloodType === "A" || d.bloodType === "B" || d.bloodType === "O" || d.bloodType === "AB") setBloodType(d.bloodType);
+      if (typeof d.isMinor === "boolean") setIsMinor(d.isMinor);
+      setGuardianName(s(d.guardianName));
+      setGuardianContact(s(d.guardianContact));
+      if (typeof d.includeInsurance === "boolean") setIncludeInsurance(d.includeInsurance);
+      setFamilyMemberName(s(d.familyMemberName));
+      if (typeof d.simultaneousFamily === "boolean") setSimultaneousFamily(d.simultaneousFamily);
+    } catch {
+      /* 破損データは無視 */
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify({
+        name, nameKana, birthDate, phone, address, postalCode, sportsHistory,
+        emergencyName, emergencyPhone, emergencyRelation, chronicConditions,
+        allergies, injuryHistory, bloodType, isMinor, guardianName, guardianContact,
+        includeInsurance, familyMemberName, simultaneousFamily,
+      }));
+    } catch {
+      /* 保存不可(プライベート等)は無視 */
+    }
+  }, [name, nameKana, birthDate, phone, address, postalCode, sportsHistory, emergencyName, emergencyPhone, emergencyRelation, chronicConditions, allergies, injuryHistory, bloodType, isMinor, guardianName, guardianContact, includeInsurance, familyMemberName, simultaneousFamily]);
+
   // ログイン済みユーザーを適切な画面へ振り分ける。
   // 既存会員 → QR画面 / 未登録(幽霊アカウント) → プラン選択。未ログインなら auth ステップ。
   // Why: useEffect 初回チェックとログイン成功後の両方で同じ分岐を使うため関数化。
@@ -231,7 +278,7 @@ export default function RegisterPage() {
     setStep("plan");
   }
 
-  async function handleCheckout() {
+  async function handleCheckout(skipPayment = false) {
     if (!selectedPlan) return;
     setError("");
     setSubmitting(true);
@@ -285,6 +332,7 @@ export default function RegisterPage() {
           familyDiscount: !!familyMemberName.trim(),
           familyMemberName: familyMemberName.trim() || undefined,
           simultaneousFamily,
+          skipPayment, // true=カード登録せず口座振替で入会（Stripeを通さない）
           // monthlyAmount は送信しない（サーバー側で planKey から確定）
         }),
       });
@@ -304,6 +352,12 @@ export default function RegisterPage() {
         return;
       }
       if (!res.ok) throw new Error(json.error ?? "登録処理に失敗しました");
+      // スキップ登録（口座振替）: Stripeを通さず会員作成済み → 下書き消去して会員トップ(QR)へ
+      if (json.skipped) {
+        try { sessionStorage.removeItem(DRAFT_KEY); } catch { /* noop */ }
+        window.location.href = `/gym/${GYM_SLUG}/member/qr`;
+        return;
+      }
       window.location.href = json.url;
     } catch (err) {
       setError((err as Error).message);
@@ -559,7 +613,7 @@ export default function RegisterPage() {
               </div>
               <div className="flex gap-3">
                 <div className="flex-1">
-                  <label htmlFor="reg-emg-phone" className="block text-xs text-zinc-400 mb-1">電話</label>
+                  <label htmlFor="reg-emg-phone" className="block text-xs text-zinc-400 mb-1">電話 <span className="text-red-400">*</span></label>
                   <input
                     id="reg-emg-phone"
                     type="tel"
@@ -700,14 +754,6 @@ export default function RegisterPage() {
                 に従うことに同意します。
               </span>
             </label>
-            {/* 戻る: 基本情報(①)へ。入力値は state 保持のため戻っても消えない */}
-            <button
-              type="button"
-              onClick={() => { setError(""); setStep("auth"); }}
-              className="text-xs text-zinc-400 hover:text-white inline-flex items-center gap-1 min-h-[44px]"
-            >
-              ← 基本情報に戻る
-            </button>
             <button
               type="submit"
               disabled={agreedToTerms === false || !nameKana.trim() || (isMinor && (!guardianName || !guardianContact))}
@@ -715,21 +761,21 @@ export default function RegisterPage() {
             >
               次へ（プラン選択）→
             </button>
+            {/* 戻る: 基本情報(①)へ。入力値は state 保持のため戻っても消えない */}
+            <button
+              type="button"
+              onClick={() => { setError(""); setStep("auth"); }}
+              className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg py-2.5 text-sm mt-2 transition-colors"
+            >
+              ← 基本情報に戻る
+            </button>
           </form>
         )}
 
         {step === "plan" && (
           <div className="bg-zinc-900 border border-white/10 rounded-xl p-6">
             <h2 className="text-sm font-bold text-white mb-1">プランを選択してください</h2>
-            <p className="text-xs text-zinc-500 mb-2">※ 表示価格はすべて税別です。</p>
-            {/* 戻る: 詳細情報を修正できるように②へ戻す（入力値は state 保持のため消えない） */}
-            <button
-              type="button"
-              onClick={() => { setError(""); setStep("profile"); }}
-              className="text-xs text-zinc-400 hover:text-white mb-4 inline-flex items-center gap-1 min-h-[44px]"
-            >
-              ← 詳細情報に戻る
-            </button>
+            <p className="text-xs text-zinc-500 mb-4">※ 表示価格はすべて税別です。</p>
             <div className="space-y-2 mb-6">
               {PLANS.map(plan => (
                 <button
@@ -893,17 +939,40 @@ export default function RegisterPage() {
             })()}
 
             {error && <p className="text-red-400 text-xs mb-3">{error}</p>}
+
+            {/* 支払い方法を2択で明確に提示: カード決済 or 口座振替(スキップ) */}
+            <p className="text-xs text-zinc-400 font-medium mb-2">お支払い方法を選んでください</p>
             <button
               type="button"
-              onClick={handleCheckout}
+              onClick={() => handleCheckout(false)}
               disabled={!selectedPlan || submitting}
               className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
             >
-              {submitting ? "Stripe へ移動中..." : "決済へ進む →"}
+              {submitting ? "処理中..." : "① カードで決済して入会 →"}
             </button>
-            <p className="text-xs text-zinc-600 mt-3 text-center">
-              Stripe の安全な決済ページへ移動します
+            <p className="text-xs text-zinc-600 mt-1 mb-3 text-center">
+              入会金・今月分（日割り）・翌月分をStripeの安全な決済ページでカード払い
             </p>
+            <button
+              type="button"
+              onClick={() => handleCheckout(true)}
+              disabled={!selectedPlan || submitting}
+              className="w-full bg-zinc-800 hover:bg-zinc-700 disabled:opacity-40 text-zinc-200 font-medium rounded-lg py-2.5 text-sm transition-colors"
+            >
+              ② 口座振替で入会（カード登録は後日）
+            </button>
+            <p className="text-xs text-zinc-600 mt-1 text-center">
+              今はカードを登録せず入会します。月謝・入会金・保険料は道場でのお支払い。カードはあとからオーナー発行のリンクで登録できます。
+            </p>
+
+            {/* 戻る: 詳細情報(②)へ。入力値は保持されます */}
+            <button
+              type="button"
+              onClick={() => { setError(""); setStep("profile"); }}
+              className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg py-2.5 text-sm mt-4 transition-colors"
+            >
+              ← 詳細情報に戻る
+            </button>
           </div>
         )}
       </div>

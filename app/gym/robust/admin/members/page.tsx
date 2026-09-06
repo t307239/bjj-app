@@ -103,6 +103,32 @@ export default function AdminMembersPage() {
   const [attTo, setAttTo] = useState(() =>
     new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Tokyo" }),
   );
+  // カード登録リンク発行（非カード会員→カード切替）: 開いている会員・選択プラン・生成URL
+  const [cardLinkFor, setCardLinkFor] = useState<string | null>(null);
+  const [cardLinkPlan, setCardLinkPlan] = useState("fulltime_male");
+  const [cardLinkUrl, setCardLinkUrl] = useState<string | null>(null);
+  const [cardLinkLoading, setCardLinkLoading] = useState(false);
+  const [cardLinkErr, setCardLinkErr] = useState("");
+  async function issueCardLink(memberId: string) {
+    setCardLinkLoading(true);
+    setCardLinkErr("");
+    setCardLinkUrl(null);
+    try {
+      const res = await fetch("/api/gym/robust/members/card-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ memberId, planKey: cardLinkPlan }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "発行に失敗しました");
+      setCardLinkUrl(json.url);
+    } catch (e) {
+      setCardLinkErr((e as Error).message);
+    } finally {
+      setCardLinkLoading(false);
+    }
+  }
+
   // Drive共有対象メールを一括コピーした際の一時フィードバック
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const copyEmails = (key: string, emails: string[]) => {
@@ -683,6 +709,15 @@ export default function AdminMembersPage() {
                       className={`min-h-[44px] px-3 text-xs disabled:opacity-40 rounded-lg whitespace-nowrap ${m.video_access ? "bg-emerald-700 hover:bg-emerald-600 text-white" : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300"}`}>
                       {m.video_access ? "🎬 動画ON（OFFにする）" : "🎬 動画OFF（ONにする）"}
                     </button>
+                    {/* カード登録リンク発行: 非カード会員(口座振替等)をカード払いに切り替える。オーナーが
+                        プランを選んでリンク発行→会員に送る→会員がカード登録で翌月からカード課金。 */}
+                    {m.payment_method !== "stripe" && m.status !== "cancelled" && (
+                      <button type="button"
+                        onClick={() => { setCardLinkFor(cardLinkFor === m.id ? null : m.id); setCardLinkUrl(null); setCardLinkErr(""); }}
+                        className="min-h-[44px] px-3 text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg whitespace-nowrap">
+                        💳 カード登録リンク
+                      </button>
+                    )}
                     {/* ③ 再入会: 退会済みのみ表示 */}
                     {m.status === "cancelled" && (
                       <button type="button" disabled={actioningId === m.id}
@@ -717,6 +752,40 @@ export default function AdminMembersPage() {
                       <span className={`text-xs ${actionMsg.ok ? "text-emerald-400" : "text-red-400"}`} role="status">
                         {actionMsg.text}
                       </span>
+                    )}
+                  </div>
+                )}
+                {/* カード登録リンク発行パネル */}
+                {editing !== m.id && cardLinkFor === m.id && (
+                  <div className="mt-2 bg-zinc-950/50 border border-white/10 rounded-lg p-3 space-y-2">
+                    <p className="text-xs text-zinc-400">
+                      プラン（料金）を選んでリンクを発行 → 会員に送ってください。会員がカード登録すると<span className="text-zinc-200">翌月1日からカード課金</span>になります（今は課金なし）。※口座振替の停止時期はオーナーが合わせてください。
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <label htmlFor={`cardplan-${m.id}`} className="sr-only">プラン</label>
+                      <select id={`cardplan-${m.id}`} value={cardLinkPlan} onChange={e => setCardLinkPlan(e.target.value)}
+                        className="bg-zinc-800 border border-white/10 rounded-lg px-2 py-1.5 text-white text-xs">
+                        <option value="fulltime_male">フルタイム（男性）¥12,000</option>
+                        <option value="fulltime_female">フルタイム（女性）¥10,000</option>
+                        <option value="twice_male">月8回（大人）¥10,000</option>
+                        <option value="twice_kids">月8回（キッズ）¥7,000</option>
+                        <option value="drop_in">ドロップイン ¥2,000</option>
+                      </select>
+                      <button type="button" disabled={cardLinkLoading} onClick={() => issueCardLink(m.id)}
+                        className="text-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white rounded-lg px-3 py-1.5 whitespace-nowrap">
+                        {cardLinkLoading ? "発行中..." : "リンク発行"}
+                      </button>
+                    </div>
+                    {cardLinkErr && <p className="text-red-400 text-xs">{cardLinkErr}</p>}
+                    {cardLinkUrl && (
+                      <div className="flex items-center gap-2">
+                        <input readOnly value={cardLinkUrl} aria-label="カード登録リンク"
+                          className="flex-1 bg-zinc-800 border border-white/10 rounded px-2 py-1.5 text-white text-xs" />
+                        <button type="button" onClick={() => copyEmails("cardlink", [cardLinkUrl])}
+                          className="text-xs bg-zinc-700 hover:bg-zinc-600 text-white rounded px-2 py-1.5 whitespace-nowrap">
+                          {copiedKey === "cardlink" ? "✓ コピー済" : "コピー"}
+                        </button>
+                      </div>
                     )}
                   </div>
                 )}

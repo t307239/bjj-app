@@ -6,6 +6,13 @@ import { robustLogger } from "@/lib/robust/logger";
 export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void> {
   const session = event.data.object as Stripe.Checkout.Session;
 
+  // カード切替（既存会員のカード登録）: 新規入会の insert ではなく、既存会員のカード情報を
+  // 更新する。metadata.mode で分岐（オーナー発行のカード登録リンク経由）。
+  if (session.metadata?.mode === "card_setup") {
+    await handleCardSetup(session);
+    return;
+  }
+
   // client_reference_id = Supabase Auth の user_id
   const userId = session.client_reference_id;
   if (!userId) throw new Error("client_reference_id が未設定");
@@ -115,6 +122,37 @@ export async function handleCheckoutCompleted(event: Stripe.Event): Promise<void
     sessionId: session.id,
     customer: String(session.customer ?? ""),
     planType,
+  });
+}
+
+/**
+ * カード切替: オーナー発行のカード登録リンクで会員がカード登録した時の処理。
+ * 既存会員レコードに Stripe 顧客/サブスクを紐付け、支払方法をカードに更新する。
+ * Why: 口座振替→カードの乗り換え。翌月1日から課金開始（billing_cycle_anchor でリンク発行時に設定済み）。
+ */
+async function handleCardSetup(session: Stripe.Checkout.Session): Promise<void> {
+  const memberId = session.metadata?.memberId;
+  if (!memberId) throw new Error("card_setup: metadata.memberId が未設定");
+
+  const supabase = createRobustAdminClient();
+  const { error } = await supabase
+    .from("gym_members")
+    .update({
+      stripe_customer_id: session.customer as string,
+      stripe_subscription_id: session.subscription as string | null,
+      payment_method: "stripe",
+    })
+    .eq("id", memberId);
+
+  if (error) {
+    // カード登録は済んだのにDB更新失敗 = 要手動照合の重大イベント
+    robustLogger.error("robust.card_setup.update_failed", { memberId, sessionId: session.id }, error);
+    throw error;
+  }
+  robustLogger.info("robust.card_setup.updated", {
+    memberId,
+    sessionId: session.id,
+    customer: String(session.customer ?? ""),
   });
 }
 
