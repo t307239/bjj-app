@@ -37,7 +37,7 @@ const STATUS_LABEL: Record<string, string> = {
 };
 const PAYMENT_LABEL: Record<string, string> = {
   stripe: "カード（Stripe）",
-  bank: "口座振替",
+  bank_transfer: "口座振替",
 };
 
 type MemberRow = {

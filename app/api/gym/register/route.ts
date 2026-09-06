@@ -163,7 +163,7 @@ export async function POST(req: NextRequest) {
       guardian_contact: guardianContact ?? null,
       stripe_customer_id: null,
       stripe_subscription_id: null,
-      payment_method: "bank", // 口座振替（現地/後日徴収）
+      payment_method: "bank_transfer", // 口座振替（現地/後日徴収）。CHECK制約は 'stripe' | 'bank_transfer' のみ
       qr_token: crypto.randomUUID(),
       plan_type: planType,
       plan_cap: planType === "twice_weekly" ? gym.plan_cap : null,
