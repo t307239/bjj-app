@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
 import RobustAdminLoginForm from "@/components/robust/RobustAdminLoginForm";
+import RobustAccessDenied from "@/components/robust/RobustAccessDenied";
 
 // 依頼書 Section 15: 休館・イベント・緊急連絡の一斉プッシュ配信（オーナー/スタッフ）
 // よく使う雛形。選ぶと件名・本文の初期値が入る（そのまま編集可）。
@@ -18,6 +19,7 @@ export default function NotifyPage() {
   const supabase = createRobustClient();
   const [loading, setLoading] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
+  const [accessDenied, setAccessDenied] = useState(false);
 
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -30,6 +32,12 @@ export default function NotifyPage() {
     (async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { setShowLogin(true); setLoading(false); return; }
+      // manager ゲート: 配信は requireRobustManager（オーナー/管理者のみ）。
+      // Why: このページはロード時に manager 限定APIを叩かず getUser のみだったため、
+      //      instructor が直URLで配信UIを開けていた。manager 限定の settings で判定して締め出す。
+      const res = await fetch("/api/gym/robust/settings");
+      if (res.status === 401) { setShowLogin(true); setLoading(false); return; }
+      if (res.status === 403) { setAccessDenied(true); setLoading(false); return; }
       setLoading(false);
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -64,6 +72,7 @@ export default function NotifyPage() {
 
   if (loading) return <div className="min-h-screen bg-zinc-950 flex items-center justify-center"><div className="w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin" /></div>;
   if (showLogin) return <RobustAdminLoginForm onSuccess={() => { setShowLogin(false); }} />;
+  if (accessDenied) return <RobustAccessDenied message="この画面はオーナー・管理者のみ利用できます。" onLogin={() => { setAccessDenied(false); setShowLogin(true); }} />;
 
   const canSend = title.trim().length > 0 && body.trim().length > 0 && !sending;
 

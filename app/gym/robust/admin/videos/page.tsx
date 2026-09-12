@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
 import RobustAdminLoginForm from "@/components/robust/RobustAdminLoginForm";
+import RobustAccessDenied from "@/components/robust/RobustAccessDenied";
 
 type Video = {
   id: string;
@@ -56,11 +57,17 @@ export default function AdminVideosPage() {
     setLoading(false);
   }
 
-  async function fetchSettings() {
+  // 管理者ゲート兼フォルダ設定取得。settings は requireRobustManager（オーナー/管理者のみ）。
+  // Why: /videos GET は会員も閲覧するため instructor でも 200 が返り、ロード判定に使えない。
+  //      manager 限定の settings を判定に使い、instructor(403) をこの画面から締め出す。
+  async function fetchSettings(): Promise<"login" | "denied" | "ok"> {
     const res = await fetch("/api/gym/robust/settings");
-    if (!res.ok) return; // 設定取得失敗は致命的でないため握りつぶす（動画一覧は表示する）
+    if (res.status === 401) return "login";
+    if (res.status === 403) return "denied";
+    if (!res.ok) return "ok"; // 認証以外の失敗はフォルダURL未取得で許容（一覧は表示する）
     const json = await res.json();
     setFolderUrl(json.drive_folder_url ?? "");
+    return "ok";
   }
 
   async function handleSaveFolder(e: React.FormEvent) {
@@ -88,7 +95,11 @@ export default function AdminVideosPage() {
     (async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { setShowLogin(true); setLoading(false); return; }
-      await Promise.all([fetchVideos(), fetchSettings()]);
+      // 先に manager ゲートを判定してから一覧を取得する（instructor はここで弾く）
+      const gate = await fetchSettings();
+      if (gate === "login") { setShowLogin(true); setLoading(false); return; }
+      if (gate === "denied") { setError("この画面はオーナー・管理者のみ利用できます。"); setLoading(false); return; }
+      await fetchVideos();
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -134,7 +145,7 @@ export default function AdminVideosPage() {
 
   if (loading) return <div className="min-h-screen bg-zinc-950 flex items-center justify-center"><div className="w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin" /></div>;
 
-  if (error) return <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4"><p className="text-red-400 text-sm">{error}</p></div>;
+  if (error) return <RobustAccessDenied message={error} onLogin={() => { setError(""); setShowLogin(true); }} />;
 
   return (
     <div className="min-h-screen bg-zinc-950 p-4">
