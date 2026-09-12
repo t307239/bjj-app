@@ -34,8 +34,8 @@ export default function NotifyPage() {
       if (!user) { setShowLogin(true); setLoading(false); return; }
       // manager ゲート: 配信は requireRobustManager（オーナー/管理者のみ）。
       // Why: このページはロード時に manager 限定APIを叩かず getUser のみだったため、
-      //      instructor が直URLで配信UIを開けていた。manager 限定の settings で判定して締め出す。
-      const res = await fetch("/api/gym/robust/settings");
+      //      instructor が直URLで配信UIを開けていた。manager 限定の /role で判定して締め出す。
+      const res = await fetch("/api/gym/robust/role");
       if (res.status === 401) { setShowLogin(true); setLoading(false); return; }
       if (res.status === 403) { setAccessDenied(true); setLoading(false); return; }
       setLoading(false);
