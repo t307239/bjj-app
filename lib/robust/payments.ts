@@ -160,12 +160,11 @@ export async function createCheckoutSession({
   const proratedAmount = Math.round((discountedMonthly * remainingDays) / daysInMonth);
 
   // line_items 構築
-  // Why: drop_in は payment モードの一回払いなので、この price 自体に外税を適用する。
-  //      月額プラン(subscription)の定期課金分は subscription_data.default_tax_rates で課税する。
+  // Why: 定期課金(subscription)/ドロップイン(payment)いずれもこの price 明細に直接 tax_rates を付ける。
+  //      subscription_data.default_tax_rates は使わない（それだと税率未指定の一時明細＝保険にまで
+  //      課税が波及し、税込のはずの保険が二重課税されるため）。課税は各明細で明示的に指定する。
   const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
-    isDropIn
-      ? { price: priceId, quantity: 1, tax_rates: [taxRateId] }
-      : { price: priceId, quantity: 1 },
+    { price: priceId, quantity: 1, tax_rates: [taxRateId] },
   ];
 
   if (!isDropIn) {
@@ -294,8 +293,8 @@ export async function createCheckoutSession({
     ...(discounts ? { discounts } : {}),
     subscription_data: {
       trial_end: trialEnd,
-      // 定期課金(翌々月以降の毎月分)に消費税10%(外税)を適用。HP の税別表記に合わせる。
-      default_tax_rates: [taxRateId],
+      // 定期課金の消費税は line_items の priceId 明細に付けた tax_rates で適用する。
+      // default_tax_rates は使わない（保険など税率未指定の一時明細に波及して二重課税になるため）。
     },
     success_url: `${origin}/gym/${gymSlug}/register/success`,
     cancel_url: `${origin}/gym/${gymSlug}/register`,
