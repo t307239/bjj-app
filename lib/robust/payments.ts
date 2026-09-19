@@ -215,6 +215,10 @@ export async function createCheckoutSession({
         unit_amount: insuranceFee,
       },
       quantity: 1,
+      // Why: 保険料(2,150/950)は元々税込のため非課税。subscription mode では
+      //      subscription_data.default_tax_rates が「tax_rates 未指定の一時明細」にも波及して
+      //      保険まで課税されてしまうため、明示的に空配列で課税対象外にする。
+      tax_rates: [],
     });
   }
 
