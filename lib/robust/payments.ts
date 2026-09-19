@@ -19,22 +19,50 @@ function getStripe(): Stripe {
   return _stripe;
 }
 
+// ROBUST 消費税(10%・外税)の Stripe TaxRate ID（モジュールスコープでメモ化）
+let _robustTaxRateId: string | null = null;
+const CONSUMPTION_TAX_PERCENTAGE = 10;
+
+/**
+ * ROBUST の消費税(10%・外税)TaxRate ID を取得する。無ければ作成して再利用する。
+ * Why: HP は全料金「税別」表記。月額の定期課金額は Stripe Price 側にあり、コードから
+ *      金額自体は変えられない。そこで外税(inclusive:false)の TaxRate を課税対象の
+ *      line_item と subscription に適用して税込課金にする（保険・超過は元々税込なので非課税）。
+ *      Stripe 管理画面の手作業を不要にするため、getRobustPortalConfigId と同様に
+ *      list→無ければ create し、cold start ごとの重複作成を避ける。
+ */
+async function getRobustTaxRate10Id(): Promise<string> {
+  if (_robustTaxRateId) return _robustTaxRateId;
+  const stripe = getStripe();
+  const existing = await stripe.taxRates.list({ active: true, limit: 100 });
+  const found = existing.data.find(
+    (t) =>
+      t.metadata?.robust_tax === "1" && t.percentage === CONSUMPTION_TAX_PERCENTAGE && !t.inclusive,
+  );
+  if (found) {
+    _robustTaxRateId = found.id;
+    return found.id;
+  }
+  const created = await stripe.taxRates.create({
+    display_name: "消費税",
+    percentage: CONSUMPTION_TAX_PERCENTAGE,
+    inclusive: false,
+    country: "JP",
+    metadata: { robust_tax: "1" },
+  });
+  _robustTaxRateId = created.id;
+  return created.id;
+}
+
 /** 超過課金: PaymentIntents 都度ではなく Invoice Items に積む（翌月合算） */
-export async function addOverageToNextInvoice(
-  member: GymMember,
-  gymId: string
-): Promise<void> {
+export async function addOverageToNextInvoice(member: GymMember, gymId: string): Promise<void> {
   // Why: 顧客IDが無い / 有効なサブスクが無い場合は請求先が確定しないため超過課金しない。
   //      サブスク無しで invoiceItem を作ると「宙吊りの請求項目」になり、将来の別請求に
   //      予期せず合算される恐れがある（口座振替・解約済への誤課金防止）。
   if (!member.stripe_customer_id || !member.stripe_subscription_id) return;
 
   const supabase = createRobustAdminClient();
-  const { data: gym } = await supabase
-    .from("gyms")
-    .select("overage_yen")
-    .eq("id", gymId)
-    .single();
+  const { data: gym } = await supabase.from("gyms").select("overage_yen").eq("id", gymId).single();
 
   // 依頼書準拠: 週2会員の超過は 1回 ¥2,200（ドロップイン ¥2,000 の税込相当）。
   // 実額は gyms.overage_yen（DB）で管理し、未設定時のフォールバックを ¥2,200 とする。
@@ -89,7 +117,7 @@ export async function createCheckoutSession({
   origin: string;
   setupFeeAmount: number;
   monthlyAmount: number;
-  name?: string;      // アプリで入力した氏名（会員名の正）。Stripeのカード名義より優先させる。
+  name?: string; // アプリで入力した氏名（会員名の正）。Stripeのカード名義より優先させる。
   nameKana?: string;
   birthDate?: string;
   phone?: string;
@@ -119,25 +147,38 @@ export async function createCheckoutSession({
   const now = new Date();
   const isDropIn = planKeyLogical === "drop_in";
 
+  // 消費税(10%外税)。課税対象: 月額(定期)・入会金・日割り・翌月分・ドロップイン。
+  // 非課税: スポーツ保険(元々税込)・超過(¥2,200=税込相当)。HP の税別表記に合わせて税込課金にする。
+  const taxRateId = await getRobustTaxRate10Id();
+
   // drop_in は単発参加のため日割り・翌月分前払いは不要
   // Why: monthlyAmount=2000 のまま日割り・翌月分を計算すると約¥5,000〜6,000の三重課金になる
   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
   const remainingDays = daysInMonth - now.getDate() + 1;
   const discountedMonthly = monthlyAmount - (familyDiscount ? FAMILY_DISCOUNT_YEN : 0);
   // 日割りは Math.round（会員中立な丸め）
-  const proratedAmount = Math.round(discountedMonthly * remainingDays / daysInMonth);
+  const proratedAmount = Math.round((discountedMonthly * remainingDays) / daysInMonth);
 
   // line_items 構築
+  // Why: drop_in は payment モードの一回払いなので、この price 自体に外税を適用する。
+  //      月額プラン(subscription)の定期課金分は subscription_data.default_tax_rates で課税する。
   const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
-    { price: priceId, quantity: 1 },
+    isDropIn
+      ? { price: priceId, quantity: 1, tax_rates: [taxRateId] }
+      : { price: priceId, quantity: 1 },
   ];
 
   if (!isDropIn) {
-    // 月額プランのみ: 入会金・日割り・翌月分を追加
+    // 月額プランのみ: 入会金・日割り・翌月分を追加（いずれも課税対象＝外税を適用）
     if (setupFeeAmount > 0) {
       lineItems.push({
-        price_data: { currency: "jpy", product_data: { name: "入会金" }, unit_amount: setupFeeAmount },
+        price_data: {
+          currency: "jpy",
+          product_data: { name: "入会金" },
+          unit_amount: setupFeeAmount,
+        },
         quantity: 1,
+        tax_rates: [taxRateId],
       });
     }
     if (proratedAmount > 0) {
@@ -148,6 +189,7 @@ export async function createCheckoutSession({
           unit_amount: proratedAmount,
         },
         quantity: 1,
+        tax_rates: [taxRateId],
       });
     }
     if (discountedMonthly > 0) {
@@ -158,6 +200,7 @@ export async function createCheckoutSession({
           unit_amount: discountedMonthly,
         },
         quantity: 1,
+        tax_rates: [taxRateId],
       });
     }
   }
@@ -233,9 +276,7 @@ export async function createCheckoutSession({
   //       duration="once" にすると翌々月（subscription初回）のみ割引が適用され翌々月+1以降は消える。
   //       Stripe Dashboard: Products > Coupons > 新規作成 > Amount off: 2000円 > Duration: Forever
   const familyCouponId = process.env.ROBUST_STRIPE_COUPON_FAMILY;
-  const discounts = familyDiscount && familyCouponId
-    ? [{ coupon: familyCouponId }]
-    : undefined;
+  const discounts = familyDiscount && familyCouponId ? [{ coupon: familyCouponId }] : undefined;
 
   const session = await getStripe().checkout.sessions.create({
     client_reference_id: userId,
@@ -249,6 +290,8 @@ export async function createCheckoutSession({
     ...(discounts ? { discounts } : {}),
     subscription_data: {
       trial_end: trialEnd,
+      // 定期課金(翌々月以降の毎月分)に消費税10%(外税)を適用。HP の税別表記に合わせる。
+      default_tax_rates: [taxRateId],
     },
     success_url: `${origin}/gym/${gymSlug}/register/success`,
     cancel_url: `${origin}/gym/${gymSlug}/register`,
@@ -276,9 +319,7 @@ export async function getRobustPortalConfigId(): Promise<string> {
   const stripe = getStripe();
 
   const existing = await stripe.billingPortal.configurations.list({ limit: 100 });
-  const found = existing.data.find(
-    (c) => c.active && c.metadata?.robust_portal === "1"
-  );
+  const found = existing.data.find((c) => c.active && c.metadata?.robust_portal === "1");
   if (found) {
     _robustPortalConfigId = found.id;
     return found.id;

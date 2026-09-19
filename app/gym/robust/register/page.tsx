@@ -12,7 +12,11 @@
 
 import { useState, useEffect } from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
-import { FAMILY_DISCOUNT_YEN, SPORTS_INSURANCE_YEN, SPORTS_INSURANCE_KIDS_YEN } from "@/lib/robust/types";
+import {
+  FAMILY_DISCOUNT_YEN,
+  SPORTS_INSURANCE_YEN,
+  SPORTS_INSURANCE_KIDS_YEN,
+} from "@/lib/robust/types";
 
 const GYM_SLUG = "robust";
 // 日本の郵便番号は 7 桁（ハイフンなし）。マジックナンバー回避のため定数化。
@@ -78,6 +82,9 @@ const PLANS: Plan[] = [
   },
 ];
 
+// 消費税率（外税10%）。表示価格はすべて税別で、決済内訳・合計に消費税を加算する。
+const CONSUMPTION_TAX_RATE = 0.1;
+
 export default function RegisterPage() {
   const supabase = createRobustClient();
   const [step, setStep] = useState<Step>("loading");
@@ -142,7 +149,8 @@ export default function RegisterPage() {
       setChronicConditions(s(d.chronicConditions));
       setAllergies(s(d.allergies));
       setInjuryHistory(s(d.injuryHistory));
-      if (d.bloodType === "A" || d.bloodType === "B" || d.bloodType === "O" || d.bloodType === "AB") setBloodType(d.bloodType);
+      if (d.bloodType === "A" || d.bloodType === "B" || d.bloodType === "O" || d.bloodType === "AB")
+        setBloodType(d.bloodType);
       if (typeof d.isMinor === "boolean") setIsMinor(d.isMinor);
       setGuardianName(s(d.guardianName));
       setGuardianContact(s(d.guardianContact));
@@ -156,23 +164,68 @@ export default function RegisterPage() {
 
   useEffect(() => {
     try {
-      sessionStorage.setItem(DRAFT_KEY, JSON.stringify({
-        name, nameKana, birthDate, phone, address, postalCode, sportsHistory,
-        emergencyName, emergencyPhone, emergencyRelation, chronicConditions,
-        allergies, injuryHistory, bloodType, isMinor, guardianName, guardianContact,
-        includeInsurance, familyMemberName, simultaneousFamily,
-      }));
+      sessionStorage.setItem(
+        DRAFT_KEY,
+        JSON.stringify({
+          name,
+          nameKana,
+          birthDate,
+          phone,
+          address,
+          postalCode,
+          sportsHistory,
+          emergencyName,
+          emergencyPhone,
+          emergencyRelation,
+          chronicConditions,
+          allergies,
+          injuryHistory,
+          bloodType,
+          isMinor,
+          guardianName,
+          guardianContact,
+          includeInsurance,
+          familyMemberName,
+          simultaneousFamily,
+        }),
+      );
     } catch {
       /* 保存不可(プライベート等)は無視 */
     }
-  }, [name, nameKana, birthDate, phone, address, postalCode, sportsHistory, emergencyName, emergencyPhone, emergencyRelation, chronicConditions, allergies, injuryHistory, bloodType, isMinor, guardianName, guardianContact, includeInsurance, familyMemberName, simultaneousFamily]);
+  }, [
+    name,
+    nameKana,
+    birthDate,
+    phone,
+    address,
+    postalCode,
+    sportsHistory,
+    emergencyName,
+    emergencyPhone,
+    emergencyRelation,
+    chronicConditions,
+    allergies,
+    injuryHistory,
+    bloodType,
+    isMinor,
+    guardianName,
+    guardianContact,
+    includeInsurance,
+    familyMemberName,
+    simultaneousFamily,
+  ]);
 
   // ログイン済みユーザーを適切な画面へ振り分ける。
   // 既存会員 → QR画面 / 未登録(幽霊アカウント) → プラン選択。未ログインなら auth ステップ。
   // Why: useEffect 初回チェックとログイン成功後の両方で同じ分岐を使うため関数化。
   async function routeLoggedInUser(): Promise<void> {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { setStep("auth"); return; }
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      setStep("auth");
+      return;
+    }
 
     // Why: user_id のみだと将来 multi-tenant 化時に他ジムレコードを誤検出する
     const GYM_ID_CONST = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
@@ -211,7 +264,8 @@ export default function RegisterPage() {
     try {
       const res = await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zip}`);
       if (!res.ok) throw new Error(`zipcloud status ${res.status}`);
-      const json: { results: { address1: string; address2: string; address3: string }[] | null } = await res.json();
+      const json: { results: { address1: string; address2: string; address3: string }[] | null } =
+        await res.json();
       const hit = json.results?.[0];
       if (!hit) {
         setPostalError("該当する住所が見つかりませんでした。手入力してください");
@@ -248,7 +302,10 @@ export default function RegisterPage() {
   // パスワードリセットメール送信
   async function handleResetPassword() {
     setError("");
-    if (!email) { setError("メールアドレスを入力してください"); return; }
+    if (!email) {
+      setError("メールアドレスを入力してください");
+      return;
+    }
     setSubmitting(true);
     try {
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
@@ -286,7 +343,9 @@ export default function RegisterPage() {
       // 新規フローはこの時点(決済直前)でアカウントを作成する。
       // Why: ①でアカウントを作らず最後にまとめることで、②③から①へ戻ってメール/パスワード変更が可能になり、
       //      途中放置の幽霊アカウントも生まれにくい。既にログイン済み(ログイン/再開)なら作成はスキップ。
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         const { error: signUpError } = await supabase.auth.signUp({
           email,
@@ -297,7 +356,7 @@ export default function RegisterPage() {
           setError(
             /already|registered|exists/i.test(signUpError.message)
               ? "このメールアドレスは既に登録済みです。「ログイン」からお進みください。"
-              : signUpError.message
+              : signUpError.message,
           );
           setSubmitting(false);
           return;
@@ -354,7 +413,11 @@ export default function RegisterPage() {
       if (!res.ok) throw new Error(json.error ?? "登録処理に失敗しました");
       // スキップ登録（口座振替）: Stripeを通さず会員作成済み → 下書き消去して会員トップ(QR)へ
       if (json.skipped) {
-        try { sessionStorage.removeItem(DRAFT_KEY); } catch { /* noop */ }
+        try {
+          sessionStorage.removeItem(DRAFT_KEY);
+        } catch {
+          /* noop */
+        }
         window.location.href = `/gym/${GYM_SLUG}/member/qr`;
         return;
       }
@@ -384,11 +447,17 @@ export default function RegisterPage() {
 
         {/* ステップインジケーター */}
         <div className="flex items-center justify-center gap-2 mb-6 text-xs text-zinc-500">
-          <span className={step === "auth" ? "text-emerald-400 font-medium" : "text-zinc-600"}>① 基本情報</span>
+          <span className={step === "auth" ? "text-emerald-400 font-medium" : "text-zinc-600"}>
+            ① 基本情報
+          </span>
           <span className="text-zinc-700">›</span>
-          <span className={step === "profile" ? "text-emerald-400 font-medium" : "text-zinc-600"}>② 詳細情報</span>
+          <span className={step === "profile" ? "text-emerald-400 font-medium" : "text-zinc-600"}>
+            ② 詳細情報
+          </span>
           <span className="text-zinc-700">›</span>
-          <span className={step === "plan" ? "text-emerald-400 font-medium" : "text-zinc-600"}>③ プラン選択</span>
+          <span className={step === "plan" ? "text-emerald-400 font-medium" : "text-zinc-600"}>
+            ③ プラン選択
+          </span>
         </div>
 
         {step === "auth" && (
@@ -399,10 +468,15 @@ export default function RegisterPage() {
             {/* ゴースト(ログイン済み・会員未登録)向け: ①を起点に見せつつ②へ進む導線 */}
             {resumeGhost && (
               <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 text-center space-y-2">
-                <p className="text-amber-200/90 text-xs">ログイン済みですが会員登録がまだ完了していません。</p>
+                <p className="text-amber-200/90 text-xs">
+                  ログイン済みですが会員登録がまだ完了していません。
+                </p>
                 <button
                   type="button"
-                  onClick={() => { setError(""); setStep("profile"); }}
+                  onClick={() => {
+                    setError("");
+                    setStep("profile");
+                  }}
                   className="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm rounded-lg py-2 transition-colors"
                 >
                   登録を続ける（詳細情報へ）→
@@ -413,14 +487,22 @@ export default function RegisterPage() {
             <div className="flex bg-zinc-800 rounded-lg p-1 mb-2">
               <button
                 type="button"
-                onClick={() => { setAuthMode("signup"); setError(""); setResetSent(false); }}
+                onClick={() => {
+                  setAuthMode("signup");
+                  setError("");
+                  setResetSent(false);
+                }}
                 className={`flex-1 text-sm rounded-md py-2 transition-colors ${authMode === "signup" ? "bg-emerald-600 text-white" : "text-zinc-400 hover:text-white"}`}
               >
                 新規登録
               </button>
               <button
                 type="button"
-                onClick={() => { setAuthMode("login"); setError(""); setResetSent(false); }}
+                onClick={() => {
+                  setAuthMode("login");
+                  setError("");
+                  setResetSent(false);
+                }}
                 className={`flex-1 text-sm rounded-md py-2 transition-colors ${authMode === "login" ? "bg-emerald-600 text-white" : "text-zinc-400 hover:text-white"}`}
               >
                 ログイン
@@ -428,18 +510,22 @@ export default function RegisterPage() {
             </div>
 
             {authMode === "login" && (
-              <p className="text-zinc-500 text-xs">すでに会員の方はメールアドレスとパスワードでログインしてください。</p>
+              <p className="text-zinc-500 text-xs">
+                すでに会員の方はメールアドレスとパスワードでログインしてください。
+              </p>
             )}
 
             {/* お名前は新規登録時のみ */}
             {authMode === "signup" && (
               <div>
-                <label htmlFor="reg-name" className="block text-xs text-zinc-400 mb-1">お名前</label>
+                <label htmlFor="reg-name" className="block text-xs text-zinc-400 mb-1">
+                  お名前
+                </label>
                 <input
                   id="reg-name"
                   type="text"
                   value={name}
-                  onChange={e => setName(e.target.value)}
+                  onChange={(e) => setName(e.target.value)}
                   required
                   autoComplete="name"
                   className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
@@ -448,12 +534,14 @@ export default function RegisterPage() {
               </div>
             )}
             <div>
-              <label htmlFor="reg-email" className="block text-xs text-zinc-400 mb-1">メールアドレス</label>
+              <label htmlFor="reg-email" className="block text-xs text-zinc-400 mb-1">
+                メールアドレス
+              </label>
               <input
                 id="reg-email"
                 type="email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
@@ -468,7 +556,7 @@ export default function RegisterPage() {
                 id="reg-password"
                 type="password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={authMode === "signup" ? 8 : undefined}
                 autoComplete={authMode === "signup" ? "new-password" : "current-password"}
@@ -476,7 +564,11 @@ export default function RegisterPage() {
               />
             </div>
             {error && <p className="text-red-400 text-xs">{error}</p>}
-            {resetSent && <p className="text-emerald-400 text-xs">パスワード再設定メールを送信しました。メールをご確認ください。</p>}
+            {resetSent && (
+              <p className="text-emerald-400 text-xs">
+                パスワード再設定メールを送信しました。メールをご確認ください。
+              </p>
+            )}
             <button
               type="submit"
               disabled={submitting}
@@ -500,39 +592,51 @@ export default function RegisterPage() {
         )}
 
         {step === "profile" && (
-          <form onSubmit={handleProfileNext} className="bg-zinc-900 border border-white/10 rounded-xl p-6 space-y-4">
-            <p className="text-xs text-zinc-500 mb-2"><span className="text-red-400">*</span> は必須項目です。健康情報・血液型・運動経歴は任意です。</p>
+          <form
+            onSubmit={handleProfileNext}
+            className="bg-zinc-900 border border-white/10 rounded-xl p-6 space-y-4"
+          >
+            <p className="text-xs text-zinc-500 mb-2">
+              <span className="text-red-400">*</span>{" "}
+              は必須項目です。健康情報・血液型・運動経歴は任意です。
+            </p>
             <div>
-              <label htmlFor="reg-kana" className="block text-xs text-zinc-400 mb-1">フリガナ <span className="text-red-400">*</span></label>
+              <label htmlFor="reg-kana" className="block text-xs text-zinc-400 mb-1">
+                フリガナ <span className="text-red-400">*</span>
+              </label>
               <input
                 id="reg-kana"
                 type="text"
                 value={nameKana}
-                onChange={e => setNameKana(e.target.value)}
+                onChange={(e) => setNameKana(e.target.value)}
                 required
                 placeholder="ジュウジュツ タロウ"
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
             <div>
-              <label htmlFor="reg-birth" className="block text-xs text-zinc-400 mb-1">生年月日 <span className="text-red-400">*</span></label>
+              <label htmlFor="reg-birth" className="block text-xs text-zinc-400 mb-1">
+                生年月日 <span className="text-red-400">*</span>
+              </label>
               <input
                 id="reg-birth"
                 type="date"
                 value={birthDate}
-                onChange={e => setBirthDate(e.target.value)}
+                onChange={(e) => setBirthDate(e.target.value)}
                 autoComplete="bday"
                 required
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
             <div>
-              <label htmlFor="reg-phone" className="block text-xs text-zinc-400 mb-1">電話番号 <span className="text-red-400">*</span></label>
+              <label htmlFor="reg-phone" className="block text-xs text-zinc-400 mb-1">
+                電話番号 <span className="text-red-400">*</span>
+              </label>
               <input
                 id="reg-phone"
                 type="tel"
                 value={phone}
-                onChange={e => setPhone(e.target.value)}
+                onChange={(e) => setPhone(e.target.value)}
                 autoComplete="tel"
                 required
                 placeholder="090-1234-5678"
@@ -540,19 +644,22 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label htmlFor="reg-postal" className="block text-xs text-zinc-400 mb-1">郵便番号（住所自動入力）</label>
+              <label htmlFor="reg-postal" className="block text-xs text-zinc-400 mb-1">
+                郵便番号（住所自動入力）
+              </label>
               <div className="flex items-center gap-2 whitespace-nowrap">
                 <input
                   id="reg-postal"
                   type="text"
                   inputMode="numeric"
                   value={postalCode}
-                  onChange={e => {
+                  onChange={(e) => {
                     const v = e.target.value;
                     setPostalCode(v);
                     setPostalError("");
                     // 7 桁揃った瞬間に自動検索（ボタンを押さなくても補完される）
-                    if (v.replace(/[^0-9]/g, "").length === POSTAL_CODE_DIGITS) void lookupAddress(v);
+                    if (v.replace(/[^0-9]/g, "").length === POSTAL_CODE_DIGITS)
+                      void lookupAddress(v);
                   }}
                   autoComplete="postal-code"
                   placeholder="1500001"
@@ -569,15 +676,19 @@ export default function RegisterPage() {
                 </button>
               </div>
               {postalError && <p className="text-xs text-red-400 mt-1">{postalError}</p>}
-              <p className="text-[11px] text-zinc-500 mt-1">ハイフンなし7桁で都道府県〜町名を自動入力します</p>
+              <p className="text-[11px] text-zinc-500 mt-1">
+                ハイフンなし7桁で都道府県〜町名を自動入力します
+              </p>
             </div>
             <div>
-              <label htmlFor="reg-address" className="block text-xs text-zinc-400 mb-1">住所 <span className="text-red-400">*</span></label>
+              <label htmlFor="reg-address" className="block text-xs text-zinc-400 mb-1">
+                住所 <span className="text-red-400">*</span>
+              </label>
               <input
                 id="reg-address"
                 type="text"
                 value={address}
-                onChange={e => setAddress(e.target.value)}
+                onChange={(e) => setAddress(e.target.value)}
                 autoComplete="street-address"
                 required
                 placeholder="東京都板橋区..."
@@ -585,11 +696,13 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label htmlFor="reg-sports" className="block text-xs text-zinc-400 mb-1">運動経歴・格闘技歴</label>
+              <label htmlFor="reg-sports" className="block text-xs text-zinc-400 mb-1">
+                運動経歴・格闘技歴
+              </label>
               <textarea
                 id="reg-sports"
                 value={sportsHistory}
-                onChange={e => setSportsHistory(e.target.value)}
+                onChange={(e) => setSportsHistory(e.target.value)}
                 rows={3}
                 maxLength={500}
                 placeholder="例: 柔道3年、ボクシング未経験など"
@@ -598,14 +711,18 @@ export default function RegisterPage() {
             </div>
             {/* 緊急連絡先（怪我など緊急時の連絡先） */}
             <div className="space-y-3 border-t border-white/10 pt-4">
-              <p className="text-xs text-zinc-400 font-medium">緊急連絡先 <span className="text-red-400">*</span>（怪我など緊急時にご連絡します）</p>
+              <p className="text-xs text-zinc-400 font-medium">
+                緊急連絡先 <span className="text-red-400">*</span>（怪我など緊急時にご連絡します）
+              </p>
               <div>
-                <label htmlFor="reg-emg-name" className="block text-xs text-zinc-400 mb-1">氏名 <span className="text-red-400">*</span></label>
+                <label htmlFor="reg-emg-name" className="block text-xs text-zinc-400 mb-1">
+                  氏名 <span className="text-red-400">*</span>
+                </label>
                 <input
                   id="reg-emg-name"
                   type="text"
                   value={emergencyName}
-                  onChange={e => setEmergencyName(e.target.value)}
+                  onChange={(e) => setEmergencyName(e.target.value)}
                   required
                   placeholder="柔術 花子"
                   className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
@@ -613,12 +730,14 @@ export default function RegisterPage() {
               </div>
               <div className="flex gap-3">
                 <div className="flex-1">
-                  <label htmlFor="reg-emg-phone" className="block text-xs text-zinc-400 mb-1">電話 <span className="text-red-400">*</span></label>
+                  <label htmlFor="reg-emg-phone" className="block text-xs text-zinc-400 mb-1">
+                    電話 <span className="text-red-400">*</span>
+                  </label>
                   <input
                     id="reg-emg-phone"
                     type="tel"
                     value={emergencyPhone}
-                    onChange={e => setEmergencyPhone(e.target.value)}
+                    onChange={(e) => setEmergencyPhone(e.target.value)}
                     autoComplete="off"
                     required
                     placeholder="090-1234-5678"
@@ -626,12 +745,14 @@ export default function RegisterPage() {
                   />
                 </div>
                 <div className="w-28">
-                  <label htmlFor="reg-emg-rel" className="block text-xs text-zinc-400 mb-1">続柄 <span className="text-red-400">*</span></label>
+                  <label htmlFor="reg-emg-rel" className="block text-xs text-zinc-400 mb-1">
+                    続柄 <span className="text-red-400">*</span>
+                  </label>
                   <input
                     id="reg-emg-rel"
                     type="text"
                     value={emergencyRelation}
-                    onChange={e => setEmergencyRelation(e.target.value)}
+                    onChange={(e) => setEmergencyRelation(e.target.value)}
                     required
                     placeholder="母"
                     className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
@@ -641,11 +762,13 @@ export default function RegisterPage() {
             </div>
             {/* 血液型（任意・緊急時の安全管理目的） */}
             <div>
-              <label htmlFor="reg-blood" className="block text-xs text-zinc-400 mb-1">血液型（任意）</label>
+              <label htmlFor="reg-blood" className="block text-xs text-zinc-400 mb-1">
+                血液型（任意）
+              </label>
               <select
                 id="reg-blood"
                 value={bloodType}
-                onChange={e => setBloodType(e.target.value as typeof bloodType)}
+                onChange={(e) => setBloodType(e.target.value as typeof bloodType)}
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               >
                 <option value="">未選択</option>
@@ -659,36 +782,42 @@ export default function RegisterPage() {
             <div className="space-y-3">
               <p className="text-xs text-zinc-400 font-medium">健康情報（任意）</p>
               <div>
-                <label htmlFor="reg-chronic" className="block text-xs text-zinc-400 mb-1">持病</label>
+                <label htmlFor="reg-chronic" className="block text-xs text-zinc-400 mb-1">
+                  持病
+                </label>
                 <input
                   id="reg-chronic"
                   type="text"
                   value={chronicConditions}
-                  onChange={e => setChronicConditions(e.target.value)}
+                  onChange={(e) => setChronicConditions(e.target.value)}
                   maxLength={200}
                   placeholder="例: 喘息、高血圧 など"
                   className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
                 />
               </div>
               <div>
-                <label htmlFor="reg-allergy" className="block text-xs text-zinc-400 mb-1">アレルギー</label>
+                <label htmlFor="reg-allergy" className="block text-xs text-zinc-400 mb-1">
+                  アレルギー
+                </label>
                 <input
                   id="reg-allergy"
                   type="text"
                   value={allergies}
-                  onChange={e => setAllergies(e.target.value)}
+                  onChange={(e) => setAllergies(e.target.value)}
                   maxLength={200}
                   placeholder="例: 甲殻類、そば、ハウスダスト など"
                   className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
                 />
               </div>
               <div>
-                <label htmlFor="reg-injury" className="block text-xs text-zinc-400 mb-1">怪我歴</label>
+                <label htmlFor="reg-injury" className="block text-xs text-zinc-400 mb-1">
+                  怪我歴
+                </label>
                 <input
                   id="reg-injury"
                   type="text"
                   value={injuryHistory}
-                  onChange={e => setInjuryHistory(e.target.value)}
+                  onChange={(e) => setInjuryHistory(e.target.value)}
                   maxLength={200}
                   placeholder="例: 右膝前十字靭帯の既往、左肩脱臼 など"
                   className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
@@ -696,7 +825,8 @@ export default function RegisterPage() {
               </div>
               {/* Why: 健康情報は個人情報保護法上の「要配慮個人情報」。取得目的の明示と、入力＝利用同意であることを表示する（任意性も明記）。 */}
               <p className="text-zinc-500 text-[11px] mt-1 leading-relaxed">
-                ※ 健康・安全管理（練習中の事故・体調急変時の適切な対応）のためにのみ使用します。入力は任意です。ご入力いただいた場合、この目的での利用に同意したものとして取り扱います。スタッフ以外には開示しません。
+                ※
+                健康・安全管理（練習中の事故・体調急変時の適切な対応）のためにのみ使用します。入力は任意です。ご入力いただいた場合、この目的での利用に同意したものとして取り扱います。スタッフ以外には開示しません。
               </p>
             </div>
             {/* 未成年フラグ */}
@@ -704,7 +834,7 @@ export default function RegisterPage() {
               <input
                 type="checkbox"
                 checked={isMinor}
-                onChange={e => setIsMinor(e.target.checked)}
+                onChange={(e) => setIsMinor(e.target.checked)}
                 className="w-4 h-4 rounded"
                 id="reg-minor"
               />
@@ -713,12 +843,14 @@ export default function RegisterPage() {
             {isMinor && (
               <div className="space-y-3 pl-7">
                 <div>
-                  <label htmlFor="reg-guardian-name" className="block text-xs text-zinc-400 mb-1">保護者氏名 <span className="text-red-400">*</span></label>
+                  <label htmlFor="reg-guardian-name" className="block text-xs text-zinc-400 mb-1">
+                    保護者氏名 <span className="text-red-400">*</span>
+                  </label>
                   <input
                     id="reg-guardian-name"
                     type="text"
                     value={guardianName}
-                    onChange={e => setGuardianName(e.target.value)}
+                    onChange={(e) => setGuardianName(e.target.value)}
                     required
                     autoComplete="name"
                     placeholder="柔術 花子"
@@ -726,12 +858,17 @@ export default function RegisterPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="reg-guardian-contact" className="block text-xs text-zinc-400 mb-1">保護者連絡先（電話またはメール）<span className="text-red-400">*</span></label>
+                  <label
+                    htmlFor="reg-guardian-contact"
+                    className="block text-xs text-zinc-400 mb-1"
+                  >
+                    保護者連絡先（電話またはメール）<span className="text-red-400">*</span>
+                  </label>
                   <input
                     id="reg-guardian-contact"
                     type="text"
                     value={guardianContact}
-                    onChange={e => setGuardianContact(e.target.value)}
+                    onChange={(e) => setGuardianContact(e.target.value)}
                     required
                     placeholder="090-xxxx-xxxx"
                     className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
@@ -744,19 +881,30 @@ export default function RegisterPage() {
               <input
                 type="checkbox"
                 checked={agreedToTerms}
-                onChange={e => setAgreedToTerms(e.target.checked)}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
                 className="w-4 h-4 rounded mt-0.5 shrink-0"
                 id="reg-terms"
               />
               <span className="text-xs text-zinc-400">
                 入会規約・スポーツ保険（一般 ¥2,150 / キッズ ¥950）への同意、および
-                <a href="https://robust-bjj.jp" target="_blank" rel="noopener" className="text-emerald-400 underline ml-1">ROBUST 柔術の規則</a>
+                <a
+                  href="https://robust-bjj.jp"
+                  target="_blank"
+                  rel="noopener"
+                  className="text-emerald-400 underline ml-1"
+                >
+                  ROBUST 柔術の規則
+                </a>
                 に従うことに同意します。
               </span>
             </label>
             <button
               type="submit"
-              disabled={agreedToTerms === false || !nameKana.trim() || (isMinor && (!guardianName || !guardianContact))}
+              disabled={
+                agreedToTerms === false ||
+                !nameKana.trim() ||
+                (isMinor && (!guardianName || !guardianContact))
+              }
               className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
             >
               次へ（プラン選択）→
@@ -764,7 +912,10 @@ export default function RegisterPage() {
             {/* 戻る: 基本情報(①)へ。入力値は state 保持のため戻っても消えない */}
             <button
               type="button"
-              onClick={() => { setError(""); setStep("auth"); }}
+              onClick={() => {
+                setError("");
+                setStep("auth");
+              }}
               className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg py-2.5 text-sm mt-2 transition-colors"
             >
               ← 基本情報に戻る
@@ -777,11 +928,14 @@ export default function RegisterPage() {
             <h2 className="text-sm font-bold text-white mb-1">プランを選択してください</h2>
             <p className="text-xs text-zinc-500 mb-4">※ 表示価格はすべて税別です。</p>
             <div className="space-y-2 mb-6">
-              {PLANS.map(plan => (
+              {PLANS.map((plan) => (
                 <button
                   key={plan.id}
                   type="button"
-                  onClick={() => { setSelectedPlan(plan); if (plan.priceKey === "drop_in") setIncludeInsurance(false); }}
+                  onClick={() => {
+                    setSelectedPlan(plan);
+                    if (plan.priceKey === "drop_in") setIncludeInsurance(false);
+                  }}
                   className={`w-full text-left rounded-lg border p-3 transition-colors ${
                     selectedPlan?.id === plan.id
                       ? "border-emerald-500 bg-emerald-500/10"
@@ -803,27 +957,31 @@ export default function RegisterPage() {
             </div>
             {/* スポーツ保険（選択制）。ドロップイン(単発)は年度保険が不要なので非表示 */}
             {selectedPlan?.priceKey !== "drop_in" && (
-            <label className="flex items-start gap-3 bg-zinc-800/60 rounded-xl p-3 cursor-pointer border border-white/10">
-              <input
-                type="checkbox"
-                checked={includeInsurance}
-                onChange={e => setIncludeInsurance(e.target.checked)}
-                className="w-4 h-4 rounded mt-0.5 shrink-0"
-                id="reg-insurance"
-              />
-              <div>
-                <p className="text-sm text-white font-medium">
-                  スポーツ保険に加入する
-                  <span className="ml-2 text-emerald-400 font-bold">
-                    ¥{(isMinor ? SPORTS_INSURANCE_KIDS_YEN : SPORTS_INSURANCE_YEN).toLocaleString()}
-                  </span>
-                  <span className="text-zinc-500 text-xs ml-1">（年度分・任意）</span>
-                </p>
-                <p className="text-xs text-zinc-500 mt-0.5">
-                  練習中のケガに備えるスポーツ保険です。加入推奨。4月〜翌3月末の年度管理。
-                </p>
-              </div>
-            </label>
+              <label className="flex items-start gap-3 bg-zinc-800/60 rounded-xl p-3 cursor-pointer border border-white/10">
+                <input
+                  type="checkbox"
+                  checked={includeInsurance}
+                  onChange={(e) => setIncludeInsurance(e.target.checked)}
+                  className="w-4 h-4 rounded mt-0.5 shrink-0"
+                  id="reg-insurance"
+                />
+                <div>
+                  <p className="text-sm text-white font-medium">
+                    スポーツ保険に加入する
+                    <span className="ml-2 text-emerald-400 font-bold">
+                      ¥
+                      {(isMinor
+                        ? SPORTS_INSURANCE_KIDS_YEN
+                        : SPORTS_INSURANCE_YEN
+                      ).toLocaleString()}
+                    </span>
+                    <span className="text-zinc-500 text-xs ml-1">（年度分・任意）</span>
+                  </p>
+                  <p className="text-xs text-zinc-500 mt-0.5">
+                    練習中のケガに備えるスポーツ保険です。加入推奨。4月〜翌3月末の年度管理。
+                  </p>
+                </div>
+              </label>
             )}
 
             {/* 家族・兄弟割引 */}
@@ -833,13 +991,15 @@ export default function RegisterPage() {
                   家族・兄弟割引
                   <span className="ml-2 text-emerald-400 font-bold">-¥2,000/月</span>
                 </p>
-                <p className="text-xs text-zinc-500 mt-0.5">同一世帯の2人目以降が対象。家族・兄弟の氏名を入力してください（入会後にオーナーが確認します）</p>
+                <p className="text-xs text-zinc-500 mt-0.5">
+                  同一世帯の2人目以降が対象。家族・兄弟の氏名を入力してください（入会後にオーナーが確認します）
+                </p>
               </div>
               <input
                 id="reg-family-name"
                 type="text"
                 value={familyMemberName}
-                onChange={e => setFamilyMemberName(e.target.value)}
+                onChange={(e) => setFamilyMemberName(e.target.value)}
                 autoComplete="off"
                 placeholder="例：柔術 花子（家族・兄弟の方の氏名）"
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
@@ -850,7 +1010,7 @@ export default function RegisterPage() {
                   <input
                     type="checkbox"
                     checked={simultaneousFamily}
-                    onChange={e => setSimultaneousFamily(e.target.checked)}
+                    onChange={(e) => setSimultaneousFamily(e.target.checked)}
                     className="w-4 h-4 rounded mt-0.5 shrink-0"
                     id="reg-simultaneous-family"
                   />
@@ -864,79 +1024,119 @@ export default function RegisterPage() {
               )}
               {familyMemberName.trim() && (
                 <p className="text-xs text-emerald-400">
-                  ✓ 割引が適用されます（{simultaneousFamily ? "同時入会・初月から" : "入会後にオーナーが確認"}）
+                  ✓ 割引が適用されます（
+                  {simultaneousFamily ? "同時入会・初月から" : "入会後にオーナーが確認"}）
                 </p>
               )}
             </div>
 
             {/* 決済明細プレビュー */}
-            {selectedPlan && selectedPlan.monthlyAmount > 0 && selectedPlan.priceKey !== "drop_in" && (() => {
-              const today = new Date();
-              const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-              const remainingDays = daysInMonth - today.getDate() + 1;
-              const prorated = Math.round(selectedPlan.monthlyAmount * remainingDays / daysInMonth);
-              const discountedMonthly = selectedPlan.monthlyAmount - (familyMemberName.trim() ? FAMILY_DISCOUNT_YEN : 0);
-              const insuranceFee = isMinor ? SPORTS_INSURANCE_KIDS_YEN : SPORTS_INSURANCE_YEN;
-              const total = selectedPlan.setupFee + prorated + discountedMonthly + (includeInsurance ? insuranceFee : 0);
-              return (
-                <div className="bg-zinc-800/40 rounded-xl p-3 text-xs text-zinc-400 space-y-1">
-                  <p className="text-zinc-500 text-xs mb-2 font-medium">今日の決済内訳</p>
-                  {selectedPlan.setupFee > 0 && (
+            {selectedPlan &&
+              selectedPlan.monthlyAmount > 0 &&
+              selectedPlan.priceKey !== "drop_in" &&
+              (() => {
+                const today = new Date();
+                const daysInMonth = new Date(
+                  today.getFullYear(),
+                  today.getMonth() + 1,
+                  0,
+                ).getDate();
+                const remainingDays = daysInMonth - today.getDate() + 1;
+                const prorated = Math.round(
+                  (selectedPlan.monthlyAmount * remainingDays) / daysInMonth,
+                );
+                const discountedMonthly =
+                  selectedPlan.monthlyAmount - (familyMemberName.trim() ? FAMILY_DISCOUNT_YEN : 0);
+                const insuranceFee = isMinor ? SPORTS_INSURANCE_KIDS_YEN : SPORTS_INSURANCE_YEN;
+                // 消費税(10%外税)。課税対象は入会金・日割り・翌月分のみ（保険は税込のため非課税）。
+                // Stripe は line_item ごとに課税・丸めるため、表示も項目ごとに Math.round して合算し実課金と一致させる。
+                const taxOf = (n: number) => Math.round(n * CONSUMPTION_TAX_RATE);
+                const taxTotal =
+                  taxOf(selectedPlan.setupFee) + taxOf(prorated) + taxOf(discountedMonthly);
+                const taxableSubtotal = selectedPlan.setupFee + prorated + discountedMonthly;
+                const total = taxableSubtotal + taxTotal + (includeInsurance ? insuranceFee : 0);
+                const monthlyWithTax = discountedMonthly + taxOf(discountedMonthly);
+                return (
+                  <div className="bg-zinc-800/40 rounded-xl p-3 text-xs text-zinc-400 space-y-1">
+                    <p className="text-zinc-500 text-xs mb-2 font-medium">今日の決済内訳</p>
+                    {selectedPlan.setupFee > 0 && (
+                      <div className="flex justify-between">
+                        <span>入会金（初回のみ）</span>
+                        <span className="text-white">
+                          ¥{selectedPlan.setupFee.toLocaleString()}
+                        </span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
-                      <span>入会金（初回のみ）</span>
-                      <span className="text-white">¥{selectedPlan.setupFee.toLocaleString()}</span>
+                      <span>日割り（{remainingDays}日分）</span>
+                      <span className="text-white">¥{prorated.toLocaleString()}</span>
                     </div>
-                  )}
-                  <div className="flex justify-between">
-                    <span>日割り（{remainingDays}日分）</span>
-                    <span className="text-white">¥{prorated.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>翌月分（前払い）</span>
-                    <span className="text-white">¥{discountedMonthly.toLocaleString()}</span>
-                  </div>
-                  {familyMemberName.trim() && (
-                    <div className="flex justify-between text-emerald-400">
-                      <span>家族割引（{familyMemberName.trim()}さんと同世帯）</span><span>-¥2,000</span>
-                    </div>
-                  )}
-                  {includeInsurance && (
                     <div className="flex justify-between">
-                      <span>スポーツ保険</span>
-                      <span className="text-white">¥{insuranceFee.toLocaleString()}</span>
+                      <span>翌月分（前払い）</span>
+                      <span className="text-white">¥{discountedMonthly.toLocaleString()}</span>
                     </div>
-                  )}
-                  <div className="flex justify-between border-t border-white/10 pt-1 mt-1 text-white font-medium">
-                    <span>合計</span><span>¥{total.toLocaleString()}</span>
+                    {familyMemberName.trim() && (
+                      <div className="flex justify-between text-emerald-400">
+                        <span>家族割引（{familyMemberName.trim()}さんと同世帯）</span>
+                        <span>-¥2,000</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between">
+                      <span>消費税（10%）</span>
+                      <span className="text-white">¥{taxTotal.toLocaleString()}</span>
+                    </div>
+                    {includeInsurance && (
+                      <div className="flex justify-between">
+                        <span>スポーツ保険（税込）</span>
+                        <span className="text-white">¥{insuranceFee.toLocaleString()}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between border-t border-white/10 pt-1 mt-1 text-white font-medium">
+                      <span>合計（税込）</span>
+                      <span>¥{total.toLocaleString()}</span>
+                    </div>
+                    <p className="text-zinc-600 text-xs mt-1">
+                      翌々月末から ¥{monthlyWithTax.toLocaleString()}/月（税込）
+                    </p>
                   </div>
-                  <p className="text-zinc-600 text-xs mt-1">翌々月末から ¥{discountedMonthly.toLocaleString()}/月</p>
-                </div>
-              );
-            })()}
+                );
+              })()}
 
             {/* ドロップイン（単発）の内訳: サブスクの日割り/前払いは無いので単発金額＋保険のみ表示 */}
-            {selectedPlan && selectedPlan.priceKey === "drop_in" && (() => {
-              const insuranceFee = isMinor ? SPORTS_INSURANCE_KIDS_YEN : SPORTS_INSURANCE_YEN;
-              const total = selectedPlan.monthlyAmount + (includeInsurance ? insuranceFee : 0);
-              return (
-                <div className="bg-zinc-800/40 rounded-xl p-3 text-xs text-zinc-400 space-y-1">
-                  <p className="text-zinc-500 text-xs mb-2 font-medium">今日の決済内訳</p>
-                  <div className="flex justify-between">
-                    <span>ドロップイン（単発参加）</span>
-                    <span className="text-white">¥{selectedPlan.monthlyAmount.toLocaleString()}</span>
-                  </div>
-                  {includeInsurance && (
+            {selectedPlan &&
+              selectedPlan.priceKey === "drop_in" &&
+              (() => {
+                const insuranceFee = isMinor ? SPORTS_INSURANCE_KIDS_YEN : SPORTS_INSURANCE_YEN;
+                // ドロップインは課税対象。保険は税込のため非課税。
+                const dropInTax = Math.round(selectedPlan.monthlyAmount * CONSUMPTION_TAX_RATE);
+                const total =
+                  selectedPlan.monthlyAmount + dropInTax + (includeInsurance ? insuranceFee : 0);
+                return (
+                  <div className="bg-zinc-800/40 rounded-xl p-3 text-xs text-zinc-400 space-y-1">
+                    <p className="text-zinc-500 text-xs mb-2 font-medium">今日の決済内訳</p>
                     <div className="flex justify-between">
-                      <span>スポーツ保険</span>
-                      <span className="text-white">¥{insuranceFee.toLocaleString()}</span>
+                      <span>ドロップイン（単発参加）</span>
+                      <span className="text-white">
+                        ¥{selectedPlan.monthlyAmount.toLocaleString()}
+                      </span>
                     </div>
-                  )}
-                  <div className="flex justify-between border-t border-white/10 pt-1 mt-1 text-white font-medium">
-                    <span>合計</span><span>¥{total.toLocaleString()}</span>
+                    <div className="flex justify-between">
+                      <span>消費税（10%）</span>
+                      <span className="text-white">¥{dropInTax.toLocaleString()}</span>
+                    </div>
+                    {includeInsurance && (
+                      <div className="flex justify-between">
+                        <span>スポーツ保険（税込）</span>
+                        <span className="text-white">¥{insuranceFee.toLocaleString()}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between border-t border-white/10 pt-1 mt-1 text-white font-medium">
+                      <span>合計（税込）</span>
+                      <span>¥{total.toLocaleString()}</span>
+                    </div>
                   </div>
-                </div>
-              );
-            })()}
+                );
+              })()}
 
             {error && <p className="text-red-400 text-xs mb-3">{error}</p>}
 
@@ -968,7 +1168,10 @@ export default function RegisterPage() {
             {/* 戻る: 詳細情報(②)へ。入力値は保持されます */}
             <button
               type="button"
-              onClick={() => { setError(""); setStep("profile"); }}
+              onClick={() => {
+                setError("");
+                setStep("profile");
+              }}
               className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg py-2.5 text-sm mt-4 transition-colors"
             >
               ← 詳細情報に戻る
