@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createRobustAdminClient } from "@/lib/robust/supabase";
 import { requireRobustManager, requireRobustAdmin } from "@/lib/robust/auth";
-import { getStripe } from "@/lib/robust/payments";
+import { getStripe, addOverageToNextInvoice } from "@/lib/robust/payments";
 import { syncDriveAccess } from "@/lib/robust/drive";
 import { robustLogger } from "@/lib/robust/logger";
 import { z } from "zod";
@@ -16,7 +16,9 @@ export async function GET() {
   const admin = createRobustAdminClient();
   const { data: members, error } = await admin
     .from("gym_members")
-    .select("id, name, name_kana, email, phone, birth_date, address, sports_history, emergency_contact_name, emergency_contact_phone, emergency_contact_relation, medical_notes, chronic_conditions, allergies, injury_history, blood_type, belt, stripes, photo_url, video_access, family_discount, family_member_name, plan_type, plan_cap, status, payment_method, insurance_expires_at, is_minor, created_at")
+    .select(
+      "id, name, name_kana, email, phone, birth_date, address, sports_history, emergency_contact_name, emergency_contact_phone, emergency_contact_relation, medical_notes, chronic_conditions, allergies, injury_history, blood_type, belt, stripes, photo_url, video_access, family_discount, family_member_name, plan_type, plan_cap, status, payment_method, insurance_expires_at, is_minor, created_at",
+    )
     .eq("gym_id", GYM_ID)
     .order("created_at", { ascending: false });
 
@@ -37,10 +39,12 @@ export async function GET() {
     }
   }
   const duplicateFamilyNames = new Set(
-    Object.entries(familyNameCount).filter(([, c]) => c > 1).map(([k]) => k)
+    Object.entries(familyNameCount)
+      .filter(([, c]) => c > 1)
+      .map(([k]) => k),
   );
 
-  const membersWithWarning = list.map(m => ({
+  const membersWithWarning = list.map((m) => ({
     ...m,
     family_discount_warning: m.family_member_name
       ? duplicateFamilyNames.has(m.family_member_name.trim())
@@ -59,10 +63,10 @@ const updateSchema = z.object({
   family_discount_approved: z.boolean().optional(), // 家族割引 承認/却下
   payment_method: z.enum(["stripe", "bank_transfer"]).optional(), // 口座振替フラグ
   manual_checkin: z.boolean().optional(), // 手動チェックイン（true で当日記録）
-  undo_checkin: z.boolean().optional(),   // 出席取消（true で当日記録を削除＝オン/オフのトグル）
+  undo_checkin: z.boolean().optional(), // 出席取消（true で当日記録を削除＝オン/オフのトグル）
   belt: z.enum(["white", "blue", "purple", "brown", "black"]).optional(), // 帯（依頼書 Section 9）
-  stripes: z.number().int().min(0).max(4).optional(),                     // ストライプ 0-4本
-  promotion_note: z.string().max(200).optional(),                        // 昇格メモ（履歴に記録）
+  stripes: z.number().int().min(0).max(4).optional(), // ストライプ 0-4本
+  promotion_note: z.string().max(200).optional(), // 昇格メモ（履歴に記録）
 });
 
 export async function PATCH(req: NextRequest) {
@@ -74,7 +78,14 @@ export async function PATCH(req: NextRequest) {
 
   // promotion_note は gym_members の列ではない（belt_history へのメモ）ため updates から除外する。
   // Why: updates に混ざると gym_members.update() で「存在しない列」エラーになる。
-  const { memberId, family_discount_approved, manual_checkin, undo_checkin, promotion_note, ...updates } = parsed.data;
+  const {
+    memberId,
+    family_discount_approved,
+    manual_checkin,
+    undo_checkin,
+    promotion_note,
+    ...updates
+  } = parsed.data;
 
   // 権限: 手動チェックイン“のみ”のリクエストは受付スタッフ(instructor含む)にも許可する。
   // Why: 出席画面のワンタップ手動チェックインは受付業務であり instructor に必要。一方、帯/ステータス/
@@ -107,7 +118,11 @@ export async function PATCH(req: NextRequest) {
   // ステータス変更を Stripe subscription に連動させる。
   // Why: DB のステータスだけ変えても課金は止まらない。退会=期末解約、休会=請求停止、
   //      復帰=請求再開（休会/解約予約を解除）を Stripe 側にも反映する。
-  if (updates.status === "cancelled" || updates.status === "paused" || updates.status === "active") {
+  if (
+    updates.status === "cancelled" ||
+    updates.status === "paused" ||
+    updates.status === "active"
+  ) {
     const { data: member } = await admin
       .from("gym_members")
       .select("stripe_subscription_id")
@@ -126,7 +141,10 @@ export async function PATCH(req: NextRequest) {
           await getStripe().subscriptions.update(subId, { pause_collection: { behavior: "void" } });
         } else if (updates.status === "active") {
           // 復帰: 休会の請求停止と解約予約を解除して通常課金に戻す
-          await getStripe().subscriptions.update(subId, { pause_collection: "", cancel_at_period_end: false });
+          await getStripe().subscriptions.update(subId, {
+            pause_collection: "",
+            cancel_at_period_end: false,
+          });
         }
       } catch (stripeErr) {
         // Stripe エラーは DB 更新を止めない（手動フォローアップで対応）
@@ -179,9 +197,7 @@ export async function PATCH(req: NextRequest) {
         .eq("gym_id", GYM_ID)
         .eq("status", "active")
         .neq("id", memberId);
-      const relative = (candidates ?? []).find(
-        c => c.name.replace(/\s+/g, "") === normalized
-      );
+      const relative = (candidates ?? []).find((c) => c.name.replace(/\s+/g, "") === normalized);
       if (relative) {
         await syncCoupon(relative.stripe_subscription_id, true);
         await admin
@@ -197,7 +213,8 @@ export async function PATCH(req: NextRequest) {
   // Why: ボタン連打や「QR済みの会員をさらに手動」で同日二重記録が起きると、出席数・週2回上限が
   //      過大カウントされる。当日(JST)の既存チェックインがあれば二重作成せず冪等に返す。
   if (manual_checkin) {
-    const { currentBillingPeriod, jstTodayStartUtc } = await import("@/lib/robust/attendance");
+    const { currentBillingPeriod, jstTodayStartUtc, countThisMonthAttendance } =
+      await import("@/lib/robust/attendance");
     const { count } = await admin
       .from("attendance_logs")
       .select("id", { count: "exact", head: true })
@@ -207,14 +224,48 @@ export async function PATCH(req: NextRequest) {
     if ((count ?? 0) > 0) {
       return NextResponse.json({ ok: true, checkedIn: true, alreadyCheckedIn: true });
     }
-    const { error: ciError } = await admin.from("attendance_logs").insert({
-      member_id: memberId,
-      gym_id: GYM_ID,
-      billing_period: currentBillingPeriod(),
-      class_type: null,
-    });
-    if (ciError) return NextResponse.json({ error: `手動チェックイン失敗: ${ciError.message}` }, { status: 500 });
-    return NextResponse.json({ ok: true, checkedIn: true });
+    const { data: ciLog, error: ciError } = await admin
+      .from("attendance_logs")
+      .insert({
+        member_id: memberId,
+        gym_id: GYM_ID,
+        billing_period: currentBillingPeriod(),
+        class_type: null,
+      })
+      .select("id")
+      .single();
+    if (ciError || !ciLog) {
+      return NextResponse.json(
+        { error: `手動チェックイン失敗: ${ciError?.message ?? ""}` },
+        { status: 500 },
+      );
+    }
+
+    // 超過課金: QRチェックインと同一扱い（月8回超過は¥2,200を翌月請求に加算）。
+    // Why: 経路(QR/手動)で課金有無が変わると取り漏れ・会員間の不公平が生じるため統一する。
+    //      口座振替(payment_method != stripe)やサブスク無しは addOverageToNextInvoice 側で加算しない。
+    let overageAmount = 0;
+    const { data: m } = await admin
+      .from("gym_members")
+      .select("plan_type, plan_cap, payment_method, stripe_customer_id, stripe_subscription_id")
+      .eq("id", memberId)
+      .eq("gym_id", GYM_ID)
+      .maybeSingle();
+    if (
+      m &&
+      m.plan_type === "twice_weekly" &&
+      m.plan_cap !== null &&
+      m.payment_method === "stripe"
+    ) {
+      const monthCount = await countThisMonthAttendance(memberId);
+      if (monthCount > m.plan_cap) {
+        overageAmount = await addOverageToNextInvoice(m, GYM_ID);
+        if (overageAmount > 0) {
+          await admin.from("attendance_logs").update({ charged: true }).eq("id", ciLog.id);
+        }
+      }
+    }
+    return NextResponse.json({ ok: true, checkedIn: true, overageAmount });
   }
 
   // 出席取消: 当日(JST)のチェックインを削除（出席のオン/オフ切替）。
@@ -227,7 +278,11 @@ export async function PATCH(req: NextRequest) {
       .eq("member_id", memberId)
       .eq("gym_id", GYM_ID)
       .gte("checked_in_at", jstTodayStartUtc().toISOString());
-    if (delErr) return NextResponse.json({ error: `出席取消に失敗しました: ${delErr.message}` }, { status: 500 });
+    if (delErr)
+      return NextResponse.json(
+        { error: `出席取消に失敗しました: ${delErr.message}` },
+        { status: 500 },
+      );
     return NextResponse.json({ ok: true, checkedIn: false });
   }
 
@@ -257,7 +312,10 @@ export async function PATCH(req: NextRequest) {
         created_by: auth.userId,
       });
       if (histError) {
-        robustLogger.error("robust.belt_history.insert_failed", { memberId, error: histError.message });
+        robustLogger.error("robust.belt_history.insert_failed", {
+          memberId,
+          error: histError.message,
+        });
       }
     }
   }

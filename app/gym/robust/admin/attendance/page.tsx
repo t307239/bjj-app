@@ -42,7 +42,11 @@ export default function AttendanceCheckPage() {
   async function fetchRoster() {
     const res = await fetch("/api/gym/robust/attendance");
     if (!res.ok) {
-      if (res.status === 401 || res.status === 403) { setShowLogin(true); setLoading(false); return; }
+      if (res.status === 401 || res.status === 403) {
+        setShowLogin(true);
+        setLoading(false);
+        return;
+      }
       const json = await res.json().catch(() => ({}));
       setError(json.error ?? "エラーが発生しました");
       setLoading(false);
@@ -56,8 +60,14 @@ export default function AttendanceCheckPage() {
 
   useEffect(() => {
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { setShowLogin(true); setLoading(false); return; }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        setShowLogin(true);
+        setLoading(false);
+        return;
+      }
       await fetchRoster();
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -72,11 +82,20 @@ export default function AttendanceCheckPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ memberId, manual_checkin: true }),
       });
+      const json = await res.json().catch(() => ({}));
       if (!res.ok) {
-        const json = await res.json().catch(() => ({}));
         throw new Error(json.error ?? "チェックインに失敗しました");
       }
-      setRoster(prev => prev.map(m => (m.id === memberId ? { ...m, checked_in_today: true } : m)));
+      setRoster((prev) =>
+        prev.map((m) => (m.id === memberId ? { ...m, checked_in_today: true } : m)),
+      );
+      // 超過課金が発生した場合は受付に告知（会員へ口頭で伝えられるように）。QRと同一挙動。
+      if (typeof json.overageAmount === "number" && json.overageAmount > 0) {
+        const nm = roster.find((m) => m.id === memberId)?.name ?? "";
+        setActionError(
+          `${nm}さん：今月の上限超過のため¥${json.overageAmount.toLocaleString()}を翌月請求に追加しました`,
+        );
+      }
     } catch (err) {
       setActionError((err as Error).message);
     } finally {
@@ -98,7 +117,9 @@ export default function AttendanceCheckPage() {
         const json = await res.json().catch(() => ({}));
         throw new Error(json.error ?? "出席の取消に失敗しました");
       }
-      setRoster(prev => prev.map(m => (m.id === memberId ? { ...m, checked_in_today: false } : m)));
+      setRoster((prev) =>
+        prev.map((m) => (m.id === memberId ? { ...m, checked_in_today: false } : m)),
+      );
     } catch (err) {
       setActionError((err as Error).message);
     } finally {
@@ -107,7 +128,15 @@ export default function AttendanceCheckPage() {
   }
 
   if (showLogin) {
-    return <RobustAdminLoginForm onSuccess={() => { setShowLogin(false); setLoading(true); fetchRoster(); }} />;
+    return (
+      <RobustAdminLoginForm
+        onSuccess={() => {
+          setShowLogin(false);
+          setLoading(true);
+          fetchRoster();
+        }}
+      />
+    );
   }
 
   if (loading) {
@@ -119,13 +148,26 @@ export default function AttendanceCheckPage() {
   }
 
   if (error) {
-    return <RobustAccessDenied message={error} onLogin={() => { setError(""); setShowLogin(true); }} />;
+    return (
+      <RobustAccessDenied
+        message={error}
+        onLogin={() => {
+          setError("");
+          setShowLogin(true);
+        }}
+      />
+    );
   }
 
-  const presentCount = roster.filter(m => m.checked_in_today).length;
+  const presentCount = roster.filter((m) => m.checked_in_today).length;
   const absentCount = roster.length - presentCount;
-  const visible = onlyAbsent ? roster.filter(m => !m.checked_in_today) : roster;
-  const todayLabel = new Date().toLocaleDateString("ja-JP", { month: "long", day: "numeric", weekday: "short" });
+  const visible = onlyAbsent ? roster.filter((m) => !m.checked_in_today) : roster;
+  const todayLabel = new Date().toLocaleDateString("ja-JP", {
+    month: "long",
+    day: "numeric",
+    weekday: "short",
+    timeZone: "Asia/Tokyo",
+  });
 
   return (
     <div className="min-h-screen bg-zinc-950 p-4">
@@ -133,7 +175,9 @@ export default function AttendanceCheckPage() {
         {/* ヘッダー */}
         <div className="flex items-center justify-between mb-1">
           <h1 className="text-xl font-bold text-white">出欠確認</h1>
-          <a href="/gym/robust/admin" className="text-zinc-400 text-xs hover:text-white">← ダッシュボード</a>
+          <a href="/gym/robust/admin" className="text-zinc-400 text-xs hover:text-white">
+            ← ダッシュボード
+          </a>
         </div>
         <p className="text-zinc-500 text-xs mb-5">
           {todayLabel}
@@ -160,7 +204,7 @@ export default function AttendanceCheckPage() {
         <div className="flex items-center justify-between mb-3">
           <button
             type="button"
-            onClick={() => setOnlyAbsent(v => !v)}
+            onClick={() => setOnlyAbsent((v) => !v)}
             className={`text-xs rounded-lg px-3 min-h-[44px] transition-colors ${onlyAbsent ? "bg-emerald-600 text-white" : "bg-zinc-800 text-zinc-300 hover:text-white"}`}
           >
             {onlyAbsent ? "未出席のみ表示中" : "未出席だけ表示"}
@@ -171,14 +215,21 @@ export default function AttendanceCheckPage() {
         {/* 一覧 */}
         {visible.length === 0 ? (
           <div className="bg-zinc-900 border border-white/10 rounded-xl p-8 text-center">
-            <p className="text-zinc-400 text-sm">{onlyAbsent ? "未出席の会員はいません 🎉" : "在籍会員がいません"}</p>
+            <p className="text-zinc-400 text-sm">
+              {onlyAbsent ? "未出席の会員はいません 🎉" : "在籍会員がいません"}
+            </p>
           </div>
         ) : (
           <div className="space-y-2">
-            {visible.map(m => (
-              <div key={m.id} className="bg-zinc-900 border border-white/10 rounded-xl p-3 flex items-center justify-between gap-3">
+            {visible.map((m) => (
+              <div
+                key={m.id}
+                className="bg-zinc-900 border border-white/10 rounded-xl p-3 flex items-center justify-between gap-3"
+              >
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-xl shrink-0" aria-hidden="true">{m.checked_in_today ? "✅" : "⬜"}</span>
+                  <span className="text-xl shrink-0" aria-hidden="true">
+                    {m.checked_in_today ? "✅" : "⬜"}
+                  </span>
                   {/* 顔写真: インストラクターが本人確認に使う。タップで拡大して氏名と照合。未登録は頭文字プレースホルダ。 */}
                   {m.photo_url ? (
                     <button
@@ -189,16 +240,27 @@ export default function AttendanceCheckPage() {
                       aria-label={`${m.name} の写真を拡大`}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={m.photo_url} alt={m.name} className="w-14 h-14 rounded-full object-cover bg-zinc-800" />
+                      <img
+                        src={m.photo_url}
+                        alt={m.name}
+                        className="w-14 h-14 rounded-full object-cover bg-zinc-800"
+                      />
                     </button>
                   ) : (
-                    <span className="w-14 h-14 rounded-full bg-zinc-800 text-zinc-400 text-base flex items-center justify-center shrink-0" aria-hidden="true">
+                    <span
+                      className="w-14 h-14 rounded-full bg-zinc-800 text-zinc-400 text-base flex items-center justify-center shrink-0"
+                      aria-hidden="true"
+                    >
                       {m.name.slice(0, 1)}
                     </span>
                   )}
                   <div className="min-w-0">
-                    <p className="text-white text-sm font-medium truncate" title={m.name}>{m.name}</p>
-                    <p className="text-zinc-500 text-xs">{PLAN_LABEL[m.plan_type] ?? m.plan_type}</p>
+                    <p className="text-white text-sm font-medium truncate" title={m.name}>
+                      {m.name}
+                    </p>
+                    <p className="text-zinc-500 text-xs">
+                      {PLAN_LABEL[m.plan_type] ?? m.plan_type}
+                    </p>
                   </div>
                 </div>
                 {m.checked_in_today ? (

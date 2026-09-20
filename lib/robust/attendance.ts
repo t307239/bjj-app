@@ -17,7 +17,9 @@ export function currentBillingPeriod(): string {
 /** JST の「今日の0:00」を UTC の Date で返す（checked_in_at >= 用） */
 export function jstTodayStartUtc(): Date {
   const jst = new Date(Date.now() + JST_OFFSET_MS);
-  return new Date(Date.UTC(jst.getUTCFullYear(), jst.getUTCMonth(), jst.getUTCDate()) - JST_OFFSET_MS);
+  return new Date(
+    Date.UTC(jst.getUTCFullYear(), jst.getUTCMonth(), jst.getUTCDate()) - JST_OFFSET_MS,
+  );
 }
 
 /** 二重スキャン防止チェック（60分クールダウン） */
@@ -48,8 +50,13 @@ export async function countThisMonthAttendance(memberId: string): Promise<number
 export async function checkIn(
   member: GymMember,
   gymId: string,
-  classType?: ClassType
-): Promise<{ log: AttendanceLog; overcharged: boolean; duplicate: boolean }> {
+  classType?: ClassType,
+): Promise<{
+  log: AttendanceLog;
+  overcharged: boolean;
+  duplicate: boolean;
+  overageAmount: number;
+}> {
   const supabase = createRobustAdminClient();
 
   // 二重スキャン防止
@@ -60,6 +67,7 @@ export async function checkIn(
       log: { member_id: member.id, gym_id: gymId } as AttendanceLog,
       overcharged: false,
       duplicate: true,
+      overageAmount: 0,
     };
   }
 
@@ -69,7 +77,12 @@ export async function checkIn(
   //      INSERT 直前に再チェックして競合ウィンドウを最小化する（楽観的ロック）。
   const doubleCheck = await isDuplicateCheckin(member.id);
   if (doubleCheck) {
-    return { log: { member_id: member.id, gym_id: gymId } as AttendanceLog, overcharged: false, duplicate: true };
+    return {
+      log: { member_id: member.id, gym_id: gymId } as AttendanceLog,
+      overcharged: false,
+      duplicate: true,
+      overageAmount: 0,
+    };
   }
 
   const { data: log, error } = await supabase
@@ -89,15 +102,21 @@ export async function checkIn(
   // Why: drop_in は subscription なし・単発参加のため上限・超過課金の概念が存在しない。
   //      stripe_subscription_id が null の会員で invoiceItems を作ると宙吊り invoice になる。
   let overcharged = false;
+  let overageAmount = 0;
   if (member.plan_type === "twice_weekly" && member.plan_cap !== null) {
     const count = await countThisMonthAttendance(member.id);
     if (count > member.plan_cap && member.payment_method === "stripe") {
-      await addOverageToNextInvoice(member, gymId);
-      overcharged = true;
+      overageAmount = await addOverageToNextInvoice(member, gymId);
+      overcharged = overageAmount > 0;
       // Why: charged フラグを true に更新しないと履歴画面の「超過」マークが出ない
-      await supabase.from("attendance_logs").update({ charged: true }).eq("id", (log as { id: string }).id);
+      if (overcharged) {
+        await supabase
+          .from("attendance_logs")
+          .update({ charged: true })
+          .eq("id", (log as { id: string }).id);
+      }
     }
   }
 
-  return { log: log as AttendanceLog, overcharged, duplicate: false };
+  return { log: log as AttendanceLog, overcharged, duplicate: false, overageAmount };
 }

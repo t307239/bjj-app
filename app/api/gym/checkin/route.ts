@@ -28,14 +28,17 @@ function checkRateLimit(ip: string): boolean {
 const bodySchema = z.object({
   qrToken: z.string().uuid(),
   gymId: z.string().uuid(),
-  classType: z.enum(["beginner","basic","regular","nogi","private","other"]).optional(),
+  classType: z.enum(["beginner", "basic", "regular", "nogi", "private", "other"]).optional(),
 });
 
 // auth: public — qr_token 認証 + IP rate-limit
 export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   if (!checkRateLimit(ip)) {
-    return NextResponse.json({ error: "リクエストが多すぎます。しばらく待ってから再試行してください。", success: false }, { status: 429 });
+    return NextResponse.json(
+      { error: "リクエストが多すぎます。しばらく待ってから再試行してください。", success: false },
+      { status: 429 },
+    );
   }
   const body = await req.json().catch(() => null);
   const parsed = bodySchema.safeParse(body);
@@ -51,7 +54,10 @@ export async function POST(req: NextRequest) {
   }
 
   if (member.gym_id !== gymId) {
-    return NextResponse.json({ error: "このジムのQRコードではありません", success: false }, { status: 403 });
+    return NextResponse.json(
+      { error: "このジムのQRコードではありません", success: false },
+      { status: 403 },
+    );
   }
 
   try {
@@ -61,17 +67,23 @@ export async function POST(req: NextRequest) {
       success: true,
       duplicate: result.duplicate,
       overcharged: result.overcharged,
+      overage_amount: result.overageAmount,
       member_name: member.name,
       // Why: インストラクターが顔写真で本人確認できるよう返す（氏名だけでは同名判別が難しい）
       member_photo_url: member.photo_url,
+      // Why: 告知額は実際に翌月請求へ加算した額(result.overageAmount)を使う。
+      //      固定文言(¥1,000)だと実請求(¥2,200)と食い違い、会員トラブルの原因になるため。
       message: result.duplicate
         ? "既にチェックイン済みです（60分以内）"
         : result.overcharged
-        ? `チェックイン完了（今月の上限を超えました。¥1,000が翌月請求に追加されます）`
-        : "チェックイン完了！",
+          ? `チェックイン完了（今月の上限を超えました。¥${result.overageAmount.toLocaleString()}が翌月請求に追加されます）`
+          : "チェックイン完了！",
     });
   } catch (err) {
     clientLogger.error("robust.checkin.error", { memberId: member.id }, err);
-    return NextResponse.json({ error: "チェックインに失敗しました", success: false }, { status: 500 });
+    return NextResponse.json(
+      { error: "チェックインに失敗しました", success: false },
+      { status: 500 },
+    );
   }
 }

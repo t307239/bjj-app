@@ -1,17 +1,21 @@
 BJJ App Hidden Bug Detector Report
-TS/TSX Scanned: 474 files
+TS/TSX Scanned: 480 files
 CRITICAL: 0
-WARNING: 17
-INFO: 104
-Total: 121
+WARNING: 21
+INFO: 107
+Total: 128
 
 [INFO] [SUPABASE_NO_ERROR] app/api/cron/onboarding-email/route.ts: L251: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
+[WARNING] [SPLIT_DESTRUCTURE_NO_GUARD] app/api/gym/robust/export/attendance/route.ts: L35: `[a, b] = fromYm.split("-")` に長さガード無し — malformed input で undefined 化リスク
+  FIX: lib/formatDate.ts の parseYearMonthSafe() を使う、または length check を追加
+[WARNING] [SPLIT_DESTRUCTURE_NO_GUARD] app/api/gym/robust/export/attendance/route.ts: L36: `[a, b] = toYm.split("-")` に長さガード無し — malformed input で undefined 化リスク
+  FIX: lib/formatDate.ts の parseYearMonthSafe() を使う、または length check を追加
 [INFO] [SUPABASE_NO_ERROR] app/api/gym/robust/settings/route.ts: L20: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/api/gym/robust/videos/route.ts: L18: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [SUPABASE_NO_ERROR] app/api/gym/webhook/handlers/checkout-completed.ts: L29: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] app/api/gym/webhook/handlers/checkout-completed.ts: L36: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [SUPABASE_NO_ERROR] app/api/gym/webhook/handlers/invoice-paid.ts: L11: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
@@ -31,15 +35,19 @@ Total: 121
   FIX: t() / serverT() 経由に修正
 [WARNING] [HARDCODED_MIXED] app/gym/robust/admin/members/page.tsx: 多言語混在（JAの中に英語）: 'カード（Stripe）'
   FIX: t() / serverT() 経由に修正
-[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L496: <button> で type 属性無し — 明示的 type="button" 推奨
+[WARNING] [SETTIMEOUT_NO_CLEANUP] app/gym/robust/admin/members/page.tsx: L138: setTimeout(() => setState) without clearTimeout — メモリリーク
+  FIX: const timer = setTimeout(...); useEffect cleanup で clearTimeout(timer)
+[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L603: <button> で type 属性無し — 明示的 type="button" 推奨
   FIX: type="button" を明示 (送信ボタンなら type="submit")
-[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L500: <button> で type 属性無し — 明示的 type="button" 推奨
+[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/members/page.tsx: L607: <button> で type 属性無し — 明示的 type="button" 推奨
   FIX: type="button" を明示 (送信ボタンなら type="submit")
+[WARNING] [PROMISE_NO_CATCH] app/gym/robust/admin/members/page.tsx: L136: .then() に .catch() がない — エラー時サイレント失敗
+  FIX: .catch((err) => console.error(err)) を追加、または async/await + try-catch に変更
 [WARNING] [HARDCODED_MIXED] app/gym/robust/admin/videos/page.tsx: 多言語混在（JAの中に英語）: '共有 Drive フォルダ'
   FIX: t() / serverT() 経由に修正
 [WARNING] [HARDCODED_MIXED] app/gym/robust/admin/videos/page.tsx: 多言語混在（JAの中に英語）: '上の「動画を追加」ボタンから Google Drive の動画を登録してください'
   FIX: t() / serverT() 経由に修正
-[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/videos/page.tsx: L149: <button> で type 属性無し — 明示的 type="button" 推奨
+[INFO] [BUTTON_NO_TYPE] app/gym/robust/admin/videos/page.tsx: L156: <button> で type 属性無し — 明示的 type="button" 推奨
   FIX: type="button" を明示 (送信ボタンなら type="submit")
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/checkin/page.tsx: L288: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
@@ -47,11 +55,11 @@ Total: 121
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [TRUNCATE_NO_TITLE] app/gym/robust/member/announcements/page.tsx: L52: truncate class 付き dynamic content に title 属性無し — 省略後の full text 確認不可
   FIX: title={varName} を追加 (a11y/UX)
-[INFO] [INLINE_STYLE_OBJECT] app/gym/robust/member/history/page.tsx: L105: style={{...}} — Tailwindクラスで統一推奨
+[INFO] [INLINE_STYLE_OBJECT] app/gym/robust/member/history/page.tsx: L101: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/profile/page.tsx: L163: JSX内に英語テキスト直書き: "ROBUST 柔術"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/profile/page.tsx: L164: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/profile/page.tsx: L273: JSX内に英語テキスト直書き: "📱 iPhoneで通知を受け取るには"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/profile/page.tsx: L274: JSX内に英語テキスト直書き: "📱 iPhoneで通知を受け取るには"
   FIX: t() キーを追加して多言語対応
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/member/qr/page.tsx: L86: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
@@ -65,9 +73,9 @@ Total: 121
   FIX: t() キーを追加して多言語対応
 [INFO] [INLINE_STYLE_OBJECT] app/gym/robust/member/videos/page.tsx: L116: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
-[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/register/page.tsx: L327: JSX内に英語テキスト直書き: "ROBUST 柔術"
+[WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/register/page.tsx: L444: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
-[INFO] [SUPABASE_NO_ERROR] app/gym/robust/register/page.tsx: L132: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] app/gym/robust/register/page.tsx: L232: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [WARNING] [JSX_HARDCODED_ENGLISH] app/gym/robust/register/success/page.tsx: L75: JSX内に英語テキスト直書き: "ようこそ ROBUST 柔術へ！"
   FIX: t() キーを追加して多言語対応
@@ -217,6 +225,12 @@ Total: 121
   FIX: t() キーを追加して多言語対応
 [WARNING] [JSX_HARDCODED_ENGLISH] components/robust/RobustAdminLoginForm.tsx: L96: JSX内に英語テキスト直書き: "ROBUST 柔術"
   FIX: t() キーを追加して多言語対応
+[INFO] [INLINE_STYLE_OBJECT] components/robust/RobustBeltBar.tsx: L42: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [INLINE_STYLE_OBJECT] components/robust/RobustBeltBar.tsx: L50: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
+[INFO] [INLINE_STYLE_OBJECT] components/robust/RobustBeltBar.tsx: L54: style={{...}} — Tailwindクラスで統一推奨
+  FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/AddNodePopup.tsx: L35: style={{...}} — Tailwindクラスで統一推奨
   FIX: 対応するTailwindユーティリティクラスに変換
 [INFO] [INLINE_STYLE_OBJECT] components/skillmap/BottomDrawer.tsx: L118: style={{...}} — Tailwindクラスで統一推奨
@@ -243,7 +257,7 @@ Total: 121
   FIX: 修正済みなら削除、未着手ならBACKLOGへ移動
 [INFO] [SUPABASE_NO_ERROR] lib/robust/auth.ts: L23: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
-[INFO] [SUPABASE_NO_ERROR] lib/robust/payments.ts: L33: Supabase query の戻り値で error を無視 — サイレント失敗リスク
+[INFO] [SUPABASE_NO_ERROR] lib/robust/payments.ts: L65: Supabase query の戻り値で error を無視 — サイレント失敗リスク
   FIX: const { data, error } = ... に変更し、error 時のフォールバックを追加
 [INFO] [CONSOLE_LOG] lib/styleAuditor.ts: console.log() が 1 件残存
   FIX: 本番前に削除

@@ -133,10 +133,20 @@ export default function AdminMembersPage() {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const copyEmails = (key: string, emails: string[]) => {
     // Why: 会員が多いとDrive共有先を1件ずつコピーするのは非現実的。カンマ区切りで一括コピー。
-    navigator.clipboard?.writeText(emails.join(", ")).then(() => {
+    const text = emails.join(", ");
+    const ok = () => {
       setCopiedKey(key);
       setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 2000);
-    });
+    };
+    // Why: クリップボードAPIが無効/権限拒否(非HTTPS・一部環境)でも黙って失敗しないよう、
+    //      失敗時は手動コピー用の prompt をフォールバック表示する。
+    const fallback = () =>
+      window.prompt("コピーできませんでした。下記を手動でコピーしてください", text);
+    if (!navigator.clipboard?.writeText) {
+      fallback();
+      return;
+    }
+    navigator.clipboard.writeText(text).then(ok).catch(fallback);
   };
   const MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5MB
   const [saving, setSaving] = useState(false);
@@ -144,13 +154,19 @@ export default function AdminMembersPage() {
   const [showLogin, setShowLogin] = useState(false);
   // インライン操作（手動チェックイン / 家族割引承認却下 / 再入会）の進行状態とフィードバック
   const [actioningId, setActioningId] = useState<string | null>(null);
-  const [actionMsg, setActionMsg] = useState<{ id: string; text: string; ok: boolean } | null>(null);
+  const [actionMsg, setActionMsg] = useState<{ id: string; text: string; ok: boolean } | null>(
+    null,
+  );
 
   async function fetchMembers() {
     const res = await fetch("/api/gym/robust/members");
     if (!res.ok) {
       const json = await res.json().catch(() => ({}));
-      if (res.status === 401) { setShowLogin(true); setLoading(false); return; }
+      if (res.status === 401) {
+        setShowLogin(true);
+        setLoading(false);
+        return;
+      }
       setError(json.error ?? "エラーが発生しました");
       setLoading(false);
       return;
@@ -162,8 +178,14 @@ export default function AdminMembersPage() {
 
   useEffect(() => {
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { setShowLogin(true); setLoading(false); return; }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        setShowLogin(true);
+        setLoading(false);
+        return;
+      }
       await fetchMembers();
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -216,7 +238,7 @@ export default function AdminMembersPage() {
     try {
       const base64 = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(((reader.result as string).split(",")[1]) ?? "");
+        reader.onload = () => resolve((reader.result as string).split(",")[1] ?? "");
         reader.onerror = () => reject(new Error("画像の読み込みに失敗しました"));
         reader.readAsDataURL(file);
       });
@@ -227,7 +249,9 @@ export default function AdminMembersPage() {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? "アップロードに失敗しました");
-      setMembers(prev => prev.map(m => m.id === memberId ? { ...m, photo_url: json.url } : m));
+      setMembers((prev) =>
+        prev.map((m) => (m.id === memberId ? { ...m, photo_url: json.url } : m)),
+      );
       setActionMsg({ id: memberId, text: "写真を更新しました", ok: true });
     } catch (err) {
       setActionMsg({ id: memberId, text: (err as Error).message, ok: false });
@@ -255,7 +279,7 @@ export default function AdminMembersPage() {
         const json = await res.json().catch(() => ({}));
         throw new Error(json.error ?? "操作に失敗しました");
       }
-      setMembers(prev => prev.map(m => (m.id === memberId ? applyLocal(m) : m)));
+      setMembers((prev) => prev.map((m) => (m.id === memberId ? applyLocal(m) : m)));
       setActionMsg({ id: memberId, text: successText, ok: true });
     } catch (err) {
       setActionMsg({ id: memberId, text: (err as Error).message, ok: false });
@@ -264,20 +288,24 @@ export default function AdminMembersPage() {
     }
   }
 
-
   // ① 家族割引 承認/却下: Stripe coupon も API 側で同期される
   function handleFamilyDecision(memberId: string, approved: boolean) {
     patchMember(
       memberId,
       { family_discount_approved: approved },
-      m => ({ ...m, family_discount: approved }),
+      (m) => ({ ...m, family_discount: approved }),
       approved ? "家族割引を承認しました" : "家族割引を却下しました",
     );
   }
 
   // ③ 再入会: 退会済み会員を1クリックで有効化
   function handleRejoin(memberId: string) {
-    patchMember(memberId, { status: "active" }, m => ({ ...m, status: "active" }), "再入会を完了しました");
+    patchMember(
+      memberId,
+      { status: "active" },
+      (m) => ({ ...m, status: "active" }),
+      "再入会を完了しました",
+    );
   }
 
   // 動画閲覧権限をワンタップでON/OFF
@@ -285,7 +313,7 @@ export default function AdminMembersPage() {
     patchMember(
       memberId,
       { video_access: !current },
-      m => ({ ...m, video_access: !current }),
+      (m) => ({ ...m, video_access: !current }),
       !current ? "動画閲覧をONにしました" : "動画閲覧をOFFにしました",
     );
   }
@@ -317,10 +345,22 @@ export default function AdminMembersPage() {
         const json = await res.json().catch(() => ({}));
         throw new Error(json.error ?? "保存に失敗しました");
       }
-      setMembers(prev => prev.map(m => m.id === memberId
-        ? { ...m, status: editStatus, plan_type: editPlan, plan_cap: body.plan_cap as number | null, video_access: editVideoAccess, payment_method: editPaymentMethod, belt: editBelt, stripes: editStripes }
-        : m
-      ));
+      setMembers((prev) =>
+        prev.map((m) =>
+          m.id === memberId
+            ? {
+                ...m,
+                status: editStatus,
+                plan_type: editPlan,
+                plan_cap: body.plan_cap as number | null,
+                video_access: editVideoAccess,
+                payment_method: editPaymentMethod,
+                belt: editBelt,
+                stripes: editStripes,
+              }
+            : m,
+        ),
+      );
       setEditing(null);
     } catch (err) {
       setSaveError((err as Error).message);
@@ -330,7 +370,15 @@ export default function AdminMembersPage() {
   }
 
   if (showLogin) {
-    return <RobustAdminLoginForm onSuccess={() => { setShowLogin(false); setLoading(true); fetchMembers(); }} />;
+    return (
+      <RobustAdminLoginForm
+        onSuccess={() => {
+          setShowLogin(false);
+          setLoading(true);
+          fetchMembers();
+        }}
+      />
+    );
   }
 
   if (loading) {
@@ -342,19 +390,27 @@ export default function AdminMembersPage() {
   }
 
   if (error) {
-    return <RobustAccessDenied message={error} onLogin={() => { setError(""); setShowLogin(true); }} />;
+    return (
+      <RobustAccessDenied
+        message={error}
+        onLogin={() => {
+          setError("");
+          setShowLogin(true);
+        }}
+      />
+    );
   }
 
-  const activeCount = members.filter(m => m.status === "active").length;
-  const pausedCount = members.filter(m => m.status === "paused").length;
+  const activeCount = members.filter((m) => m.status === "active").length;
+  const pausedCount = members.filter((m) => m.status === "paused").length;
 
   // 動画アクセス（手動 Drive 共有）管理リスト
   // Why: 動画は Drive フォルダを各会員の Google アカウントに手動共有する運用。
   //      アプリの動画リンクは status==active かつ video_access でゲートされるが、
   //      手動共有した Drive 権限はアプリのゲートが効かない（退会後も直接閲覧可能）。
   //      「共有すべき人」「権限を外すべき人」を可視化し剥奪忘れの事故を防ぐ。
-  const driveShareTargets = members.filter(m => m.status === "active" && m.video_access);
-  const driveRevokeTargets = members.filter(m => m.video_access && m.status !== "active");
+  const driveShareTargets = members.filter((m) => m.status === "active" && m.video_access);
+  const driveRevokeTargets = members.filter((m) => m.video_access && m.status !== "active");
 
   return (
     <div className="min-h-screen bg-zinc-950 p-4">
@@ -374,7 +430,12 @@ export default function AdminMembersPage() {
             >
               ⬇ 会員CSV
             </a>
-            <a href="/gym/robust/admin" className="text-zinc-400 text-xs hover:text-white whitespace-nowrap">← ダッシュボード</a>
+            <a
+              href="/gym/robust/admin"
+              className="text-zinc-400 text-xs hover:text-white whitespace-nowrap"
+            >
+              ← ダッシュボード
+            </a>
           </div>
         </div>
 
@@ -397,7 +458,9 @@ export default function AdminMembersPage() {
         {/* 来館CSV（期間指定）: 出席ログを日付範囲で出力（売上・稼働レポート用） */}
         <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6 flex flex-wrap items-end gap-3">
           <div>
-            <label htmlFor="att-from" className="block text-xs text-zinc-400 mb-1">来館CSV：開始日</label>
+            <label htmlFor="att-from" className="block text-xs text-zinc-400 mb-1">
+              来館CSV：開始日
+            </label>
             <input
               id="att-from"
               type="date"
@@ -408,7 +471,9 @@ export default function AdminMembersPage() {
             />
           </div>
           <div>
-            <label htmlFor="att-to" className="block text-xs text-zinc-400 mb-1">終了日</label>
+            <label htmlFor="att-to" className="block text-xs text-zinc-400 mb-1">
+              終了日
+            </label>
             <input
               id="att-to"
               type="date"
@@ -425,36 +490,55 @@ export default function AdminMembersPage() {
           >
             ⬇ 来館サマリーCSV（月別回数）
           </a>
-          <p className="text-xs text-zinc-500 basis-full">指定期間の「会員 × 各月の来館回数」を一覧で出力します（稼働・売上分析用）。会員の連絡先など詳細は「会員CSV」から。</p>
+          <p className="text-xs text-zinc-500 basis-full">
+            指定期間の「会員 ×
+            各月の来館回数」を一覧で出力します（稼働・売上分析用）。会員の連絡先など詳細は「会員CSV」から。
+          </p>
         </div>
 
         {/* 動画アクセス（Drive 共有）管理 */}
         {(driveShareTargets.length > 0 || driveRevokeTargets.length > 0) && (
           <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
-            <h2 className="text-sm font-medium text-white mb-1">📹 動画アクセス（Drive 共有管理）</h2>
+            <h2 className="text-sm font-medium text-white mb-1">
+              📹 動画アクセス（Drive 共有管理）
+            </h2>
             <p className="text-zinc-500 text-xs mb-3">
-              動画フォルダを各会員の Google アカウントに手動共有する運用です。下記を Drive の共有設定に反映してください。
+              動画フォルダを各会員の Google アカウントに手動共有する運用です。下記を Drive
+              の共有設定に反映してください。
             </p>
 
             {driveRevokeTargets.length > 0 && (
-              <details open={driveRevokeTargets.length <= 8} className="mb-3 rounded-lg bg-red-500/10 border border-red-500/30 p-3">
+              <details
+                open={driveRevokeTargets.length <= 8}
+                className="mb-3 rounded-lg bg-red-500/10 border border-red-500/30 p-3"
+              >
                 <summary className="text-red-400 text-xs font-medium cursor-pointer">
                   ⚠️ Drive 権限を外す（{driveRevokeTargets.length}名）— 退会・休会したが動画ONのまま
                 </summary>
                 <div className="mt-2">
                   <button
                     type="button"
-                    onClick={() => copyEmails("revoke", driveRevokeTargets.map(m => m.email))}
+                    onClick={() =>
+                      copyEmails(
+                        "revoke",
+                        driveRevokeTargets.map((m) => m.email),
+                      )
+                    }
                     className="text-[11px] bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded px-2 py-1 mb-2"
                   >
                     📋 メールを一括コピー{copiedKey === "revoke" ? " ✓" : ""}
                   </button>
                   <ul className="space-y-1 max-h-56 overflow-auto">
-                    {driveRevokeTargets.map(m => (
-                      <li key={m.id} className="text-xs text-zinc-300 flex items-center gap-2 flex-wrap">
+                    {driveRevokeTargets.map((m) => (
+                      <li
+                        key={m.id}
+                        className="text-xs text-zinc-300 flex items-center gap-2 flex-wrap"
+                      >
                         <span>{m.name}</span>
                         <span className="text-zinc-500">{m.email}</span>
-                        <span className="text-red-400">（{STATUS_LABEL[m.status] ?? m.status}）</span>
+                        <span className="text-red-400">
+                          （{STATUS_LABEL[m.status] ?? m.status}）
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -474,14 +558,22 @@ export default function AdminMembersPage() {
                 <div className="mt-2">
                   <button
                     type="button"
-                    onClick={() => copyEmails("share", driveShareTargets.map(m => m.email))}
+                    onClick={() =>
+                      copyEmails(
+                        "share",
+                        driveShareTargets.map((m) => m.email),
+                      )
+                    }
                     className="text-[11px] bg-emerald-600 hover:bg-emerald-500 text-white rounded px-2 py-1 mb-2"
                   >
                     📋 メールを一括コピー{copiedKey === "share" ? " ✓" : ""}
                   </button>
                   <ul className="space-y-1 max-h-56 overflow-auto">
-                    {driveShareTargets.map(m => (
-                      <li key={m.id} className="text-xs text-zinc-300 flex items-center gap-2 flex-wrap">
+                    {driveShareTargets.map((m) => (
+                      <li
+                        key={m.id}
+                        className="text-xs text-zinc-300 flex items-center gap-2 flex-wrap"
+                      >
                         <span>{m.name}</span>
                         <span className="text-zinc-500">{m.email}</span>
                       </li>
@@ -500,7 +592,7 @@ export default function AdminMembersPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {members.map(m => (
+            {members.map((m) => (
               <div key={m.id} className="bg-zinc-900 border border-white/10 rounded-xl p-4">
                 {editing === m.id ? (
                   /* 編集モード */
@@ -512,8 +604,11 @@ export default function AdminMembersPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-xs text-zinc-400 mb-1">ステータス</label>
-                        <select value={editStatus} onChange={e => setEditStatus(e.target.value)}
-                          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+                        <select
+                          value={editStatus}
+                          onChange={(e) => setEditStatus(e.target.value)}
+                          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                        >
                           <option value="active">有効</option>
                           <option value="paused">休会中</option>
                           <option value="cancelled">退会</option>
@@ -521,8 +616,11 @@ export default function AdminMembersPage() {
                       </div>
                       <div>
                         <label className="block text-xs text-zinc-400 mb-1">プラン</label>
-                        <select value={editPlan} onChange={e => setEditPlan(e.target.value)}
-                          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+                        <select
+                          value={editPlan}
+                          onChange={(e) => setEditPlan(e.target.value)}
+                          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                        >
                           <option value="fulltime">フルタイム</option>
                           <option value="twice_weekly">月8回</option>
                           <option value="drop_in">ドロップイン</option>
@@ -533,37 +631,52 @@ export default function AdminMembersPage() {
                             （プラン種別だけでは男女別価格を確定できず自動同期できない）。誤解防止の注意書き。 */}
                     {editPlan !== m.plan_type && (
                       <p className="text-amber-400 text-xs bg-amber-500/10 rounded-lg px-3 py-2">
-                        ※ プラン変更は月額（Stripe）の請求額には自動反映されません。金額の変更が必要な場合は Stripe 側で行ってください。
+                        ※
+                        プラン変更は月額（Stripe）の請求額には自動反映されません。金額の変更が必要な場合は
+                        Stripe 側で行ってください。
                       </p>
                     )}
                     {editPlan === "twice_weekly" && (
                       <div>
                         <label className="block text-xs text-zinc-400 mb-1">月上限回数</label>
-                        <input type="number" value={editCap} onChange={e => setEditCap(e.target.value)}
-                          min={1} max={99} placeholder="8"
-                          className="w-32 bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
+                        <input
+                          type="number"
+                          value={editCap}
+                          onChange={(e) => setEditCap(e.target.value)}
+                          min={1}
+                          max={99}
+                          placeholder="8"
+                          className="w-32 bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                        />
                       </div>
                     )}
                     {/* 動画アクセス切替 */}
                     <div className="flex items-center justify-between bg-zinc-800 rounded-lg px-3 py-2.5">
                       <div>
                         <p className="text-white text-sm">会員限定動画の閲覧</p>
-                        <p className="text-zinc-500 text-xs mt-0.5">オンにすると動画ページにアクセス可能</p>
+                        <p className="text-zinc-500 text-xs mt-0.5">
+                          オンにすると動画ページにアクセス可能
+                        </p>
                       </div>
                       <button
                         type="button"
-                        onClick={() => setEditVideoAccess(v => !v)}
+                        onClick={() => setEditVideoAccess((v) => !v)}
                         className={`relative w-11 h-6 rounded-full transition-colors ${editVideoAccess ? "bg-emerald-500" : "bg-zinc-600"}`}
                         aria-label="動画アクセス切替"
                       >
-                        <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${editVideoAccess ? "translate-x-5" : "translate-x-0"}`} />
+                        <span
+                          className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${editVideoAccess ? "translate-x-5" : "translate-x-0"}`}
+                        />
                       </button>
                     </div>
                     {/* ⑤ 支払い方法（カード / 口座振替）切替 */}
                     <div>
                       <label className="block text-xs text-zinc-400 mb-1">支払い方法</label>
-                      <select value={editPaymentMethod} onChange={e => setEditPaymentMethod(e.target.value)}
-                        className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+                      <select
+                        value={editPaymentMethod}
+                        onChange={(e) => setEditPaymentMethod(e.target.value)}
+                        className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                      >
                         <option value="stripe">カード（Stripe）</option>
                         <option value="bank_transfer">口座振替</option>
                       </select>
@@ -572,8 +685,11 @@ export default function AdminMembersPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-xs text-zinc-400 mb-1">帯</label>
-                        <select value={editBelt} onChange={e => setEditBelt(e.target.value)}
-                          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+                        <select
+                          value={editBelt}
+                          onChange={(e) => setEditBelt(e.target.value)}
+                          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                        >
                           <option value="white">白帯</option>
                           <option value="blue">青帯</option>
                           <option value="purple">紫帯</option>
@@ -583,8 +699,11 @@ export default function AdminMembersPage() {
                       </div>
                       <div>
                         <label className="block text-xs text-zinc-400 mb-1">ストライプ</label>
-                        <select value={String(editStripes)} onChange={e => setEditStripes(parseInt(e.target.value))}
-                          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+                        <select
+                          value={String(editStripes)}
+                          onChange={(e) => setEditStripes(parseInt(e.target.value))}
+                          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                        >
                           <option value="0">0本</option>
                           <option value="1">1本</option>
                           <option value="2">2本</option>
@@ -595,17 +714,24 @@ export default function AdminMembersPage() {
                     </div>
                     {(editBelt !== m.belt || editStripes !== m.stripes) && (
                       <p className="text-emerald-400 text-xs bg-emerald-500/10 rounded-lg px-3 py-2">
-                        ※ 保存すると昇格履歴に記録されます（{BELT_LABEL[m.belt] ?? m.belt}{m.stripes}本 → {BELT_LABEL[editBelt] ?? editBelt}{editStripes}本）
+                        ※ 保存すると昇格履歴に記録されます（{BELT_LABEL[m.belt] ?? m.belt}
+                        {m.stripes}本 → {BELT_LABEL[editBelt] ?? editBelt}
+                        {editStripes}本）
                       </p>
                     )}
                     {saveError && <p className="text-red-400 text-xs">{saveError}</p>}
                     <div className="flex gap-2">
-                      <button onClick={() => handleSave(m.id)} disabled={saving}
-                        className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white text-sm rounded-lg py-2 font-medium">
+                      <button
+                        onClick={() => handleSave(m.id)}
+                        disabled={saving}
+                        className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white text-sm rounded-lg py-2 font-medium"
+                      >
                         {saving ? "保存中..." : "保存"}
                       </button>
-                      <button onClick={() => setEditing(null)}
-                        className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white text-sm rounded-lg py-2">
+                      <button
+                        onClick={() => setEditing(null)}
+                        className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white text-sm rounded-lg py-2"
+                      >
                         キャンセル
                       </button>
                     </div>
@@ -622,28 +748,54 @@ export default function AdminMembersPage() {
                           <>
                             <button
                               type="button"
-                              onClick={() => setZoomPhoto({ url: m.photo_url as string, name: m.name })}
+                              onClick={() =>
+                                setZoomPhoto({ url: m.photo_url as string, name: m.name })
+                              }
                               className="rounded-full cursor-zoom-in"
                               title="クリックで拡大"
                               aria-label={`${m.name} の写真を拡大`}
                             >
                               {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img src={m.photo_url} alt={m.name} className="w-14 h-14 rounded-full object-cover bg-zinc-800" />
+                              <img
+                                src={m.photo_url}
+                                alt={m.name}
+                                className="w-14 h-14 rounded-full object-cover bg-zinc-800"
+                              />
                             </button>
-                            <label className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-zinc-700 hover:bg-zinc-600 rounded-full flex items-center justify-center cursor-pointer border border-zinc-900 text-[11px] leading-none"
-                              title="写真を変更">
+                            <label
+                              className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-zinc-700 hover:bg-zinc-600 rounded-full flex items-center justify-center cursor-pointer border border-zinc-900 text-[11px] leading-none"
+                              title="写真を変更"
+                            >
                               <span aria-hidden="true">✎</span>
-                              <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden"
+                              <input
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                className="hidden"
                                 disabled={uploadingPhotoId === m.id}
-                                onChange={e => { const f = e.target.files?.[0]; if (f) handlePhotoUpload(m.id, f); e.currentTarget.value = ""; }} />
+                                onChange={(e) => {
+                                  const f = e.target.files?.[0];
+                                  if (f) handlePhotoUpload(m.id, f);
+                                  e.currentTarget.value = "";
+                                }}
+                              />
                             </label>
                           </>
                         ) : (
                           <label className="cursor-pointer" title="クリックで写真を登録">
-                            <span className="w-14 h-14 rounded-full bg-zinc-700 flex items-center justify-center text-zinc-300 text-lg">{m.name.charAt(0)}</span>
-                            <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden"
+                            <span className="w-14 h-14 rounded-full bg-zinc-700 flex items-center justify-center text-zinc-300 text-lg">
+                              {m.name.charAt(0)}
+                            </span>
+                            <input
+                              type="file"
+                              accept="image/jpeg,image/png,image/webp"
+                              className="hidden"
                               disabled={uploadingPhotoId === m.id}
-                              onChange={e => { const f = e.target.files?.[0]; if (f) handlePhotoUpload(m.id, f); e.currentTarget.value = ""; }} />
+                              onChange={(e) => {
+                                const f = e.target.files?.[0];
+                                if (f) handlePhotoUpload(m.id, f);
+                                e.currentTarget.value = "";
+                              }}
+                            />
                           </label>
                         )}
                         {uploadingPhotoId === m.id && (
@@ -653,47 +805,78 @@ export default function AdminMembersPage() {
                         )}
                       </div>
                       <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="text-white font-medium text-sm">{m.name}</p>
-                        {m.name_kana && <span className="text-zinc-500 text-xs">（{m.name_kana}）</span>}
-                        {m.is_minor && <span className="text-xs bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded">未成年</span>}
-                        <span className={`text-xs px-2 py-0.5 rounded ${STATUS_COLOR[m.status] ?? "bg-zinc-700 text-zinc-400"}`}>
-                          {STATUS_LABEL[m.status] ?? m.status}
-                        </span>
-                        <RobustBeltBar belt={m.belt} stripes={m.stripes} />
-                      </div>
-                      <p className="text-zinc-500 text-xs mt-0.5 truncate">{m.email}</p>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500 flex-wrap">
-                        <span>{PLAN_LABEL[m.plan_type] ?? m.plan_type}</span>
-                        {m.plan_cap != null && <span>上限{m.plan_cap}回/月</span>}
-                        {m.phone && <span>{m.phone}</span>}
-                        <span>{m.payment_method === "stripe" ? "カード" : "口座振替"}</span>
-                        {m.video_access && <span className="text-emerald-500">動画あり</span>}
-                        {m.family_member_name && (
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="text-white font-medium text-sm">{m.name}</p>
+                          {m.name_kana && (
+                            <span className="text-zinc-500 text-xs">（{m.name_kana}）</span>
+                          )}
+                          {m.is_minor && (
+                            <span className="text-xs bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded">
+                              未成年
+                            </span>
+                          )}
                           <span
-                            className={m.family_discount_warning ? "text-yellow-400" : m.family_discount ? "text-blue-400" : "text-amber-400"}
-                            title={m.family_discount_warning
-                              ? `⚠️ 同じ氏名「${m.family_member_name}」を複数会員が申請しています。確認が必要です。`
-                              : `家族割引 ${m.family_discount ? "適用中" : "申請中（未適用）"}: ${m.family_member_name}さんと同世帯`}
+                            className={`text-xs px-2 py-0.5 rounded ${STATUS_COLOR[m.status] ?? "bg-zinc-700 text-zinc-400"}`}
                           >
-                            {m.family_discount_warning ? "⚠️" : "👨‍👩‍👦"} {m.family_member_name}
-                            {m.family_discount ? "（適用中）" : "（申請中）"}
+                            {STATUS_LABEL[m.status] ?? m.status}
                           </span>
-                        )}
+                          <RobustBeltBar belt={m.belt} stripes={m.stripes} />
+                        </div>
+                        <p className="text-zinc-500 text-xs mt-0.5 truncate">{m.email}</p>
+                        <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500 flex-wrap">
+                          <span>{PLAN_LABEL[m.plan_type] ?? m.plan_type}</span>
+                          {m.plan_cap != null && <span>上限{m.plan_cap}回/月</span>}
+                          {m.phone && <span>{m.phone}</span>}
+                          <span>{m.payment_method === "stripe" ? "カード" : "口座振替"}</span>
+                          {m.video_access && <span className="text-emerald-500">動画あり</span>}
+                          {m.family_member_name && (
+                            <span
+                              className={
+                                m.family_discount_warning
+                                  ? "text-yellow-400"
+                                  : m.family_discount
+                                    ? "text-blue-400"
+                                    : "text-amber-400"
+                              }
+                              title={
+                                m.family_discount_warning
+                                  ? `⚠️ 同じ氏名「${m.family_member_name}」を複数会員が申請しています。確認が必要です。`
+                                  : `家族割引 ${m.family_discount ? "適用中" : "申請中（未適用）"}: ${m.family_member_name}さんと同世帯`
+                              }
+                            >
+                              {m.family_discount_warning ? "⚠️" : "👨‍👩‍👦"} {m.family_member_name}
+                              {m.family_discount ? "（適用中）" : "（申請中）"}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
                     </div>
                     <div className="flex gap-2 ml-3 shrink-0">
-                      {(m.address || m.sports_history || m.birth_date || m.emergency_contact_name || m.emergency_contact_phone || m.medical_notes || m.chronic_conditions || m.allergies || m.injury_history || m.blood_type) && (
-                        <button type="button" onClick={() => toggleDetail(m)}
+                      {(m.address ||
+                        m.sports_history ||
+                        m.birth_date ||
+                        m.emergency_contact_name ||
+                        m.emergency_contact_phone ||
+                        m.medical_notes ||
+                        m.chronic_conditions ||
+                        m.allergies ||
+                        m.injury_history ||
+                        m.blood_type) && (
+                        <button
+                          type="button"
+                          onClick={() => toggleDetail(m)}
                           className="min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-400 hover:text-white text-xs bg-zinc-800 hover:bg-zinc-700 rounded-lg px-2"
-                          aria-label={`${m.name}の詳細`}>
+                          aria-label={`${m.name}の詳細`}
+                        >
                           詳細
                         </button>
                       )}
-                      <button type="button" onClick={() => startEdit(m)}
+                      <button
+                        type="button"
+                        onClick={() => startEdit(m)}
                         className="min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-400 hover:text-white text-xs bg-zinc-800 hover:bg-zinc-700 rounded-lg px-3"
-                        aria-label={`${m.name}を編集`}>
+                        aria-label={`${m.name}を編集`}
+                      >
                         編集
                       </button>
                     </div>
@@ -704,52 +887,76 @@ export default function AdminMembersPage() {
                   <div className="mt-3 pt-3 border-t border-white/10 flex flex-wrap gap-2 items-center">
                     {/* 出席取り（手動チェックイン・取消）は出欠確認画面に一本化。会員管理は情報管理に専念。 */}
                     {/* 動画閲覧権限のワンタップ切替 */}
-                    <button type="button" disabled={actioningId === m.id}
+                    <button
+                      type="button"
+                      disabled={actioningId === m.id}
                       onClick={() => handleToggleVideo(m.id, m.video_access)}
-                      className={`min-h-[44px] px-3 text-xs disabled:opacity-40 rounded-lg whitespace-nowrap ${m.video_access ? "bg-emerald-700 hover:bg-emerald-600 text-white" : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300"}`}>
+                      className={`min-h-[44px] px-3 text-xs disabled:opacity-40 rounded-lg whitespace-nowrap ${m.video_access ? "bg-emerald-700 hover:bg-emerald-600 text-white" : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300"}`}
+                    >
                       {m.video_access ? "🎬 動画ON（OFFにする）" : "🎬 動画OFF（ONにする）"}
                     </button>
                     {/* カード登録リンク発行: 非カード会員(口座振替等)をカード払いに切り替える。オーナーが
                         プランを選んでリンク発行→会員に送る→会員がカード登録で翌月からカード課金。 */}
                     {m.payment_method !== "stripe" && m.status !== "cancelled" && (
-                      <button type="button"
-                        onClick={() => { setCardLinkFor(cardLinkFor === m.id ? null : m.id); setCardLinkUrl(null); setCardLinkErr(""); }}
-                        className="min-h-[44px] px-3 text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg whitespace-nowrap">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCardLinkFor(cardLinkFor === m.id ? null : m.id);
+                          setCardLinkUrl(null);
+                          setCardLinkErr("");
+                        }}
+                        className="min-h-[44px] px-3 text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg whitespace-nowrap"
+                      >
                         💳 カード登録リンク
                       </button>
                     )}
                     {/* ③ 再入会: 退会済みのみ表示 */}
                     {m.status === "cancelled" && (
-                      <button type="button" disabled={actioningId === m.id}
+                      <button
+                        type="button"
+                        disabled={actioningId === m.id}
                         onClick={() => handleRejoin(m.id)}
-                        className="min-h-[44px] px-3 text-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white rounded-lg whitespace-nowrap">
+                        className="min-h-[44px] px-3 text-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white rounded-lg whitespace-nowrap"
+                      >
                         ↩ 再入会
                       </button>
                     )}
                     {/* ① 家族割引: 申請（氏名入力）があれば表示。未適用なら承認、適用中なら解除 */}
                     {m.family_member_name && !m.family_discount && (
                       <>
-                        <button type="button" disabled={actioningId === m.id}
+                        <button
+                          type="button"
+                          disabled={actioningId === m.id}
                           onClick={() => handleFamilyDecision(m.id, true)}
-                          className="min-h-[44px] px-3 text-xs bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white rounded-lg whitespace-nowrap">
+                          className="min-h-[44px] px-3 text-xs bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white rounded-lg whitespace-nowrap"
+                        >
                           👨‍👩‍👦 家族割引を承認
                         </button>
-                        <button type="button" disabled={actioningId === m.id}
+                        <button
+                          type="button"
+                          disabled={actioningId === m.id}
                           onClick={() => handleFamilyDecision(m.id, false)}
-                          className="min-h-[44px] px-3 text-xs bg-zinc-700 hover:bg-zinc-600 disabled:opacity-40 text-white rounded-lg whitespace-nowrap">
+                          className="min-h-[44px] px-3 text-xs bg-zinc-700 hover:bg-zinc-600 disabled:opacity-40 text-white rounded-lg whitespace-nowrap"
+                        >
                           却下
                         </button>
                       </>
                     )}
                     {m.family_member_name && m.family_discount && (
-                      <button type="button" disabled={actioningId === m.id}
+                      <button
+                        type="button"
+                        disabled={actioningId === m.id}
                         onClick={() => handleFamilyDecision(m.id, false)}
-                        className="min-h-[44px] px-3 text-xs bg-zinc-700 hover:bg-zinc-600 disabled:opacity-40 text-white rounded-lg whitespace-nowrap">
+                        className="min-h-[44px] px-3 text-xs bg-zinc-700 hover:bg-zinc-600 disabled:opacity-40 text-white rounded-lg whitespace-nowrap"
+                      >
                         家族割引を解除
                       </button>
                     )}
                     {actionMsg?.id === m.id && (
-                      <span className={`text-xs ${actionMsg.ok ? "text-emerald-400" : "text-red-400"}`} role="status">
+                      <span
+                        className={`text-xs ${actionMsg.ok ? "text-emerald-400" : "text-red-400"}`}
+                        role="status"
+                      >
                         {actionMsg.text}
                       </span>
                     )}
@@ -759,30 +966,50 @@ export default function AdminMembersPage() {
                 {editing !== m.id && cardLinkFor === m.id && (
                   <div className="mt-2 bg-zinc-950/50 border border-white/10 rounded-lg p-3 space-y-2">
                     <p className="text-xs text-zinc-400">
-                      プラン（料金）を選んでリンクを発行 → 会員に送ってください。会員がカード登録すると<span className="text-zinc-200">翌月1日からカード課金</span>になります（今は課金なし）。※口座振替の停止時期はオーナーが合わせてください。
+                      プラン（料金）を選んでリンクを発行 →
+                      会員に送ってください。会員がカード登録すると
+                      <span className="text-zinc-200">翌月1日からカード課金</span>
+                      になります（今は課金なし）。※口座振替の停止時期はオーナーが合わせてください。
                     </p>
                     <div className="flex flex-wrap items-center gap-2">
-                      <label htmlFor={`cardplan-${m.id}`} className="sr-only">プラン</label>
-                      <select id={`cardplan-${m.id}`} value={cardLinkPlan} onChange={e => setCardLinkPlan(e.target.value)}
-                        className="bg-zinc-800 border border-white/10 rounded-lg px-2 py-1.5 text-white text-xs">
+                      <label htmlFor={`cardplan-${m.id}`} className="sr-only">
+                        プラン
+                      </label>
+                      <select
+                        id={`cardplan-${m.id}`}
+                        value={cardLinkPlan}
+                        onChange={(e) => setCardLinkPlan(e.target.value)}
+                        className="bg-zinc-800 border border-white/10 rounded-lg px-2 py-1.5 text-white text-xs"
+                      >
                         <option value="fulltime_male">フルタイム（男性）¥12,000</option>
                         <option value="fulltime_female">フルタイム（女性）¥10,000</option>
                         <option value="twice_male">月8回（大人）¥10,000</option>
                         <option value="twice_kids">月8回（キッズ）¥7,000</option>
                         <option value="drop_in">ドロップイン ¥2,000</option>
                       </select>
-                      <button type="button" disabled={cardLinkLoading} onClick={() => issueCardLink(m.id)}
-                        className="text-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white rounded-lg px-3 py-1.5 whitespace-nowrap">
+                      <button
+                        type="button"
+                        disabled={cardLinkLoading}
+                        onClick={() => issueCardLink(m.id)}
+                        className="text-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white rounded-lg px-3 py-1.5 whitespace-nowrap"
+                      >
                         {cardLinkLoading ? "発行中..." : "リンク発行"}
                       </button>
                     </div>
                     {cardLinkErr && <p className="text-red-400 text-xs">{cardLinkErr}</p>}
                     {cardLinkUrl && (
                       <div className="flex items-center gap-2">
-                        <input readOnly value={cardLinkUrl} aria-label="カード登録リンク"
-                          className="flex-1 bg-zinc-800 border border-white/10 rounded px-2 py-1.5 text-white text-xs" />
-                        <button type="button" onClick={() => copyEmails("cardlink", [cardLinkUrl])}
-                          className="text-xs bg-zinc-700 hover:bg-zinc-600 text-white rounded px-2 py-1.5 whitespace-nowrap">
+                        <input
+                          readOnly
+                          value={cardLinkUrl}
+                          aria-label="カード登録リンク"
+                          className="flex-1 bg-zinc-800 border border-white/10 rounded px-2 py-1.5 text-white text-xs"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => copyEmails("cardlink", [cardLinkUrl])}
+                          className="text-xs bg-zinc-700 hover:bg-zinc-600 text-white rounded px-2 py-1.5 whitespace-nowrap"
+                        >
                           {copiedKey === "cardlink" ? "✓ コピー済" : "コピー"}
                         </button>
                       </div>
@@ -859,15 +1086,20 @@ export default function AdminMembersPage() {
                         <span className="text-zinc-500">記録なし</span>
                       ) : (
                         <ul className="mt-1 space-y-1">
-                          {detailHistory.map(pr => (
+                          {detailHistory.map((pr) => (
                             <li key={pr.id} className="flex items-baseline gap-2">
                               <span className="text-zinc-500 tabular-nums whitespace-nowrap">
                                 {new Date(pr.promoted_on).toLocaleDateString("ja-JP")}
                               </span>
                               <span className="text-zinc-300 whitespace-nowrap">
-                                {BELT_LABEL[pr.belt] ?? pr.belt}{pr.stripes > 0 ? ` ${pr.stripes}本` : ""}
+                                {BELT_LABEL[pr.belt] ?? pr.belt}
+                                {pr.stripes > 0 ? ` ${pr.stripes}本` : ""}
                               </span>
-                              {pr.note && <span className="text-zinc-500 truncate" title={pr.note}>{pr.note}</span>}
+                              {pr.note && (
+                                <span className="text-zinc-500 truncate" title={pr.note}>
+                                  {pr.note}
+                                </span>
+                              )}
                             </li>
                           ))}
                         </ul>

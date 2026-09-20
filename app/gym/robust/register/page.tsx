@@ -84,6 +84,8 @@ const PLANS: Plan[] = [
 
 // 消費税率（外税10%）。表示価格はすべて税別で、決済内訳・合計に消費税を加算する。
 const CONSUMPTION_TAX_RATE = 0.1;
+// JSTオフセット。日割り計算をサーバー(JST)と一致させ、端末TZ差でズレないようにする。
+const JST_OFFSET_MS = 9 * 60 * 60 * 1000;
 
 export default function RegisterPage() {
   const supabase = createRobustClient();
@@ -1035,13 +1037,12 @@ export default function RegisterPage() {
               selectedPlan.monthlyAmount > 0 &&
               selectedPlan.priceKey !== "drop_in" &&
               (() => {
-                const today = new Date();
+                // JST基準で日割りを計算（サーバーの課金計算と一致させる。端末TZに依存させない）。
+                const nowJst = new Date(Date.now() + JST_OFFSET_MS);
                 const daysInMonth = new Date(
-                  today.getFullYear(),
-                  today.getMonth() + 1,
-                  0,
-                ).getDate();
-                const remainingDays = daysInMonth - today.getDate() + 1;
+                  Date.UTC(nowJst.getUTCFullYear(), nowJst.getUTCMonth() + 1, 0),
+                ).getUTCDate();
+                const remainingDays = daysInMonth - nowJst.getUTCDate() + 1;
                 const prorated = Math.round(
                   (selectedPlan.monthlyAmount * remainingDays) / daysInMonth,
                 );
