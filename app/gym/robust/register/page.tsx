@@ -87,6 +87,9 @@ const CONSUMPTION_TAX_RATE = 0.1;
 // JSTオフセット。日割り計算をサーバー(JST)と一致させ、端末TZ差でズレないようにする。
 const JST_OFFSET_MS = 9 * 60 * 60 * 1000;
 
+// 生年月日として許容する最古日(入力ミス防止)
+const BIRTH_DATE_MIN = "1900-01-01";
+
 export default function RegisterPage() {
   const supabase = createRobustClient();
   const [step, setStep] = useState<Step>("loading");
@@ -633,6 +636,10 @@ export default function RegisterPage() {
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
                 autoComplete="bday"
+                // Why: type=date は6桁の年(例 111111-11-11)も受け付け、サーバーで「不正なリクエスト」になる。
+                //      ブラウザ側で範囲を縛り、フォーム送信前に弾く。
+                min={BIRTH_DATE_MIN}
+                max={new Date().toISOString().slice(0, 10)}
                 required
                 className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               />

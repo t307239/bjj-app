@@ -14,7 +14,14 @@ const bodySchema = z.object({
   // 生年月日は YYYY-MM-DD のみ許可（不正値で DB date 型を壊さない）
   // 必須化（依頼: 登録情報の必須化）。フリガナと合わせ、連絡先・緊急連絡先・生年月日を必須にする。
   // 健康情報・血液型・運動経歴は要配慮個人情報/任意のため optional のまま維持。
-  birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  birthDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "生年月日の形式が正しくありません")
+    // Why: 形式だけでなく実在・妥当な範囲(1900年〜今日)も検証し、DB date 型エラーと不正入力を防ぐ
+    .refine((v) => {
+      const t = Date.parse(`${v}T00:00:00Z`);
+      return !Number.isNaN(t) && v >= "1900-01-01" && t <= Date.now();
+    }, "生年月日が正しくありません"),
   phone: z.string().min(1).max(20),
   address: z.string().min(1).max(200),
   sportsHistory: z.string().max(500).optional(),
@@ -50,7 +57,13 @@ export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
   const parsed = bodySchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "不正なリクエスト" }, { status: 400 });
+    // Why: 原因不明の「不正なリクエスト」だけだと会員もオーナーも直せない。先頭の検証メッセージを返す。
+    const firstIssue = parsed.error.issues[0];
+    const field = firstIssue?.path.join(".") ?? "";
+    return NextResponse.json(
+      { error: `入力内容を確認してください${field ? `（${field}）` : ""}：${firstIssue?.message ?? "不正なリクエスト"}` },
+      { status: 400 },
+    );
   }
   const { gymSlug, planKey, name, nameKana, birthDate, phone, address, sportsHistory, emergencyName, emergencyPhone, emergencyRelation, medicalNotes, chronicConditions, allergies, injuryHistory, bloodType, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, simultaneousFamily, agreedToTerms, skipPayment } = parsed.data;
 
