@@ -46,10 +46,28 @@ const bodySchema = z.object({
   // monthlyAmount はクライアント送信値を使わない（改ざん防止）
 });
 
+/** 検証エラー表示用の日本語項目名 */
+const REGISTER_FIELD_LABELS: Record<string, string> = {
+  name: "氏名",
+  nameKana: "フリガナ",
+  birthDate: "生年月日",
+  phone: "電話番号",
+  address: "住所",
+  emergencyName: "緊急連絡先の氏名",
+  emergencyPhone: "緊急連絡先の電話番号",
+  emergencyRelation: "緊急連絡先との続柄",
+  guardianName: "保護者の氏名",
+  guardianContact: "保護者の連絡先",
+  planKey: "プラン",
+};
+
 // auth: public — Supabase Auth で認証確認済みのユーザーのみ
 export async function POST(req: NextRequest) {
   const supabase = await createRobustServerClient();
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
   if (authError || !user) {
     return NextResponse.json({ error: "ログインが必要です" }, { status: 401 });
   }
@@ -59,13 +77,41 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     // Why: 原因不明の「不正なリクエスト」だけだと会員もオーナーも直せない。先頭の検証メッセージを返す。
     const firstIssue = parsed.error.issues[0];
-    const field = firstIssue?.path.join(".") ?? "";
+    const fieldKey = String(firstIssue?.path[0] ?? "");
+    // Why: 内部のフィールド名(birthDate 等)を会員に見せても意味が通らないため、日本語の項目名に変換する
+    const fieldLabel = REGISTER_FIELD_LABELS[fieldKey] ?? "";
     return NextResponse.json(
-      { error: `入力内容を確認してください${field ? `（${field}）` : ""}：${firstIssue?.message ?? "不正なリクエスト"}` },
+      { error: `${fieldLabel ? `${fieldLabel}: ` : ""}入力内容を確認してください` },
       { status: 400 },
     );
   }
-  const { gymSlug, planKey, name, nameKana, birthDate, phone, address, sportsHistory, emergencyName, emergencyPhone, emergencyRelation, medicalNotes, chronicConditions, allergies, injuryHistory, bloodType, isMinor, guardianName, guardianContact, includeInsurance, familyDiscount, familyMemberName, simultaneousFamily, agreedToTerms, skipPayment } = parsed.data;
+  const {
+    gymSlug,
+    planKey,
+    name,
+    nameKana,
+    birthDate,
+    phone,
+    address,
+    sportsHistory,
+    emergencyName,
+    emergencyPhone,
+    emergencyRelation,
+    medicalNotes,
+    chronicConditions,
+    allergies,
+    injuryHistory,
+    bloodType,
+    isMinor,
+    guardianName,
+    guardianContact,
+    includeInsurance,
+    familyDiscount,
+    familyMemberName,
+    simultaneousFamily,
+    agreedToTerms,
+    skipPayment,
+  } = parsed.data;
 
   // Why: monthlyAmount/setupFee はクライアント値を使わず planKey から確定（改ざん防止）
   const monthlyAmount = PLAN_MONTHLY_AMOUNTS[planKey] ?? 0;
@@ -103,12 +149,13 @@ export async function POST(req: NextRequest) {
   if (existingMember) {
     return NextResponse.json(
       {
-        error: existingMember.status === "cancelled"
-          ? "退会済みのため、再入会は道場へお問い合わせください。"
-          : "既に会員登録済みです。マイページをご利用ください。",
+        error:
+          existingMember.status === "cancelled"
+            ? "退会済みのため、再入会は道場へお問い合わせください。"
+            : "既に会員登録済みです。マイページをご利用ください。",
         alreadyMember: true,
       },
-      { status: 409 }
+      { status: 409 },
     );
   }
 
@@ -126,7 +173,7 @@ export async function POST(req: NextRequest) {
       .eq("status", "active");
 
     verifiedFamilyDiscount = (members ?? []).some(
-      m => m.name.replace(/\s+/g, "") === normalizedInput
+      (m) => m.name.replace(/\s+/g, "") === normalizedInput,
     );
 
     if (!verifiedFamilyDiscount) {
@@ -144,9 +191,11 @@ export async function POST(req: NextRequest) {
 
   // 論理プランキー → DBの plan_type
   const planType: "fulltime" | "twice_weekly" | "drop_in" =
-    planKey === "twice_male" || planKey === "twice_kids" ? "twice_weekly"
-    : planKey === "drop_in" ? "drop_in"
-    : "fulltime";
+    planKey === "twice_male" || planKey === "twice_kids"
+      ? "twice_weekly"
+      : planKey === "drop_in"
+        ? "drop_in"
+        : "fulltime";
 
   // ── カード登録スキップ（口座振替で後日）: Stripeを通さず会員を直接作成 ──
   // Why: 口座振替など現地払いの会員を、自己登録でもカード無しで作れるようにする。
@@ -189,7 +238,10 @@ export async function POST(req: NextRequest) {
     if (insErr) {
       // user_id UNIQUE 違反 = 既に会員（二度押し等）→ 正常扱い
       if (insErr.code === "23505") {
-        return NextResponse.json({ error: "既に会員登録済みです。", alreadyMember: true }, { status: 409 });
+        return NextResponse.json(
+          { error: "既に会員登録済みです。", alreadyMember: true },
+          { status: 409 },
+        );
       }
       return NextResponse.json({ error: "登録に失敗しました" }, { status: 500 });
     }
@@ -199,7 +251,10 @@ export async function POST(req: NextRequest) {
   const priceId = STRIPE_PRICE_IDS[planKey];
   if (!priceId) {
     // Why: Stripe Price ID が未設定（空文字）は「無効なプラン」ではなく「決済未設定」
-    return NextResponse.json({ error: "現在オンライン決済の準備中です。直接ご連絡ください。" }, { status: 503 });
+    return NextResponse.json(
+      { error: "現在オンライン決済の準備中です。直接ご連絡ください。" },
+      { status: 503 },
+    );
   }
 
   const origin = req.headers.get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL ?? "";
@@ -209,34 +264,34 @@ export async function POST(req: NextRequest) {
   let checkoutUrl: string;
   try {
     checkoutUrl = await createCheckoutSession({
-    name,
-    userId: user.id,
-    email: user.email!,
-    gymSlug,
-    priceId,
-    origin,
-    setupFeeAmount: setupFee,
-    nameKana,
-    birthDate,
-    phone,
-    address,
-    sportsHistory,
-    emergencyName,
-    emergencyPhone,
-    emergencyRelation,
-    medicalNotes,
-    chronicConditions,
-    allergies,
-    injuryHistory,
-    bloodType,
-    isMinor: isMinor ?? false,
-    guardianName,
-    guardianContact,
-    includeInsurance: includeInsurance ?? false,
-    familyDiscount: applyCoupon,               // DB検証済み or 同時入会の自己申告で coupon 適用
-    familyMemberName,                          // 申請氏名は常に保存（admin確認用）
-    monthlyAmount: monthlyAmount,
-    planKeyLogical: planKey, // 論理キーをメタデータに渡す（webhook plan_type判定用）
+      name,
+      userId: user.id,
+      email: user.email!,
+      gymSlug,
+      priceId,
+      origin,
+      setupFeeAmount: setupFee,
+      nameKana,
+      birthDate,
+      phone,
+      address,
+      sportsHistory,
+      emergencyName,
+      emergencyPhone,
+      emergencyRelation,
+      medicalNotes,
+      chronicConditions,
+      allergies,
+      injuryHistory,
+      bloodType,
+      isMinor: isMinor ?? false,
+      guardianName,
+      guardianContact,
+      includeInsurance: includeInsurance ?? false,
+      familyDiscount: applyCoupon, // DB検証済み or 同時入会の自己申告で coupon 適用
+      familyMemberName, // 申請氏名は常に保存（admin確認用）
+      monthlyAmount: monthlyAmount,
+      planKeyLogical: planKey, // 論理キーをメタデータに渡す（webhook plan_type判定用）
     });
   } catch (err) {
     console.error("[gym/register] createCheckoutSession failed", err);
