@@ -191,7 +191,11 @@ export async function POST(req: NextRequest) {
 
   const origin = req.headers.get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL ?? "";
 
-  const checkoutUrl = await createCheckoutSession({
+  // Why: Stripe 側の例外(無効な価格/クーポン等)を握りつぶさないと Next が非JSONの500を返し、
+  //      クライアントの res.json() が「Unexpected end of JSON input」で落ちる。必ずJSONで返す。
+  let checkoutUrl: string;
+  try {
+    checkoutUrl = await createCheckoutSession({
     name,
     userId: user.id,
     email: user.email!,
@@ -220,7 +224,14 @@ export async function POST(req: NextRequest) {
     familyMemberName,                          // 申請氏名は常に保存（admin確認用）
     monthlyAmount: monthlyAmount,
     planKeyLogical: planKey, // 論理キーをメタデータに渡す（webhook plan_type判定用）
-  });
+    });
+  } catch (err) {
+    console.error("[gym/register] createCheckoutSession failed", err);
+    return NextResponse.json(
+      { error: "決済画面の準備に失敗しました。時間をおいて再度お試しください。" },
+      { status: 502 },
+    );
+  }
 
   return NextResponse.json({ url: checkoutUrl });
 }

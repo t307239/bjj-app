@@ -397,7 +397,8 @@ export default function RegisterPage() {
           // monthlyAmount は送信しない（サーバー側で planKey から確定）
         }),
       });
-      const json = await res.json();
+      // Why: サーバーが非JSON(HTMLの500等)を返しても生の SyntaxError を会員に見せない
+      const json = await res.json().catch(() => ({}) as { error?: string; url?: string; skipped?: boolean; alreadyMember?: boolean });
       if (res.status === 503) {
         // Stripe 未設定時は連絡先を案内
         setError(json.error ?? "現在オンライン決済の準備中です。");
