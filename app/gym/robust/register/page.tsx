@@ -95,6 +95,12 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   // auth ステップの表示モード: 新規登録 or 既存会員ログイン
   const [authMode, setAuthMode] = useState<"signup" | "login">("signup");
+  // Why: 再設定完了後などから ?mode=login でログインタブを直接開く。初期値をwindow依存にすると
+  //      SSRとの不一致(hydration error)になるため、マウント後に反映する。
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("mode") === "login") setAuthMode("login");
+  }, []);
+
   const [resetSent, setResetSent] = useState(false);
   // ログイン済み・会員未登録(ゴースト)の再開フラグ。①基本情報を起点にしつつ②へ進む導線を出す。
   const [resumeGhost, setResumeGhost] = useState(false);

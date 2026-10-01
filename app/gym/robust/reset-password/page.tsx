@@ -37,6 +37,9 @@ export default function ResetPasswordPage() {
     try {
       const { error: updateError } = await supabase.auth.updateUser({ password });
       if (updateError) throw updateError;
+      // Why: 再設定リンクの recovery セッションは「ログイン済み」と同義。放置すると本人確認なしに
+      //      会員/管理画面へ入れてしまうため、いったんログアウトし新パスワードでの再ログインを必須にする。
+      await supabase.auth.signOut();
       setDone(true);
     } catch (err) {
       setError((err as Error).message);
@@ -55,14 +58,15 @@ export default function ResetPasswordPage() {
         {done ? (
           <div className="bg-zinc-900 border border-white/10 rounded-xl p-6 text-center space-y-3">
             <p className="text-emerald-400 text-sm">✓ パスワードを更新しました</p>
-            <a href="/gym/robust/admin" className="block text-emerald-400 text-sm underline mt-2">
-              管理画面へ戻る
+            <p className="text-zinc-400 text-xs">新しいパスワードでログインしてください。</p>
+            <a href="/gym/robust/register?mode=login" className="block text-emerald-400 text-sm underline mt-2">
+              ログイン画面へ
             </a>
           </div>
         ) : !hasSession ? (
           <div className="bg-zinc-900 border border-white/10 rounded-xl p-6 text-center">
             <p className="text-red-400 text-sm">リンクの有効期限が切れています</p>
-            <a href="/gym/robust/admin" className="block text-zinc-400 text-xs mt-3 underline">
+            <a href="/gym/robust/register?mode=login" className="block text-zinc-400 text-xs mt-3 underline">
               ← ログインページへ
             </a>
           </div>
