@@ -12,6 +12,8 @@ import { createRobustClient } from "@/lib/robust/supabase";
 import type { GymMember } from "@/lib/robust/types";
 
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
+// QR 画像の一辺(px)。表示サイズ(240)と揃える
+const QR_IMAGE_SIZE_PX = 240;
 
 export default function MemberQrPage() {
   const supabase = createRobustClient();
@@ -21,8 +23,13 @@ export default function MemberQrPage() {
 
   useEffect(() => {
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { window.location.href = "/gym/robust/register"; return; }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        window.location.href = "/gym/robust/register";
+        return;
+      }
 
       const { data } = await supabase
         .from("gym_members")
@@ -36,10 +43,27 @@ export default function MemberQrPage() {
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // QR コード描画（qrcode ライブラリ不使用 — QR Server API を使用）
-  const qrUrl = member
-    ? `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(member.qr_token)}`
-    : null;
+  // QR 画像はブラウザ内で生成する。
+  // Why: 以前は外部サービス(api.qrserver.com)へ qr_token を送って画像を取得していた。
+  //      外部往復で表示が遅れ、会員の識別トークンが第三者に渡る点もセキュリティ上好ましくないため。
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (!member?.qr_token) return;
+    let cancelled = false;
+    // Why: qrcode は表示時にだけ必要なので動的 import でバンドルから分離する
+    import("qrcode")
+      .then((QRCode) => QRCode.toDataURL(member.qr_token, { width: QR_IMAGE_SIZE_PX, margin: 0 }))
+      .then((url) => {
+        if (!cancelled) setQrDataUrl(url);
+      })
+      .catch(() => {
+        if (!cancelled) setQrDataUrl(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [member?.qr_token]);
+  const qrUrl = qrDataUrl;
 
   const planLabel: Record<string, string> = {
     fulltime: "フルタイム",
@@ -89,6 +113,8 @@ export default function MemberQrPage() {
         {/* QR コード */}
         <div className="bg-white rounded-2xl p-4 inline-block mb-4">
           {qrUrl && (
+            // Why: src は data URL(ブラウザ内生成)。next/image の最適化・遅延読込の対象外なので <img> が適切。
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={qrUrl}
               alt="チェックイン用QRコード"
@@ -99,23 +125,30 @@ export default function MemberQrPage() {
           )}
         </div>
 
-        {member.status === "active"
-          ? <p className="text-zinc-500 text-xs mb-6">入口の読み取り機にQRコードをかざしてください</p>
-          : <p className="text-yellow-500 text-xs mb-6">
-              {member.status === "paused" ? "⚠️ 休会中のため現在チェックインできません" : "⚠️ 退会済みのためチェックインできません"}
-            </p>
-        }
+        {member.status === "active" ? (
+          <p className="text-zinc-500 text-xs mb-6">入口の読み取り機にQRコードをかざしてください</p>
+        ) : (
+          <p className="text-yellow-500 text-xs mb-6">
+            {member.status === "paused"
+              ? "⚠️ 休会中のため現在チェックインできません"
+              : "⚠️ 退会済みのためチェックインできません"}
+          </p>
+        )}
 
         <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 text-left">
           <div className="flex justify-between items-center">
             <span className="text-xs text-zinc-500">プラン</span>
-            <span className="text-sm text-white">{planLabel[member.plan_type] ?? member.plan_type}</span>
+            <span className="text-sm text-white">
+              {planLabel[member.plan_type] ?? member.plan_type}
+            </span>
           </div>
           <div className="flex justify-between items-center mt-2">
             <span className="text-xs text-zinc-500">ステータス</span>
-            <span className={`text-xs px-2 py-0.5 rounded ${
-              statusColor[member.status] ?? "bg-zinc-700 text-zinc-400"
-            }`}>
+            <span
+              className={`text-xs px-2 py-0.5 rounded ${
+                statusColor[member.status] ?? "bg-zinc-700 text-zinc-400"
+              }`}
+            >
               {statusLabel[member.status] ?? member.status}
             </span>
           </div>
@@ -125,17 +158,23 @@ export default function MemberQrPage() {
 
         {/* ナビゲーション */}
         <div className="mt-6 space-y-2">
-          <a href="/gym/robust/member/videos"
-            className="block w-full text-center bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-sm font-medium rounded-xl py-3 transition-colors">
+          <a
+            href="/gym/robust/member/videos"
+            className="block w-full text-center bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-sm font-medium rounded-xl py-3 transition-colors"
+          >
             会員限定動画を見る →
           </a>
           <div className="flex gap-2">
-            <a href="/gym/robust/member/history"
-              className="flex-1 text-center bg-zinc-800 hover:bg-zinc-700 text-zinc-400 text-xs rounded-xl py-2.5 transition-colors">
+            <a
+              href="/gym/robust/member/history"
+              className="flex-1 text-center bg-zinc-800 hover:bg-zinc-700 text-zinc-400 text-xs rounded-xl py-2.5 transition-colors"
+            >
               来館履歴
             </a>
-            <a href="/gym/robust/member/profile"
-              className="flex-1 text-center bg-zinc-800 hover:bg-zinc-700 text-zinc-400 text-xs rounded-xl py-2.5 transition-colors">
+            <a
+              href="/gym/robust/member/profile"
+              className="flex-1 text-center bg-zinc-800 hover:bg-zinc-700 text-zinc-400 text-xs rounded-xl py-2.5 transition-colors"
+            >
               マイページ
             </a>
           </div>
