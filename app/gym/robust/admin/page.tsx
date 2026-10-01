@@ -12,6 +12,7 @@ import RobustAdminLoginForm from "@/components/robust/RobustAdminLoginForm";
 
 import { useState, useEffect } from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
+import { PLAN_LABEL } from "@/lib/robust/labels";
 
 type Member = {
   id: string;
@@ -45,24 +46,19 @@ type AdminData = {
   billingPeriod: string;
 };
 
-const PLAN_LABEL: Record<string, string> = {
-  fulltime:     "フルタイム",
-  twice_weekly: "月8回",
-  drop_in:      "ドロップイン",
-};
-
 const CLASS_LABEL: Record<string, string> = {
   beginner: "白帯",
-  basic:    "基礎",
-  regular:  "通常",
-  nogi:     "ノーギ",
-  private:  "個別",
-  other:    "その他",
+  basic: "基礎",
+  regular: "通常",
+  nogi: "ノーギ",
+  private: "個別",
+  other: "その他",
 };
 
 function fmt(iso: string): string {
   return new Date(iso).toLocaleTimeString("ja-JP", {
-    hour: "2-digit", minute: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
@@ -89,7 +85,9 @@ export default function AdminPage() {
 
   useEffect(() => {
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         setShowLogin(true);
         setLoading(false);
@@ -108,7 +106,15 @@ export default function AdminPage() {
   }
 
   if (showLogin) {
-    return <RobustAdminLoginForm onSuccess={() => { setShowLogin(false); setLoading(true); fetchDashboard(); }} />;
+    return (
+      <RobustAdminLoginForm
+        onSuccess={() => {
+          setShowLogin(false);
+          setLoading(true);
+          fetchDashboard();
+        }}
+      />
+    );
   }
 
   if (error) {
@@ -126,11 +132,11 @@ export default function AdminPage() {
 
   if (!data) return null;
 
-  const activeMembers = data.members.filter(m => m.status === "active");
-  const pausedCount = data.members.filter(m => m.status === "paused").length;
-  const cancelledCount = data.members.filter(m => m.status === "cancelled").length;
+  const activeMembers = data.members.filter((m) => m.status === "active");
+  const pausedCount = data.members.filter((m) => m.status === "paused").length;
+  const cancelledCount = data.members.filter((m) => m.status === "cancelled").length;
   // 有効会員のプラン内訳。Why: ダッシュボードで会員数系＋プラン構成を一目で把握できるようにする。
-  const planCount = (t: string) => activeMembers.filter(m => m.plan_type === t).length;
+  const planCount = (t: string) => activeMembers.filter((m) => m.plan_type === t).length;
 
   // サマリー指標（2段表示）: 会員数系（総/有効/休会/退会）＋ 稼働・プラン内訳（本日来館/各プラン）。
   const summaryStats: { n: number; label: string; color: string }[] = [
@@ -158,7 +164,10 @@ export default function AdminPage() {
               会員マイページまで行く必要があり不便だった。ここから直接ログアウトできるようにする。 */}
           <button
             type="button"
-            onClick={async () => { await supabase.auth.signOut(); window.location.href = "/gym/robust/admin"; }}
+            onClick={async () => {
+              await supabase.auth.signOut();
+              window.location.href = "/gym/robust/admin";
+            }}
             className="text-xs text-zinc-400 hover:text-white border border-white/10 rounded-lg px-2.5 py-1 transition-colors"
           >
             ログアウト
@@ -168,8 +177,11 @@ export default function AdminPage() {
 
       {/* サマリーカード（会員数系＋稼働・プラン内訳を2段で表示） */}
       <div className="grid grid-cols-4 gap-2 p-4">
-        {summaryStats.map(s => (
-          <div key={s.label} className="bg-zinc-900 border border-white/10 rounded-xl p-2.5 text-center">
+        {summaryStats.map((s) => (
+          <div
+            key={s.label}
+            className="bg-zinc-900 border border-white/10 rounded-xl p-2.5 text-center"
+          >
             <p className={`text-xl font-bold ${s.color}`}>{s.n}</p>
             <p className="text-[10px] text-zinc-500 mt-0.5 leading-tight">{s.label}</p>
           </div>
@@ -178,36 +190,48 @@ export default function AdminPage() {
 
       {/* クイックリンク */}
       <div className="grid grid-cols-2 gap-2 px-4 pb-3">
-        <a href="/gym/robust/admin/attendance"
-          className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
+        <a
+          href="/gym/robust/admin/attendance"
+          className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors"
+        >
           出欠確認
         </a>
         {/* 会員管理・動画管理・スタッフ管理は owner / admin のみ（instructor は出欠確認とチェックインのみ） */}
         {(data.role === "owner" || data.role === "admin") && (
           <>
-            <a href="/gym/robust/admin/members"
-              className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
+            <a
+              href="/gym/robust/admin/members"
+              className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors"
+            >
               会員管理
             </a>
-            <a href="/gym/robust/admin/videos"
-              className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
+            <a
+              href="/gym/robust/admin/videos"
+              className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors"
+            >
               動画管理
             </a>
           </>
         )}
-        <a href="/gym/robust/checkin"
-          className="text-center text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg py-2.5 transition-colors">
+        <a
+          href="/gym/robust/checkin"
+          className="text-center text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg py-2.5 transition-colors"
+        >
           チェックイン
         </a>
         {(data.role === "owner" || data.role === "admin") && (
-          <a href="/gym/robust/admin/staff"
-            className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
+          <a
+            href="/gym/robust/admin/staff"
+            className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors"
+          >
             スタッフ管理
           </a>
         )}
         {(data.role === "owner" || data.role === "admin") && (
-          <a href="/gym/robust/admin/notify"
-            className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors">
+          <a
+            href="/gym/robust/admin/notify"
+            className="text-center text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg py-2.5 transition-colors"
+          >
             お知らせ配信
           </a>
         )}
@@ -221,13 +245,16 @@ export default function AdminPage() {
               ⚠️ スポーツ保険の更新予定（{data.insuranceExpiring.length}名）
             </p>
             <div className="space-y-1.5">
-              {data.insuranceExpiring.map(m => {
+              {data.insuranceExpiring.map((m) => {
                 const expired = new Date(m.insurance_expires_at) < new Date();
                 return (
                   <div key={m.id} className="flex items-center justify-between text-xs">
                     <span className="text-zinc-200">{m.name}</span>
-                    <span className={`whitespace-nowrap ${expired ? "text-red-400" : "text-amber-300"}`}>
-                      {m.insurance_expires_at}{expired ? "（期限切れ）" : " まで"}
+                    <span
+                      className={`whitespace-nowrap ${expired ? "text-red-400" : "text-amber-300"}`}
+                    >
+                      {m.insurance_expires_at}
+                      {expired ? "（期限切れ）" : " まで"}
                     </span>
                   </div>
                 );
@@ -239,7 +266,7 @@ export default function AdminPage() {
 
       {/* タブ */}
       <div className="flex border-b border-white/10 px-4">
-        {(["today", "members"] as const).map(t => (
+        {(["today", "members"] as const).map((t) => (
           <button
             key={t}
             type="button"
@@ -261,15 +288,13 @@ export default function AdminPage() {
           {data.todayLogs.length === 0 ? (
             <p className="text-zinc-600 text-sm text-center py-8">まだチェックインはありません</p>
           ) : (
-            data.todayLogs.map(log => (
+            data.todayLogs.map((log) => (
               <div
                 key={log.id}
                 className="bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 flex items-center justify-between"
               >
                 <div>
-                  <p className="text-sm font-medium text-white">
-                    {log.gym_members?.name ?? "—"}
-                  </p>
+                  <p className="text-sm font-medium text-white">{log.gym_members?.name ?? "—"}</p>
                   <p className="text-xs text-zinc-500 mt-0.5">
                     {PLAN_LABEL[log.gym_members?.plan_type ?? ""] ?? log.gym_members?.plan_type}
                     {log.class_type && ` · ${CLASS_LABEL[log.class_type] ?? log.class_type}`}
@@ -285,28 +310,29 @@ export default function AdminPage() {
       {/* 会員一覧 */}
       {tab === "members" && (
         <div className="p-4 space-y-2">
-          {data.members.map(m => (
-            <div
-              key={m.id}
-              className="bg-zinc-900 border border-white/10 rounded-xl px-4 py-3"
-            >
+          {data.members.map((m) => (
+            <div key={m.id} className="bg-zinc-900 border border-white/10 rounded-xl px-4 py-3">
               <div className="flex items-start justify-between">
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-white truncate">{m.name}</p>
                   <p className="text-xs text-zinc-500 truncate">{m.email}</p>
                 </div>
-                <span className={`ml-2 shrink-0 text-xs px-2 py-0.5 rounded ${
-                  m.status === "active"
-                    ? "bg-emerald-500/20 text-emerald-400"
-                    : "bg-zinc-700 text-zinc-400"
-                }`}>
+                <span
+                  className={`ml-2 shrink-0 text-xs px-2 py-0.5 rounded ${
+                    m.status === "active"
+                      ? "bg-emerald-500/20 text-emerald-400"
+                      : "bg-zinc-700 text-zinc-400"
+                  }`}
+                >
                   {m.status === "active" ? "有効" : m.status}
                 </span>
               </div>
               <div className="flex items-center gap-3 mt-2 text-xs text-zinc-500">
                 <span>{PLAN_LABEL[m.plan_type] ?? m.plan_type}</span>
                 <span className="text-zinc-700">·</span>
-                <span>今月 <strong className="text-white">{m.month_count}</strong> 回</span>
+                <span>
+                  今月 <strong className="text-white">{m.month_count}</strong> 回
+                </span>
               </div>
             </div>
           ))}

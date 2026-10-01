@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createRobustAdminClient } from "@/lib/robust/supabase";
 import { requireRobustManager } from "@/lib/robust/auth";
+import { BELT_LABEL, PLAN_LABEL, STATUS_LABEL, PAYMENT_LABEL } from "@/lib/robust/labels";
 
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
 
@@ -17,28 +18,6 @@ function csvCell(value: unknown): string {
   if (value === null || value === undefined) return '""';
   return `"${String(value).replace(/"/g, '""')}"`;
 }
-
-const BELT_LABEL: Record<string, string> = {
-  white: "白帯",
-  blue: "青帯",
-  purple: "紫帯",
-  brown: "茶帯",
-  black: "黒帯",
-};
-const PLAN_LABEL: Record<string, string> = {
-  fulltime: "フルタイム",
-  twice_weekly: "月8回",
-  drop_in: "ドロップイン",
-};
-const STATUS_LABEL: Record<string, string> = {
-  active: "有効",
-  paused: "休会中",
-  cancelled: "退会",
-};
-const PAYMENT_LABEL: Record<string, string> = {
-  stripe: "カード（Stripe）",
-  bank_transfer: "口座振替",
-};
 
 type MemberRow = {
   name: string | null;

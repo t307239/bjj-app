@@ -10,6 +10,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
 import type { GymMember } from "@/lib/robust/types";
+import { PLAN_LABEL, STATUS_LABEL, STATUS_COLOR } from "@/lib/robust/labels";
 
 const GYM_ID = process.env.NEXT_PUBLIC_ROBUST_GYM_ID ?? "";
 // QR 画像の一辺(px)。表示サイズ(240)と揃える
@@ -64,24 +65,6 @@ export default function MemberQrPage() {
     };
   }, [member?.qr_token]);
   const qrUrl = qrDataUrl;
-
-  const planLabel: Record<string, string> = {
-    fulltime: "フルタイム",
-    twice_weekly: "月8回",
-    drop_in: "ドロップイン",
-  };
-
-  const statusLabel: Record<string, string> = {
-    active: "有効",
-    paused: "休会中",
-    cancelled: "退会",
-  };
-
-  const statusColor: Record<string, string> = {
-    active: "bg-emerald-500/20 text-emerald-400",
-    paused: "bg-yellow-500/20 text-yellow-400",
-    cancelled: "bg-red-500/20 text-red-400",
-  };
 
   if (loading) {
     return (
@@ -139,17 +122,17 @@ export default function MemberQrPage() {
           <div className="flex justify-between items-center">
             <span className="text-xs text-zinc-500">プラン</span>
             <span className="text-sm text-white">
-              {planLabel[member.plan_type] ?? member.plan_type}
+              {PLAN_LABEL[member.plan_type] ?? member.plan_type}
             </span>
           </div>
           <div className="flex justify-between items-center mt-2">
             <span className="text-xs text-zinc-500">ステータス</span>
             <span
               className={`text-xs px-2 py-0.5 rounded ${
-                statusColor[member.status] ?? "bg-zinc-700 text-zinc-400"
+                STATUS_COLOR[member.status] ?? "bg-zinc-700 text-zinc-400"
               }`}
             >
-              {statusLabel[member.status] ?? member.status}
+              {STATUS_LABEL[member.status] ?? member.status}
             </span>
           </div>
         </div>

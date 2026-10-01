@@ -6,6 +6,12 @@ import RobustAdminLoginForm from "@/components/robust/RobustAdminLoginForm";
 import RobustAccessDenied from "@/components/robust/RobustAccessDenied";
 import RobustBeltBar from "@/components/robust/RobustBeltBar";
 import RobustPhotoLightbox from "@/components/robust/RobustPhotoLightbox";
+import { PLAN_LABEL, STATUS_LABEL, STATUS_COLOR, type Promotion } from "@/lib/robust/labels";
+import AttendanceCsvExport from "@/components/robust/admin/AttendanceCsvExport";
+import DriveAccessPanel from "@/components/robust/admin/DriveAccessPanel";
+import MemberEditForm, { type MemberEditValues } from "@/components/robust/admin/MemberEditForm";
+import CardLinkPanel from "@/components/robust/admin/CardLinkPanel";
+import MemberDetailPanel from "@/components/robust/admin/MemberDetailPanel";
 
 type Member = {
   id: string;
@@ -40,53 +46,12 @@ type Member = {
   created_at: string;
 };
 
-const PLAN_LABEL: Record<string, string> = {
-  fulltime: "フルタイム",
-  twice_weekly: "月8回",
-  drop_in: "ドロップイン",
-};
-
-const BELT_LABEL: Record<string, string> = {
-  white: "白帯",
-  blue: "青帯",
-  purple: "紫帯",
-  brown: "茶帯",
-  black: "黒帯",
-};
-
-type Promotion = {
-  id: string;
-  belt: string;
-  stripes: number;
-  promoted_on: string;
-  note: string | null;
-};
-
-const STATUS_LABEL: Record<string, string> = {
-  active: "有効",
-  paused: "休会中",
-  cancelled: "退会",
-};
-
-const STATUS_COLOR: Record<string, string> = {
-  active: "bg-emerald-500/20 text-emerald-400",
-  paused: "bg-yellow-500/20 text-yellow-400",
-  cancelled: "bg-red-500/20 text-red-400",
-};
-
 export default function AdminMembersPage() {
   const supabase = createRobustClient();
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
-  const [editStatus, setEditStatus] = useState<string>("");
-  const [editPlan, setEditPlan] = useState<string>("");
-  const [editCap, setEditCap] = useState<string>("");
-  const [editVideoAccess, setEditVideoAccess] = useState<boolean>(false);
-  const [editPaymentMethod, setEditPaymentMethod] = useState<string>("stripe");
-  const [editBelt, setEditBelt] = useState<string>("white");
-  const [editStripes, setEditStripes] = useState<number>(0);
   const [detailMember, setDetailMember] = useState<Member | null>(null);
   // 昇格履歴（依頼書 Section 10）: 詳細を開いた会員の履歴をオンデマンド取得してキャッシュ
   const [detailHistory, setDetailHistory] = useState<Promotion[]>([]);
@@ -95,59 +60,8 @@ export default function AdminMembersPage() {
   const [uploadingPhotoId, setUploadingPhotoId] = useState<string | null>(null);
   // 本人確認用の写真拡大（ライトボックス）
   const [zoomPhoto, setZoomPhoto] = useState<{ url: string; name: string } | null>(null);
-  // 来館CSVの期間（既定=今月1日〜今日, JST）。Why: 出席ログを期間指定で出力するため。
-  const [attFrom, setAttFrom] = useState(() => {
-    const t = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Tokyo" });
-    return t.slice(0, 7) + "-01";
-  });
-  const [attTo, setAttTo] = useState(() =>
-    new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Tokyo" }),
-  );
-  // カード登録リンク発行（非カード会員→カード切替）: 開いている会員・選択プラン・生成URL
+  // カード登録リンク発行（非カード会員→カード切替）: 発行パネルを開いている会員
   const [cardLinkFor, setCardLinkFor] = useState<string | null>(null);
-  const [cardLinkPlan, setCardLinkPlan] = useState("fulltime_male");
-  const [cardLinkUrl, setCardLinkUrl] = useState<string | null>(null);
-  const [cardLinkLoading, setCardLinkLoading] = useState(false);
-  const [cardLinkErr, setCardLinkErr] = useState("");
-  async function issueCardLink(memberId: string) {
-    setCardLinkLoading(true);
-    setCardLinkErr("");
-    setCardLinkUrl(null);
-    try {
-      const res = await fetch("/api/gym/robust/members/card-link", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ memberId, planKey: cardLinkPlan }),
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error ?? "発行に失敗しました");
-      setCardLinkUrl(json.url);
-    } catch (e) {
-      setCardLinkErr((e as Error).message);
-    } finally {
-      setCardLinkLoading(false);
-    }
-  }
-
-  // Drive共有対象メールを一括コピーした際の一時フィードバック
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
-  const copyEmails = (key: string, emails: string[]) => {
-    // Why: 会員が多いとDrive共有先を1件ずつコピーするのは非現実的。カンマ区切りで一括コピー。
-    const text = emails.join(", ");
-    const ok = () => {
-      setCopiedKey(key);
-      setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 2000);
-    };
-    // Why: クリップボードAPIが無効/権限拒否(非HTTPS・一部環境)でも黙って失敗しないよう、
-    //      失敗時は手動コピー用の prompt をフォールバック表示する。
-    const fallback = () =>
-      window.prompt("コピーできませんでした。下記を手動でコピーしてください", text);
-    if (!navigator.clipboard?.writeText) {
-      fallback();
-      return;
-    }
-    navigator.clipboard.writeText(text).then(ok).catch(fallback);
-  };
   const MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5MB
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
@@ -192,13 +106,6 @@ export default function AdminMembersPage() {
 
   function startEdit(m: Member) {
     setEditing(m.id);
-    setEditStatus(m.status);
-    setEditPlan(m.plan_type);
-    setEditCap(m.plan_cap != null ? String(m.plan_cap) : "");
-    setEditVideoAccess(m.video_access);
-    setEditPaymentMethod(m.payment_method);
-    setEditBelt(m.belt);
-    setEditStripes(m.stripes);
     setSaveError("");
   }
 
@@ -318,49 +225,20 @@ export default function AdminMembersPage() {
     );
   }
 
-  async function handleSave(memberId: string) {
+  async function handleSave(memberId: string, values: MemberEditValues) {
     setSaving(true);
     setSaveError("");
     try {
-      const body: Record<string, unknown> = {
-        memberId,
-        status: editStatus,
-        plan_type: editPlan,
-        video_access: editVideoAccess,
-        payment_method: editPaymentMethod,
-        belt: editBelt,
-        stripes: editStripes,
-      };
-      if (editPlan === "twice_weekly") {
-        body.plan_cap = editCap ? parseInt(editCap) : 8;
-      } else {
-        body.plan_cap = null;
-      }
       const res = await fetch("/api/gym/robust/members", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ memberId, ...values }),
       });
       if (!res.ok) {
         const json = await res.json().catch(() => ({}));
         throw new Error(json.error ?? "保存に失敗しました");
       }
-      setMembers((prev) =>
-        prev.map((m) =>
-          m.id === memberId
-            ? {
-                ...m,
-                status: editStatus,
-                plan_type: editPlan,
-                plan_cap: body.plan_cap as number | null,
-                video_access: editVideoAccess,
-                payment_method: editPaymentMethod,
-                belt: editBelt,
-                stripes: editStripes,
-              }
-            : m,
-        ),
-      );
+      setMembers((prev) => prev.map((m) => (m.id === memberId ? { ...m, ...values } : m)));
       setEditing(null);
     } catch (err) {
       setSaveError((err as Error).message);
@@ -403,14 +281,6 @@ export default function AdminMembersPage() {
 
   const activeCount = members.filter((m) => m.status === "active").length;
   const pausedCount = members.filter((m) => m.status === "paused").length;
-
-  // 動画アクセス（手動 Drive 共有）管理リスト
-  // Why: 動画は Drive フォルダを各会員の Google アカウントに手動共有する運用。
-  //      アプリの動画リンクは status==active かつ video_access でゲートされるが、
-  //      手動共有した Drive 権限はアプリのゲートが効かない（退会後も直接閲覧可能）。
-  //      「共有すべき人」「権限を外すべき人」を可視化し剥奪忘れの事故を防ぐ。
-  const driveShareTargets = members.filter((m) => m.status === "active" && m.video_access);
-  const driveRevokeTargets = members.filter((m) => m.video_access && m.status !== "active");
 
   return (
     <div className="min-h-screen bg-zinc-950 p-4">
@@ -455,135 +325,9 @@ export default function AdminMembersPage() {
           </div>
         </div>
 
-        {/* 来館CSV（期間指定）: 出席ログを日付範囲で出力（売上・稼働レポート用） */}
-        <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6 flex flex-wrap items-end gap-3">
-          <div>
-            <label htmlFor="att-from" className="block text-xs text-zinc-400 mb-1">
-              来館CSV：開始日
-            </label>
-            <input
-              id="att-from"
-              type="date"
-              value={attFrom}
-              max={attTo}
-              onChange={(e) => setAttFrom(e.target.value)}
-              className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-1.5 text-white text-sm"
-            />
-          </div>
-          <div>
-            <label htmlFor="att-to" className="block text-xs text-zinc-400 mb-1">
-              終了日
-            </label>
-            <input
-              id="att-to"
-              type="date"
-              value={attTo}
-              min={attFrom}
-              onChange={(e) => setAttTo(e.target.value)}
-              className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-1.5 text-white text-sm"
-            />
-          </div>
-          <a
-            href={`/api/gym/robust/export/attendance?from=${attFrom}&to=${attTo}`}
-            className="text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg px-4 py-2 whitespace-nowrap"
-            title="指定期間の来館データをCSVでダウンロード"
-          >
-            ⬇ 来館サマリーCSV（月別回数）
-          </a>
-          <p className="text-xs text-zinc-500 basis-full">
-            指定期間の「会員 ×
-            各月の来館回数」を一覧で出力します（稼働・売上分析用）。会員の連絡先など詳細は「会員CSV」から。
-          </p>
-        </div>
+        <AttendanceCsvExport />
 
-        {/* 動画アクセス（Drive 共有）管理 */}
-        {(driveShareTargets.length > 0 || driveRevokeTargets.length > 0) && (
-          <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-6">
-            <h2 className="text-sm font-medium text-white mb-1">
-              📹 動画アクセス（Drive 共有管理）
-            </h2>
-            <p className="text-zinc-500 text-xs mb-3">
-              動画フォルダを各会員の Google アカウントに手動共有する運用です。下記を Drive
-              の共有設定に反映してください。
-            </p>
-
-            {driveRevokeTargets.length > 0 && (
-              <details
-                open={driveRevokeTargets.length <= 8}
-                className="mb-3 rounded-lg bg-red-500/10 border border-red-500/30 p-3"
-              >
-                <summary className="text-red-400 text-xs font-medium cursor-pointer">
-                  ⚠️ Drive 権限を外す（{driveRevokeTargets.length}名）— 退会・休会したが動画ONのまま
-                </summary>
-                <div className="mt-2">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      copyEmails(
-                        "revoke",
-                        driveRevokeTargets.map((m) => m.email),
-                      )
-                    }
-                    className="text-[11px] bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded px-2 py-1 mb-2"
-                  >
-                    📋 メールを一括コピー{copiedKey === "revoke" ? " ✓" : ""}
-                  </button>
-                  <ul className="space-y-1 max-h-56 overflow-auto">
-                    {driveRevokeTargets.map((m) => (
-                      <li
-                        key={m.id}
-                        className="text-xs text-zinc-300 flex items-center gap-2 flex-wrap"
-                      >
-                        <span>{m.name}</span>
-                        <span className="text-zinc-500">{m.email}</span>
-                        <span className="text-red-400">
-                          （{STATUS_LABEL[m.status] ?? m.status}）
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </details>
-            )}
-
-            {driveShareTargets.length === 0 ? (
-              <p className="text-emerald-400 text-xs font-medium">
-                ✅ Drive を共有する対象（0名）— 有効かつ動画ON：対象なし
-              </p>
-            ) : (
-              <details open={driveShareTargets.length <= 8}>
-                <summary className="text-emerald-400 text-xs font-medium cursor-pointer">
-                  ✅ Drive を共有する対象（{driveShareTargets.length}名）— 有効かつ動画ON
-                </summary>
-                <div className="mt-2">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      copyEmails(
-                        "share",
-                        driveShareTargets.map((m) => m.email),
-                      )
-                    }
-                    className="text-[11px] bg-emerald-600 hover:bg-emerald-500 text-white rounded px-2 py-1 mb-2"
-                  >
-                    📋 メールを一括コピー{copiedKey === "share" ? " ✓" : ""}
-                  </button>
-                  <ul className="space-y-1 max-h-56 overflow-auto">
-                    {driveShareTargets.map((m) => (
-                      <li
-                        key={m.id}
-                        className="text-xs text-zinc-300 flex items-center gap-2 flex-wrap"
-                      >
-                        <span>{m.name}</span>
-                        <span className="text-zinc-500">{m.email}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </details>
-            )}
-          </div>
-        )}
+        <DriveAccessPanel members={members} />
 
         {/* 会員リスト */}
         {members.length === 0 ? (
@@ -596,146 +340,13 @@ export default function AdminMembersPage() {
               <div key={m.id} className="bg-zinc-900 border border-white/10 rounded-xl p-4">
                 {editing === m.id ? (
                   /* 編集モード */
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <p className="text-white font-medium">{m.name}</p>
-                      <p className="text-zinc-500 text-xs">{m.email}</p>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs text-zinc-400 mb-1">ステータス</label>
-                        <select
-                          value={editStatus}
-                          onChange={(e) => setEditStatus(e.target.value)}
-                          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-                        >
-                          <option value="active">有効</option>
-                          <option value="paused">休会中</option>
-                          <option value="cancelled">退会</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-xs text-zinc-400 mb-1">プラン</label>
-                        <select
-                          value={editPlan}
-                          onChange={(e) => setEditPlan(e.target.value)}
-                          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-                        >
-                          <option value="fulltime">フルタイム</option>
-                          <option value="twice_weekly">月8回</option>
-                          <option value="drop_in">ドロップイン</option>
-                        </select>
-                      </div>
-                    </div>
-                    {/* Why: プラン変更は cap/超過の判定には効くが、Stripe の月額請求は自動で変わらない。
-                            （プラン種別だけでは男女別価格を確定できず自動同期できない）。誤解防止の注意書き。 */}
-                    {editPlan !== m.plan_type && (
-                      <p className="text-amber-400 text-xs bg-amber-500/10 rounded-lg px-3 py-2">
-                        ※
-                        プラン変更は月額（Stripe）の請求額には自動反映されません。金額の変更が必要な場合は
-                        Stripe 側で行ってください。
-                      </p>
-                    )}
-                    {editPlan === "twice_weekly" && (
-                      <div>
-                        <label className="block text-xs text-zinc-400 mb-1">月上限回数</label>
-                        <input
-                          type="number"
-                          value={editCap}
-                          onChange={(e) => setEditCap(e.target.value)}
-                          min={1}
-                          max={99}
-                          placeholder="8"
-                          className="w-32 bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-                        />
-                      </div>
-                    )}
-                    {/* 動画アクセス切替 */}
-                    <div className="flex items-center justify-between bg-zinc-800 rounded-lg px-3 py-2.5">
-                      <div>
-                        <p className="text-white text-sm">会員限定動画の閲覧</p>
-                        <p className="text-zinc-500 text-xs mt-0.5">
-                          オンにすると動画ページにアクセス可能
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setEditVideoAccess((v) => !v)}
-                        className={`relative w-11 h-6 rounded-full transition-colors ${editVideoAccess ? "bg-emerald-500" : "bg-zinc-600"}`}
-                        aria-label="動画アクセス切替"
-                      >
-                        <span
-                          className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${editVideoAccess ? "translate-x-5" : "translate-x-0"}`}
-                        />
-                      </button>
-                    </div>
-                    {/* ⑤ 支払い方法（カード / 口座振替）切替 */}
-                    <div>
-                      <label className="block text-xs text-zinc-400 mb-1">支払い方法</label>
-                      <select
-                        value={editPaymentMethod}
-                        onChange={(e) => setEditPaymentMethod(e.target.value)}
-                        className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-                      >
-                        <option value="stripe">カード（Stripe）</option>
-                        <option value="bank_transfer">口座振替</option>
-                      </select>
-                    </div>
-                    {/* 帯・ストライプ（依頼書 Section 9）。保存時に変更があれば昇格履歴に自動記録される。 */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs text-zinc-400 mb-1">帯</label>
-                        <select
-                          value={editBelt}
-                          onChange={(e) => setEditBelt(e.target.value)}
-                          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-                        >
-                          <option value="white">白帯</option>
-                          <option value="blue">青帯</option>
-                          <option value="purple">紫帯</option>
-                          <option value="brown">茶帯</option>
-                          <option value="black">黒帯</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-xs text-zinc-400 mb-1">ストライプ</label>
-                        <select
-                          value={String(editStripes)}
-                          onChange={(e) => setEditStripes(parseInt(e.target.value))}
-                          className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-                        >
-                          <option value="0">0本</option>
-                          <option value="1">1本</option>
-                          <option value="2">2本</option>
-                          <option value="3">3本</option>
-                          <option value="4">4本</option>
-                        </select>
-                      </div>
-                    </div>
-                    {(editBelt !== m.belt || editStripes !== m.stripes) && (
-                      <p className="text-emerald-400 text-xs bg-emerald-500/10 rounded-lg px-3 py-2">
-                        ※ 保存すると昇格履歴に記録されます（{BELT_LABEL[m.belt] ?? m.belt}
-                        {m.stripes}本 → {BELT_LABEL[editBelt] ?? editBelt}
-                        {editStripes}本）
-                      </p>
-                    )}
-                    {saveError && <p className="text-red-400 text-xs">{saveError}</p>}
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleSave(m.id)}
-                        disabled={saving}
-                        className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white text-sm rounded-lg py-2 font-medium"
-                      >
-                        {saving ? "保存中..." : "保存"}
-                      </button>
-                      <button
-                        onClick={() => setEditing(null)}
-                        className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white text-sm rounded-lg py-2"
-                      >
-                        キャンセル
-                      </button>
-                    </div>
-                  </div>
+                  <MemberEditForm
+                    member={m}
+                    saving={saving}
+                    saveError={saveError}
+                    onSave={(values) => handleSave(m.id, values)}
+                    onCancel={() => setEditing(null)}
+                  />
                 ) : (
                   /* 表示モード */
                   <div className="flex items-center justify-between">
@@ -900,11 +511,7 @@ export default function AdminMembersPage() {
                     {m.payment_method !== "stripe" && m.status !== "cancelled" && (
                       <button
                         type="button"
-                        onClick={() => {
-                          setCardLinkFor(cardLinkFor === m.id ? null : m.id);
-                          setCardLinkUrl(null);
-                          setCardLinkErr("");
-                        }}
+                        onClick={() => setCardLinkFor(cardLinkFor === m.id ? null : m.id)}
                         className="min-h-[44px] px-3 text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg whitespace-nowrap"
                       >
                         💳 カード登録リンク
@@ -963,149 +570,14 @@ export default function AdminMembersPage() {
                   </div>
                 )}
                 {/* カード登録リンク発行パネル */}
-                {editing !== m.id && cardLinkFor === m.id && (
-                  <div className="mt-2 bg-zinc-950/50 border border-white/10 rounded-lg p-3 space-y-2">
-                    <p className="text-xs text-zinc-400">
-                      プラン（料金）を選んでリンクを発行 →
-                      会員に送ってください。会員がカード登録すると
-                      <span className="text-zinc-200">翌月1日からカード課金</span>
-                      になります（今は課金なし）。※口座振替の停止時期はオーナーが合わせてください。
-                    </p>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <label htmlFor={`cardplan-${m.id}`} className="sr-only">
-                        プラン
-                      </label>
-                      <select
-                        id={`cardplan-${m.id}`}
-                        value={cardLinkPlan}
-                        onChange={(e) => setCardLinkPlan(e.target.value)}
-                        className="bg-zinc-800 border border-white/10 rounded-lg px-2 py-1.5 text-white text-xs"
-                      >
-                        <option value="fulltime_male">フルタイム（男性）¥12,000</option>
-                        <option value="fulltime_female">フルタイム（女性）¥10,000</option>
-                        <option value="twice_male">月8回（大人）¥10,000</option>
-                        <option value="twice_kids">月8回（キッズ）¥7,000</option>
-                        <option value="drop_in">ドロップイン ¥2,000</option>
-                      </select>
-                      <button
-                        type="button"
-                        disabled={cardLinkLoading}
-                        onClick={() => issueCardLink(m.id)}
-                        className="text-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white rounded-lg px-3 py-1.5 whitespace-nowrap"
-                      >
-                        {cardLinkLoading ? "発行中..." : "リンク発行"}
-                      </button>
-                    </div>
-                    {cardLinkErr && <p className="text-red-400 text-xs">{cardLinkErr}</p>}
-                    {cardLinkUrl && (
-                      <div className="flex items-center gap-2">
-                        <input
-                          readOnly
-                          value={cardLinkUrl}
-                          aria-label="カード登録リンク"
-                          className="flex-1 bg-zinc-800 border border-white/10 rounded px-2 py-1.5 text-white text-xs"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => copyEmails("cardlink", [cardLinkUrl])}
-                          className="text-xs bg-zinc-700 hover:bg-zinc-600 text-white rounded px-2 py-1.5 whitespace-nowrap"
-                        >
-                          {copiedKey === "cardlink" ? "✓ コピー済" : "コピー"}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
+                {editing !== m.id && cardLinkFor === m.id && <CardLinkPanel memberId={m.id} />}
                 {/* 詳細情報パネル（生年月日・住所・緊急連絡先・運動経歴・既往症） */}
                 {detailMember?.id === m.id && editing !== m.id && (
-                  <div className="mt-3 pt-3 border-t border-white/10 space-y-2 text-xs">
-                    {m.birth_date && (
-                      <div>
-                        <span className="text-zinc-500">生年月日: </span>
-                        <span className="text-zinc-300">{m.birth_date}</span>
-                      </div>
-                    )}
-                    {m.address && (
-                      <div>
-                        <span className="text-zinc-500">住所: </span>
-                        <span className="text-zinc-300">{m.address}</span>
-                      </div>
-                    )}
-                    {(m.emergency_contact_name || m.emergency_contact_phone) && (
-                      <div>
-                        <span className="text-zinc-500">緊急連絡先: </span>
-                        <span className="text-zinc-300">
-                          {m.emergency_contact_name}
-                          {m.emergency_contact_relation && `（${m.emergency_contact_relation}）`}
-                          {m.emergency_contact_phone && ` ${m.emergency_contact_phone}`}
-                        </span>
-                      </div>
-                    )}
-                    {m.sports_history && (
-                      <div>
-                        <span className="text-zinc-500">運動経歴: </span>
-                        <span className="text-zinc-300">{m.sports_history}</span>
-                      </div>
-                    )}
-                    {m.blood_type && (
-                      <div>
-                        <span className="text-zinc-500">血液型: </span>
-                        <span className="text-zinc-300">{m.blood_type}型</span>
-                      </div>
-                    )}
-                    {m.chronic_conditions && (
-                      <div>
-                        <span className="text-amber-500">持病: </span>
-                        <span className="text-zinc-300">{m.chronic_conditions}</span>
-                      </div>
-                    )}
-                    {m.allergies && (
-                      <div>
-                        <span className="text-amber-500">アレルギー: </span>
-                        <span className="text-zinc-300">{m.allergies}</span>
-                      </div>
-                    )}
-                    {m.injury_history && (
-                      <div>
-                        <span className="text-amber-500">怪我歴: </span>
-                        <span className="text-zinc-300">{m.injury_history}</span>
-                      </div>
-                    )}
-                    {m.medical_notes && (
-                      <div>
-                        <span className="text-amber-500">既往症・アレルギー（旧）: </span>
-                        <span className="text-zinc-300">{m.medical_notes}</span>
-                      </div>
-                    )}
-                    {/* 昇格履歴（依頼書 Section 10・管理画面の一覧表示） */}
-                    <div className="pt-2 border-t border-white/5">
-                      <span className="text-zinc-500">昇格履歴: </span>
-                      {historyLoading ? (
-                        <span className="text-zinc-500">読み込み中…</span>
-                      ) : detailHistory.length === 0 ? (
-                        <span className="text-zinc-500">記録なし</span>
-                      ) : (
-                        <ul className="mt-1 space-y-1">
-                          {detailHistory.map((pr) => (
-                            <li key={pr.id} className="flex items-baseline gap-2">
-                              <span className="text-zinc-500 tabular-nums whitespace-nowrap">
-                                {new Date(pr.promoted_on).toLocaleDateString("ja-JP")}
-                              </span>
-                              <span className="text-zinc-300 whitespace-nowrap">
-                                {BELT_LABEL[pr.belt] ?? pr.belt}
-                                {pr.stripes > 0 ? ` ${pr.stripes}本` : ""}
-                              </span>
-                              {pr.note && (
-                                <span className="text-zinc-500 truncate" title={pr.note}>
-                                  {pr.note}
-                                </span>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  </div>
+                  <MemberDetailPanel
+                    member={m}
+                    history={detailHistory}
+                    historyLoading={historyLoading}
+                  />
                 )}
               </div>
             ))}

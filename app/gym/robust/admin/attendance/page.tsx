@@ -5,6 +5,7 @@ import { createRobustClient } from "@/lib/robust/supabase";
 import RobustAdminLoginForm from "@/components/robust/RobustAdminLoginForm";
 import RobustAccessDenied from "@/components/robust/RobustAccessDenied";
 import RobustPhotoLightbox from "@/components/robust/RobustPhotoLightbox";
+import { PLAN_LABEL } from "@/lib/robust/labels";
 
 type RosterMember = {
   id: string;
@@ -12,12 +13,6 @@ type RosterMember = {
   plan_type: string;
   photo_url: string | null;
   checked_in_today: boolean;
-};
-
-const PLAN_LABEL: Record<string, string> = {
-  fulltime: "フルタイム",
-  twice_weekly: "月8回",
-  drop_in: "ドロップイン",
 };
 
 const ROLE_LABEL: Record<string, string> = {

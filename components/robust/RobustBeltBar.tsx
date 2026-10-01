@@ -4,6 +4,8 @@
  * Why: テキスト「青帯 1本」だけだと直感的に分かりづらいため、実際の帯に近い見た目を出す。
  */
 
+import { BELT_LABEL } from "@/lib/robust/labels";
+
 // 帯色（上下グラデーションで布の陰影を表現）
 const BELT_GRADIENT: Record<string, string> = {
   white: "linear-gradient(180deg,#fafafa 0%,#d4d4d8 100%)",
@@ -11,10 +13,6 @@ const BELT_GRADIENT: Record<string, string> = {
   purple: "linear-gradient(180deg,#9333ea 0%,#4a044e 100%)",
   brown: "linear-gradient(180deg,#92400e 0%,#292524 100%)",
   black: "linear-gradient(180deg,#3f3f46 0%,#000000 100%)",
-};
-
-const BELT_LABEL: Record<string, string> = {
-  white: "白帯", blue: "青帯", purple: "紫帯", brown: "茶帯", black: "黒帯",
 };
 
 export default function RobustBeltBar({

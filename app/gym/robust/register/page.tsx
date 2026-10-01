@@ -12,6 +12,7 @@
 
 import { useState, useEffect } from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
+import { PLANS, CONSUMPTION_TAX_RATE, JST_OFFSET_MS, type Plan } from "@/lib/robust/plans";
 import {
   FAMILY_DISCOUNT_YEN,
   SPORTS_INSURANCE_YEN,
@@ -23,69 +24,6 @@ const GYM_SLUG = "robust";
 const POSTAL_CODE_DIGITS = 7;
 
 type Step = "auth" | "profile" | "plan" | "loading";
-
-type Plan = {
-  id: string;
-  label: string;
-  price: string;
-  priceKey: string;
-  setupFee: number;
-  monthlyAmount: number; // 日割り・翌月分計算用（税別）
-  description: string;
-};
-
-const PLANS: Plan[] = [
-  {
-    id: "fulltime_male",
-    label: "フルタイム（男性）",
-    price: "¥12,000/月",
-    priceKey: "fulltime_male",
-    setupFee: 10000,
-    monthlyAmount: 12000,
-    description: "通い放題・全クラス参加可",
-  },
-  {
-    id: "fulltime_female",
-    label: "フルタイム（女性・中高生）",
-    price: "¥10,000/月",
-    priceKey: "fulltime_female",
-    setupFee: 5000,
-    monthlyAmount: 10000,
-    description: "通い放題・全クラス参加可",
-  },
-  {
-    id: "twice_male",
-    label: "月8回（男性）",
-    price: "¥10,000/月",
-    priceKey: "twice_male",
-    setupFee: 10000,
-    monthlyAmount: 10000,
-    description: "月8回まで。超過は¥2,200/回",
-  },
-  {
-    id: "twice_kids",
-    label: "月8回（キッズ）",
-    price: "¥7,000/月",
-    priceKey: "twice_kids",
-    setupFee: 0,
-    monthlyAmount: 7000,
-    description: "小学生対象・月8回まで",
-  },
-  {
-    id: "drop_in",
-    label: "ビジター（ドロップイン）",
-    price: "¥2,000/回",
-    priceKey: "drop_in",
-    setupFee: 0,
-    monthlyAmount: 2000,
-    description: "単発参加",
-  },
-];
-
-// 消費税率（外税10%）。表示価格はすべて税別で、決済内訳・合計に消費税を加算する。
-const CONSUMPTION_TAX_RATE = 0.1;
-// JSTオフセット。日割り計算をサーバー(JST)と一致させ、端末TZ差でズレないようにする。
-const JST_OFFSET_MS = 9 * 60 * 60 * 1000;
 
 // 生年月日として許容する最古日(入力ミス防止)
 const BIRTH_DATE_MIN = "1900-01-01";
@@ -407,7 +345,12 @@ export default function RegisterPage() {
         }),
       });
       // Why: サーバーが非JSON(HTMLの500等)を返しても生の SyntaxError を会員に見せない
-      const json = await res.json().catch(() => ({}) as { error?: string; url?: string; skipped?: boolean; alreadyMember?: boolean });
+      const json = await res
+        .json()
+        .catch(
+          () =>
+            ({}) as { error?: string; url?: string; skipped?: boolean; alreadyMember?: boolean },
+        );
       if (res.status === 503) {
         // Stripe 未設定時は連絡先を案内
         setError(json.error ?? "現在オンライン決済の準備中です。");

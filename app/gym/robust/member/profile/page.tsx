@@ -3,8 +3,13 @@
 import { useState, useEffect } from "react";
 import React from "react";
 import { createRobustClient } from "@/lib/robust/supabase";
-import { subscribeRobustPush, unsubscribeRobustPush, isRobustPushSubscribed } from "@/lib/robust/push";
+import {
+  subscribeRobustPush,
+  unsubscribeRobustPush,
+  isRobustPushSubscribed,
+} from "@/lib/robust/push";
 import RobustBeltBar from "@/components/robust/RobustBeltBar";
+import { BELT_LABEL, PLAN_LABEL, type Promotion } from "@/lib/robust/labels";
 
 type Profile = {
   id: string;
@@ -19,22 +24,6 @@ type Profile = {
   belt: string;
   stripes: number;
   created_at: string;
-};
-
-const BELT_LABEL: Record<string, string> = {
-  white: "白帯", blue: "青帯", purple: "紫帯", brown: "茶帯", black: "黒帯",
-};
-
-type Promotion = {
-  id: string;
-  belt: string;
-  stripes: number;
-  promoted_on: string;
-  note: string | null;
-};
-
-const PLAN_LABEL: Record<string, string> = {
-  fulltime: "フルタイム", twice_weekly: "月8回", drop_in: "ドロップイン",
 };
 
 export default function MemberProfilePage() {
@@ -78,9 +67,15 @@ export default function MemberProfilePage() {
     }
     let mounted = true;
     isRobustPushSubscribed()
-      .then(on => { if (mounted) setPushOn(on); })
-      .catch(() => { /* silent: ok — 購読状態の取得失敗時はトグルOFF初期値のまま */ });
-    return () => { mounted = false; };
+      .then((on) => {
+        if (mounted) setPushOn(on);
+      })
+      .catch(() => {
+        /* silent: ok — 購読状態の取得失敗時はトグルOFF初期値のまま */
+      });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   async function handleTogglePush() {
@@ -108,10 +103,19 @@ export default function MemberProfilePage() {
 
   useEffect(() => {
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { window.location.href = "/gym/robust/register"; return; }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        window.location.href = "/gym/robust/register";
+        return;
+      }
       const res = await fetch("/api/gym/robust/member/profile");
-      if (!res.ok) { setError("プロフィールの取得に失敗しました"); setLoading(false); return; }
+      if (!res.ok) {
+        setError("プロフィールの取得に失敗しました");
+        setLoading(false);
+        return;
+      }
       const json = await res.json();
       setProfile(json.member);
       setPromotions(json.promotions ?? []);
@@ -138,7 +142,7 @@ export default function MemberProfilePage() {
         body: JSON.stringify({ phone: phone || null, address: address || null }),
       });
       if (res.ok) {
-        setProfile(p => p ? { ...p, phone: phone || null, address: address || null } : p);
+        setProfile((p) => (p ? { ...p, phone: phone || null, address: address || null } : p));
         setEditing(false);
         showMsg("保存しました");
       } else {
@@ -152,8 +156,18 @@ export default function MemberProfilePage() {
     }
   }
 
-  if (loading) return <div className="min-h-screen bg-zinc-950 flex items-center justify-center"><div className="w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin" /></div>;
-  if (error || !profile) return <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4"><p className="text-red-400 text-sm">{error || "会員情報が見つかりません"}</p></div>;
+  if (loading)
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-white/10 border-t-white/60 rounded-full animate-spin" />
+      </div>
+    );
+  if (error || !profile)
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
+        <p className="text-red-400 text-sm">{error || "会員情報が見つかりません"}</p>
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-zinc-950 p-4">
@@ -163,7 +177,9 @@ export default function MemberProfilePage() {
             <h1 className="text-xl font-bold text-white">マイページ</h1>
             <p className="text-zinc-500 text-xs mt-0.5">ROBUST 柔術</p>
           </div>
-          <a href="/gym/robust/member/qr" className="text-zinc-400 text-xs hover:text-white">← QRコード</a>
+          <a href="/gym/robust/member/qr" className="text-zinc-400 text-xs hover:text-white">
+            ← QRコード
+          </a>
         </div>
 
         {/* プラン情報 */}
@@ -173,8 +189,14 @@ export default function MemberProfilePage() {
               <p className="text-white font-medium">{profile.name}</p>
               <p className="text-zinc-500 text-xs mt-0.5">{profile.email}</p>
             </div>
-            <span className={`text-xs px-2 py-0.5 rounded ${profile.status === "active" ? "bg-emerald-500/20 text-emerald-400" : "bg-zinc-700 text-zinc-400"}`}>
-              {profile.status === "active" ? "有効" : profile.status === "paused" ? "休会中" : "退会"}
+            <span
+              className={`text-xs px-2 py-0.5 rounded ${profile.status === "active" ? "bg-emerald-500/20 text-emerald-400" : "bg-zinc-700 text-zinc-400"}`}
+            >
+              {profile.status === "active"
+                ? "有効"
+                : profile.status === "paused"
+                  ? "休会中"
+                  : "退会"}
             </span>
           </div>
           <div className="flex gap-4 mt-3 text-xs text-zinc-500 flex-wrap">
@@ -190,15 +212,20 @@ export default function MemberProfilePage() {
           <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 mb-4">
             <h2 className="text-sm font-medium text-white mb-3">昇格履歴</h2>
             <ul className="space-y-2">
-              {promotions.map(pr => (
+              {promotions.map((pr) => (
                 <li key={pr.id} className="flex items-baseline gap-3 text-sm">
                   <span className="text-zinc-500 text-xs whitespace-nowrap tabular-nums">
                     {new Date(pr.promoted_on).toLocaleDateString("ja-JP")}
                   </span>
                   <span className="text-white whitespace-nowrap">
-                    {BELT_LABEL[pr.belt] ?? pr.belt}{pr.stripes > 0 ? ` ${pr.stripes}本` : ""}
+                    {BELT_LABEL[pr.belt] ?? pr.belt}
+                    {pr.stripes > 0 ? ` ${pr.stripes}本` : ""}
                   </span>
-                  {pr.note && <span className="text-zinc-400 text-xs truncate" title={pr.note}>{pr.note}</span>}
+                  {pr.note && (
+                    <span className="text-zinc-400 text-xs truncate" title={pr.note}>
+                      {pr.note}
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>
@@ -210,35 +237,69 @@ export default function MemberProfilePage() {
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-medium text-white">連絡先・プロフィール</h2>
             {!editing && (
-              <button type="button" onClick={() => setEditing(true)}
-                className="text-xs text-zinc-400 hover:text-white bg-zinc-800 px-3 py-1.5 rounded-lg">編集</button>
+              <button
+                type="button"
+                onClick={() => setEditing(true)}
+                className="text-xs text-zinc-400 hover:text-white bg-zinc-800 px-3 py-1.5 rounded-lg"
+              >
+                編集
+              </button>
             )}
           </div>
           {editing ? (
             <form onSubmit={handleSave} className="space-y-3">
               <div>
                 <label className="block text-xs text-zinc-400 mb-1">電話番号</label>
-                <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} autoComplete="tel"
-                  className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  autoComplete="tel"
+                  className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                />
               </div>
               <div>
                 <label className="block text-xs text-zinc-400 mb-1">住所</label>
-                <input type="text" value={address} onChange={e => setAddress(e.target.value)} autoComplete="street-address"
-                  className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
+                <input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  autoComplete="street-address"
+                  className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                />
               </div>
               <div className="flex gap-2">
-                <button type="submit" disabled={saving}
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white text-sm rounded-lg py-2 font-medium">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white text-sm rounded-lg py-2 font-medium"
+                >
                   {saving ? "保存中..." : "保存"}
                 </button>
-                <button type="button" onClick={() => setEditing(false)}
-                  className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white text-sm rounded-lg py-2">キャンセル</button>
+                <button
+                  type="button"
+                  onClick={() => setEditing(false)}
+                  className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white text-sm rounded-lg py-2"
+                >
+                  キャンセル
+                </button>
               </div>
             </form>
           ) : (
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between"><span className="text-zinc-500">電話</span><span className="text-white">{profile.phone || "未登録"}</span></div>
-              <div className="flex justify-between"><span className="text-zinc-500">住所</span><span className="text-white text-right max-w-[60%] truncate" title={profile.address ?? ""}>{profile.address || "未登録"}</span></div>
+              <div className="flex justify-between">
+                <span className="text-zinc-500">電話</span>
+                <span className="text-white">{profile.phone || "未登録"}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-zinc-500">住所</span>
+                <span
+                  className="text-white text-right max-w-[60%] truncate"
+                  title={profile.address ?? ""}
+                >
+                  {profile.address || "未登録"}
+                </span>
+              </div>
             </div>
           )}
           {saveMsg && <p className="text-emerald-400 text-xs mt-2">{saveMsg}</p>}
@@ -250,7 +311,9 @@ export default function MemberProfilePage() {
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-white text-sm">お知らせ通知</p>
-                <p className="text-zinc-500 text-xs mt-0.5">休館日・イベント・緊急連絡をこの端末で受け取る</p>
+                <p className="text-zinc-500 text-xs mt-0.5">
+                  休館日・イベント・緊急連絡をこの端末で受け取る
+                </p>
               </div>
               <button
                 type="button"
@@ -261,7 +324,9 @@ export default function MemberProfilePage() {
                 aria-label="お知らせ通知の受け取り"
                 className={`relative shrink-0 w-11 h-6 rounded-full transition-colors disabled:opacity-50 ${pushOn ? "bg-emerald-500" : "bg-zinc-600"}`}
               >
-                <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${pushOn ? "translate-x-5" : "translate-x-0"}`} />
+                <span
+                  className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${pushOn ? "translate-x-5" : "translate-x-0"}`}
+                />
               </button>
             </div>
             {pushMsg && <p className="text-zinc-400 text-xs mt-2">{pushMsg}</p>}
@@ -282,28 +347,38 @@ export default function MemberProfilePage() {
 
         {/* リンク */}
         <div className="space-y-2">
-          <a href="/gym/robust/member/qr"
-            className="block bg-emerald-600 hover:bg-emerald-500 rounded-xl p-4 flex items-center justify-between transition-colors">
+          <a
+            href="/gym/robust/member/qr"
+            className="block bg-emerald-600 hover:bg-emerald-500 rounded-xl p-4 flex items-center justify-between transition-colors"
+          >
             <span className="text-white text-sm font-medium">📱 チェックイン用QRコードを表示</span>
             <span className="text-white/80 text-xs">→</span>
           </a>
-          <a href="/gym/robust/member/announcements"
-            className="block bg-zinc-900 border border-white/10 rounded-xl p-4 flex items-center justify-between hover:border-white/20">
+          <a
+            href="/gym/robust/member/announcements"
+            className="block bg-zinc-900 border border-white/10 rounded-xl p-4 flex items-center justify-between hover:border-white/20"
+          >
             <span className="text-white text-sm">お知らせ</span>
             <span className="text-zinc-500 text-xs">→</span>
           </a>
-          <a href="/gym/robust/member/history"
-            className="block bg-zinc-900 border border-white/10 rounded-xl p-4 flex items-center justify-between hover:border-white/20">
+          <a
+            href="/gym/robust/member/history"
+            className="block bg-zinc-900 border border-white/10 rounded-xl p-4 flex items-center justify-between hover:border-white/20"
+          >
             <span className="text-white text-sm">チェックイン履歴</span>
             <span className="text-zinc-500 text-xs">→</span>
           </a>
-          <a href="/gym/robust/member/billing"
-            className="block bg-zinc-900 border border-white/10 rounded-xl p-4 flex items-center justify-between hover:border-white/20">
+          <a
+            href="/gym/robust/member/billing"
+            className="block bg-zinc-900 border border-white/10 rounded-xl p-4 flex items-center justify-between hover:border-white/20"
+          >
             <span className="text-white text-sm">お支払い・カード変更</span>
             <span className="text-zinc-500 text-xs">→</span>
           </a>
-          <a href="/gym/robust/member/videos"
-            className="block bg-zinc-900 border border-white/10 rounded-xl p-4 flex items-center justify-between hover:border-white/20">
+          <a
+            href="/gym/robust/member/videos"
+            className="block bg-zinc-900 border border-white/10 rounded-xl p-4 flex items-center justify-between hover:border-white/20"
+          >
             <span className="text-white text-sm">会員限定動画</span>
             <span className="text-zinc-500 text-xs">→</span>
           </a>
@@ -312,7 +387,10 @@ export default function MemberProfilePage() {
         {/* ログアウト */}
         <button
           type="button"
-          onClick={async () => { await supabase.auth.signOut(); window.location.href = "/gym/robust/register"; }}
+          onClick={async () => {
+            await supabase.auth.signOut();
+            window.location.href = "/gym/robust/register";
+          }}
           className="w-full mt-4 min-h-[44px] text-zinc-400 hover:text-white text-sm bg-zinc-900 border border-white/10 rounded-xl"
         >
           ログアウト
