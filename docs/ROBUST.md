@@ -41,6 +41,7 @@
 
 - 引き渡し・運用の説明: Claude Docs「ROBUST 依頼書対応・引き渡し」ドキュメント
 - `docs/ROBUST_DRIVE_AUTO_SETUP.md`（Drive連携）、`ROBUST_確認手順_郵便番号自動入力.md`
+- 残タスク・動作確認・復旧手順: `docs/ROBUST_TODO.md`（ROBUST 専用。bjj-app 本体の BACKLOG.md とは別管理）
 - 全体ルール: `CLAUDE.md`
 
 ## 直近の変更履歴（要約）
