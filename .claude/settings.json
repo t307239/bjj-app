@@ -23,6 +23,10 @@
       "Bash(git remote:*)",
       "Bash(git rev-parse:*)",
       "Bash(git ls-files:*)",
+      "Bash(git tag:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(git add:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr list:*)",
       "Bash(gh pr diff:*)",
@@ -88,7 +92,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if echo \"$TOOL_INPUT\" | grep -qE '\\bgit\\s+(add|commit|push|reset)\\b'; then echo 'BLOCKED: git コマンドは禁止。CLAUDE_COMMIT_MSG に書いてください。' && exit 2; fi"
+            "command": "if echo \"$TOOL_INPUT\" | grep -qE '\\bgit\\s+reset\\b'; then echo 'BLOCKED: git reset は禁止。' && exit 2; fi"
           },
           {
             "type": "command",
