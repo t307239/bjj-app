@@ -10,7 +10,7 @@
 | ---------------- | ------------------------------------------------------------------------------------------ | --------------- |
 | コード           | `git checkout stable-2026-10-02`（リファクタ前の基点）。以降の安定点は同じ要領でタグを打つ | ✅ タグあり     |
 | 本番表示         | Vercel の Instant Rollback（直前の READY デプロイへ即戻し）                                | ✅ 利用可       |
-| DB スキーマ      | Supabase の migrations（`list_migrations` で履歴確認）。変更は必ず migration で行う        | 要確認          |
+| DB スキーマ      | Supabase の migrations（`list_migrations` で履歴確認）。変更は必ず migration で行う        | ✅ 履歴あり     |
 | DB データ        | Supabase のバックアップ / PITR（プランにより可否が異なる）                                 | ⬜ 未確認       |
 | 昇格履歴の誤登録 | 画面から削除不可。DB から該当行を直接削除                                                  | ⬜ 取消機能なし |
 
@@ -19,6 +19,7 @@
 - 大きな変更の前に `git tag stable-YYYY-MM-DD && git push origin <tag>` で基点を打つ。
 - 本番データを書き換える動作確認は、テスト会員（`+rb-` 付き）だけで行う。
 - 破壊的な DB 操作（DELETE / DROP / 一括 UPDATE）は事前に対象行を SELECT して控える。
+- DB スキーマの migration は 13 件を管理済み（最新 `20260905051248 drop_redundant_member_indexes`、2026-10-03 確認）。
 
 ## B. 残タスク（優先順）
 
